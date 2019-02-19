@@ -18,6 +18,7 @@ import { StorageComponent } from './storage/storage.component';
 import { StorageDetailComponent } from './storage/storage-detail/storage-detail.component';
 import { NetworksComponent } from './networks/networks.component';
 import { NetworksDetailComponent } from './networks/networks-detail/networks-detail.component';
+import { NetworkSecurityProfilesComponent } from './networks/network-security-profiles/network-security-profiles.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NetworksDetailComponent } from './networks/networks-detail/networks-det
     StorageDetailComponent,
     NetworksComponent,
     NetworksDetailComponent,
+    NetworkSecurityProfilesComponent,
   ],
   imports: [
     BrowserModule,

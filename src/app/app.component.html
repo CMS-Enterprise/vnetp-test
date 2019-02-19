@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="dashboard">Automation UI</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="dashboard">DRaaS</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -7,27 +7,55 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['projects']" href="projects">
-          Projects</a>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Compute</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="virtual-machines">Virtual Machines</a>
+          <a class="dropdown-item" href="#">VMware Cloud</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">zLinux-XVM</a>
+          <a class="dropdown-item" href="#">xVM</a>
+          <a class="dropdown-item" href="#">Solaris Sparc</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">x86 Baremetal</a>
+          <a class="dropdown-item" href="#">Mainframe</a>
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['virtual-machines']" href="virtual-machines">
-          Virtual Machines
-        </a>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Connectivity</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="networks">Networks</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="networks/network-security-profiles">Security Profiles</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">External Connections</a>
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['networks']" href="networks">
-          Networks
-        </a>
-      </li>
+
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['storage']" href="storage">
           Storage
         </a>
       </li>
+      
     </ul>
     <ul class="navbar-nav ml-auto">
+
+      <li class="nav-item">
+        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['projects']" href="projects">
+          Projects</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['permissions']" href="permissions">
+          Manage Permissions
+        </a>
+      </li>
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false"> My Account</a>
