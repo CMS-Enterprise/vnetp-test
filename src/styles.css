@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+.pill-default {
+    background-color: #0d146d;
+    border-radius: 2px;
+    color: #ffffff;
+    display: inline;
+    font-size: smaller;
+    padding: 2px 5px 2px 5px;
+}
