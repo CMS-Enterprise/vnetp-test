@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AutomationApiService } from '../services/automation-api.service';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-projects',
