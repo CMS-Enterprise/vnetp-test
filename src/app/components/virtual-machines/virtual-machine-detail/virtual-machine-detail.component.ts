@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { VirtualMachine } from 'src/app/models/virtual-machine';
 
 @Component({
   selector: 'app-virtual-machine-detail',
@@ -11,21 +12,19 @@ export class VirtualMachineDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService) { }
 
-  Id = "";
-  virtualMachine;
-  
-  ngOnInit() {
-    this.Id += this.route.snapshot.paramMap.get("id")
+  Id = '';
+  virtualMachine: VirtualMachine;
 
-    //this.getVirtualMachine();
+  ngOnInit() {
+    this.Id += this.route.snapshot.paramMap.get('id');
+
+    this.getVirtualMachine();
   }
 
-  // getVirtualMachine(){
-  //   this.automationApiService.getVirtualMachine(this.Id).subscribe(
-  //     data => {this.virtualMachine = data},
-  //     err => console.error(err),
-  //     () => console.log('done loading vm')
-  //   );
-  // }
-
+  getVirtualMachine() {
+    this.automationApiService.getVirtualMachine(this.Id).subscribe(
+      (data: VirtualMachine) => this.virtualMachine = data,
+      error => console.error(error)
+    );
+  }
 }

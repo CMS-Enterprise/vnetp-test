@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { VirtualMachine } from 'src/app/models/virtual-machine';
 
 @Component({
   selector: 'app-virtual-machines',
@@ -10,7 +11,7 @@ export class VirtualMachinesComponent implements OnInit {
 
   constructor(private automationApiService : AutomationApiService) { }
 
-  virtualMachines;
+  virtualMachines : Array<VirtualMachine>;
 
   ngOnInit() {
     this.getVirtualMachines();
@@ -18,8 +19,8 @@ export class VirtualMachinesComponent implements OnInit {
 
   getVirtualMachines() {
     this.automationApiService.getVirtualMachines().subscribe(
-      data => {this.virtualMachines = data},
-      err => console.error(err)    
+      (data: Array<VirtualMachine>) => this.virtualMachines = data,
+      error => console.error(error)
       );
-  };
+  }
 }

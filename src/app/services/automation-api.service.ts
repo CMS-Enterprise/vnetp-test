@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { VirtualMachine } from '../models/virtual-machine';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,42 +10,45 @@ export class AutomationApiService {
 
   constructor(private http: HttpClient) { }
 
-  apiBase : string = "https://localhost:44350"
+  apiBase = 'https://localhost:44350';
 
-  getProjects(){
-    return this.get("/api/projects");
+  getProjects() {
+    return this.get('/api/projects');
   }
 
-  getProject(id){
-    return this.get("/api/projects" + id);
+  getProject(id: string ) {
+    return this.get('/api/projects/' + id);
   }
 
-  getTemplates(){
-    return this.get("/api/templates");
+  getTemplates() {
+    return this.get('/api/templates');
   }
 
-  getNetworks(){
-    return this.get("/api/networks");
+  getNetworks() {
+    return this.get('/api/networks');
   }
 
-  getVirtualMachines(){
-    return this.get("/api/virtualmachines");
+  getNetwork(id: string) {
+    return this.get('/api/networks/' + id);
   }
 
-  
-  private get(url : string){
+  getVirtualMachines(): Observable<Array<VirtualMachine>>{
+    return this.http.get<Array<VirtualMachine>>(this.apiBase + '/api/virtualmachines');
+  }
+
+  getVirtualMachine(id: string): Observable<VirtualMachine> {
+    return this.http.get<VirtualMachine>(this.apiBase + '/api/virtualmachines/' + id);
+  }
+
+  createVirtualMachine(virtualMachine: VirtualMachine) {
+    return this.http.post(this.apiBase + '/api/virtualmachines', virtualMachine);
+  }
+
+  private get(url: string) {
     return this.http.get(this.apiBase + url);
   }
 
-  private post(url : string, body){
+  private post(url: string, body) {
     return this.http.post(this.apiBase + url, body);
-  }
-
-  private put(url : string, body){
-    return this.http.put(this.apiBase + url, body);
-  }
-
-  private delete(url: string){
-    return this.http.delete(this.apiBase + url);
   }
 }

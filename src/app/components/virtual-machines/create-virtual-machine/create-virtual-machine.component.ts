@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { VirtualAction } from 'rxjs';
 import { Router } from '@angular/router';
+import { VirtualMachine } from 'src/app/models/virtual-machine';
+import { VirtualDisk } from 'src/app/models/virtual-disk';
+import { Template } from 'src/app/models/template';
 
 @Component({
   selector: 'app-create-virtual-machine',
@@ -10,53 +13,42 @@ import { Router } from '@angular/router';
 })
 export class CreateVirtualMachineComponent implements OnInit {
 
-  constructor(private automationApiService : AutomationApiService, private router : Router) { }
+  constructor(private automationApiService: AutomationApiService, private router: Router) { }
 
   templates;
   projects;
   networks;
   storagePools;
 
-  selectionIndex: number = 1;
+  selectionIndex = 1;
 
   selectedProject;
   selectedNetwork;
 
-  virtualMachine;
+  virtualMachine: VirtualMachine = new VirtualMachine();
 
-  updateSelectionIndex(index: number){
+  updateSelectionIndex(index: number) {
     this.selectionIndex = index;
-  };
+  }
 
-  selectProject(){
+  selectProject() {
     this.updateSelectionIndex(2);
   }
 
-  selectTemplate(template){
-    this.virtualMachine.Name = template.Name;
-    this.virtualMachine.Description = template.Description;
-    this.virtualMachine.TemplateId = template.Id;
+  selectTemplate(template) {
 
-    this.virtualMachine.CpuCores = template.CpuCores;
-    this.virtualMachine.CoresPerSocket = template.CoresPerSocket;
-    this.virtualMachine.MemoryMB = template.MemoryMB;
-
-    // Add an OS Disk to the VM
-    this.virtualMachine.AddVirtualDisk(template.OsDiskSizeGB, "OS Disk", true);
-
-    // Add a Network Adapter to the VM
-    this.virtualMachine.AddNetworkAdapter("Default");
+    this.virtualMachine = new VirtualMachine(template);
 
     this.updateSelectionIndex(3);
-  };
+  }
 
-  // createVirtualMachine(){
-  //   this.automationApiService.createVirtualMachine(this.virtualMachine).subscribe(
-  //     data => {},
-  //     err => console.error(err),
-  //     () => this.router.navigate(["/virtual-machines"])
-  //   )
-  // };
+  createVirtualMachine() {
+    this.automationApiService.createVirtualMachine(this.virtualMachine).subscribe(
+      data => {},
+      err => console.error(err),
+      () => this.router.navigate(['/virtual-machines'])
+    );
+  }
 
   ngOnInit() {
     this.getProjects();
@@ -64,28 +56,28 @@ export class CreateVirtualMachineComponent implements OnInit {
     this.getNetworks();
   }
 
-  getTemplates(){
+  getTemplates() {
     this.automationApiService.getTemplates().subscribe(
-      data => {this.templates = data},
+      data => {this.templates = data;},
       err => console.error(err)
     );
-  };
+  }
 
-  getNetworks(){
+  getNetworks() {
     this.automationApiService.getNetworks().subscribe(
-      data => {this.networks = data},
+      data => {this.networks = data;},
       err => console.error(err)
     );
-  };
+  }
 
-  getProjects(){
+  getProjects() {
     this.automationApiService.getProjects().subscribe(
-      data => {this.projects = data},
+      data => {this.projects = data;},
       err => console.error(err)
     );
-  };
+  }
 
-  //TODO: Move to Helper Service
+  // TODO: Move to Helper Service
   isEmptyObject(obj) {
     return (obj && (Object.keys(obj).length === 0));
   }

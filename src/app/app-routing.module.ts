@@ -16,8 +16,11 @@ const routes: Routes = [
   {path: 'projects/:id', component: ProjectDetailComponent},
   {path: 'networks', component: NetworksComponent},
   {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
+  {path: 'virtual-machines', component: VirtualMachinesComponent},
+  {path: 'virtual-machines/create', component: CreateVirtualMachineComponent},
+  {path: 'virtual-machines/edit/:id', component: VirtualMachineDetailComponent},
   {path: 'dashboard', component: DashboardComponent},
-  {path: 'login', component:LoginComponent}
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({

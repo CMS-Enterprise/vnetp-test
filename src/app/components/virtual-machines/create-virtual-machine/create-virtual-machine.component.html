@@ -16,7 +16,6 @@
         <div class="form-group">
           <label>Project</label>
           <select name="selected-project" class="form-control" [(ngModel)]="virtualMachine.ProjectId">
-            <option>Standalone</option>
             <option *ngFor="let project of projects" value="{{project.Id}}">{{project.Name}}</option>
           </select>
         </div>
@@ -40,7 +39,7 @@
           <div class="card" style="width: 14rem; height: 20rem;">
 
             <img class="card-img-top" style="padding-top:10px; width:100px; height:100px; display:block; margin-left:auto; margin-right:auto;"
-              src="{{template.LogoUrl}}" alt="Card image cap">
+              src="{{template.LogoUrl}}" alt="Logo">
 
             <div class="card-body">
               <h6 class="card-title">{{template.Name}}</h6>
@@ -186,18 +185,6 @@
           </div>
           <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
             [(ngModel)]="networkAdapter.IpAddress">
-
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Speed Mbps</span>
-          </div>
-          <select class="form-control" [(ngModel)]="networkAdapter.SpeedMbps">
-            <option value="100">100Mbps</option>
-            <option value="1000">1Gbps</option>
-            <option value="2500">2.5Gbps</option>
-            <option value="5000">5Gbps</option>
-            <option value="10000">10Gbps</option>
-          </select>
-
         </div>
       </div>
     </div>

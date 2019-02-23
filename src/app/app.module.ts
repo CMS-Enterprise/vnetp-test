@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule } from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {FormsModule } from '@angular/forms';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
@@ -16,6 +16,7 @@ import { CreateVirtualMachineComponent } from './components/virtual-machines/cre
 import { NetworksComponent } from './components/networks/networks.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
+import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,9 @@ import { NetworkSecurityProfilesComponent } from './components/networks/network-
     NetworksComponent,
     NetworksDetailComponent,
     NetworkSecurityProfilesComponent,
+    VirtualMachinesComponent,
+    VirtualMachineDetailComponent,
+    CreateVirtualMachineComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,7 @@ import { NetworkSecurityProfilesComponent } from './components/networks/network-
     AngularFontAwesomeModule,
     FormsModule
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
