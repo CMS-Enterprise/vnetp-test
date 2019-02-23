@@ -6,21 +6,15 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-<<<<<<< HEAD
 import { VirtualMachinesComponent } from './components/virtual-machines/virtual-machines.component';
 import { VirtualMachineDetailComponent } from './components/virtual-machines/virtual-machine-detail/virtual-machine-detail.component';
-=======
->>>>>>> 2307697732ed04a427b4de466e36e01091c23e02
 import { ProjectsComponent } from './components/projects/projects.component';
 import { ProjectDetailComponent } from './components/projects/project-detail/project-detail.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
-<<<<<<< HEAD
 import { CreateVirtualMachineComponent } from './components/virtual-machines/create-virtual-machine/create-virtual-machine.component';
 import { StorageComponent } from './components/storage/storage.component';
 import { StorageDetailComponent } from './components/storage/storage-detail/storage-detail.component';
-=======
->>>>>>> 2307697732ed04a427b4de466e36e01091c23e02
 import { NetworksComponent } from './components/networks/networks.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
