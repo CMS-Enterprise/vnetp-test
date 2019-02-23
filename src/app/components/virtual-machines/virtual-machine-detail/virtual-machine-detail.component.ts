@@ -17,15 +17,15 @@ export class VirtualMachineDetailComponent implements OnInit {
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get("id")
 
-    this.getVirtualMachine();
+    //this.getVirtualMachine();
   }
 
-  getVirtualMachine(){
-    this.automationApiService.getVirtualMachine(this.Id).subscribe(
-      data => {this.virtualMachine = data},
-      err => console.error(err),
-      () => console.log('done loading vm')
-    );
-  }
+  // getVirtualMachine(){
+  //   this.automationApiService.getVirtualMachine(this.Id).subscribe(
+  //     data => {this.virtualMachine = data},
+  //     err => console.error(err),
+  //     () => console.log('done loading vm')
+  //   );
+  // }
 
 }

@@ -13,8 +13,6 @@ import { ProjectDetailComponent } from './components/projects/project-detail/pro
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { CreateVirtualMachineComponent } from './components/virtual-machines/create-virtual-machine/create-virtual-machine.component';
-import { StorageComponent } from './components/storage/storage.component';
-import { StorageDetailComponent } from './components/storage/storage-detail/storage-detail.component';
 import { NetworksComponent } from './components/networks/networks.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';

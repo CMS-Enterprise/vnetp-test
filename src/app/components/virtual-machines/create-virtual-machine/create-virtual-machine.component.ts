@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { VirtualMachine } from 'src/app/models/virtual-machine';
 import { VirtualAction } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -23,7 +22,7 @@ export class CreateVirtualMachineComponent implements OnInit {
   selectedProject;
   selectedNetwork;
 
-  virtualMachine = new VirtualMachine();
+  virtualMachine;
 
   updateSelectionIndex(index: number){
     this.selectionIndex = index;
@@ -51,19 +50,18 @@ export class CreateVirtualMachineComponent implements OnInit {
     this.updateSelectionIndex(3);
   };
 
-  createVirtualMachine(){
-    this.automationApiService.createVirtualMachine(this.virtualMachine).subscribe(
-      data => {},
-      err => console.error(err),
-      () => this.router.navigate(["/virtual-machines"])
-    )
-  };
+  // createVirtualMachine(){
+  //   this.automationApiService.createVirtualMachine(this.virtualMachine).subscribe(
+  //     data => {},
+  //     err => console.error(err),
+  //     () => this.router.navigate(["/virtual-machines"])
+  //   )
+  // };
 
   ngOnInit() {
     this.getProjects();
     this.getTemplates();
     this.getNetworks();
-    this.getStoragePools();
   }
 
   getTemplates(){
@@ -76,13 +74,6 @@ export class CreateVirtualMachineComponent implements OnInit {
   getNetworks(){
     this.automationApiService.getNetworks().subscribe(
       data => {this.networks = data},
-      err => console.error(err)
-    );
-  };
-
-  getStoragePools(){
-    this.automationApiService.getStorage().subscribe(
-      data => {this.storagePools = data},
       err => console.error(err)
     );
   };

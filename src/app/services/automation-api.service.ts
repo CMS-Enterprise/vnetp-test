@@ -26,6 +26,11 @@ export class AutomationApiService {
     return this.get("/api/networks");
   }
 
+  getVirtualMachines(){
+    return this.get("/api/virtualmachines");
+  }
+
+  
   private get(url : string){
     return this.http.get(this.apiBase + url);
   }
