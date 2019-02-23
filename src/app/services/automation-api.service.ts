@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { VirtualMachine } from '../models/virtual-machine';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +9,6 @@ export class AutomationApiService {
   constructor(private http: HttpClient) { }
 
   apiBase : string = "https://localhost:44350"
-
-  getVirtualMachines(){
-    return this.get("/api/virtualmachines");
-  }
-
-  getVirtualMachine(id){
-    return this.get("/api/virtualmachines/" + id);
-  }
-
-  createVirtualMachine(virtualMachine : VirtualMachine){
-    return this.post("/api/virtualmachines/", virtualMachine)
-  }
 
   getProjects(){
     return this.get("/api/projects");
@@ -37,10 +24,6 @@ export class AutomationApiService {
 
   getNetworks(){
     return this.get("/api/networks");
-  }
-
-  getStorage(){
-    return this.get("/api/storagepools");
   }
 
   private get(url : string){
