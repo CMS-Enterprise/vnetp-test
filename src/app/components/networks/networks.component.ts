@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { Network } from 'src/app/models/network';
 
 
 @Component({
@@ -11,16 +12,16 @@ export class NetworksComponent implements OnInit {
 
   constructor(private automationApiService : AutomationApiService) { }
 
+  networks = new Array<Network>();
+
   ngOnInit() {
     this.getNetworks();
   }
 
-  networks;
-
   getNetworks() {
     this.automationApiService.getNetworks().subscribe(
-      data => {this.networks = data},
-      err => console.error(err)    
+      (data: Array<Network>) => this.networks = data,
+      error => console.error(error)
       );
-  };
+  }
 }

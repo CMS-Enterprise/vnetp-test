@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { VirtualMachine } from '../models/virtual-machine';
 import { Observable } from 'rxjs';
+import { NetworkSecurityProfile } from '../models/network-security-profile';
+import { Network } from '../models/network';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +30,16 @@ export class AutomationApiService {
     return this.get('/api/networks');
   }
 
-  getNetwork(id: string) {
-    return this.get('/api/networks/' + id);
+  getNetwork(id: string): Observable<Network> {
+    return this.http.get<Network>(this.apiBase + '/api/networks/' + id);
+  }
+
+  getNetworkSecurityProfiles(): Observable<Array<NetworkSecurityProfile>> {
+    return this.http.get<Array<NetworkSecurityProfile>>(this.apiBase + '/api/networksecurityprofiles/');
+  }
+
+  getNetworkSecurityProfile(id: string): Observable<NetworkSecurityProfile> {
+    return this.http.get<NetworkSecurityProfile>(this.apiBase + '/api/networksecurityprofiles/' + id);
   }
 
   getVirtualMachines(): Observable<Array<VirtualMachine>>{

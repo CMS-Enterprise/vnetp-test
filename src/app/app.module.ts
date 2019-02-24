@@ -17,6 +17,8 @@ import { NetworksComponent } from './components/networks/networks.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
     NetworkSecurityProfilesComponent,
     VirtualMachinesComponent,
     VirtualMachineDetailComponent,
-    CreateVirtualMachineComponent
+    CreateVirtualMachineComponent,
+    LoadBalancersComponent,
+    NetworkSecurityProfileDetailComponent
   ],
   imports: [
     BrowserModule,

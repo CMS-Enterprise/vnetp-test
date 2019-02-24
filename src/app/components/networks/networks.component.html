@@ -1,15 +1,18 @@
 <div class="offset-1 col-10">
-    <div class="card">
-  
-      <div class="btn-group" role="group">
+
+    <div class="btn-group" role="group">
         <button type="button" class="btn btn-info" (click)="getNetworks()">
           <fa name="refresh" size="2x"></fa>
         </button>
         <button type="button" class="btn btn-success">
           <fa name="plus" size="2x"></fa>
         </button>
+        <button type="button" class="btn btn-danger" disabled>
+            <fa name="trash" size="2x"></fa>
+          </button>
       </div>
-  
+
+    <div class="card">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -24,7 +27,7 @@
             <td><input type="checkbox"></td>
             <td>{{network.Name}}</td>
             <td>{{network.NetworkAddress}}/{{network.SubnetMask}}</td>
-            <td>TODO</td>
+            <td>{{network.NetworkSecurityProfile.Name}}</td>
           </tr>
         </tbody>
       </table>

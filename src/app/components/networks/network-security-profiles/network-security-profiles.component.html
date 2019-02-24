@@ -1,3 +1,37 @@
-<p>
-  network-security-profiles works!
-</p>
+<div class="offset-1 col-10">
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-info" (click)="getNetworkSecurityProfiles()">
+          <fa name="refresh" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-success">
+          <fa name="plus" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+            <fa name="trash" size="2x"></fa>
+          </button>
+      </div>
+
+    <div class="card">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Networks</th>
+            <th scope="col">Rules</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let networkSecurityProfile of networkSecurityProfiles">
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="/networks/network-security-profiles/edit/{{ networkSecurityProfile.Id }}">{{networkSecurityProfile.Name}}</a>
+            </td>
+            <td>{{networkSecurityProfile.Networks.length}}</td>
+            <td>{{networkSecurityProfile.NetworkSecurityProfileRules.length}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

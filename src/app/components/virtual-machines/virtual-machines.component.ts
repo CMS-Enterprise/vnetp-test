@@ -9,7 +9,7 @@ import { VirtualMachine } from 'src/app/models/virtual-machine';
 })
 export class VirtualMachinesComponent implements OnInit {
 
-  constructor(private automationApiService : AutomationApiService) { }
+  constructor(private automationApiService: AutomationApiService) { }
 
   virtualMachines : Array<VirtualMachine>;
 

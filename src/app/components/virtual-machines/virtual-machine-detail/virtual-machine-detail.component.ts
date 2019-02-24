@@ -13,7 +13,7 @@ export class VirtualMachineDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService) { }
 
   Id = '';
-  virtualMachine: VirtualMachine;
+  virtualMachine = new VirtualMachine();
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
