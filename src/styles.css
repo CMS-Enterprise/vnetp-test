@@ -8,3 +8,11 @@
     font-size: smaller;
     padding: 2px 5px 2px 5px;
 }
+
+.fg-danger{
+    color: red;
+}
+
+.fg-success{
+    color:green;
+}

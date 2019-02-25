@@ -1,3 +1,97 @@
-<p>
-  {{networkSecurityProfile.Name}}
-</p>
+<div class="offset-1 col-md-10">
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-info" (click)="getNetworkSecurityProfile()">
+          <fa name="refresh" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-success" (click)="addNetworkSecurityProfileRule()">
+          <fa name="plus" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+            <fa name="trash" size="2x"></fa>
+          </button>
+      </div>
+
+<div class="card">
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Name</th>
+      <th scope="col">Action</th>
+      <th scope="col">Protocol</th>
+      <th scope="col">Direction</th> 
+      <th scope="col">Source IP(s)</th>
+      <th scope="col">Source Port(s)</th>
+      <th scope="col">Destination IP(s)</th>
+      <th scope="col">Destination Port(s)</th> 
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let networkSecurityProfileRule of networkSecurityProfile.NetworkSecurityProfileRules">
+      <td><input type="checkbox"></td>
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">
+          {{networkSecurityProfileRule.Name}}
+        </p>
+
+        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.Name" [hidden]="!networkSecurityProfileRule.Edit">
+      </td>
+      <td>
+        <p [ngClass]="{'fg-danger': networkSecurityProfileRule.Action == 0, 'fg-success': networkSecurityProfileRule.Action == 1}"
+           [hidden]="networkSecurityProfileRule.Edit" >
+          {{networkSecurityProfileRule.Action == 0 ? 'Deny':'Allow'}}
+        </p>
+
+        <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Action" [hidden]="!networkSecurityProfileRule.Edit">
+          <option value=0>Deny</option>
+          <option value=1>Allow</option>
+        </select>
+      </td>
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">
+          {{networkSecurityProfileRule.ProtocolString}}
+        </p>
+        <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Protocol" [hidden]="!networkSecurityProfileRule.Edit">
+          <option value=1>Icmp </option>  
+          <option value=6>Tcp</option>
+          <option value=17>Udp</option>     
+        </select>
+      </td>
+      <td>
+       {{networkSecurityProfileRule.DirectionString}}
+      </td>
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourceIP}}</p>
+        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.SourceIP" [hidden]="!networkSecurityProfileRule.Edit">    
+      </td>
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourcePorts}}</p>
+        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.SourcePorts" [hidden]="!networkSecurityProfileRule.Edit">    
+      </td>  
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationIP}}</p>
+        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.DestinationIP" [hidden]="!networkSecurityProfileRule.Edit">    
+      </td>
+      <td>
+        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationPorts}}</p>
+        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.DestinationPorts" [hidden]="!networkSecurityProfileRule.Edit">    
+      </td>
+      <td>
+        <fa 
+        name="pencil" 
+        (click)="networkSecurityProfileRule.Edit = !networkSecurityProfileRule.Edit" 
+        [hidden]="networkSecurityProfileRule.Edit">
+      </fa>        
+      <fa 
+        name="floppy-o" 
+        (click)="networkSecurityProfileRule.Edit = !networkSecurityProfileRule.Edit" 
+        [hidden]="!networkSecurityProfileRule.Edit">
+      </fa>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>

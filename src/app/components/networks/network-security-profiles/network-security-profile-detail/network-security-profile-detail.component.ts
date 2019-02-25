@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NetworkSecurityProfile } from 'src/app/models/network-security-profile';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
+import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -10,8 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class NetworkSecurityProfileDetailComponent implements OnInit {
 
-
-  networkSecurityProfile: NetworkSecurityProfile;
+  networkSecurityProfile = new NetworkSecurityProfile();
 
   Id = '';
 
@@ -28,5 +28,11 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
       (data: NetworkSecurityProfile) => this.networkSecurityProfile = data,
       error => console.error(error)
     );
+  }
+
+  addNetworkSecurityProfileRule() {
+    const nspr = new NetworkSecurityProfileRule();
+    nspr.Edit = true;
+    this.networkSecurityProfile.NetworkSecurityProfileRules.push(nspr);
   }
 }

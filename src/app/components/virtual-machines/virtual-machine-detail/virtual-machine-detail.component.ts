@@ -25,6 +25,6 @@ export class VirtualMachineDetailComponent implements OnInit {
     this.automationApiService.getVirtualMachine(this.Id).subscribe(
       (data: VirtualMachine) => this.virtualMachine = data,
       error => console.error(error)
-    );
+      );
   }
 }

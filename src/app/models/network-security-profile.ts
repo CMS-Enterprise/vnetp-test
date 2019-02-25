@@ -6,7 +6,7 @@ export class NetworkSecurityProfile {
 
     Name: string;
 
-    Networks: Array<Network>;
+    Networks = new Array<Network>();
 
-    NetworkSecurityProfileRules: Array<NetworkSecurityProfileRule>;
+    NetworkSecurityProfileRules = new Array<NetworkSecurityProfileRule>();
 }

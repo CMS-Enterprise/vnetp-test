@@ -1,6 +1,10 @@
 export class NetworkSecurityProfileRule {
     Id: number;
 
+    Name: string;
+
+    Description: string;
+
     Protocol: number;
 
     Direction: number;
@@ -16,4 +20,6 @@ export class NetworkSecurityProfileRule {
     NetworkSecurityProfileId: number;
 
     ProjectId: number;
+
+    Edit: boolean;
 }
