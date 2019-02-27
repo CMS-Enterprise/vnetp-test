@@ -5,6 +5,10 @@ export class NetworkSecurityProfileRule {
 
     Description: string;
 
+    Index: number;
+
+    Action: number;
+
     Protocol: number;
 
     Direction: number;

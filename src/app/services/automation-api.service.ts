@@ -54,6 +54,10 @@ export class AutomationApiService {
     return this.http.post(this.apiBase + '/api/virtualmachines', virtualMachine);
   }
 
+  updateNetworkSecurityProfile(id : string, networkSecurityProfile: NetworkSecurityProfile){
+    return this.http.put(this.apiBase + '/api/networksecurityprofiles/' + id, networkSecurityProfile);
+  }
+
   private get(url: string) {
     return this.http.get(this.apiBase + url);
   }

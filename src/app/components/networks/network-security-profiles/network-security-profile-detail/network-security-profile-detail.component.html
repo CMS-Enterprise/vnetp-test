@@ -1,16 +1,30 @@
+<div class="text-center">
+<h3>Network Security Profiles / {{networkSecurityProfile.Name}}</h3>
+</div>
+
 <div class="offset-1 col-md-10">
 
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-info" (click)="getNetworkSecurityProfile()">
-          <fa name="refresh" size="2x"></fa>
-        </button>
-        <button type="button" class="btn btn-success" (click)="addNetworkSecurityProfileRule()">
-          <fa name="plus" size="2x"></fa>
-        </button>
-        <button type="button" class="btn btn-danger" disabled>
-            <fa name="trash" size="2x"></fa>
-          </button>
-      </div>
+  <h5>Network Security Profile Rules</h5>  
+
+  <div class="btn-group" role="group">
+
+    <button type="button" class="btn btn-warning" (click)="updateNetworkSecurityProfile()">
+      <fa name="floppy-o" size="2x"></fa>
+    </button>
+  
+    <button type="button" class="btn btn-info" (click)="getNetworkSecurityProfile()">
+      <fa name="refresh" size="2x"></fa> 
+    </button>
+
+    <button type="button" class="btn btn-success" (click)="addNetworkSecurityProfileRule()"> 
+      <fa name="plus" size="2x"></fa>  
+    </button>  
+
+    <button type="button" class="btn btn-danger" disabled>  
+     <fa name="trash" size="2x"></fa>
+    </button> 
+
+  </div>
 
 <div class="card">
 <table class="table table-sm table-striped">
@@ -32,7 +46,14 @@
     <tr *ngFor="let networkSecurityProfileRule of networkSecurityProfile.NetworkSecurityProfileRules">
       <td><input type="checkbox"></td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">
+        <p [hidden]="networkSecurityProfileRule.Edit">           
+          
+          <fa        
+          name="asterisk"  
+          style="color:orange"      
+          title="New Rule"  
+          [hidden]="networkSecurityProfileRule.Id">        
+         </fa>
           {{networkSecurityProfileRule.Name}}
         </p>
 
@@ -64,19 +85,19 @@
       </td>
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourceIP}}</p>
-        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.SourceIP" [hidden]="!networkSecurityProfileRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.SourceIP" [hidden]="!networkSecurityProfileRule.Edit">    
       </td>
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourcePorts}}</p>
-        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.SourcePorts" [hidden]="!networkSecurityProfileRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.SourcePorts" [hidden]="!networkSecurityProfileRule.Edit">    
       </td>  
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationIP}}</p>
-        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.DestinationIP" [hidden]="!networkSecurityProfileRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.DestinationIP" [hidden]="!networkSecurityProfileRule.Edit">    
       </td>
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationPorts}}</p>
-        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.DestinationPorts" [hidden]="!networkSecurityProfileRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.DestinationPorts" [hidden]="!networkSecurityProfileRule.Edit">    
       </td>
       <td>
         <fa 
@@ -88,6 +109,16 @@
         name="floppy-o" 
         (click)="networkSecurityProfileRule.Edit = !networkSecurityProfileRule.Edit" 
         [hidden]="!networkSecurityProfileRule.Edit">
+      </fa>
+      <fa
+      name="chevron-up"
+      (click)="moveRule(-1,networkSecurityProfileRule)"
+      >
+      </fa>
+      <fa
+      name="chevron-down"
+      (click)="moveRule(1,networkSecurityProfileRule)"
+      >
       </fa>
       </td>
     </tr>
