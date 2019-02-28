@@ -1,20 +1,18 @@
-<div class="container col-md-4">
-  <div class="alert alert-success">
-    Loadbalancer Name
-  </div>
+<div class="text-center">
+  <h4>{{ loadbalancer.Name }}</h4>
 </div>
 
-<div class="container">
+<div class="offset-1 col-md-10">
   <div class="row">
     <div class="col-4">
       <h3>Frontends</h3>
 
       <div class="btn-group-sm" role="group">
-        <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
-          <fa name="refresh" size="1x"></fa>
+        <button type="button" class="btn btn-info">
+          <fa name="refresh" size="1x" (click)="getLoadbalancer()"></fa>
         </button>
         <button type="button" class="btn btn-success">
-          <fa name="plus" size="1x"></fa>
+          <fa name="plus" size="1x" (click)="updateSelectionIndex(1)"></fa>
         </button>
         <button type="button" class="btn btn-danger" disabled>
           <fa name="trash" size="1x"></fa>
@@ -27,60 +25,31 @@
             <tr>
               <th scope="col"></th>
               <th scope="col">Name</th>
+              <th scope="col">IP Address</th>
+              <th scope="col">Network Id</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let lb of loadBalancers">
+            <tr *ngFor="let fe of loadbalancer.Frontends">
               <td><input type="checkbox" /></td>
-              <td></td>
+              <td>{{ fe.Name }}</td>
+              <td>{{ fe.IpAddress }}</td>
+              <td>{{ fe.NetworkId }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    
-    <div class="col-4">
-        <h3>Rules</h3>
-  
-        <div class="btn-group-sm" role="group">
-          <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
-            <fa name="refresh" size="1x"></fa>
-          </button>
-          <button type="button" class="btn btn-success">
-            <fa name="plus" size="1x"></fa>
-          </button>
-          <button type="button" class="btn btn-danger" disabled>
-            <fa name="trash" size="1x"></fa>
-          </button>
-        </div>
-  
-        <div class="card">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let lb of loadBalancers">
-                <td><input type="checkbox" /></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
 
     <div class="col-4">
-      <h3>Backends</h3>
+      <h3>Rules</h3>
 
       <div class="btn-group-sm" role="group">
-        <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
-          <fa name="refresh" size="1x"></fa>
+        <button type="button" class="btn btn-info">
+          <fa name="refresh" size="1x" (click)="getLoadbalancer()"></fa>
         </button>
         <button type="button" class="btn btn-success">
-          <fa name="plus" size="1x"></fa>
+          <fa name="plus" size="1x" (click)="updateSelectionIndex(2)"></fa>
         </button>
         <button type="button" class="btn btn-danger" disabled>
           <fa name="trash" size="1x"></fa>
@@ -93,16 +62,185 @@
             <tr>
               <th scope="col"></th>
               <th scope="col">Name</th>
+              <th scope="col">Protocol</th>
+              <th scope="col">Port</th>
+              <th scope="col">FE</th>
+              <th scope="col">BE</th>
+              <th scope="col">Healthcheck</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let lb of loadBalancers">
+            <tr *ngFor="let r of loadbalancer.Rules">
               <td><input type="checkbox" /></td>
-              <td></td>
+              <td>{{ r.Name }}</td>
+              <td>{{ r.ProtocolTypeString }}</td>
+              <td>{{ r.Port }}</td>
+              <td>{{ r.BackendId }}</td>
+              <td>{{ r.FrontendId }}</td>
+              <td>{{ r.HealthCheckId }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <h3>Backends</h3>
+
+      <div class="btn-group-sm" role="group">
+        <button type="button" class="btn btn-info">
+          <fa name="refresh" size="1x" (click)="getLoadbalancer()"></fa>
+        </button>
+        <button type="button" class="btn btn-success">
+          <fa name="plus" size="1x" (click)="updateSelectionIndex(3)"></fa>
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+          <fa name="trash" size="1x"></fa>
+        </button>
+      </div>
+
+      <div class="card">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+              <th scope="col">LB Method</th>
+              <th scope="col">Network Id</th>
+              <th scope="col">Servers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let be of loadbalancer.Backends">
+              <td><input type="checkbox" /></td>
+              <td>{{ be.Name }}</td>
+              <td>{{ be.LoadBalanceTypeString }}</td>
+              <td>{{ be.NetworkId }}</td>
+              <td>{{ be.NetworkAdapters.length }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
+</div>
+
+<div [hidden]="selectionIndex != 1">
+  <h4>Add/Edit Frontend</h4>
+
+  <div class="card" style="height: 100px;">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+      </div>
+      <input type="text" class="form-control" [(ngModel)]="newFrontend.Name" />
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm"
+          >Ip Address</span
+        >
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="newFrontend.IpAddress"
+      />
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Network</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newFrontend.NetworkId">
+        <option *ngFor="let network of networks" value="{{ network.Id }}">
+          {{ network.Name }} ({{ network.NetworkAddress }}/{{
+            network.SubnetMask
+          }})
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn btn-success" (click)="saveFrontend()">Save</button>
+</div>
+
+<div [hidden]="selectionIndex != 2">
+  <h4>Add/Edit Rule</h4>
+
+  <div class="card" style="height: 100px;">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+      </div>
+      <input type="text" class="form-control" [(ngModel)]="newRule.Name" />
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Protocol</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newRule.Protocol">
+        <option value="6">TCP</option>
+        <option value="17">UDP</option>
+      </select>
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Port</span>
+      </div>
+      <input type="text" class="form-control" [(ngModel)]="newRule.Port" />
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Frontend</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newRule.FrontendId">
+        <option *ngFor="let fe of loadbalancer.Frontends" value="{{ fe.Id }}">{{
+          fe.Name
+        }}</option>
+      </select>
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Backend</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newRule.BackendId">
+        <option *ngFor="let be of loadbalancer.Backends" value="{{ be.Id }}">{{
+          be.Name
+        }}</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn btn-success" (click)="saveRule()">Save</button>
+</div>
+
+<div [hidden]="selectionIndex != 3">
+  <h4>Add/Edit Backend</h4>
+
+  <div class="card" style="height: 100px;">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+      </div>
+      <input type="text" class="form-control" [(ngModel)]="newRule.Name" />
+
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Network</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newFrontend.NetworkId">
+        <option *ngFor="let network of networks" value="{{ network.Id }}">
+          {{ network.Name }} ({{ network.NetworkAddress }}/{{
+            network.SubnetMask
+          }})
+        </option>
+      </select>
+    </div>
+
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Server</span>
+      </div>
+      <select class="form-control" [(ngModel)]="newFrontend.NetworkId">
+        <option value="1">Server 1</option>
+        <option value="1">Server 2</option>
+        <option value="1">Server 3</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn btn-success" (click)="saveBackend()">Save</button>
 </div>

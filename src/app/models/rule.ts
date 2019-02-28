@@ -5,6 +5,7 @@ import { HealthCheck } from './health-check';
 export class Rule {
     Id: number;
     Name: string;
+    ProtocolTypeString: string;
     Protocol: number;
     Port: number;
 

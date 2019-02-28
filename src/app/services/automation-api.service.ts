@@ -43,6 +43,10 @@ export class AutomationApiService {
     return this.http.get<NetworkSecurityProfile>(this.apiBase + '/api/networksecurityprofiles/' + id);
   }
 
+  getLoadBalancer(id: string): Observable<LoadBalancer> {
+    return this.http.get<LoadBalancer>(this.apiBase + '/api/loadbalancers/' + id);
+  }
+
   getLoadBalancers(): Observable<Array<LoadBalancer>> {
     return this.http.get<Array<LoadBalancer>>(this.apiBase + '/api/loadbalancers');
   }
