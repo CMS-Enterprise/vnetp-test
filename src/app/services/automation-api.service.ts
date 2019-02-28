@@ -47,7 +47,7 @@ export class AutomationApiService {
     return this.http.get<Array<LoadBalancer>>(this.apiBase + '/api/loadbalancers');
   }
 
-  getVirtualMachines(): Observable<Array<VirtualMachine>>{
+  getVirtualMachines(): Observable<Array<VirtualMachine>> {
     return this.http.get<Array<VirtualMachine>>(this.apiBase + '/api/virtualmachines');
   }
 
@@ -59,7 +59,7 @@ export class AutomationApiService {
     return this.http.post(this.apiBase + '/api/virtualmachines', virtualMachine);
   }
 
-  updateNetworkSecurityProfile(id : string, networkSecurityProfile: NetworkSecurityProfile){
+  updateNetworkSecurityProfile(id: string, networkSecurityProfile: NetworkSecurityProfile) {
     return this.http.put(this.apiBase + '/api/networksecurityprofiles/' + id, networkSecurityProfile);
   }
 
