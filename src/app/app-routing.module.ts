@@ -11,6 +11,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
+import { EditLoadBalancerComponent } from './components/load-balancers/edit-load-balancer/edit-load-balancer.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
   {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent},
   {path: 'networks/load-balancers', component: LoadBalancersComponent},
+  {path: 'networks/load-balancers/edit/:id', component: EditLoadBalancerComponent},
   {path: 'virtual-machines', component: VirtualMachinesComponent},
   {path: 'virtual-machines/create', component: CreateVirtualMachineComponent},
   {path: 'virtual-machines/edit/:id', component: VirtualMachineDetailComponent},

@@ -4,6 +4,7 @@ import { VirtualMachine } from '../models/virtual-machine';
 import { Observable } from 'rxjs';
 import { NetworkSecurityProfile } from '../models/network-security-profile';
 import { Network } from '../models/network';
+import { LoadBalancer } from '../models/load-balancer';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class AutomationApiService {
 
   getNetworkSecurityProfile(id: string): Observable<NetworkSecurityProfile> {
     return this.http.get<NetworkSecurityProfile>(this.apiBase + '/api/networksecurityprofiles/' + id);
+  }
+
+  getLoadBalancers(): Observable<Array<LoadBalancer>> {
+    return this.http.get<Array<LoadBalancer>>(this.apiBase + '/api/loadbalancers');
   }
 
   getVirtualMachines(): Observable<Array<VirtualMachine>>{

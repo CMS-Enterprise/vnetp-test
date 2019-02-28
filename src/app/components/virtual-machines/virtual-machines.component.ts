@@ -11,7 +11,7 @@ export class VirtualMachinesComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService) { }
 
-  virtualMachines : Array<VirtualMachine>;
+  virtualMachines: Array<VirtualMachine>;
 
   ngOnInit() {
     this.getVirtualMachines();

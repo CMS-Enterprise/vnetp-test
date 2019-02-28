@@ -1,0 +1,108 @@
+<div class="container col-md-4">
+  <div class="alert alert-success">
+    Loadbalancer Name
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <h3>Frontends</h3>
+
+      <div class="btn-group-sm" role="group">
+        <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
+          <fa name="refresh" size="1x"></fa>
+        </button>
+        <button type="button" class="btn btn-success">
+          <fa name="plus" size="1x"></fa>
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+          <fa name="trash" size="1x"></fa>
+        </button>
+      </div>
+
+      <div class="card">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lb of loadBalancers">
+              <td><input type="checkbox" /></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="col-4">
+        <h3>Rules</h3>
+  
+        <div class="btn-group-sm" role="group">
+          <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
+            <fa name="refresh" size="1x"></fa>
+          </button>
+          <button type="button" class="btn btn-success">
+            <fa name="plus" size="1x"></fa>
+          </button>
+          <button type="button" class="btn btn-danger" disabled>
+            <fa name="trash" size="1x"></fa>
+          </button>
+        </div>
+  
+        <div class="card">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lb of loadBalancers">
+                <td><input type="checkbox" /></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <div class="col-4">
+      <h3>Backends</h3>
+
+      <div class="btn-group-sm" role="group">
+        <button type="button" class="btn btn-info" (click)="getLoadBalncers()">
+          <fa name="refresh" size="1x"></fa>
+        </button>
+        <button type="button" class="btn btn-success">
+          <fa name="plus" size="1x"></fa>
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+          <fa name="trash" size="1x"></fa>
+        </button>
+      </div>
+
+      <div class="card">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lb of loadBalancers">
+              <td><input type="checkbox" /></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
