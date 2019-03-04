@@ -10,6 +10,8 @@ export class Rule {
     Port: number;
 
     Frontend: Frontend;
+    FrontendId: number;
     Backend: Backend;
+    BackendId: number;
     HealthCheck: HealthCheck;
 }

@@ -22,16 +22,19 @@ export class VirtualMachine {
     Id: number;
     Name: string;
     Description: string;
+    Notes: string;
     Status: number;
+    StatusString: number;
     CpuCores: number;
     MemoryMB: number;
-    TemplateId: any;
+    TemplateId: number;
+    ProjectId: number;
 
-    AddVirtualDisk(virtualDisk: VirtualDisk) {
+    AddVirtualDisk(virtualDisk?: VirtualDisk) {
         this.VirtualDisks.push(virtualDisk);
     }
 
-    AddNetworkAdapter(networkAdapter: NetworkAdapter) {
+    AddNetworkAdapter(networkAdapter?: NetworkAdapter) {
         this.NetworkAdapters.push(networkAdapter);
     }
 }

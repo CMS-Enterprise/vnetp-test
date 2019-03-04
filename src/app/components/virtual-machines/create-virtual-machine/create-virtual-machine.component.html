@@ -106,15 +106,6 @@
             <option value="3">3</option>
             <option value="4">4</option>
           </select>
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Cores per Socket</span>
-          </div>
-          <select class="form-control" [(ngModel)]="virtualMachine.CoresPerSocket">
-            <option value="1">1</option>
-            <option value="2" [hidden]="virtualMachine.CpuCores < 2">2</option>
-            <option value="3" [hidden]="virtualMachine.CpuCores < 3">3</option>
-            <option value="4" [hidden]="virtualMachine.CpuCores < 4">4</option>
-          </select>
         </div>
 
         <h6>Memory</h6>
