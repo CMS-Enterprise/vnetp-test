@@ -12,12 +12,16 @@ import { LoginComponent } from './components/login/login.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
 import { EditLoadBalancerComponent } from './components/load-balancers/edit-load-balancer/edit-load-balancer.component';
+import { JobsComponent } from './components/jobs/jobs.component';
+import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 
 
 const routes: Routes = [
   {path: 'projects', component: ProjectsComponent},
   {path: 'projects/:id', component: ProjectDetailComponent},
   {path: 'networks', component: NetworksComponent},
+  {path: 'networks/create', component: CreateNetworkComponent},
+  {path: 'jobs', component: JobsComponent},
   {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
   {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent},
   {path: 'networks/load-balancers', component: LoadBalancersComponent},

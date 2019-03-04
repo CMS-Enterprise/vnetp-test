@@ -11,6 +11,8 @@ export class Network {
 
     SubnetMask: string;
 
+    VlanId: number;
+
     NetworkAdapters: Array<NetworkAdapter>;
 
     NetworkSecurityProfileId: number;

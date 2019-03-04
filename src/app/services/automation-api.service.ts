@@ -15,6 +15,8 @@ export class AutomationApiService {
 
   apiBase = 'https://localhost:44350';
 
+  ansibleBase = 'https://10.255.1.68';
+
   getProjects() {
     return this.get('/api/projects');
   }
@@ -65,6 +67,16 @@ export class AutomationApiService {
 
   updateNetworkSecurityProfile(id: string, networkSecurityProfile: NetworkSecurityProfile) {
     return this.http.put(this.apiBase + '/api/networksecurityprofiles/' + id, networkSecurityProfile);
+  }
+
+  getJobs(query?: string) {
+    if (query == null) { query = ''; }
+
+    return this.http.get(this.ansibleBase + '/api/v2/jobs/' + query);
+  }
+
+  launchTemplate(jobName: string, ansibleBody){
+    return this.http.post(this.ansibleBase + '/api/v2/job_templates/' + jobName + '/launch/', ansibleBody);
   }
 
   private get(url: string) {

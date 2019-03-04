@@ -1,0 +1,24 @@
+<div class="offset-1 col-10">
+    <div class="card">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Started</th> 
+            <th scope="col">Finished</th> 
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs.results">
+            <td>{{job.name}}</td>
+            <td>{{job.status}}</td>
+            <td>{{job.started | date: 'medium'}}</td>
+            <td>{{job.finished | date: 'medium'}}</td>
+            <td>{{job.elapsed}} seconds</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

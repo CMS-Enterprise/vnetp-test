@@ -1,0 +1,80 @@
+<h4>Create Network</h4>
+
+<div class="card">
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+    </div>
+
+    <input
+      type="text"
+      class="form-control"
+      aria-label="Small"
+      aria-describedby="inputGroup-sizing-sm"
+      [(ngModel)]="network.Name"
+    />
+
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Network Address</span>
+    </div>
+    <input
+      type="text"
+      class="form-control"
+      aria-label="Small"
+      aria-describedby="inputGroup-sizing-sm"
+      [(ngModel)]="network.NetworkAddress"
+    />
+
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Subnet Mask</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm"
+        [(ngModel)]="network.SubnetMask"
+      />
+
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-sm">VLAN Id</span>
+    </div>
+    <input
+      type="number"
+      class="form-control"
+      aria-label="Small"
+      aria-describedby="inputGroup-sizing-sm"
+      [(ngModel)]="network.VlanId"
+    />
+  </div>
+
+
+  <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Project</span>
+      </div>
+  
+      <input
+        type="text"
+        class="form-control"
+        aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm"
+      />
+  
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Network Security Group</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm"
+      />
+    </div>
+</div>
+
+<div class="btn-group">
+    <button class="btn btn-success">Save</button>
+    <button class="btn btn-danger" (click)="createNetwork()">Deploy</button>
+</div>

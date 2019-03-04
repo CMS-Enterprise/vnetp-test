@@ -1,0 +1,26 @@
+import { Component, OnInit } from '@angular/core';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+
+@Component({
+  selector: 'app-jobs',
+  templateUrl: './jobs.component.html',
+  styleUrls: ['./jobs.component.css']
+})
+export class JobsComponent implements OnInit {
+  jobs = {};
+
+  constructor(private automationApiService: AutomationApiService) { }
+
+  jobPoller = setInterval(() => this.getJobs() , 5000);
+
+  ngOnInit() {
+    this.getJobs();
+  }
+
+  getJobs() {
+    this.automationApiService.getJobs('?order_by=-created').subscribe(
+      data => this.jobs = data,
+      error => console.error(error)
+    );
+  }
+}

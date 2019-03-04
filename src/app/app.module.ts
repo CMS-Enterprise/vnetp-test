@@ -20,6 +20,9 @@ import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
 import { EditLoadBalancerComponent } from './components/load-balancers/edit-load-balancer/edit-load-balancer.component';
+import { JobsComponent } from './components/jobs/jobs.component';
+import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { EditLoadBalancerComponent } from './components/load-balancers/edit-load
     CreateVirtualMachineComponent,
     LoadBalancersComponent,
     NetworkSecurityProfileDetailComponent,
-    EditLoadBalancerComponent
+    EditLoadBalancerComponent,
+    JobsComponent,
+    CreateNetworkComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
