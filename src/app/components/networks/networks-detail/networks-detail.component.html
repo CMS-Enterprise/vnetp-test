@@ -1,3 +1,6 @@
-<p>
-  networks-detail works!
-</p>
+<div class="text-center">
+  <h4>{{ subnet.name }}</h4>
+  <p>Network: {{ subnet.network }}/{{ subnet.mask_bits }}</p>
+  <p>IP Range: {{ subnet.range_begin }}-{{ subnet.range_end }}</p>
+  <button class="btn btn-danger" (click)="deleteSubnet()">Delete</button>
+</div>

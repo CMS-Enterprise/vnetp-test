@@ -14,6 +14,7 @@ import { NetworkSecurityProfileDetailComponent } from './components/networks/net
 import { EditLoadBalancerComponent } from './components/load-balancers/edit-load-balancer/edit-load-balancer.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
+import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'projects/:id', component: ProjectDetailComponent},
   {path: 'networks', component: NetworksComponent},
   {path: 'networks/create', component: CreateNetworkComponent},
+  {path: 'networks/edit/:id', component: NetworksDetailComponent},
   {path: 'jobs', component: JobsComponent},
   {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
   {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent},

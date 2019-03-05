@@ -22,11 +22,13 @@ export class CreateNetworkComponent implements OnInit {
 
     const body = {
       extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${this.network.NetworkAddress}
-      ,\"subnet_mask\": ${this.network.SubnetMask},\"customer_id\": ${this.network.Name}-${this.network.VlanId}}`
+      ,\"subnet_mask\": ${this.network.SubnetMask},\"customer_id\": ${this.network.Name}
+      ,\"subnet_mask_bits\": ${this.network.SubnetMaskBits}}`
     };
 
     this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('create_vlan', body).subscribe();
+    this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
     this.router.navigate(['/networks']);
   }
 }

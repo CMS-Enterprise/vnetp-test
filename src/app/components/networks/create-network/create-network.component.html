@@ -37,6 +37,17 @@
         [(ngModel)]="network.SubnetMask"
       />
 
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Subnet Mask Bits</span>
+      </div>
+      <input
+        type="number"
+        class="form-control"
+        aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm"
+        [(ngModel)]="network.SubnetMaskBits"
+      />
+
     <div class="input-group-prepend">
       <span class="input-group-text" id="inputGroup-sizing-sm">VLAN Id</span>
     </div>

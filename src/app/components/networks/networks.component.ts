@@ -12,15 +12,15 @@ export class NetworksComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService) { }
 
-  networks = new Array<Network>();
+  subnets = {};
 
   ngOnInit() {
     this.getNetworks();
   }
 
   getNetworks() {
-    this.automationApiService.getNetworks().subscribe(
-      (data: Array<Network>) => this.networks = data,
+    this.automationApiService.getSubnets().subscribe(
+      data => this.subnets = data,
       error => console.error(error)
       );
   }

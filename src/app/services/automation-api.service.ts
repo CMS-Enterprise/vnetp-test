@@ -17,6 +17,8 @@ export class AutomationApiService {
 
   ansibleBase = 'https://10.255.1.68';
 
+  device42Base = 'https://10.255.1.252';
+
   getProjects() {
     return this.get('/api/projects');
   }
@@ -75,8 +77,16 @@ export class AutomationApiService {
     return this.http.get(this.ansibleBase + '/api/v2/jobs/' + query);
   }
 
-  launchTemplate(jobName: string, ansibleBody){
+  launchTemplate(jobName: string, ansibleBody) {
     return this.http.post(this.ansibleBase + '/api/v2/job_templates/' + jobName + '/launch/', ansibleBody);
+  }
+
+  getSubnets() {
+    return this.http.get(this.device42Base + '/api/1.0/subnets/');
+  }
+
+  getSubnet(id: string){
+    return this.http.get(this.device42Base + `/api/1.0/subnets/${id}`);
   }
 
   private get(url: string) {

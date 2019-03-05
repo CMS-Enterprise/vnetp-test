@@ -8,7 +8,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService){}
+  constructor(private automationApiService: AutomationApiService) {}
 
   runningJobs = {};
 

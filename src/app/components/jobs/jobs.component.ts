@@ -11,7 +11,7 @@ export class JobsComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService) { }
 
-  jobPoller = setInterval(() => this.getJobs() , 5000);
+  jobPoller = setInterval(() => this.getJobs() , 10000);
 
   ngOnInit() {
     this.getJobs();

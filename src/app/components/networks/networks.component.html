@@ -1,36 +1,36 @@
 <div class="offset-1 col-10">
-
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-info" (click)="getNetworks()">
-          <fa name="refresh" size="2x"></fa>
-        </button>
-        <button type="button" class="btn btn-success" [routerLink]="['create']">
-          <fa name="plus" size="2x"></fa>
-        </button>
-        <button type="button" class="btn btn-danger" disabled>
-            <fa name="trash" size="2x"></fa>
-          </button>
-      </div>
-
-    <div class="card">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Name</th>
-            <th scope="col">Address Range</th>
-            <th scope="col">Network Security Profile</th> 
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let network of networks">
-            <td><input type="checkbox"></td>
-            <td>{{network.Name}}</td>
-            <td>{{network.NetworkAddress}}/{{network.SubnetMask}}</td>
-            <td>{{network.NetworkSecurityProfile.Name}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-info" (click)="getNetworks()">
+      <fa name="refresh" size="2x"></fa>
+    </button>
+    <button type="button" class="btn btn-success" [routerLink]="['create']">
+      <fa name="plus" size="2x"></fa>
+    </button>
+    <button type="button" class="btn btn-danger" disabled>
+      <fa name="trash" size="2x"></fa>
+    </button>
   </div>
-  
+
+  <div class="card">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col">Address Range</th>
+          <th scope="col">VLAN ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subnet of subnets.subnets">
+          <td><input type="checkbox" /></td>
+          <td>
+            <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+          </td>
+          <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
+          <td>{{ subnet.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
