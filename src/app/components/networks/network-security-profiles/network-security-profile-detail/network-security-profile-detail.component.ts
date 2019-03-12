@@ -11,7 +11,9 @@ import { NetworkSecurityProfileRule } from 'src/app/models/network-security-prof
 })
 export class NetworkSecurityProfileDetailComponent implements OnInit {
 
-  networkSecurityProfile = new NetworkSecurityProfile();
+  subnet: any;
+
+  firewall_rules = [];
 
   Id = '';
 
@@ -19,52 +21,59 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
-
     this.getNetworkSecurityProfile();
   }
 
-  sortRules() {
-    this.networkSecurityProfile.NetworkSecurityProfileRules.sort((a, b): number => {
-      if (a.Index < b.Index) { return -1; }
-      if (a.Index > b.Index) { return 1; }
-      return 0;
-    });
-  }
+  moveRule(value: number, rule) {
 
-  moveRule(value: number, rule: NetworkSecurityProfileRule) {
-    if (rule.Index + value < 0) { return; }
+    const ruleIndex = this.firewall_rules.indexOf(rule);
 
-    const relatedRule = this.networkSecurityProfile.NetworkSecurityProfileRules.filter(x => x.Index === rule.Index + value)[0];
+    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewall_rules.length) { return; }
 
-    if (relatedRule == null) {return; }
+    const nextRule = this.firewall_rules[ruleIndex + value];
 
-    const temp = relatedRule.Index;
-    relatedRule.Index = rule.Index;
-    rule.Index = temp;
+    if (nextRule === null) { return; }
 
-    this.sortRules();
+    const nextRuleIndex = this.firewall_rules.indexOf(nextRule);
+
+    [this.firewall_rules[ruleIndex], this.firewall_rules[nextRuleIndex]] =
+    [this.firewall_rules[nextRuleIndex], this.firewall_rules[ruleIndex]];
   }
 
   getNetworkSecurityProfile() {
-    this.automationApiService.getNetworkSecurityProfile(this.Id).subscribe(
-      (data: NetworkSecurityProfile) => this.networkSecurityProfile = data,
+    this.automationApiService.getSubnet(this.Id).subscribe(
+      data => this.subnet = data,
       error => console.error(error),
-      () => this.sortRules()
+      () => this.getFirewallRules()
     );
   }
 
+  getFirewallRules(){
+    const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
+
+    if (firewallrules) {
+    this.firewall_rules = JSON.parse(firewallrules.value);
+    }
+  }
+
   addNetworkSecurityProfileRule() {
+    if (this.firewall_rules == null) { this.firewall_rules = []; }
+
     const nspr = new NetworkSecurityProfileRule();
     nspr.Edit = true;
     nspr.Action =  0;
-    this.networkSecurityProfile.NetworkSecurityProfileRules.push(nspr);
+    this.firewall_rules.push(nspr);
   }
 
   updateNetworkSecurityProfile() {
-    this.automationApiService.updateNetworkSecurityProfile(this.Id, this.networkSecurityProfile).subscribe(
+
+    const body = {
+      extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description}, \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
+    };
+
+    this.automationApiService.launchTemplate('update_asa_acl', body).subscribe(
       data => {},
-      error => console.log(error),
-      () => this.getNetworkSecurityProfile()
+      error => console.log(error)
     );
   }
 }

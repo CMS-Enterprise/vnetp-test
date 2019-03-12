@@ -10,20 +10,18 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworkSecurityProfilesComponent implements OnInit {
 
-
-  networkSecurityProfiles: Array<NetworkSecurityProfile>;
+  subnets = {};
 
   constructor(private automationApiService: AutomationApiService) { }
 
   ngOnInit() {
-    this.getNetworkSecurityProfiles();
+    this.getNetworks();
   }
 
-  getNetworkSecurityProfiles(){
-    this.automationApiService.getNetworkSecurityProfiles().subscribe(
-      (data: Array<NetworkSecurityProfile>) => this.networkSecurityProfiles = data,
+  getNetworks() {
+    this.automationApiService.getSubnets().subscribe(
+      data => this.subnets = data,
       error => console.error(error)
-    );
+      );
   }
-
 }

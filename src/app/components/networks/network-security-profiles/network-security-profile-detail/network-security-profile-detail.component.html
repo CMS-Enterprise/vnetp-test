@@ -1,5 +1,4 @@
 <div class="text-center">
-<h3>Network Security Profiles / {{networkSecurityProfile.Name}}</h3>
 </div>
 
 <div class="offset-1 col-md-10">
@@ -43,45 +42,38 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let networkSecurityProfileRule of networkSecurityProfile.NetworkSecurityProfileRules">
+    <tr *ngFor="let networkSecurityProfileRule of firewall_rules">
       <td><input type="checkbox"></td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">           
-          
-          <fa        
-          name="asterisk"  
-          style="color:orange"      
-          title="New Rule"  
-          [hidden]="networkSecurityProfileRule.Id">        
-         </fa>
+        <p [hidden]="networkSecurityProfileRule.Edit">
           {{networkSecurityProfileRule.Name}}
         </p>
 
         <input class="form-control" [(ngModel)]="networkSecurityProfileRule.Name" [hidden]="!networkSecurityProfileRule.Edit">
       </td>
       <td>
-        <p [ngClass]="{'fg-danger': networkSecurityProfileRule.Action == 0, 'fg-success': networkSecurityProfileRule.Action == 1}"
+        <p [ngClass]="{'fg-danger': networkSecurityProfileRule.Action == 'deny', 'fg-success': networkSecurityProfileRule.Action == 'allow'}"
            [hidden]="networkSecurityProfileRule.Edit" >
-          {{networkSecurityProfileRule.Action == 0 ? 'Deny':'Allow'}}
+          {{networkSecurityProfileRule.Action}}
         </p>
 
         <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Action" [hidden]="!networkSecurityProfileRule.Edit">
-          <option value=0>Deny</option>
-          <option value=1>Allow</option>
+          <option value="deny">Deny</option>
+          <option value="permit">Permit</option>
         </select>
       </td>
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">
-          {{networkSecurityProfileRule.ProtocolString}}
+          {{networkSecurityProfileRule.Protocol}}
         </p>
         <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Protocol" [hidden]="!networkSecurityProfileRule.Edit">
-          <option value=1>Icmp </option>  
-          <option value=6>Tcp</option>
-          <option value=17>Udp</option>     
+          <option value="icmp">ICMP</option>  
+          <option value="tcp">TCP</option>
+          <option value="udp">UDP</option>     
         </select>
       </td>
       <td>
-       {{networkSecurityProfileRule.DirectionString}}
+       {{networkSecurityProfileRule.Direction}}
       </td>
       <td>
         <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourceIP}}</p>

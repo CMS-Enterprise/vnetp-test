@@ -19,6 +19,7 @@ export class HttpConfigInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // const token: string = localStorage.getItem('token');
 
+        console.log("interceptor");
         request = request.clone({ headers: request.headers.set('Authorization', 'Basic YWNtZWFkbWluOnBhc3N3b3Jk') });
 
         if (!request.headers.has('Content-Type')) {

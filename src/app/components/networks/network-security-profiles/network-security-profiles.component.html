@@ -18,18 +18,14 @@
           <tr>
             <th scope="col"></th>
             <th scope="col">Name</th>
-            <th scope="col">Networks</th>
-            <th scope="col">Rules</th> 
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let networkSecurityProfile of networkSecurityProfiles">
+          <tr *ngFor="let subnet of subnets.subnets">
             <td><input type="checkbox"></td>
             <td>
-              <a href="/networks/network-security-profiles/edit/{{ networkSecurityProfile.Id }}">{{networkSecurityProfile.Name}}</a>
+              <a href="/networks/network-security-profiles/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
             </td>
-            <td>{{networkSecurityProfile.Networks.length}}</td>
-            <td>{{networkSecurityProfile.NetworkSecurityProfileRules.length}}</td>
           </tr>
         </tbody>
       </table>

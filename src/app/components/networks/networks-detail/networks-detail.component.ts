@@ -29,7 +29,7 @@ export class NetworksDetailComponent implements OnInit {
 
   deleteSubnet() {
     const body = {
-      extra_vars: `{\"vlan_id\": ${this.subnet.description}, \"subnet_id\": ${this.subnet.subnet_id}}`
+      extra_vars: `{\"customer_id\": ${this.subnet.name}, \"vlan_id\": ${this.subnet.description}, \"subnet_id\": ${this.subnet.subnet_id}}`
     };
 
     this.automationApiService.launchTemplate('delete_asa_subinterface', body).subscribe();
