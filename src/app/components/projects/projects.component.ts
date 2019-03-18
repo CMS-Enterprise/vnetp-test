@@ -8,7 +8,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class ProjectsComponent implements OnInit {
 
-  constructor(private automationApiService : AutomationApiService) { }
+  constructor(private automationApiService: AutomationApiService) { }
 
   projects;
 
@@ -16,10 +16,5 @@ export class ProjectsComponent implements OnInit {
     this.getProjects();
   }
 
-  getProjects(){
-    this.automationApiService.getProjects().subscribe(
-      data => {this.projects = data},
-      err => console.error(err)         
-      );  
-    };
+  getProjects() {}
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { StaticRoute } from 'src/app/models/static-route';
 
 @Component({
   selector: 'app-networks-detail',
@@ -9,15 +10,19 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute,private router: Router, private automationApiService: AutomationApiService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) { }
 
   Id = '';
   subnet: any;
+  subnetIps: any;
+  staticRoutes: any;
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
 
     this.getNetwork();
+    this.getIps();
+    this.getStaticRoutes();
   }
 
   getNetwork() {
@@ -25,6 +30,30 @@ export class NetworksDetailComponent implements OnInit {
       data => this.subnet = data,
       error => console.error(error)
     );
+  }
+
+  getIps() {
+    this.automationApiService.getSubnetIps(this.Id).subscribe(
+      data => this.subnetIps = data,
+      error => console.error(error)
+    );
+  }
+
+  getStaticRoutes() {
+    const staticRoutes = this.subnet.custom_fields.find(c => c.key === 'static_routes');
+
+    if (staticRoutes){
+      this.staticRoutes = JSON.parse(staticRoutes.value);
+    }
+  }
+
+  addStaticRoute() {
+    if (this.staticRoutes == null) { this.staticRoutes = []; }
+
+    const staticRoute = new StaticRoute();
+    staticRoute.Edit = true;
+
+    this.staticRoutes.push(staticRoute);
   }
 
   deleteSubnet() {

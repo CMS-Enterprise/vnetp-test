@@ -7,20 +7,15 @@ import { PapaParseModule } from 'ngx-papaparse';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { VirtualMachinesComponent } from './components/virtual-machines/virtual-machines.component';
-import { VirtualMachineDetailComponent } from './components/virtual-machines/virtual-machine-detail/virtual-machine-detail.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { ProjectDetailComponent } from './components/projects/project-detail/project-detail.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
-import { CreateVirtualMachineComponent } from './components/virtual-machines/create-virtual-machine/create-virtual-machine.component';
 import { NetworksComponent } from './components/networks/networks.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
-import { EditLoadBalancerComponent } from './components/load-balancers/edit-load-balancer/edit-load-balancer.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -35,12 +30,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     NetworksComponent,
     NetworksDetailComponent,
     NetworkSecurityProfilesComponent,
-    VirtualMachinesComponent,
-    VirtualMachineDetailComponent,
-    CreateVirtualMachineComponent,
-    LoadBalancersComponent,
     NetworkSecurityProfileDetailComponent,
-    EditLoadBalancerComponent,
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent

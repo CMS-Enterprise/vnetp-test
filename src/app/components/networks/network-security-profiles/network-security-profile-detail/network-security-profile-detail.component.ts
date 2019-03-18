@@ -26,13 +26,15 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   moveFirewallRule(value: number, rule) {
-
     const ruleIndex = this.firewall_rules.indexOf(rule);
 
+    // If the rule isn't in the array, is at the start of the array and requested to move up
+    // or if the rule is at the end of the array, return.
     if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewall_rules.length) { return; }
 
     const nextRule = this.firewall_rules[ruleIndex + value];
 
+    // If the next rule doesn't exist, return.
     if (nextRule === null) { return; }
 
     const nextRuleIndex = this.firewall_rules.indexOf(nextRule);
