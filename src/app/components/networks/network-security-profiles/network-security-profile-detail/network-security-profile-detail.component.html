@@ -19,9 +19,16 @@
       <fa name="plus" size="2x"></fa>  
     </button>  
 
+    <button type="button" class="btn btn-info" (click)="uploader.click()">
+      <fa name="file-text-o" size="2x"></fa>
+    </button>
+
     <button type="button" class="btn btn-danger" disabled>  
      <fa name="trash" size="2x"></fa>
     </button> 
+
+    <input hidden type="file" #uploader (change)="handleFileSelect($event)"/>
+
 
   </div>
 

@@ -3,6 +3,7 @@ import { NetworkSecurityProfile } from 'src/app/models/network-security-profile'
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
+import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -17,7 +18,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   Id = '';
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService) { }
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) { }
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
@@ -65,15 +66,51 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     this.firewall_rules.push(nspr);
   }
 
+
+  deleteNetworkSecurityProfileRule(rule){
+    this.firewall_rules.splice(this.firewall_rules.indexOf(rule), 1);
+  }
+
   updateNetworkSecurityProfile() {
 
     const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description}, \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
+      extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
+      \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
     };
 
     this.automationApiService.launchTemplate('update_asa_acl', body).subscribe(
       data => {},
       error => console.log(error)
     );
+  }
+
+  handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    var file = files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event) => {
+      var csv = event.target.result; // Content of CSV file
+      this.parseCsv(csv);
+    };
+  }
+
+  parseCsv(csv) {
+    let options = {
+      header: true,
+      complete: (results, file) => {
+        this.insertFirewallRules(results.data);
+      }
+    };
+
+    this.papa.parse(csv, options);
+  }
+
+  insertFirewallRules(rules){
+    console.log(rules);
+
+    rules.forEach(rule => {
+      this.firewall_rules.push(rule);
+    });
   }
 }
