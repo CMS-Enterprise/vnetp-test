@@ -7,15 +7,15 @@
 
   <div class="btn-group" role="group">
 
-    <button type="button" class="btn btn-warning" (click)="updateNetworkSecurityProfile()">
+    <button type="button" class="btn btn-warning" (click)="updateFirewallRules()">
       <fa name="floppy-o" size="2x"></fa>
     </button>
   
-    <button type="button" class="btn btn-info" (click)="getNetworkSecurityProfile()">
+    <button type="button" class="btn btn-info" (click)="getFirewallRules()">
       <fa name="refresh" size="2x"></fa> 
     </button>
 
-    <button type="button" class="btn btn-success" (click)="addNetworkSecurityProfileRule()"> 
+    <button type="button" class="btn btn-success" (click)="addFirewallRule()"> 
       <fa name="plus" size="2x"></fa>  
     </button>  
 
@@ -23,20 +23,13 @@
       <fa name="file-text-o" size="2x"></fa>
     </button>
 
-    <button type="button" class="btn btn-danger" disabled>  
-     <fa name="trash" size="2x"></fa>
-    </button> 
-
     <input hidden type="file" #uploader (change)="handleFileSelect($event)"/>
-
-
   </div>
 
 <div class="card">
 <table class="table table-sm table-striped">
   <thead>
     <tr>
-      <th scope="col"></th>
       <th scope="col">Name</th>
       <th scope="col">Action</th>
       <th scope="col">Protocol</th>
@@ -49,74 +42,78 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let networkSecurityProfileRule of firewall_rules">
-      <td><input type="checkbox"></td>
+    <tr *ngFor="let firewallRule of firewall_rules">
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">
-          {{networkSecurityProfileRule.Name}}
+        <p [hidden]="firewallRule.Edit">
+          {{firewallRule.Name}}
         </p>
 
-        <input class="form-control" [(ngModel)]="networkSecurityProfileRule.Name" [hidden]="!networkSecurityProfileRule.Edit">
+        <input class="form-control" [(ngModel)]="firewallRule.Name" [hidden]="!firewallRule.Edit">
       </td>
       <td>
-        <p [ngClass]="{'fg-danger': networkSecurityProfileRule.Action == 'deny', 'fg-success': networkSecurityProfileRule.Action == 'allow'}"
-           [hidden]="networkSecurityProfileRule.Edit" >
-          {{networkSecurityProfileRule.Action}}
+        <p [ngClass]="{'fg-danger': firewallRule.Action == 'deny', 'fg-success': firewallRule.Action == 'allow'}"
+           [hidden]="firewallRule.Edit" >
+          {{firewallRule.Action}}
         </p>
 
-        <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Action" [hidden]="!networkSecurityProfileRule.Edit">
+        <select class="form-control" [(ngModel)]="firewallRule.Action" [hidden]="!firewallRule.Edit">
           <option value="deny">Deny</option>
           <option value="permit">Permit</option>
         </select>
       </td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">
-          {{networkSecurityProfileRule.Protocol}}
+        <p [hidden]="firewallRule.Edit">
+          {{firewallRule.Protocol}}
         </p>
-        <select class="form-control" [(ngModel)]="networkSecurityProfileRule.Protocol" [hidden]="!networkSecurityProfileRule.Edit">
+        <select class="form-control" [(ngModel)]="firewallRule.Protocol" [hidden]="!firewallRule.Edit">
           <option value="icmp">ICMP</option>  
           <option value="tcp">TCP</option>
           <option value="udp">UDP</option>     
         </select>
       </td>
       <td>
-       {{networkSecurityProfileRule.Direction}}
+       {{firewallRule.Direction}}
       </td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourceIP}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.SourceIP" [hidden]="!networkSecurityProfileRule.Edit">    
+        <p [hidden]="firewallRule.Edit">{{firewallRule.SourceIP}}</p>
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourceIP" [hidden]="!firewallRule.Edit">    
       </td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.SourcePorts}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.SourcePorts" [hidden]="!networkSecurityProfileRule.Edit">    
+        <p [hidden]="firewallRule.Edit">{{firewallRule.SourcePorts}}</p>
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourcePorts" [hidden]="!firewallRule.Edit">    
       </td>  
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationIP}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.DestinationIP" [hidden]="!networkSecurityProfileRule.Edit">    
+        <p [hidden]="firewallRule.Edit">{{firewallRule.DestinationIP}}</p>
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationIP" [hidden]="!firewallRule.Edit">    
       </td>
       <td>
-        <p [hidden]="networkSecurityProfileRule.Edit">{{networkSecurityProfileRule.DestinationPorts}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="networkSecurityProfileRule.DestinationPorts" [hidden]="!networkSecurityProfileRule.Edit">    
+        <p [hidden]="firewallRule.Edit">{{firewallRule.DestinationPorts}}</p>
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationPorts" [hidden]="!firewallRule.Edit">    
       </td>
       <td>
         <fa 
         name="pencil" 
-        (click)="networkSecurityProfileRule.Edit = !networkSecurityProfileRule.Edit" 
-        [hidden]="networkSecurityProfileRule.Edit">
+        (click)="firewallRule.Edit = !firewallRule.Edit" 
+        [hidden]="firewallRule.Edit">
       </fa>        
       <fa 
         name="floppy-o" 
-        (click)="networkSecurityProfileRule.Edit = !networkSecurityProfileRule.Edit" 
-        [hidden]="!networkSecurityProfileRule.Edit">
+        (click)="firewallRule.Edit = !firewallRule.Edit" 
+        [hidden]="!firewallRule.Edit">
       </fa>
       <fa
       name="chevron-up"
-      (click)="moveRule(-1,networkSecurityProfileRule)"
+      (click)="moveFirewallRule(-1,firewallRule)"
       >
       </fa>
       <fa
       name="chevron-down"
-      (click)="moveRule(1,networkSecurityProfileRule)"
+      (click)="moveFirewallRule(1,firewallRule)"
+      >
+      </fa>
+      <fa
+      name ="trash"
+      (click)=deleteFirewallRule(firewallRule)
       >
       </fa>
       </td>

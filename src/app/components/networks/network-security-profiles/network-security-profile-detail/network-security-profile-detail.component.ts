@@ -22,10 +22,10 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
-    this.getNetworkSecurityProfile();
+    this.getSubnet();
   }
 
-  moveRule(value: number, rule) {
+  moveFirewallRule(value: number, rule) {
 
     const ruleIndex = this.firewall_rules.indexOf(rule);
 
@@ -41,7 +41,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     [this.firewall_rules[nextRuleIndex], this.firewall_rules[ruleIndex]];
   }
 
-  getNetworkSecurityProfile() {
+  getSubnet() {
     this.automationApiService.getSubnet(this.Id).subscribe(
       data => this.subnet = data,
       error => console.error(error),
@@ -49,7 +49,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     );
   }
 
-  getFirewallRules(){
+  getFirewallRules() {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
@@ -57,7 +57,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     }
   }
 
-  addNetworkSecurityProfileRule() {
+  addFirewallRule() {
     if (this.firewall_rules == null) { this.firewall_rules = []; }
 
     const nspr = new NetworkSecurityProfileRule();
@@ -67,11 +67,11 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
 
-  deleteNetworkSecurityProfileRule(rule){
+  deleteFirewallRule(rule) {
     this.firewall_rules.splice(this.firewall_rules.indexOf(rule), 1);
   }
 
-  updateNetworkSecurityProfile() {
+  updateFirewallRules() {
 
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
@@ -85,32 +85,30 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    let files = evt.target.files; // FileList object
+    let file = files[0];
+    let reader = new FileReader();
     reader.readAsText(file);
-    reader.onload = (event) => {
-      var csv = event.target.result; // Content of CSV file
-      this.parseCsv(csv);
+    reader.onload = () => {
+      this.parseCsv(reader.result);
     };
   }
 
   parseCsv(csv) {
-    let options = {
+    const options = {
       header: true,
-      complete: (results, file) => {
+      complete: (results) => {
         this.insertFirewallRules(results.data);
       }
     };
-
     this.papa.parse(csv, options);
   }
 
-  insertFirewallRules(rules){
-    console.log(rules);
-
+  insertFirewallRules(rules) {
     rules.forEach(rule => {
-      this.firewall_rules.push(rule);
+      if (rule.Name !== '') {
+        this.firewall_rules.push(rule);
+      }
     });
   }
 }
