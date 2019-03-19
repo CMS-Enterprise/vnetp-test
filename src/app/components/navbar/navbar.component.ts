@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { AuthServiceService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,9 +9,9 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService) {}
+  constructor(private automationApiService: AutomationApiService, private auth: AuthServiceService) {}
 
-  runningJobs = {};
+  runningJobs: any;
 
   jobPoller = setInterval(() => this.getRunningJobs() , 5000);
 

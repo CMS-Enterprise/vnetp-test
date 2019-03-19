@@ -10,7 +10,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworkSecurityProfilesComponent implements OnInit {
 
-  subnets = {};
+  subnets: any;
 
   constructor(private automationApiService: AutomationApiService) { }
 

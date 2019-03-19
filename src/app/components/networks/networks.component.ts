@@ -12,7 +12,7 @@ export class NetworksComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService) { }
 
-  subnets = {};
+  subnets: any;
 
   ngOnInit() {
     this.getNetworks();

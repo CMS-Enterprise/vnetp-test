@@ -20,7 +20,10 @@ export class HttpConfigInterceptor {
         // const token: string = localStorage.getItem('token');
 
         console.log("interceptor");
-        request = request.clone({ headers: request.headers.set('Authorization', 'Basic YWNtZWFkbWluOnBhc3N3b3Jk') });
+
+        if (!request.headers.has('Authorization')) {
+            request = request.clone({ headers: request.headers.set('Authorization', 'Basic YWNtZWFkbWluOnBhc3N3b3Jk') });
+        }
 
         if (!request.headers.has('Content-Type')) {
             request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });

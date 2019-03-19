@@ -7,7 +7,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
   styleUrls: ['./jobs.component.css']
 })
 export class JobsComponent implements OnInit {
-  jobs = {};
+  jobs: any;
 
   constructor(private automationApiService: AutomationApiService) { }
 
