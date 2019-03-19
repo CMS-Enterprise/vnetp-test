@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { VirtualMachine } from '../models/virtual-machine';
-import { Observable } from 'rxjs';
-import { NetworkSecurityProfile } from '../models/network-security-profile';
-import { Network } from '../models/network';
-import { LoadBalancer } from '../models/load-balancer';
 
 @Injectable({
   providedIn: 'root'

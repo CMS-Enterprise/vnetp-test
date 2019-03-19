@@ -1,6 +1,6 @@
 <div class="text-center">
-  <h4>{{ subnet.name }}</h4>
-  <p>Network: {{ subnet.network }}/{{ subnet.mask_bits }}</p>
+  <h3>Network: {{ subnet.name }}</h3>
+  <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
   <button class="btn btn-danger" (click)="deleteSubnet()">Delete</button>
 </div>
 
@@ -26,9 +26,15 @@
       </thead>
       <tbody>
         <tr *ngFor="let ip of subnetIps.ips">
-          <td>{{ ip.ip }}</td>
-          <td>{{ ip.type }}</td>
-          <td>{{ ip.label }}</td>
+          <td>
+            <p>{{ ip.ip }}</p>
+          </td>
+          <td>
+            <p>{{ ip.type }}</p>
+          </td>
+          <td>
+            <p>{{ ip.label }}</p>
+          </td>
         </tr>
       </tbody>
     </table>

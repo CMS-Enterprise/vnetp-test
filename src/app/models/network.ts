@@ -1,6 +1,4 @@
-import { NetworkAdapter } from './network-adapter';
 import { NetworkSecurityProfile } from './network-security-profile';
-import { Project } from './project';
 
 export class Network {
     Id: number;
@@ -15,13 +13,7 @@ export class Network {
 
     VlanId: number;
 
-    NetworkAdapters: Array<NetworkAdapter>;
-
     NetworkSecurityProfileId: number;
 
     NetworkSecurityProfile: NetworkSecurityProfile;
-
-    ProjectId: number;
-
-    Project: Project;
 }

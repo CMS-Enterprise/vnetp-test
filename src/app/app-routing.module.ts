@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectsComponent } from './components/projects/projects.component';
-import { ProjectDetailComponent } from './components/projects/project-detail/project-detail.component';
 import { NetworksComponent } from './components/networks/networks.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -13,8 +11,6 @@ import { NetworksDetailComponent } from './components/networks/networks-detail/n
 
 
 const routes: Routes = [
-  {path: 'projects', component: ProjectsComponent},
-  {path: 'projects/:id', component: ProjectDetailComponent},
   {path: 'networks', component: NetworksComponent},
   {path: 'networks/create', component: CreateNetworkComponent},
   {path: 'networks/edit/:id', component: NetworksDetailComponent},

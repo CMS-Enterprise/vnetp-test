@@ -7,24 +7,20 @@ import { PapaParseModule } from 'ngx-papaparse';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProjectsComponent } from './components/projects/projects.component';
-import { ProjectDetailComponent } from './components/projects/project-detail/project-detail.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { NetworksComponent } from './components/networks/networks.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NetworkSecurityProfilesComponent } from './components/networks/network-security-profiles/network-security-profiles.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { NetworkSecurityProfileDetailComponent } from './components/networks/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProjectsComponent,
-    ProjectDetailComponent,
     DashboardComponent,
     LoginComponent,
     NetworksComponent,
