@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-navbar',
@@ -9,17 +10,29 @@ import { AuthServiceService } from 'src/app/services/auth-service.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private auth: AuthServiceService) {}
+  constructor(private automationApiService: AutomationApiService, private auth: AuthService) {
+    this.runningJobs = [];
+    this.auth.currentUser.subscribe(u => this.currentUser = u);
+  }
 
+  loggedIn: boolean;
   runningJobs: any;
+  currentUser: User;
 
   jobPoller = setInterval(() => this.getRunningJobs() , 5000);
 
   getRunningJobs() {
+
+    if (!this.currentUser) { return; }
+
     this.automationApiService.getJobs('?order_by=-created&status=running').subscribe(
       data => this.runningJobs = data,
       error => console.error(error)
     );
+  }
+
+  logout() {
+    this.auth.logout();
   }
 
   ngOnInit() {

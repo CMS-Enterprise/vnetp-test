@@ -18,7 +18,8 @@ const routes: Routes = [
   {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
   {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent},
   {path: 'dashboard', component: DashboardComponent},
-  {path: 'login', component: LoginComponent}
+  {path: 'login', component: LoginComponent},
+  {path: '', redirectTo: 'login', pathMatch: 'full'}
 ];
 
 @NgModule({

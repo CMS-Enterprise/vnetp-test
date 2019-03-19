@@ -12,7 +12,9 @@ export class NetworkSecurityProfilesComponent implements OnInit {
 
   subnets: any;
 
-  constructor(private automationApiService: AutomationApiService) { }
+  constructor(private automationApiService: AutomationApiService) { 
+    this.subnets = [];
+  }
 
   ngOnInit() {
     this.getNetworks();

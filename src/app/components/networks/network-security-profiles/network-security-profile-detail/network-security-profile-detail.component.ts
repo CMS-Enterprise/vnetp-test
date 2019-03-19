@@ -14,11 +14,14 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   subnet: any;
 
-  firewall_rules = [];
+  firewall_rules: any;
 
   Id = '';
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) { }
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) {
+    this.subnet = {};
+    this.firewall_rules = [];
+   }
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');

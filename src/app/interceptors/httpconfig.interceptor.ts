@@ -11,18 +11,19 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 
 export class HttpConfigInterceptor {
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // const token: string = localStorage.getItem('token');
+    constructor(private auth: AuthService) {}
 
-        console.log("interceptor");
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const currentUser = this.auth.currentUserValue;
 
         if (!request.headers.has('Authorization')) {
-            request = request.clone({ headers: request.headers.set('Authorization', 'Basic YWNtZWFkbWluOnBhc3N3b3Jk') });
+            request = request.clone({ headers: request.headers.set('Authorization', `Basic ${currentUser.Token}`) });
         }
 
         if (!request.headers.has('Content-Type')) {
@@ -49,6 +50,4 @@ export class HttpConfigInterceptor {
                 return throwError(error);
             }));
     }
-
-
 }

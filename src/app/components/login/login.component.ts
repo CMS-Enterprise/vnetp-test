@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Userpass } from 'src/app/models/userpass';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Router } from '@angular/router';
-import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -10,21 +10,36 @@ import { AuthServiceService } from 'src/app/services/auth-service.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   userpass = new Userpass();
-  errorMessage = '';
+  errorMessage: string;
+  returnUrl: string;
 
-  constructor(private automationApiService: AutomationApiService,private auth: AuthServiceService, private router: Router) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+
+            // reset login status
+            this.auth.logout();
+
+            // get return url from route parameters or default to '/'
+            this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
   }
 
   login() {
-    this.automationApiService.login(this.userpass).subscribe(
-      data => this.auth.login(this.userpass),
-      error => this.errorMessage = 'Login Failed',
-      () => this.router.navigate(['/dashboard'])
-    );
-  }
+    this.errorMessage = null;
 
+    this.auth.login(this.userpass)
+    .pipe(first())
+    .subscribe(
+        data => {
+            this.router.navigate([this.returnUrl]);
+        },
+        error => {
+          this.errorMessage = 'Invalid Username/Password';
+        });
+      }
 }

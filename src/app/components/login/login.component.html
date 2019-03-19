@@ -1,16 +1,23 @@
 <div class="offset-3 col-md-6">
   <div class="card text-center" style="display:block; margin:auto;">
-    <img src="/assets/img/logo-large.png" style="max-width: 268px;" />
+    <form>
+      <img src="/assets/img/logo-large.png" style="max-width: 268px;" />
 
-    <div class="offset-3 form-group col-md-6">
-      <label for="username">Username:</label>
-      <input name="username" class="form-control" [(ngModel)]="userpass.Username"/>
-      <label for="password">Password:</label>
-      <input name="password" type="password" class="form-control" [(ngModel)]="userpass.Password" />
-    </div>
-    <button class="btn btn-success" type="button" (click)="login()">Login</button>
-    <div style="color:red;">
+      <div class="offset-3 form-group col-md-6">
+
+        <label for="username">Username:</label>
+        <input name="username" class="form-control" [(ngModel)]="userpass.Username"/>
+
+        <label for="password">Password:</label>
+        <input name="password" type="password" class="form-control"  [(ngModel)]="userpass.Password"/>
+
+      </div>
+      
+      <button class="btn btn-success" type="submit" (click)="login()">Login</button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
         {{ errorMessage }}
-    </div>
+      </div>
+    </form>
   </div>
 </div>

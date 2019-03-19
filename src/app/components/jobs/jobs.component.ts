@@ -9,7 +9,9 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 export class JobsComponent implements OnInit {
   jobs: any;
 
-  constructor(private automationApiService: AutomationApiService) { }
+  constructor(private automationApiService: AutomationApiService) {
+    this.jobs = [];
+  }
 
   jobPoller = setInterval(() => this.getJobs() , 10000);
 

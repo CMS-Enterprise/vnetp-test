@@ -10,7 +10,11 @@ import { StaticRoute } from 'src/app/models/static-route';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) {
+    this.subnet = {};
+    this.subnetIps = {};
+    this.staticRoutes = [];
+   }
 
   Id = '';
   subnet: any;
