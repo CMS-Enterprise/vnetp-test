@@ -22,13 +22,13 @@ export class NetworksDetailComponent implements OnInit {
 
     this.getNetwork();
     this.getIps();
-    this.getStaticRoutes();
   }
 
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
       data => this.subnet = data,
-      error => console.error(error)
+      error => console.error(error),
+      () => this.getStaticRoutes()
     );
   }
 
@@ -42,7 +42,7 @@ export class NetworksDetailComponent implements OnInit {
   getStaticRoutes() {
     const staticRoutes = this.subnet.custom_fields.find(c => c.key === 'static_routes');
 
-    if (staticRoutes){
+    if (staticRoutes) {
       this.staticRoutes = JSON.parse(staticRoutes.value);
     }
   }
