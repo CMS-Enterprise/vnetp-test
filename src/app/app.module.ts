@@ -18,6 +18,7 @@ import { CreateNetworkComponent } from './components/networks/create-network/cre
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { IpaddressesComponent } from './components/networks/ipaddresses/ipaddresses.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { IpaddressesComponent } from './components/networks/ipaddresses/ipaddres
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent,
-    IpaddressesComponent
+    IpaddressesComponent,
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,

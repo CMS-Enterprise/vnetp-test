@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
   runningJobs: any;
   currentUser: User;
 
-  jobPoller = setInterval(() => this.getRunningJobs() , 5000);
+  jobPoller = setInterval(() => this.getRunningJobs() , 10000);
 
   getRunningJobs() {
 

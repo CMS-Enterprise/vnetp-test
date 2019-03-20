@@ -9,18 +9,22 @@ import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { AuthGuard } from './guards/auth.guard';
+import { IpaddressesComponent } from './components/networks/ipaddresses/ipaddresses.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
 
 
 const routes: Routes = [
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard]},
-  {path: 'networks/create', component: CreateNetworkComponent},
-  {path: 'networks/edit/:id', component: NetworksDetailComponent},
-  {path: 'jobs', component: JobsComponent},
-  {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent},
-  {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent},
-  {path: 'dashboard', component: DashboardComponent},
+  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard]},
+  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard]},
+  {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard]},
+  {path: 'networks/ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard]},
+  {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard]},
+  {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard]},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
-  {path: '', redirectTo: 'login', pathMatch: 'full'}
+  {path: '', redirectTo: 'login', pathMatch: 'full'},
+  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
