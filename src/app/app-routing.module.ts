@@ -8,10 +8,11 @@ import { NetworkSecurityProfileDetailComponent } from './components/networks/net
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
-  {path: 'networks', component: NetworksComponent},
+  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard]},
   {path: 'networks/create', component: CreateNetworkComponent},
   {path: 'networks/edit/:id', component: NetworksDetailComponent},
   {path: 'jobs', component: JobsComponent},

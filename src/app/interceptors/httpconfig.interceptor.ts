@@ -36,13 +36,18 @@ export class HttpConfigInterceptor {
                 if (event instanceof HttpResponse) {
 
                     if (!environment.production) {
-                        console.log('debug-httpevent-->>', event);
+                        //console.log('debug-httpevent-->>', event);
                     }
                 }
                 return event;
             }),
             catchError((error: HttpErrorResponse) => {
+
+                if (error.status === 401) {
+                }
+
                 let data = {};
+
                 data = {
                     reason: error && error.error.reason ? error.error.reason : '',
                     status: error.status

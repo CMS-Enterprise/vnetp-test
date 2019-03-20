@@ -63,12 +63,18 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          {{currentUser.Username}}</a
-        >
+          {{currentUser.Username}}
+        </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
         </div>
       </li>
+
+      <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link disabled">{{ currentUser.CustomerName}}</a>
+          </li>  
+        </ul>
     </ul>
   </div>
 </nav>

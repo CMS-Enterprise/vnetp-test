@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +9,63 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private automationApiService: AutomationApiService) {
+    this.ips = { ips: []};
+    this.subnets = {subnets: []};
+    this.devices = {Devices: []};
+    this.jobs = {results: []};
   }
 
+  ips: any;
+  subnets: any;
+  devices: any;
+  jobs: any;
+  failedJobs = 0;
+  succesfulJobs = 0;
+
+  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
+
+  ngOnInit() {
+    this.loadDashboard();
+  }
+
+  loadDashboard() {
+    this.getDevices();
+    this.getNetworks();
+    this.getIps();
+    this.getJobs();
+  }
+
+  getNetworks() {
+    this.automationApiService.getSubnets().subscribe(
+      data => this.subnets = data
+    );
+  }
+
+  getIps() {
+    this.automationApiService.getIps().subscribe(
+      data => this.ips = data
+    );
+  }
+
+  getDevices() {
+    this.automationApiService.getDevices().subscribe(
+      data => this.devices = data
+    );
+  }
+
+  getJobs() {
+    const date = new Date().toISOString().slice(0, 10);
+
+    this.automationApiService.getJobs(`?created__gte=${date}T00:00&created__lte=${date}T23:59`).subscribe(
+      data => this.jobs = data,
+      error => {},
+      () => this.sortJobs()
+    );
+  }
+
+  sortJobs() {
+    this.succesfulJobs = this.jobs.results.filter(job => !job.failed && job.status === 'successful').length;
+    this.failedJobs = this.jobs.results.filter(job => job.failed).length;
+  }
 }

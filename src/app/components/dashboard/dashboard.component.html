@@ -2,40 +2,92 @@
   <h1>Dashboard</h1>
 </div>
 
-<div class="container text-center" style="padding-top:100px;">
+<div class="container text-center">
   <div class="row">
-    <div class="col-4">
-      <h3>Summary 1</h3>
-    </div>
-    <div class="col-4">
-      <h3>Summary 2</h3>
-    </div>
-    <div class="col-4">
-      <h3>Summary 3</h3>
-    </div>
-  </div>
-
-  <div class="row" style="padding-top:250px;">
-      <div class="col-4">
-        <h3>Summary 4</h3>
-      </div>
-      <div class="col-4">
-        <h3>Summary 5</h3>
-      </div>
-      <div class="col-4">
-        <h3>Summary 6</h3>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Subnets
+        </div>
+        <div class="card-body">
+          <h6>{{ subnets.subnets.length }}</h6>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary" routerLink="/networks">Manage</button>
+        </div>
       </div>
     </div>
 
-  <div class="row" style="padding-top:250px;">
-    <div class="col-4">
-      <h3>Top 10 CPU</h3>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Devices
+        </div>
+        <div class="card-body">
+          <h6>{{ devices.Devices.length }}</h6>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary" routerLink="/devices">Manage</button>
+        </div>
+      </div>
     </div>
-    <div class="col-4">
-      <h3>Top 10 Memory</h3>
-    </div>
-    <div class="col-4">
-      <h3>Top 10 Storage</h3>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          IP Addresses
+        </div>
+        <div class="card-body">
+          <h6>{{ ips.ips.length }}</h6>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary" routerLink="/ipaddresses">Manage</button>
+        </div>
+      </div>
     </div>
   </div>
+  
+  <hr>
+
+  <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            Jobs executed in the Last 24 Hours
+          </div>
+          <div class="card-body">
+            <h6>{{ jobs.results.length }}</h6>
+          </div>
+          <div class="card-footer">
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            Successful Jobs
+          </div>
+          <div class="card-body">
+            <h6>{{ succesfulJobs }}</h6>
+          </div>
+          <div class="card-footer">
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            Failed Jobs
+          </div>
+          <div class="card-body">
+            <h6 style="color:red;">{{ failedJobs }}</h6>
+          </div>
+          <div class="card-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div>

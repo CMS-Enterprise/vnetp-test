@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkSecurityProfile } from 'src/app/models/network-security-profile';
-import { ThrowStmt } from '@angular/compiler';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
@@ -23,7 +21,7 @@ export class NetworkSecurityProfilesComponent implements OnInit {
   getNetworks() {
     this.automationApiService.getSubnets().subscribe(
       data => this.subnets = data,
-      error => console.error(error)
+      error => {}
       );
   }
 }

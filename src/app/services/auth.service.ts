@@ -30,12 +30,15 @@ export class AuthService {
       })
     };
 
-    return this.http.get<any>(environment.apiBase + '/api/1.0/adminusers/', httpOptions)
+    return this.http.get<any>(environment.apiBase + '/api/1.0/customers/', httpOptions)
         .pipe(map(result => {
 
           const user = new User(userpass);
 
-          if (result.adminusers) {
+          const customer = result.Customers[0];
+
+          if (customer) {
+                user.CustomerName = customer.name;
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
             }
