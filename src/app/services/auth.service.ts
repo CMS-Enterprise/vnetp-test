@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, config } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class AuthService {
       })
     };
 
-    return this.http.get<any>('http://localhost:3000' + '/api/1.0/adminusers/', httpOptions)
+    return this.http.get<any>(environment.apiBase + '/api/1.0/adminusers/', httpOptions)
         .pipe(map(result => {
 
           const user = new User(userpass);
