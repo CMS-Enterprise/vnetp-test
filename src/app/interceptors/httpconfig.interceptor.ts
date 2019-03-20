@@ -44,6 +44,8 @@ export class HttpConfigInterceptor {
             catchError((error: HttpErrorResponse) => {
 
                 if (error.status === 401) {
+                    this.auth.logout();
+                    location.reload();
                 }
 
                 let data = {};
