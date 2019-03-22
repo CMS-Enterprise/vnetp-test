@@ -16,3 +16,9 @@
 .fg-success{
     color:green;
 }
+
+.breadcrumbs{
+    height: 100px;
+    text-align:center;
+    line-height:50px;
+}

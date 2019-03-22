@@ -11,16 +11,18 @@ import { NetworksDetailComponent } from './components/networks/networks-detail/n
 import { AuthGuard } from './guards/auth.guard';
 import { IpaddressesComponent } from './components/networks/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { DevicesComponent } from './components/devices/devices.component';
 
 
 const routes: Routes = [
-  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard]},
-  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard]},
-  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard]},
-  {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard]},
-  {path: 'networks/ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard]},
-  {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard]},
-  {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard]},
+  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
+  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
+  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
+  {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
+  {path: 'networks/ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
+  {path: 'networks/network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
+  {path: 'networks/network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
+  {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},

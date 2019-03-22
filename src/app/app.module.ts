@@ -19,6 +19,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { IpaddressesComponent } from './components/networks/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { DevicesComponent } from './components/devices/devices.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
     CreateNetworkComponent,
     NavbarComponent,
     IpaddressesComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    BreadcrumbComponent,
+    DevicesComponent
   ],
   imports: [
     BrowserModule,

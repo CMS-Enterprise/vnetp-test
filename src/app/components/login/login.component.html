@@ -13,6 +13,10 @@
 
       </div>
       
+      <div>
+        <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
+      </div>
+
       <button class="btn btn-success" type="submit" (click)="login()">Login</button>
 
       <div *ngIf="errorMessage" class="alert alert-danger">

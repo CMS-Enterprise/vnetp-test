@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   userpass = new Userpass();
   errorMessage: string;
   returnUrl: string;
+  loading: boolean;
 
   constructor(
     private auth: AuthService,
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.errorMessage = null;
+    this.loading = true;
 
     this.auth.login(this.userpass)
     .pipe(first())
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.errorMessage = 'Invalid Username/Password';
+          this.loading = false;
         });
       }
 }
