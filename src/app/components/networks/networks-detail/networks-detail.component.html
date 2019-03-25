@@ -6,7 +6,7 @@
 
 <div class="offset-1 col-md-10">
 <div class="row">
-<div class="col-6">
+<div class="col-4">
   <h3>IP Addresses</h3>
 
   <div class="btn-group-sm" role="group">
@@ -41,15 +41,18 @@
   </div>
 </div>
 
-<div class="col-6">
+<div class="col-8">
   <h3>Static Routes</h3>
 
-  <div class="btn-group-sm" role="group">
-    <button type="button" class="btn btn-info">
-      <fa name="refresh" size="1x" (click)="getStaticRoutes()"></fa>
+  <div class="btn-group-sm" role="group" >  
+    <button type="button" class="btn btn-warning"  aria-label="Update Static Routes" (click)="updateStaticRoutes()">     
+      <fa name="floppy-o" size="1x"></fa>   
     </button>
-    <button type="button" class="btn btn-success">
-      <fa name="plus" size="1x" (click)="addStaticRoute()"></fa>
+    <button type="button" class="btn btn-info" (click)="getStaticRoutes()">
+      <fa name="refresh" size="1x"></fa>
+    </button>
+    <button type="button" class="btn btn-success" (click)="addStaticRoute()">
+      <fa name="plus" size="1x" ></fa>
     </button>
   </div>
 
@@ -60,10 +63,11 @@
           <th scope="col">IP Address</th>
           <th scope="col">Subnet Mask</th>
           <th scope="col">Next Hop</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let route of staticRoutes">
+        <tr *ngFor="let route of staticRoutes" [ngClass]="{'table-danger': route.Deleted}">
           <td>
             <p [hidden]="route.Edit">{{ route.IpAddress }}</p>
             <input class="form-control" placeholder="any" [(ngModel)]="route.IpAddress" [hidden]="!route.Edit">
@@ -75,6 +79,12 @@
           <td>         
             <p [hidden]="route.Edit">{{ route.NextHop }}</p>            
             <input class="form-control" placeholder="any" [(ngModel)]="route.NextHop" [hidden]="!route.Edit">
+          </td>
+          <td>
+            <fa name="pencil" (click)="route.Edit = !route.Edit" [hidden]="route.Edit"></fa>         
+            <fa name="floppy-o" (click)="route.Edit = !route.Edit" [hidden]="!route.Edit"></fa>
+            <fa name="trash" (click)="route.Deleted = !route.Deleted" [hidden]="route.Deleted"></fa>
+            <fa name="undo" (click)="route.Deleted = !route.Deleted" [hidden]="!route.Deleted"></fa>
           </td>
         </tr>
       </tbody>

@@ -6,6 +6,8 @@ export class StaticRoute {
     NextHop: string;
 
     Edit: boolean;
+
+    Deleted: boolean;
 }
 
 

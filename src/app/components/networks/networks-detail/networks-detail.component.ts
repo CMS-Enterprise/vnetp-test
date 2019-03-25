@@ -56,8 +56,30 @@ export class NetworksDetailComponent implements OnInit {
 
     const staticRoute = new StaticRoute();
     staticRoute.Edit = true;
+    staticRoute.Deleted = false;
 
     this.staticRoutes.push(staticRoute);
+  }
+
+  updateStaticRoutes() {
+
+    let deleted_static_routes = this.staticRoutes.filter(r => r.Deleted);
+    let updated_static_routes = this.staticRoutes.filter(r => !r.Deleted);
+
+    console.log(deleted_static_routes);
+    console.log(updated_static_routes);
+
+    const body = {
+      extra_vars: `{\"customer_id\": ${this.subnet.name},
+      \"subnet_id\": ${this.subnet.subnet_id},
+      \"updated_static_routes\": ${JSON.stringify(updated_static_routes)},
+      \"deleted_static_routes\":${JSON.stringify(deleted_static_routes)}}`
+    };
+
+    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe(
+      data => {},
+      error => console.log(error)
+    );
   }
 
   deleteSubnet() {
