@@ -4,64 +4,59 @@
 
   <div class="input-group input-group-sm mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+      <span class="input-group-text">Name</span>
     </div>
 
     <input
       type="text"
       class="form-control"
-      aria-label="Small"
-      aria-describedby="inputGroup-sizing-sm"
+      aria-label="Name"
       [(ngModel)]="network.Name"
     />
 
     <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-sm">Network Address</span>
+      <span class="input-group-text">Network Address</span>
     </div>
     <input
       type="text"
       class="form-control"
-      aria-label="Small"
-      aria-describedby="inputGroup-sizing-sm"
+      aria-label="Network Address"
       [(ngModel)]="network.NetworkAddress"
     />
 
     <div class="input-group-prepend">
-        <span class="input-group-text" id="inputGroup-sizing-sm">Subnet Mask</span>
+        <span class="input-group-text">Subnet Mask</span>
       </div>
       <input
         type="text"
         class="form-control"
-        aria-label="Small"
-        aria-describedby="inputGroup-sizing-sm"
+        aria-label="Subnet Mask"
         [(ngModel)]="network.SubnetMask"
       />
 
       <div class="input-group-prepend">
-        <span class="input-group-text" id="inputGroup-sizing-sm">Subnet Mask Bits</span>
+        <span class="input-group-text">Subnet Mask Bits</span>
       </div>
       <input
         type="number"
         class="form-control"
-        aria-label="Small"
-        aria-describedby="inputGroup-sizing-sm"
+        aria-label="Subnet Mask Bits"
         [(ngModel)]="network.SubnetMaskBits"
       />
 
     <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-sm">VLAN Id</span>
+      <span class="input-group-text">VLAN Id</span>
     </div>
     <input
       type="number"
       class="form-control"
-      aria-label="Small"
-      aria-describedby="inputGroup-sizing-sm"
+      aria-label="VLAN Id"
       [(ngModel)]="network.VlanId"
     />
   </div>
 </div>
 
 <div class="btn-group">
-    <button class="btn btn-success">Save</button>
-    <button class="btn btn-danger" (click)="createNetwork()">Deploy</button>
+    <button class="btn btn-success" aria-label="Save">Save</button>
+    <button class="btn btn-danger" (click)="createNetwork()" aria-label="Deploy">Deploy</button>
 </div>

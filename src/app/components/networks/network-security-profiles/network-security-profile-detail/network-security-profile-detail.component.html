@@ -1,22 +1,22 @@
 <div class="offset-1 col-md-10">
 
-  <h5>Network Security Profile Rules</h5>
+  <h5 aria-label="Network Security Profile Rules">Network Security Profile Rules</h5>
 
   <div class="btn-group" role="group">
 
-    <button type="button" class="btn btn-warning" (click)="updateFirewallRules()">
+    <button type="button" class="btn btn-warning" (click)="updateFirewallRules()" aria-label="Update Firewall Rules">
       <fa name="floppy-o" size="2x"></fa>
     </button>
   
-    <button type="button" class="btn btn-info" (click)="getFirewallRules()">
+    <button type="button" class="btn btn-info" (click)="getFirewallRules()" aria-label="Refresh Firewall Rules">
       <fa name="refresh" size="2x"></fa> 
     </button>
 
-    <button type="button" class="btn btn-success" (click)="addFirewallRule()"> 
+    <button type="button" class="btn btn-success" (click)="addFirewallRule()" aria-label="Add Firewall Rule"> 
       <fa name="plus" size="2x"></fa>  
     </button>  
 
-    <button type="button" class="btn btn-info" (click)="uploader.click()">
+    <button type="button" class="btn btn-info" (click)="uploader.click()" aria-label="Upload CSV">
       <fa name="file-text-o" size="2x"></fa>
     </button>
 
@@ -45,15 +45,15 @@
           {{firewallRule.Name}}
         </p>
 
-        <input class="form-control" [(ngModel)]="firewallRule.Name" [hidden]="!firewallRule.Edit">
+        <input class="form-control" [(ngModel)]="firewallRule.Name" [hidden]="!firewallRule.Edit" aria-label="Name">
       </td>
       <td>
         <p [ngClass]="{'fg-danger': firewallRule.Action == 'deny', 'fg-success': firewallRule.Action == 'allow'}"
-           [hidden]="firewallRule.Edit" >
+           [hidden]="firewallRule.Edit">
           {{firewallRule.Action}}
         </p>
 
-        <select class="form-control" [(ngModel)]="firewallRule.Action" [hidden]="!firewallRule.Edit">
+        <select class="form-control" [(ngModel)]="firewallRule.Action" [hidden]="!firewallRule.Edit" aria-label="Action">
           <option value="deny">Deny</option>
           <option value="permit">Permit</option>
         </select>
@@ -62,7 +62,7 @@
         <p [hidden]="firewallRule.Edit">
           {{firewallRule.Protocol}}
         </p>
-        <select class="form-control" [(ngModel)]="firewallRule.Protocol" [hidden]="!firewallRule.Edit">
+        <select class="form-control" [(ngModel)]="firewallRule.Protocol" [hidden]="!firewallRule.Edit" aria-label="Protocol">
           <option value="icmp">ICMP</option>  
           <option value="tcp">TCP</option>
           <option value="udp">UDP</option>     
@@ -73,19 +73,19 @@
       </td>
       <td>
         <p [hidden]="firewallRule.Edit">{{firewallRule.SourceIP}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourceIP" [hidden]="!firewallRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourceIP" [hidden]="!firewallRule.Edit" aria-label="Source IP">    
       </td>
       <td>
         <p [hidden]="firewallRule.Edit">{{firewallRule.SourcePorts}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourcePorts" [hidden]="!firewallRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.SourcePorts" [hidden]="!firewallRule.Edit" aria-label="Source Ports">    
       </td>  
       <td>
         <p [hidden]="firewallRule.Edit">{{firewallRule.DestinationIP}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationIP" [hidden]="!firewallRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationIP" [hidden]="!firewallRule.Edit" aria-label="Destination IP">    
       </td>
       <td>
         <p [hidden]="firewallRule.Edit">{{firewallRule.DestinationPorts}}</p>
-        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationPorts" [hidden]="!firewallRule.Edit">    
+        <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationPorts" [hidden]="!firewallRule.Edit" aria-label="Destination Ports">    
       </td>
       <td>
         <fa 
