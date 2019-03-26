@@ -4,9 +4,6 @@
         <button type="button" class="btn btn-info" (click)="getNetworks()" aria-label="Refresh Networks">
           <fa name="refresh" size="2x"></fa>
         </button>
-        <button type="button" class="btn btn-success" aria-label="Create New Network">
-          <fa name="plus" size="2x"></fa>
-        </button>
       </div>
 
     <div class="card">
@@ -15,6 +12,7 @@
           <tr>
             <th scope="col"></th>
             <th scope="col">Name</th>
+            <th scope="col">Firewall Rules</th>
           </tr>
         </thead>
         <tbody>
@@ -22,6 +20,9 @@
             <td><input type="checkbox"></td>
             <td>
               <a href="/network-security-profiles/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            </td>
+            <td>
+              {{ getFirewallRulesCount(subnet) }}
             </td>
           </tr>
         </tbody>

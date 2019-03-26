@@ -13,13 +13,11 @@ export class NetworksDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) {
     this.subnet = {};
     this.subnetIps = {};
-    this.staticRoutes = [];
    }
 
   Id = '';
   subnet: any;
   subnetIps: any;
-  staticRoutes: any;
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -31,8 +29,7 @@ export class NetworksDetailComponent implements OnInit {
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
       data => this.subnet = data,
-      error => console.error(error),
-      () => this.getStaticRoutes()
+      error => console.error(error)
     );
   }
 
@@ -40,42 +37,6 @@ export class NetworksDetailComponent implements OnInit {
     this.automationApiService.getSubnetIps(this.Id).subscribe(
       data => this.subnetIps = data,
       error => console.error(error)
-    );
-  }
-
-  getStaticRoutes() {
-    const staticRoutes = this.subnet.custom_fields.find(c => c.key === 'static_routes');
-
-    if (staticRoutes) {
-      this.staticRoutes = JSON.parse(staticRoutes.value);
-    }
-  }
-
-  addStaticRoute() {
-    if (this.staticRoutes == null) { this.staticRoutes = []; }
-
-    const staticRoute = new StaticRoute();
-    staticRoute.Edit = true;
-    staticRoute.Deleted = false;
-
-    this.staticRoutes.push(staticRoute);
-  }
-
-  updateStaticRoutes() {
-
-    let deleted_static_routes = this.staticRoutes.filter(r => r.Deleted);
-    let updated_static_routes = this.staticRoutes.filter(r => !r.Deleted);
-
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},
-      \"subnet_id\": ${this.subnet.subnet_id},
-      \"updated_static_routes\": ${JSON.stringify(updated_static_routes)},
-      \"deleted_static_routes\":${JSON.stringify(deleted_static_routes)}}`
-    };
-
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe(
-      data => {},
-      error => console.log(error)
     );
   }
 

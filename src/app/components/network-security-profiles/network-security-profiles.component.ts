@@ -24,4 +24,12 @@ export class NetworkSecurityProfilesComponent implements OnInit {
       error => {}
       );
   }
+
+  getFirewallRulesCount(subnet) {
+    const jsonFirewallRules = subnet.custom_fields.find(c => c.key === 'firewall_rules');
+
+    const firewallRules = JSON.parse(jsonFirewallRules.value);
+
+    if (firewallRules) { return firewallRules.length; } else { return 0; }
+  }
 }

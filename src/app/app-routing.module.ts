@@ -12,6 +12,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { DevicesComponent } from './components/devices/devices.component';
+import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
+import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 
 
 const routes: Routes = [
@@ -22,6 +24,8 @@ const routes: Routes = [
   {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
   {path: 'network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
   {path: 'network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
+  {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
+  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},

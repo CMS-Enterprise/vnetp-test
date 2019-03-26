@@ -21,6 +21,8 @@ import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.compo
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { DevicesComponent } from './components/devices/devices.component';
+import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
+import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { DevicesComponent } from './components/devices/devices.component';
     IpaddressesComponent,
     NotfoundComponent,
     BreadcrumbComponent,
-    DevicesComponent
+    DevicesComponent,
+    StaticRoutesComponent,
+    StaticRouteDetailComponent
   ],
   imports: [
     BrowserModule,
