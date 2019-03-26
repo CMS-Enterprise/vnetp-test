@@ -15,7 +15,6 @@
           <th scope="col"></th>
           <th scope="col">Name</th>
           <th scope="col">Address Range</th>
-          <th scope="col">VLAN ID</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +24,6 @@
             <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
-          <td>{{ subnet.description }}</td>
         </tr>
       </tbody>
     </table>
