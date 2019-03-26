@@ -1,4 +1,6 @@
 export class StaticRoute {
+    InterfaceName: string;
+
     IpAddress: string;
 
     SubnetMask: string;

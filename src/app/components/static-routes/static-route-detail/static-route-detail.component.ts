@@ -38,6 +38,7 @@ export class StaticRouteDetailComponent implements OnInit {
     const staticRoute = new StaticRoute();
     staticRoute.Edit = true;
     staticRoute.Deleted = false;
+    staticRoute.InterfaceName = this.subnet.name;
 
     this.staticRoutes.push(staticRoute);
   }

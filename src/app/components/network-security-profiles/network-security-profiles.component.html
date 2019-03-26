@@ -10,14 +10,12 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col"></th>
             <th scope="col">Interface Name</th>
             <th scope="col">Firewall Rules</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let subnet of subnets.subnets">
-            <td><input type="checkbox"></td>
             <td>
               <a href="/network-security-profiles/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
             </td>

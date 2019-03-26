@@ -30,6 +30,6 @@ export class NetworkSecurityProfilesComponent implements OnInit {
 
     const firewallRules = JSON.parse(jsonFirewallRules.value);
 
-    if (firewallRules) { return firewallRules.length; } else { return 0; }
+    return firewallRules ? firewallRules.length : 0;
   }
 }

@@ -1,5 +1,15 @@
 <div class="offset-1 col-10">
 
+  <ul class="nav nav-tabs">
+    <li class="nav-item"  (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{'active': navIndex == 0}">Static Routes</a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{'active': navIndex == 1}">Routing Table</a>
+    </li>
+  </ul>
+
+<div *ngIf="navIndex == 0">
   <div class="btn-group" role="group">
       <button type="button" class="btn btn-info" (click)="getNetworks()" aria-label="Refresh Networks">
         <fa name="refresh" size="2x"></fa>
@@ -10,14 +20,12 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col"></th>
           <th scope="col">Interface Name</th>
           <th scope="col">Static Routes</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let subnet of subnets.subnets">
-          <td><input type="checkbox"></td>
           <td>
             <a href="/static-routes/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
@@ -28,4 +36,43 @@
       </tbody>
     </table>
   </div>
+</div>
+
+
+<div *ngIf="navIndex == 1">
+  <div class="btn-group" role="group">
+      <button type="button" class="btn btn-info" (click)="getRoutingTable()" aria-label="Refresh Routing Table">
+        <fa name="refresh" size="2x"></fa>
+      </button>
+    </div>
+
+  <div class="card">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Interface Name</th>
+          <th scope="col">IP Address</th>
+          <th scope="col">Subnet Mask</th>
+          <th scope="col">Next Hop</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let route of routingTable">
+          <td>
+            {{ route.InterfaceName }}
+          </td>
+          <td>
+            {{ route.IpAddress }}
+          </td>
+          <td>
+            {{ route.SubnetMask }}
+          </td>
+          <td>
+            {{ route.NextHop }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </div>
