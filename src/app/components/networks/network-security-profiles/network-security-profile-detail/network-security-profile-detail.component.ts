@@ -77,7 +77,6 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   updateFirewallRules() {
-
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
       \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
