@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { StaticRoute } from 'src/app/models/static-route';
 
 @Component({
   selector: 'app-networks-detail',
