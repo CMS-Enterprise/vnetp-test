@@ -16,6 +16,7 @@ import { StaticRoutesComponent } from './components/static-routes/static-routes.
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
+import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
   {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'ip-nats', component: IpNatsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Network Address Translation'}},
+  {path: 'ip-nats/create', component: CreateIpNatComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create IP NAT'}},
   {path: 'ip-nats/edit/:id', component: IpNatDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Network Address Translation'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},

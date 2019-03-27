@@ -25,8 +25,16 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/admingroups/');
   }
 
+  doqlQuery(query: string) {
+    return this.http.get(environment.apiBase + '/services/data/v1.0/query/' + '?query=' + query + '&output_type=json');
+  }
+
   getIps() {
     return this.http.get(environment.apiBase + '/api/1.0/ips/');
+  }
+
+  getIpNats() {
+    return this.http.get(environment.apiBase + '/api/1.0/ipnat/');
   }
 
   getDevices() {

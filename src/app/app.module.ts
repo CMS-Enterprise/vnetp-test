@@ -25,6 +25,7 @@ import { StaticRoutesComponent } from './components/static-routes/static-routes.
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
+import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-
     StaticRoutesComponent,
     StaticRouteDetailComponent,
     IpNatsComponent,
-    IpNatDetailComponent
+    IpNatDetailComponent,
+    CreateIpNatComponent
   ],
   imports: [
     BrowserModule,
