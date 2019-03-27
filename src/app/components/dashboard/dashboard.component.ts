@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   devices: any;
   jobs: any;
   failedJobs = 0;
-  succesfulJobs = 0;
+  successfulJobs = 0;
 
   dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit {
   }
 
   sortJobs() {
-    this.succesfulJobs = this.jobs.results.filter(job => !job.failed && job.status === 'successful').length;
+    this.successfulJobs = this.jobs.results.filter(job => !job.failed && job.status === 'successful').length;
     this.failedJobs = this.jobs.results.filter(job => job.failed).length;
   }
 }

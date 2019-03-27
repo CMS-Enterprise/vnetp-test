@@ -69,7 +69,7 @@
             Successful Jobs Today
           </div>
           <div class="card-body">
-            <h6 style="color:green;">{{ succesfulJobs }}</h6>
+            <h6 [ngClass]="{'text-success': successfulJobs > 0}">{{ successfulJobs }}</h6>
           </div>
           <div class="card-footer">
           </div>
@@ -82,7 +82,7 @@
             Failed Jobs Today
           </div>
           <div class="card-body">
-            <h6 style="color:red;">{{ failedJobs }}</h6>
+            <h6 [ngClass]="{'text-danger': failedJobs > 0}">{{ failedJobs }}</h6>
           </div>
           <div class="card-footer">
           </div>
