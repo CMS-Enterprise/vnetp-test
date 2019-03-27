@@ -10,6 +10,8 @@ export class StaticRoute {
     Edit: boolean;
 
     Deleted: boolean;
+
+    Updated: boolean;
 }
 
 

@@ -20,7 +20,6 @@ export class StaticRouteDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
-
     this.getNetwork();
   }
 
@@ -38,6 +37,7 @@ export class StaticRouteDetailComponent implements OnInit {
     const staticRoute = new StaticRoute();
     staticRoute.Edit = true;
     staticRoute.Deleted = false;
+    staticRoute.Updated = false;
     staticRoute.InterfaceName = this.subnet.name;
 
     this.staticRoutes.push(staticRoute);
@@ -45,14 +45,21 @@ export class StaticRouteDetailComponent implements OnInit {
 
   updateStaticRoutes() {
 
-    let deleted_static_routes = this.staticRoutes.filter(r => r.Deleted);
-    let updated_static_routes = this.staticRoutes.filter(r => !r.Deleted);
+    // TODO: Handle updates to existing static routes
+
+    // Deleted Static Routes are added to the deleted static routes array.
+    const deletedStaticRoutes = this.staticRoutes.filter(r => r.Deleted);
+
+    // All not deleted or not deleted and updated routes are added to the local static routes
+    // array. This is the array that will be persisted into the device 42 static_routes custom
+    // property.
+    const staticRoutes = this.staticRoutes.filter(r => !r.Deleted || !r.Deleted && r.Updated);
 
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name},
       \"subnet_id\": ${this.subnet.subnet_id},
-      \"updated_static_routes\": ${JSON.stringify(updated_static_routes)},
-      \"deleted_static_routes\":${JSON.stringify(deleted_static_routes)}}`
+      \"updated_static_routes\": ${JSON.stringify(staticRoutes)},
+      \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
     };
 
     this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe(
@@ -66,6 +73,11 @@ export class StaticRouteDetailComponent implements OnInit {
 
     if (staticRoutes) {
       this.staticRoutes = JSON.parse(staticRoutes.value);
+
+      this.staticRoutes.forEach((route) => {
+        route.Updated = false;
+        route.Edit = false;
+      });
     }
   }
 }
