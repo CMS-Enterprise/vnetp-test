@@ -19,6 +19,8 @@ export class CreateIpNatComponent implements OnInit {
   destinationSubnetIps: any;
   sourceIpId: number;
   destinationIpId: number;
+  sourceSubnetId: number;
+  destinationSubnetId: number;
 
   ngOnInit() {
     this.getNetworks();
