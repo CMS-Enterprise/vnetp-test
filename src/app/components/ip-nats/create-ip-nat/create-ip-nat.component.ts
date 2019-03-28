@@ -23,10 +23,10 @@ export class CreateIpNatComponent implements OnInit {
   destinationSubnetId: number;
 
   ngOnInit() {
-    this.getNetworks();
+    this.getSubnets();
   }
 
-  getNetworks() {
+  getSubnets() {
     this.automationApiService.getSubnets().subscribe(
       data => this.subnets = data,
       error => console.error(error)
