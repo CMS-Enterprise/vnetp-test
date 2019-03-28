@@ -36,7 +36,7 @@ export class CreateIpNatComponent implements OnInit {
   getSubnetIps( subnetId: number, subnetType) {
     const query = 'SELECT ipaddress_pk AS id, ip_address FROM view_ipaddress_v1 WHERE subnet_fk = ' + subnetId;
 
-    if (subnetType === 'source'){
+    if (subnetType === 'source') {
       this.sourceIpId = 0;
     }
 
