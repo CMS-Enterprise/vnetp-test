@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { IpNat } from 'src/app/models/ip-nat';
 
 @Component({
   selector: 'app-create-ip-nat',
@@ -12,15 +13,16 @@ export class CreateIpNatComponent implements OnInit {
     this.subnets = [];
     this.sourceSubnetIps = [];
     this.destinationSubnetIps = [];
+    this.ipNat = new IpNat();
+    this.ipNat.two_way_relation = true;
    }
 
   subnets: any;
   sourceSubnetIps: any;
   destinationSubnetIps: any;
-  sourceIpId: number;
-  destinationIpId: number;
-  sourceSubnetId: number;
-  destinationSubnetId: number;
+  sourceSubnet: any;
+  destinationSubnet: any;
+  ipNat: IpNat;
 
   ngOnInit() {
     this.getSubnets();
@@ -33,14 +35,9 @@ export class CreateIpNatComponent implements OnInit {
       );
   }
 
-  getSubnetIps( subnetId: number, subnetType) {
-    const query = 'SELECT ipaddress_pk AS id, ip_address FROM view_ipaddress_v1 WHERE subnet_fk = ' + subnetId;
+  getSubnetIps( subnet: any, subnetType) {
 
-    if (subnetType === 'source') {
-      this.sourceIpId = 0;
-    }
-
-    this.automationApiService.doqlQuery(query).subscribe(
+    this.automationApiService.getSubnetIps(subnet.subnet_id).subscribe(
       data => {
         if (subnetType === 'source') {
           this.sourceSubnetIps = data;
@@ -49,6 +46,19 @@ export class CreateIpNatComponent implements OnInit {
           this.destinationSubnetIps = data;
         }
       },
+      error => {}
+    );
+  }
+
+  createIpNat() {
+    const body = {
+      extra_vars: `{\"source_subnet\": \"${this.sourceSubnet.name}\",
+      \"destination_subnet\": \"${this.destinationSubnet.name}\",
+      \"ipnat\": ${JSON.stringify(this.ipNat)}}`
+    };
+
+    this.automationApiService.launchTemplate('create_asa_ipnat', body).subscribe(
+      data => {},
       error => {}
     );
   }
