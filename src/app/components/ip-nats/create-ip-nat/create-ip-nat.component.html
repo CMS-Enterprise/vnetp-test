@@ -6,7 +6,7 @@
       <span class="input-group-text">Name</span>
     </div>
 
-    <input type="text" class="form-control" aria-label="Name" [(ngModel)]="ipNat.name" />
+    <input appIsAlphanumeric type="text" class="form-control" aria-label="Name" [(ngModel)]="ipNat.name" />
 
     <div class="input-group-prepend">
       <span class="input-group-text">Source Subnet</span>
@@ -46,6 +46,7 @@
       <span class="input-group-text">Source IP Address</span>
     </div>
     <select class="form-control" [(ngModel)]="ipNat.ip_address_from">
+      <option></option>
       <option *ngFor="let ip of sourceSubnetIps.ips" [ngValue]="ip.ip">{{
         ip.ip
       }}</option>
@@ -54,7 +55,8 @@
     <div class="input-group-prepend">
       <span class="input-group-text">Destination IP Address</span>
     </div>
-    <select class="form-control" [(ngModel)]="ipNat.ip_address_to">
+    <select class="form-control" [(ngModel)]="ipNat.ip_address_to">  
+      <option></option>
       <option *ngFor="let ip of destinationSubnetIps.ips" [ngValue]="ip.ip">{{
         ip.ip
       }}</option>
