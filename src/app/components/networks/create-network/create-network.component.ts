@@ -20,6 +20,10 @@ export class CreateNetworkComponent implements OnInit {
 
   createNetwork() {
 
+    if (!this.network.Name || !this.network.NetworkAddress
+      || !this.network.SubnetMask || !this.network.SubnetMaskBits
+      || !this.network.VlanId) { return; }
+
     const body = {
       extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${this.network.NetworkAddress}
       ,\"subnet_mask\": ${this.network.SubnetMask},\"customer_id\": ${this.network.Name}

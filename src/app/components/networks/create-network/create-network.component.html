@@ -1,63 +1,100 @@
+<!--TODO: Auto-generate subnet mask bits from subnet mask input.-->
+<!--TODO: Custom Validator for IP Addresses and Subnet Masks.-->
+
 <h4>Create Network</h4>
 
 <div class="card">
+  <form
+    name="networkForm"
+    class="form"
+    (ngSubmit)="form.form.valid && createNetwork()"
+    #form="ngForm"
+    novalidate
+  >
+    <div class="form-group input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Name</span>
+      </div>
 
-  <div class="input-group input-group-sm mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Name</span>
-    </div>
+      <input
+        name="name"
+        appIsAlphanumeric
+        type="text"
+        class="form-control"
+        aria-label="Name"
+        #name="ngModel"
+        [(ngModel)]="network.Name"
+        [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
+        required
+      />
 
-    <input
-      appIsAlphanumeric
-      type="text"
-      class="form-control"
-      aria-label="Name"
-      [(ngModel)]="network.Name"
-    />
+      <div class="input-group-prepend">
+        <span class="input-group-text">Network Address</span>
+      </div>
+      <input
+        name="networkAddress"
+        type="text"
+        class="form-control"
+        aria-label="Network Address"
+        #networkAddress="ngModel"
+        [(ngModel)]="network.NetworkAddress"
+        [ngClass]="{ 'is-invalid': form.submitted && networkAddress.invalid }"
+        required
+      />
 
-    <div class="input-group-prepend">
-      <span class="input-group-text">Network Address</span>
-    </div>
-    <input
-      type="text"
-      class="form-control"
-      aria-label="Network Address"
-      [(ngModel)]="network.NetworkAddress"
-    />
-
-    <div class="input-group-prepend">
+      <div class="input-group-prepend">
         <span class="input-group-text">Subnet Mask</span>
       </div>
       <input
+        name="subnetMask"
         type="text"
         class="form-control"
         aria-label="Subnet Mask"
+        #subnetMask="ngModel"
         [(ngModel)]="network.SubnetMask"
+        [ngClass]="{ 'is-invalid': form.submitted && subnetMask.invalid }"
+        required
       />
 
       <div class="input-group-prepend">
         <span class="input-group-text">Subnet Mask Bits</span>
       </div>
       <input
+        name="subnetMaskBits"
         type="number"
         class="form-control"
         aria-label="Subnet Mask Bits"
+        #subnetMaskBits="ngModel"
         [(ngModel)]="network.SubnetMaskBits"
+        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
+        required
       />
 
-    <div class="input-group-prepend">
-      <span class="input-group-text">VLAN Id</span>
+      <div class="input-group-prepend">
+        <span class="input-group-text">VLAN Id</span>
+      </div>
+      <input
+        name="vlanId"
+        type="number"
+        class="form-control"
+        aria-label="VLAN Id"
+        #vlanId="ngModel"
+        [(ngModel)]="network.VlanId"
+        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
+        required
+      />
     </div>
-    <input
-      type="number"
-      class="form-control"
-      aria-label="VLAN Id"
-      [(ngModel)]="network.VlanId"
-    />
-  </div>
-</div>
 
-<div class="btn-group">
-    <button class="btn btn-success" aria-label="Save">Save</button>
-    <button class="btn btn-danger" (click)="createNetwork()" aria-label="Deploy">Deploy</button>
+    <div class="btn-group">
+      <button class="btn btn-success" aria-label="Save">Save</button>
+      <button
+        class="btn btn-danger"
+        type="button"
+        (click)="createNetwork()"
+        aria-label="Deploy"
+      >
+        Deploy
+      </button>
+    </div>
+  </form>
 </div>
