@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-ip-nat-detail',
@@ -7,9 +10,43 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IpNatDetailComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
+              private toastr: ToastrService) {
+    this.ipnat = {};
+
+  }
+
+  Id = '';
+  ipnat: any;
 
   ngOnInit() {
+    this.Id += this.route.snapshot.paramMap.get('id');
+    this.getIpNats();
+  }
+
+  // Device 42 doesn't have an endpoint to receive a specific IP NAT, therefore we will
+  // retrieve all IP NATs and then find the matching one in the resulting array.
+  getIpNats() {
+    this.automationApiService.getIpNats().subscribe(
+      data => this.getIpNat(data),
+      error => {}
+    );
+  }
+
+  getIpNat(ipnats: any) {
+    this.ipnat = ipnats.ipnats.find(i => i.id === parseInt(this.Id));
+  }
+
+  deleteIpNat() {
+      const body = {
+        extra_vars: `{\"ipnat\": ${JSON.stringify(this.ipnat)}}`
+      };
+
+      this.automationApiService.launchTemplate('delete_asa_ipnat', body).subscribe(
+        data => {},
+        error => {},
+        () => this.toastr.warning('Deleting Network Address Translation')
+      );
   }
 
 }

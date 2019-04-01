@@ -1,9 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {FormsModule } from '@angular/forms';
+
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +30,7 @@ import { StaticRouteDetailComponent } from './components/static-routes/static-ro
 import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
+import { SpecialCharacterDirective } from './directives/special-character.directive';
 
 @NgModule({
   declarations: [
@@ -47,15 +52,21 @@ import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-
     StaticRouteDetailComponent,
     IpNatsComponent,
     IpNatDetailComponent,
-    CreateIpNatComponent
+    CreateIpNatComponent,
+    SpecialCharacterDirective,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
+    CommonModule,
     HttpClientModule,
     AngularFontAwesomeModule,
     FormsModule,
-    PapaParseModule
+    PapaParseModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    })
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}],
   bootstrap: [AppComponent]
