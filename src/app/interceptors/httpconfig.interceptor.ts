@@ -12,12 +12,13 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 
 export class HttpConfigInterceptor {
 
-    constructor(private auth: AuthService) {}
+    constructor(private auth: AuthService, private toastr: ToastrService) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const currentUser = this.auth.currentUserValue;
@@ -36,7 +37,7 @@ export class HttpConfigInterceptor {
                 if (event instanceof HttpResponse) {
 
                     if (!environment.production) {
-                        //console.log('debug-httpevent-->>', event);
+                        // console.log('debug-httpevent-->>', event);
                     }
                 }
                 return event;
@@ -47,6 +48,7 @@ export class HttpConfigInterceptor {
                 if (error.status === 401) {
                     this.auth.logout();
                     location.reload();
+                    return;
                 }
 
                 let data = {};
@@ -55,6 +57,8 @@ export class HttpConfigInterceptor {
                     reason: error && error.error.reason ? error.error.reason : '',
                     status: error.status
                 };
+
+                this.toastr.error('Request Failed!');
                 return throwError(error);
             }));
     }

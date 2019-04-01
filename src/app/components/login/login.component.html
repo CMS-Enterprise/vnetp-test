@@ -1,23 +1,48 @@
 <div class="offset-3 col-md-6">
   <div class="text-center" style="display:block; margin:auto;">
-    <form>
+    <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
       <img src="/assets/img/logo-large.png" style="max-width: 268px;" />
 
       <div class="offset-3 form-group col-md-6">
-
         <label for="username">Username:</label>
-        <input name="username" class="form-control" [(ngModel)]="userpass.Username" aria-label="Username"/>
+        <input
+          type="text"
+          name="username"
+          class="form-control"
+          #username="ngModel"
+          [(ngModel)]="userpass.Username"
+          aria-label="Username"
+          [ngClass]="{ 'is-invalid': form.submitted && username.invalid }"
+          required
+        />
+        <div *ngIf="form.submitted && username.invalid" class="invalid-feedback">
+          <div *ngIf="username.errors.required">Username is required</div>
+        </div>
 
         <label for="password">Password:</label>
-        <input name="password" type="password" class="form-control"  [(ngModel)]="userpass.Password" aria-label="Password"/>
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          #password="ngModel"
+          [(ngModel)]="userpass.Password"
+          aria-label="Password"
+          [ngClass]="{ 'is-invalid': form.submitted && password.invalid }"
+          required
+        />
 
+        <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
+            <div *ngIf="password.errors.required">Password is required</div>
+          </div>
       </div>
-      
+
       <div>
         <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
       </div>
 
-      <button class="btn btn-success" type="submit" (click)="login()">Login</button>
+      <button class="btn btn-success" type="submit" (click)="login()">
+        Login
+      </button>
 
       <div *ngIf="errorMessage" class="alert alert-danger">
         {{ errorMessage }}
