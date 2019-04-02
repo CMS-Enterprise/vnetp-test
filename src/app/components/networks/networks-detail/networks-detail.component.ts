@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-networks-detail',
@@ -9,7 +10,8 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) {
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
+              public ngxSmartModalService: NgxSmartModalService) {
     this.subnet = {};
     this.subnetIps = {};
    }
