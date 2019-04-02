@@ -8,7 +8,7 @@
       <fa name="floppy-o" size="2x"></fa>
     </button>
   
-    <button type="button" class="btn btn-info" (click)="getFirewallRules()" aria-label="Refresh Firewall Rules">
+    <button type="button" class="btn btn-info" (click)="getSubnet()" aria-label="Refresh Firewall Rules">
       <fa name="refresh" size="2x"></fa> 
     </button>
 
@@ -39,7 +39,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let firewallRule of firewall_rules">
+    <tr *ngFor="let firewallRule of firewall_rules"
+      [ngClass]="{
+        'table-danger': firewallRule.Deleted,
+        'table-warning': firewallRule.Updated
+      }"
+    >
       <td>
         <p [hidden]="firewallRule.Edit">
           {{firewallRule.Name}}
@@ -87,12 +92,12 @@
         <p [hidden]="firewallRule.Edit">{{firewallRule.DestinationPorts}}</p>
         <input class="form-control" placeholder="any" [(ngModel)]="firewallRule.DestinationPorts" [hidden]="!firewallRule.Edit" aria-label="Destination Ports">    
       </td>
-      <td>
+      <td>  
         <fa 
         name="pencil" 
         (click)="firewallRule.Edit = !firewallRule.Edit" 
         [hidden]="firewallRule.Edit">
-      </fa>        
+      </fa>  
       <fa 
         name="floppy-o" 
         (click)="firewallRule.Edit = !firewallRule.Edit" 
@@ -110,9 +115,21 @@
       </fa>
       <fa
       name ="trash"
-      (click)=deleteFirewallRule(firewallRule)
+      (click)="firewallRule.Deleted = !firewallRule.Deleted"
+      [hidden]="firewallRule.Deleted"
       >
       </fa>
+      <fa
+      name ="undo"
+      (click)="firewallRule.Deleted = !firewallRule.Deleted"
+      [hidden]="!firewallRule.Deleted"
+      >
+      </fa>
+      <fa
+      name="copy"
+      (click)="duplicateFirewallRule(firewallRule)"
+      [hidden]="firewallRule.Deleted"
+      ></fa>
       </td>
     </tr>
   </tbody>
