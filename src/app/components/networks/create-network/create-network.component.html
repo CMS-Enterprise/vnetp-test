@@ -84,7 +84,7 @@
         aria-label="VLAN Id"
         #vlanId="ngModel"
         [(ngModel)]="network.VlanId"
-        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
+        [ngClass]="{ 'is-invalid': form.submitted && vlanId.invalid }"
         required
       />
     </div>
@@ -104,6 +104,6 @@
       >
         Deploy
       </button>
-    </div>
+      </div>
   </form>
 </div>

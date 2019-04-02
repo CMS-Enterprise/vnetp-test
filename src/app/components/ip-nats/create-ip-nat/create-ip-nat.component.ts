@@ -51,7 +51,7 @@ export class CreateIpNatComponent implements OnInit {
     );
   }
 
-  createIpNat() {
+  createIpNat(action: string) {
     const body = {
       extra_vars: `{\"source_subnet\": \"${this.sourceSubnet.name}\",
       \"destination_subnet\": \"${this.destinationSubnet.name}\",
