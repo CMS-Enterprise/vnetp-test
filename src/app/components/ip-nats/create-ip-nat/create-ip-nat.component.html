@@ -19,6 +19,7 @@
         type="text"
         class="form-control"
         aria-label="Name"
+        #name="ngModel"
         [(ngModel)]="ipNat.name"
         [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
         required
@@ -29,10 +30,14 @@
       </div>
 
       <select
-        name="sourceSubnet"
+        name="sourceSubnetName"
         class="form-control"
+        aria-label="Source Subnet"
+        #sourceSubnetName="ngModel"
         [(ngModel)]="sourceSubnet"
         (ngModelChange)="getSubnetIps(sourceSubnet, 'source')"
+        [ngClass]="{ 'is-invalid': form.submitted && sourceSubnetName.invalid }"
+        required
       >
         <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
           subnet.name
@@ -44,11 +49,15 @@
       </div>
 
       <select
-        name="destinationSubnet"
+        name="destinationSubnetName"
         class="form-control"
+        aria-label="Destination Subnet"
+        #destinationSubnetName="ngModel"
         [(ngModel)]="destinationSubnet"
         [ngModelOptions]="standalone"
         (ngModelChange)="getSubnetIps(destinationSubnet, 'destination')"
+        [ngClass]="{ 'is-invalid': form.submitted && destinationSubnetName.invalid }"
+        required
       >
         <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
           subnet.name
@@ -82,7 +91,7 @@
         name="destinationIpAddress"
         class="form-control"
         aria-label="Destination IP Address"
-        #sourceIpAddress="ngModel"
+        #destinationIpAddress="ngModel"
         [(ngModel)]="ipNat.ip_address_to"
         [ngClass]="{ 'is-invalid': form.submitted && destinationIpAddress.invalid }"
         required
@@ -95,13 +104,6 @@
     </div>
 
     <div class="btn-group">
-      <!-- <button
-          class="btn btn-success"
-          aria-label="Save"
-          (click)="createIpNat('save')"
-        >
-          Save
-        </button> -->
       <button
         class="btn btn-danger"
         aria-label="Deploy"

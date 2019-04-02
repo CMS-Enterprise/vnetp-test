@@ -9,14 +9,16 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./create-ip-nat.component.css']
 })
 export class CreateIpNatComponent implements OnInit {
-
-  constructor(private automationApiService: AutomationApiService, private toastr: ToastrService) {
+  constructor(
+    private automationApiService: AutomationApiService,
+    private toastr: ToastrService
+  ) {
     this.subnets = [];
     this.sourceSubnetIps = [];
     this.destinationSubnetIps = [];
     this.ipNat = new IpNat();
     this.ipNat.two_way_relation = true;
-   }
+  }
 
   subnets: any;
   sourceSubnetIps: any;
@@ -30,20 +32,17 @@ export class CreateIpNatComponent implements OnInit {
   }
 
   getSubnets() {
-    this.automationApiService.getSubnets().subscribe(
-      data => this.subnets = data,
-      error => console.error(error)
-      );
+    this.automationApiService
+      .getSubnets()
+      .subscribe(data => (this.subnets = data), error => console.error(error));
   }
 
-  getSubnetIps( subnet: any, subnetType) {
-
+  getSubnetIps(subnet: any, subnetType) {
     this.automationApiService.getSubnetIps(subnet.subnet_id).subscribe(
       data => {
         if (subnetType === 'source') {
           this.sourceSubnetIps = data;
-        } else
-        if (subnetType === 'destination') {
+        } else if (subnetType === 'destination') {
           this.destinationSubnetIps = data;
         }
       },
@@ -52,16 +51,28 @@ export class CreateIpNatComponent implements OnInit {
   }
 
   createIpNat(action: string) {
+    if (
+      !this.ipNat.ip_address_from ||
+      !this.ipNat.ip_address_to ||
+      !this.sourceSubnet ||
+      !this.destinationSubnet
+    ) {
+      this.toastr.error('Invalid Data');
+      return;
+    }
+
     const body = {
       extra_vars: `{\"source_subnet\": \"${this.sourceSubnet.name}\",
       \"destination_subnet\": \"${this.destinationSubnet.name}\",
       \"ipnat\": ${JSON.stringify(this.ipNat)}}`
     };
 
-    this.automationApiService.launchTemplate('create_asa_ipnat', body).subscribe(
-      data => {},
-      error => {},
-      () => this.toastr.success('Creating Network Address Translation')
-    )
+    this.automationApiService
+      .launchTemplate('create_asa_ipnat', body)
+      .subscribe(
+        data => {},
+        error => {},
+        () => this.toastr.success('Creating Network Address Translation')
+      );
   }
 }
