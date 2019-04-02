@@ -34,6 +34,7 @@
       <input
         name="networkAddress"
         type="text"
+        mask="009.009.009.009"
         class="form-control"
         aria-label="Network Address"
         #networkAddress="ngModel"
@@ -48,6 +49,7 @@
       <input
         name="subnetMask"
         type="text"
+        mask="009.009.009.009"
         class="form-control"
         aria-label="Subnet Mask"
         #subnetMask="ngModel"
@@ -62,6 +64,7 @@
       <input
         name="subnetMaskBits"
         type="number"
+        mask="09"
         class="form-control"
         aria-label="Subnet Mask Bits"
         #subnetMaskBits="ngModel"
@@ -76,6 +79,7 @@
       <input
         name="vlanId"
         type="number"
+        mask="09"
         class="form-control"
         aria-label="VLAN Id"
         #vlanId="ngModel"
@@ -86,11 +90,16 @@
     </div>
 
     <div class="btn-group">
-      <button class="btn btn-success" aria-label="Save">Save</button>
+      <button
+        class="btn btn-success"
+        (click)="createNetwork('save')"
+        aria-label="Save"
+      >
+        Save
+      </button>
       <button
         class="btn btn-danger"
-        type="button"
-        (click)="createNetwork()"
+        (click)="createNetwork('deploy')"
         aria-label="Deploy"
       >
         Deploy

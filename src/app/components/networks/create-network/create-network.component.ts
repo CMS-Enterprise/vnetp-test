@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
-import { routerNgProbeToken } from '@angular/router/src/router_module';
 import { Network } from 'src/app/models/network';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-network',
@@ -13,16 +13,18 @@ export class CreateNetworkComponent implements OnInit {
 
   network = new Network();
 
-  constructor(private automationApiService: AutomationApiService, private router: Router) { }
+  constructor(private automationApiService: AutomationApiService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit() {
   }
 
-  createNetwork() {
+  createNetwork(action: string) {
 
     if (!this.network.Name || !this.network.NetworkAddress
       || !this.network.SubnetMask || !this.network.SubnetMaskBits
-      || !this.network.VlanId) { return; }
+      || !this.network.VlanId) {
+        this.toastr.error('Invalid Data');
+        return; }
 
     const body = {
       extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${this.network.NetworkAddress}
@@ -30,8 +32,10 @@ export class CreateNetworkComponent implements OnInit {
       ,\"subnet_mask_bits\": ${this.network.SubnetMaskBits}}`
     };
 
+    if (action === 'deploy') {
     this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('create_vlan', body).subscribe();
+    }
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
     this.router.navigate(['/networks']);
   }
