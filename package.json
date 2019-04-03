@@ -23,6 +23,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
+    "ip-subnet-calculator": "^1.1.8",
     "jquery": "^3.3.1",
     "ngx-mask": "^7.8.9",
     "ngx-papaparse": "^3.0.2",

@@ -43,6 +43,21 @@
       />
 
       <div class="input-group-prepend">
+        <span class="input-group-text">Subnet Mask Bits</span>
+      </div>
+      <input
+        name="subnetMaskBits"
+        type="number"
+        class="form-control"
+        aria-label="Subnet Mask Bits"
+        #subnetMaskBits="ngModel"
+        [(ngModel)]="network.SubnetMaskBits"
+        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
+        (keyup)="calculateSubnetMask()"
+        required
+      />
+
+      <div class="input-group-prepend">
         <span class="input-group-text">Subnet Mask</span>
       </div>
       <input
@@ -54,21 +69,10 @@
         [(ngModel)]="network.SubnetMask"
         [ngClass]="{ 'is-invalid': form.submitted && subnetMask.invalid }"
         required
+        disabled
       />
 
-      <div class="input-group-prepend">
-        <span class="input-group-text">Subnet Mask Bits</span>
-      </div>
-      <input
-        name="subnetMaskBits"
-        type="number"
-        class="form-control"
-        aria-label="Subnet Mask Bits"
-        #subnetMaskBits="ngModel"
-        [(ngModel)]="network.SubnetMaskBits"
-        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
-        required
-      />
+
 
       <div class="input-group-prepend">
         <span class="input-group-text">VLAN Id</span>
@@ -88,7 +92,7 @@
     <div class="btn-group">
       <button
         class="btn btn-success"
-        (click)="createNetwork()"
+        (click)="validateIp()"
         aria-label="Save"
         disabled
       >
