@@ -18,7 +18,7 @@ export class CreateNetworkComponent implements OnInit {
   ngOnInit() {
   }
 
-  createNetwork(action: string) {
+  createNetwork() {
 
     if (!this.network.Name || !this.network.NetworkAddress
       || !this.network.SubnetMask || !this.network.SubnetMaskBits
@@ -32,10 +32,8 @@ export class CreateNetworkComponent implements OnInit {
       ,\"subnet_mask_bits\": ${this.network.SubnetMaskBits}}`
     };
 
-    if (action === 'deploy') {
     this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    }
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
     this.router.navigate(['/networks']);
   }

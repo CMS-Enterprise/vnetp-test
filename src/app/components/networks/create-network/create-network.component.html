@@ -92,14 +92,15 @@
     <div class="btn-group">
       <button
         class="btn btn-success"
-        (click)="createNetwork('save')"
+        (click)="createNetwork()"
         aria-label="Save"
+        disabled
       >
         Save
       </button>
       <button
         class="btn btn-danger"
-        (click)="createNetwork('deploy')"
+        (click)="createNetwork()"
         aria-label="Deploy"
       >
         Deploy
