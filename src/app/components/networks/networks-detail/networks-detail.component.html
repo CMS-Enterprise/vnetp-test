@@ -1,8 +1,12 @@
 <div class="text-center">
   <h3>Network: {{ subnet.name }}</h3>
   <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
-  <!-- <button class="btn btn-danger" (click)="deleteSubnet()">Delete</button> -->
-  <button class="btn btn-danger" (click)="ngxSmartModalService.getModal('yesNoModal').open()">Delete</button>
+  <button
+    class="btn btn-danger"
+    (click)="ngxSmartModalService.getModal('deleteSubnetModal').open()"
+  >
+    Delete
+  </button>
 </div>
 
 <div class="offset-1 col-md-10">
@@ -36,3 +40,48 @@
     </tbody>
   </table>
 </div>
+
+<ngx-smart-modal
+  #deleteSubnetModal
+  identifier="deleteSubnetModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h5 class="modal-title">Do you want to delete Subnet '{{ subnet.name }}'</h5>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <p>This will delete all static routes, NAT rules and Firewall rules associated with this subnet.</p>
+
+    <p class="py-3">Type 'DELETE' and click 'Yes'</p>
+    <input class="form-control" [(ngModel)]="deleteSubnetConfirm" />
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="deleteSubnet()"
+      [disabled]="deleteSubnetConfirm !== 'DELETE'"
+    >
+      Yes
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
+    >
+      No
+    </button>
+  </div>
+</ngx-smart-modal>

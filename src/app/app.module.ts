@@ -35,7 +35,6 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
-import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +58,6 @@ import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-mod
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
-    YesNoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,7 +76,7 @@ import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-mod
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

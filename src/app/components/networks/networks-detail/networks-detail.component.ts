@@ -19,6 +19,7 @@ export class NetworksDetailComponent implements OnInit {
   Id = '';
   subnet: any;
   subnetIps: any;
+  deleteSubnetConfirm = '';
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -42,6 +43,8 @@ export class NetworksDetailComponent implements OnInit {
   }
 
   deleteSubnet() {
+    if (this.deleteSubnetConfirm !== 'DELETE') { return; }
+
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name}, \"vlan_id\": ${this.subnet.description}, \"subnet_id\": ${this.subnet.subnet_id}}`
     };
