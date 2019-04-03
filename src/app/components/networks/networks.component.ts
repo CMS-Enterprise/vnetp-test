@@ -10,7 +10,7 @@ import { Network } from 'src/app/models/network';
 })
 export class NetworksComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService) { 
+  constructor(private automationApiService: AutomationApiService) {
     this.subnets = [];
   }
 
