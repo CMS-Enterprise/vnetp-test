@@ -44,7 +44,6 @@
               [(ngModel)]="route.IpAddress"
               (ngModelChange)="route.Updated = true"
               [hidden]="!route.Edit"
-              mask="009.009.009.009"
             />
           </td>
           <td>
@@ -55,7 +54,6 @@
               [(ngModel)]="route.SubnetMask"
               (ngModelChange)="route.Updated = true"
               [hidden]="!route.Edit"
-              mask="009.009.009.009"
             />
           </td>
           <td>
@@ -66,7 +64,6 @@
               [(ngModel)]="route.NextHop"
               (ngModelChange)="route.Updated = true"
               [hidden]="!route.Edit"
-              mask="009.009.009.009"
             />
           </td>
           <td>
