@@ -1,152 +1,101 @@
-<!--TODO: Auto-generate subnet mask bits from subnet mask input.-->
-<!--TODO: Custom Validator for IP Addresses and Subnet Masks.-->
+<!--TODO: Form can currently be submitted with invalid CIDR format address-->
 
 <h4>Create Network</h4>
 
-<div class="card">
-  <form
-    name="networkForm"
-    class="form"
-    (ngSubmit)="form.form.valid && createNetwork()"
-    #form="ngForm"
-    novalidate
-  >
-    <div class="form-group input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Name</span>
-      </div>
-
-      <input
-        name="name"
-        appIsAlphanumeric
-        type="text"
-        class="form-control"
-        aria-label="Name"
-        #name="ngModel"
-        [(ngModel)]="network.Name"
-        [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
-        required
-      />
-
-      <div class="input-group-prepend">
-        <span class="input-group-text">Network Address</span>
-      </div>
-      <input
-        name="networkAddress"
-        type="text"
-        class="form-control"
-        aria-label="Network Address"
-        #networkAddress="ngModel"
-        [(ngModel)]="network.NetworkAddress"
-        [ngClass]="{ 'is-invalid': form.submitted && networkAddress.invalid }"
-        [dropSpecialCharacters]="false"
-        mask="099.099.099.099"
-        required
-      />
-
-      <div class="input-group-prepend">
-        <span class="input-group-text">Subnet Mask Bits</span>
-      </div>
-      <input
-        name="subnetMaskBits"
-        type="number"
-        class="form-control"
-        aria-label="Subnet Mask Bits"
-        #subnetMaskBits="ngModel"
-        [(ngModel)]="network.SubnetMaskBits"
-        [ngClass]="{ 'is-invalid': form.submitted && subnetMaskBits.invalid }"
-        (keyup)="calculateSubnetMask()"
-        required
-      />
-
-      <div class="input-group-prepend">
-        <span class="input-group-text">VLAN Id</span>
-      </div>
-      <input
-        name="vlanId"
-        type="number"
-        class="form-control"
-        aria-label="VLAN Id"
-        #vlanId="ngModel"
-        [(ngModel)]="network.VlanId"
-        [ngClass]="{ 'is-invalid': form.submitted && vlanId.invalid }"
-        required
-      />
-    </div>
-  </form>
-</div>
-
-{{ network.SubnetMask}}
-
 <div class="offset-1 col-md-10">
   <div>
-    <form>
+    <form
+      name="networkForm"
+      class="form"
+      (ngSubmit)="form.form.valid && createNetwork()"
+      #form="ngForm"
+      novalidate
+    >
       <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="name">Network Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          placeholder="Network Name"
-        />
-      </div>
-      <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
+          <label for="name">Network Name</label>
+          <input
+            name="name"
+            appIsAlphanumeric
+            type="text"
+            class="form-control"
+            aria-label="Network Name"
+            #name="ngModel"
+            [(ngModel)]="network.Name"
+            [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
+            required
+          />
+        </div>
+        <div class="form-group col-md-4">
           <label for="protocol">Protocol</label>
-        <select class="form-control" id="protocol" disabled>
-          <option selected>IPv4</option>
-        </select>
+          <select class="form-control" id="protocol" disabled>
+            <option selected>IPv4</option>
+          </select>
+        </div>
       </div>
-    </div>
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputAddress">Network Address</label>
           <input
+            name="networkAddress"
             type="text"
             class="form-control"
-            id="inputAddress"
-            placeholder="x.x.x.x"
+            aria-label="Network Address"
+            #networkAddress="ngModel"
+            [(ngModel)]="cidrAddress"
+            (ngModelChange)="calculateNetwork()"
+            [ngClass]="{
+              'is-invalid': form.submitted && networkAddress.invalid
+            }"
+            [dropSpecialCharacters]="false"
+            mask="099.099.099.099/09"
+            required
           />
         </div>
-        <div class="form-group col-md-1">
-          <label for="inputAddress2">Subnet Mask</label>
+        <div class="form-group col-md-2">
+          <label for="subnetMask">Subnet Mask</label>
           <input
             type="text"
-            class="form-control"
-            id="inputAddress2"
-            placeholder="yy"
+            readonly
+            class="form-control-plaintext"
+            id="subnetMask"
+            value="{{ this.network.SubnetMask }}"
           />
         </div>
-        <div class="form-group col-md-1">
-          192.168.1.3-192.168.1.254
+        <div class="form-group col-md-2">
+          <label for="usableAddressSpace">Usable Addresses</label>
+          <input
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="usableAddressSpace"
+            value="{{ usableRange }}"
+          />
         </div>
-        <div class="form-group col-md-1">
-          255.255.255.0
+        <div class="form-group col-md-2">
+          <label for="subnetMask">Total Addresses</label>
+          <input
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="subnetMask"
+            value="{{ rangeSize }}"
+          />
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="inputCity">City</label>
-          <input type="text" class="form-control" id="inputCity" />
-        </div>
-        <div class="form-group col-md-4">
-          <label for="inputState">State</label>
-          <select id="inputState" class="form-control">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
-        </div>
-        <div class="form-group col-md-2">
-          <label for="inputZip">Zip</label>
-          <input type="text" class="form-control" id="inputZip" />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="gridCheck" />
-          <label class="form-check-label" for="gridCheck">
-            Check me out
-          </label>
+        <div class="form-group col-md-1">
+          <label for="vlanId">VLAN ID</label>
+          <input
+            name="vlanId"
+            type="number"
+            class="form-control"
+            aria-label="VLAN Id"
+            #vlanId="ngModel"
+            [(ngModel)]="network.VlanId"
+            [ngClass]="{ 'is-invalid': form.submitted && vlanId.invalid }"
+            required
+          />
         </div>
       </div>
       <div class="btn-group">
@@ -157,7 +106,7 @@
           class="btn btn-danger"
           (click)="createNetwork()"
           aria-label="Deploy"
-          type="button"
+          type="submit"
         >
           Deploy
         </button>
