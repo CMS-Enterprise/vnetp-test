@@ -25,14 +25,12 @@ export class CreateNetworkComponent implements OnInit {
   }
 
   calculateSubnetMask() {
-    if (this.network.SubnetMaskBits < 0) { this.network.SubnetMaskBits = 1; }
+    if (this.network.SubnetMaskBits < 0) { this.network.SubnetMaskBits = 0; }
     if (this.network.SubnetMaskBits > 32 ) { this.network.SubnetMaskBits = 32; }
 
     if (!this.validateIp(this.network.NetworkAddress)) { return; }
 
     var result =  this.ipService.calculateSubnetMask(this.network.NetworkAddress, this.network.SubnetMaskBits);
-
-    console.log(result);
 
     this.network.SubnetMask = result.prefixMaskStr;
   }
@@ -43,7 +41,6 @@ export class CreateNetworkComponent implements OnInit {
         this.toastr.error('Invalid Data');
         return;
       }
-
 
     const body = {
       extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${this.network.NetworkAddress}
