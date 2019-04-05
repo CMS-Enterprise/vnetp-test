@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { IPv4 } from "ip-num/IPv4";
-import { IPv6 } from "ip-num/IPv6";
-import { IPv4Range } from "ip-num/IPv4Range";
-import { Validator } from "ip-num/Validator";
-import * as IpSubnetCalculator from "ip-subnet-calculator/lib/ip-subnet-calculator.js";
+import { Injectable } from '@angular/core';
+import { IPv4 } from 'ip-num/IPv4';
+import { IPv6 } from 'ip-num/IPv6';
+import { IPv4Range } from 'ip-num/IPv4Range';
+import { Validator } from 'ip-num/Validator';
+import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class IpAddressService {
   constructor() {}
@@ -24,10 +24,10 @@ export class IpAddressService {
   }
 
   public ipv4MaskLessThan(cidr: string, length: number) {
-    let cidrComponents = cidr.split('/');
+    const cidrComponents = cidr.split('/');
 
-    let ip = cidrComponents[0];
-    let range = cidrComponents[1];
+    const ip = cidrComponents[0];
+    const range = cidrComponents[1];
 
     if (+range > length) {
       return false;
@@ -36,28 +36,28 @@ export class IpAddressService {
   }
 
   public updateCidrMask(cidr: string, value: number) {
-    let cidrComponents = cidr.split('/');
+    const cidrComponents = cidr.split('/');
 
-    let ip = cidrComponents[0];
-    let range = cidrComponents[1];
+    const ip = cidrComponents[0];
+    const range = cidrComponents[1];
 
     return `${ip}/${value}`;
   }
 
-  public calculateSubnetMask(cidr: string): string{
-    let cidrComponents = cidr.split('/');
+  public calculateSubnetMask(cidr: string): string {
+    const cidrComponents = cidr.split('/');
 
-    let ip = cidrComponents[0];
-    let range = cidrComponents[1];
+    const ip = cidrComponents[0];
+    const range = cidrComponents[1];
 
     return IpSubnetCalculator.calculateSubnetMask(ip, range).prefixMaskStr;
   }
 
   public getCidrMask(cidr: string): number {
-    let cidrComponents = cidr.split('/');
+    const cidrComponents = cidr.split('/');
 
-    let ip = cidrComponents[0];
-    let range = cidrComponents[1];
+    const ip = cidrComponents[0];
+    const range = cidrComponents[1];
 
     return +range;
   }
