@@ -32,13 +32,13 @@ export class CreateNetworkComponent implements OnInit {
 
   calculateNetwork() {
 
-    const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
-    if (!isValid) { return; }
-
     // If the range portion of the CIDR address is greater than 30, set it to 30.
     if (!this.ipService.ipv4MaskLessThan(this.cidrAddress, 30)) {
-     this.cidrAddress = this.ipService.updateCidrMask(this.cidrAddress, 30);
-   }
+      this.cidrAddress = this.ipService.updateCidrMask(this.cidrAddress, 30);
+    }
+
+    const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
+    if (!isValid) { return; }
 
     let ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);
     this.usableRange = `${ipv4Range.getFirst().nextIPNumber().nextIPNumber()}-${ipv4Range.getLast()}`;
