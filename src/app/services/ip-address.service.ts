@@ -1,9 +1,12 @@
+// TODO: Given a valid input, IP service should return a network object.
+
 import { Injectable } from '@angular/core';
 import { IPv4 } from 'ip-num/IPv4';
 import { IPv6 } from 'ip-num/IPv6';
 import { IPv4Range } from 'ip-num/IPv4Range';
 import { Validator } from 'ip-num/Validator';
 import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';
+import { Network } from '../models/network';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +41,8 @@ export class IpAddressService {
   public updateCidrMask(cidr: string, value: number) {
     const cidrComponents = cidr.split('/');
 
+    if (cidrComponents.length < 2) { return; }
+
     const ip = cidrComponents[0];
     const range = cidrComponents[1];
 
@@ -60,5 +65,12 @@ export class IpAddressService {
     const range = cidrComponents[1];
 
     return +range;
+  }
+
+  // TODO: Initialize and return network object
+  public getNetworkFromCidr(cidr: string): Network {
+    let network = new Network();
+    throw new Error('Not Implemented');
+    return network;
   }
 }

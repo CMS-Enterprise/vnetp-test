@@ -19,7 +19,9 @@ export class CreateNetworkComponent implements OnInit {
   cidrAddress: string;
   subnetMask: string;
   usableRange: string;
+  gateway: string;
   rangeSize: string;
+  lastValidCidr: string;
 
   constructor(
     private automationApiService: AutomationApiService,
@@ -30,6 +32,8 @@ export class CreateNetworkComponent implements OnInit {
 
   ngOnInit() {}
 
+
+  // TODO: Refactor
   calculateNetwork() {
 
     // If the range portion of the CIDR address is greater than 30, set it to 30.
@@ -37,20 +41,31 @@ export class CreateNetworkComponent implements OnInit {
       this.cidrAddress = this.ipService.updateCidrMask(this.cidrAddress, 30);
     }
 
+    // Validate that the supplied CIDR notation contains a valid IP address.
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
-    if (!isValid) { return; }
+    if (!isValid) {
+      if (this.lastValidCidr != null || this.lastValidCidr !== '') {
+        this.cidrAddress = this.lastValidCidr;
+      }
+      return; }
 
-    let ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);
-    this.usableRange = `${ipv4Range.getFirst().nextIPNumber().nextIPNumber()}-${ipv4Range.getLast()}`;
+    if (isValid) {
+      this.lastValidCidr = this.cidrAddress;
+    }
+
+    // TODO: Add this data into the network object
+    const ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);
+    this.usableRange = `${ipv4Range.getFirst().nextIPNumber().nextIPNumber()}-${ipv4Range.getLast().previousIPNumber()}`;
     this.rangeSize = ipv4Range.getSize().toString();
+    this.gateway = `${ipv4Range.getFirst().nextIPNumber()}`;
 
+    // TODO: This network object will be returned from the IP service.
     this.network.NetworkAddress = ipv4Range.getFirst().nextIPNumber().toString();
     this.network.SubnetMask = this.ipService.calculateSubnetMask(this.cidrAddress);
     this.network.SubnetMaskBits = this.ipService.getCidrMask(this.cidrAddress);
   }
 
   createNetwork() {
-
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
     if (
@@ -65,22 +80,14 @@ export class CreateNetworkComponent implements OnInit {
     }
 
     const body = {
-      extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${
-        this.network.NetworkAddress
-      }
-      ,\"subnet_mask\": ${this.network.SubnetMask},\"customer_id\": ${
-        this.network.Name
-      }
+      extra_vars: `{\"vlan_id\": ${this.network.VlanId},\"ip_address\": ${this.network.NetworkAddress }
+      ,\"subnet_mask\": ${this.network.SubnetMask},\"customer_id\": ${this.network.Name}
       ,\"subnet_mask_bits\": ${this.network.SubnetMaskBits}}`
     };
 
-    this.automationApiService
-      .launchTemplate('create_asa_subinterface', body)
-      .subscribe();
+    this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    this.automationApiService
-      .launchTemplate('create_device42_subnet', body)
-      .subscribe();
+    this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
     this.router.navigate(['/networks']);
   }
 }
