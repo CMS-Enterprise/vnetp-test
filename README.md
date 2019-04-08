@@ -1,5 +1,7 @@
 [![Build Status](https://drone.cds-cloud-labs.net/api/badges/draas/ui/status.svg)](https://drone.cds-cloud-labs.net/draas/ui)
 
+Adding drone
+
 # AutomationUi
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
