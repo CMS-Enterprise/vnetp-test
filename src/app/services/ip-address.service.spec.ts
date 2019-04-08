@@ -10,18 +10,63 @@ describe('IpAddressService', () => {
     expect(service).toBeTruthy();
   });
 
+  // isValidIPv4String
+  // Valid
+  it('ip address shoudl be valid', () => {
+    const service : IpAddressService = TestBed.get(IpAddressService);
+    const result = service.isValidIPv4CidrNotation('10.102.34.5')
+    expect(result[0]).toBeTruthy();
+  });
+
+  // Invalid
+  it('ip address shoudl not be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const result = service.isValidIPv4CidrNotation('302.23.434.51');
+    expect(result[0]).toBeFalsy();
+  });
+
+  // isValidIPv4CidrNotation Tests
+  // Valid
+  it('cidr notation should be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const result0 = service.isValidIPv4CidrNotation('10.0.0.0/8');
+    expect(result0[0]).toBeTruthy();
+    const result1 = service.isValidIPv4CidrNotation('172.20.74.253/24');
+    expect(result1[0]).toBeTruthy();
+    const result2 = service.isValidIPv4CidrNotation('192.168.74.253/24');
+    expect(result2[0]).toBeTruthy();
+  });
+
+  // Invalid
+  it('cidr notation should not be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const result0 = service.isValidIPv4CidrNotation('10.0.0.0/33');
+    expect(result0[0]).toBeFalsy();
+    const result1 = service.isValidIPv4CidrNotation('372.20.74.253/24');
+    expect(result1[0]).toBeFalsy();
+    const result2 = service.isValidIPv4CidrNotation('192.168.741.253/24');
+    expect(result2[0]).toBeFalsy();
+  });
+
+// TODO: getIpv4Range Tests
+// TODO: ipv4MaskLessThan Tests
+
 // updateCidrMask Tests
-  it('should be changed to 30', () => {
+  it('mask should be changed to 30', () => {
   const service: IpAddressService = TestBed.get(IpAddressService);
   const cidr = '192.168.1.0/24';
   const result = service.updateCidrMask(cidr, 30).split('/');
   expect(result[1] === '30').toBeTruthy();
   });
 
-  it('should not be changed', () => {
+  it('mask should not be changed', () => {
   const service: IpAddressService = TestBed.get(IpAddressService);
   const cidr = '192.168.1.0/24';
   const result = service.updateCidrMask(cidr, 24).split('/');
   expect(result[1] === '24').toBeTruthy();
   });
+
+  // TODO: calculateSubnetMask Tests
+  // TODO: getCidrMask Tests
+  // TODO: getNetworkFromCidr Tests
 });
