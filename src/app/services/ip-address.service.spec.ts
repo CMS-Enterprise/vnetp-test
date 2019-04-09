@@ -79,7 +79,27 @@ describe('IpAddressService', () => {
   expect(result[1] === '24').toBeTruthy();
   });
 
-  // TODO: calculateSubnetMask Tests
-  // TODO: getCidrMask Tests
-  // TODO: getNetworkFromCidr Tests
+  // calculateSubnetMask Tests
+  it('mask should be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.calculateSubnetMask(cidr);
+    expect(result === '255.255.255.0').toBeTruthy();
+  });
+
+  // getCidrMask Tests
+  it('cidr mask should be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.getCidrMask(cidr);
+    expect(result === 24).toBeTruthy();
+  });
+
+  // getNetworkFromCidr Tests
+  it('network should be valid', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.getNetworkFromCidr(cidr);
+    expect(result.SubnetMask === '255.255.255.0');
+  });
 });
