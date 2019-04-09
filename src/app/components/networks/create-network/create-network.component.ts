@@ -21,7 +21,6 @@ export class CreateNetworkComponent implements OnInit {
   usableRange: string;
   gateway: string;
   rangeSize: string;
-  lastValidCidr: string;
 
   constructor(
     private automationApiService: AutomationApiService,
@@ -35,7 +34,6 @@ export class CreateNetworkComponent implements OnInit {
 
   // TODO: Refactor
   calculateNetwork() {
-
     // If the range portion of the CIDR address is greater than 30, set it to 30.
     if (!this.ipService.ipv4MaskLessThan(this.cidrAddress, 30)) {
       this.cidrAddress = this.ipService.updateCidrMask(this.cidrAddress, 30);
@@ -44,14 +42,9 @@ export class CreateNetworkComponent implements OnInit {
     // Validate that the supplied CIDR notation contains a valid IP address.
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
     if (!isValid) {
-      if (this.lastValidCidr != null || this.lastValidCidr !== '') {
-        this.cidrAddress = this.lastValidCidr;
-      }
       return; }
 
-    if (isValid) {
-      this.lastValidCidr = this.cidrAddress;
-    }
+    // TODO: Validate that the subnet doesn't already exist.
 
     // TODO: Add this data into the network object
     const ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);

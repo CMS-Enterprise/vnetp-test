@@ -7,12 +7,13 @@ import { IPv4Range } from 'ip-num/IPv4Range';
 import { Validator } from 'ip-num/Validator';
 import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';
 import { Network } from '../models/network';
+import { AutomationApiService } from './automation-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IpAddressService {
-  constructor() {}
+  constructor(private apiService: AutomationApiService) {}
 
   public isValidIPv4String(ipAddress: string): [boolean, string[]] {
     return Validator.isValidIPv4String(ipAddress);
@@ -72,5 +73,11 @@ export class IpAddressService {
     let network = new Network();
     throw new Error('Not Implemented');
     return network;
+  }
+
+  // Returns a boolean indicating whether the supplied network
+  // exists in Device42
+  public checkDevice42Network(cidr : string) : boolean{
+    throw new Error('Not Implemented');
   }
 }
