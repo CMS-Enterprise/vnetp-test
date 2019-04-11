@@ -13,7 +13,7 @@ import { AutomationApiService } from './automation-api.service';
   providedIn: 'root'
 })
 export class IpAddressService {
-  constructor(private apiService: AutomationApiService) {}
+  constructor() {}
 
   public isValidIPv4String(ipAddress: string): [boolean, string[]] {
     return Validator.isValidIPv4String(ipAddress);
@@ -73,11 +73,5 @@ export class IpAddressService {
     let network = new Network();
     throw new Error('Not Implemented');
     return network;
-  }
-
-  // Returns a boolean indicating whether the supplied network
-  // exists in Device42
-  public checkDevice42Network(cidr : string) : boolean{
-    throw new Error('Not Implemented');
   }
 }

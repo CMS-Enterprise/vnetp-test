@@ -22,6 +22,7 @@
             aria-label="Network Name"
             #name="ngModel"
             [(ngModel)]="network.Name"
+            (ngModelChange)="calculateNetwork()"
             [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
             required
           />
@@ -34,7 +35,7 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-2">
+        <div class="col-md-2 mb-3">
           <label for="inputAddress">Network Address</label>
           <input
             name="networkAddress"
@@ -51,6 +52,9 @@
             mask="099.099.099.099/09"
             required
           />
+          <div *ngIf="subnetExists" class="alert alert-danger">
+            <div>Subnet/Name already in use.</div>
+          </div>
         </div>
         <div class="form-group col-md-2">
           <label for="subnetMask">Subnet Mask</label>

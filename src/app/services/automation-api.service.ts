@@ -26,7 +26,7 @@ export class AutomationApiService {
   }
 
   doqlQuery(query: string) {
-    return this.http.get(environment.apiBase + '/services/data/v1.0/query/' + '?query=' + query + '&output_type=json');
+    return this.http.get(environment.apiBase + '/services/data/v1.0/query/?query=' + query + '&output_type=json');
   }
 
   getIps() {
