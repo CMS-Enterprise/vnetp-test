@@ -12,14 +12,14 @@ describe('IpAddressService', () => {
 
   // isValidIPv4String
   // Valid
-  it('ip address shoudl be valid', () => {
+  it('ip address should be valid', () => {
     const service: IpAddressService = TestBed.get(IpAddressService);
     const result = service.isValidIPv4CidrNotation('10.102.34.5');
     expect(result[0]).toBeTruthy();
   });
 
   // Invalid
-  it('ip address shoudl not be valid', () => {
+  it('ip address should not be valid', () => {
     const service: IpAddressService = TestBed.get(IpAddressService);
     const result = service.isValidIPv4CidrNotation('302.23.434.51');
     expect(result[0]).toBeFalsy();
@@ -48,7 +48,15 @@ describe('IpAddressService', () => {
     expect(result2[0]).toBeFalsy();
   });
 
-// TODO: getIpv4Range Tests
+// getIpv4Range Tests
+  it('should be a valid ip range', () => {
+  const service: IpAddressService = TestBed.get(IpAddressService);
+  const cidr = '192.168.1.0/24';
+  const result = service.getIpv4Range(cidr);
+  expect(`${result.getFirst()}` === '192.168.1.0');
+  expect(`${result.getLast()}` === '192.168.1.255');
+});
+
 // ipv4MaskLessThan Tests
   it('mask should be less than', () => {
   const service: IpAddressService = TestBed.get(IpAddressService);
