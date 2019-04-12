@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-ip-nat-detail',
@@ -10,10 +11,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class IpNatDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private toastr: ToastrService) {
+  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+              private route: ActivatedRoute, private router: Router, private toastr: ToastrService) {
     this.ipnat = {};
-
   }
 
   Id = '';
@@ -43,10 +43,10 @@ export class IpNatDetailComponent implements OnInit {
       };
 
       this.automationApiService.launchTemplate('delete_asa_ipnat', body).subscribe(
-        data => {},
-        error => {},
         () => this.toastr.warning('Deleting Network Address Translation')
       );
+
+      this.messageService.filter('Job Launched');
   }
 
 }

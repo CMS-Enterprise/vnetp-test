@@ -64,10 +64,7 @@ export class StaticRouteDetailComponent implements OnInit {
       \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
     };
 
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe(
-      data => {},
-      error => console.log(error)
-    );
+    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
 
     this.messageService.filter('Job Launched');
   }

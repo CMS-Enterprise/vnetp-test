@@ -62,7 +62,7 @@ export class CreateIpNatComponent implements OnInit {
 
     this.automationApiService.launchTemplate('create_asa_ipnat', body).subscribe(
       () => this.toastr.success('Creating Network Address Translation')
-    )
+    );
 
     this.messageService.filter('Job Launched');
 
