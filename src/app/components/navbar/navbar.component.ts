@@ -23,10 +23,7 @@ export class NavbarComponent implements OnInit {
         // if no jobs are currently running.
         if (this.runningJobs.count <= 0) {
           this.runningJobs = { count: 1};
-
-          setTimeout(() => {
-            this.getRunningJobs();
-          }, 2500);
+          this.skipNextUpdate = true;
         }
       }
     });
@@ -35,16 +32,20 @@ export class NavbarComponent implements OnInit {
   loggedIn: boolean;
   runningJobs: any;
   currentUser: User;
+  skipNextUpdate: boolean;
 
   jobPoller = setInterval(() => this.getRunningJobs() , 10000);
 
   getRunningJobs() {
 
     if (!this.currentUser) { return; }
+    if (this.skipNextUpdate) {
+      this.skipNextUpdate = false;
+      return;
+    }
 
     this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(
-      data => this.runningJobs = data,
-      error => console.error(error)
+      data => this.runningJobs = data
     );
   }
 
@@ -55,5 +56,4 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.getRunningJobs();
   }
-
 }
