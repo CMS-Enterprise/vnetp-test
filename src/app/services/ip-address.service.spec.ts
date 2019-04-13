@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { IpAddressService } from './ip-address.service';
+import { Subnet } from '../models/d42/subnet';
 
 describe('IpAddressService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -103,5 +104,64 @@ describe('IpAddressService', () => {
     expect(result === 24).toBeTruthy();
   });
 
-  
+  // checkOverlap Tests
+  it('should overlap', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const subnet: Subnet = {
+      subnet_id: 0,
+      name: 'subnet',
+      network: '192.168.0.0',
+      gateway: '192.168.0.1',
+      subnet_mask: '255.255.0.0',
+      mask_bits: 16,
+    };
+
+    const subnets = new Array<Subnet>();
+
+    const subnet1: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '192.168.1.0',
+      gateway: '192.168.1.1',
+      subnet_mask: '255.255.255.0',
+      mask_bits: 24,
+    };
+
+    subnets.push(subnet1);
+
+    const result = service.checkIPv4RangeOverlap(subnet, subnets);
+
+    expect(result[0]).toBeTruthy();
+    expect(result[1].subnet_id === 100).toBeTruthy();
+  });
+
+  it('should not overlap', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const subnet: Subnet = {
+      subnet_id: 0,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+    };
+
+    const subnets = new Array<Subnet>();
+
+    const subnet1: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '192.168.1.0',
+      gateway: '192.168.1.1',
+      subnet_mask: '255.255.255.0',
+      mask_bits: 24,
+    };
+
+    subnets.push(subnet1);
+
+    const result = service.checkIPv4RangeOverlap(subnet, subnets);
+
+    expect(result[0]).toBeFalsy();
+    expect(result[1]).toBeNull();
+  });
 });
