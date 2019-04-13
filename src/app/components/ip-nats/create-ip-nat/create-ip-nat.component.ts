@@ -3,6 +3,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { IpNat } from 'src/app/models/ip-nat';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-create-ip-nat',
@@ -11,7 +12,8 @@ import { Router } from '@angular/router';
 })
 export class CreateIpNatComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private router: Router, private toastr: ToastrService) {
+  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+              private router: Router, private toastr: ToastrService) {
     this.subnets = [];
     this.sourceSubnetIps = [];
     this.destinationSubnetIps = [];
@@ -68,7 +70,9 @@ export class CreateIpNatComponent implements OnInit {
 
     this.automationApiService.launchTemplate('create_asa_ipnat', body).subscribe(
       () => this.toastr.success('Creating Network Address Translation')
-    )
+    );
+
+    this.messageService.filter('Job Launched');
 
     this.router.navigate(['/ip-nats']);
   }

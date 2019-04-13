@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/static-route';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -10,7 +11,8 @@ import { StaticRoute } from 'src/app/models/static-route';
 })
 export class StaticRouteDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) {
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
+              private messageService: MessageService) {
     this.subnet = {};
    }
 
@@ -62,10 +64,9 @@ export class StaticRouteDetailComponent implements OnInit {
       \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
     };
 
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe(
-      data => {},
-      error => console.log(error)
-    );
+    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+
+    this.messageService.filter('Job Launched');
   }
 
   getStaticRoutes() {

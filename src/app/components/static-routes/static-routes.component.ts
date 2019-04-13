@@ -26,7 +26,6 @@ export class StaticRoutesComponent implements OnInit {
   getNetworks() {
     this.automationApiService.getSubnets().subscribe(
       data => this.subnets = data,
-      error => {},
       () => this.getRoutingTable()
       );
   }
@@ -60,7 +59,5 @@ export class StaticRoutesComponent implements OnInit {
         });
       }
     });
-
-    console.log(this.routingTable);
   }
 }

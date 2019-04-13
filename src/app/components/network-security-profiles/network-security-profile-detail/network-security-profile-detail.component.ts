@@ -4,6 +4,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 import { Papa } from 'ngx-papaparse';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -18,7 +19,8 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   Id = '';
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) {
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
+              private papa: Papa) {
     this.subnet = {};
     this.firewall_rules = [];
    }
@@ -97,6 +99,8 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
       data => {},
       error => console.log(error)
     );
+
+    this.messageService.filter('Job Launched');
   }
 
   handleFileSelect(evt) {

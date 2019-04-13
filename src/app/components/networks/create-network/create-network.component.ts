@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Network } from 'src/app/models/network';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-create-network',
@@ -27,7 +28,8 @@ export class CreateNetworkComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private toastr: ToastrService,
     private router: Router,
-    private ipService: IpAddressService
+    private ipService: IpAddressService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {}
@@ -100,6 +102,9 @@ export class CreateNetworkComponent implements OnInit {
     this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('create_vlan', body).subscribe();
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
+
+    this.messageService.filter('Job Launched');
+
     this.router.navigate(['/networks']);
   }
 }
