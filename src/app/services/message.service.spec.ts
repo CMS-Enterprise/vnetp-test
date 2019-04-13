@@ -9,4 +9,9 @@ describe('MessageService', () => {
     const service: MessageService = TestBed.get(MessageService);
     expect(service).toBeTruthy();
   });
+
+  it('should receive message', () => {
+    const service: MessageService = TestBed.get(MessageService);
+    this.messageService.filter('Job Launched');
+  });
 });
