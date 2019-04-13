@@ -51,7 +51,7 @@ export class CreateIpNatComponent implements OnInit {
     );
   }
 
-  createIpNat(action: string) {
+  createIpNat() {
     if (
       !this.ipNat.ip_address_from ||
       !this.ipNat.ip_address_to ||

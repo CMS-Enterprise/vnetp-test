@@ -54,7 +54,6 @@
         aria-label="Destination Subnet"
         #destinationSubnetName="ngModel"
         [(ngModel)]="destinationSubnet"
-        [ngModelOptions]="standalone"
         (ngModelChange)="getSubnetIps(destinationSubnet, 'destination')"
         [ngClass]="{ 'is-invalid': form.submitted && destinationSubnetName.invalid }"
         required
@@ -107,7 +106,7 @@
       <button
         class="btn btn-danger"
         aria-label="Deploy"
-        (click)="createIpNat('deploy')"
+        (click)="createIpNat()"
       >
         Deploy
       </button>
