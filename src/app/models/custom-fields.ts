@@ -1,3 +1,3 @@
 export interface CustomFieldsObject {
-    custom_fields: [{key: string, value: string, notes: string}];
+    custom_fields: Array<{notes: string, key: string, value: string}>;
 }

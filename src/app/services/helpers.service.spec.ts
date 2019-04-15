@@ -80,4 +80,55 @@ describe('HelpersService', () => {
     const result = service.getDeployedState(subnet);
     expect(result).toBeFalsy();
   });
+
+  it('should handle null custom fields', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: null
+    };
+
+    const result = service.getDeployedState(subnet);
+    expect(result).toBeFalsy();
+  });
+
+  it('should handle empty custom fields', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: []
+    };
+
+    const result = service.getDeployedState(subnet);
+    expect(result).toBeFalsy();
+  });
+
+  it('should handle empty custom fields', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: [{key: 'wrong_custom_field', value: 'something else', notes: ''}]
+    };
+
+    const result = service.getDeployedState(subnet);
+    expect(result).toBeFalsy();
+  });
 });

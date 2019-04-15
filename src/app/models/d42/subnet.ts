@@ -8,7 +8,7 @@ export class Subnet implements CustomFieldsObject {
     public gateway: string;
     public mask_bits: number;
     public subnet_mask: string;
-    public custom_fields: [{notes: string, key: string, value: string}];
+    public custom_fields: Array<{notes: string, key: string, value: string}>;
 }
 
 export interface SubnetResponse {
