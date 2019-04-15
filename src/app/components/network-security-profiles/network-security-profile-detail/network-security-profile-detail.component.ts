@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkSecurityProfile } from 'src/app/models/network-security-profile';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
