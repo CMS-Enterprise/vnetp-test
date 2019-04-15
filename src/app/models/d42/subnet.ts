@@ -11,7 +11,7 @@ export class Subnet {
 
 export interface SubnetResponse {
     total_count: number;
-    offset: 0;
-    limit: 1000;
+    offset: number;
+    limit: number;
     subnets: Subnet[];
 }
