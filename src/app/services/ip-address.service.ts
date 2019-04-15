@@ -27,13 +27,13 @@ export class IpAddressService {
 
   // Returns a boolen indicating if an IPv4 cidr mask range is less
   // than the supplied number.
-  public ipv4MaskLessThan(cidr: string, length: number) {
+  public ipv4MaskLessThan(cidr: string, length: number): boolean {
     const cidrComponents = cidr.split('/');
 
     const ip = cidrComponents[0];
     const range = cidrComponents[1];
 
-    if (+range > length) {
+    if (Number(range) > length) {
       return false;
     }
     return true;
