@@ -11,7 +11,7 @@ export class HelpersService {
 
   public getDeployedState(object: CustomFieldsObject): boolean {
     // Check to ensure that object has custom fields with at least 1 element.
-    if (object.custom_fields === null || object.custom_fields.length === 0) { return false; }
+    if (object.custom_fields == null || object.custom_fields.length === 0) { return false; }
 
     // Try to find deployed key in the custom_fields array.
     const deployedState = object.custom_fields.find(c => c.key === 'deployed');
