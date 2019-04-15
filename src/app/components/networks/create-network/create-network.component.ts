@@ -70,7 +70,7 @@ export class CreateNetworkComponent implements OnInit {
     this.showDetails = true;
 }
 
-  createNetwork() {
+  createNetwork(action: string) {
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
     if (!isValid || !this.subnet.name || !this.subnet.network ||
@@ -81,12 +81,12 @@ export class CreateNetworkComponent implements OnInit {
 
     this.automationApiService.getSubnets().subscribe(data => {
       const subnetResponse = data as SubnetResponse;
-      this.checkNetwork(subnetResponse.subnets);
+      this.checkNetwork(subnetResponse.subnets, action);
     });
   }
 
   // Validate that network isn't a duplicate of another and that it doesn't overlap with any existing networks.
-  private checkNetwork(existingSubnets: Subnet[]) {
+  private checkNetwork(existingSubnets: Subnet[], action: string) {
     let error = false;
 
     const checkDuplicateResult = this.ipService.checkIPv4SubnetDuplicate(this.subnet, this.vlanId, existingSubnets);
@@ -121,20 +121,23 @@ export class CreateNetworkComponent implements OnInit {
     }
 
     if (!error) {
-    this.launchJobs(); }
+    this.launchJobs(action); }
   }
 
   // Launch required automation jobs
-  private launchJobs() {
+  private launchJobs(action: string) {
     const body = {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway }
       ,\"subnet_mask\": ${this.subnet.subnet_mask},\"customer_id\": ${this.subnet.name}
-      ,\"subnet_mask_bits\": ${this.subnet.mask_bits}}`
+      ,\"subnet_mask_bits\": ${this.subnet.mask_bits}, \"deploy\": ${action === 'deploy'}}`
     };
 
-    this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
-    this.automationApiService.launchTemplate('create_vlan', body).subscribe();
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
+
+    if (action === 'deploy') {
+      this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
+      this.automationApiService.launchTemplate('create_vlan', body).subscribe();
+    }
 
     this.messageService.filter('Job Launched');
     this.router.navigate(['/networks']);

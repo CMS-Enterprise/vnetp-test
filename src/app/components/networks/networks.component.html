@@ -14,14 +14,16 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Address Range</th>
+          <th scope="col">Deployed</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let subnet of subnets.subnets">
+        <tr *ngFor="let subnet of subnets">
           <td>
             <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
+          <td>{{ getDeployedState(subnet) }}</td>
         </tr>
       </tbody>
     </table>
