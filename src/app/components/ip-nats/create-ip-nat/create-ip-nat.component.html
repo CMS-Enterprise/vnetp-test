@@ -39,7 +39,7 @@
         [ngClass]="{ 'is-invalid': form.submitted && sourceSubnetName.invalid }"
         required
       >
-        <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
+        <option *ngFor="let subnet of subnets" [ngValue]="subnet">{{
           subnet.name
         }}</option>
       </select>
@@ -58,7 +58,7 @@
         [ngClass]="{ 'is-invalid': form.submitted && destinationSubnetName.invalid }"
         required
       >
-        <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
+        <option *ngFor="let subnet of subnets" [ngValue]="subnet">{{
           subnet.name
         }}</option>
       </select>

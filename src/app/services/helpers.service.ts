@@ -39,7 +39,7 @@ export class HelpersService {
     if (result[0] === false) { return -1; }
 
     const customField = result[1];
-
+    // Ensure that the number is valid.
     if (isNullOrUndefined(customField.value) ||
     Number(customField.value) < Number.MIN_SAFE_INTEGER ||
     Number(customField.value) > Number.MAX_SAFE_INTEGER) { return -1; } else {

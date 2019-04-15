@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/static-route';
 import { MessageService } from 'src/app/services/message.service';
+import { Subnet } from 'src/app/models/d42/subnet';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -12,12 +14,13 @@ import { MessageService } from 'src/app/services/message.service';
 export class StaticRouteDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService) {
-    this.subnet = {};
+              private messageService: MessageService, private hs: HelpersService) {
+                this.subnet = new Subnet();
    }
 
   Id = '';
-  subnet: any;
+  subnet: Subnet;
+  deployedState: boolean;
   staticRoutes: any;
 
   ngOnInit() {
@@ -27,9 +30,11 @@ export class StaticRouteDetailComponent implements OnInit {
 
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
-      data => this.subnet = data,
-      error => console.error(error),
-      () => this.getStaticRoutes()
+      data => {
+        this.subnet = data as Subnet;
+        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
+        this.getStaticRoutes();
+      }
     );
   }
 
@@ -64,7 +69,11 @@ export class StaticRouteDetailComponent implements OnInit {
       \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
     };
 
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+    if (this.deployedState) {
+      this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+    } else {
+      this.automationApiService.launchTemplate('update_device42_static_routes', body).subscribe();
+    }
 
     this.messageService.filter('Job Launched');
   }

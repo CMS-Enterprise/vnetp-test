@@ -4,6 +4,8 @@ import { IpNat } from 'src/app/models/ip-nat';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
+import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-create-ip-nat',
@@ -13,7 +15,7 @@ import { MessageService } from 'src/app/services/message.service';
 export class CreateIpNatComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private router: Router, private toastr: ToastrService) {
+              private router: Router, private toastr: ToastrService, private hs: HelpersService) {
     this.subnets = [];
     this.sourceSubnetIps = [];
     this.destinationSubnetIps = [];
@@ -21,7 +23,7 @@ export class CreateIpNatComponent implements OnInit {
     this.ipNat.two_way_relation = true;
   }
 
-  subnets: any;
+  subnets: Array<Subnet>;
   sourceSubnetIps: any;
   destinationSubnetIps: any;
   sourceSubnet: any;
@@ -33,9 +35,11 @@ export class CreateIpNatComponent implements OnInit {
   }
 
   getSubnets() {
-    this.automationApiService
-      .getSubnets()
-      .subscribe(data => (this.subnets = data), error => console.error(error));
+    this.automationApiService.getSubnets().subscribe(
+      data => {
+        const subnetResponse = data as SubnetResponse;
+        this.getDeployedSubnets(subnetResponse.subnets);
+      });
   }
 
   getSubnetIps( subnet: any, subnetType) {
@@ -46,9 +50,21 @@ export class CreateIpNatComponent implements OnInit {
         } else if (subnetType === 'destination') {
           this.destinationSubnetIps = data;
         }
-      },
-      error => {}
+      }
     );
+  }
+
+  getDeployedSubnets(subnets: Array<Subnet>) {
+    const deployedSubnets = [];
+
+    subnets.forEach(subnet => {
+      const deployedState = this.hs.getBooleanCustomField(subnet, 'deployed');
+      if (deployedState) {
+        deployedSubnets.push(subnet);
+      }
+    });
+
+    this.subnets = deployedSubnets;
   }
 
   createIpNat() {

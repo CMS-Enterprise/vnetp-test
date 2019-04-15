@@ -127,9 +127,10 @@ export class CreateNetworkComponent implements OnInit {
   // Launch required automation jobs
   private launchJobs(action: string) {
     const body = {
-      extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway }
-      ,\"subnet_mask\": ${this.subnet.subnet_mask},\"customer_id\": ${this.subnet.name}
-      ,\"subnet_mask_bits\": ${this.subnet.mask_bits}, \"deploy\": ${action === 'deploy'}}`
+      extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
+      \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
+      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
+      \"deploy\": ${action === 'deploy'}}`
     };
 
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
