@@ -6,4 +6,12 @@ export class Subnet {
     public gateway: string;
     public mask_bits: number;
     public subnet_mask: string;
+    public custom_fields: [{notes: string, key: string, value: string}];
+}
+
+export interface SubnetResponse {
+    total_count: number;
+    offset: 0;
+    limit: 1000;
+    subnets: Subnet[];
 }

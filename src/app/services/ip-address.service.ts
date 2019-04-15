@@ -74,6 +74,8 @@ export class IpAddressService {
   }
 
   // Checks if a supplied subnet overlaps with other subnets in array
+  // Returns a tuple containing a boolean indicating whether the subnet is a overlapped,
+  // and the existing Subnet that the provided Subnet overlaps or is overlapped by.
   public checkIPv4RangeOverlap(subnet: Subnet, subnets: Subnet[]): [boolean, Subnet] {
     // Create an IPv4 Range from the network to be evaluated.
     const newRange = IPv4Range.fromCidr(`${subnet.network}/${subnet.mask_bits}`);
@@ -89,5 +91,26 @@ export class IpAddressService {
       }
     }
     return [false, null];
+  }
+
+  // Check if supplied subnet is a duplicate of another subnet in the array
+  // Returns a tuple containing a boolean indicating whether the subnet is a duplicate, a string that indicates
+  // what property of the subnet is a duplicate and the existing Subnet that the provided Subnet is a duplicate of.
+  public checkIPv4SubnetDuplicate(subnet: Subnet, vlanId: number, subnets: Subnet[]): [boolean, string, Subnet] {
+    for (const s of subnets) {
+      // Names are case-insensitive, therefore change to lower case before checking.
+      if (s.name.toLowerCase() === subnet.name.toLowerCase()) {
+        return [true, 'name', s];
+      } else
+      // Check if same network address.
+      if (s.network === subnet.network) {
+        return [true, 'network', s];
+      } else
+      // Check if same VLAN Id.
+      if (s.custom_fields.find(c => c.key === 'vlan_number').value === vlanId.toString()) {
+        return [true, 'vlan', s];
+      }
+    }
+    return [false, '', null];
   }
 }

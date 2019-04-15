@@ -114,6 +114,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.0.1',
       subnet_mask: '255.255.0.0',
       mask_bits: 16,
+      custom_fields: null
     };
 
     const subnets = new Array<Subnet>();
@@ -125,6 +126,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
+      custom_fields: null
     };
 
     subnets.push(subnet1);
@@ -144,6 +146,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
+      custom_fields: null
     };
 
     const subnets = new Array<Subnet>();
@@ -155,6 +158,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
+      custom_fields: null
     };
 
     subnets.push(subnet1);
@@ -164,4 +168,105 @@ describe('IpAddressService', () => {
     expect(result[0]).toBeFalsy();
     expect(result[1]).toBeNull();
   });
+
+  it('should be duplicate (name)', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const subnet: Subnet = {
+      subnet_id: 0,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: null
+    };
+
+    const subnets = new Array<Subnet>();
+
+    const subnet1: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '192.168.1.0',
+      gateway: '192.168.1.1',
+      subnet_mask: '255.255.255.0',
+      mask_bits: 24,
+      custom_fields: null
+    };
+
+    subnets.push(subnet1);
+
+    const result = service.checkIPv4SubnetDuplicate(subnet, 0, subnets);
+
+    expect(result[0]).toBeTruthy();
+    expect(result[1] === 'name').toBeTruthy();
+    expect(result[2]).toBeTruthy();
+  });
+
+  it('should be duplicate (network)', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const subnet: Subnet = {
+      subnet_id: 0,
+      name: 'unique',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: null
+    };
+
+    const subnets = new Array<Subnet>();
+
+    const subnet1: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: null
+    };
+
+    subnets.push(subnet1);
+
+    const result = service.checkIPv4SubnetDuplicate(subnet, 0, subnets);
+
+    expect(result[0]).toBeTruthy();
+    expect(result[1] === 'network').toBeTruthy();
+    expect(result[2]).toBeTruthy();
+  });
+
+  it('should be duplicate (vlan)', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const subnet: Subnet = {
+      subnet_id: 0,
+      name: 'unique',
+      network: '172.16.0.0',
+      gateway: '172.16.0.1',
+      subnet_mask: '255.255.255.0',
+      mask_bits: 24,
+      custom_fields: null
+    };
+
+    const subnets = new Array<Subnet>();
+
+    const subnet1: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: [{key: 'vlan_number', value: '50', notes: ''}]
+    };
+
+    subnets.push(subnet1);
+
+    const result = service.checkIPv4SubnetDuplicate(subnet, 50, subnets);
+
+    expect(result[0]).toBeTruthy();
+    expect(result[1] === 'vlan').toBeTruthy();
+    expect(result[2]).toBeTruthy();
+  });
 });
+
+

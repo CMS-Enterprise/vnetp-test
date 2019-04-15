@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { MessageService } from 'src/app/services/message.service';
-import { Subnet } from 'src/app/models/d42/subnet';
+import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-create-network',
@@ -21,7 +21,9 @@ export class CreateNetworkComponent implements OnInit {
   rangeSize: string;
   nameExists: boolean;
   networkExists: boolean;
+  vlanExists: boolean;
   networkOverlaps: boolean;
+
   existingSubnet: Subnet;
   showDetails: boolean;
   vlanId: number;
@@ -41,6 +43,7 @@ export class CreateNetworkComponent implements OnInit {
   calculateNetwork() {
     this.nameExists = false;
     this.networkExists = false;
+    this.vlanExists = false;
     this.networkOverlaps = false;
     this.showDetails = false;
 
@@ -76,54 +79,52 @@ export class CreateNetworkComponent implements OnInit {
       return;
     }
 
-    this.checkDuplicate();
+    this.automationApiService.getSubnets().subscribe(data => {
+      const subnetResponse = data as SubnetResponse;
+      this.checkNetwork(subnetResponse.subnets);
+    });
   }
 
-  // Check to ensure that an existing subnet is not using the same name or network address.
-  private checkDuplicate() {
-    const ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);
-    this.automationApiService.doqlQuery(`SELECT subnet_pk as subnet_id,name,network,mask_bits FROM view_subnet_v1
-    WHERE network = \'${ipv4Range.getFirst()}\' OR name = \'${this.subnet.name}\'`)
-    .subscribe(data => {
-        const existingSubnets = data as Subnet[];
-        if (existingSubnets.length > 0) {
-          const existingSubnet = existingSubnets[0];
+  // Validate that network isn't a duplicate of another and that it doesn't overlap with any existing networks.
+  private checkNetwork(existingSubnets: Subnet[]) {
+    let error = false;
 
-          if (this.subnet.name === existingSubnet.name) {
-            this.toastr.error('Name already in use.');
+    const checkDuplicateResult = this.ipService.checkIPv4SubnetDuplicate(this.subnet, this.vlanId, existingSubnets);
+
+    if (checkDuplicateResult[0]) {
+        error = true;
+        switch (checkDuplicateResult[1]) {
+          case 'name': {
             this.nameExists = true;
+            break;
           }
-
-          if (this.subnet.network === existingSubnet.network) {
-            this.toastr.error('Subnet already in use.');
+          case 'network': {
             this.networkExists = true;
+            break;
           }
-          return;
-        } else {
-          this.checkOverlap();
+          case 'vlan': {
+            this.vlanExists = true;
+            break;
+          }
         }
-      });
+      }
+
+    // Only check range overlap if network is not a duplicate.
+    if (checkDuplicateResult[1] !== 'network') {
+    const checkOverlapResult = this.ipService.checkIPv4RangeOverlap(this.subnet, existingSubnets);
+
+    if (checkOverlapResult[0]) {
+      error = true;
+      this.networkOverlaps = true;
+      this.existingSubnet = checkOverlapResult[1];
+      }
+    }
+
+    if (!error) {
+    this.launchJobs(); }
   }
 
-  // Check all existing subnets to ensure that the new subnet doesn't contain them and
-  // that they don't contain the new subnet.
-  private checkOverlap() {
-    this.automationApiService.doqlQuery('select subnet_pk as subnet_id, name, network, mask_bits from view_subnet_v1')
-    .subscribe(data => {
-        const existingSubnets = data as Subnet[];
-        const result = this.ipService.checkIPv4RangeOverlap(this.subnet, existingSubnets);
-        if (result[0]) {
-          this.networkOverlaps = true;
-          this.existingSubnet = result[1];
-
-          this.toastr.error('Subnet overlaps with at least one existing subnet: ' +
-          `${this.existingSubnet.network}/${this.existingSubnet.mask_bits}`);
-        } else {
-          this.launchJobs();
-        }
-      });
-  }
-
+  // Launch required automation jobs
   private launchJobs() {
     const body = {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway }

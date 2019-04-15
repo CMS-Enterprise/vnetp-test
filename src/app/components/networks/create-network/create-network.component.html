@@ -26,7 +26,7 @@
             required
           />
           <div *ngIf="nameExists" class="alert alert-danger">
-            <div>Name already in use. </div>
+            <div>Name already in use. Subnet names are case-insensitive.</div>
           </div>
         </div>
         <div class="form-group col-md-6">
@@ -55,11 +55,9 @@
             mask="099.099.099.099/09"
             required
           />
-          <div *ngIf="networkExists" class="alert alert-danger">
-            <div>Subnet already in use.</div>
-          </div>
-          <div *ngIf="networkOverlaps" class="alert alert-danger">
-            <div>Subnet overlaps with at least one existing subnet: {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }} </div>
+          <div *ngIf="networkExists || networkOverlaps" class="alert alert-danger">
+            <p *ngIf="networkExists">Subnet already in use.</p>
+            <p *ngIf="networkOverlaps">Subnet overlaps with at least one existing subnet: {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }}</p>
           </div>
         </div>
       </div>
@@ -110,7 +108,7 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-1">
+        <div class="form-group col-md-3">
           <label for="formVlanId">VLAN ID</label>
           <input
             name="formVlanId"
@@ -119,10 +117,14 @@
             aria-label="VLAN Id"
             #formVlanId="ngModel"
             [(ngModel)]="vlanId"
+            (ngModelChange)="calculateNetwork()"
             [ngClass]="{ 'is-invalid': form.submitted && formVlanId.invalid }"
             mask="0999"
             required
           />
+          <div *ngIf="vlanExists" class="alert alert-danger">
+            <div>VLAN already in use.</div>
+          </div>
         </div>
       </div>
       <div class="btn-group">
