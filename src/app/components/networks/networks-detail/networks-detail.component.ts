@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { MessageService } from 'src/app/services/message.service';
+import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-networks-detail',
@@ -12,12 +13,11 @@ export class NetworksDetailComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
               private route: ActivatedRoute, private router: Router, ) {
-    this.subnet = {};
     this.subnetIps = {};
    }
 
   Id = '';
-  subnet: any;
+  subnet: Subnet;
   subnetIps: any;
 
   ngOnInit() {
@@ -29,9 +29,9 @@ export class NetworksDetailComponent implements OnInit {
 
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
-      data => this.subnet = data,
-      error => console.error(error)
-    );
+      data => {
+        this.subnet = data as Subnet
+      });
   }
 
   getIps() {

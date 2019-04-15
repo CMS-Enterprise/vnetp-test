@@ -10,7 +10,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 })
 export class NetworksComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private helpersService: HelpersService) {
+  constructor(private automationApiService: AutomationApiService, private helperService: HelpersService) {
     this.subnets = [];
   }
 
@@ -23,12 +23,12 @@ export class NetworksComponent implements OnInit {
   getNetworks() {
     this.automationApiService.getSubnets()
     .subscribe(data => {
-        const result = data as SubnetResponse;
-        this.subnets = result.subnets;
+        const subnetResponse = data as SubnetResponse;
+        this.subnets = subnetResponse.subnets;
       });
     }
 
     getDeployedState(subnet: Subnet) {
-      return this.helpersService.getDeployedState(subnet);
+      return this.helperService.getBooleanCustomField(subnet, 'deployed');
     }
 }
