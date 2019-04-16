@@ -2,7 +2,6 @@
   <h3>Network: {{ subnet.name }}</h3>
   <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
   <button class="btn btn-danger" (click)="deleteSubnet()">Delete</button>
-  <button class="btn btn-success" (click)="deploySubnet()" *ngIf="!deployedState">Deploy</button>
 </div>
 
 <div class="offset-1 col-md-10">

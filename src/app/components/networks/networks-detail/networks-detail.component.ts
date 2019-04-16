@@ -46,23 +46,6 @@ export class NetworksDetailComponent implements OnInit {
     );
   }
 
-  deploySubnet() {
-    const body = {
-      extra_vars: `{\"vlan_id\": ${this.subnet.description},\"ip_address\": ${this.subnet.gateway}
-      ,\"subnet_mask\": ${this.ips.calculateIPv4SubnetMask(`${this.subnet.network}/${this.subnet.mask_bits}`)}
-      ,\"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
-      \"subnet_id\": ${this.subnet.subnet_id}}`
-    };
-
-    this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
-    this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    this.automationApiService.launchTemplate('deploy_device42_subnet', body).subscribe();
-
-    this.deployedState = true;
-
-    this.messageService.filter('Job Launched');
-  }
-
   deleteSubnet() {
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name},

@@ -1,5 +1,3 @@
-// TODO: Input argument is not an input element
-
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
@@ -121,24 +119,18 @@ export class CreateNetworkComponent implements OnInit {
     }
 
     if (!error) {
-    this.launchJobs(action); }
+    this.launchJobs(); }
   }
 
   // Launch required automation jobs
-  private launchJobs(action: string) {
+  private launchJobs() {
     const body = {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
       \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
-      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
-      \"deploy\": ${action === 'deploy'}}`
+      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits}`
     };
 
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
-
-    if (action === 'deploy') {
-      this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
-      this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    }
 
     this.messageService.filter('Job Launched');
     this.router.navigate(['/networks']);
