@@ -66,7 +66,7 @@ export class StaticRouteDetailComponent implements OnInit {
       extra_vars: `{\"customer_id\": ${this.subnet.name},
       \"subnet_id\": ${this.subnet.subnet_id},
       \"updated_static_routes\": ${JSON.stringify(staticRoutes)},
-      \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
+      \"deleted_static_routes\": ${JSON.stringify(deletedStaticRoutes)}}`
     };
 
     if (this.deployedState) {

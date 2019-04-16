@@ -1,0 +1,59 @@
+<div class="offset-1 col-md-10">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ active: tabIndex === 0 }"
+        (click)="tabIndex = 0"
+        >Network</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ active: tabIndex === 1 }"
+        (click)="tabIndex = 1"
+        >Solaris</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [ngClass]="{ active: tabIndex === 2 }"
+        (click)="tabIndex = 2"
+        >zLinux</a
+      >
+    </li>
+  </ul>
+  <div class="card" style="height:500px;">
+    <div class="offset-1 col-md-10">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Address Range</th>
+            <th scope="col">Firewall Rules</th>
+            <th scope="col">Static Routes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let subnet of subnets">
+            <td>
+              <a href="/networks/edit/{{ subnet.subnet_id }}">{{
+                subnet.name
+              }}</a>
+            </td>
+            <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
+            <td>{{ getPropertyLength(subnet, 'firewall_rules') }}</td>
+            <td>{{ getPropertyLength(subnet, 'static_routes') }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <button class="btn btn-danger" (click)="deployNetwork()" *ngIf="subnets.length">Deploy Networks</button>
+</div>
+
+<div class="offset-1 col-md-10 text-center pt-5">
+  <button class="btn btn-danger">Deploy All</button>
+</div>
