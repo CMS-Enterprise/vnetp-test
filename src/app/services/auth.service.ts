@@ -15,8 +15,19 @@ export class AuthService {
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient, private router: Router) {
+
+    if (environment.authBypass) {
+      console.log('Auth Bypassed.');
+      const user: User = {
+        Username : 'Bypass',
+        Token: 'sometoken',
+        CustomerName: 'Bypass Customer'
+      };
+      this.currentUserSubject = new BehaviorSubject<User>(user);
+      this.currentUser = this.currentUserSubject.asObservable();
+    } else {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUser = this.currentUserSubject.asObservable(); }
   }
 
   public get currentUserValue(): User {

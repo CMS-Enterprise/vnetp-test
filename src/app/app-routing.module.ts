@@ -17,6 +17,8 @@ import { StaticRouteDetailComponent } from './components/static-routes/static-ro
 import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
+import { SolarisComponent } from './components/solaris/solaris.component';
+import { SolarisDetailComponent }  from './components/solaris/solaris-detail/solaris-detail.component';
 
 
 const routes: Routes = [
@@ -35,6 +37,8 @@ const routes: Routes = [
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
+  {path: 'solaris', component: SolarisComponent},
+  {path: 'solaris/edit/:id', component: SolarisDetailComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
 ];
