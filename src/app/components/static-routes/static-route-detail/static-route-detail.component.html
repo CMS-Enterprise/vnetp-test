@@ -1,15 +1,20 @@
 <div class="offset-1 col-md-10">
   <h5>Static Routes</h5>
 
-  <div class="btn-group-sm" role="group" >  
-    <button type="button" class="btn btn-warning"  aria-label="Update Static Routes" (click)="updateStaticRoutes()">     
-      <fa name="floppy-o" size="2x"></fa>   
+  <div class="btn-group-sm" role="group">
+    <button
+      type="button"
+      class="btn btn-warning"
+      aria-label="Update Static Routes"
+      (click)="updateStaticRoutes()"
+    >
+      <fa name="floppy-o" size="2x"></fa>
     </button>
     <button type="button" class="btn btn-info" (click)="getNetwork()">
       <fa name="refresh" size="2x"></fa>
     </button>
     <button type="button" class="btn btn-success" (click)="addStaticRoute()">
-      <fa name="plus" size="2x" ></fa>
+      <fa name="plus" size="2x"></fa>
     </button>
   </div>
 
@@ -24,24 +29,59 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let route of staticRoutes" [ngClass]="{'table-danger': route.Deleted, 'table-warning': route.Updated}">
+        <tr
+          *ngFor="let route of staticRoutes"
+          [ngClass]="{
+            'table-danger': route.Deleted,
+            'table-warning': route.Updated
+          }"
+        >
           <td>
             <p [hidden]="route.Edit">{{ route.IpAddress }}</p>
-            <input class="form-control" placeholder="any" [(ngModel)]="route.IpAddress" (ngModelChange)="route.Updated = true" [hidden]="!route.Edit">
+            <input
+              class="form-control"
+              placeholder="any"
+              [(ngModel)]="route.IpAddress"
+              (ngModelChange)="route.Updated = true"
+              [hidden]="!route.Edit"
+            />
           </td>
           <td>
             <p [hidden]="route.Edit">{{ route.SubnetMask }}</p>
-            <input class="form-control" placeholder="any" [(ngModel)]="route.SubnetMask" (ngModelChange)="route.Updated = true" [hidden]="!route.Edit">
-          </td>
-          <td>         
-            <p [hidden]="route.Edit">{{ route.NextHop }}</p>            
-            <input class="form-control" placeholder="any" [(ngModel)]="route.NextHop" (ngModelChange)="route.Updated = true" [hidden]="!route.Edit">
+            <input
+              class="form-control"
+              placeholder="any"
+              [(ngModel)]="route.SubnetMask"
+              (ngModelChange)="route.Updated = true"
+              [hidden]="!route.Edit"
+            />
           </td>
           <td>
-            <!-- <fa name="pencil" (click)="route.Edit = !route.Edit" [hidden]="route.Edit"></fa>-->
-            <fa name="floppy-o" (click)="route.Edit = !route.Edit" [hidden]="!route.Edit"></fa>
-            <fa name="trash" (click)="route.Deleted = !route.Deleted" [hidden]="route.Deleted"></fa>
-            <fa name="undo" (click)="route.Deleted = !route.Deleted" [hidden]="!route.Deleted"></fa>
+            <p [hidden]="route.Edit">{{ route.NextHop }}</p>
+            <input
+              class="form-control"
+              placeholder="any"
+              [(ngModel)]="route.NextHop"
+              (ngModelChange)="route.Updated = true"
+              [hidden]="!route.Edit"
+            />
+          </td>
+          <td>
+            <fa
+              name="floppy-o"
+              (click)="route.Edit = !route.Edit"
+              [hidden]="!route.Edit"
+            ></fa>
+            <fa
+              name="trash"
+              (click)="route.Deleted = !route.Deleted"
+              [hidden]="route.Deleted"
+            ></fa>
+            <fa
+              name="undo"
+              (click)="route.Deleted = !route.Deleted"
+              [hidden]="!route.Deleted"
+            ></fa>
           </td>
         </tr>
       </tbody>

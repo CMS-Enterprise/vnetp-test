@@ -26,4 +26,8 @@ export class NetworkSecurityProfileRule {
     ProjectId: number;
 
     Edit: boolean;
+
+    Deleted: boolean;
+
+    Updated: boolean;
 }

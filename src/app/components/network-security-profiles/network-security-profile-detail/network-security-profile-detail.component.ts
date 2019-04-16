@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkSecurityProfile } from 'src/app/models/network-security-profile';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 import { Papa } from 'ngx-papaparse';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -18,7 +18,8 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   Id = '';
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) {
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
+              private papa: Papa) {
     this.subnet = {};
     this.firewall_rules = [];
    }
@@ -67,25 +68,38 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
     const nspr = new NetworkSecurityProfileRule();
     nspr.Edit = true;
+    nspr.Deleted = false;
+    nspr.Updated = true;
     nspr.Action =  0;
     this.firewall_rules.push(nspr);
   }
 
 
-  deleteFirewallRule(rule) {
-    this.firewall_rules.splice(this.firewall_rules.indexOf(rule), 1);
+  duplicateFirewallRule(rule) {
+    const ruleIndex = this.firewall_rules.indexOf(rule);
+
+    if (ruleIndex === -1) { return; }
+
+    const dupRule = Object.assign({}, rule);
+    dupRule.Deleted = false;
+
+    this.firewall_rules.splice(ruleIndex, 0, dupRule);
   }
 
   updateFirewallRules() {
+    const firewallRules = this.firewall_rules.filter(r => !r.Deleted);
+
     const body = {
       extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
-      \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
+      \"firewall_rules\": ${JSON.stringify(firewallRules)},\"subnet_id\": ${this.subnet.subnet_id}}`
     };
 
     this.automationApiService.launchTemplate('update_asa_acl', body).subscribe(
       data => {},
       error => console.log(error)
     );
+
+    this.messageService.filter('Job Launched');
   }
 
   handleFileSelect(evt) {

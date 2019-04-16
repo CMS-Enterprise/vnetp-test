@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-networks-detail',
@@ -9,7 +10,8 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService) {
+  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+              private route: ActivatedRoute, private router: Router, ) {
     this.subnet = {};
     this.subnetIps = {};
    }
@@ -47,6 +49,9 @@ export class NetworksDetailComponent implements OnInit {
     this.automationApiService.launchTemplate('delete_asa_subinterface', body).subscribe();
     this.automationApiService.launchTemplate('delete_vlan', body).subscribe();
     this.automationApiService.launchTemplate('delete_device42_subnet', body).subscribe();
+
+    this.messageService.filter('Job Launched');
+
     this.router.navigate(['/networks']);
   }
 }
