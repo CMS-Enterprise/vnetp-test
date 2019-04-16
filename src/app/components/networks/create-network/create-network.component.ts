@@ -127,7 +127,7 @@ export class CreateNetworkComponent implements OnInit {
     const body = {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
       \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
-      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits}`
+      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits}}`
     };
 
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
