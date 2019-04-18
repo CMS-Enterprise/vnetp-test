@@ -9,7 +9,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 export class IpNatsComponent implements OnInit {
   ipnats: any;
 
-  constructor(private automationApiService: AutomationApiService) { 
+  constructor(private automationApiService: AutomationApiService) {
     this.ipnats = [];
   }
 
@@ -19,8 +19,7 @@ export class IpNatsComponent implements OnInit {
 
   getIpNats() {
     this.automationApiService.getIpNats().subscribe(
-      data => this.ipnats = data,
-      error => {}
+      data => this.ipnats = data
     );
   }
 }

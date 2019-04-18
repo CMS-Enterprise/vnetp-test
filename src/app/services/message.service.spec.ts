@@ -12,6 +12,6 @@ describe('MessageService', () => {
 
   it('should receive message', () => {
     const service: MessageService = TestBed.get(MessageService);
-    this.messageService.filter('Job Launched');
+    service.filter('Job Launched');
   });
 });

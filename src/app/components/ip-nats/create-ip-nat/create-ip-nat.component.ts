@@ -19,7 +19,7 @@ export class CreateIpNatComponent implements OnInit {
     this.destinationSubnetIps = [];
     this.ipNat = new IpNat();
     this.ipNat.two_way_relation = true;
-   }
+  }
 
   subnets: any;
   sourceSubnetIps: any;
@@ -33,10 +33,9 @@ export class CreateIpNatComponent implements OnInit {
   }
 
   getSubnets() {
-    this.automationApiService.getSubnets().subscribe(
-      data => this.subnets = data,
-      error => console.error(error)
-      );
+    this.automationApiService
+      .getSubnets()
+      .subscribe(data => (this.subnets = data), error => console.error(error));
   }
 
   getSubnetIps( subnet: any, subnetType) {
@@ -44,8 +43,7 @@ export class CreateIpNatComponent implements OnInit {
       data => {
         if (subnetType === 'source') {
           this.sourceSubnetIps = data;
-        } else
-        if (subnetType === 'destination') {
+        } else if (subnetType === 'destination') {
           this.destinationSubnetIps = data;
         }
       },
@@ -54,6 +52,16 @@ export class CreateIpNatComponent implements OnInit {
   }
 
   createIpNat() {
+    if (
+      !this.ipNat.ip_address_from ||
+      !this.ipNat.ip_address_to ||
+      !this.sourceSubnet ||
+      !this.destinationSubnet
+    ) {
+      this.toastr.error('Invalid Data');
+      return;
+    }
+
     const body = {
       extra_vars: `{\"source_subnet\": \"${this.sourceSubnet.name}\",
       \"destination_subnet\": \"${this.destinationSubnet.name}\",

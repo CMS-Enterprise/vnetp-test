@@ -1,70 +1,115 @@
 <h4>Create IP NAT</h4>
 
 <div class="card">
-  <div class="input-group input-group-sm mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Name</span>
-    </div>
+  <form
+    name="ipNatForm"
+    class="form"
+    (ngSubmit)="form.form.valid && createIpNat()"
+    #form="ngForm"
+    novalidate
+  >
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Name</span>
+      </div>
 
-    <input appIsAlphanumeric type="text" class="form-control" aria-label="Name" [(ngModel)]="ipNat.name" />
+      <input
+        name="name"
+        appIsAlphanumeric
+        type="text"
+        class="form-control"
+        aria-label="Name"
+        #name="ngModel"
+        [(ngModel)]="ipNat.name"
+        [ngClass]="{ 'is-invalid': form.submitted && name.invalid }"
+        required
+      />
 
-    <div class="input-group-prepend">
-      <span class="input-group-text">Source Subnet</span>
-    </div>
+      <div class="input-group-prepend">
+        <span class="input-group-text">Source Subnet</span>
+      </div>
 
-    <select
-      class="form-control"
-      [(ngModel)]="sourceSubnet"
-      (ngModelChange)="getSubnetIps(sourceSubnet, 'source')"
-    >
-      <option
-        *ngFor="let subnet of subnets.subnets"
-        [ngValue]="subnet"
-        >{{ subnet.name }}</option
+      <select
+        name="sourceSubnetName"
+        class="form-control"
+        aria-label="Source Subnet"
+        #sourceSubnetName="ngModel"
+        [(ngModel)]="sourceSubnet"
+        (ngModelChange)="getSubnetIps(sourceSubnet, 'source')"
+        [ngClass]="{ 'is-invalid': form.submitted && sourceSubnetName.invalid }"
+        required
       >
-    </select>
+        <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
+          subnet.name
+        }}</option>
+      </select>
 
-    <div class="input-group-prepend">
-      <span class="input-group-text">Destination Subnet</span>
-    </div>
+      <div class="input-group-prepend">
+        <span class="input-group-text">Destination Subnet</span>
+      </div>
 
-    <select
-      class="form-control"
-      [(ngModel)]="destinationSubnet"
-      (ngModelChange)="getSubnetIps(destinationSubnet, 'destination')"
-    >
-      <option
-        *ngFor="let subnet of subnets.subnets"
-        [ngValue]="subnet"
-        >{{ subnet.name }}</option
+      <select
+        name="destinationSubnetName"
+        class="form-control"
+        aria-label="Destination Subnet"
+        #destinationSubnetName="ngModel"
+        [(ngModel)]="destinationSubnet"
+        (ngModelChange)="getSubnetIps(destinationSubnet, 'destination')"
+        [ngClass]="{ 'is-invalid': form.submitted && destinationSubnetName.invalid }"
+        required
       >
-    </select>
-  </div>
-
-  <div class="input-group input-group-sm mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Source IP Address</span>
+        <option *ngFor="let subnet of subnets.subnets" [ngValue]="subnet">{{
+          subnet.name
+        }}</option>
+      </select>
     </div>
-    <select class="form-control" [(ngModel)]="ipNat.ip_address_from">
-      <option></option>
-      <option *ngFor="let ip of sourceSubnetIps.ips" [ngValue]="ip.ip">{{
-        ip.ip
-      }}</option>
-    </select>
 
-    <div class="input-group-prepend">
-      <span class="input-group-text">Destination IP Address</span>
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Source IP Address</span>
+      </div>
+      <select
+        name="sourceIpAddress"
+        class="form-control"
+        aria-label="Source IP Address"
+        #sourceIpAddress="ngModel"
+        [(ngModel)]="ipNat.ip_address_from"
+        [ngClass]="{ 'is-invalid': form.submitted && sourceIpAddress.invalid }"
+        required
+      >
+        <option></option>
+        <option *ngFor="let ip of sourceSubnetIps.ips" [ngValue]="ip.ip">{{
+          ip.ip
+        }}</option>
+      </select>
+
+      <div class="input-group-prepend">
+        <span class="input-group-text">Destination IP Address</span>
+      </div>
+      <select
+        name="destinationIpAddress"
+        class="form-control"
+        aria-label="Destination IP Address"
+        #destinationIpAddress="ngModel"
+        [(ngModel)]="ipNat.ip_address_to"
+        [ngClass]="{ 'is-invalid': form.submitted && destinationIpAddress.invalid }"
+        required
+      >
+        <option></option>
+        <option *ngFor="let ip of destinationSubnetIps.ips" [ngValue]="ip.ip">{{
+          ip.ip
+        }}</option>
+      </select>
     </div>
-    <select class="form-control" [(ngModel)]="ipNat.ip_address_to">  
-      <option></option>
-      <option *ngFor="let ip of destinationSubnetIps.ips" [ngValue]="ip.ip">{{
-        ip.ip
-      }}</option>
-    </select>
-  </div>
-</div>
 
-<div class="btn-group">
-  <button class="btn btn-success" aria-label="Save">Save</button>
-  <button class="btn btn-danger" aria-label="Deploy" (click)="createIpNat()">Deploy</button>
+    <div class="btn-group">
+      <button
+        class="btn btn-danger"
+        aria-label="Deploy"
+        (click)="createIpNat()"
+      >
+        Deploy
+      </button>
+    </div>
+  </form>
 </div>

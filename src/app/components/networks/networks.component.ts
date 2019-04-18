@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Network } from 'src/app/models/network';
 
 
 @Component({

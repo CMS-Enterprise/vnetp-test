@@ -1,63 +1,144 @@
 <h4>Create Network</h4>
 
-<div class="card">
-
-  <div class="input-group input-group-sm mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Name</span>
-    </div>
-
-    <input
-      appIsAlphanumeric
-      type="text"
-      class="form-control"
-      aria-label="Name"
-      [(ngModel)]="network.Name"
-    />
-
-    <div class="input-group-prepend">
-      <span class="input-group-text">Network Address</span>
-    </div>
-    <input
-      type="text"
-      class="form-control"
-      aria-label="Network Address"
-      [(ngModel)]="network.NetworkAddress"
-    />
-
-    <div class="input-group-prepend">
-        <span class="input-group-text">Subnet Mask</span>
+<div class="offset-1 col-md-10">
+  <div>
+    <form
+      name="networkForm"
+      class="form"
+      (ngSubmit)="form.form.valid && createNetwork()"
+      #form="ngForm"
+      novalidate
+    >
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="name">Name</label>
+          <input
+            name="name"
+            appIsAlphanumeric
+            type="text"
+            class="form-control"
+            aria-label="Name"
+            #name="ngModel"
+            [(ngModel)]="subnet.name"
+            (ngModelChange)="calculateNetwork()"
+            [ngClass]="{ 
+              'is-invalid': form.submitted && name.invalid || nameExists }"
+            required
+          />
+          <div *ngIf="nameExists" class="alert alert-danger">
+            <div>Name already in use. Subnet names are case-insensitive.</div>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="protocol">Protocol</label>
+          <select class="form-control" id="protocol">
+            <option selected>IPv4</option>
+            <option disabled>IPv6</option>
+          </select>
+        </div>
       </div>
-      <input
-        type="text"
-        class="form-control"
-        aria-label="Subnet Mask"
-        [(ngModel)]="network.SubnetMask"
-      />
-
-      <div class="input-group-prepend">
-        <span class="input-group-text">Subnet Mask Bits</span>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="inputAddress">Network Address</label>
+          <input
+            name="networkAddress"
+            type="text"
+            class="form-control"
+            aria-label="Network Address"
+            #networkAddress="ngModel"
+            [(ngModel)]="cidrAddress"
+            (ngModelChange)="calculateNetwork()"
+            [ngClass]="{
+              'is-invalid': form.submitted && networkAddress.invalid || networkExists || networkOverlaps 
+            }"
+            [dropSpecialCharacters]="false"
+            mask="099.099.099.099/09"
+            required
+          />
+          <div *ngIf="networkExists || networkOverlaps" class="alert alert-danger">
+            <p *ngIf="networkExists">Subnet already in use.</p>
+            <p *ngIf="networkOverlaps">Subnet overlaps with at least one existing subnet: {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }}</p>
+          </div>
+        </div>
       </div>
-      <input
-        type="number"
-        class="form-control"
-        aria-label="Subnet Mask Bits"
-        [(ngModel)]="network.SubnetMaskBits"
-      />
-
-    <div class="input-group-prepend">
-      <span class="input-group-text">VLAN Id</span>
-    </div>
-    <input
-      type="number"
-      class="form-control"
-      aria-label="VLAN Id"
-      [(ngModel)]="network.VlanId"
-    />
+      <div class="form-row" *ngIf="showDetails">
+        <div class="form-group col-md-3">
+          <label for="subnetMask">Subnet Mask</label>
+          <input
+            tabindex="-1"
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="subnetMask"
+            value="{{ this.subnet.subnet_mask }}"
+          />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="usableAddressSpace">Usable Addresses</label>
+          <input
+            tabindex="-1"
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="usableAddressSpace"
+            value="{{ usableRange }}"
+          />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="gateway">Gateway</label>
+          <input
+            tabindex="-1"
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="gateway"
+            value="{{ this.subnet.gateway }}"        
+          />      
+        </div>
+        <div class="form-group col-md-3">
+          <label for="subnetMask">Total Addresses</label>
+          <input
+            tabindex="-1"
+            type="text"
+            readonly
+            class="form-control-plaintext"
+            id="subnetMask"
+            value="{{ rangeSize }}"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="formVlanId">VLAN ID</label>
+          <input
+            name="formVlanId"
+            type="text"
+            class="form-control"
+            aria-label="VLAN Id"
+            #formVlanId="ngModel"
+            [(ngModel)]="vlanId"
+            (ngModelChange)="calculateNetwork()"
+            [ngClass]="{ 'is-invalid': form.submitted && formVlanId.invalid }"
+            mask="0999"
+            required
+          />
+          <div *ngIf="vlanExists" class="alert alert-danger">
+            <div>VLAN already in use.</div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-success" aria-label="Save" disabled>
+          Save
+        </button>
+        <button
+          class="btn btn-danger"
+          aria-label="Deploy"
+          type="submit"
+        >
+          Deploy
+        </button>
+      </div>
+    </form>
   </div>
-</div>
-
-<div class="btn-group">
-    <button class="btn btn-success" aria-label="Save">Save</button>
-    <button class="btn btn-danger" (click)="createNetwork()" aria-label="Deploy">Deploy</button>
 </div>

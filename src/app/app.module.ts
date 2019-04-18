@@ -10,6 +10,7 @@ import {FormsModule } from '@angular/forms';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxMaskModule } from 'ngx-mask';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -95,6 +96,7 @@ import { SolarisLdomEditComponent } from './components/solaris/solaris-ldom-edit
     AngularFontAwesomeModule,
     FormsModule,
     PapaParseModule,
+    NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
       progressBar: true,

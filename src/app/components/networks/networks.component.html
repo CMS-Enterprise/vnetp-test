@@ -12,14 +12,12 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col"></th>
           <th scope="col">Name</th>
           <th scope="col">Address Range</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let subnet of subnets.subnets">
-          <td><input type="checkbox" /></td>
           <td>
             <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
