@@ -19,6 +19,7 @@ import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisDetailComponent }  from './components/solaris/solaris-detail/solaris-detail.component';
+import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'solaris', component: SolarisComponent},
   {path: 'solaris/edit/:id', component: SolarisDetailComponent},
+  {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
 ];
