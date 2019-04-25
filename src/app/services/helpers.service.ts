@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CustomFieldsObject, CustomField } from '../models/custom-fields-object-interface';
 import { isNullOrUndefined, isNull } from 'util';
+import { elementStart } from '@angular/core/src/render3';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,16 @@ export class HelpersService {
     if (customField.value === 'yes') { return true; }
 
     return false;
+  }
+
+  public getStringCustomField(object: CustomFieldsObject, fieldName: string): string {
+    const result = this.getCustomField(object, fieldName);
+    if (result[0] === false) { return '';}
+
+    const customField = result[1];
+    if (isNullOrUndefined(customField.value)) { return ''; } else {
+      return customField.value;
+    }
   }
 
   public getNumberCustomField(object: CustomFieldsObject, fieldName: string): number {

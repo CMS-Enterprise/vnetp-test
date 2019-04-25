@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HelpersService } from './helpers.service';
 import { Subnet } from '../models/d42/subnet';
+import { isUndefined } from 'util';
 
 describe('HelpersService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -157,4 +158,59 @@ describe('HelpersService', () => {
     expect(result > 9000).toBeTruthy();
     expect(result === 9001).toBeTruthy();
   });
+
+  it('should return string', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      description: '',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: [{key: 'string', value: 'value', notes: ''}]
+    };
+
+    const result = service.getStringCustomField(subnet, 'string');
+    expect(result === 'value').toBeTruthy();
+  });
+
+  it('should return empty string when custom_field empty', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      description: '',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: [{key: 'string', value: '', notes: ''}]
+    };
+
+    const result = service.getStringCustomField(subnet, 'string');
+    expect(result === '').toBeTruthy();
+  });
+
+  it('should return empty string when custom_field not present', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const subnet: Subnet = {
+      subnet_id: 100,
+      name: 'subnet',
+      description: '',
+      network: '10.0.0.0',
+      gateway: '10.0.0.1',
+      subnet_mask: '255.0.0.0',
+      mask_bits: 8,
+      custom_fields: [{key: 'string', value: 'value', notes: ''}]
+    };
+
+    const result = service.getStringCustomField(subnet, 'random123');
+    expect(result === '').toBeTruthy();
+  });
+
 });
