@@ -21,6 +21,7 @@ export class CreateNetworkComponent implements OnInit {
   networkExists: boolean;
   vlanExists: boolean;
   networkOverlaps: boolean;
+  tier: string;
 
   existingSubnet: Subnet;
   showDetails: boolean;
@@ -72,7 +73,8 @@ export class CreateNetworkComponent implements OnInit {
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
     if (!isValid || !this.subnet.name || !this.subnet.network ||
-      !this.subnet.mask_bits || !this.subnet.subnet_mask) {
+      !this.subnet.mask_bits || !this.subnet.subnet_mask ||
+      !this.tier) {
       this.toastr.error('Invalid Data');
       return;
     }
@@ -128,7 +130,7 @@ export class CreateNetworkComponent implements OnInit {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
       \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
       \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
-      \"deploy\": false}`
+      \"deploy\": false, \"tier\":${this.tier}}`
     };
 
     this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
