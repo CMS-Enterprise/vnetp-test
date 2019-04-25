@@ -26,10 +26,11 @@
     </li>
   </ul>
   <div class="card" style="height:500px;">
-    <div class="offset-1 col-md-10">
+    <div class="col-md-12">
       <table class="table table-striped">
         <thead>
           <tr>
+            <th scope="col"></th>
             <th scope="col">Name</th>
             <th scope="col">Address Range</th>
             <th scope="col">Firewall Rules</th>
@@ -38,6 +39,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let subnet of subnets">
+            <td>
+              <input type="checkbox">
+            </td>
             <td>
               <a href="/networks/edit/{{ subnet.subnet_id }}">{{
                 subnet.name
@@ -51,9 +55,9 @@
       </table>
     </div>
   </div>
-  <button class="btn btn-danger" (click)="deployNetwork()" *ngIf="subnets.length">Deploy Networks</button>
+  <button class="btn btn-danger" (click)="deployNetwork()" *ngIf="subnets.length">Deploy Selected Networks</button>
 </div>
 
 <div class="offset-1 col-md-10 text-center pt-5">
-  <button class="btn btn-danger">Deploy All</button>
+  <button class="btn btn-danger">Deploy All Selected Items</button>
 </div>
