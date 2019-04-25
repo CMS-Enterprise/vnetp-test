@@ -31,4 +31,8 @@ export class NetworksComponent implements OnInit {
     getDeployedState(subnet: Subnet) {
       return this.helperService.getBooleanCustomField(subnet, 'deployed');
     }
+
+    getTier(subnet: Subnet){
+      return this.helperService.getStringCustomField(subnet, 'tier');
+    }
 }

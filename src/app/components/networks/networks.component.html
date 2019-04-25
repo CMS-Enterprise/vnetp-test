@@ -15,6 +15,7 @@
           <th scope="col">Name</th>
           <th scope="col">Address Range</th>
           <th scope="col">Deployed</th>
+          <th scope="col">Tier</th>
         </tr>
       </thead>
       <tbody>
@@ -24,6 +25,7 @@
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
           <td>{{ getDeployedState(subnet) }}</td>
+          <td>{{ getTier(subnet) }}</td>
         </tr>
       </tbody>
     </table>
