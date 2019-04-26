@@ -84,7 +84,7 @@ export class CreateIpNatComponent implements OnInit {
       \"ipnat\": ${JSON.stringify(this.ipNat)}}`
     };
 
-    this.automationApiService.launchTemplate('create_asa_ipnat', body).subscribe(
+    this.automationApiService.launchTemplate('deploy-ipnat', body).subscribe(
       () => this.toastr.success('Creating Network Address Translation')
     );
 

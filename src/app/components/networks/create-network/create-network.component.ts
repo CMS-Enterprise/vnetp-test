@@ -130,10 +130,10 @@ export class CreateNetworkComponent implements OnInit {
       extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
       \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
       \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
-      \"deploy\": false, \"tier\":${this.tier}}`
+      \"deploy\": false, \"tier\": ${this.tier}}`
     };
 
-    this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
+    this.automationApiService.launchTemplate('save-network', body).subscribe();
 
     this.messageService.filter('Job Launched');
     this.router.navigate(['/networks']);

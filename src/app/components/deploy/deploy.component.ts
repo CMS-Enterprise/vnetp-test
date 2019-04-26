@@ -14,7 +14,9 @@ export class DeployComponent implements OnInit {
   tabIndex: number;
   subnets: Array<Subnet>;
 
-  constructor(private hs: HelpersService, private automationApiService: AutomationApiService, private ips: IpAddressService) { }
+  constructor(private hs: HelpersService, private automationApiService: AutomationApiService, private ips: IpAddressService) {
+    this.subnets = new Array<Subnet>();
+   }
 
   ngOnInit() {
     this.tabIndex = 0;
@@ -69,25 +71,20 @@ export class DeployComponent implements OnInit {
   }
 
    private deploySubnet(subnet: Subnet) {
+    let firewall_rules = this.getFirewallRules(subnet);
+    let static_routes = this.getStaticRoutes(subnet);
+
     const body = {
             extra_vars: `{\"vlan_id\": ${subnet.description},\"ip_address\": ${subnet.gateway}
            ,\"subnet_mask\": ${this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`)}
             ,\"customer_id\": ${subnet.name},\"subnet_mask_bits\": ${subnet.mask_bits},
-            \"subnet_id\": ${subnet.subnet_id}}`
+            \"subnet_id\": ${subnet.subnet_id}, \"firewall_rules\": ${JSON.stringify(firewall_rules)},
+             \"updated_static_routes\": ${JSON.stringify(static_routes)}}`
           };
-    this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
-    this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    this.automationApiService.launchTemplate('deploy_device42_subnet', body).subscribe();
-
-    // TODO: Track status of network deploy jobs and launch additional jobs
-    // when network deploy jobs have completed.
-    setTimeout(() => this.deployFirewallRules(subnet), 30 * 1000);
-    setTimeout(() => this.deployStaticRoutes(subnet), 30 * 1000);
+    this.automationApiService.launchTemplate('deploy-network', body).subscribe();
   }
 
-  private deployFirewallRules(subnet: Subnet) {
-
-
+  private getFirewallRules(subnet: Subnet) {
     const firewallrules = subnet.custom_fields.find(c => c.key === 'firewall_rules');
     let firewall_rules: any;
 
@@ -95,17 +92,11 @@ export class DeployComponent implements OnInit {
       firewall_rules = JSON.parse(firewallrules.value);
     }
 
-    if (firewall_rules.length <= 0) { return; }
-
-    const body = {
-      extra_vars: `{\"customer_id\": ${subnet.name},\"vlan_id\": ${subnet.description},
-      \"firewall_rules\": ${JSON.stringify(firewall_rules)},\"subnet_id\": ${subnet.subnet_id}}`
-    };
-
-    this.automationApiService.launchTemplate('update_asa_acl', body).subscribe();
+    if (firewall_rules == null || firewall_rules.length <= 0) { return []; }
+    return firewall_rules;
   }
 
-  private deployStaticRoutes(subnet: Subnet) {
+  private getStaticRoutes(subnet: Subnet) {
     const staticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
     let static_routes: any;
 
@@ -113,15 +104,7 @@ export class DeployComponent implements OnInit {
       static_routes = JSON.parse(staticRoutes.value);
     }
 
-    if (static_routes.length <= 0) { return; }
-
-    const body = {
-      extra_vars: `{\"customer_id\": ${subnet.name},
-      \"subnet_id\": ${subnet.subnet_id},
-      \"updated_static_routes\": ${JSON.stringify(static_routes)},
-      \"deleted_static_routes\": ${JSON.stringify([])}}`
-    };
-
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+    if (static_routes == null || static_routes.length <= 0) { return []; }
+    return static_routes;
   }
 }

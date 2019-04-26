@@ -99,10 +99,10 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
       \"firewall_rules\": ${JSON.stringify(firewallRules)},\"subnet_id\": ${this.subnet.subnet_id}}`
     };
 
-    if (this.deployedState){
-      this.automationApiService.launchTemplate('update_asa_acl', body).subscribe();
+    if (this.deployedState) {
+      this.automationApiService.launchTemplate('deploy-acl', body).subscribe();
     } else {
-      this.automationApiService.launchTemplate('update_device42_acl', body).subscribe();
+      this.automationApiService.launchTemplate('save-acl', body).subscribe();
     }
 
     this.messageService.filter('Job Launched');

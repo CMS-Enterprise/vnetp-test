@@ -70,9 +70,9 @@ export class StaticRouteDetailComponent implements OnInit {
     };
 
     if (this.deployedState) {
-      this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
     } else {
-      this.automationApiService.launchTemplate('update_device42_static_routes', body).subscribe();
+      this.automationApiService.launchTemplate('save-static-route', body).subscribe();
     }
 
     this.messageService.filter('Job Launched');

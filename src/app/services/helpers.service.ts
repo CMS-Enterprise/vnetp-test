@@ -29,8 +29,8 @@ export class HelpersService {
 
     const customField = result[1];
     // Device42 stores 'booleans' as yes/no strings, read them and convert to boolean.
-    if (isNullOrUndefined(customField.value) || customField.value !== 'yes') { return false; } else
-    if (customField.value === 'yes') { return true; }
+    if (isNullOrUndefined(customField.value) || customField.value !== 'Yes') { return false; } else
+    if (customField.value === 'Yes') { return true; }
 
     return false;
   }

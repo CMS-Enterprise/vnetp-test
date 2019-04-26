@@ -53,12 +53,7 @@ export class NetworksDetailComponent implements OnInit {
        \"subnet_id\": ${this.subnet.subnet_id}}`
     };
 
-    if (this.deployedState) {
-     this.automationApiService.launchTemplate('delete_asa_subinterface', body).subscribe();
-     this.automationApiService.launchTemplate('delete_vlan', body).subscribe();
-    }
-
-    this.automationApiService.launchTemplate('delete_device42_subnet', body).subscribe();
+    this.automationApiService.launchTemplate('delete-network', body).subscribe();
 
     this.messageService.filter('Job Launched');
 
