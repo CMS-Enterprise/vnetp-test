@@ -15,7 +15,7 @@ describe('IpAddressService', () => {
   // Valid
   it('ip address should be valid', () => {
     const service: IpAddressService = TestBed.get(IpAddressService);
-    const result = service.isValidIPv4CidrNotation('10.102.34.5');
+    const result = service.isValidIPv4CidrNotation('10.102.34.5/32');
     expect(result[0]).toBeTruthy();
   });
 
@@ -63,14 +63,14 @@ describe('IpAddressService', () => {
   const service: IpAddressService = TestBed.get(IpAddressService);
   const cidr = '192.168.1.0/24';
   const result = service.ipv4MaskLessThan(cidr, 25);
-  expect(result[1]).toBeTruthy();
+  expect(result).toBeTruthy();
 });
 
   it('mask should not be less than', () => {
   const service: IpAddressService = TestBed.get(IpAddressService);
   const cidr = '192.168.1.0/24';
-  const result = service.ipv4MaskLessThan(cidr, 25);
-  expect(result[1]).toBeFalsy();
+  const result = service.ipv4MaskLessThan(cidr, 23);
+  expect(result).toBeFalsy();
 });
 
 // updateCidrMask Tests
@@ -110,6 +110,7 @@ describe('IpAddressService', () => {
     const subnet: Subnet = {
       subnet_id: 0,
       name: 'subnet',
+      description: '',
       network: '192.168.0.0',
       gateway: '192.168.0.1',
       subnet_mask: '255.255.0.0',
@@ -122,6 +123,7 @@ describe('IpAddressService', () => {
     const subnet1: Subnet = {
       subnet_id: 100,
       name: 'subnet',
+      description: '',
       network: '192.168.1.0',
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
@@ -142,6 +144,7 @@ describe('IpAddressService', () => {
     const subnet: Subnet = {
       subnet_id: 0,
       name: 'subnet',
+      description: '',
       network: '10.0.0.0',
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
@@ -154,6 +157,7 @@ describe('IpAddressService', () => {
     const subnet1: Subnet = {
       subnet_id: 100,
       name: 'subnet',
+      description: '',
       network: '192.168.1.0',
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
@@ -174,6 +178,7 @@ describe('IpAddressService', () => {
     const subnet: Subnet = {
       subnet_id: 0,
       name: 'subnet',
+      description: '',
       network: '10.0.0.0',
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
@@ -186,6 +191,7 @@ describe('IpAddressService', () => {
     const subnet1: Subnet = {
       subnet_id: 100,
       name: 'subnet',
+      description: '',
       network: '192.168.1.0',
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
@@ -207,6 +213,7 @@ describe('IpAddressService', () => {
     const subnet: Subnet = {
       subnet_id: 0,
       name: 'unique',
+      description: '',
       network: '10.0.0.0',
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
@@ -219,6 +226,7 @@ describe('IpAddressService', () => {
     const subnet1: Subnet = {
       subnet_id: 100,
       name: 'subnet',
+      description: '',
       network: '10.0.0.0',
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
@@ -240,6 +248,7 @@ describe('IpAddressService', () => {
     const subnet: Subnet = {
       subnet_id: 0,
       name: 'unique',
+      description: '',
       network: '172.16.0.0',
       gateway: '172.16.0.1',
       subnet_mask: '255.255.255.0',
@@ -252,6 +261,7 @@ describe('IpAddressService', () => {
     const subnet1: Subnet = {
       subnet_id: 100,
       name: 'subnet',
+      description: '',
       network: '10.0.0.0',
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',

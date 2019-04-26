@@ -18,7 +18,10 @@ export class AutomationApiService {
   }
 
   launchTemplate(jobName: string, ansibleBody) {
-    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + jobName + '/launch/', ansibleBody);
+    // Append Customer Identifier to Job Name
+    const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
+    console.log(fullJobName);
+    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
   getAdminGroups() {
