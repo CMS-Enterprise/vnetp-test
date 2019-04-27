@@ -126,12 +126,13 @@ export class CreateNetworkComponent implements OnInit {
 
   // Launch required automation jobs
   private launchJobs() {
-    const body = {
-      extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway },
-      \"gateway\": ${this.subnet.gateway},\"subnet_mask\": ${this.subnet.subnet_mask},
-      \"customer_id\": ${this.subnet.name},\"subnet_mask_bits\": ${this.subnet.mask_bits},
-      \"deploy\": false, \"tier\": ${this.tier}}`
-    };
+    let extra_vars: {[k: string]: any} = {};
+    extra_vars.customer = 'acme';
+    extra_vars.subnet = this.subnet;
+    extra_vars.tier = this.tier;
+    extra_vars.vlan_id = this.vlanId;
+
+    const body = { extra_vars };
 
     this.automationApiService.launchTemplate('save-network', body).subscribe();
 

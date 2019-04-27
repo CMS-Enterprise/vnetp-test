@@ -80,7 +80,7 @@ export class DeployComponent implements OnInit {
     extra_vars.subnet = subnet;
     extra_vars.subnet_mask = this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`);
     extra_vars.firewall_rules = firewall_rules;
-    extra_vars.updated_static_routes = static_routes;
+    extra_vars.static_routes = static_routes;
 
     const body = { extra_vars };
 
