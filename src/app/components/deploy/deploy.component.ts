@@ -74,13 +74,15 @@ export class DeployComponent implements OnInit {
     let firewall_rules = this.getFirewallRules(subnet);
     let static_routes = this.getStaticRoutes(subnet);
 
-    const body = {
-            extra_vars: `{\"vlan_id\": ${subnet.description},\"ip_address\": ${subnet.gateway}
-           ,\"subnet_mask\": ${this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`)}
-            ,\"customer_id\": ${subnet.name},\"subnet_mask_bits\": ${subnet.mask_bits},
-            \"subnet_id\": ${subnet.subnet_id}, \"firewall_rules\": ${JSON.stringify(firewall_rules)},
-             \"updated_static_routes\": ${JSON.stringify(static_routes)}}`
-          };
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.customer = 'acme';
+    extra_vars.subnet = subnet;
+    extra_vars.subnet_mask = this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`);
+    extra_vars.firewall_rules = firewall_rules;
+    extra_vars.updated_static_routes = static_routes;
+
+    const body = { extra_vars };
+
     this.automationApiService.launchTemplate('deploy-network', body).subscribe();
   }
 
