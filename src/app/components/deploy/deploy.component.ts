@@ -75,6 +75,7 @@ export class DeployComponent implements OnInit {
     let static_routes = this.getStaticRoutes(subnet);
 
     var extra_vars: {[k: string]: any} = {};
+    // TODO: Get dynamically (or do we allow AT to set this?)
     extra_vars.customer = 'acme';
     extra_vars.subnet = subnet;
     extra_vars.subnet_mask = this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`);
