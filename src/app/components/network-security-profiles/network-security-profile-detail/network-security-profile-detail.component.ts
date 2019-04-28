@@ -98,15 +98,13 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     // TODO: Get dynamically (or do we allow AT to set this?)
     extra_vars.customer = 'acme';
     extra_vars.subnet = this.subnet;
+    extra_vars.firewall_rules = firewallRules;
 
     const body = { extra_vars };
 
     if (this.deployedState) {
       this.automationApiService.launchTemplate('deploy-acl', body).subscribe();
     } else {
-      // TODO: If we aren't deploying the subnet, pass in the firewall rules seperately
-      // since we aren't updating the custom field.
-      extra_vars.firewall_rules = firewallRules;
       this.automationApiService.launchTemplate('save-acl', body).subscribe();
     }
 
