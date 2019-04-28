@@ -28,15 +28,34 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="networks">Networks</a>
-          <a class="dropdown-item" href="ipaddresses">IP Addresses</a>
-          <a class="dropdown-item" href="static-routes">Static Routes</a>
+          <a class="dropdown-item" href="networks">Subnets</a>
+          <a class="dropdown-item" href="static-routes">Routing</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="network-security-profiles">Network Security</a>
           <a class="dropdown-item" href="ip-nats">Network Address Translation</a>
         </div>
       </li>
-    </ul>
+  
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >IPAM
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="ipaddresses">IP Addresses</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="network-objects-groups">Network Objects/Groups</a>
+            <a class="dropdown-item" href="service-objects-groups">Service Objects/Groups</a>
+          </div>
+        </li>
+      </ul>
+
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         <a
@@ -49,6 +68,8 @@
             [hidden]="!runningJobs.count"></fa>
           <span class="badge badge-success" [hidden]="!runningJobs.count">{{runningJobs.count}}</span> Jobs</a>
       </li>
+
+
 
       <li class="nav-item dropdown">
         <a
