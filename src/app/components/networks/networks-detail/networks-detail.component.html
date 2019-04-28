@@ -3,7 +3,7 @@
   <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
   <button
     class="btn btn-danger"
-    (click)="ngxSmartModalService.getModal('deleteSubnetModal').open()"
+    (click)="ngx.getModal('deleteSubnetModal').open()"
   >
     Delete
   </button>
@@ -47,7 +47,7 @@
   customClass="'modal-content'"
 >
   <div class="modal-header">
-    <h5 class="modal-title">Do you want to delete Subnet '{{ subnet.name }}'</h5>
+    <h4 class="modal-title">Delete Subnet '{{ subnet.name }}'?</h4>
     <button
       type="button"
       class="close"
@@ -57,8 +57,10 @@
     ></button>
   </div>
 
-  <div class="modal-body">
-    <p>This will delete all static routes, NAT rules and Firewall rules associated with this subnet.</p>
+  <div class="modal-body text-center">
+    <p>This will also delete all child objects associated with this subnet.</p>
+
+    <h6 class="text-danger">DANGER: The subnet will be permanently delete and immediately deprovisioned.</h6>
 
     <p class="py-3">Type 'DELETE' and click 'Yes'</p>
     <input class="form-control" [(ngModel)]="deleteSubnetConfirm" />
