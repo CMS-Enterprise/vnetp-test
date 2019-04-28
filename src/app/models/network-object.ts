@@ -7,6 +7,8 @@ export class NetworkObject {
 
     IpAddress: string;
 
+    SubnetMask: number;
+
     StartAddress: string;
 
     EndAddress: string;

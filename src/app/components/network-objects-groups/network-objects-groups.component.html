@@ -1,0 +1,223 @@
+<div class="offset-1 col-md-10">
+  <div class="btn-group-sm" role="group">
+    <button
+      type="button"
+      class="btn btn-warning"
+      aria-label="Save Network Objects/Groups"
+      (click)="saveAll()"
+      [hidden]="!dirty"
+    >
+      <fa name="floppy-o" size="2x"></fa>
+    </button>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+        >Network Objects</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >Network Object Groups</a
+      >
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createNetworkObject()"
+        aria-label="Network Object"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
+    </div>
+
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObj of networkObjects">
+            <td>
+              <p>{{ netObj.Name }}</p>
+            </td>
+            <td>
+              <p>{{ getNetworkObjectTypeStr(netObj) }}</p>
+            </td>
+            <td>
+                <fa 
+                name="pencil" 
+                (click)="editNetworkObject(netObj)" 
+                >
+              </fa>  
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="navIndex == 1">
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Members</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObj of networkObjectGroups">
+            <td>
+              <p>{{ netObj.Name }}</p>
+            </td>
+            <td>
+              <p>{{ netObj.NetworkObjects.length }}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!--TODO: Form Validation-->
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="networkObjectModal"
+  customClass="'modal-content'"
+  *ngIf="modalNetworkObject"
+  [dismissable]="false"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Network Object</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="networkObjectModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        #name="ngModel"
+        [(ngModel)]="modalNetworkObject.Name"
+        aria-label="Name"
+        required
+      />
+
+      <label for="type">Type</label>
+      <select
+        name="type"
+        class="form-control"
+        #type="ngModel"
+        [(ngModel)]="modalNetworkObject.Type"
+        aria-label="Type"
+        required
+      >
+        <option></option>
+        <option value="0">Host</option>
+        <option value="1">Range</option>
+        <option value="2">Network</option>
+      </select>
+    </div>
+
+    <div class="form-group" 
+    [hidden]="!modalNetworkObject.Type">
+      <label for="name"
+      [hidden]="modalNetworkObject.Type == 1"
+      >IP Address</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        #name="ngModel"
+        [(ngModel)]="modalNetworkObject.IpAddress"
+        aria-label="IP Address"
+        [hidden]="modalNetworkObject.Type == 1"
+        [required]="modalNetworkObject.Type == 1"
+      />
+
+      <label for="subnetMask" 
+      [hidden]="modalNetworkObject.Type != 1"
+        >Start Address</label
+      >
+      <input
+        type="text"
+        name="startAddress"
+        class="form-control"
+        #startAddress="ngModel"
+        [(ngModel)]="modalNetworkObject.StartAddress"
+        aria-label="Start Address"
+        [hidden]="modalNetworkObject.Type != 1"
+        [required]="modalNetworkObject.Type != 1"
+      />
+
+      <label for="subnetMask" 
+      [hidden]="modalNetworkObject.Type != 1"
+        >End Address</label
+      >
+      <input
+        type="text"
+        name="endAddress"
+        class="form-control"
+        #endAddress="ngModel"
+        [(ngModel)]="modalNetworkObject.EndAddress"
+        aria-label="End Address"
+        [hidden]="modalNetworkObject.Type != 1"
+        [required]="modalNetworkObject.Type != 1"
+      />
+
+      <label for="subnetMask" 
+      [hidden]="modalNetworkObject.Type != 2"
+        >Subnet Mask</label
+      >
+      <input
+        type="text"
+        name="subnetMask"
+        class="form-control"
+        #subnetMask="ngModel"
+        [(ngModel)]="modalNetworkObject.SubnetMask"
+        aria-label="Subnet Mask"
+        [hidden]="modalNetworkObject.Type != 2"
+        [required]="modalNetworkObject.Type != 2"
+      />
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="saveNetworkObject()"
+    >
+      Save
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="networkObjectModal.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>
