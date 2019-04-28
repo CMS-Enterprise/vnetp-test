@@ -9,4 +9,5 @@ export class User {
     Username: string;
     Token: string;
     CustomerName: string;
+    CustomerIdentifier: string;
 }

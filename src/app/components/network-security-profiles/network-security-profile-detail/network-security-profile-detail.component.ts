@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkSecurityProfile } from 'src/app/models/network-security-profile';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 import { Papa } from 'ngx-papaparse';
+import { MessageService } from 'src/app/services/message.service';
+import { Subnet } from 'src/app/models/d42/subnet';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -12,14 +15,15 @@ import { Papa } from 'ngx-papaparse';
 })
 export class NetworkSecurityProfileDetailComponent implements OnInit {
 
-  subnet: any;
-
+  subnet: Subnet;
+  deployedState: boolean;
   firewall_rules: any;
 
   Id = '';
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private papa: Papa) {
-    this.subnet = {};
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
+              private papa: Papa, private hs: HelpersService, private ips: IpAddressService) {
+    this.subnet = new Subnet();
     this.firewall_rules = [];
    }
 
@@ -48,9 +52,11 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   getSubnet() {
     this.automationApiService.getSubnet(this.Id).subscribe(
-      data => this.subnet = data,
-      error => console.error(error),
-      () => this.getFirewallRules()
+      data => {
+        this.subnet = data as Subnet;
+        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
+        this.getFirewallRules();
+      }
     );
   }
 
@@ -58,6 +64,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
+    // TODO: Return from HelpersService
     this.firewall_rules = JSON.parse(firewallrules.value);
     }
   }
@@ -67,25 +74,39 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
     const nspr = new NetworkSecurityProfileRule();
     nspr.Edit = true;
+    nspr.Deleted = false;
+    nspr.Updated = true;
     nspr.Action =  0;
     this.firewall_rules.push(nspr);
   }
 
+  duplicateFirewallRule(rule) {
+    const ruleIndex = this.firewall_rules.indexOf(rule);
 
-  deleteFirewallRule(rule) {
-    this.firewall_rules.splice(this.firewall_rules.indexOf(rule), 1);
+    if (ruleIndex === -1) { return; }
+
+    const dupRule = Object.assign({}, rule);
+    dupRule.Deleted = false;
+
+    this.firewall_rules.splice(ruleIndex, 0, dupRule);
   }
 
   updateFirewallRules() {
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
-      \"firewall_rules\": ${JSON.stringify(this.firewall_rules)},\"subnet_id\": ${this.subnet.subnet_id}}`
-    };
+    const firewallRules = this.firewall_rules.filter(r => !r.Deleted);
 
-    this.automationApiService.launchTemplate('update_asa_acl', body).subscribe(
-      data => {},
-      error => console.log(error)
-    );
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet = this.subnet;
+    extra_vars.firewall_rules = firewallRules;
+
+    const body = { extra_vars };
+
+    if (this.deployedState) {
+      this.automationApiService.launchTemplate('deploy-acl', body).subscribe();
+    } else {
+      this.automationApiService.launchTemplate('save-acl', body).subscribe();
+    }
+
+    this.messageService.filter('Job Launched');
   }
 
   handleFileSelect(evt) {
@@ -109,6 +130,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   insertFirewallRules(rules) {
+    if (this.firewall_rules == null) { this.firewall_rules = []; }
     rules.forEach(rule => {
       if (rule.Name !== '') {
         this.firewall_rules.push(rule);

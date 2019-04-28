@@ -18,7 +18,10 @@ export class AutomationApiService {
   }
 
   launchTemplate(jobName: string, ansibleBody) {
-    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + jobName + '/launch/', ansibleBody);
+    // Append Customer Identifier to Job Name
+    const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
+    console.log(fullJobName);
+    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
   getAdminGroups() {
@@ -26,7 +29,7 @@ export class AutomationApiService {
   }
 
   doqlQuery(query: string) {
-    return this.http.get(environment.apiBase + '/services/data/v1.0/query/' + '?query=' + query + '&output_type=json');
+    return this.http.get(environment.apiBase + '/services/data/v1.0/query/?query=' + query + '&output_type=json');
   }
 
   getIps() {

@@ -1,0 +1,20 @@
+import { CustomFieldsObject, CustomField } from '../custom-fields-object-interface';
+
+// tslint:disable variable-name
+export class Subnet implements CustomFieldsObject {
+    public subnet_id: number;
+    public name: string;
+    public description: string;
+    public network: string;
+    public gateway: string;
+    public mask_bits: number;
+    public subnet_mask: string;
+    public custom_fields: Array<CustomField>;
+}
+
+export interface SubnetResponse {
+    total_count: number;
+    offset: number;
+    limit: number;
+    subnets: Subnet[];
+}

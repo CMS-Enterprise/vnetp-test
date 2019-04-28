@@ -37,8 +37,11 @@ export class AuthService {
 
           const customer = result.Customers[0];
 
+          console.log(customer)
+
           if (customer) {
                 user.CustomerName = customer.name;
+                user.CustomerIdentifier = customer.name.toLowerCase();
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
             }

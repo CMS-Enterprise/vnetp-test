@@ -5,25 +5,37 @@ export class NetworkSecurityProfileRule {
 
     Description: string;
 
-    Index: number;
-
     Action: number;
 
     Protocol: number;
 
     Direction: number;
 
-    SourcePorts: string;
+    DestinationIP: string;
+
+    DestinationObject: string;
+
+    DestinationObjectGroup: string;
 
     DestinationPorts: string;
 
+    DestinationServiceGroup: string;
+
     SourceIP: string;
 
-    DestinationIP: string;
+    SourceObject: string;
 
-    NetworkSecurityProfileId: number;
+    SourceObjectGroup: string;
 
-    ProjectId: number;
+    SourcePorts: string;
+
+    SourceServiceGroup: string;
+
+    Log: boolean;
 
     Edit: boolean;
+
+    Deleted: boolean;
+
+    Updated: boolean;
 }

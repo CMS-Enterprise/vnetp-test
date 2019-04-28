@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { MessageService } from 'src/app/services/message.service';
+import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-networks-detail',
@@ -10,16 +13,16 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              public ngxSmartModalService: NgxSmartModalService) {
-    this.subnet = {};
+  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+              private route: ActivatedRoute, private router: Router, private hs: HelpersService, private ips: IpAddressService ) {
     this.subnetIps = {};
+    this.subnet = new Subnet();
    }
 
   Id = '';
-  subnet: any;
+  subnet: Subnet;
   subnetIps: any;
-  deleteSubnetConfirm = '';
+  deployedState = false;
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -30,9 +33,10 @@ export class NetworksDetailComponent implements OnInit {
 
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
-      data => this.subnet = data,
-      error => console.error(error)
-    );
+      data => {
+        this.subnet = data as Subnet;
+        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
+      });
   }
 
   getIps() {
@@ -43,15 +47,16 @@ export class NetworksDetailComponent implements OnInit {
   }
 
   deleteSubnet() {
-    if (this.deleteSubnetConfirm !== 'DELETE') { return; }
+    // if (this.deleteSubnetConfirm !== 'DELETE') { return; }
 
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name}, \"vlan_id\": ${this.subnet.description}, \"subnet_id\": ${this.subnet.subnet_id}}`
-    };
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet_id = this.subnet.subnet_id;
+    const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('delete_asa_subinterface', body).subscribe();
-    this.automationApiService.launchTemplate('delete_vlan', body).subscribe();
-    this.automationApiService.launchTemplate('delete_device42_subnet', body).subscribe();
+    this.automationApiService.launchTemplate('delete-network', body).subscribe();
+
+    this.messageService.filter('Job Launched');
+
     this.router.navigate(['/networks']);
   }
 }

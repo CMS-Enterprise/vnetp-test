@@ -11,6 +11,7 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxMaskModule } from 'ngx-mask';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -36,6 +37,7 @@ import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
+import { DeployComponent } from './components/deploy/deploy.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,8 @@ import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-mod
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
-    YesNoModalComponent
+    YesNoModalComponent,
+    DeployComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-mod
     AngularFontAwesomeModule,
     FormsModule,
     PapaParseModule,
+    NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
       progressBar: true,
