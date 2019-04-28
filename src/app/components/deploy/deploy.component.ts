@@ -31,7 +31,7 @@ export class DeployComponent implements OnInit {
     });
   }
 
-
+  //TODO: Move to helper service
   getPropertyLength(subnet: Subnet, propertyName: string) {
     const jsonFirewallRules = subnet.custom_fields.find(c => c.key === propertyName);
 
@@ -71,16 +71,16 @@ export class DeployComponent implements OnInit {
   }
 
    private deploySubnet(subnet: Subnet) {
-    let firewall_rules = this.getFirewallRules(subnet);
-    let static_routes = this.getStaticRoutes(subnet);
+    // let firewall_rules = this.getFirewallRules(subnet);
+    // let static_routes = this.getStaticRoutes(subnet);
 
     var extra_vars: {[k: string]: any} = {};
     // TODO: Get dynamically (or do we allow AT to set this?)
     extra_vars.customer = 'acme';
-    extra_vars.subnet = subnet;
+    extra_vars.subnet_id = subnet.subnet_id;
+    // TODO: This should be saved as a custom property in the object or parsed out from mask_bits
+    // on server side.
     extra_vars.subnet_mask = this.ips.calculateIPv4SubnetMask(`${subnet.network}/${subnet.mask_bits}`);
-    extra_vars.firewall_rules = firewall_rules;
-    extra_vars.static_routes = static_routes;
 
     const body = { extra_vars };
 

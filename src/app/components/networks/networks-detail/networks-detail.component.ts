@@ -47,11 +47,11 @@ export class NetworksDetailComponent implements OnInit {
   }
 
   deleteSubnet() {
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},
-       \"vlan_id\": ${this.hs.getNumberCustomField(this.subnet, 'vlan_number')},
-       \"subnet_id\": ${this.subnet.subnet_id}}`
-    };
+    var extra_vars: {[k: string]: any} = {};
+
+    extra_vars.customer = 'acme';
+    extra_vars.subnet = this.subnet;
+    const body = { extra_vars };
 
     this.automationApiService.launchTemplate('delete-network', body).subscribe();
 

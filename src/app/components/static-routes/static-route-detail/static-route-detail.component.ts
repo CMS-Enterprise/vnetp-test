@@ -68,13 +68,15 @@ export class StaticRouteDetailComponent implements OnInit {
     // TODO: Get dynamically (or do we allow AT to set this?)
     extra_vars.customer = 'acme';
     extra_vars.subnet = this.subnet;
-    extra_vars.static_routes = staticRoutes;
 
     var body = { extra_vars };
 
     if (this.deployedState) {
       this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
     } else {
+      // TODO: If we aren't deploying the subnet, pass in the static routes seperately
+      // since we aren't updating the custom field.
+      extra_vars.static_routes = staticRoutes;
       this.automationApiService.launchTemplate('save-static-route', body).subscribe();
     }
 
