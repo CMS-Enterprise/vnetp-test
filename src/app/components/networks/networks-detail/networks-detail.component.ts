@@ -48,7 +48,7 @@ export class NetworksDetailComponent implements OnInit {
 
   deleteSubnet() {
     var extra_vars: {[k: string]: any} = {};
-    extra_vars.subnet = this.subnet;
+    extra_vars.subnet_id = this.subnet.subnet_id;
     const body = { extra_vars };
 
     this.automationApiService.launchTemplate('delete-network', body).subscribe();
