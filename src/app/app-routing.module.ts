@@ -19,6 +19,7 @@ import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { CanActivate } from '@angular/router/src/utils/preactivation';
+import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
   {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},
   {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
   {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
+  {path: 'network-objects-groups', component: NetworkObjectsGroupsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Objects'}},
   {path: 'network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
   {path: 'network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},

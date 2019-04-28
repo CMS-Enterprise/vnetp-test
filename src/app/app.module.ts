@@ -38,6 +38,7 @@ import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
 import { DeployComponent } from './components/deploy/deploy.component';
+import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
     SpecialCharacterDirective,
     YesNoModalComponent,
     DeployComponent,
+    NetworkObjectsGroupsComponent,
   ],
   imports: [
     BrowserModule,
