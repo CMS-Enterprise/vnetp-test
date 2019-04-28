@@ -5,5 +5,5 @@ export class ServiceObjectGroup {
 
     Description: string;
 
-    Objects: Array<ServiceObject>;
+    ServiceObjects: Array<ServiceObject>;
 }

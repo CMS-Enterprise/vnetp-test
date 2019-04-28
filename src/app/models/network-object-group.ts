@@ -5,5 +5,5 @@ export class NetworkObjectGroup {
 
     Description: string;
 
-    Objects: Array<NetworkObject>;
+    NetworkObjects: Array<NetworkObject>;
 }
