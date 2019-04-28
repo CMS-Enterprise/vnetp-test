@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'src/app/services/message.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,7 @@ import { MessageService } from 'src/app/services/message.service';
 export class NavbarComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private toastr: ToastrService, private auth: AuthService) {
+              private ngx: NgxSmartModalService , private auth: AuthService) {
     this.runningJobs = [];
     this.auth.currentUser.subscribe(u => this.currentUser = u);
 
@@ -50,6 +51,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
+    this.ngx.close('logoutModal');
     this.auth.logout();
   }
 
