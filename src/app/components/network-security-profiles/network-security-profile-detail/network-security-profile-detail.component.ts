@@ -95,8 +95,6 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     const firewallRules = this.firewall_rules.filter(r => !r.Deleted);
 
     var extra_vars: {[k: string]: any} = {};
-    // TODO: Get dynamically (or do we allow AT to set this?)
-    extra_vars.customer = 'acme';
     extra_vars.subnet = this.subnet;
     extra_vars.firewall_rules = firewallRules;
 

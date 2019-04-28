@@ -64,9 +64,7 @@ export class StaticRouteDetailComponent implements OnInit {
 
 
 
-    var extra_vars: {[k: string]: any} = {};
-    // TODO: Get dynamically (or do we allow AT to set this?)
-    extra_vars.customer = 'acme';
+    let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
     extra_vars.static_routes = staticRoutes;
 

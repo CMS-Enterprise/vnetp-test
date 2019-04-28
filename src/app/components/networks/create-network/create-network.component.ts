@@ -127,7 +127,6 @@ export class CreateNetworkComponent implements OnInit {
   // Launch required automation jobs
   private launchJobs() {
     let extra_vars: {[k: string]: any} = {};
-    extra_vars.customer = 'acme';
     extra_vars.subnet = this.subnet;
     extra_vars.tier = this.tier;
     extra_vars.vlan_id = this.vlanId;

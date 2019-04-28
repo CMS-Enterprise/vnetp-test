@@ -71,40 +71,11 @@ export class DeployComponent implements OnInit {
   }
 
    private deploySubnet(subnet: Subnet) {
-    // let firewall_rules = this.getFirewallRules(subnet);
-    // let static_routes = this.getStaticRoutes(subnet);
-
     var extra_vars: {[k: string]: any} = {};
-    // TODO: Get dynamically (or do we allow AT to set this?)
-    extra_vars.customer = 'acme';
     extra_vars.subnet_id = subnet.subnet_id;
 
     const body = { extra_vars };
 
     this.automationApiService.launchTemplate('deploy-network', body).subscribe();
-  }
-
-  private getFirewallRules(subnet: Subnet) {
-    const firewallrules = subnet.custom_fields.find(c => c.key === 'firewall_rules');
-    let firewall_rules: any;
-
-    if (firewallrules) {
-      firewall_rules = JSON.parse(firewallrules.value);
-    }
-
-    if (firewall_rules == null || firewall_rules.length <= 0) { return []; }
-    return firewall_rules;
-  }
-
-  private getStaticRoutes(subnet: Subnet) {
-    const staticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
-    let static_routes: any;
-
-    if (staticRoutes) {
-      static_routes = JSON.parse(staticRoutes.value);
-    }
-
-    if (static_routes == null || static_routes.length <= 0) { return []; }
-    return static_routes;
   }
 }

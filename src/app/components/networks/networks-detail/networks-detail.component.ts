@@ -48,8 +48,6 @@ export class NetworksDetailComponent implements OnInit {
 
   deleteSubnet() {
     var extra_vars: {[k: string]: any} = {};
-
-    extra_vars.customer = 'acme';
     extra_vars.subnet = this.subnet;
     const body = { extra_vars };
 
