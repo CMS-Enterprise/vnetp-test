@@ -1,0 +1,85 @@
+<h4>LDCOM Create</h4>
+<div class="col-sm-12">
+  <div>
+    <form name="LDOMCreateForm" class="form" #form="ngForm" novalidate>
+      <div class="form-group row">
+        <label for="inputLDOMName" class="col-md-1 col-form-label">LDOM Name</label>
+        <div class="col-md-2">
+          <input name="inputLDOMName" aria-label="Input LDOM Name" appIsAlphanumeric type="text" class="form-control"
+            placeholder="Name" #name="ngModel" [(ngModel)]="LDOM.name">
+        </div>
+        <label for="inputCDOMCloneFrom" class="col-md-1 col-form-label offset-md-1">Clone CDOM From:</label>
+
+      </div>
+      <div class="form-group row">
+        <label for="inputLDOMMemory" class="col-1 col-form-label offset-md-1">RAM (GB)</label>
+        <div class="col-1">
+          <input name="inputLDOMMemory" aria-label="RAM in Gigabytes" appIsAlphanumeric type="text" class="form-control"
+            placeholder="# GB" #name="ngModel" [(ngModel)]="LDOM.RAM">
+        </div>
+        <label for="inputCDOMvCPU" class="col-1 col-form-label offset-2">vCPU</label>
+        <div class="col-1">
+          <input name="inputLDOMvCPU" aria-label="LDOM vCPU count" appIsAlphanumeric type="text" class="form-control"
+            placeholder="# vCPU" #name="ngModel" [(ngModel)]="LDOM.vCPU">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputLDOMVariables" class="col-1 col-form-label offset-md-1">Variables</label>
+        <div class="col-1 offset-md-4">
+          <input name="inputLDOMVariables" aria-label="LDOM Variables" appIsAlphanumeric type="text" class="form-control"
+           #name="ngModel" [(ngModel)]="LDOM.Variables">
+        </div>
+      </div>
+      <div class="form-group row">
+          <label for="inputLDOMVDisks" class="col-1 offset-md-1">VDisks</label>
+          <select id="inputLDOMVDisks" class="custom-select col-1 offset-md-4">
+            <option selected>Choose...</option>
+            <option>...</option>
+          </select>
+      </div>
+      <div class="form-group row">
+          <label for="inputLDOMVDSDevs" class="col-1 col-form-label offset-md-1">VDSDevs</label>
+          <select id="inputCDOMVDSDevs" class="custom-select col-1 offset-md-4">
+            <option selected>Choose...</option>
+            <option>...</option>
+          </select>
+      </div>
+      <div class="form-group row">
+        <label for="inputLDOMVNet" class="col-1 col-form-label offset-md-1">VNET</label>
+          <select id="inputLDOMVnet" class="custom-select col-1 offset-md-4">
+            <option selected>Choose...</option>
+            <option>...</option>
+          </select>
+      </div>
+      <div class="form-group row">
+          <label for="inputLDOMLUNS" class="col-1 col-form-label offset-md-1">LUNS</label>
+          <div class="col-1 offset-md-4">
+            <input
+             name="inputLDOMLUNS"
+             aria-label="LDOM LUNS"
+             appIsAlphanumeric
+             type="text"
+             class="form-control"
+             #name="ngModel"
+             [(ngModel)]="LDOM.LUNS"
+             >
+          </div>
+      </div>
+      <div class="form-group row">
+          <label for="inputLDOMVLANs" class="col-1 col-form-label offset-md-1">VLANS</label>
+          <div class="col-1 offset-md-4">
+            <input
+             name="inputLDOMVLANs"
+             aria-label="LDOM VLANS"
+             appIsAlphanumeric
+             type="text"
+             class="form-control"
+             #name="ngModel"
+             [(ngModel)]="LDOM.VLANS"
+             >
+          </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- https://mdbootstrap.com/docs/angular/forms/inputs/ -->

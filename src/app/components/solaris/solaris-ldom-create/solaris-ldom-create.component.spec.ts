@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SolarisCdomCoresComponent } from './solaris-cdom-cores.component';
+import { SolarisLdomCreateComponent } from './solaris-ldom-create.component';
 
-describe('SolarisCdomCoresComponent', () => {
-  let component: SolarisCdomCoresComponent;
-  let fixture: ComponentFixture<SolarisCdomCoresComponent>;
+describe('SolarisLdomCreateComponent', () => {
+  let component: SolarisLdomCreateComponent;
+  let fixture: ComponentFixture<SolarisLdomCreateComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SolarisCdomCoresComponent ]
+      declarations: [ SolarisLdomCreateComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolarisCdomCoresComponent);
+    fixture = TestBed.createComponent(SolarisLdomCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

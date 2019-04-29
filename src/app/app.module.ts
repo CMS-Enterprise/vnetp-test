@@ -36,19 +36,8 @@ import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisDetailComponent } from './components/solaris/solaris-detail/solaris-detail.component';
-import { SolarisVdcListComponent } from './components/solaris/solaris-vdc-list/solaris-vdc-list.component';
-import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
-import { SolarisCdomViewComponent } from './components/solaris/solaris-cdom-view/solaris-cdom-view.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-import { SolarisCdomLdomsComponent } from './components/solaris/solaris-cdom-ldoms/solaris-cdom-ldoms.component';
-import { SolarisCdomWwnComponent } from './components/solaris/solaris-cdom-wwn/solaris-cdom-wwn.component';
-import { SolarisCdomVlanComponent } from './components/solaris/solaris-cdom-vlan/solaris-cdom-vlan.component';
-import { SolarisCdomCoresComponent } from './components/solaris/solaris-cdom-cores/solaris-cdom-cores.component';
-import { SolarisCdomMemoryComponent } from './components/solaris/solaris-cdom-memory/solaris-cdom-memory.component';
-import { SolarisLdomListComponent } from './components/solaris/solaris-ldom-list/solaris-ldom-list.component';
-import { SolarisLdomViewComponent } from './components/solaris/solaris-ldom-view/solaris-ldom-view.component';
-import { SolarisLdomEditComponent } from './components/solaris/solaris-ldom-edit/solaris-ldom-edit.component';
+import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
 
 @NgModule({
   declarations: [
@@ -73,19 +62,8 @@ import { SolarisLdomEditComponent } from './components/solaris/solaris-ldom-edit
     CreateIpNatComponent,
     SpecialCharacterDirective,
     SolarisComponent,
-    SolarisDetailComponent,
-    SolarisVdcListComponent,
-    SolarisCdomListComponent,
-    SolarisCdomViewComponent,
     SolarisCdomCreateComponent,
-    SolarisCdomLdomsComponent,
-    SolarisCdomWwnComponent,
-    SolarisCdomVlanComponent,
-    SolarisCdomCoresComponent,
-    SolarisCdomMemoryComponent,
-    SolarisLdomListComponent,
-    SolarisLdomViewComponent,
-    SolarisLdomEditComponent,
+    SolarisLdomCreateComponent,
   ],
   imports: [
     BrowserModule,

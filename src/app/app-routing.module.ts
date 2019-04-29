@@ -18,10 +18,8 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisDetailComponent }  from './components/solaris/solaris-detail/solaris-detail.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-
-
+import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
 const routes: Routes = [
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
@@ -39,8 +37,8 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'solaris', component: SolarisComponent},
-  {path: 'solaris/edit/:id', component: SolarisDetailComponent},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent},
+  {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
 ];
