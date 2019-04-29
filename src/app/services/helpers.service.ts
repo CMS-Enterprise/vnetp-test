@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CustomFieldsObject, CustomField } from '../models/custom-fields-object-interface';
-import { isNullOrUndefined, isNull } from 'util';
-import { elementStart } from '@angular/core/src/render3';
+import { isNullOrUndefined } from 'util';
 
 @Injectable({
   providedIn: 'root'
