@@ -63,7 +63,7 @@
           {{currentUser.Username}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
+          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
         </div>
       </li>
 
@@ -79,3 +79,44 @@
     </ul>
   </div>
 </nav>
+
+
+<ngx-smart-modal
+  #logoutModal
+  identifier="logoutModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Logout?</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="logoutModal.close()"
+    ></button>
+  </div>
+<!-- 
+  <div class="modal-body text-center">
+  </div> -->
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="logout()"
+    >
+      Yes
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="logoutModal.close()"
+    >
+      No
+    </button>
+  </div>
+</ngx-smart-modal>

@@ -10,6 +10,7 @@ import {FormsModule } from '@angular/forms';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 
 // 1st-Party Imports
@@ -35,6 +36,7 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
+import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 
 @NgModule({
@@ -59,6 +61,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
+    YesNoModalComponent,
     DeployComponent,
   ],
   imports: [
@@ -76,9 +79,10 @@ import { DeployComponent } from './components/deploy/deploy.component';
       progressBar: true,
       closeButton: true,
       preventDuplicates: true
-    })
+    }),
+    NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

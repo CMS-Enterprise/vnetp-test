@@ -55,19 +55,20 @@ export class StaticRouteDetailComponent implements OnInit {
     // TODO: Handle updates to existing static routes
 
     // Deleted Static Routes are added to the deleted static routes array.
-    const deletedStaticRoutes = this.staticRoutes.filter(r => r.Deleted);
+    // const deletedStaticRoutes = this.staticRoutes.filter(r => r.Deleted);
 
     // All not deleted or not deleted and updated routes are added to the local static routes
     // array. This is the array that will be persisted into the device 42 static_routes custom
     // property.
     const staticRoutes = this.staticRoutes.filter(r => !r.Deleted || !r.Deleted && r.Updated);
 
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},
-      \"subnet_id\": ${this.subnet.subnet_id},
-      \"updated_static_routes\": ${JSON.stringify(staticRoutes)},
-      \"deleted_static_routes\": ${JSON.stringify(deletedStaticRoutes)}}`
-    };
+
+
+    let extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet = this.subnet;
+    extra_vars.static_routes = staticRoutes;
+
+    var body = { extra_vars };
 
     if (this.deployedState) {
       this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();

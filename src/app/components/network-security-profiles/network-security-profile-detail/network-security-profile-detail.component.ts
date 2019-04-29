@@ -94,10 +94,11 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   updateFirewallRules() {
     const firewallRules = this.firewall_rules.filter(r => !r.Deleted);
 
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},\"vlan_id\": ${this.subnet.description},
-      \"firewall_rules\": ${JSON.stringify(firewallRules)},\"subnet_id\": ${this.subnet.subnet_id}}`
-    };
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet = this.subnet;
+    extra_vars.firewall_rules = firewallRules;
+
+    const body = { extra_vars };
 
     if (this.deployedState) {
       this.automationApiService.launchTemplate('deploy-acl', body).subscribe();

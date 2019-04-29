@@ -1,7 +1,12 @@
 <div class="text-center">
   <h3>Network: {{ subnet.name }}</h3>
   <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
-  <button class="btn btn-danger" (click)="deleteSubnet()">Delete</button>
+  <button
+    class="btn btn-danger"
+    (click)="ngx.getModal('deleteSubnetModal').open()"
+  >
+    Delete
+  </button>
 </div>
 
 <div class="offset-1 col-md-10">
@@ -12,26 +17,73 @@
       <fa name="refresh" size="1x" (click)="getIps()"></fa>
     </button>
   </div>
-    <table class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Label</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ip of subnetIps.ips">
-          <td>
-            <p>{{ ip.ip }}</p>
-          </td>
-          <td>
-            <p>{{ ip.type }}</p>
-          </td>
-          <td>
-            <p>{{ ip.label }}</p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Label</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ip of subnetIps.ips">
+        <td>
+          <p>{{ ip.ip }}</p>
+        </td>
+        <td>
+          <p>{{ ip.type }}</p>
+        </td>
+        <td>
+          <p>{{ ip.label }}</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+<ngx-smart-modal
+  #deleteSubnetModal
+  identifier="deleteSubnetModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Subnet '{{ subnet.name }}'?</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body text-center">
+    <p>This will also delete all child objects associated with this subnet.</p>
+
+    <h6 class="text-danger">DANGER: The subnet will be permanently delete and immediately deprovisioned.</h6>
+
+    <p class="py-3">Type 'DELETE' and click 'Yes'</p>
+    <input class="form-control" [(ngModel)]="deleteSubnetConfirm" />
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="deleteSubnet()"
+      [disabled]="deleteSubnetConfirm !== 'DELETE'"
+    >
+      Yes
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
+    >
+      No
+    </button>
+  </div>
+</ngx-smart-modal>

@@ -5,6 +5,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { IpAddressService } from 'src/app/services/ip-address.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-networks-detail',
@@ -14,7 +15,8 @@ import { IpAddressService } from 'src/app/services/ip-address.service';
 export class NetworksDetailComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private route: ActivatedRoute, private router: Router, private hs: HelpersService, private ips: IpAddressService ) {
+              private route: ActivatedRoute, private router: Router, private hs: HelpersService, 
+              private ips: IpAddressService, private ngx: NgxSmartModalService ) {
     this.subnetIps = {};
     this.subnet = new Subnet();
    }
@@ -23,6 +25,7 @@ export class NetworksDetailComponent implements OnInit {
   subnet: Subnet;
   subnetIps: any;
   deployedState = false;
+  deleteSubnetConfirm = '';
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -47,11 +50,11 @@ export class NetworksDetailComponent implements OnInit {
   }
 
   deleteSubnet() {
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},
-       \"vlan_id\": ${this.hs.getNumberCustomField(this.subnet, 'vlan_number')},
-       \"subnet_id\": ${this.subnet.subnet_id}}`
-    };
+    if (this.deleteSubnetConfirm !== 'DELETE') { return; }
+
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet_id = this.subnet.subnet_id;
+    const body = { extra_vars };
 
     this.automationApiService.launchTemplate('delete-network', body).subscribe();
 
