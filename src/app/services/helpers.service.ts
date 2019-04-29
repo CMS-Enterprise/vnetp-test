@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CustomFieldsObject, CustomField } from '../models/custom-fields-object-interface';
-import { isNullOrUndefined, isNull } from 'util';
-import { elementStart } from '@angular/core/src/render3';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +27,7 @@ export class HelpersService {
 
     const customField = result[1];
     // Device42 stores 'booleans' as yes/no strings, read them and convert to boolean.
-    if (isNullOrUndefined(customField.value) || customField.value !== 'Yes') { return false; } else
+    if (customField.value == null || customField.value ===  undefined || customField.value !== 'Yes') { return false; } else
     if (customField.value === 'Yes') { return true; }
 
     return false;
@@ -40,7 +38,7 @@ export class HelpersService {
     if (result[0] === false) { return '';}
 
     const customField = result[1];
-    if (isNullOrUndefined(customField.value)) { return ''; } else {
+    if (customField.value == null || customField.value === undefined) { return ''; } else {
       return customField.value;
     }
   }
@@ -51,7 +49,7 @@ export class HelpersService {
 
     const customField = result[1];
     // Ensure that the number is valid.
-    if (isNullOrUndefined(customField.value) ||
+    if (customField.value == null || customField.value === undefined ||
     Number(customField.value) < Number.MIN_SAFE_INTEGER ||
     Number(customField.value) > Number.MAX_SAFE_INTEGER) { return -1; } else {
       return +customField.value;

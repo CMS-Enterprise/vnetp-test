@@ -26,6 +26,7 @@
     "ip-num": "^1.1.1",
     "ip-subnet-calculator": "^1.1.8",
     "jquery": "^3.3.1",
+    "ngx-cookie-service": "^2.1.0",
     "ngx-mask": "^7.8.9",
     "ngx-papaparse": "^3.0.2",
     "ngx-smart-modal": "^7.1.1",
