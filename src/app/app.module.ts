@@ -12,6 +12,7 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
+import { CookieService } from 'ngx-cookie-service';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -82,7 +83,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
