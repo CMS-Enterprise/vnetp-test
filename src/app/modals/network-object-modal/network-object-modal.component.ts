@@ -14,13 +14,17 @@ export class NetworkObjectModalComponent implements OnInit {
   save() {
     this.ngx.setModalData(Object.assign({}, this.networkObject), 'networkObjectModal');
     this.ngx.close('networkObjectModal');
+    this.networkObject = new NetworkObject();
   }
 
   cancel() {
     this.ngx.close('networkObjectModal');
+    this.networkObject = new NetworkObject();
   }
 
-  constructor(private ngx: NgxSmartModalService) {}
+  constructor(private ngx: NgxSmartModalService) {
+    this.networkObject = new NetworkObject();
+  }
 
   ngOnInit() {
     // FIXME: Improve before merge.
@@ -30,8 +34,6 @@ export class NetworkObjectModalComponent implements OnInit {
 
         if (data !== undefined) {
         this.networkObject = modal.getData() as NetworkObject;
-        } else {
-          this.networkObject = new NetworkObject();
         }
       });
     }, 0.5 * 1000);
