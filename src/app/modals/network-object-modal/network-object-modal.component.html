@@ -90,21 +90,6 @@
         [hidden]="networkObject.Type != 1"
         [required]="networkObject.Type != 1"
       />
-
-      <label for="subnetMask" 
-      [hidden]="networkObject.Type != 2"
-        >Subnet Mask</label
-      >
-      <input
-        type="text"
-        name="subnetMask"
-        class="form-control"
-        #subnetMask="ngModel"
-        [(ngModel)]="networkObject.SubnetMask"
-        aria-label="Subnet Mask"
-        [hidden]="networkObject.Type != 2"
-        [required]="networkObject.Type != 2"
-      />
     </div>
   </form>
   </div>
