@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkObject } from 'src/app/models/network-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -10,6 +11,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 export class NetworkObjectModalComponent implements OnInit {
 
   networkObject: NetworkObject;
+  networkObjectForm: FormGroup;
 
   save() {
     this.ngx.setModalData(Object.assign({}, this.networkObject), 'networkObjectModal');
@@ -22,11 +24,21 @@ export class NetworkObjectModalComponent implements OnInit {
     this.networkObject = new NetworkObject();
   }
 
-  constructor(private ngx: NgxSmartModalService) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
     this.networkObject = new NetworkObject();
   }
 
   ngOnInit() {
+
+    this.networkObjectForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      type: ['', Validators.required],
+      ipVersion: ['', Validators.required],
+      ipAddress: [''],
+      startAddress: [''],
+      endAddress: ['']
+    });
+
     // FIXME: Improve before merge.
     setTimeout(() => {
       this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
