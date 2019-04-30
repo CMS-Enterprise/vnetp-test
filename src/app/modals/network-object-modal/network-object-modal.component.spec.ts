@@ -2,18 +2,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectModalComponent } from './network-object-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NetworkObject } from 'src/app/models/network-object';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
   let fixture: ComponentFixture<NetworkObjectModalComponent>;
 
+  const ngx: NgxSmartModalService = new NgxSmartModalService();
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, NgxSmartModalModule ],
       declarations: [ NetworkObjectModalComponent ],
-      providers: [ NgxSmartModalService]
+      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators ]
     })
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(NetworkObjectModalComponent);
@@ -32,18 +34,40 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('should have network object', () => {
-    // FIXME: Set modal data in smart modal service and ensure that
-    // component reads it.
+    expect(component.networkObject).toBeTruthy();
+  });
+
+  it('should read network object from service', () => {
+
+    const modal = ngx.getModal('networkObjectModal')
+    const networkObject = new NetworkObject();
+    networkObject.Name = 'Test';
+    networkObject.IpAddress = '1.1.1.1';
+
+    modal.setData(networkObject);
+    modal.open(); // FIXME: Isn't firing onOpen.
+
     expect(component.networkObject).toBeTruthy();
   });
 
   it('save should set ngxModal data and recreate local network object', () => {
     component.networkObject.Name = 'Test';
     component.networkObject.IpAddress = '192.168.10.10';
-    // FIXME: Check ngx smart modal service to ensure data was set.
+
     component.save();
 
+    // Component should be cleared since we deep-copied
+    // it to modal service and then reinitialized it.
     expect(component.networkObject.Name).toBeFalsy();
+    expect(component.networkObject.IpAddress).toBeFalsy();
+
+    // Get Data from the modal service
+    const modal = ngx.getModal('networkObjectModal');
+    const data = modal.getData() as NetworkObject;
+
+    // Ensure that it is equal to our test data.
+    expect(data.Name === 'Test').toBeTruthy();
+    expect(data.IpAddress = '192.168.10.10').toBeTruthy();
   });
 
   it('cancel should recreate network object', () => {
