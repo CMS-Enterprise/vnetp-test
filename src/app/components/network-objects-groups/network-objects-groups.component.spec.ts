@@ -1,11 +1,11 @@
+// TODO: Write mock for ngxSmartModal to test subscribe
+// unsubscribe and modal maninpulation.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
-import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
-import { ModalInstance } from 'ngx-smart-modal/src/services/modal-instance';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
