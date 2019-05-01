@@ -95,6 +95,6 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.unsubscribe();
+    this.networkObjectModalSubscription.unsubscribe();
   }
 }
