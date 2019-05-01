@@ -3,10 +3,9 @@ import { User } from '../models/user';
 import { Userpass } from '../models/userpass';
 import { Observable, BehaviorSubject, config } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private cs: CookieService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -33,12 +32,8 @@ export class AuthService {
 
     return this.http.get<any>(environment.apiBase + '/api/1.0/customers/', httpOptions)
         .pipe(map(result => {
-
           const user = new User(userpass);
-
           const customer = result.Customers[0];
-
-          console.log(customer)
 
           if (customer) {
                 user.CustomerName = customer.name;
@@ -52,7 +47,8 @@ export class AuthService {
 }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    localStorage.clear();
+    this.cs.deleteAll('/');
     this.currentUserSubject.next(null);
     location.reload();
   }

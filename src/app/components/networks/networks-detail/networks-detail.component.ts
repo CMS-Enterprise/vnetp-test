@@ -16,7 +16,7 @@ export class NetworksDetailComponent implements OnInit {
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
               private route: ActivatedRoute, private router: Router, private hs: HelpersService, 
-              private ips: IpAddressService, private ngx: NgxSmartModalService ) {
+              private ips: IpAddressService, public ngx: NgxSmartModalService ) {
     this.subnetIps = {};
     this.subnet = new Subnet();
    }
