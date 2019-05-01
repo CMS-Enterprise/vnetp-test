@@ -50,7 +50,9 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group"
+      *ngIf="f.type.value == 'host'"
+      >
         <label for="name">Host Address</label>
         <input
           type="text"
@@ -68,7 +70,9 @@
       </div>
 
       <div class="form-group">
-        <label for="name">CIDR Address</label>
+        <label for="name" 
+        *ngIf="f.type.value == 'network'"
+        >CIDR Address</label>
         <input
           type="text"
           name="name"
@@ -85,7 +89,9 @@
       </div>
 
       <div class="form-group"> 
-        <label for="subnetMask">Start Address</label>
+        <label for="subnetMask"
+        *ngIf="f.type.value == 'range'"
+        >Start Address</label>
         <input
           type="text"
           name="startAddress"
@@ -94,6 +100,7 @@
           [ngClass]="{'is-invalid' : submitted && f.startAddress.errors }"
           mask="099.099.099.099"
           aria-label="Start Address"
+          *ngIf="f.type.value == 'range'"
         />
         <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
           <div *ngIf="f.startAddress.errors.required">Start Address is required</div>
@@ -101,7 +108,9 @@
       </div>
 
       <div class="form-group">
-        <label for="subnetMask">End Address</label>
+        <label for="subnetMask"
+        *ngIf="f.type.value == 'range'"
+        >End Address</label>
         <input
           type="text"
           name="endAddress"
@@ -110,6 +119,7 @@
           [ngClass]="{'is-invalid' : submitted && f.endAddress.errors }"
           mask="099.099.099.099"
           aria-label="End Address"
+          *ngIf="f.type.value == 'range'"
         />
         <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
           <div *ngIf="f.endAddress.errors.required">End Address is required</div>
