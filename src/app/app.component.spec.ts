@@ -8,7 +8,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
-import { FormsModule, FormBuilder } from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -18,7 +18,8 @@ describe('AppComponent', () => {
         AngularFontAwesomeModule,
         NgxSmartModalModule,
         HttpClientModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [
         AppComponent,
