@@ -68,14 +68,6 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     this.dirty = true;
   }
 
-  getNetworkObjectTypeStr(networkObject: NetworkObject) {
-    switch (networkObject.Type) {
-    case '0': { return 'Host'; }
-    case '1': { return 'Range'; }
-    case '2': { return 'Network'; }
-  }
-  }
-
   saveAll() {
     const dto = new NetworkObjectDto();
 
