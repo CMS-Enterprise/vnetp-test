@@ -37,7 +37,6 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
-import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 
 @NgModule({
