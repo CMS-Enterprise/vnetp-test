@@ -7,6 +7,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
+import { FormsModule, FormBuilder } from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -15,14 +17,16 @@ describe('AppComponent', () => {
         RouterTestingModule,
         AngularFontAwesomeModule,
         NgxSmartModalModule,
-        HttpClientModule
+        HttpClientModule,
+        FormsModule
       ],
       declarations: [
         AppComponent,
         NavbarComponent,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        NetworkObjectModalComponent
       ],
-      providers: [CookieService, NgxSmartModalService]
+      providers: [CookieService, NgxSmartModalService, FormBuilder]
     }).compileComponents();
   }));
 
