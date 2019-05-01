@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 import { NetworksComponent } from './networks.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NetworksComponent', () => {
   let component: NetworksComponent;
@@ -8,7 +11,9 @@ describe('NetworksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NetworksComponent ]
+      imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]) ],
+      declarations: [ NetworksComponent ],
+      providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();
   }));
