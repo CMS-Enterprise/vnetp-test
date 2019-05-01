@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule, FormBuilder } from '@angular/forms';
+import {FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
@@ -74,6 +74,7 @@ import { NetworkObjectModalComponent } from './modals/network-object-modal/netwo
     CommonModule,
     HttpClientModule,
     AngularFontAwesomeModule,
+    ReactiveFormsModule,
     FormsModule,
     PapaParseModule,
     NgxMaskModule.forRoot(),
