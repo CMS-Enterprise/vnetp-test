@@ -34,7 +34,7 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('should have network object form', () => {
-    expect(component.networkObjectForm).toBeTruthy();
+    expect(component.form).toBeTruthy();
   });
 
   it('should read network object from service', () => {
@@ -47,14 +47,14 @@ describe('NetworkObjectModalComponent', () => {
     modal.setData(networkObject);
     modal.open(); // FIXME: Isn't firing onOpen.
 
-    expect(component.networkObjectForm).toBeTruthy();
+    expect(component.form).toBeTruthy();
   });
 
   it('save should set ngxModal data (Host)', () => {
-    component.networkObjectForm.controls.name.setValue('Test');
-    component.networkObjectForm.controls.type.setValue('host');
-    component.networkObjectForm.controls.hostAddress.setValue('192.168.10.10/32');
-    expect(component.networkObjectForm.valid).toBeTruthy();
+    component.form.controls.name.setValue('Test');
+    component.form.controls.type.setValue('host');
+    component.form.controls.hostAddress.setValue('192.168.10.10/32');
+    expect(component.form.valid).toBeTruthy();
     component.save();
 
     // Get Data from the modal service
@@ -68,11 +68,11 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('save should set ngxModal data (Range)', () => {
-    component.networkObjectForm.controls.name.setValue('Test');
-    component.networkObjectForm.controls.type.setValue('range');
-    component.networkObjectForm.controls.startAddress.setValue('192.168.10.10');
-    component.networkObjectForm.controls.endAddress.setValue('192.168.10.11');
-    expect(component.networkObjectForm.valid).toBeTruthy();
+    component.form.controls.name.setValue('Test');
+    component.form.controls.type.setValue('range');
+    component.form.controls.startAddress.setValue('192.168.10.10');
+    component.form.controls.endAddress.setValue('192.168.10.11');
+    expect(component.form.valid).toBeTruthy();
     component.save();
 
     // Get Data from the modal service
@@ -87,10 +87,10 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('save should set ngxModal data (Network)', () => {
-    component.networkObjectForm.controls.name.setValue('Test');
-    component.networkObjectForm.controls.type.setValue('network');
-    component.networkObjectForm.controls.cidrAddress.setValue('192.168.10.0/24');
-    expect(component.networkObjectForm.valid).toBeTruthy();
+    component.form.controls.name.setValue('Test');
+    component.form.controls.type.setValue('network');
+    component.form.controls.cidrAddress.setValue('192.168.10.0/24');
+    expect(component.form.valid).toBeTruthy();
     component.save();
 
     // Get Data from the modal service
@@ -105,63 +105,63 @@ describe('NetworkObjectModalComponent', () => {
 
   // Initial Form State
   it ('name should be required', () =>  {
-    const name = component.networkObjectForm.controls.name;
+    const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
   });
 
   it ('type should be required', () =>  {
-    const type = component.networkObjectForm.controls.type;
+    const type = component.form.controls.type;
     expect(type.valid).toBeFalsy();
   });
 
   it ('hostAddress should not be required', () =>  {
-    const hostAddress = component.networkObjectForm.controls.hostAddress;
+    const hostAddress = component.form.controls.hostAddress;
     expect(hostAddress.valid).toBeTruthy();
   });
 
   it ('cidrAddress should not be required', () =>  {
-    const cidrAddress = component.networkObjectForm.controls.cidrAddress;
+    const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeTruthy();
   });
 
   it ('startaddress should not be required', () =>  {
-    const startAddress = component.networkObjectForm.controls.startAddress;
+    const startAddress = component.form.controls.startAddress;
     expect(startAddress.valid).toBeTruthy();
   });
 
   it ('endAddress should not be required', () =>  {
-    const endAddress = component.networkObjectForm.controls.endAddress;
+    const endAddress = component.form.controls.endAddress;
     expect(endAddress.valid).toBeTruthy();
   });
 
   // Form State when Type: Host selected
   it ('hostAddress should be required', () => {
-    const type = component.networkObjectForm.controls.type;
+    const type = component.form.controls.type;
     type.setValue('host');
-    const hostAddress = component.networkObjectForm.controls.hostAddress;
+    const hostAddress = component.form.controls.hostAddress;
     expect(hostAddress.valid).toBeFalsy();
   });
 
   // Form State when Type: Range selected
   it ('startAddress should be required', () => {
-    const type = component.networkObjectForm.controls.type;
+    const type = component.form.controls.type;
     type.setValue('range');
-    const startAddress = component.networkObjectForm.controls.startAddress;
+    const startAddress = component.form.controls.startAddress;
     expect(startAddress.valid).toBeFalsy();
   });
 
   it ('endAddress should be required', () => {
-    const type = component.networkObjectForm.controls.type;
+    const type = component.form.controls.type;
     type.setValue('range');
-    const endAddress = component.networkObjectForm.controls.endAddress;
+    const endAddress = component.form.controls.endAddress;
     expect(endAddress.valid).toBeFalsy();
   });
 
   // Form State when Type: Network selected
   it ('cidrAddress should be required', () => {
-    const type = component.networkObjectForm.controls.type;
+    const type = component.form.controls.type;
     type.setValue('network');
-    const cidrAddress = component.networkObjectForm.controls.cidrAddress;
+    const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeFalsy();
   });
 });

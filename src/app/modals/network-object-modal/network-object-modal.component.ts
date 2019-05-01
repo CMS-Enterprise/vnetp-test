@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./network-object-modal.component.css']
 })
 export class NetworkObjectModalComponent implements OnInit {
-  networkObjectForm: FormGroup;
+  form: FormGroup;
   submitted: boolean;
   networkTypeSubscription: Subscription;
 
@@ -19,18 +19,18 @@ export class NetworkObjectModalComponent implements OnInit {
 
   save() {
     this.submitted = true;
-    if (this.networkObjectForm.invalid)
+    if (this.form.invalid)
     {
       return;
     }
 
     const networkObject = new NetworkObject();
-    networkObject.Name = this.networkObjectForm.value.name;
-    networkObject.Type = this.networkObjectForm.value.type;
-    networkObject.HostAddress = this.networkObjectForm.value.hostAddress;
-    networkObject.CidrAddress = this.networkObjectForm.value.cidrAddress;
-    networkObject.StartAddress = this.networkObjectForm.value.startAddress;
-    networkObject.EndAddress = this.networkObjectForm.value.endAddress;
+    networkObject.Name = this.form.value.name;
+    networkObject.Type = this.form.value.type;
+    networkObject.HostAddress = this.form.value.hostAddress;
+    networkObject.CidrAddress = this.form.value.cidrAddress;
+    networkObject.StartAddress = this.form.value.startAddress;
+    networkObject.EndAddress = this.form.value.endAddress;
 
     this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
     this.ngx.close('networkObjectModal');
@@ -42,24 +42,24 @@ export class NetworkObjectModalComponent implements OnInit {
     this.reset();
   }
 
-  get f() { return this.networkObjectForm.controls; }
+  get f() { return this.form.controls; }
 
 
   ngOnInit() {
     this.buildForm();
-    this.setNetworkInfoValidators();
+    this.setFormValidators();
 
     // FIXME: Improve before merge.
     setTimeout(() => {
       this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
         const networkObject = Object.assign({}, modal.getData() as NetworkObject);
         if (networkObject !== undefined) {
-        this.networkObjectForm.controls.name.setValue(networkObject.Name);
-        this.networkObjectForm.controls.type.setValue(networkObject.Type);
-        this.networkObjectForm.controls.hostAddress.setValue(networkObject.HostAddress);
-        this.networkObjectForm.controls.cidrAddress.setValue(networkObject.CidrAddress);
-        this.networkObjectForm.controls.startAddress.setValue(networkObject.StartAddress);
-        this.networkObjectForm.controls.endAddress.setValue(networkObject.EndAddress);
+        this.form.controls.name.setValue(networkObject.Name);
+        this.form.controls.type.setValue(networkObject.Type);
+        this.form.controls.hostAddress.setValue(networkObject.HostAddress);
+        this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
+        this.form.controls.startAddress.setValue(networkObject.StartAddress);
+        this.form.controls.endAddress.setValue(networkObject.EndAddress);
         }
       });
     }, 1 * 1000);
@@ -67,13 +67,13 @@ export class NetworkObjectModalComponent implements OnInit {
     // must first discover all modals.
   }
 
-  private setNetworkInfoValidators() {
-    const cidrAddress = this.networkObjectForm.get('cidrAddress');
-    const hostAddress = this.networkObjectForm.get('hostAddress');
-    const startAddress = this.networkObjectForm.get('startAddress');
-    const endAddress = this.networkObjectForm.get('endAddress');
+  private setFormValidators() {
+    const cidrAddress = this.form.get('cidrAddress');
+    const hostAddress = this.form.get('hostAddress');
+    const startAddress = this.form.get('startAddress');
+    const endAddress = this.form.get('endAddress');
 
-    this.networkTypeSubscription = this.networkObjectForm.get('type').valueChanges
+    this.networkTypeSubscription = this.form.get('type').valueChanges
       .subscribe( type => {
         if (type === 'host') {
           hostAddress.setValidators([Validators.required]);
@@ -114,7 +114,7 @@ export class NetworkObjectModalComponent implements OnInit {
   }
 
   private buildForm() {
-    this.networkObjectForm = this.formBuilder.group({
+    this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
       ipVersion: [''],
@@ -129,6 +129,6 @@ export class NetworkObjectModalComponent implements OnInit {
     this.networkTypeSubscription.unsubscribe();
     this.submitted = false;
     this.buildForm();
-    this.setNetworkInfoValidators();
+    this.setFormValidators();
   }
 }
