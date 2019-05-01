@@ -16,7 +16,7 @@ describe('CreateNetworkComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxMaskModule, RouterTestingModule.withRoutes([]), ToastrModule.forRoot(), NgxMaskModule],
+      imports: [ FormsModule, NgxMaskModule, RouterTestingModule.withRoutes([]), ToastrModule.forRoot(), NgxMaskModule.forRoot()],
       declarations: [ CreateNetworkComponent ],
       providers: [HttpClient, HttpHandler, CookieService]
     })
