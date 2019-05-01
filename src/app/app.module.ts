@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule } from '@angular/forms';
+import {FormsModule, FormBuilder } from '@angular/forms';
 
 // 3rd-Party Imports
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
@@ -85,7 +85,7 @@ import { NetworkObjectModalComponent } from './modals/network-object-modal/netwo
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService, FormBuilder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

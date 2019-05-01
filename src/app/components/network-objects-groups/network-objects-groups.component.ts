@@ -6,6 +6,7 @@ import { ModalMode } from 'src/app/models/modal-mode';
 import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -24,20 +25,38 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   networkObjectModalMode: ModalMode;
   dirty: boolean;
 
+  networkObjectModalSubscription: Subscription;
+
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService) {
     this.networkObjects = new Array<NetworkObject>();
   }
 
   createNetworkObject() {
+    this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
     this.ngx.getModal('networkObjectModal').open();
   }
 
   editNetworkObject(networkObject: NetworkObject) {
+    this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
     this.ngx.getModal('networkObjectModal').open();
+  }
+
+  subscribeToNetworkObjectModal() {
+    this.networkObjectModalSubscription =
+    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as NetworkObject;
+
+      if (data !== undefined) {
+        data = Object.assign({}, data);
+        this.saveNetworkObject(data);
+      }
+      this.ngx.resetModalData('networkObjectModal');
+      this.networkObjectModalSubscription.unsubscribe();
+    });
   }
 
   saveNetworkObject(networkObject: NetworkObject) {
@@ -73,15 +92,6 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObject;
-
-      if (data !== undefined) {
-        data = Object.assign({}, data);
-        this.saveNetworkObject(data);
-      }
-      this.ngx.resetModalData('networkObjectModal');
-    });
   }
 
   ngOnDestroy() {
