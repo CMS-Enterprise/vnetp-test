@@ -5,7 +5,9 @@ export class NetworkObject {
 
     IpVersion: string;
 
-    IpAddress: string;
+    CidrAddress: string;
+
+    HostAddress: string;
 
     StartAddress: string;
 

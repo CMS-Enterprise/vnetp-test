@@ -16,101 +16,120 @@
   </div>
 
   <div class="modal-body">
-    <form *ngIf="networkObject">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input
-        type="text"
-        name="name"
-        class="form-control"
-        #name="ngModel"
-        [(ngModel)]="networkObject.Name"
-        aria-label="Name"
-        required
-      />
+    <form [formGroup]="networkObjectForm" (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
 
-      <label for="type">Type</label>
-      <select
-        name="type"
-        class="form-control"
-        #type="ngModel"
-        [(ngModel)]="networkObject.Type"
-        aria-label="Type"
-        required
-      >
-        <option></option>
-        <option value="0">Host</option>
-        <option value="1">Range</option>
-        <option value="2">Network</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select
+          name="type"
+          formControlName="type"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+          aria-label="Type"
+        >
+          <option></option>
+          <option value="host">Host</option>
+          <option value="range">Range</option>
+          <option value="network">Network</option>
+        </select>
+        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+          <div *ngIf="f.type.errors.required">Type is required</div>
+        </div>
+      </div>
 
-    <div class="form-group" 
-    [hidden]="!networkObject.Type">
-      <label for="name"
-      [hidden]="networkObject.Type == 1"
-      >IP Address</label>
-      <input
-        type="text"
-        name="name"
-        class="form-control"
-        #name="ngModel"
-        [(ngModel)]="networkObject.IpAddress"
-        aria-label="IP Address"
-        [hidden]="networkObject.Type == 1"
-        [required]="networkObject.Type == 1"
-      />
+      <div class="form-group">
+        <label for="name">Host Address</label>
+        <input
+          type="text"
+          name="name"
+          formControlName="cidrAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.cidrAddress.errors }"
+          mask="099.099.099.099"
+          aria-label="Host Address"
+          *ngIf="f.type.value == 'host'"
+        />
+        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
+        </div>
+      </div>
 
-      <label for="subnetMask" 
-      [hidden]="networkObject.Type != 1"
-        >Start Address</label
-      >
-      <input
-        type="text"
-        name="startAddress"
-        class="form-control"
-        #startAddress="ngModel"
-        [(ngModel)]="networkObject.StartAddress"
-        aria-label="Start Address"
-        [hidden]="networkObject.Type != 1"
-        [required]="networkObject.Type != 1"
-      />
+      <div class="form-group">
+        <label for="name">CIDR Address</label>
+        <input
+          type="text"
+          name="name"
+          formControlName="cidrAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.cidrAddress.errors }"
+          mask="099.099.099.099/09"
+          aria-label="CIDR Address"
+          *ngIf="f.type.value == 'network'"
+        />
+        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
+        </div>
+      </div>
 
-      <label for="subnetMask" 
-      [hidden]="networkObject.Type != 1"
-        >End Address</label
-      >
-      <input
-        type="text"
-        name="endAddress"
-        class="form-control"
-        #endAddress="ngModel"
-        [(ngModel)]="networkObject.EndAddress"
-        aria-label="End Address"
-        [hidden]="networkObject.Type != 1"
-        [required]="networkObject.Type != 1"
-      />
-    </div>
-  </form>
-  </div>
+      <div class="form-group"> 
+        <label for="subnetMask">Start Address</label>
+        <input
+          type="text"
+          name="startAddress"
+          class="form-control"
+          formControlName="startAddress"
+          [ngClass]="{'is-invalid' : submitted && f.startAddress.errors }"
+          mask="099.099.099.099"
+          aria-label="Start Address"
+        />
+        <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.startAddress.errors.required">Start Address is required</div>
+        </div>
+      </div>
 
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-dismiss="modal"
-      (click)="save()"
-    >
-      Save
-    </button>
+      <div class="form-group">
+        <label for="subnetMask">End Address</label>
+        <input
+          type="text"
+          name="endAddress"
+          class="form-control"
+          formControlName="endAddress"
+          [ngClass]="{'is-invalid' : submitted && f.endAddress.errors }"
+          mask="099.099.099.099"
+          aria-label="End Address"
+        />
+        <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.endAddress.errors.required">End Address is required</div>
+        </div>
+      </div>
 
-    <button
-      type="button"
-      class="btn btn-secondary"
-      data-dismiss="modal"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   </div>
 </ngx-smart-modal>
