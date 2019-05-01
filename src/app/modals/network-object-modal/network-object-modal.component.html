@@ -59,13 +59,13 @@
           name="name"
           formControlName="cidrAddress"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.cidrAddress.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f.hostAddress.errors }"
           mask="099.099.099.099"
           aria-label="Host Address"
           *ngIf="f.type.value == 'host'"
         />
-        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
+        <div *ngIf="submitted && f.hostAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.hostAddress.errors.required">IP Address is required</div>
         </div>
       </div>
 
@@ -83,8 +83,8 @@
           aria-label="CIDR Address"
           *ngIf="f.type.value == 'network'"
         />
-        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
+        <div *ngIf="submitted && f.cidrAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.cidrAddress.errors.required">IP Address is required</div>
         </div>
       </div>
 
