@@ -2,8 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { Router } from '@angular/router';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -13,7 +15,8 @@ describe('NavbarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, AngularFontAwesomeModule, NgxSmartModalModule],
-      declarations: [ NavbarComponent ]
+      declarations: [ NavbarComponent ],
+      providers: [HttpClient, HttpHandler, CookieService, NgxSmartModalService]
     })
     .compileComponents();
   }));
@@ -25,7 +28,7 @@ describe('NavbarComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });
