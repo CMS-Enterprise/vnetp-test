@@ -61,7 +61,6 @@ import { DeployComponent } from './components/deploy/deploy.component';
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
-    YesNoModalComponent,
     DeployComponent,
   ],
   imports: [
