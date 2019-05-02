@@ -2,7 +2,7 @@
   #networkObjectModal
   identifier="networkObjectGroupModal"
   [dismissable]="false"
-  customClass="'modal-content'"
+  customClass="large-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Network Object Group</h4>
@@ -15,36 +15,94 @@
     ></button>
   </div>
 
-  <div class="modal-body">
-    <form [formGroup]="form" (ngSubmit)="save()">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
 
-      {{ networkObjects.length }}
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Description</label>
+        <input
+          type="text"
+          formControlName="description"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.required">Name is required</div>
+        </div>
+      </div>
 
       <div class="btn-group-sm" role="group">
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="createNetworkObject()"
-            aria-label="Network Object"
-          >
-            <fa name="plus" size="2x"></fa>
-          </button>
-        </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
-          data-dismiss="modal"
-          (click)="cancel()"
+          class="btn btn-success"
+          (click)="createNetworkObject()"
+          aria-label="Network Object"
         >
-          Cancel
+          <fa name="plus" size="1x"></fa>
         </button>
       </div>
-    </form>
-  </div>
+
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Address</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObj of networkObjects">
+            <td>
+              <p>{{ netObj.Name }}</p>
+            </td>
+            <td>
+              <p>{{ netObj.Type }}</p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
+              <p *ngIf="netObj.Type === 'range'">
+                {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
+              </p>
+              <p *ngIf="netObj.Type === 'network'">
+                {{ netObj.CidrAddress }}
+              </p>
+            </td>
+            <td>
+              <fa name="pencil" (click)="editNetworkObject(netObj)"> </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-dismiss="modal">
+        Save
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
 </ngx-smart-modal>

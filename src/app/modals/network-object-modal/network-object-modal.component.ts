@@ -43,6 +43,7 @@ export class NetworkObjectModalComponent implements OnInit {
     networkObject.StartAddress = this.form.value.startAddress;
     networkObject.EndAddress = this.form.value.endAddress;
 
+    this.ngx.resetModalData('networkObjectModal');
     this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
     this.ngx.close('networkObjectModal');
     this.reset();

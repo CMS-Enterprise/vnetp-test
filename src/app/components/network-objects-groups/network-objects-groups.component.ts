@@ -21,8 +21,10 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   navIndex = 0;
 
   editNetworkObjectIndex: number;
+  editNetworkObjectGroupIndex: number;
 
   networkObjectModalMode: ModalMode;
+  networkObjectGroupModalMode: ModalMode;
   dirty: boolean;
 
   networkObjectModalSubscription: Subscription;
@@ -30,6 +32,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService) {
     this.networkObjects = new Array<NetworkObject>();
+    this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
   createNetworkObject() {
@@ -40,6 +43,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
   createNetworkObjectGroup() {
     this.subscribeToNetworkObjectGroupModal();
+    this.networkObjectGroupModalMode = ModalMode.Create;
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 
@@ -72,7 +76,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
       if (data !== undefined) {
         data = Object.assign({}, data);
-        // this.saveNetworkObjectGroup(data);
+        this.saveNetworkObjectGroup(data);
       }
       this.ngx.resetModalData('networkObjectGroupModal');
       this.networkObjectGroupModalSubscription.unsubscribe();
@@ -84,6 +88,15 @@ export class NetworkObjectsGroupsComponent implements OnInit {
       this.networkObjects.push(networkObject);
     } else {
       this.networkObjects[this.editNetworkObjectIndex] = networkObject;
+    }
+    this.dirty = true;
+  }
+
+  saveNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup){
+    if (this.networkObjectGroupModalMode === ModalMode.Create) {
+      this.networkObjectGroups.push(networkObjectGroup);
+    } else {
+      this.networkObjectGroups[this.editNetworkObjectGroupIndex] = networkObjectGroup;
     }
     this.dirty = true;
   }
