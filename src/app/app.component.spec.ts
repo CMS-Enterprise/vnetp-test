@@ -10,6 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
+import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -27,7 +28,8 @@ describe('AppComponent', () => {
         AppComponent,
         NavbarComponent,
         BreadcrumbComponent,
-        NetworkObjectModalComponent
+        NetworkObjectModalComponent,
+        NetworkObjectGroupModalComponent
       ],
       providers: [CookieService, NgxSmartModalService, FormBuilder]
     }).compileComponents();
