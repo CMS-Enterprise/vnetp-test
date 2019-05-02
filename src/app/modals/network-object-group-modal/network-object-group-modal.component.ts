@@ -30,7 +30,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
-    this.ngx.open('networkObjectModal');
+    this.ngx.getModal('networkObjectModal').toggle();
   }
 
   editNetworkObject(networkObject: NetworkObject) {
@@ -38,7 +38,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     this.networkObjectModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
-    this.ngx.getModal('networkObjectModal').open();
+    this.ngx.getModal('networkObjectModal').toggle();
   }
 
   subscribeToNetworkObjectModal() {
@@ -86,6 +86,8 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     this.ngx.close('networkObjectGroupModal');
     this.reset();
   }
+
+  get f() { return this.form.controls; }
 
   ngOnInit() {
     this.buildForm();
