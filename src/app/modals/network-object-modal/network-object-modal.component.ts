@@ -56,29 +56,6 @@ export class NetworkObjectModalComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-
-  ngOnInit() {
-    this.buildForm();
-    this.setFormValidators();
-
-    // FIXME: Improve before merge.
-    setTimeout(() => {
-      this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
-        const networkObject = Object.assign({}, modal.getData() as NetworkObject);
-        if (networkObject !== undefined) {
-        this.form.controls.name.setValue(networkObject.Name);
-        this.form.controls.type.setValue(networkObject.Type);
-        this.form.controls.hostAddress.setValue(networkObject.HostAddress);
-        this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
-        this.form.controls.startAddress.setValue(networkObject.StartAddress);
-        this.form.controls.endAddress.setValue(networkObject.EndAddress);
-        }
-      });
-    }, 1 * 1000);
-    // Delay on subscribe since smart modal service
-    // must first discover all modals.
-  }
-
   private setFormValidators() {
     const cidrAddress = this.form.get('cidrAddress');
     const hostAddress = this.form.get('hostAddress');
@@ -123,6 +100,27 @@ export class NetworkObjectModalComponent implements OnInit {
         startAddress.updateValueAndValidity();
         endAddress.updateValueAndValidity();
       });
+  }
+
+  ngOnInit() {
+    this.buildForm();
+    this.setFormValidators();
+
+    setTimeout(() => {
+      this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
+        const networkObject = Object.assign({}, modal.getData() as NetworkObject);
+        if (networkObject !== undefined) {
+        this.form.controls.name.setValue(networkObject.Name);
+        this.form.controls.type.setValue(networkObject.Type);
+        this.form.controls.hostAddress.setValue(networkObject.HostAddress);
+        this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
+        this.form.controls.startAddress.setValue(networkObject.StartAddress);
+        this.form.controls.endAddress.setValue(networkObject.EndAddress);
+        }
+      });
+    }, 1 * 1000);
+    // Delay on subscribe since smart modal service
+    // must first discover all modals.
   }
 
   private buildForm() {

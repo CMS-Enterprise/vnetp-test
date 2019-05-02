@@ -27,6 +27,40 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     this.networkObjects = new Array<NetworkObject>();
    }
 
+   save() {
+    this.submitted = true;
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    const networkObjectGroup = new NetworkObjectGroup();
+
+    networkObjectGroup.Name = this.form.value.name;
+    networkObjectGroup.Description = this.form.value.description;
+    networkObjectGroup.NetworkObjects = Object.assign([], this.networkObjects);
+
+    this.ngx.resetModalData('networkObjectGroupModal');
+    this.ngx.setModalData(networkObjectGroup, 'networkObjectGroupModal');
+    this.ngx.close('networkObjectGroupModal');
+    this.reset();
+  }
+
+  cancel() {
+    this.ngx.close('networkObjectGroupModal');
+    this.reset();
+  }
+
+  get f() { return this.form.controls; }
+
+  saveNetworkObject(networkObject: NetworkObject) {
+    if (this.networkObjectModalMode === ModalMode.Create) {
+      this.networkObjects.push(networkObject);
+    } else {
+      this.networkObjects[this.editNetworkObjectIndex] = networkObject;
+    }
+  }
+
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
@@ -54,40 +88,6 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       this.networkObjectModalSubscription.unsubscribe();
     });
   }
-
-  saveNetworkObject(networkObject: NetworkObject) {
-    if (this.networkObjectModalMode === ModalMode.Create) {
-      this.networkObjects.push(networkObject);
-    } else {
-      this.networkObjects[this.editNetworkObjectIndex] = networkObject;
-    }
-  }
-
-  save() {
-    this.submitted = true;
-
-    if (this.form.invalid) {
-      return;
-    }
-
-    const networkObjectGroup = new NetworkObjectGroup();
-
-    networkObjectGroup.Name = this.form.value.name;
-    networkObjectGroup.Description = this.form.value.description;
-    networkObjectGroup.NetworkObjects = Object.assign([], this.networkObjects);
-
-    this.ngx.resetModalData('networkObjectGroupModal');
-    this.ngx.setModalData(networkObjectGroup, 'networkObjectGroupModal');
-    this.ngx.close('networkObjectGroupModal');
-    this.reset();
-  }
-
-  cancel() {
-    this.ngx.close('networkObjectGroupModal');
-    this.reset();
-  }
-
-  get f() { return this.form.controls; }
 
   ngOnInit() {
     this.buildForm();
