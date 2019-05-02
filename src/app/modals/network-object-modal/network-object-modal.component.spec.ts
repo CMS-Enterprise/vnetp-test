@@ -4,6 +4,7 @@ import { NetworkObjectModalComponent } from './network-object-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NetworkObject } from 'src/app/models/network-object';
+import { NgxMaskModule } from 'ngx-mask';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
@@ -13,7 +14,7 @@ describe('NetworkObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule],
+      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule],
       declarations: [ NetworkObjectModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
@@ -53,7 +54,7 @@ describe('NetworkObjectModalComponent', () => {
   it('save should set ngxModal data (Host)', () => {
     component.form.controls.name.setValue('Test');
     component.form.controls.type.setValue('host');
-    component.form.controls.hostAddress.setValue('192.168.10.10/32');
+    component.form.controls.hostAddress.setValue('192.168.10.10');
     expect(component.form.valid).toBeTruthy();
     component.save();
 

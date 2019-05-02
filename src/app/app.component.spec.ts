@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule } from 'ngx-mask';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -17,6 +18,7 @@ describe('AppComponent', () => {
         RouterTestingModule,
         AngularFontAwesomeModule,
         NgxSmartModalModule,
+        NgxMaskModule,
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule

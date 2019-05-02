@@ -3,6 +3,8 @@ import { NetworkObject } from 'src/app/models/network-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { ValidateIpAddress, ValidateCidrAddress} from 'src/app/validators/ip-address-validator';
+import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -13,15 +15,24 @@ export class NetworkObjectModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   networkTypeSubscription: Subscription;
+  invalidRange: boolean;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private ipService: IpAddressService, private formBuilder: FormBuilder) {
   }
 
   save() {
     this.submitted = true;
-    if (this.form.invalid)
-    {
+    this.invalidRange = false;
+    if (this.form.invalid) {
       return;
+    }
+
+    // FIXME: Workaround to support range checking, move to custom validator.
+    if (this.form.value.type === 'range') {
+      if (!this.ipService.isIpv4LessThan(this.form.value.startAddress, this.form.value.endAddress)) {
+        this.invalidRange = true;
+        return;
+      }
     }
 
     const networkObject = new NetworkObject();
@@ -76,7 +87,7 @@ export class NetworkObjectModalComponent implements OnInit {
     this.networkTypeSubscription = this.form.get('type').valueChanges
       .subscribe( type => {
         if (type === 'host') {
-          hostAddress.setValidators([Validators.required]);
+          hostAddress.setValidators([Validators.required, ValidateIpAddress]);
           cidrAddress.setValidators(null);
           cidrAddress.setValue(null);
           startAddress.setValidators(null);
@@ -86,9 +97,9 @@ export class NetworkObjectModalComponent implements OnInit {
         }
 
         if (type === 'range') {
-          startAddress.setValidators([Validators.required]);
+          startAddress.setValidators([Validators.required, ValidateIpAddress]);
           startAddress.setValue(null);
-          endAddress.setValidators([Validators.required]);
+          endAddress.setValidators([Validators.required, ValidateIpAddress]);
           endAddress.setValue(null);
           hostAddress.setValidators(null);
           hostAddress.setValue(null);
@@ -97,7 +108,7 @@ export class NetworkObjectModalComponent implements OnInit {
         }
 
         if (type === 'network') {
-          cidrAddress.setValidators([Validators.required]);
+          cidrAddress.setValidators([Validators.required, ValidateCidrAddress]);
           hostAddress.setValidators(null);
           hostAddress.setValidators(null);
           startAddress.setValidators(null);

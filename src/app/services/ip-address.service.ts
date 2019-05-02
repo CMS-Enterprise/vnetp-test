@@ -14,12 +14,20 @@ export class IpAddressService {
 
   // Returns a boolean indicating if an IPv4 string is valid.
   public isValidIPv4String(ipAddress: string): [boolean, string[]] {
-    return Validator.isValidIPv4String(ipAddress);
+    try {
+      return Validator.isValidIPv4String(ipAddress);
+    } catch (e) {
+      return [false, null];
+    }
   }
 
   // Returns a boolean indicating if an IPv4 cidr notaion is valid.
   public isValidIPv4CidrNotation(cidr: string): [boolean, string[]] {
-    return Validator.isValidIPv4CidrNotation(cidr);
+    try {
+      return Validator.isValidIPv4CidrNotation(cidr);
+    } catch (e) {
+      return [false, null];
+    }
   }
 
   // Returns boolean indicating if start address is smaller than

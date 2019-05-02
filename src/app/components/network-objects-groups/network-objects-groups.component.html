@@ -41,7 +41,8 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
-            <th></th>
+            <th scope="col">Address</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -50,7 +51,12 @@
               <p>{{ netObj.Name }}</p>
             </td>
             <td>
-              <p>{{ netObj.type }}</p>
+              <p>{{ netObj.Type }}</p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Type === 'host'">{{netObj.HostAddress}}</p>
+              <p *ngIf="netObj.Type === 'range'">{{netObj.StartAddress}} - {{netObj.EndAddress}}</p>
+              <p *ngIf="netObj.Type === 'network'">{{netObj.CidrAddress}}</p>
             </td>
             <td>
                 <fa 
