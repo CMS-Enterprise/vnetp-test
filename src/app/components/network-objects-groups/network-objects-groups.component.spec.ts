@@ -4,8 +4,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
+import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
+import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-group-modal/network-object-group-modal.component';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule } from 'ngx-mask';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -13,9 +17,17 @@ describe('NetworkObjectsGroupsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule ],
-      declarations: [ NetworkObjectsGroupsComponent ],
-      providers: [NgxSmartModalService, HttpClientModule, HttpClient, HttpHandler, CookieService]
+      imports: [ AngularFontAwesomeModule,
+         NgxSmartModalModule,
+         NgxMaskModule,
+        FormsModule,
+        ReactiveFormsModule
+       ],
+      declarations: [
+         NetworkObjectsGroupsComponent,
+        NetworkObjectModalComponent,
+        NetworkObjectGroupModalComponent],
+      providers: [NgxSmartModalService, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
     .compileComponents();
   }));

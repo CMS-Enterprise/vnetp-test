@@ -29,7 +29,7 @@
           type="button"
           class="btn btn-success"
           (click)="createNetworkObject()"
-          aria-label="Network Object"
+          aria-label="Create Network Object"
         >
           <fa name="plus" size="2x"></fa>
         </button>
@@ -63,7 +63,8 @@
                 </p>
               </td>
               <td>
-                <fa name="pencil" (click)="editNetworkObject(netObj)"> </fa>
+                <fa name="pencil" (click)="editNetworkObject(netObj)"
+                aria-label="Edit Network Object"> </fa>
               </td>
             </tr>
           </tbody>
@@ -77,7 +78,7 @@
           type="button"
           class="btn btn-success"
           (click)="createNetworkObjectGroup()"
-          aria-label="Network Object"
+          aria-label="Network Object Groups"
         >
           <fa name="plus" size="2x"></fa>
         </button>
@@ -89,16 +90,20 @@
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Members</th>
-              <th></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let netObj of networkObjectGroups">
+            <tr *ngFor="let netObjGroup of networkObjectGroups">
               <td>
-                <p>{{ netObj.Name }}</p>
+                <p>{{ netObjGroup.Name }}</p>
               </td>
               <td>
-                <p>{{ netObj.NetworkObjects.length }}</p>
+                <p>{{ netObjGroup.NetworkObjects.length }}</p>
+              </td>
+              <td>
+                  <fa name="pencil" (click)="editNetworkObjectGroup(netObjGroup)"
+                  aria-label="Edit Network Object Group"> </fa>
               </td>
             </tr>
           </tbody>
