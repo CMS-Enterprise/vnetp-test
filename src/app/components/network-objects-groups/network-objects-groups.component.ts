@@ -101,13 +101,29 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     this.dirty = true;
   }
 
-  saveNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup){
+  deleteNetworkObject(networkObject: NetworkObject) {
+    const index = this.networkObjects.indexOf(networkObject);
+    if ( index > -1) {
+      this.networkObjects.splice(index, 1);
+      this.dirty = true;
+    }
+  }
+
+  saveNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
     if (this.networkObjectGroupModalMode === ModalMode.Create) {
       this.networkObjectGroups.push(networkObjectGroup);
     } else {
       this.networkObjectGroups[this.editNetworkObjectGroupIndex] = networkObjectGroup;
     }
     this.dirty = true;
+  }
+
+  deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
+    const index = this.networkObjectGroups.indexOf(networkObjectGroup);
+    if ( index > -1) {
+      this.networkObjectGroups.splice(index, 1);
+      this.dirty = true;
+    }
   }
 
   saveAll() {
@@ -122,34 +138,62 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
     const body = { extra_vars };
 
+    console.log(body);
+
     this.api.launchTemplate('save-network-object-dto', body).subscribe();
   }
 
-  
   handleFileSelect(evt) {
-    let files = evt.target.files; // FileList object
-    let file = files[0];
-    let reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
       this.parseCsv(reader.result);
     };
   }
 
-  parseCsv(csv) {
+  private parseCsv(csv) {
     const options = {
       header: true,
       complete: (results) => {
-        console.log(results);
+        this.importObjects(results.data);
       }
     };
     this.papa.parse(csv, options);
+  }
+
+  importObjects(objects) {
+    // TODO: Validation.
+    objects.forEach(object => {
+      if (object.GroupName) {
+        const group = this.networkObjectGroups.find(g => g.Name === object.GroupName);
+        if (group != null) {
+          group.NetworkObjects.push(object);
+        } else {
+          const newGroup = new NetworkObjectGroup();
+          newGroup.Name = object.GroupName;
+          newGroup.NetworkObjects = new Array<NetworkObject>();
+          newGroup.NetworkObjects.push(object as NetworkObject);
+          this.networkObjectGroups.push(newGroup);
+          this.dirty = true;
+        }
+       } else if (object.Name) {
+         this.networkObjects.push(object as NetworkObject);
+         this.dirty = true;
+       }
+    });
   }
 
   ngOnInit() {
   }
 
   ngOnDestroy() {
+    try{
     this.networkObjectModalSubscription.unsubscribe();
+    this.networkObjectGroupModalSubscription.unsubscribe();
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

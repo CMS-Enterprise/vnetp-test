@@ -18,9 +18,9 @@
     >
       <fa name="file-text-o" size="2x"></fa>
     </button>
+    
+    <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
   </div>
-
-  <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
 
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0">
@@ -81,6 +81,11 @@
                 aria-label="Edit Network Object"
               >
               </fa>
+              <fa
+              name ="trash"
+              (click)="deleteNetworkObject(netObj)"
+              >
+              </fa>
             </td>
           </tr>
         </tbody>
@@ -122,6 +127,11 @@
                 name="pencil"
                 (click)="editNetworkObjectGroup(netObjGroup)"
                 aria-label="Edit Network Object Group"
+              >
+              </fa>
+              <fa
+              name ="trash"
+              (click)="deleteNetworkObjectGroup(netObjGroup)"
               >
               </fa>
             </td>

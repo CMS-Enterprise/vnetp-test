@@ -106,6 +106,7 @@ export class NetworkObjectModalComponent implements OnInit {
     this.buildForm();
     this.setFormValidators();
 
+    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
     setTimeout(() => {
       this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
         const networkObject = Object.assign({}, modal.getData() as NetworkObject);
@@ -118,7 +119,7 @@ export class NetworkObjectModalComponent implements OnInit {
         this.form.controls.endAddress.setValue(networkObject.EndAddress);
         }
       });
-    }, 1 * 1000);
+    }, 2.5 * 1000);
     // Delay on subscribe since smart modal service
     // must first discover all modals.
   }

@@ -53,6 +53,13 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  deleteNetworkObject(networkObject: NetworkObject) {
+    const index = this.networkObjects.indexOf(networkObject);
+    if ( index > -1) {
+      this.networkObjects.splice(index, 1);
+    }
+  }
+
   saveNetworkObject(networkObject: NetworkObject) {
     if (this.networkObjectModalMode === ModalMode.Create) {
       this.networkObjects.push(networkObject);
@@ -92,6 +99,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
 
+    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
     setTimeout(() => {
       this.ngx.getModal('networkObjectGroupModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
         const networkObjectGroup = Object.assign({}, modal.getData() as NetworkObjectGroup);
@@ -105,7 +113,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         }
         }
       });
-    }, 1 * 1000);
+    }, 2.5 * 1000);
     // Delay on subscribe since smart modal service
     // must first discover all modals.
   }
