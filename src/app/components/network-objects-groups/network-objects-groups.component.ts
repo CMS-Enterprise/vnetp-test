@@ -7,6 +7,7 @@ import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
+import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -30,7 +31,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa) {
     this.networkObjects = new Array<NetworkObject>();
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
@@ -122,6 +123,27 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     const body = { extra_vars };
 
     this.api.launchTemplate('save-network-object-dto', body).subscribe();
+  }
+
+  
+  handleFileSelect(evt) {
+    let files = evt.target.files; // FileList object
+    let file = files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      this.parseCsv(reader.result);
+    };
+  }
+
+  parseCsv(csv) {
+    const options = {
+      header: true,
+      complete: (results) => {
+        console.log(results);
+      }
+    };
+    this.papa.parse(csv, options);
   }
 
   ngOnInit() {

@@ -10,105 +10,124 @@
       <fa name="floppy-o" size="2x"></fa>
     </button>
 
-    <ul class="nav nav-tabs">
-      <li class="nav-item" (click)="navIndex = 0">
-        <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-          >Network Objects</a
-        >
-      </li>
-      <li class="nav-item" (click)="navIndex = 1">
-        <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-          >Network Object Groups</a
-        >
-      </li>
-    </ul>
+    <button
+      type="button"
+      class="btn btn-info"
+      (click)="uploader.click()"
+      aria-label="Upload CSV"
+    >
+      <fa name="file-text-o" size="2x"></fa>
+    </button>
+  </div>
 
-    <div *ngIf="navIndex == 0">
-      <div class="btn-group-sm" role="group">
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="createNetworkObject()"
-          aria-label="Create Network Object"
-        >
-          <fa name="plus" size="2x"></fa>
-        </button>
-      </div>
+  <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
 
-      <div class="card">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Address</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let netObj of networkObjects">
-              <td>
-                <p>{{ netObj.Name }}</p>
-              </td>
-              <td>
-                <p>{{ netObj.Type }}</p>
-              </td>
-              <td>
-                <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
-                <p *ngIf="netObj.Type === 'range'">
-                  {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
-                </p>
-                <p *ngIf="netObj.Type === 'network'">
-                  {{ netObj.CidrAddress }}
-                </p>
-              </td>
-              <td>
-                <fa name="pencil" (click)="editNetworkObject(netObj)"
-                aria-label="Edit Network Object"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+        >Network Objects</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >Network Object Groups</a
+      >
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createNetworkObject()"
+        aria-label="Create Network Object"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
     </div>
 
-    <div *ngIf="navIndex == 1">
-      <div class="btn-group-sm" role="group">
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="createNetworkObjectGroup()"
-          aria-label="Network Object Groups"
-        >
-          <fa name="plus" size="2x"></fa>
-        </button>
-      </div>
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Address</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObj of networkObjects">
+            <td>
+              <p>{{ netObj.Name }}</p>
+            </td>
+            <td>
+              <p>{{ netObj.Type }}</p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
+              <p *ngIf="netObj.Type === 'range'">
+                {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
+              </p>
+              <p *ngIf="netObj.Type === 'network'">
+                {{ netObj.CidrAddress }}
+              </p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editNetworkObject(netObj)"
+                aria-label="Edit Network Object"
+              >
+              </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-      <div class="card">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Members</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let netObjGroup of networkObjectGroups">
-              <td>
-                <p>{{ netObjGroup.Name }}</p>
-              </td>
-              <td>
-                <p>{{ netObjGroup.NetworkObjects.length }}</p>
-              </td>
-              <td>
-                  <fa name="pencil" (click)="editNetworkObjectGroup(netObjGroup)"
-                  aria-label="Edit Network Object Group"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div *ngIf="navIndex == 1">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createNetworkObjectGroup()"
+        aria-label="Network Object Groups"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
+    </div>
+
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Members</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObjGroup of networkObjectGroups">
+            <td>
+              <p>{{ netObjGroup.Name }}</p>
+            </td>
+            <td>
+              <p>{{ netObjGroup.NetworkObjects.length }}</p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editNetworkObjectGroup(netObjGroup)"
+                aria-label="Edit Network Object Group"
+              >
+              </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
