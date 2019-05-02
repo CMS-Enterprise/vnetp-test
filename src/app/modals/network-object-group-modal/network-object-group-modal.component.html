@@ -1,0 +1,50 @@
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="networkObjectGroupModal"
+  [dismissable]="false"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Network Object Group</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="networkObjectGroupModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      {{ networkObjects.length }}
+
+      <div class="btn-group-sm" role="group">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="createNetworkObject()"
+            aria-label="Network Object"
+          >
+            <fa name="plus" size="2x"></fa>
+          </button>
+        </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</ngx-smart-modal>

@@ -41,6 +41,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
 import { ValidateIpAddress } from './validators/ip-address-validator';
+import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { ValidateIpAddress } from './validators/ip-address-validator';
     SpecialCharacterDirective,
     DeployComponent,
     NetworkObjectsGroupsComponent,
-    NetworkObjectModalComponent
+    NetworkObjectModalComponent,
+    NetworkObjectGroupModalComponent
   ],
   imports: [
     BrowserModule,

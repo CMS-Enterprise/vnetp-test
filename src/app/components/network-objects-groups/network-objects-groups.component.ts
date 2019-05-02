@@ -26,6 +26,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   dirty: boolean;
 
   networkObjectModalSubscription: Subscription;
+  networkObjectGroupModalSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService) {
     this.networkObjects = new Array<NetworkObject>();
@@ -35,6 +36,11 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
     this.ngx.getModal('networkObjectModal').open();
+  }
+
+  createNetworkObjectGroup() {
+    this.subscribeToNetworkObjectGroupModal();
+    this.ngx.getModal('networkObjectGroupModal').open();
   }
 
   editNetworkObject(networkObject: NetworkObject) {
@@ -56,6 +62,20 @@ export class NetworkObjectsGroupsComponent implements OnInit {
       }
       this.ngx.resetModalData('networkObjectModal');
       this.networkObjectModalSubscription.unsubscribe();
+    });
+  }
+
+  subscribeToNetworkObjectGroupModal() {
+    this.networkObjectGroupModalSubscription =
+    this.ngx.getModal('networkObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as NetworkObjectGroup;
+
+      if (data !== undefined) {
+        data = Object.assign({}, data);
+        // this.saveNetworkObjectGroup(data);
+      }
+      this.ngx.resetModalData('networkObjectGroupModal');
+      this.networkObjectGroupModalSubscription.unsubscribe();
     });
   }
 
