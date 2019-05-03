@@ -11,6 +11,8 @@ import { NetworkObjectModalComponent } from './modals/network-object-modal/netwo
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -19,7 +21,7 @@ describe('AppComponent', () => {
         RouterTestingModule,
         AngularFontAwesomeModule,
         NgxSmartModalModule,
-        NgxMaskModule,
+        NgxMaskModule.forRoot(),
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule
@@ -29,7 +31,9 @@ describe('AppComponent', () => {
         NavbarComponent,
         BreadcrumbComponent,
         NetworkObjectModalComponent,
-        NetworkObjectGroupModalComponent
+        NetworkObjectGroupModalComponent,
+        ServiceObjectModalComponent,
+        ServiceObjectGroupModalComponent
       ],
       providers: [CookieService, NgxSmartModalService, FormBuilder]
     }).compileComponents();

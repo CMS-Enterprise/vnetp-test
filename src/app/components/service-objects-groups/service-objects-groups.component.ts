@@ -140,7 +140,7 @@ export class ServiceObjectsGroupsComponent implements OnInit {
 
     console.log(body);
 
-    this.api.launchTemplate('save-service-object-dto', body).subscribe();
+    // this.api.launchTemplate('save-service-object-dto', body).subscribe();
   }
 
   handleFileSelect(evt) {

@@ -2,27 +2,27 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
-import { NetworkObject } from 'src/app/models/network-object';
-import { NetworkObjectGroupModalComponent } from '../network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
+import { ServiceObject } from 'src/app/models/Service-object';
+import { ServiceObjectGroup } from 'src/app/models/Service-object-group';
 
-describe('NetworkObjectGroupModalComponent', () => {
-  let component: NetworkObjectGroupModalComponent;
-  let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
+describe('ServiceObjectGroupModalComponent', () => {
+  let component: ServiceObjectGroupModalComponent;
+  let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
 
   const ngx: NgxSmartModalService = new NgxSmartModalService();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ NetworkObjectGroupModalComponent ],
+      declarations: [ ServiceObjectGroupModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);
+    fixture = TestBed.createComponent(ServiceObjectGroupModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -31,25 +31,25 @@ describe('NetworkObjectGroupModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have network object group form', () => {
+  it('should have service object group form', () => {
     expect(component.form).toBeTruthy();
   });
 
   it('save should set ngxModal data', () => {
     component.form.controls.name.setValue('Name');
     component.form.controls.description.setValue('Description');
-    component.networkObjects.push({ Name: 'Test'} as NetworkObject);
+    component.serviceObjects.push({ Name: 'Test'} as ServiceObject);
     expect(component.form.valid).toBeTruthy();
     component.save();
 
     // Get Data from the modal service
-    const modal = ngx.getModal('networkObjectGroupModal');
-    const data = modal.getData() as NetworkObjectGroup;
+    const modal = ngx.getModal('serviceObjectGroupModal');
+    const data = modal.getData() as ServiceObjectGroup;
 
     // Ensure that it is equal to our test data.
     expect(data.Name === 'Name').toBeTruthy();
     expect(data.Description === 'Description').toBeTruthy();
-    expect(data.NetworkObjects[0].Name === 'Test').toBeTruthy();
+    expect(data.ServiceObjects[0].Name === 'Test').toBeTruthy();
   });
 
   // Initial Form State

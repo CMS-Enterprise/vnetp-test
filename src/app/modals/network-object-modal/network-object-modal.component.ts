@@ -4,7 +4,6 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ValidateIpv4Address, ValidateIpv4CidrAddress} from 'src/app/validators/network-form-validators';
-import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -16,7 +15,7 @@ export class NetworkObjectModalComponent implements OnInit {
   submitted: boolean;
   networkTypeSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private ipService: IpAddressService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
 
   save() {

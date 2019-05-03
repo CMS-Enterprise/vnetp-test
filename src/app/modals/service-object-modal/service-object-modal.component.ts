@@ -3,6 +3,7 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-service-object-modal',
@@ -12,6 +13,8 @@ import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 export class ServiceObjectModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
+  sourcePortSubscription: Subscription;
+  destinationPortSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -41,8 +44,23 @@ export class ServiceObjectModalComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  private setFormValidators() {
+    const destinationPort = this.form.get('destinationPort');
+
+    this.destinationPortSubscription = this.form.get('sourcePort').valueChanges
+    .subscribe( value => {
+      if (value) {
+        destinationPort.setValidators(Validators.compose([ValidatePortRange]));
+      } else {
+        destinationPort.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+      }
+      destinationPort.updateValueAndValidity();
+    });
+  }
+
   ngOnInit() {
     this.buildForm();
+    this.setFormValidators();
 
     // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
     setTimeout(() => {
@@ -51,8 +69,8 @@ export class ServiceObjectModalComponent implements OnInit {
         if (serviceObject !== undefined) {
         this.form.controls.name.setValue(serviceObject.Name);
         this.form.controls.type.setValue(serviceObject.Type);
-        this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
         this.form.controls.destinationPort.setValue(serviceObject.DestinationPort);
+        this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
         }
       });
     }, 2.5 * 1000);
@@ -64,12 +82,13 @@ export class ServiceObjectModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      sourcePort: ['', Validators.compose([Validators.required, ValidatePortRange])],
-      destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])]
+      destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      sourcePort: ['', Validators.compose([ValidatePortRange])]
     });
   }
 
   private reset() {
+    this.destinationPortSubscription.unsubscribe();
     this.submitted = false;
     this.buildForm();
   }

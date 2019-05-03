@@ -140,7 +140,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
     console.log(body);
 
-    this.api.launchTemplate('save-network-object-dto', body).subscribe();
+    // this.api.launchTemplate('save-network-object-dto', body).subscribe();
   }
 
   handleFileSelect(evt) {

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 export function ValidateIpv4CidrAddress(control: FormControl) {
     if (!control || !control.value) {
-        return { validIpv4Address: true };
+       return null;
     }
     const valueArray = control.value.split('/');
 
@@ -18,7 +18,7 @@ export function ValidateIpv4CidrAddress(control: FormControl) {
 
 export function ValidateIpv4Address(control: FormControl) {
     if (!control || !control.value) {
-        return { validIpv4Address: true };
+        return null;
     }
     const valueArray = control.value.split('/');
 
@@ -33,7 +33,7 @@ export function ValidateIpv4Address(control: FormControl) {
 
 export function ValidatePortRange(control: FormControl) {
     if (!control || !control.value) {
-        return { validPortNumber : true };
+        return null;
     }
 
     const value = control.value;
@@ -59,7 +59,7 @@ export function ValidatePortRange(control: FormControl) {
         }
 
         if (startPort > endPort) {
-            return { validPortNumber: true };
+            return { validPortRange: true };
         }
 
         if (!isValidPortNumber(startPort) ||

@@ -49,6 +49,31 @@
       </div>
 
       <div class="form-group">
+          <label for="name">Destination Port/Range</label>
+          <input
+            type="text"
+            name="name"
+            formControlName="destinationPort"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationPort.errors }"
+            [dropSpecialCharacters]="false"
+            mask="09999-09999"
+            aria-label="Destination Port"
+          />
+          <div *ngIf="submitted && f.destinationPort.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationPort.errors.required">
+                  Destination Port/Range required.
+            </div>
+            <div *ngIf="f.destinationPort.errors.validPortNumber">
+              Destination Port/Range values must be greater than 0 and less than or equal to 65535.
+            </div>
+            <div *ngIf="f.destinationPort.errors.validPortRange">
+              Destination Port Range is invalid.
+            </div>
+          </div>
+        </div>
+
+      <div class="form-group">
         <label for="name">Source Port/Range</label>
         <input
           type="text"
@@ -61,28 +86,15 @@
           aria-label="Source Port"
         />
         <div *ngIf="submitted && f.sourcePort.errors" class="invalid-feedback">
+          <div *ngIf="f.sourcePort.errors.required">
+            Source Port/Range required.
+          </div>
           <div *ngIf="f.sourcePort.errors.validPortNumber">
-            Source Port/Range values must be greater than 0 and less than 65535.
+            Source Port/Range values must be greater than 0 and less than or equal to 65535.
           </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="name">Destination Port/Range</label>
-        <input
-          type="text"
-          name="name"
-          formControlName="destinationPort"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationPort.errors }"
-          [dropSpecialCharacters]="false"
-          mask="09999-09999"
-          aria-label="Destination Port"
-        />
-        <div *ngIf="submitted && f.destinationPort.errors" class="invalid-feedback">
-          <div *ngIf="f.destinationPort.errors.validPortNumber">
-            Destination Port/Range values must be greater than 0 and less than 65535.
-          </div>
+          <div *ngIf="f.sourcePort.errors.validPortRange">
+              Source Port Range is invalid.
+            </div>
         </div>
       </div>
 
