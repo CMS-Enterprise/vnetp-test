@@ -1,0 +1,42 @@
+<h4>CDOM List : {{ devices.length }}</h4>
+<!-- <div class="col-sm-12">
+    <div>
+      <form 
+        name="CDOMListForm"
+        class="form"
+        #form="ngForm" novalidate
+      >
+      <div class="form-group row">
+        <label for="listCDOM" class="col-md-1 col-form-label">{{ devices.length }}</label>
+        <input name="CDOM1" aria-label="List CDOM" appIsAlphanumeric type="text" class="form-control"
+              placeholder="{{ devices.length }}">
+        </div>
+      </form>
+    </div>
+  </div> -->
+
+<div class="table table-striped">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>CDOM Name</th>
+      <th class="col-md-4 offset-md-4"> AA</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let device of devices">
+        <td>
+          <fa name="server"></fa>
+        </td>
+        <td>
+          <a href='/dashboard'>{{device.name}}</a>
+        </td>
+          <td class="spaced"> 
+            <a href='/dashboard'>Associated LDOMs </a>
+          </td>
+      </tr>
+  </tbody>
+</div>
+
+<!-- https://mdbootstrap.com/docs/angular/forms/inputs/ -->

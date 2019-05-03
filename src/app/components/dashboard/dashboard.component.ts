@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
     this.subnets = {subnets: []};
     this.devices = {Devices: []};
     this.jobs = {results: []};
-  }
+   }
 
   ips: any;
   subnets: any;

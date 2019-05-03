@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SolarisCdom } from '../../../models/solaris-cdom';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-solaris-cdom-create',
@@ -8,10 +9,15 @@ import { SolarisCdom } from '../../../models/solaris-cdom';
 })
 export class SolarisCdomCreateComponent implements OnInit {
   cdom: SolarisCdom
-
-  constructor() { }
+  constructor(
+    private automationApiService: AutomationApiService
+  ){
+  
+  }
 
   ngOnInit() {
   }
-
+  createCDOM(){
+    // this.automationApiService.doqlQuery()
+  }
 }

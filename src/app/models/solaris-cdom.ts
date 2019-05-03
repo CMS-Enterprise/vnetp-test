@@ -17,3 +17,4 @@ export class SolarisCdom {
   Variables: string;
   Commands: string;
 }
+

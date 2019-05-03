@@ -38,6 +38,7 @@ import { SpecialCharacterDirective } from './directives/special-character.direct
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
 import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
+import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-cr
     SolarisComponent,
     SolarisCdomCreateComponent,
     SolarisLdomCreateComponent,
+    SolarisCdomListComponent,
   ],
   imports: [
     BrowserModule,

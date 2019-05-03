@@ -19,9 +19,9 @@ export class AuthService {
     if (environment.authBypass) {
       console.log('Auth Bypassed.');
       const user: User = {
-        Username : 'Bypass',
-        Token: 'sometoken',
-        CustomerName: 'Bypass Customer'
+        Username : 'contoso_admin',
+        Token: 'contoso_admin',
+        CustomerName: 'Contoso'
       };
       this.currentUserSubject = new BehaviorSubject<User>(user);
       this.currentUser = this.currentUserSubject.asObservable();

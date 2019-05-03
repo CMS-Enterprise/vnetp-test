@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:3000',
+  apiBase: 'https://draas.cds-cloud-labs.net',
+  //apiBase: 'https://localhost:4200',
   // DEV Only
-  authBypass: true
+  authBypass: false
 };
