@@ -9,7 +9,7 @@ export function ValidateIpv4CidrAddress(control: FormControl) {
 
     if (valueArray.length !== 2) {
         return {validIpv4Address: true };
-    } else  if (!isValidIpAddress(valueArray[0]) ||
+    } else if (!isValidIpAddress(valueArray[0]) ||
     !isValidNetMask(Number(valueArray[1]))) {
         return { validIpv4Address: true };
     }
@@ -39,6 +39,10 @@ export function ValidatePortRange(control: FormControl) {
     const value = control.value;
     const valueArray = value.split('-');
 
+    if (valueArray.length < 1 || valueArray.length > 2){
+        return { validPortNumber: true };
+    }
+
     if (valueArray.length === 1) {
         // Single Number
         if (!isValidPortNumber(Number(valueArray[0]))) {
@@ -47,8 +51,19 @@ export function ValidatePortRange(control: FormControl) {
 
     } else if (valueArray.length === 2) {
         // Range
-        if (!isValidPortNumber(Number(valueArray[0])) ||
-        !isValidPortNumber(Number(valueArray[1]))) {
+        const startPort = Number(valueArray[0]);
+        const endPort = Number(valueArray[1]);
+
+        if (isNaN(startPort) || isNaN(endPort)) {
+            return { validPortNumber: true };
+        }
+
+        if (startPort > endPort) {
+            return { validPortNumber: true };
+        }
+
+        if (!isValidPortNumber(startPort) ||
+        !isValidPortNumber(endPort)) {
             return { validPortNumber: true };
         }
     }
@@ -56,7 +71,7 @@ export function ValidatePortRange(control: FormControl) {
 }
 
 function isValidPortNumber(portNumber: number): boolean {
-   return (portNumber > 0 && portNumber <= 65535);
+   return (!isNaN(portNumber) && portNumber > 0 && portNumber <= 65535);
 }
 
 function isValidIpAddress(ipAddress: string): boolean {
@@ -72,7 +87,7 @@ function isValidIpAddress(ipAddress: string): boolean {
         }
 
         const octet = Number(o);
-        if (octet < 0 || octet > 255) {
+        if (isNaN(octet) || octet < 0 || octet > 255) {
             return false;
         }
     }
@@ -80,5 +95,5 @@ function isValidIpAddress(ipAddress: string): boolean {
 }
 
 function isValidNetMask(netMask: number): boolean {
-    return (netMask > 0 && netMask <= 32);
+    return (!isNaN(netMask) && netMask > 0 && netMask <= 32);
 }
