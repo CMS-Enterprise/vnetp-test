@@ -15,24 +15,14 @@ export class NetworkObjectModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   networkTypeSubscription: Subscription;
-  invalidRange: boolean;
 
   constructor(private ngx: NgxSmartModalService, private ipService: IpAddressService, private formBuilder: FormBuilder) {
   }
 
   save() {
     this.submitted = true;
-    this.invalidRange = false;
     if (this.form.invalid) {
       return;
-    }
-
-    // FIXME: Workaround to support range checking, move to custom validator.
-    if (this.form.value.type === 'range') {
-      if (!this.ipService.isIpv4LessThan(this.form.value.startAddress, this.form.value.endAddress)) {
-        this.invalidRange = true;
-        return;
-      }
     }
 
     const networkObject = new NetworkObject();

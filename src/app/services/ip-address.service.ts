@@ -30,14 +30,6 @@ export class IpAddressService {
     }
   }
 
-  // Returns boolean indicating if start address is smaller than
-  // end address.
-  public isIpv4LessThan(start: string, end: string): boolean {
-    const startIpAddr = new IPv4(start);
-    const endIpAddr = new IPv4(end);
-    return startIpAddr.isLessThan(endIpAddr);
-  }
-
   // Returns an IPv4 range from a cidr formatted IPv4 address.
   public getIpv4Range(cidr: string): IPv4Range {
     return IPv4Range.fromCidr(cidr);
