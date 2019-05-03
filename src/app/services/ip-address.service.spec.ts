@@ -278,16 +278,6 @@ describe('IpAddressService', () => {
     expect(result[2]).toBeTruthy();
   });
 
-  it('should be less than', () => {
-    const service: IpAddressService = TestBed.get(IpAddressService);
-    expect(service.isIpv4LessThan('192.168.1.0', '192.168.10.0'));
-  });
-
-  it('should not be less than', () => {
-    const service: IpAddressService = TestBed.get(IpAddressService);
-    expect(service.isIpv4LessThan('192.168.10.0', '192.168.1.0'));
-  });
-
 });
 
 
