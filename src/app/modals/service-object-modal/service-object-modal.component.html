@@ -62,7 +62,7 @@
         />
         <div *ngIf="submitted && f.sourcePort.errors" class="invalid-feedback">
           <div *ngIf="f.sourcePort.errors.validPortNumber">
-            Source Port/Range values must be between 0 and 65535.
+            Source Port/Range values must be greater than 0 and less than 65535.
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@
         />
         <div *ngIf="submitted && f.destinationPort.errors" class="invalid-feedback">
           <div *ngIf="f.destinationPort.errors.validPortNumber">
-            Destination Port/Range values must be between 0 and 65535.
+            Destination Port/Range values must be greater than 0 and less than 65535.
           </div>
         </div>
       </div>

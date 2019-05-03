@@ -1,19 +1,41 @@
-import { FormControl, FormGroup } from '@angular/forms';
-import { IpAddressService } from '../services/ip-address.service';
-
-const ipService = new IpAddressService();
+import { FormControl } from '@angular/forms';
 
 
-export function ValidateIpAddress(control: FormControl) {
-    const result = ipService.isValidIPv4String(control.value);
+export function ValidateIpv4CidrAddress(control: FormControl) {
+    if (!control || !control.value) {
+        return { validIpv4Address: true };
+    }
+    const valueArray = control.value.split('/');
 
-    if (!result[0]) {
+    if (valueArray.length !== 2) {
+        return {validIpv4Address: true };
+    } else  if (!isValidIpAddress(valueArray[0]) ||
+    !isValidNetMask(Number(valueArray[1]))) {
         return { validIpv4Address: true };
     }
     return null;
 }
 
+export function ValidateIpv4Address(control: FormControl) {
+    if (!control || !control.value) {
+        return { validIpv4Address: true };
+    }
+    const valueArray = control.value.split('/');
+
+    if (valueArray.length !== 1) {
+        return {validIpv4Address: true };
+    } else if
+         (!isValidIpAddress(valueArray[0])) {
+            return { validIpv4Address : true };
+        }
+    return null;
+}
+
 export function ValidatePortRange(control: FormControl) {
+    if (!control || !control.value) {
+        return { validPortNumber : true };
+    }
+
     const value = control.value;
     const valueArray = value.split('-');
 
@@ -33,6 +55,30 @@ export function ValidatePortRange(control: FormControl) {
     return null;
 }
 
-function isValidPortNumber(portNumber: number) {
-   return (portNumber <= 0 || portNumber > 65535) ? false : true;
+function isValidPortNumber(portNumber: number): boolean {
+   return (portNumber > 0 && portNumber <= 65535);
+}
+
+function isValidIpAddress(ipAddress: string): boolean {
+    const ipAddressArray = ipAddress.split('.');
+
+    if (ipAddressArray.length < 4) {
+        return false;
+    }
+
+    for (const o of ipAddressArray) {
+        if (!o || o === '') {
+            return false;
+        }
+
+        const octet = Number(o);
+        if (octet < 0 || octet > 255) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function isValidNetMask(netMask: number): boolean {
+    return (netMask > 0 && netMask <= 32);
 }

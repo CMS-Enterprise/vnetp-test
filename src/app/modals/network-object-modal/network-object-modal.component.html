@@ -87,10 +87,10 @@
         />
         <div *ngIf="submitted && f.cidrAddress.errors" class="invalid-feedback">
           <div *ngIf="f.cidrAddress.errors.required">
-            IP Address is required
+            CIDR Address is required.
           </div>
-          <div *ngIf="f.cidrAddress.errors.validIpv4CidrAddress">
-            CIDR Address is invalid
+          <div *ngIf="f.cidrAddress.errors.validIpv4Address">
+            CIDR Address is invalid.
           </div>
         </div>
       </div>

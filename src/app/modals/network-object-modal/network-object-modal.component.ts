@@ -3,7 +3,7 @@ import { NetworkObject } from 'src/app/models/network-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateIpAddress} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Address, ValidateIpv4CidrAddress} from 'src/app/validators/network-form-validators';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
@@ -55,7 +55,7 @@ export class NetworkObjectModalComponent implements OnInit {
     this.networkTypeSubscription = this.form.get('type').valueChanges
       .subscribe( type => {
         if (type === 'host') {
-          hostAddress.setValidators([Validators.required, ValidateIpAddress]);
+          hostAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
           cidrAddress.setValidators(null);
           cidrAddress.setValue(null);
           startAddress.setValidators(null);
@@ -65,9 +65,9 @@ export class NetworkObjectModalComponent implements OnInit {
         }
 
         if (type === 'range') {
-          startAddress.setValidators([Validators.required, ValidateIpAddress]);
+          startAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
           startAddress.setValue(null);
-          endAddress.setValidators([Validators.required, ValidateIpAddress]);
+          endAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
           endAddress.setValue(null);
           hostAddress.setValidators(null);
           hostAddress.setValue(null);
@@ -76,7 +76,7 @@ export class NetworkObjectModalComponent implements OnInit {
         }
 
         if (type === 'network') {
-          cidrAddress.setValidators([Validators.required]);
+          cidrAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4CidrAddress]));
           hostAddress.setValidators(null);
           hostAddress.setValidators(null);
           startAddress.setValidators(null);
