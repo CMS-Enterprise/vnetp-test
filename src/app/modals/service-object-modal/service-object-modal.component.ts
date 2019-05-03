@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ServiceObject } from 'src/app/models/service-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-service-object-modal',
@@ -63,8 +64,8 @@ export class ServiceObjectModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      sourcePort: ['', Validators.required],
-      destinationPort: ['', Validators.required],
+      sourcePort: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])]
     });
   }
 

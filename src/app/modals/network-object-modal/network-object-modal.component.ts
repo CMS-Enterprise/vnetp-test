@@ -3,7 +3,7 @@ import { NetworkObject } from 'src/app/models/network-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateIpAddress, ValidateCidrAddress} from 'src/app/validators/ip-address-validator';
+import { ValidateIpAddress} from 'src/app/validators/network-form-validators';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
@@ -76,7 +76,7 @@ export class NetworkObjectModalComponent implements OnInit {
         }
 
         if (type === 'network') {
-          cidrAddress.setValidators([Validators.required, ValidateCidrAddress]);
+          cidrAddress.setValidators([Validators.required]);
           hostAddress.setValidators(null);
           hostAddress.setValidators(null);
           startAddress.setValidators(null);
