@@ -3,7 +3,7 @@
       <button
         type="button"
         class="btn btn-warning"
-        aria-label="Save Service Objects/Groups"
+        aria-label="Save Service Object/Groups"
         (click)="saveAll()"
         [hidden]="!dirty"
       >
@@ -25,7 +25,7 @@
     <ul class="nav nav-tabs">
       <li class="nav-item" (click)="navIndex = 0">
         <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-          >Service Objects</a
+          >Service Object</a
         >
       </li>
       <li class="nav-item" (click)="navIndex = 1">
@@ -53,37 +53,35 @@
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Type</th>
-              <th scope="col">Address</th>
+              <th scope="col">Source Port</th>
+              <th scope="col">Destination Port</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let netObj of serviceObjects">
+            <tr *ngFor="let serviceObject of serviceObjects">
               <td>
-                <p>{{ netObj.Name }}</p>
+                <p>{{ serviceObject.Name }}</p>
               </td>
               <td>
-                <p>{{ netObj.Type }}</p>
+                <p>{{ serviceObject.Type }}</p>
               </td>
               <td>
-                <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
-                <p *ngIf="netObj.Type === 'range'">
-                  {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
-                </p>
-                <p *ngIf="netObj.Type === 'service'">
-                  {{ netObj.CidrAddress }}
-                </p>
+                <p>{{ serviceObject.SourcePort }}</p>
+              </td>
+              <td>
+                <p>{{ serviceObject.DestinationPort }}</p>
               </td>
               <td>
                 <fa
                   name="pencil"
-                  (click)="editServiceObject(netObj)"
+                  (click)="editServiceObject(serviceObject)"
                   aria-label="Edit Service Object"
                 >
                 </fa>
                 <fa
                 name ="trash"
-                (click)="deleteServiceObject(netObj)"
+                (click)="deleteServiceObject(serviceObject)"
                 >
                 </fa>
               </td>
@@ -115,23 +113,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let netObjGroup of serviceObjectGroups">
+            <tr *ngFor="let serviceObjectGroup of serviceObjectGroups">
               <td>
-                <p>{{ netObjGroup.Name }}</p>
+                <p>{{ serviceObjectGroup.Name }}</p>
               </td>
               <td>
-                <p>{{ netObjGroup.ServiceObjects.length }}</p>
+                <p>{{ serviceObjectGroup.ServiceObjects.length }}</p>
               </td>
               <td>
                 <fa
                   name="pencil"
-                  (click)="editServiceObjectGroup(netObjGroup)"
+                  (click)="editServiceObjectGroup(serviceObjectGroup)"
                   aria-label="Edit Service Object Group"
                 >
                 </fa>
                 <fa
                 name ="trash"
-                (click)="deleteServiceObjectGroup(netObjGroup)"
+                (click)="deleteServiceObjectGroup(serviceObjectGroup)"
                 >
                 </fa>
               </td>

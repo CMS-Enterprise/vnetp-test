@@ -1,0 +1,116 @@
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="serviceObjectGroupModal"
+  [dismissable]="false"
+  customClass="large-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Service Object Group</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Description</label>
+        <input
+          type="text"
+          formControlName="description"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="btn-group-sm" role="group">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="createServiceObject()"
+          aria-label="Network Object"
+        >
+          <fa name="plus" size="1x"></fa>
+        </button>
+      </div>
+
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Source Port</th>
+            <th scope="col">Destination Port</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let serviceObject of serviceObjects">
+            <td>
+              <p>{{ serviceObject.Name }}</p>
+            </td>
+            <td>
+              <p>{{ serviceObject.Type }}</p>
+            </td>
+            <td>
+              <p>{{ serviceObject.SourcePort }}</p>
+            </td>
+            <td>
+              <p>{{ serviceObject.DestinationPort }}</p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editServiceObject(serviceObject)"
+                aria-label="Edit Service Object"
+              >
+              </fa>
+              <fa
+              name ="trash"
+              (click)="deleteServiceObject(netObj)"
+              >
+              </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-dismiss="modal">
+        Save
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>

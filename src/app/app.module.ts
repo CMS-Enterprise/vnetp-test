@@ -42,6 +42,8 @@ import { NetworkObjectsGroupsComponent } from './components/network-objects-grou
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
 import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
+import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
     NetworkObjectGroupModalComponent,
-    ServiceObjectsGroupsComponent
+    ServiceObjectsGroupsComponent,
+    ServiceObjectModalComponent,
+    ServiceObjectGroupModalComponent
   ],
   imports: [
     BrowserModule,
