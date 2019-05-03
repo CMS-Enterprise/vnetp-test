@@ -5,8 +5,8 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
-import { ServiceObject } from 'src/app/models/Service-object';
-import { ServiceObjectGroup } from 'src/app/models/Service-object-group';
+import { ServiceObject } from 'src/app/models/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 
 @Component({
