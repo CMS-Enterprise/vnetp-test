@@ -70,10 +70,10 @@ export class FirewallRuleModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       action: ['', Validators.required],
-      sourcePorts: ['', Validators.required],
       sourceIp: ['', Validators.required],
-      destinationPorts: ['', Validators.required],
-      destinationIp: ['', Validators.required]
+      sourcePorts: ['', Validators.required],
+      destinationIp: ['', Validators.required],
+      destinationPorts: ['', Validators.required]
     });
   }
 
