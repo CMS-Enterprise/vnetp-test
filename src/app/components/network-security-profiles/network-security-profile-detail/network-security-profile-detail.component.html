@@ -95,14 +95,9 @@
       <td>  
         <fa 
         name="pencil" 
-        (click)="firewallRule.Edit = !firewallRule.Edit" 
-        [hidden]="firewallRule.Edit">
+        (click)="editFirewallRule(firewallRule)" 
+      >
       </fa>  
-      <fa 
-        name="floppy-o" 
-        (click)="firewallRule.Edit = !firewallRule.Edit" 
-        [hidden]="!firewallRule.Edit">
-      </fa>
       <fa
       name="chevron-up"
       (click)="moveFirewallRule(-1,firewallRule)"
@@ -136,3 +131,5 @@
 </table>
 </div>
 </div>
+
+<app-firewall-rule-modal></app-firewall-rule-modal>

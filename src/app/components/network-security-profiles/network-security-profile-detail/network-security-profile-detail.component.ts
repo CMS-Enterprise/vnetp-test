@@ -7,6 +7,9 @@ import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { IpAddressService } from 'src/app/services/ip-address.service';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { ModalMode } from 'src/app/models/modal-mode';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -16,13 +19,16 @@ import { IpAddressService } from 'src/app/services/ip-address.service';
 export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   subnet: Subnet;
+  dirty: boolean;
   deployedState: boolean;
   firewall_rules: any;
-
+  editFirewallRuleIndex: number;
+  networkObjectModalMode: ModalMode;
+  networkObjectModalSubscription: Subscription;
   Id = '';
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
-              private papa: Papa, private hs: HelpersService, private ips: IpAddressService) {
+              private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
     this.firewall_rules = [];
    }
@@ -65,7 +71,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
     if (firewallrules) {
     // TODO: Return from HelpersService
-    this.firewall_rules = JSON.parse(firewallrules.value);
+    this.firewall_rules = JSON.parse(firewallrules.value) as Array<NetworkSecurityProfileRule>;
     }
   }
 
@@ -89,6 +95,43 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     dupRule.Deleted = false;
 
     this.firewall_rules.splice(ruleIndex, 0, dupRule);
+  }
+
+  createFirewallRule() {
+    this.subscribeToFirewallRuleModal();
+    this.networkObjectModalMode = ModalMode.Create;
+    this.ngx.getModal('firewallRuleModal').open();
+  }
+
+  editFirewallRule(firewallRule : NetworkSecurityProfileRule){
+    this.subscribeToFirewallRuleModal();
+    this.networkObjectModalMode = ModalMode.Edit;
+    this.ngx.setModalData(Object.assign({}, firewallRule), 'firewallRuleModal');
+    this.editFirewallRuleIndex = this.firewall_rules.indexOf(firewallRule);
+    this.ngx.getModal('firewallRuleModal').open();
+  }
+
+  subscribeToFirewallRuleModal() {
+    this.networkObjectModalSubscription =
+    this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as NetworkSecurityProfileRule;
+
+      if (data !== undefined) {
+        data = Object.assign({}, data);
+        this.saveFirewallRule(data);
+      }
+      this.ngx.resetModalData('firewallRuleModal');
+      this.networkObjectModalSubscription.unsubscribe();
+    });
+  }
+
+  saveFirewallRule(firewallRule: NetworkSecurityProfileRule) {
+    if (this.networkObjectModalMode === ModalMode.Create) {
+      this.firewall_rules.push(firewallRule);
+    } else {
+      this.firewall_rules[this.editFirewallRuleIndex] = firewallRule;
+    }
+    this.dirty = true;
   }
 
   updateFirewallRules() {

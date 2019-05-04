@@ -44,6 +44,7 @@ import { NetworkObjectGroupModalComponent } from './modals/network-object-group-
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
+import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { ServiceObjectGroupModalComponent } from './modals/service-object-group-
     NetworkObjectGroupModalComponent,
     ServiceObjectsGroupsComponent,
     ServiceObjectModalComponent,
-    ServiceObjectGroupModalComponent
+    ServiceObjectGroupModalComponent,
+    FirewallRuleModalComponent
   ],
   imports: [
     BrowserModule,

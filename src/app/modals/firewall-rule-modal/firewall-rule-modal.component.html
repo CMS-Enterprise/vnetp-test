@@ -1,0 +1,146 @@
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="firewallRuleModal"
+  [dismissable]="false"
+  customClass="large-modal"
+  >
+  <div class="modal-header">
+    <h4 class="modal-title">Firewall Rule</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+      <div class="form-group col-md-6">
+          <label for="type">Permit</label>
+          <select
+            name="type"
+            formControlName="permit"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.permit.errors }"
+            aria-label="Type"
+          >
+            <option></option>
+            <option value="permit">Permit</option>
+            <option value="deny">Deny</option>
+          </select>
+          <div *ngIf="submitted && f.permit.errors" class="invalid-feedback">
+            <div *ngIf="f.type.errors.required">Type is required</div>
+          </div>
+        </div>
+
+    </div>
+
+      <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="name">Source IP</label>
+        <input
+          type="text"
+          formControlName="sourceIp"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
+          <div *ngIf="f.sourceIp.errors.required">
+            Source IP is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6">
+          <label for="name">Source Port</label>
+          <input
+            type="text"
+            formControlName="sourcePorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
+            <div *ngIf="f.sourcePorts.errors.required">
+              Source Port is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="name">Destination IP</label>
+        <input
+          type="text"
+          formControlName="destinationIp"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
+          aria-label="Name"
+        />
+        <div
+          *ngIf="submitted && f.destinationIp.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.destinationIp.errors.required">
+            Destination IP is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6">
+          <label for="name">Destination Ports</label>
+          <input
+            type="text"
+            formControlName="destinationPorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+            aria-label="Name"
+          />
+          <div
+            *ngIf="submitted && f.destinationPorts.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationPorts.errors.required">
+              Destination Ports is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>
