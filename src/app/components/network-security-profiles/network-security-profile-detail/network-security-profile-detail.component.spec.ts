@@ -10,6 +10,7 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
+import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 
 describe('NetworkSecurityProfileDetailComponent', () => {
   let component: NetworkSecurityProfileDetailComponent;
@@ -37,4 +38,64 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should move firewall rule up', () => {
+    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
+    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+
+    component.moveFirewallRule(-1, component.firewall_rules[2]);
+
+    // Should be moved to index 1
+    expect(component.firewall_rules[1].Name === 'Test3').toBeTruthy();
+  });
+
+  it('should not move firewall rule at front of array up', () => {
+    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
+    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+
+    component.moveFirewallRule(-1, component.firewall_rules[0]);
+
+    // Shouldn't move.
+    expect(component.firewall_rules[0].Name === 'Test').toBeTruthy();
+  });
+
+  it('should not move firewall rule at end of array down', () => {
+    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
+    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+
+    component.moveFirewallRule(1, component.firewall_rules[2]);
+
+    // Shouldn't move.
+    expect(component.firewall_rules[2].Name === 'Test3').toBeTruthy();
+  });
+
+
+  it('should move firewall rule down', () => {
+    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
+    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+
+    component.moveFirewallRule(1, component.firewall_rules[1]);
+
+    // Should be moved to index 2
+    expect(component.firewall_rules[2].Name === 'Test2').toBeTruthy();
+  });
+
+  it('should add firewall rule', () => {
+    component.addFirewallRule();
+
+    expect(component.firewall_rules.length).toBeTruthy();
+  });
+
+  it('should duplicate firewall rule', () => {
+    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
+    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+
+    component.duplicateFirewallRule(component.firewall_rules[2]);
+
+    expect(component.firewall_rules.length === 4).toBeTruthy();
+    expect(component.firewall_rules[2].Name === component.firewall_rules[3].Name).toBeTruthy();
+  });
+
+  // TODO: Modal invocation tests and edit tests.
+
 });
