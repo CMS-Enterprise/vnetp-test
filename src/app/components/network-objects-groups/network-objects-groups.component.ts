@@ -60,7 +60,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     this.subscribeToNetworkObjectGroupModal() ;
     this.networkObjectGroupModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, networkObjectGroup), 'networkObjectGroupModal');
-    this.editNetworkObjectIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
+    this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 

@@ -60,7 +60,7 @@ export class ServiceObjectsGroupsComponent implements OnInit {
     this.subscribeToServiceObjectGroupModal() ;
     this.serviceObjectGroupModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, serviceObjectGroup), 'serviceObjectGroupModal');
-    this.editServiceObjectIndex = this.serviceObjectGroups.indexOf(serviceObjectGroup);
+    this.editServiceObjectGroupIndex = this.serviceObjectGroups.indexOf(serviceObjectGroup);
     this.ngx.getModal('serviceObjectGroupModal').open();
   }
 
