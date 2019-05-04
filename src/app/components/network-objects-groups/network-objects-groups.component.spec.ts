@@ -26,7 +26,7 @@ describe('NetworkObjectsGroupsComponent', () => {
          ReactiveFormsModule
        ],
       declarations: [
-         NetworkObjectsGroupsComponent,
+        NetworkObjectsGroupsComponent,
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent],
       providers: [NgxSmartModalService, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],

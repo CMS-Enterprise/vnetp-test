@@ -3,10 +3,13 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { NetworkSecurityProfileDetailComponent } from './network-security-profile-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PapaParseModule } from 'ngx-papaparse';
+import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxMaskModule } from 'ngx-mask';
+import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 
 describe('NetworkSecurityProfileDetailComponent', () => {
   let component: NetworkSecurityProfileDetailComponent;
@@ -15,9 +18,11 @@ describe('NetworkSecurityProfileDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule],
-      declarations: [ NetworkSecurityProfileDetailComponent ],
-      providers: [HttpClient, HttpHandler, CookieService]
+      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
+      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
+      declarations: [ NetworkSecurityProfileDetailComponent,
+      FirewallRuleModalComponent ],
+      providers: [NgxSmartModalService, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
     .compileComponents();
   }));

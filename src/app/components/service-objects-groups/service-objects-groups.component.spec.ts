@@ -6,29 +6,32 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { PapaParseModule } from 'ngx-papaparse';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
-import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-group-modal/network-object-group-modal.component';
 import { HttpClientModule, HttpHandler, HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
   let fixture: ComponentFixture<ServiceObjectsGroupsComponent>;
 
+  const ngx: NgxSmartModalService = new NgxSmartModalService();
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule,
         NgxSmartModalModule,
-        NgxMaskModule,
+        NgxMaskModule.forRoot(),
         PapaParseModule,
         FormsModule,
         ReactiveFormsModule
       ],
      declarations: [
       ServiceObjectsGroupsComponent,
-       NetworkObjectModalComponent,
-       NetworkObjectGroupModalComponent],
-     providers: [NgxSmartModalService, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
+      ServiceObjectModalComponent,
+      ServiceObjectGroupModalComponent
+    ],
+     providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
     .compileComponents();
   }));
