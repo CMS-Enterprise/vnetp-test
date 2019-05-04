@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 export class ServiceObjectModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
-  sourcePortSubscription: Subscription;
   destinationPortSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
