@@ -34,19 +34,19 @@
       <div class="form-row">
 
       <div class="form-group col-md-6">
-          <label for="type">Permit</label>
+          <label for="type">Action</label>
           <select
             name="type"
-            formControlName="permit"
+            formControlName="action"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.permit.errors }"
+            [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
             aria-label="Type"
           >
             <option></option>
-            <option value="permit">Permit</option>
+            <option value="action">Permit</option>
             <option value="deny">Deny</option>
           </select>
-          <div *ngIf="submitted && f.permit.errors" class="invalid-feedback">
+          <div *ngIf="submitted && f.action.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
           </div>
         </div>
