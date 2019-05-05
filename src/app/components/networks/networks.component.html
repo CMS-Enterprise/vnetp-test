@@ -21,7 +21,7 @@
       <tbody>
         <tr *ngFor="let subnet of subnets">
           <td>
-            <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            <a routerLink="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
           <td>{{ getDeployedState(subnet) }}</td>

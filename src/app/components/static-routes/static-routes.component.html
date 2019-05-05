@@ -27,7 +27,7 @@
       <tbody>
         <tr *ngFor="let subnet of subnets.subnets">
           <td>
-            <a href="/static-routes/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            <a routerLink="/static-routes/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>
             {{ getStaticRoutesCount(subnet) }}
