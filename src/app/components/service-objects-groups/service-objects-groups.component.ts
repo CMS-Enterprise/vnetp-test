@@ -46,7 +46,7 @@ export class ServiceObjectsGroupsComponent implements OnInit {
 
       this.serviceObjects = serviceObjectDto.ServiceObjects;
       this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-    });
+    }, error => { console.log(error); });
   }
 
   createServiceObject() {

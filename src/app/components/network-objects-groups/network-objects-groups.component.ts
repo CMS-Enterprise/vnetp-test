@@ -46,7 +46,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
 
       this.networkObjects = networkObjectDto.NetworkObjects;
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-    });
+    }, error => { console.log(error); });
   }
 
   createNetworkObject() {
