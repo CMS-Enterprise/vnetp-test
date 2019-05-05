@@ -133,14 +133,11 @@ export class ServiceObjectsGroupsComponent implements OnInit {
     dto.ServiceObjectGroups = this.serviceObjectGroups;
 
     let extra_vars: {[k: string]: any} = {};
-    extra_vars.vrf_id = 1;
     extra_vars.service_object_dto = dto;
 
     const body = { extra_vars };
 
-    console.log(body);
-
-    // this.api.launchTemplate('save-service-object-dto', body).subscribe();
+    this.api.launchTemplate('save-service-object-dto', body).subscribe();
   }
 
   handleFileSelect(evt) {

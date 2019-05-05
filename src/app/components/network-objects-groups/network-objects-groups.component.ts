@@ -133,14 +133,11 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     dto.NetworkObjectGroups = this.networkObjectGroups;
 
     let extra_vars: {[k: string]: any} = {};
-    extra_vars.vrf_id = 1;
     extra_vars.network_object_dto = dto;
 
     const body = { extra_vars };
 
-    console.log(body);
-
-    // this.api.launchTemplate('save-network-object-dto', body).subscribe();
+    this.api.launchTemplate('save-network-object-dto', body).subscribe();
   }
 
   handleFileSelect(evt) {
