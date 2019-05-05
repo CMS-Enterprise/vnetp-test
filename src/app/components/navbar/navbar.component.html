@@ -27,8 +27,8 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="networks">Subnets</a>
-          <a class="dropdown-item" href="static-routes">Routing</a>
+          <a class="dropdown-item" routerLink="networks">Subnets</a>
+          <a class="dropdown-item" routerLink="static-routes">Routing</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="network-security-profiles">Network Security</a>
           <a class="dropdown-item" routerLink="ip-nats">Network Address Translation</a>
@@ -38,7 +38,6 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle"
-            href="#"
             id="navbarDropdown"
             role="button"
             data-toggle="dropdown"
@@ -47,10 +46,10 @@
             >IPAM
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="ipaddresses">IP Addresses</a>
+            <a class="dropdown-item" routerLink="ipaddresses">IP Addresses</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="network-objects-groups">Network Objects/Groups</a>
-            <a class="dropdown-item" href="service-objects-groups">Service Objects/Groups</a>
+            <a class="dropdown-item" routerLink="network-objects-groups">Network Objects/Groups</a>
+            <a class="dropdown-item" routerLink="service-objects-groups">Service Objects/Groups</a>
           </div>
         </li>
       </ul>
@@ -60,7 +59,6 @@
         <a
           class="nav-link"
           [routerLinkActive]="['active']"
-          [routerLink]="['jobs']"
           routerLink="jobs"
           ><fa name="spinner fa-spin"
             style="padding-right:5px;"

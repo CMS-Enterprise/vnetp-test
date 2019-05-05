@@ -44,6 +44,10 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/devices/');
   }
 
+  getVrfs() {
+    return this.http.get(environment.apiBase + '/api/1.0/vrf_group/');
+  }
+
   getSubnets() {
     return this.http.get(environment.apiBase + '/api/1.0/subnets/');
   }

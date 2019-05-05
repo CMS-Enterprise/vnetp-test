@@ -36,6 +36,19 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
+  getVrf() {
+    this.api.getVrfs().subscribe(data => {
+      const result = data as Vrf[]
+      // FIXME: Move to multiple VRF
+      const vrf = result[0];
+
+      const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+
+      this.networkObjects = networkObjectDto.NetworkObjects;
+      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+    });
+  }
+
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
@@ -183,6 +196,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getVrf();
   }
 
   ngOnDestroy() {

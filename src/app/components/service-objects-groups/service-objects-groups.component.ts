@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/modal-mode';
-import { Vrf } from 'src/app/models/d42/vrf';
+import { Vrf, VrfResponse } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
@@ -34,6 +34,19 @@ export class ServiceObjectsGroupsComponent implements OnInit {
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa) {
     this.serviceObjects = new Array<ServiceObject>();
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
+  }
+
+  getVrf() {
+    this.api.getVrfs().subscribe(data => {
+      const result = data as Vrf[]
+      // FIXME: Move to multiple VRF
+      const vrf = result[0];
+
+      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+
+      this.serviceObjects = serviceObjectDto.ServiceObjects;
+      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+    });
   }
 
   createServiceObject() {
@@ -183,6 +196,7 @@ export class ServiceObjectsGroupsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getVrf();
   }
 
   ngOnDestroy() {

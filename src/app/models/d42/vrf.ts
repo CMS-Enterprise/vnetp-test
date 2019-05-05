@@ -9,3 +9,7 @@ export class Vrf implements CustomFieldsObject {
 
     custom_fields: Array<CustomField>;
 }
+
+export class VrfResponse {
+    vrfs: Vrf[];
+}
