@@ -262,18 +262,18 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    try {
       [this.sourceNetworkTypeSubscription, this.sourceServiceTypeSubscription,
         this.destinationNetworkTypeSubscription, this.destinationServiceTypeSubscription]
         .forEach( sub => {
-          if (sub) {
-            sub.unsubscribe();
-          }
+          try {
+            if (sub) {
+              sub.unsubscribe();
+            }
+          } catch (e) {
+            console.error(e);
+         }
         });
-    } catch (e) {
-       console.error(e);
-    }
-  }
+        }
 
   private reset() {
     this.unsubAll();
@@ -281,7 +281,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.buildForm();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.unsubAll();
   }
 }
