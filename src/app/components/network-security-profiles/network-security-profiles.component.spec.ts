@@ -9,6 +9,7 @@ import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/f
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PapaParseModule } from 'ngx-papaparse';
 import { NgxMaskModule } from 'ngx-mask';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NetworkSecurityProfilesComponent', () => {
   let component: NetworkSecurityProfilesComponent;
@@ -23,7 +24,8 @@ describe('NetworkSecurityProfilesComponent', () => {
       NgxMaskModule.forRoot(),
       PapaParseModule,
       FormsModule,
-      ReactiveFormsModule],
+      ReactiveFormsModule,
+      RouterTestingModule],
       declarations: [ 
         NetworkSecurityProfilesComponent,
         FirewallRuleModalComponent ],
