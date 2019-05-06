@@ -47,23 +47,18 @@ export class FirewallRuleModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+  }
 
-    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
-    setTimeout(() => {
-      this.ngx.getModal('firewallRuleModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
-        const firewallRule = Object.assign({}, modal.getData() as NetworkSecurityProfileRule);
-        if (firewallRule !== undefined) {
-        this.form.controls.name.setValue(firewallRule.Name);
-        this.form.controls.action.setValue(firewallRule.Action);
-        this.form.controls.sourceIp.setValue(firewallRule.SourceIP);
-        this.form.controls.sourcePorts.setValue(firewallRule.SourcePorts);
-        this.form.controls.destinationIp.setValue(firewallRule.SourceIP);
-        this.form.controls.destinationPorts.setValue(firewallRule.SourcePorts);
-        }
-      });
-    }, 2.5 * 1000);
-    // Delay on subscribe since smart modal service
-    // must first discover all modals.
+  getData() {
+    const firewallRule = Object.assign({}, this.ngx.getModalData('firewallRuleModal') as NetworkSecurityProfileRule);
+    if (firewallRule !== undefined) {
+      this.form.controls.name.setValue(firewallRule.Name);
+      this.form.controls.action.setValue(firewallRule.Action);
+      this.form.controls.sourceIp.setValue(firewallRule.SourceIP);
+      this.form.controls.sourcePorts.setValue(firewallRule.SourcePorts);
+      this.form.controls.destinationIp.setValue(firewallRule.SourceIP);
+      this.form.controls.destinationPorts.setValue(firewallRule.SourcePorts);
+      }
   }
 
   private buildForm() {

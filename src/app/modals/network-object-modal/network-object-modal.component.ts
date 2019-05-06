@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NetworkObject } from 'src/app/models/network-object';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ValidateIpv4Address, ValidateIpv4CidrAddress} from 'src/app/validators/network-form-validators';
@@ -94,23 +94,18 @@ export class NetworkObjectModalComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.setFormValidators();
+  }
 
-    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
-    setTimeout(() => {
-      this.ngx.getModal('networkObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
-        const networkObject = Object.assign({}, modal.getData() as NetworkObject);
-        if (networkObject !== undefined) {
-        this.form.controls.name.setValue(networkObject.Name);
-        this.form.controls.type.setValue(networkObject.Type);
-        this.form.controls.hostAddress.setValue(networkObject.HostAddress);
-        this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
-        this.form.controls.startAddress.setValue(networkObject.StartAddress);
-        this.form.controls.endAddress.setValue(networkObject.EndAddress);
-        }
-      });
-    }, 2.5 * 1000);
-    // Delay on subscribe since smart modal service
-    // must first discover all modals.
+  getData() {
+    const networkObject = Object.assign({}, this.ngx.getModalData('networkObjectModal') as NetworkObject);
+    if (networkObject !== undefined) {
+      this.form.controls.name.setValue(networkObject.Name);
+      this.form.controls.type.setValue(networkObject.Type);
+      this.form.controls.hostAddress.setValue(networkObject.HostAddress);
+      this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
+      this.form.controls.startAddress.setValue(networkObject.StartAddress);
+      this.form.controls.endAddress.setValue(networkObject.EndAddress);
+    }
   }
 
   private buildForm() {

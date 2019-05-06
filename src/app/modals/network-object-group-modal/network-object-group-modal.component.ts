@@ -98,24 +98,19 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+  }
 
-    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
-    setTimeout(() => {
-      this.ngx.getModal('networkObjectGroupModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
-        const networkObjectGroup = Object.assign({}, modal.getData() as NetworkObjectGroup);
-        if (networkObjectGroup !== undefined) {
-        this.form.controls.name.setValue(networkObjectGroup.Name);
-        this.form.controls.description.setValue(networkObjectGroup.Description);
-        if (networkObjectGroup.NetworkObjects) {
-          this.networkObjects = networkObjectGroup.NetworkObjects;
-        } else {
-          this.networkObjects = new Array<NetworkObject>();
-        }
-        }
-      });
-    }, 2.5 * 1000);
-    // Delay on subscribe since smart modal service
-    // must first discover all modals.
+  getData() {
+    const networkObjectGroup = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroup);
+    if (networkObjectGroup !== undefined) {
+      this.form.controls.name.setValue(networkObjectGroup.Name);
+      this.form.controls.description.setValue(networkObjectGroup.Description);
+      if (networkObjectGroup.NetworkObjects) {
+        this.networkObjects = networkObjectGroup.NetworkObjects;
+      } else {
+        this.networkObjects = new Array<NetworkObject>();
+      }
+    }
   }
 
   private buildForm() {

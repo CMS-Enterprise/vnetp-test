@@ -118,6 +118,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     // must first discover all modals.
   }
 
+  getData() {
+    const serviceObjectGroup = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroup);
+  }
+
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],

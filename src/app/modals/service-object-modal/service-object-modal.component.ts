@@ -60,21 +60,16 @@ export class ServiceObjectModalComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.setFormValidators();
+  }
 
-    // Subscribe to our onOpen event so that we can load data to our form controls if it is passed.
-    setTimeout(() => {
-      this.ngx.getModal('serviceObjectModal').onOpen.subscribe((modal: NgxSmartModalComponent) => {
-        const serviceObject = Object.assign({}, modal.getData() as ServiceObject);
-        if (serviceObject !== undefined) {
-        this.form.controls.name.setValue(serviceObject.Name);
-        this.form.controls.type.setValue(serviceObject.Type);
-        this.form.controls.destinationPort.setValue(serviceObject.DestinationPort);
-        this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
-        }
-      });
-    }, 2.5 * 1000);
-    // Delay on subscribe since smart modal service
-    // must first discover all modals.
+  getData() {
+    const serviceObject =  Object.assign({}, this.ngx.getModalData('serviceObjectModal') as ServiceObject);
+    if (serviceObject !== undefined) {
+      this.form.controls.name.setValue(serviceObject.Name);
+      this.form.controls.type.setValue(serviceObject.Type);
+      this.form.controls.destinationPort.setValue(serviceObject.DestinationPort);
+      this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
+      }
   }
 
   private buildForm() {
