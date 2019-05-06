@@ -1,3 +1,8 @@
+import { NetworkObjectGroup } from './network-object-group';
+import { ServiceObject } from './service-object';
+import { NetworkObject } from './network-object';
+import { ServiceObjectGroup } from './service-object-group';
+
 export class NetworkSecurityProfileRule {
     Id: number;
 
@@ -37,9 +42,30 @@ export class NetworkSecurityProfileRule {
 
     Log: boolean;
 
-    Edit: boolean;
+    // TODO: Refactor
+    // When objects are assigned they will be denormalized and attached
+    // to these properties. Post-MVP if we migrate to a true RDBMS this
+    // won't be required.
 
-    Deleted: boolean;
+    _sourceNetworkObject?: NetworkObject;
 
-    Updated: boolean;
+    _sourceNetworkObjectGroup?: NetworkObjectGroup;
+
+    _sourceServiceObject?: ServiceObject;
+
+    _sourceServiceObjectGroup?: ServiceObjectGroup;
+
+    _destinationNetworkObject?: NetworkObject;
+
+    _destinationNetworkObjectGroup?: NetworkObjectGroup;
+
+    _destinationServiceObject?: ServiceObject;
+
+    _destinationServiceObjectGroup?: ServiceObjectGroup;
+
+    Edit?: boolean;
+
+    Deleted?: boolean;
+
+    Updated?: boolean;
 }
