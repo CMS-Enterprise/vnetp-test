@@ -4,6 +4,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
 import { ValidateIpv4Address, ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { ServiceObject } from 'src/app/models/service-object';
+import { NetworkObject } from 'src/app/models/network-object';
+import { ServiceObjectGroup } from 'src/app/models/service-object-group';
+import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -18,6 +22,12 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   sourceServiceTypeSubscription: Subscription;
   destinationNetworkTypeSubscription: Subscription;
   destinationServiceTypeSubscription: Subscription;
+
+  networkObjects: Array<NetworkObject>;
+  networkObjectGroups: Array<NetworkObjectGroup>;
+
+  serviceObjects: Array<ServiceObject>;
+  serviceObjectGroups: Array<ServiceObjectGroup>;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -126,7 +136,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case 'port':
           sourcePort.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
           sourceServiceObject.setValue(null);
-          sourceServiceObject.setValue(null);
+          sourceServiceObject.setValidators(null);
+          sourceServiceObjectGroup.setValue(null);
           sourceServiceObjectGroup.setValidators(null);
           break;
         case 'object':
@@ -140,7 +151,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           sourcePort.setValue(null);
           sourcePort.setValidators(null);
           sourceServiceObject.setValue(null);
-          sourceServiceObject.setValue(null);
+          sourceServiceObject.setValidators(null);
           sourceServiceObjectGroup.setValidators(Validators.compose([Validators.required]));
           break;
         default:
@@ -197,7 +208,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case 'port':
           destinationPort.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
           destinationServiceObject.setValue(null);
-          destinationServiceObject.setValue(null);
+          destinationServiceObject.setValidators(null);
+          destinationServiceObjectGroup.setValue(null);
           destinationServiceObjectGroup.setValidators(null);
           break;
         case 'object':
@@ -211,7 +223,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           destinationPort.setValue(null);
           destinationPort.setValidators(null);
           destinationServiceObject.setValue(null);
-          destinationServiceObject.setValue(null);
+          destinationServiceObject.setValidators(null);
           destinationServiceObjectGroup.setValidators(Validators.compose([Validators.required]));
           break;
         default:
