@@ -58,11 +58,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   get f() { return this.form.controls; }
 
-  ngOnInit() {
-    this.buildForm();
-    this.setFormValidators();
-  }
-
   getData() {
     const firewallRule = Object.assign({}, this.ngx.getModalData('firewallRuleModal') as NetworkSecurityProfileRule);
     if (firewallRule !== undefined) {
@@ -319,6 +314,12 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
+    this.setFormValidators();
+  }
+
+  ngOnInit() {
+    this.buildForm();
+    this.setFormValidators();
   }
 
   ngOnDestroy() {

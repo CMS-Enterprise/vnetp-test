@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ServiceObject } from 'src/app/models/service-object';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { ModalMode } from 'src/app/models/modal-mode';
   templateUrl: './service-object-group-modal.component.html',
   styleUrls: ['./service-object-group-modal.component.css']
 })
-export class ServiceObjectGroupModalComponent implements OnInit {
+export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   serviceObjects: Array<ServiceObject>;
@@ -19,7 +19,6 @@ export class ServiceObjectGroupModalComponent implements OnInit {
   editServiceObjectIndex: number;
 
   serviceObjectModalSubscription: Subscription;
-  serviceObjectGroupModalSubscription: Subscription;
 
   serviceObjectModalMode: ModalMode;
 
@@ -96,10 +95,6 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.buildForm();
-  }
-
   getData() {
     const serviceObjectGroup = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroup);
     if (serviceObjectGroup !== undefined) {
@@ -124,5 +119,19 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     this.submitted = false;
     this.serviceObjects = new Array<ServiceObject>();
     this.buildForm();
+  }
+
+  private unsubAll() {
+    if (this.serviceObjectModalSubscription) {
+      this.serviceObjectModalSubscription.unsubscribe();
+    }
+  }
+
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
   }
 }

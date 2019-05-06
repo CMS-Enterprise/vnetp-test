@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ServiceObject } from 'src/app/models/service-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './service-object-modal.component.html',
   styleUrls: ['./service-object-modal.component.css']
 })
-export class ServiceObjectModalComponent implements OnInit {
+export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   destinationPortSubscription: Subscription;
@@ -57,11 +57,6 @@ export class ServiceObjectModalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.buildForm();
-    this.setFormValidators();
-  }
-
   getData() {
     const serviceObject =  Object.assign({}, this.ngx.getModalData('serviceObjectModal') as ServiceObject);
     if (serviceObject !== undefined) {
@@ -81,9 +76,24 @@ export class ServiceObjectModalComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    if (this.destinationPortSubscription) {
+      this.destinationPortSubscription.unsubscribe();
+    }
+  }
+
   private reset() {
-    this.destinationPortSubscription.unsubscribe();
+    this.unsubAll();
     this.submitted = false;
     this.buildForm();
+  }
+
+  ngOnInit() {
+    this.buildForm();
+    this.setFormValidators();
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
   }
 }

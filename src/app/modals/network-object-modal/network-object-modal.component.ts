@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NetworkObject } from 'src/app/models/network-object';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { ValidateIpv4Address, ValidateIpv4CidrAddress} from 'src/app/validators/
   templateUrl: './network-object-modal.component.html',
   styleUrls: ['./network-object-modal.component.css']
 })
-export class NetworkObjectModalComponent implements OnInit {
+export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   networkTypeSubscription: Subscription;
@@ -91,11 +91,6 @@ export class NetworkObjectModalComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.buildForm();
-    this.setFormValidators();
-  }
-
   getData() {
     const networkObject = Object.assign({}, this.ngx.getModalData('networkObjectModal') as NetworkObject);
     if (networkObject !== undefined) {
@@ -120,10 +115,25 @@ export class NetworkObjectModalComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    if (this.networkTypeSubscription) {
+      this.networkTypeSubscription.unsubscribe();
+    }
+  }
+
   private reset() {
-    this.networkTypeSubscription.unsubscribe();
+    this.unsubAll();
     this.submitted = false;
     this.buildForm();
     this.setFormValidators();
+  }
+
+  ngOnInit() {
+    this.buildForm();
+    this.setFormValidators();
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
   }
 }
