@@ -1,6 +1,37 @@
 import { FormControl } from '@angular/forms';
 
 
+/** Validates an IPv4 address in either address (x.x.x.x) or
+ *  CIDR (x.x.x.x/y) format, also accepts 'any'.
+ */
+export function ValidateIpv4Any(control: FormControl) {
+    if (!control || !control.value) {
+        return null;
+    }
+
+    if (control.value === 'any') {
+        return null;
+    }
+
+    const ipArray = control.value.split('/');
+    if (ipArray.length < 1 || ipArray.length > 2) {
+        return { validIpv4Any: true };
+    }
+
+    let result;
+    if (ipArray.length === 1) {
+        result = ValidateIpv4Address(control);
+    } else if (ipArray.length === 2) {
+        result = ValidateIpv4CidrAddress(control);
+    } 
+
+    if (!result) {
+        return null;
+    } else if (result) {
+        return { validIpv4Any: true };
+    }
+}
+
 export function ValidateIpv4CidrAddress(control: FormControl) {
     if (!control || !control.value) {
        return null;
@@ -95,5 +126,5 @@ function isValidIpAddress(ipAddress: string): boolean {
 }
 
 function isValidNetMask(netMask: number): boolean {
-    return (!isNaN(netMask) && netMask > 0 && netMask <= 32);
+    return (!isNaN(netMask) && netMask >= 0 && netMask <= 32);
 }

@@ -1,9 +1,48 @@
 import { TestBed } from '@angular/core/testing';
-import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange } from './network-form-validators';
+import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange, ValidateIpv4Any } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
 describe('Network Form Validators', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
+
+
+  it('should be valid ip addresses (any)', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('any');
+    expect(ValidateIpv4Any(formControl)).toBeNull();
+
+    formControl.setValue('255.255.255.255');
+    expect(ValidateIpv4Any(formControl)).toBeNull();
+
+    formControl.setValue('1.1.1.1');
+    expect(ValidateIpv4Any(formControl)).toBeNull();
+
+    formControl.setValue('255.255.255.255/32');
+    expect(ValidateIpv4Any(formControl)).toBeNull();
+
+    formControl.setValue('0.0.0.0/0');
+    expect(ValidateIpv4Any(formControl)).toBeNull();
+  });
+
+  it('should be invalid ip addresses (any)', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('all');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+
+    formControl.setValue('1.1.1.');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+
+    formControl.setValue('-1.1.1.1');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+
+    formControl.setValue('255.255.255.255/33');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+
+    formControl.setValue('0.0.0.0/-1');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+  });
 
   it('should be valid ip addresses', () => {
     const formControl = new FormControl();
