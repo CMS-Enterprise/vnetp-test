@@ -8,6 +8,9 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { NetworkObject } from 'src/app/models/network-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { NetworkObjectGroup } from 'src/app/models/network-object-group';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { NetworkObjectDto } from 'src/app/models/network-object-dto';
+import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -29,7 +32,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private automationApiService: AutomationApiService) {
   }
 
   save() {
@@ -88,6 +91,31 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.log.setValue(firewallRule.Log);
 
       }
+
+    this.getVrfCustomFields();
+  }
+
+  getVrfCustomFields() {
+    this.automationApiService.getVrfs().subscribe(data => {
+      const result = data;
+      // FIXME: Temporarily hardcoding VRF ID.
+      const vrf = result.find(v => v.id === 1);
+
+      const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+
+      if (networkObjectDto) {
+        this.networkObjects = networkObjectDto.NetworkObjects;
+        this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+      }
+
+      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+
+      if (serviceObjectDto) {
+        this.serviceObjects = serviceObjectDto.ServiceObjects;
+        this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+      }
+
+    }, error => { console.log(error); });
   }
 
   private setFormValidators() {
