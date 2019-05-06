@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { NetworkSecurityProfileRule } from 'src/app/models/network-security-prof
   templateUrl: './firewall-rule-modal.component.html',
   styleUrls: ['./firewall-rule-modal.component.css']
 })
-export class FirewallRuleModalComponent implements OnInit {
+export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
@@ -133,5 +133,9 @@ export class FirewallRuleModalComponent implements OnInit {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
+  }
+
+  ngOnDestroy(){
+    this.unsubAll();
   }
 }
