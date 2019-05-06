@@ -23,7 +23,7 @@ export function ValidateIpv4Any(control: FormControl) {
         result = ValidateIpv4Address(control);
     } else if (ipArray.length === 2) {
         result = ValidateIpv4CidrAddress(control);
-    } 
+    }
 
     if (!result) {
         return null;

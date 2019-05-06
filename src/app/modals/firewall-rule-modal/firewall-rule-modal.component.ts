@@ -117,9 +117,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       sourceNetworkObjectGroup.updateValueAndValidity();
     });
 
-    const sourcePort = this.form.controls.sourcePort;
+    const sourcePort = this.form.controls.sourcePorts;
     const sourceServiceObject = this.form.controls.sourceServiceObject;
-    const sourceServiceObjectGroup = this.form.controls.sourceNetworkObjectGroup;
+    const sourceServiceObjectGroup = this.form.controls.sourceServiceObjectGroup;
 
     this.sourceServiceTypeSubscription = this.form.controls.sourceServiceType.valueChanges.subscribe(sourceServiceType => {
       switch (sourceServiceType) {
@@ -188,9 +188,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationNetworkObjectGroup.updateValueAndValidity();
     });
 
-    const destinationPort = this.form.controls.destinationPort;
+    const destinationPort = this.form.controls.destinationPorts;
     const destinationServiceObject = this.form.controls.destinationServiceObject;
-    const destinationServiceObjectGroup = this.form.controls.destinationNetworkObjectGroup;
+    const destinationServiceObjectGroup = this.form.controls.destinationServiceObjectGroup;
 
     this.destinationServiceTypeSubscription = this.form.controls.destinationServiceType.valueChanges.subscribe(destinationServiceType => {
       switch (destinationServiceType) {
@@ -263,7 +263,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   private unsubAll() {
     try {
-      [ this.sourceNetworkTypeSubscription, this.sourceServiceTypeSubscription,
+      [this.sourceNetworkTypeSubscription, this.sourceServiceTypeSubscription,
         this.destinationNetworkTypeSubscription, this.destinationServiceTypeSubscription]
         .forEach( sub => {
           if (sub) {
