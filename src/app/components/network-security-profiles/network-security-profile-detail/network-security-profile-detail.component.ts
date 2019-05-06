@@ -70,7 +70,6 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
-    // TODO: Return from HelpersService
     this.firewall_rules = JSON.parse(firewallrules.value) as Array<NetworkSecurityProfileRule>;
     }
   }
@@ -103,7 +102,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     this.ngx.getModal('firewallRuleModal').open();
   }
 
-  editFirewallRule(firewallRule : NetworkSecurityProfileRule){
+  editFirewallRule(firewallRule: NetworkSecurityProfileRule) {
     this.subscribeToFirewallRuleModal();
     this.networkObjectModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, firewallRule), 'firewallRuleModal');
