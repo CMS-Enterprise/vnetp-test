@@ -3,6 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
+import { ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -46,6 +47,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
+    this.setFormValidators();
   }
 
   getData() {
@@ -76,6 +78,80 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.log.setValue(firewallRule.Log);
 
       }
+  }
+
+  private setFormValidators() {
+    const sourceIp = this.form.controls.sourceIp;
+    const sourceNetworkObject = this.form.controls.sourceNetworkObject;
+    const sourceNetworkObjectGroup = this.form.controls.sourceNetworkObjectGroup;
+
+    this.sourceNetworkTypeSubscription = this.form.controls.sourceNetworkType.valueChanges.subscribe(sourceNetworkType => {
+      switch (sourceNetworkType) {
+        case 'ip':
+          sourceIp.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+          sourceNetworkObject.setValue(null);
+          sourceNetworkObject.setValidators(null);
+          sourceNetworkObjectGroup.setValue(null);
+          sourceNetworkObjectGroup.setValidators(null);
+          break;
+        case 'object':
+          sourceIp.setValue(null);
+          sourceIp.setValidators(null);
+          sourceNetworkObject.setValidators(Validators.required);
+          sourceNetworkObjectGroup.setValue(null);
+          sourceNetworkObjectGroup.setValidators(null);
+          break;
+        case 'objectGroup':
+          sourceIp.setValue(null);
+          sourceIp.setValidators(null);
+          sourceNetworkObject.setValue(null);
+          sourceNetworkObject.setValidators(null);
+          sourceNetworkObjectGroup.setValidators(Validators.required);
+          break;
+        default:
+        break;
+      }
+
+      sourceIp.updateValueAndValidity();
+      sourceNetworkObject.updateValueAndValidity();
+      sourceNetworkObjectGroup.updateValueAndValidity();
+    });
+
+    const destinationIp = this.form.controls.destinationIp;
+    const destinationNetworkObject = this.form.controls.destinationNetworkObject;
+    const destinationNetworkObjectGroup = this.form.controls.destinationNetworkObjectGroup;
+
+    this.destinationNetworkTypeSubscription = this.form.controls.destinationNetworkType.valueChanges.subscribe(destinationNetworkType => {
+      switch (destinationNetworkType) {
+        case 'ip':
+          destinationIp.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+          destinationNetworkObject.setValue(null);
+          destinationNetworkObject.setValidators(null);
+          destinationNetworkObjectGroup.setValue(null);
+          destinationNetworkObjectGroup.setValidators(null);
+          break;
+        case 'object':
+          destinationIp.setValue(null);
+          destinationIp.setValidators(null);
+          destinationNetworkObject.setValidators(Validators.required);
+          destinationNetworkObjectGroup.setValue(null);
+          destinationNetworkObjectGroup.setValidators(null);
+          break;
+        case 'objectGroup':
+          destinationIp.setValue(null);
+          destinationIp.setValidators(null);
+          destinationNetworkObject.setValue(null);
+          destinationNetworkObject.setValidators(null);
+          destinationNetworkObjectGroup.setValidators(Validators.required);
+          break;
+        default:
+        break;
+      }
+
+      destinationIp.updateValueAndValidity();
+      destinationNetworkObject.updateValueAndValidity();
+      destinationNetworkObjectGroup.updateValueAndValidity();
+    });
   }
 
   private buildForm() {
@@ -115,7 +191,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private unsubAll(){
+  private unsubAll() {
     try {
       [ this.sourceNetworkTypeSubscription, this.sourceServiceTypeSubscription,
         this.destinationNetworkTypeSubscription, this.destinationServiceTypeSubscription]
