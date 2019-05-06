@@ -79,21 +79,26 @@ export class FirewallRuleModalComponent implements OnInit {
       name: ['', Validators.required],
       description: [''],
       action: ['', Validators.required],
-      protocol: ['', Validators.required],
+      protocol: ['', Validators.required], // TODO: Only required when using source ports, otherwise inherited from
+                                           // service object/service object group.
       direction: [''],
 
+      // Source Network Info
       sourceIp: ['', Validators.required],
       sourceNetworkObject: [''],
       sourceNetworkObjectGroup: [''],
 
+      // Source Service Info
       sourcePorts: ['', Validators.required],
       sourceServiceObject: [''],
       sourceServiceObjectGroup: [''],
 
+      // Destination Network Info
       destinationIp: ['', Validators.required],
       destinationNetworkObject: [''],
       destinationNetworkObjectGroup: [''],
 
+      // Destination Service Info
       destinationPorts: ['', Validators.required],
       destinationServiceObject: [''],
       destinationServiceObjectGroup: [''],
