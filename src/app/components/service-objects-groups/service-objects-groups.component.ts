@@ -174,7 +174,7 @@ export class ServiceObjectsGroupsComponent implements OnInit {
   }
 
   importObjects(objects) {
-    // TODO: Validation.
+    // TODO: Validation: Throw error on duplicate name.
     objects.forEach(object => {
       if (object.GroupName) {
         const group = this.serviceObjectGroups.find(g => g.Name === object.GroupName);

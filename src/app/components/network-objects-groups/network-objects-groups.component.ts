@@ -174,7 +174,7 @@ export class NetworkObjectsGroupsComponent implements OnInit {
   }
 
   importObjects(objects) {
-    // TODO: Validation.
+    // TODO: Validation: Throw Error on Duplicate Name.
     objects.forEach(object => {
       if (object.GroupName) {
         const group = this.networkObjectGroups.find(g => g.Name === object.GroupName);
