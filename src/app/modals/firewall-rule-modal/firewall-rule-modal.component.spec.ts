@@ -4,6 +4,8 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
+import { HttpHandler, HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -15,7 +17,7 @@ describe('FirewallRuleModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
       declarations: [ FirewallRuleModalComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, HttpClient, HttpHandler, CookieService]
     })
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(FirewallRuleModalComponent);
