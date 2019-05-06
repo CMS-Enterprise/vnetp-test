@@ -10,6 +10,13 @@ import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
+import { Vrf } from 'src/app/models/d42/vrf';
+import { NetworkObjectDto } from 'src/app/models/network-object-dto';
+import { NetworkObject } from 'src/app/models/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-object-group';
+import { ServiceObject } from 'src/app/models/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -17,15 +24,21 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./network-security-profile-detail.component.css']
 })
 export class NetworkSecurityProfileDetailComponent implements OnInit {
-
+  Id = '';
   subnet: Subnet;
   dirty: boolean;
   deployedState: boolean;
   firewall_rules: any;
+
+  networkObjects: Array<NetworkObject>;
+  networkObjectGroups: Array<NetworkObjectGroup>;
+  serviceObjects: Array<ServiceObject>;
+  serviceObjectGroups: Array<ServiceObjectGroup>;
+
+
   editFirewallRuleIndex: number;
   networkObjectModalMode: ModalMode;
   networkObjectModalSubscription: Subscription;
-  Id = '';
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
@@ -61,17 +74,38 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
       data => {
         this.subnet = data as Subnet;
         this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
-        this.getFirewallRules();
+        this.getSubnetCustomFields();
+        this.getVrfCustomFields();
       }
     );
   }
 
-  getFirewallRules() {
+  getSubnetCustomFields() {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
     this.firewall_rules = JSON.parse(firewallrules.value) as Array<NetworkSecurityProfileRule>;
     }
+  }
+
+  getVrfCustomFields() {
+    this.automationApiService.getVrfs().subscribe(data => {
+      const result = data;
+      const vrf = result.find(v => v.id === this.subnet.vrf_group_id);
+
+      const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+
+      this.networkObjects = networkObjectDto.NetworkObjects;
+      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+
+      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+
+      this.serviceObjects = serviceObjectDto.ServiceObjects;
+      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+
+      console.log(this.networkObjects, this.networkObjectGroups, this.serviceObjects, this.serviceObjectGroups);
+
+    }, error => { console.log(error); });
   }
 
   addFirewallRule() {
