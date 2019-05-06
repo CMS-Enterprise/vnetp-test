@@ -19,7 +19,6 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-
         <label for="name">Name</label>
         <input
           type="text"
@@ -86,6 +85,8 @@
             </td>
             <td>
               <fa name="pencil" (click)="editNetworkObject(netObj)"> </fa>
+              <fa name="trash" (click)="deleteNetworkObject(netObj)">
+              </fa>
             </td>
           </tr>
         </tbody>
