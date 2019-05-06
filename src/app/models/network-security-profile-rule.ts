@@ -10,6 +10,16 @@ export class NetworkSecurityProfileRule {
     Protocol: number;
 
     Direction: number;
+    
+    SourceIP: string;
+
+    SourceObject: string;
+
+    SourceObjectGroup: string;
+
+    SourcePorts: string;
+
+    SourceServiceGroup: string;
 
     DestinationIP: string;
 
@@ -20,16 +30,6 @@ export class NetworkSecurityProfileRule {
     DestinationPorts: string;
 
     DestinationServiceGroup: string;
-
-    SourceIP: string;
-
-    SourceObject: string;
-
-    SourceObjectGroup: string;
-
-    SourcePorts: string;
-
-    SourceServiceGroup: string;
 
     Log: boolean;
 

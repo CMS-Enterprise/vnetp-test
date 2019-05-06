@@ -66,6 +66,7 @@ export class FirewallRuleModalComponent implements OnInit {
       name: ['', Validators.required],
       action: ['', Validators.required],
       sourceIp: ['', Validators.required],
+      source
       sourcePorts: ['', Validators.required],
       destinationIp: ['', Validators.required],
       destinationPorts: ['', Validators.required]
