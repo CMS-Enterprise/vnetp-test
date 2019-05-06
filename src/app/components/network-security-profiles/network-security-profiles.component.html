@@ -19,7 +19,7 @@
         <tbody>
           <tr *ngFor="let subnet of subnets.subnets">
             <td>
-              <a href="/network-security-profiles/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+              <a routerLink="/network-security-profiles/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
             </td>
             <td>
               {{ getFirewallRulesCount(subnet) }}
