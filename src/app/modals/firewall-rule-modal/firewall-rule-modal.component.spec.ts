@@ -59,6 +59,12 @@ describe('FirewallRuleModalComponent', () => {
     expect(direction.valid).toBeTruthy();
   });
 
+  it('sourceNetworkType should not be required and should have default value ip', () => {
+    const sourceNetworkType = component.form.controls.sourceNetworkType;
+    expect(sourceNetworkType.valid).toBeTruthy();
+    expect(sourceNetworkType.value === 'ip').toBeTruthy();
+  });
+
   it ('sourceIp should be required', () =>  {
     const sourceIp = component.form.controls.sourceIp;
     expect(sourceIp.valid).toBeFalsy();
@@ -72,6 +78,12 @@ describe('FirewallRuleModalComponent', () => {
   it('sourceNetworkObjectGroup should not be required', () => {
     const sourceNetworkObjectGroup = component.form.controls.sourceNetworkObjectGroup;
     expect(sourceNetworkObjectGroup.valid).toBeTruthy();
+  });
+
+  it('sourceServiceType should not be required and should have default value port', () => {
+    const sourceServiceType = component.form.controls.sourceServiceType;
+    expect(sourceServiceType.valid).toBeTruthy();
+    expect(sourceServiceType.value === 'port').toBeTruthy();
   });
 
   it ('sourcePorts should be required', () =>  {
@@ -89,6 +101,12 @@ describe('FirewallRuleModalComponent', () => {
     expect(sourceServiceObjectGroup.valid).toBeTruthy();
   });
 
+  it('destinationNetworkType should not be required and should have default value ip', () => {
+    const destinationNetworkType = component.form.controls.destinationNetworkType;
+    expect(destinationNetworkType.valid).toBeTruthy();
+    expect(destinationNetworkType.value === 'ip').toBeTruthy();
+  });
+
   it('destinationIp should be required', () => {
     const destinationIp = component.form.controls.destinationIp;
     expect(destinationIp.valid).toBeFalsy();
@@ -102,6 +120,12 @@ describe('FirewallRuleModalComponent', () => {
   it('destinationNetworkObjectGroup should not be required', () => {
     const destinationNetworkObjectGroup = component.form.controls.destinationNetworkObjectGroup;
     expect(destinationNetworkObjectGroup.valid).toBeTruthy();
+  });
+
+  it('destinationServiceType should not be required and should have default value port', () => {
+    const destinationServiceType = component.form.controls.destinationServiceType;
+    expect(destinationServiceType.valid).toBeTruthy();
+    expect(destinationServiceType.value === 'port').toBeTruthy();
   });
 
   it ('destinationPorts should be required', () =>  {
@@ -122,5 +146,5 @@ describe('FirewallRuleModalComponent', () => {
   it('log should not be required', () => {
     const log = component.form.controls.log;
     expect(log.valid).toBeTruthy();
-  })
+  });
 });

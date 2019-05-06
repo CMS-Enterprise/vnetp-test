@@ -4,7 +4,7 @@
   [dismissable]="false"
   (onOpen)="getData()"
   customClass="large-modal"
-  >
+>
   <div class="modal-header">
     <h4 class="modal-title">Firewall Rule</h4>
     <button
@@ -33,8 +33,7 @@
       </div>
 
       <div class="form-row">
-
-      <div class="form-group col-md-6">
+        <div class="form-group col-md-6">
           <label for="type">Action</label>
           <select
             name="type"
@@ -44,34 +43,58 @@
             aria-label="Type"
           >
             <option></option>
-            <option value="action">Permit</option>
+            <option value="permit">Permit</option>
             <option value="deny">Deny</option>
           </select>
           <div *ngIf="submitted && f.action.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
           </div>
         </div>
-
-    </div>
-
-      <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="name">Source IP</label>
-        <input
-          type="text"
-          formControlName="sourceIp"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
-          aria-label="Name"
-        />
-        <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
-          <div *ngIf="f.sourceIp.errors.required">
-            Source IP is required
-          </div>
-        </div>
       </div>
 
-      <div class="form-group col-md-6">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+
+            <label for="name">Source Network Type</label>
+            <select
+              name="sourceNetworkType"
+              formControlName="sourceNetworkType"
+              class="form-control"
+              aria-label="Source Network Type"
+            >
+              <option value="ip">IP</option>
+              <option value="object">Network Object</option>
+              <option value="objectGroup">Network Object Group</option>
+            </select>
+
+          <label for="name">Source IP</label>
+          <input
+            type="text"
+            formControlName="sourceIp"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceIp.errors.required">
+              Source IP is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+              <label for="name">Source Service Type</label>
+            <select
+              name="sourceServiceType"
+              formControlName="sourceServiceType"
+              class="form-control"
+              aria-label="Source Service Type"
+            >
+              <option value="port">Port</option>
+              <option value="object">Service Object</option>
+              <option value="objectGroup">Service Object Group</option>
+            </select>
+
           <label for="name">Source Port</label>
           <input
             type="text"
@@ -80,7 +103,10 @@
             [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
             aria-label="Name"
           />
-          <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
+          <div
+            *ngIf="submitted && f.sourcePorts.errors"
+            class="invalid-feedback"
+          >
             <div *ngIf="f.sourcePorts.errors.required">
               Source Port is required
             </div>
@@ -88,27 +114,55 @@
         </div>
       </div>
 
+      <hr />
+
       <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="name">Destination IP</label>
-        <input
-          type="text"
-          formControlName="destinationIp"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
-          aria-label="Name"
-        />
-        <div
-          *ngIf="submitted && f.destinationIp.errors"
-          class="invalid-feedback"
-        >
-          <div *ngIf="f.destinationIp.errors.required">
-            Destination IP is required
+        <div class="form-group col-md-6">
+
+          <label for="name">Destination Network Type</label>
+          <select
+            name="destinationNetworkType"
+            formControlName="destinationNetworkType"
+            class="form-control"
+            aria-label="Destination Network Type"
+          >
+            <option value="ip">IP</option>
+            <option value="object">Network Object</option>
+            <option value="objectGroup">Network Object Group</option>
+          </select>
+
+          <label for="name">Destination IP</label>
+          <input
+            type="text"
+            formControlName="destinationIp"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
+            aria-label="Name"
+          />
+          <div
+            *ngIf="submitted && f.destinationIp.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationIp.errors.required">
+              Destination IP is required
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-group col-md-6">
+        <div class="form-group col-md-6">
+            <label for="name">Destination Service Type</label>
+            <select
+              name="destinationServiceType"
+              formControlName="destinationServiceType"
+              class="form-control"
+              aria-label="Destination Service Type"
+            >
+              <option value="port">Port</option>
+              <option value="object">Service Object</option>
+              <option value="objectGroup">Service Object Group</option>
+            </select>
+
+
           <label for="name">Destination Ports</label>
           <input
             type="text"
