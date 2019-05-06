@@ -6,11 +6,9 @@ import { Papa } from 'ngx-papaparse';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
-import { Vrf } from 'src/app/models/d42/vrf';
 import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { NetworkObject } from 'src/app/models/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-object-group';
@@ -95,15 +93,17 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
       const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
 
-      this.networkObjects = networkObjectDto.NetworkObjects;
-      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+      if (networkObjectDto) {
+        this.networkObjects = networkObjectDto.NetworkObjects;
+        this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+      }
 
       const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
 
-      this.serviceObjects = serviceObjectDto.ServiceObjects;
-      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-
-      console.log(this.networkObjects, this.networkObjectGroups, this.serviceObjects, this.serviceObjectGroups);
+      if (serviceObjectDto) {
+        this.serviceObjects = serviceObjectDto.ServiceObjects;
+        this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+      }
 
     }, error => { console.log(error); });
   }
