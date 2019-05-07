@@ -27,7 +27,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   subnet: Subnet;
   dirty: boolean;
   deployedState: boolean;
-  firewall_rules: any;
+  firewallRules: any;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -42,7 +42,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
-    this.firewall_rules = [];
+    this.firewallRules = [];
    }
 
   ngOnInit() {
@@ -51,21 +51,21 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   moveFirewallRule(value: number, rule) {
-    const ruleIndex = this.firewall_rules.indexOf(rule);
+    const ruleIndex = this.firewallRules.indexOf(rule);
 
     // If the rule isn't in the array, is at the start of the array and requested to move up
     // or if the rule is at the end of the array, return.
-    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewall_rules.length) { return; }
+    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewallRules.length) { return; }
 
-    const nextRule = this.firewall_rules[ruleIndex + value];
+    const nextRule = this.firewallRules[ruleIndex + value];
 
     // If the next rule doesn't exist, return.
     if (nextRule === null) { return; }
 
-    const nextRuleIndex = this.firewall_rules.indexOf(nextRule);
+    const nextRuleIndex = this.firewallRules.indexOf(nextRule);
 
-    [this.firewall_rules[ruleIndex], this.firewall_rules[nextRuleIndex]] =
-    [this.firewall_rules[nextRuleIndex], this.firewall_rules[ruleIndex]];
+    [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] =
+    [this.firewallRules[nextRuleIndex], this.firewallRules[ruleIndex]];
   }
 
   getSubnet() {
@@ -83,7 +83,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
-    this.firewall_rules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
+    this.firewallRules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
     }
   }
 
@@ -109,26 +109,16 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     }, error => { console.log(error); });
   }
 
-  addFirewallRule() {
-    if (this.firewall_rules == null) { this.firewall_rules = []; }
-
-    const nspr = new FirewallRule();
-    nspr.Edit = true;
-    nspr.Deleted = false;
-    nspr.Updated = true;
-    nspr.Action =  0;
-    this.firewall_rules.push(nspr);
-  }
 
   duplicateFirewallRule(rule) {
-    const ruleIndex = this.firewall_rules.indexOf(rule);
+    const ruleIndex = this.firewallRules.indexOf(rule);
 
     if (ruleIndex === -1) { return; }
 
     const dupRule = Object.assign({}, rule);
     dupRule.Deleted = false;
 
-    this.firewall_rules.splice(ruleIndex, 0, dupRule);
+    this.firewallRules.splice(ruleIndex, 0, dupRule);
   }
 
   createFirewallRule() {
@@ -146,7 +136,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     dto.VrfId = this.subnet.vrf_group_id;
 
     this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
-    this.editFirewallRuleIndex = this.firewall_rules.indexOf(firewallRule);
+    this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
     this.ngx.getModal('firewallRuleModal').open();
   }
 
@@ -166,15 +156,15 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
 
   saveFirewallRule(firewallRule: FirewallRule) {
     if (this.networkObjectModalMode === ModalMode.Create) {
-      this.firewall_rules.push(firewallRule);
+      this.firewallRules.push(firewallRule);
     } else {
-      this.firewall_rules[this.editFirewallRuleIndex] = firewallRule;
+      this.firewallRules[this.editFirewallRuleIndex] = firewallRule;
     }
     this.dirty = true;
   }
 
   updateFirewallRules() {
-    const firewallRules = this.firewall_rules.filter(r => !r.Deleted);
+    const firewallRules = this.firewallRules.filter(r => !r.Deleted);
 
     var extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
@@ -212,10 +202,10 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   }
 
   insertFirewallRules(rules) {
-    if (this.firewall_rules == null) { this.firewall_rules = []; }
+    if (this.firewallRules == null) { this.firewallRules = []; }
     rules.forEach(rule => {
       if (rule.Name !== '') {
-        this.firewall_rules.push(rule);
+        this.firewallRules.push(rule);
       }
     });
   }

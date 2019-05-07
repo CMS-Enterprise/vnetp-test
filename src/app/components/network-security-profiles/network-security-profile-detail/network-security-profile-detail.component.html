@@ -12,7 +12,7 @@
       <fa name="refresh" size="2x"></fa> 
     </button>
 
-    <button type="button" class="btn btn-success" (click)="addFirewallRule()" aria-label="Add Firewall Rule"> 
+    <button type="button" class="btn btn-success" (click)="createFirewallRule()" aria-label="Add Firewall Rule"> 
       <fa name="plus" size="2x"></fa>  
     </button>  
 
@@ -39,39 +39,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let firewallRule of firewall_rules"
+    <tr *ngFor="let firewallRule of firewallRules"
       [ngClass]="{
         'table-danger': firewallRule.Deleted,
         'table-warning': firewallRule.Updated
       }"
-    >
+      >
       <td>
-        <p [hidden]="firewallRule.Edit">
-          {{firewallRule.Name}}
-        </p>
-
-        <input class="form-control" [(ngModel)]="firewallRule.Name" [hidden]="!firewallRule.Edit" aria-label="Name">
+        <p>{{firewallRule.Name}}</p>
       </td>
       <td>
-        <p [ngClass]="{'fg-danger': firewallRule.Action == 'deny', 'fg-success': firewallRule.Action == 'allow'}"
-           [hidden]="firewallRule.Edit">
-          {{firewallRule.Action}}
-        </p>
-
-        <select class="form-control" [(ngModel)]="firewallRule.Action" [hidden]="!firewallRule.Edit" aria-label="Action">
-          <option value="deny">Deny</option>
-          <option value="permit">Permit</option>
-        </select>
+        <p>{{firewallRule.Action}}</p>
       </td>
       <td>
-        <p [hidden]="firewallRule.Edit">
-          {{firewallRule.Protocol}}
-        </p>
-        <select class="form-control" [(ngModel)]="firewallRule.Protocol" [hidden]="!firewallRule.Edit" aria-label="Protocol">
-          <option value="icmp">ICMP</option>  
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>     
-        </select>
+        <p>{{firewallRule.Protocol}}</p>
       </td>
       <td>
        {{firewallRule.Direction}}
