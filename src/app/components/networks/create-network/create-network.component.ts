@@ -91,7 +91,7 @@ export class CreateNetworkComponent implements OnInit {
       return;
     }
 
-    this.automationApiService.getSubnets().subscribe(data => {
+    this.automationApiService.getSubnets(this.subnet.vrf_group_id).subscribe(data => {
       const subnetResponse = data as SubnetResponse;
       this.checkNetwork(subnetResponse.subnets, action);
     });

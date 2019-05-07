@@ -49,15 +49,21 @@ export class AutomationApiService {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
   }
 
-  getSubnets() {
-    return this.http.get(environment.apiBase + '/api/1.0/subnets/');
+  getSubnets(vrfId?: number) {
+    let uri = '/api/1.0/subnets';
+
+    if (vrfId) {
+      uri += `?vrf_group_id=${vrfId}`;
+    }
+
+    return this.http.get(environment.apiBase + uri);
   }
 
-  getSubnet(id: string){
+  getSubnet(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/subnets/${id}`);
   }
 
-  getSubnetIps(id: string){
+  getSubnetIps(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
   }
 }
