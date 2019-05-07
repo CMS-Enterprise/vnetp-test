@@ -18,11 +18,11 @@ import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 
 @Component({
-  selector: 'app-network-security-profile-detail',
-  templateUrl: './network-security-profile-detail.component.html',
-  styleUrls: ['./network-security-profile-detail.component.css']
+  selector: 'app-firewall-rules-detail',
+  templateUrl: './firewall-rules-detail.component.html',
+  styleUrls: ['./firewall-rules-detail.component.css']
 })
-export class NetworkSecurityProfileDetailComponent implements OnInit {
+export class FirewallRulesDetailComponent implements OnInit {
   Id = '';
   subnet: Subnet;
   dirty: boolean;

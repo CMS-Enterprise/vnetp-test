@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
-  selector: 'app-network-security-profiles',
-  templateUrl: './network-security-profiles.component.html',
-  styleUrls: ['./network-security-profiles.component.css']
+  selector: 'app-firewall-rules',
+  templateUrl: './firewall-rules.component.html',
+  styleUrls: ['./firewall-rules.component.css']
 })
-export class NetworkSecurityProfilesComponent implements OnInit {
+export class FirewallRulesComponent implements OnInit {
 
   subnets: any;
 

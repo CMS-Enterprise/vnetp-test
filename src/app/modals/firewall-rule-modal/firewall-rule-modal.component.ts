@@ -14,6 +14,7 @@ import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
 import { RuleLocation } from 'src/app/models/rule-location';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -24,6 +25,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   vrfId: number;
+  vrf: Vrf;
 
   sourceNetworkTypeSubscription: Subscription;
   sourceServiceTypeSubscription: Subscription;
@@ -180,7 +182,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   getVrfCustomFields() {
     this.automationApiService.getVrfs().subscribe(data => {
       const result = data;
-      // FIXME: Temporarily hardcoding VRF ID.
+
       const vrf = result.find(v => v.id === this.vrfId);
 
       const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;

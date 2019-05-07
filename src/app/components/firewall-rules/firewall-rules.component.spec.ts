@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NetworkSecurityProfilesComponent } from './network-security-profiles.component';
+import { FirewallRulesComponent } from './firewall-rules.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { HttpHandler, HttpClient, HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,9 +11,9 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('NetworkSecurityProfilesComponent', () => {
-  let component: NetworkSecurityProfilesComponent;
-  let fixture: ComponentFixture<NetworkSecurityProfilesComponent>;
+describe('FirewallRulesComponent', () => {
+  let component: FirewallRulesComponent;
+  let fixture: ComponentFixture<FirewallRulesComponent>;
 
   const ngx: NgxSmartModalService = new NgxSmartModalService();
 
@@ -27,7 +27,7 @@ describe('NetworkSecurityProfilesComponent', () => {
       ReactiveFormsModule,
       RouterTestingModule],
       declarations: [ 
-        NetworkSecurityProfilesComponent,
+        FirewallRulesComponent,
         FirewallRuleModalComponent ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
@@ -35,7 +35,7 @@ describe('NetworkSecurityProfilesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NetworkSecurityProfilesComponent);
+    fixture = TestBed.createComponent(FirewallRulesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

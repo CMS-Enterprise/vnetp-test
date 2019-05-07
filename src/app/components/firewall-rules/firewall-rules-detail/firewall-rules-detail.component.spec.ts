@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { NetworkSecurityProfileDetailComponent } from './network-security-profile-detail.component';
+import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,16 +12,16 @@ import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRule } from 'src/app/models/firewall-rule';
 
-describe('NetworkSecurityProfileDetailComponent', () => {
-  let component: NetworkSecurityProfileDetailComponent;
-  let fixture: ComponentFixture<NetworkSecurityProfileDetailComponent>;
+describe('FirewallRulesDetailComponent', () => {
+  let component: FirewallRulesDetailComponent;
+  let fixture: ComponentFixture<FirewallRulesDetailComponent>;
   let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
       NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
-      declarations: [ NetworkSecurityProfileDetailComponent,
+      declarations: [ FirewallRulesDetailComponent,
       FirewallRuleModalComponent ],
       providers: [NgxSmartModalService, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
@@ -29,7 +29,7 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NetworkSecurityProfileDetailComponent);
+    fixture = TestBed.createComponent(FirewallRulesDetailComponent);
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     fixture.detectChanges();

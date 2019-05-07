@@ -20,9 +20,9 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { NetworksComponent } from './components/networks/networks.component';
-import { NetworkSecurityProfilesComponent } from './components/network-security-profiles/network-security-profiles.component';
+import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { NetworkSecurityProfileDetailComponent } from './components/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
+import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -53,8 +53,8 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
     LoginComponent,
     NetworksComponent,
     NetworksDetailComponent,
-    NetworkSecurityProfilesComponent,
-    NetworkSecurityProfileDetailComponent,
+    FirewallRulesComponent,
+    FirewallRulesDetailComponent,
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent,
