@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-create-network',
@@ -13,6 +14,7 @@ import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 })
 export class CreateNetworkComponent implements OnInit {
   subnet: Subnet;
+  vrfs: Vrf[];
 
   cidrAddress: string;
   usableRange: string;
@@ -37,7 +39,15 @@ export class CreateNetworkComponent implements OnInit {
     this.subnet = new Subnet();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getVrf();
+  }
+
+  getVrf() {
+    this.automationApiService.getVrfs().subscribe(data => {
+      this.vrfs = data;
+    });
+  }
 
   calculateNetwork() {
     this.nameExists = false;
@@ -72,9 +82,11 @@ export class CreateNetworkComponent implements OnInit {
   createNetwork(action: string) {
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
+    console.log(this.subnet);
+
     if (!isValid || !this.subnet.name || !this.subnet.network ||
       !this.subnet.mask_bits || !this.subnet.subnet_mask ||
-      !this.tier) {
+      !this.subnet.vrf_group_id) {
       this.toastr.error('Invalid Data');
       return;
     }
@@ -128,7 +140,7 @@ export class CreateNetworkComponent implements OnInit {
   private launchJobs() {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
-    extra_vars.tier = this.tier;
+    extra_vars.vrf_ = this.tier;
     extra_vars.vlan_id = this.vlanId;
 
     const body = { extra_vars };
