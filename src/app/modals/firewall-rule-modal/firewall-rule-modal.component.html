@@ -95,9 +95,9 @@
             *ngIf="f.sourceNetworkType.value === 'object'"
           >
             <option
-              *ngFor="let serviceObject of serviceObjects"
-              [ngValue]="serviceObject.Name"
-              >{{ serviceObject.Name }}</option
+              *ngFor="let networkObject of networkObjects"
+              [ngValue]="networkObject.Name"
+              >{{ networkObject.Name }}</option
             >
           </select>
           <div
@@ -124,9 +124,9 @@
             *ngIf="f.sourceNetworkType.value === 'objectGroup'"
           >
             <option
-              *ngFor="let serviceObject of serviceObjectGroups"
-              [ngValue]="serviceObjectGroup.Name"
-              >{{ serviceObjectGroup.Name }}</option
+              *ngFor="let networkObjectGroup of networkObjectGroups"
+              [ngValue]="networkObjectGroup.Name"
+              >{{ networkObjectGroup.Name }}</option
             >
           </select>
           <div
@@ -282,9 +282,9 @@
             *ngIf="f.destinationNetworkType.value === 'object'"
           >
             <option
-              *ngFor="let serviceObject of serviceObjects"
-              [ngValue]="serviceObject.Name"
-              >{{ serviceObject.Name }}</option
+              *ngFor="let networkObject of networkObjects"
+              [ngValue]="networkObject.Name"
+              >{{ networkObject.Name }}</option
             >
           </select>
           <div
@@ -311,9 +311,9 @@
             *ngIf="f.destinationNetworkType.value === 'objectGroup'"
           >
             <option
-              *ngFor="let serviceObject of serviceObjectGroups"
-              [ngValue]="serviceObjectGroup.Name"
-              >{{ serviceObjectGroup.Name }}</option
+              *ngFor="let networkObjectGroup of networkObjectGroups"
+              [ngValue]="networkObjectGroup.Name"
+              >{{ networkObjectGroup.Name }}</option
             >
           </select>
           <div
