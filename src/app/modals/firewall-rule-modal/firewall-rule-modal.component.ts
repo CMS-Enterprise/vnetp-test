@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
-import { ValidateIpv4Address, ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { ServiceObject } from 'src/app/models/service-object';
 import { NetworkObject } from 'src/app/models/network-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
@@ -11,6 +11,8 @@ import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
+import { RuleLocation } from 'src/app/models/rule-location';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -38,12 +40,61 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   save() {
     this.submitted = true;
     if (this.form.invalid) {
+      console.log(this.form);
       return;
     }
 
     const firewallRule = new NetworkSecurityProfileRule();
-    // TODO: Assign form values to firewall rule
-    // TODO: Look up network and service objects from VRF
+
+    firewallRule.Name = this.form.controls.name.value;
+    firewallRule.Action = this.form.controls.action.value;
+    firewallRule.Protocol = this.form.controls.protocol.value;
+    firewallRule.Direction = this.form.controls.direction.value;
+    firewallRule.Log = this.form.controls.log.value;
+
+    const sourceNetworkType = this.form.controls.sourceNetworkType.value;
+    if (sourceNetworkType  === 'ip') {
+    firewallRule.SourceIP = this.form.controls.sourceIp.value;
+    } else if (sourceNetworkType === 'object') {
+      FirewallRuleService.mapNetworkObject(firewallRule, this.form.controls.sourceNetworkObject.value,
+         this.networkObjects, RuleLocation.Source);
+    } else if (sourceNetworkType === 'objectGroup') {
+      FirewallRuleService.mapNetworkObjectGroup(firewallRule, this.form.controls.sourceNetworkObjectGroup.value,
+         this.networkObjectGroups, RuleLocation.Source);
+      }
+
+    const sourceServiceType = this.form.controls.sourceServiceType.value;
+    if (sourceServiceType === 'port') {
+      firewallRule.SourcePorts = this.form.controls.sourcePorts.value;
+    } else if (sourceServiceType === 'object') {
+      FirewallRuleService.mapServiceObject(firewallRule, this.form.controls.sourceServiceObject.value,
+        this.serviceObjects, RuleLocation.Source);
+    } else if (sourceServiceType === 'objectGroup') {
+      FirewallRuleService.mapServiceObjectGroup(firewallRule, this.form.controls.sourceServiceObjectGroup.value,
+        this.serviceObjectGroups, RuleLocation.Source);
+    }
+
+    const destinationNetworkType = this.form.controls.destinationNetworkType.value;
+    if (destinationNetworkType === 'ip') {
+      firewallRule.DestinationIP = this.form.controls.destinationIp.value;
+    } else if (destinationNetworkType === 'object') {
+      FirewallRuleService.mapNetworkObject(firewallRule, this.form.controls.destinationNetworkObject.value,
+        this.networkObjects, RuleLocation.Destination);
+    } else if (destinationNetworkType === 'objectGroup') {
+      FirewallRuleService.mapNetworkObjectGroup(firewallRule, this.form.controls.destinationNetworkObjectGroup.value,
+        this.networkObjectGroups, RuleLocation.Destination);
+    }
+
+    const destinationServiceType = this.form.controls.destinationServiceType.value;
+    if (destinationServiceType === 'port') {
+      firewallRule.DestinationPorts = this.form.controls.destinationPorts.value;
+    } else if (destinationServiceType === 'object') {
+      FirewallRuleService.mapServiceObject(firewallRule, this.form.controls.destinationServiceObject.value,
+        this.serviceObjects, RuleLocation.Destination);
+    } else if (destinationServiceType === 'objectGroup') {
+      FirewallRuleService.mapServiceObjectGroup(firewallRule, this.form.controls.destinationServiceObjectGroup.value,
+        this.serviceObjectGroups, RuleLocation.Destination);
+    }
 
     this.ngx.resetModalData('firewallRuleModal');
     this.ngx.setModalData(Object.assign({}, firewallRule), 'firewallRuleModal');
@@ -62,31 +113,58 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const firewallRule = Object.assign({}, this.ngx.getModalData('firewallRuleModal') as NetworkSecurityProfileRule);
     if (firewallRule !== undefined) {
 
-      this.form.controls.name.setValue(firewallRule.Name);
-      this.form.controls.action.setValue(firewallRule.Action);
-      this.form.controls.protocol.setValue(firewallRule.Protocol);
-      this.form.controls.direction.setValue(firewallRule.Direction);
+        this.form.controls.name.setValue(firewallRule.Name);
+        this.form.controls.action.setValue(firewallRule.Action);
+        this.form.controls.protocol.setValue(firewallRule.Protocol);
+        this.form.controls.direction.setValue(firewallRule.Direction);
+        this.form.controls.log.setValue(firewallRule.Log);
 
-      this.form.controls.sourceIp.setValue(firewallRule.SourceIP);
-      this.form.controls.sourceNetworkObject.setValue(firewallRule.SourceNetworkObject);
-      this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.SourceNetworkObjectGroup);
+        if (firewallRule.SourceIP) {
+          this.form.controls.sourceNetworkType.setValue('ip');
+          this.form.controls.sourceIp.setValue(firewallRule.SourceIP);
+        } else if (firewallRule.SourceNetworkObject) {
+          this.form.controls.sourceNetworkType.setValue('object');
+          this.form.controls.sourceNetworkObject.setValue(firewallRule.SourceNetworkObject.Name);
+        } else if (firewallRule.SourceNetworkObjectGroup) {
+          this.form.controls.sourceNetworkType.setValue('objectGroup');
+          this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.SourceNetworkObjectGroup.Name);
+        }
 
-      this.form.controls.sourcePorts.setValue(firewallRule.SourcePorts);
-      this.form.controls.sourceServiceObject.setValue(firewallRule.SourceServiceObject);
-      this.form.controls.sourceServiceObjectGroup.setValue(firewallRule.SourceServiceObjectGroup);
+        if (firewallRule.SourcePorts) {
+          this.form.controls.sourceServiceType.setValue('port');
+          this.form.controls.sourcePorts.setValue(firewallRule.SourcePorts);
+        } else if (firewallRule.SourceServiceObject) {
+          this.form.controls.sourceServiceType.setValue('object');
+          this.form.controls.sourceServiceObject.setValue(firewallRule.SourceServiceObject.Name);
+        } else if (firewallRule.SourceServiceObjectGroup) {
+          this.form.controls.sourceServiceType.setValue('objectGroup');
+          this.form.controls.sourceServiceObjectGroup.setValue(firewallRule.SourceServiceObjectGroup.Name);
+        }
 
-      this.form.controls.destinationIp.setValue(firewallRule.DestinationIP);
-      this.form.controls.destinationNetworkObject.setValue(firewallRule.DestinationNetworkObject);
-      this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.DestinationNetworkObjectGroup);
+        if (firewallRule.DestinationIP) {
+          this.form.controls.destinationNetworkType.setValue('ip');
+          this.form.controls.destinationIp.setValue(firewallRule.DestinationIP);
+        } else if (firewallRule.DestinationNetworkObject) {
+          this.form.controls.destinationNetworkType.setValue('object');
+          this.form.controls.destinationNetworkObject.setValue(firewallRule.DestinationNetworkObject.Name);
+        } else if (firewallRule.DestinationNetworkObjectGroup) {
+          this.form.controls.destinationNetworkType.setValue('objectGroup');
+          this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.DestinationNetworkObjectGroup.Name);
+        }
 
-      this.form.controls.destinationPorts.setValue(firewallRule.DestinationPorts);
-      this.form.controls.destinationServiceObject.setValue(firewallRule.DestinationServiceObject);
-      this.form.controls.destinationServiceObjectGroup.setValue(firewallRule.DestinationServiceObjectGroup);
+        if (firewallRule.DestinationPorts) {
+          this.form.controls.destinationServiceType.setValue('port');
+          this.form.controls.destinationPorts.setValue(firewallRule.DestinationPorts);
+        } else if (firewallRule.DestinationServiceObject) {
+          this.form.controls.destinationServiceType.setValue('object');
+          this.form.controls.destinationServiceObject.setValue(firewallRule.DestinationServiceObject.Name);
+        } else if (firewallRule.DestinationServiceObjectGroup) {
+          this.form.controls.destinationServiceType.setValue('objectGroup');
+          this.form.controls.destinationServiceObjectGroup.setValue(firewallRule.DestinationServiceObjectGroup.Name);
+        }
 
-      this.form.controls.log.setValue(firewallRule.Log);
-
-      }
-
+        this.form.updateValueAndValidity();
+     }
     this.getVrfCustomFields();
   }
 

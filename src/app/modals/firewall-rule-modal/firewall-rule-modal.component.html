@@ -33,10 +33,10 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
           <label for="type">Action</label>
           <select
-            name="type"
+            name="action"
             formControlName="action"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
@@ -46,7 +46,24 @@
             <option value="permit">Permit</option>
           </select>
           <div *ngIf="submitted && f.action.errors" class="invalid-feedback">
-            <div *ngIf="f.type.errors.required">Type is required</div>
+            <div *ngIf="f.action.errors.required">Type is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="type">Protocol</label>
+          <select
+            name="protocol"
+            formControlName="protocol"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
+            aria-label="Protocol"
+          >
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+          </select>
+          <div *ngIf="submitted && f.protocol.errors" class="invalid-feedback">
+            <div *ngIf="f.protocol.errors.required">Protocol is required</div>
           </div>
         </div>
       </div>
