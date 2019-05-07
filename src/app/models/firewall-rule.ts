@@ -3,7 +3,7 @@ import { ServiceObject } from './service-object';
 import { NetworkObject } from './network-object';
 import { ServiceObjectGroup } from './service-object-group';
 
-export class NetworkSecurityProfileRule {
+export class FirewallRule {
     Id: number;
 
     Name: string;

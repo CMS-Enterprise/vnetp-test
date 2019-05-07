@@ -1,7 +1,7 @@
-import { NetworkSecurityProfileRule } from './network-security-profile-rule';
+import { FirewallRule } from './firewall-rule';
 
 export class FirewallRuleModalDto {
     VrfId: number;
 
-    FirewallRule: NetworkSecurityProfileRule;
+    FirewallRule: FirewallRule;
 }

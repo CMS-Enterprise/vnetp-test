@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { FirewallRuleService } from './firewall-rule.service';
 import { NetworkObject } from '../models/network-object';
-import { NetworkSecurityProfileRule } from '../models/network-security-profile-rule';
+import { FirewallRule } from '../models/firewall-rule';
 import { RuleLocation } from '../models/rule-location';
 import { NetworkObjectGroup } from '../models/network-object-group';
 import { ServiceObject } from '../models/service-object';
@@ -19,7 +19,7 @@ describe('FirewallRuleService', () => {
   // Network Object Mapping
   it('should map source network object', () => {
     const networkObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObject>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Source);
 
@@ -29,7 +29,7 @@ describe('FirewallRuleService', () => {
 
   it('should map destination network object', () => {
     const networkObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObject>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Destination);
 
@@ -38,7 +38,7 @@ describe('FirewallRuleService', () => {
   });
 
   it('should throw error with invalid network object', () => {
-    const firewallRule = {Name: 'Allow Test3'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test3'} as FirewallRule;
 
     expect(() => {FirewallRuleService.mapNetworkObject(firewallRule, 'Test3', new Array<NetworkObject>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Network Object.');
@@ -47,7 +47,7 @@ describe('FirewallRuleService', () => {
   // Network Object Group Mapping
   it('should map source network object group', () => {
     const networkObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObjectGroup>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Source);
 
@@ -58,7 +58,7 @@ describe('FirewallRuleService', () => {
 
   it('should map destination network object group', () => {
     const networkObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObjectGroup>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Destination);
 
@@ -67,7 +67,7 @@ describe('FirewallRuleService', () => {
   });
 
   it('should throw error with invalid network object group', () => {
-    const firewallRule = {Name: 'Allow Test3'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test3'} as FirewallRule;
 
     expect(() => {FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test3', new Array<NetworkObjectGroup>(), RuleLocation.Source); })
     .toThrowError('Unable to find Network Object Group.');
@@ -76,7 +76,7 @@ describe('FirewallRuleService', () => {
   // Map Service Object
   it('should map source service object', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
@@ -86,7 +86,7 @@ describe('FirewallRuleService', () => {
 
   it('should map destination service object', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Destination);
 
@@ -95,7 +95,7 @@ describe('FirewallRuleService', () => {
   });
 
   it('should throw error with invalid service object', () => {
-    const firewallRule = {Name: 'Allow Test3'} as NetworkSecurityProfileRule
+    const firewallRule = {Name: 'Allow Test3'} as FirewallRule
 
     expect(() => {FirewallRuleService.mapServiceObject(firewallRule, 'Test3', new Array<ServiceObject>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Service Object.');
@@ -104,7 +104,7 @@ describe('FirewallRuleService', () => {
   // Map Service Object Group
   it('should map source service object', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
@@ -114,7 +114,7 @@ describe('FirewallRuleService', () => {
 
   it('should map destination service object', () => {
     const serviceObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObjectGroup>;
-    const firewallRule = {Name: 'Allow Test2'} as NetworkSecurityProfileRule;
+    const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
     FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test2', serviceObjectGroups, RuleLocation.Destination);
 
@@ -123,7 +123,7 @@ describe('FirewallRuleService', () => {
   });
 
   it('should throw error with invalid service object', () => {
-    const firewallRule = {Name: 'Allow Test3'} as NetworkSecurityProfileRule
+    const firewallRule = {Name: 'Allow Test3'} as FirewallRule
 
     expect(() => {FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test3', new Array<ServiceObjectGroup>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Service Object Group.');

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NetworkSecurityProfileRule } from '../models/network-security-profile-rule';
+import { FirewallRule } from '../models/firewall-rule';
 import { ServiceObject } from '../models/service-object';
 import { ServiceObjectGroup } from '../models/service-object-group';
 import { NetworkObject } from '../models/network-object';
@@ -14,7 +14,7 @@ export class FirewallRuleService {
   constructor() { }
 
   /** Denormalizes Network Object by attaching directly to Firewall Rule, only required due to backend constraints. */
-  public static mapNetworkObject(firewallRule: NetworkSecurityProfileRule, objectName: string, networkObjects: Array<NetworkObject>,
+  public static mapNetworkObject(firewallRule: FirewallRule, objectName: string, networkObjects: Array<NetworkObject>,
                                  ruleLocation: RuleLocation) {
 
     const networkObject = networkObjects.find(n => n.Name === objectName);
@@ -31,7 +31,7 @@ export class FirewallRuleService {
   }
 
     /** Denormalizes Network Object Group by attaching directly to Firewall Rule, only required due to backend constraints. */
-  public static mapNetworkObjectGroup(firewallRule: NetworkSecurityProfileRule, objectGroupName: string,
+  public static mapNetworkObjectGroup(firewallRule: FirewallRule, objectGroupName: string,
                                       networkObjectGroups: Array<NetworkObjectGroup>, ruleLocation: RuleLocation ) {
     const networkObjectGroup = networkObjectGroups.find(n => n.Name === objectGroupName);
 
@@ -47,7 +47,7 @@ export class FirewallRuleService {
   }
 
     /** Denormalizes Service Object by attaching directly to Firewall Rule, only required due to backend constraints. */
-  public static mapServiceObject(firewallRule: NetworkSecurityProfileRule, objectName: string,
+  public static mapServiceObject(firewallRule: FirewallRule, objectName: string,
                                  serviceObjects: Array<ServiceObject>, ruleLocation: RuleLocation) {
    const serviceObject = serviceObjects.find(s => s.Name === objectName);
 
@@ -63,7 +63,7 @@ export class FirewallRuleService {
   }
 
   /** Denormalizes Service Object Group by attaching directly to Firewall Rule, only required due to backend constraints. */
-  public static mapServiceObjectGroup(firewallRule: NetworkSecurityProfileRule, objectGroupName: string,
+  public static mapServiceObjectGroup(firewallRule: FirewallRule, objectGroupName: string,
                                       serviceObjectGroups: Array<ServiceObjectGroup>, ruleLocation: RuleLocation) {
   const serviceObjectGroup = serviceObjectGroups.find(s => s.Name === objectGroupName);
 

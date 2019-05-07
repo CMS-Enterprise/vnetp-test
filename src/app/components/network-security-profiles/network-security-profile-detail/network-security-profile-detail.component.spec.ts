@@ -10,7 +10,7 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
-import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
+import { FirewallRule } from 'src/app/models/firewall-rule';
 
 describe('NetworkSecurityProfileDetailComponent', () => {
   let component: NetworkSecurityProfileDetailComponent;
@@ -40,8 +40,8 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   });
 
   it('should move firewall rule up', () => {
-    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
-    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+    component.firewall_rules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
 
     component.moveFirewallRule(-1, component.firewall_rules[2]);
 
@@ -50,8 +50,8 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   });
 
   it('should not move firewall rule at front of array up', () => {
-    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
-    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+    component.firewall_rules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
 
     component.moveFirewallRule(-1, component.firewall_rules[0]);
 
@@ -60,8 +60,8 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   });
 
   it('should not move firewall rule at end of array down', () => {
-    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
-    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+    component.firewall_rules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
 
     component.moveFirewallRule(1, component.firewall_rules[2]);
 
@@ -71,8 +71,8 @@ describe('NetworkSecurityProfileDetailComponent', () => {
 
 
   it('should move firewall rule down', () => {
-    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
-    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+    component.firewall_rules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
 
     component.moveFirewallRule(1, component.firewall_rules[1]);
 
@@ -87,8 +87,8 @@ describe('NetworkSecurityProfileDetailComponent', () => {
   });
 
   it('should duplicate firewall rule', () => {
-    component.firewall_rules = [{ Name: 'Test'} as NetworkSecurityProfileRule, { Name: 'Test2'} as NetworkSecurityProfileRule
-    , { Name: 'Test3'} as NetworkSecurityProfileRule];
+    component.firewall_rules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
 
     component.duplicateFirewallRule(component.firewall_rules[2]);
 

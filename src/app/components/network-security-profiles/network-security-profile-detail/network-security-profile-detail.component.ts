@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
+import { FirewallRule } from 'src/app/models/firewall-rule';
 import { Papa } from 'ngx-papaparse';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
@@ -83,7 +83,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     const firewallrules = this.subnet.custom_fields.find(c => c.key === 'firewall_rules');
 
     if (firewallrules) {
-    this.firewall_rules = JSON.parse(firewallrules.value) as Array<NetworkSecurityProfileRule>;
+    this.firewall_rules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
     }
   }
 
@@ -112,7 +112,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   addFirewallRule() {
     if (this.firewall_rules == null) { this.firewall_rules = []; }
 
-    const nspr = new NetworkSecurityProfileRule();
+    const nspr = new FirewallRule();
     nspr.Edit = true;
     nspr.Deleted = false;
     nspr.Updated = true;
@@ -137,7 +137,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     this.ngx.getModal('firewallRuleModal').open();
   }
 
-  editFirewallRule(firewallRule: NetworkSecurityProfileRule) {
+  editFirewallRule(firewallRule: FirewallRule) {
     this.subscribeToFirewallRuleModal();
     this.networkObjectModalMode = ModalMode.Edit;
 
@@ -164,7 +164,7 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
     });
   }
 
-  saveFirewallRule(firewallRule: NetworkSecurityProfileRule) {
+  saveFirewallRule(firewallRule: FirewallRule) {
     if (this.networkObjectModalMode === ModalMode.Create) {
       this.firewall_rules.push(firewallRule);
     } else {

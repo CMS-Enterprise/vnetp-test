@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { NetworkSecurityProfileRule } from 'src/app/models/network-security-profile-rule';
+import { FirewallRule } from 'src/app/models/firewall-rule';
 import { ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { ServiceObject } from 'src/app/models/service-object';
 import { NetworkObject } from 'src/app/models/network-object';
@@ -46,7 +46,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const firewallRule = new NetworkSecurityProfileRule();
+    const firewallRule = new FirewallRule();
 
     firewallRule.Name = this.form.controls.name.value;
     firewallRule.Action = this.form.controls.action.value;
