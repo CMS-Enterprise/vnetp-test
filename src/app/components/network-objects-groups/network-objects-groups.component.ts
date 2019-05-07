@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NetworkObject } from 'src/app/models/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -14,7 +14,7 @@ import { Papa } from 'ngx-papaparse';
   templateUrl: './network-objects-groups.component.html',
   styleUrls: ['./network-objects-groups.component.css']
 })
-export class NetworkObjectsGroupsComponent implements OnInit {
+export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   vrf: Vrf;
   networkObjects: Array<NetworkObject>;
@@ -195,16 +195,25 @@ export class NetworkObjectsGroupsComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    [this.networkObjectModalSubscription,
+    this.networkObjectGroupModalSubscription]
+    .forEach(sub => {
+      try {
+        if (sub) {
+          sub.unsubscribe();
+        } 
+      } catch (e) {
+        console.error(e);
+      }
+    })
+  }
+
   ngOnInit() {
     this.getVrf();
   }
 
   ngOnDestroy() {
-    try{
-    this.networkObjectModalSubscription.unsubscribe();
-    this.networkObjectGroupModalSubscription.unsubscribe();
-    } catch (e) {
-      console.log(e);
-    }
+    this.unsubAll();
   }
 }

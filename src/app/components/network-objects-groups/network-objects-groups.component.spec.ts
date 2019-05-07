@@ -1,5 +1,3 @@
-// TODO: Write mock for ngxSmartModal to test subscribe
-// unsubscribe and modal maninpulation.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
@@ -13,7 +11,6 @@ import { NgxMaskModule } from 'ngx-mask';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { NetworkObject } from 'src/app/models/network-object';
-import { ExpectedConditions } from 'protractor';
 import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 
 describe('NetworkObjectsGroupsComponent', () => {

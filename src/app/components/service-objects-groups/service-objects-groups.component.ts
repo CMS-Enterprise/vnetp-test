@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Vrf, VrfResponse } from 'src/app/models/d42/vrf';
@@ -14,7 +14,7 @@ import { ServiceObjectDto } from 'src/app/models/service-object-dto';
   templateUrl: './service-objects-groups.component.html',
   styleUrls: ['./service-objects-groups.component.css']
 })
-export class ServiceObjectsGroupsComponent implements OnInit {
+export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   vrf: Vrf;
   serviceObjects: Array<ServiceObject>;
@@ -195,16 +195,23 @@ export class ServiceObjectsGroupsComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    [this.serviceObjectModalSubscription,
+      this.serviceObjectGroupModalSubscription]
+      .forEach(sub => {
+        try {
+          sub.unsubscribe();
+        } catch (e) {
+          console.error(e);
+        }
+      });
+  }
+
   ngOnInit() {
     this.getVrf();
   }
 
   ngOnDestroy() {
-    try{
-    this.serviceObjectModalSubscription.unsubscribe();
-    this.serviceObjectGroupModalSubscription.unsubscribe();
-    } catch (e) {
-      console.log(e);
-    }
+    this.unsubAll();
   }
 }
