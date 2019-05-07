@@ -40,7 +40,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.api.getVrfs().subscribe(data => {
       const result = data as Vrf[]
       // FIXME: Move to multiple VRF
-      const vrf = result[0];
+      const vrf = result.find(r => r.id === 1);
 
       const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
 
