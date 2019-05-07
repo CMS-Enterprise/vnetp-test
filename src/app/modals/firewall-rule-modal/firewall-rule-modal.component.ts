@@ -13,6 +13,7 @@ import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
 import { RuleLocation } from 'src/app/models/rule-location';
+import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -22,6 +23,7 @@ import { RuleLocation } from 'src/app/models/rule-location';
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
+  vrfId: number;
 
   sourceNetworkTypeSubscription: Subscription;
   sourceServiceTypeSubscription: Subscription;
@@ -96,8 +98,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.serviceObjectGroups, RuleLocation.Destination);
     }
 
+    const dto = new FirewallRuleModalDto();
+    dto.FirewallRule = firewallRule;
+
     this.ngx.resetModalData('firewallRuleModal');
-    this.ngx.setModalData(Object.assign({}, firewallRule), 'firewallRuleModal');
+    this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
     this.ngx.close('firewallRuleModal');
     this.reset();
   }
@@ -110,7 +115,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   get f() { return this.form.controls; }
 
   getData() {
-    const firewallRule = Object.assign({}, this.ngx.getModalData('firewallRuleModal') as NetworkSecurityProfileRule);
+    const firewallRuleModalDto = Object.assign({}, this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto);
+
+    this.vrfId = firewallRuleModalDto.VrfId;
+    const firewallRule = firewallRuleModalDto.FirewallRule;
+
     if (firewallRule !== undefined) {
 
         this.form.controls.name.setValue(firewallRule.Name);
@@ -172,7 +181,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.automationApiService.getVrfs().subscribe(data => {
       const result = data;
       // FIXME: Temporarily hardcoding VRF ID.
-      const vrf = result.find(v => v.id === 1);
+      const vrf = result.find(v => v.id === this.vrfId);
 
       const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
 
@@ -390,6 +399,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   private reset() {
     this.unsubAll();
+    this.vrfId = null;
     this.submitted = false;
     this.buildForm();
     this.setFormValidators();

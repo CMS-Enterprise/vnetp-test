@@ -15,6 +15,7 @@ import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 
 @Component({
   selector: 'app-network-security-profile-detail',
@@ -139,7 +140,12 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   editFirewallRule(firewallRule: NetworkSecurityProfileRule) {
     this.subscribeToFirewallRuleModal();
     this.networkObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, firewallRule), 'firewallRuleModal');
+
+    const dto = new FirewallRuleModalDto();
+    dto.FirewallRule = firewallRule;
+    dto.VrfId = this.subnet.vrf_group_id;
+
+    this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
     this.editFirewallRuleIndex = this.firewall_rules.indexOf(firewallRule);
     this.ngx.getModal('firewallRuleModal').open();
   }
@@ -147,11 +153,11 @@ export class NetworkSecurityProfileDetailComponent implements OnInit {
   subscribeToFirewallRuleModal() {
     this.networkObjectModalSubscription =
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkSecurityProfileRule;
+      let data = modal.getData() as FirewallRuleModalDto;
 
       if (data !== undefined) {
         data = Object.assign({}, data);
-        this.saveFirewallRule(data);
+        this.saveFirewallRule(data.FirewallRule);
       }
       this.ngx.resetModalData('firewallRuleModal');
       this.networkObjectModalSubscription.unsubscribe();
