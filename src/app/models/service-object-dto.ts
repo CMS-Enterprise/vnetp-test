@@ -7,4 +7,6 @@ export class ServiceObjectDto {
     ServiceObjects: Array<ServiceObject>;
 
     ServiceObjectGroups: Array<ServiceObjectGroup>;
+
+    VrfId: number;
 }

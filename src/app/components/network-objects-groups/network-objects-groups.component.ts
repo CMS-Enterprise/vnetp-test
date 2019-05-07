@@ -15,8 +15,9 @@ import { Papa } from 'ngx-papaparse';
   styleUrls: ['./network-objects-groups.component.css']
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
+  vrfs: Vrf[];
+  currentVrf: Vrf;
 
-  vrf: Vrf;
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   navIndex = 0;
@@ -36,17 +37,27 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
-  getVrf() {
+  getVrfs() {
+    this.dirty = false;
     this.api.getVrfs().subscribe(data => {
-      const result = data as Vrf[]
-      // FIXME: Move to multiple VRF
-      const vrf = result.find(r => r.id === 1);
+      this.vrfs = data;
+      if (!this.currentVrf){
+        this.currentVrf = this.vrfs[0];
+      }
+      this.getVrfObjects(this.currentVrf);
+    });
+  }
 
+  getVrfObjects(vrf: Vrf) {
       const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
 
+      if (!networkObjectDto) {
+        this.networkObjects = new Array<NetworkObject>();
+        this.networkObjectGroups = new Array<NetworkObjectGroup>();
+      } else {
       this.networkObjects = networkObjectDto.NetworkObjects;
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-    }, error => { console.log(error); });
+      }
   }
 
   createNetworkObject() {
@@ -140,17 +151,20 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   saveAll() {
+    this.dirty = false;
     const dto = new NetworkObjectDto();
 
     dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
+    dto.VrfId = this.currentVrf.id;
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.network_object_dto = dto;
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-object-dto', body).subscribe();
+    this.api.launchTemplate('save-network-object-dto', body).subscribe(data => {
+    }, error => { this.dirty = true;});
   }
 
   handleFileSelect(evt) {
@@ -202,15 +216,15 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       try {
         if (sub) {
           sub.unsubscribe();
-        } 
+        }
       } catch (e) {
         console.error(e);
       }
-    })
+    });
   }
 
   ngOnInit() {
-    this.getVrf();
+    this.getVrfs();
   }
 
   ngOnDestroy() {

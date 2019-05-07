@@ -1,27 +1,51 @@
-<div class="offset-1 col-md-10">
-    <div class="btn-group-sm" role="group">
+<div class="pl-2 pr-2">
+
+    <div class="input-group pb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text">VRF</span>
+      </div>
+
+      <select
+        name="vrf"
+        class="form-control col-md-3"
+        [(ngModel)]="currentVrf"
+        (ngModelChange)="getVrfObjects(currentVrf)"
+        [disabled]="dirty"
+      >
+        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+      </select>
+      <span class="pl-2 input-group-btn">
+          <button
+          type="button"
+          class="btn btn-danger"
+          aria-label="Save Network Objects/Groups"
+          (click)="saveAll()"
+          [hidden]="!dirty"
+        >
+        Save Changes to Current VRF
+      </button>   
       <button
         type="button"
         class="btn btn-warning"
-        aria-label="Save Service Object/Groups"
-        (click)="saveAll()"
+        aria-label="Clear Changes"
+        (click)="getVrfs()"
         [hidden]="!dirty"
-      >
-        <fa name="floppy-o" size="2x"></fa>
+        >
+        Clear Changes to Current VRF
       </button>
-  
       <button
         type="button"
         class="btn btn-info"
         (click)="uploader.click()"
-        aria-label="Upload CSV"
+        aria-label="Import CSV"
       >
-        <fa name="file-text-o" size="2x"></fa>
+        Import CSV
       </button>
-      
-      <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
+      </span>
     </div>
-  
+
+    <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
+
     <ul class="nav nav-tabs">
       <li class="nav-item" (click)="navIndex = 0">
         <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
@@ -86,6 +110,9 @@
                 </fa>
               </td>
             </tr>
+            <tr *ngIf="serviceObjects?.length === 0" class="text-center">
+                <td colspan="4">No Service Objects in this VRF.</td>
+              </tr>
           </tbody>
         </table>
       </div>
@@ -134,6 +161,9 @@
                 </fa>
               </td>
             </tr>
+            <tr *ngIf="serviceObjectGroups?.length === 0" class="text-center">
+                <td colspan="3">No Service Object Groups in this VRF.</td>
+              </tr>
           </tbody>
         </table>
       </div>

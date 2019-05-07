@@ -14,6 +14,7 @@
           <tr>
             <th scope="col">Interface Name</th>
             <th scope="col">Firewall Rules</th>
+            <th scope="col">VRF (Tier)</th>
           </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
             </td>
             <td>
               {{ getFirewallRulesCount(subnet) }}
+            </td>
+            <td>
+              {{ subnet.vrf_group_name }}
             </td>
           </tr>
         </tbody>

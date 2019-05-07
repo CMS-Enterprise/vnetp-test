@@ -1,26 +1,50 @@
-<div class="offset-1 col-md-10">
-  <div class="btn-group-sm" role="group">
+<div class="pl-2 pr-2">
+
+  <div class="input-group pb-2">
+    <div class="input-group-prepend">
+      <span class="input-group-text">VRF</span>
+    </div>
+
+    <select
+      name="vrf"
+      class="form-control col-md-3"
+      [(ngModel)]="currentVrf"
+      (ngModelChange)="getVrfObjects(currentVrf)"
+      [disabled]="dirty"
+    >
+      <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+    </select>
+    <span class="pl-2 input-group-btn">
+        <button
+        type="button"
+        class="btn btn-danger"
+        aria-label="Save Network Objects/Groups"
+        (click)="saveAll()"
+        [hidden]="!dirty"
+      >
+      Save Changes to Current VRF
+    </button>   
     <button
       type="button"
       class="btn btn-warning"
-      aria-label="Save Network Objects/Groups"
-      (click)="saveAll()"
+      aria-label="Clear Changes"
+      (click)="getVrfs()"
       [hidden]="!dirty"
-    >
-      <fa name="floppy-o" size="2x"></fa>
+      >
+      Clear Changes to Current VRF
     </button>
-
     <button
       type="button"
       class="btn btn-info"
       (click)="uploader.click()"
-      aria-label="Upload CSV"
+      aria-label="Import CSV"
     >
-      <fa name="file-text-o" size="2x"></fa>
+      Import CSV
     </button>
-    
-    <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
+    </span>
   </div>
+
+  <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
 
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0">
@@ -81,13 +105,12 @@
                 aria-label="Edit Network Object"
               >
               </fa>
-              <fa
-              name ="trash"
-              (click)="deleteNetworkObject(netObj)"
-              >
-              </fa>
+              <fa name="trash" (click)="deleteNetworkObject(netObj)"> </fa>
             </td>
           </tr>
+          <tr *ngIf="networkObjects?.length === 0" class="text-center">
+              <td colspan="3">No Network Objects in this VRF.</td>
+            </tr>
         </tbody>
       </table>
     </div>
@@ -129,19 +152,18 @@
                 aria-label="Edit Network Object Group"
               >
               </fa>
-              <fa
-              name ="trash"
-              (click)="deleteNetworkObjectGroup(netObjGroup)"
-              >
+              <fa name="trash" (click)="deleteNetworkObjectGroup(netObjGroup)">
               </fa>
             </td>
           </tr>
+          <tr *ngIf="networkObjectGroups?.length === 0" class="text-center">
+              <td colspan="3">No Network Object Groups in this VRF.</td>
+            </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-
 
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>

@@ -16,7 +16,8 @@ import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
-  vrf: Vrf;
+  vrfs: Vrf[];
+  currentVrf: Vrf;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
   navIndex = 0;
@@ -36,17 +37,27 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
   }
 
-  getVrf() {
+  getVrfs() {
+    this.dirty = false;
     this.api.getVrfs().subscribe(data => {
-      const result = data as Vrf[]
-      // FIXME: Move to multiple VRF
-      const vrf = result.find(r => r.id === 1);
+      this.vrfs = data;
+      if (!this.currentVrf){
+        this.currentVrf = this.vrfs[0];
+      }
+      this.getVrfObjects(this.currentVrf);
+    });
+  }
 
+  getVrfObjects(vrf: Vrf) {
       const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
 
-      this.serviceObjects = serviceObjectDto.ServiceObjects;
-      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-    }, error => { console.log(error); });
+      if (!serviceObjectDto) {
+        this.serviceObjects = new Array<ServiceObject>();
+        this.serviceObjectGroups = new Array<ServiceObjectGroup>();
+       } else if (serviceObjectDto) {
+        this.serviceObjects = serviceObjectDto.ServiceObjects;
+        this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+    }
   }
 
   createServiceObject() {
@@ -140,17 +151,20 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   saveAll() {
+    this.dirty = false;
     const dto = new ServiceObjectDto();
 
     dto.ServiceObjects = this.serviceObjects;
     dto.ServiceObjectGroups = this.serviceObjectGroups;
+    dto.VrfId = this.currentVrf.id;
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.service_object_dto = dto;
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-service-object-dto', body).subscribe();
+    this.api.launchTemplate('save-service-object-dto', body).subscribe(data => { },
+      error => { this.dirty = true; });
   }
 
   handleFileSelect(evt) {
@@ -200,7 +214,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.serviceObjectGroupModalSubscription]
       .forEach(sub => {
         try {
+          if (sub) {
           sub.unsubscribe();
+          }
         } catch (e) {
           console.error(e);
         }
@@ -208,7 +224,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getVrf();
+    this.getVrfs();
   }
 
   ngOnDestroy() {

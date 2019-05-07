@@ -7,4 +7,6 @@ export class NetworkObjectDto {
     NetworkObjects: Array<NetworkObject>;
 
     NetworkObjectGroups: Array<NetworkObjectGroup>;
+
+    VrfId: number;
 }
