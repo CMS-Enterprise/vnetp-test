@@ -18,50 +18,29 @@ export class NetworkSecurityProfileRule {
 
     SourceIP: string;
 
-    SourceNetworkObject: string;
+    SourceNetworkObject: NetworkObject;
 
-    SourceNetworkObjectGroup: string;
+    SourceNetworkObjectGroup: NetworkObjectGroup;
 
     SourcePorts: string;
 
-    SourceServiceObject: string;
+    SourceServiceObject: ServiceObject;
 
-    SourceServiceObjectGroup: string;
+    SourceServiceObjectGroup: ServiceObjectGroup;
 
     DestinationIP: string;
 
-    DestinationNetworkObject: string;
+    DestinationNetworkObject: NetworkObject;
 
-    DestinationNetworkObjectGroup: string;
+    DestinationNetworkObjectGroup: NetworkObjectGroup;
 
     DestinationPorts: string;
 
-    DestinationServiceObject: string;
+    DestinationServiceObject: ServiceObject;
 
-    DestinationServiceObjectGroup: string;
+    DestinationServiceObjectGroup: ServiceObjectGroup;
 
     Log: boolean;
-
-    // TODO: Refactor
-    // When objects are assigned they will be denormalized and attached
-    // to these properties. Post-MVP if we migrate to a true RDBMS this
-    // won't be required.
-
-    _sourceNetworkObject?: NetworkObject;
-
-    _sourceNetworkObjectGroup?: NetworkObjectGroup;
-
-    _sourceServiceObject?: ServiceObject;
-
-    _sourceServiceObjectGroup?: ServiceObjectGroup;
-
-    _destinationNetworkObject?: NetworkObject;
-
-    _destinationNetworkObjectGroup?: NetworkObjectGroup;
-
-    _destinationServiceObject?: ServiceObject;
-
-    _destinationServiceObjectGroup?: ServiceObjectGroup;
 
     Edit?: boolean;
 
