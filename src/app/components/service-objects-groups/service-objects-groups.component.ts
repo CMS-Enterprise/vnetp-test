@@ -190,25 +190,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   importObjects(objects) {
     // Validate Uniqueness
-    // TODO: Refactor
-    for (const object of objects) {
-      const serviceObjectUnique = FirewallRuleService.objectIsUnique(object, this.serviceObjects);
-      if (!serviceObjectUnique) {
-        console.error(`Objects must be unique ${object.Name}`);
-        return;
-      }
-
-      if (object.GroupName) {
-        const group = this.serviceObjectGroups.find(g => g.Name === object.GroupName);
-        if (group != null) {
-          const serviceObjectUnique = FirewallRuleService.objectIsUnique(object, group.ServiceObjects);
-          if (!serviceObjectUnique) {
-            console.error(`Group Member Objects must be unique ${object.Name}`);
-            return;
-          }
-        }
-      }
-    }
 
     try {
     objects.forEach(object => {
