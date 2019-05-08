@@ -70,7 +70,7 @@ export function ValidatePortRange(control: FormControl) {
     const value = control.value;
     const valueArray = value.split('-');
 
-    if (valueArray.length < 1 || valueArray.length > 2){
+    if (valueArray.length < 1 || valueArray.length > 2) {
         return { validPortNumber: true };
     }
 
@@ -89,7 +89,7 @@ export function ValidatePortRange(control: FormControl) {
             return { validPortNumber: true };
         }
 
-        if (startPort > endPort) {
+        if (startPort > endPort || startPort === endPort) {
             return { validPortRange: true };
         }
 

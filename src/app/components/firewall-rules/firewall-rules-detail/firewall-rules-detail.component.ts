@@ -27,7 +27,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   subnet: Subnet;
   dirty: boolean;
   deployedState: boolean;
-  firewallRules: any;
+  firewallRules: Array<FirewallRule>;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -161,6 +161,10 @@ export class FirewallRulesDetailComponent implements OnInit {
   }
 
   saveFirewallRule(firewallRule: FirewallRule) {
+    if (!this.firewallRules) {
+      this.firewallRules = new Array<FirewallRule>();
+    }
+
     if (this.firewallRuleModalMode === ModalMode.Create) {
       this.firewallRules.push(firewallRule);
     } else {
@@ -208,7 +212,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   }
 
   insertFirewallRules(rules) {
-    if (this.firewallRules == null) { this.firewallRules = []; }
+    if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
     rules.forEach(rule => {
       if (rule.Name !== '') {
         this.firewallRules.push(rule);
