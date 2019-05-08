@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/modal-mode';
-import { Vrf, VrfResponse } from 'src/app/models/d42/vrf';
+import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -41,7 +42,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.dirty = false;
     this.api.getVrfs().subscribe(data => {
       this.vrfs = data;
-      if (!this.currentVrf){
+      if (!this.currentVrf) {
         this.currentVrf = this.vrfs[0];
       }
       this.getVrfObjects(this.currentVrf);
@@ -188,6 +189,27 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   importObjects(objects) {
+    // Validate Uniqueness
+    // TODO: Refactor
+    for (const object of objects) {
+      const serviceObjectUnique = FirewallRuleService.objectIsUnique(object, this.serviceObjects);
+      if (!serviceObjectUnique) {
+        console.error(`Objects must be unique ${object.Name}`);
+        return;
+      }
+
+      if (object.GroupName) {
+        const group = this.serviceObjectGroups.find(g => g.Name === object.GroupName);
+        if (group != null) {
+          const serviceObjectUnique = FirewallRuleService.objectIsUnique(object, group.ServiceObjects);
+          if (!serviceObjectUnique) {
+            console.error(`Group Member Objects must be unique ${object.Name}`);
+            return;
+          }
+        }
+      }
+    }
+
     try {
     objects.forEach(object => {
       if (object.GroupName) {
