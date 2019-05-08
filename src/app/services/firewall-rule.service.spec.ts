@@ -167,4 +167,34 @@ describe('FirewallRuleService', () => {
     expect(result).toBeFalsy();
   });
 
+  it('should throw error with null source object', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+
+    expect(() => {FirewallRuleService.objectIsUnique(null, uniqueObjects); })
+    .toThrowError('Null object or object collection.');
+  });
+
+  it('should throw error with null object collection', () => {
+    const uniqueObject = {Name: ''} as UniqueNameObject;
+
+    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, null); })
+    .toThrowError('Null object or object collection.');
+  });
+
+  it('should throw error with invalid object name (empty)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: '   '} as UniqueNameObject;
+
+    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects); })
+    .toThrowError('Object must have a name.');
+  });
+
+  it('should throw error with invalid object name (null)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: null} as UniqueNameObject;
+
+    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects); })
+    .toThrowError('Object must have a name.');
+  });
+
 });

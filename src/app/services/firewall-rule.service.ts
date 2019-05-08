@@ -88,7 +88,11 @@ export class FirewallRuleService {
                                caseInsensitive = true): boolean {
 
     if (!uniqueNameObject || !uniqueNameObjects) {
-      throw new Error('Empty object or object collection.');
+      throw new Error('Null object or object collection.');
+    }
+
+    if (!uniqueNameObject.Name || uniqueNameObject.Name.trim() === '') {
+      throw new Error('Object must have a name.');
     }
 
     for (const object of uniqueNameObjects) {
