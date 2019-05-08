@@ -11,11 +11,15 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRule } from 'src/app/models/firewall-rule';
+import { Subnet } from 'src/app/models/d42/subnet';
+import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
   let fixture: ComponentFixture<FirewallRulesDetailComponent>;
   let router: Router;
+
+  const ngx: NgxSmartModalService = new NgxSmartModalService();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -23,7 +27,7 @@ describe('FirewallRulesDetailComponent', () => {
       NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
       declarations: [ FirewallRulesDetailComponent,
       FirewallRuleModalComponent ],
-      providers: [NgxSmartModalService, HttpClient, HttpHandler, CookieService, FormBuilder]
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
     .compileComponents();
   }));
@@ -37,6 +41,29 @@ describe('FirewallRulesDetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set vrf id in firewall rule dto on create', () => {
+    component.subnet = {name: 'Test', vrf_group_id: 101} as Subnet;
+    component.createFirewallRule();
+
+    const dto = ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
+
+    expect(component.firewallRuleModalSubscription).toBeTruthy();
+    expect(dto.VrfId === 101).toBeTruthy();
+  });
+
+  it('should set vrf id and firewall rule in dto on edit', () => {
+    component.subnet = {name: 'Test', vrf_group_id: 102} as Subnet;
+    component.firewallRules = [{Name: 'TestRule'}] as Array<FirewallRule>;
+
+    component.editFirewallRule(component.firewallRules[0]);
+
+    const dto = ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
+
+    expect(component.firewallRuleModalSubscription).toBeTruthy();
+    expect(dto.VrfId === 102).toBeTruthy();
+    expect(dto.FirewallRule.Name === 'TestRule').toBeTruthy();
   });
 
   it('should move firewall rule up', () => {

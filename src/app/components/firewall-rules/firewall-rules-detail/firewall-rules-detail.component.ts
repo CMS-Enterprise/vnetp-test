@@ -37,7 +37,7 @@ export class FirewallRulesDetailComponent implements OnInit {
 
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
-  networkObjectModalSubscription: Subscription;
+  firewallRuleModalSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
@@ -147,7 +147,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   }
 
   subscribeToFirewallRuleModal() {
-    this.networkObjectModalSubscription =
+    this.firewallRuleModalSubscription =
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as FirewallRuleModalDto;
 
@@ -156,7 +156,7 @@ export class FirewallRulesDetailComponent implements OnInit {
         this.saveFirewallRule(data.FirewallRule);
       }
       this.ngx.resetModalData('firewallRuleModal');
-      this.networkObjectModalSubscription.unsubscribe();
+      this.firewallRuleModalSubscription.unsubscribe();
     });
   }
 
