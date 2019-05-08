@@ -22,6 +22,7 @@
         <tr>
           <th scope="col">Interface Name</th>
           <th scope="col">Static Routes</th>
+          <th scope="col">VRF</th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +32,9 @@
           </td>
           <td>
             {{ getStaticRoutesCount(subnet) }}
+          </td>
+          <td>
+            {{ subnet.vrf_group_name }}
           </td>
         </tr>
       </tbody>
