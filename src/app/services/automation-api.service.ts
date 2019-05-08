@@ -63,7 +63,7 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/subnets/${id}`);
   }
 
-  getSubnetIps(id: string) {
+  getSubnetIps(id: number) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
   }
 }

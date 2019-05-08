@@ -31,7 +31,7 @@ export class NetworksDetailComponent implements OnInit {
     this.Id  += this.route.snapshot.paramMap.get('id');
 
     this.getNetwork();
-    this.getIps();
+    // this.getIps();
   }
 
   getNetwork() {
@@ -42,12 +42,12 @@ export class NetworksDetailComponent implements OnInit {
       });
   }
 
-  getIps() {
-    this.automationApiService.getSubnetIps(this.Id).subscribe(
-      data => this.subnetIps = data,
-      error => console.error(error)
-    );
-  }
+  // getIps() {
+  //   this.automationApiService.getSubnetIps(this.Id).subscribe(
+  //     data => this.subnetIps = data,
+  //     error => console.error(error)
+  //   );
+  // }
 
   deleteSubnet() {
     if (this.deleteSubnetConfirm !== 'DELETE') { return; }
