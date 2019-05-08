@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { FirewallRuleService } from './firewall-rule.service';
 import { NetworkObject } from '../models/network-object';
 import { FirewallRule } from '../models/firewall-rule';
@@ -7,6 +6,7 @@ import { RuleLocation } from '../models/rule-location';
 import { NetworkObjectGroup } from '../models/network-object-group';
 import { ServiceObject } from '../models/service-object';
 import { ServiceObjectGroup } from '../models/service-object-group';
+import { UniqueNameObject } from '../models/unique-name-object.interface';
 
 describe('FirewallRuleService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -125,8 +125,46 @@ describe('FirewallRuleService', () => {
   it('should throw error with invalid service object', () => {
     const firewallRule = {Name: 'Allow Test3'} as FirewallRule
 
-    expect(() => {FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test3', new Array<ServiceObjectGroup>(), RuleLocation.Destination); })
+    expect(() => {FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test3',
+     new Array<ServiceObjectGroup>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Service Object Group.');
+  });
+
+  it('should validate UNIQUE unique name objects (case-insensitive)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: 'Test4'} as UniqueNameObject;
+
+    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects);
+
+    expect(result).toBeTruthy();
+  });
+
+
+  it('should validate UNIQUE unique name object (case-sensitive)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: 'Test2'} as UniqueNameObject;
+
+    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects, false);
+
+    expect(result).toBeTruthy();
+  });
+
+  it('should validate NON-UNIQUE unique name objects (case-insensitive)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: 'test2'} as UniqueNameObject;
+
+    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects);
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should validate NON-UNIQUE unique name object (case-sensitive)', () => {
+    const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
+    const uniqueObject = {Name: 'TEST2'} as UniqueNameObject;
+
+    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects, false);
+
+    expect(result).toBeFalsy();
   });
 
 });

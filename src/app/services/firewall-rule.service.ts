@@ -5,6 +5,7 @@ import { ServiceObjectGroup } from '../models/service-object-group';
 import { NetworkObject } from '../models/network-object';
 import { NetworkObjectGroup } from '../models/network-object-group';
 import { RuleLocation } from '../models/rule-location';
+import { UniqueNameObject } from '../models/unique-name-object.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -80,5 +81,30 @@ export class FirewallRuleService {
 
   public static validateFirewallRules() {
     throw new Error('Not Implemented.');
+  }
+
+  /** Validates that the provided unique name object is unique within a collection of unique name objects. */
+  public static objectIsUnique(uniqueNameObject: UniqueNameObject, uniqueNameObjects: Array<UniqueNameObject>,
+                               caseInsensitive = true): boolean {
+
+    if (!uniqueNameObject || !uniqueNameObjects) {
+      throw new Error('Empty object or object collection.');
+    }
+
+    for (const object of uniqueNameObjects) {
+      let duplicate = false;
+
+      if (caseInsensitive) {
+        duplicate = uniqueNameObject.Name.toLowerCase() === object.Name.toLowerCase();
+        } else if (!caseInsensitive) {
+          duplicate = uniqueNameObject.Name === object.Name;
+        }
+
+      if (duplicate) {
+          return false;
+      }
+    }
+
+    return true;
   }
 }

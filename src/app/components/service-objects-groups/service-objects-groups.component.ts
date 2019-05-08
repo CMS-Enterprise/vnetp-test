@@ -188,7 +188,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   importObjects(objects) {
-    // TODO: Validation: Throw error on duplicate name.
+    try {
     objects.forEach(object => {
       if (object.GroupName) {
         const group = this.serviceObjectGroups.find(g => g.Name === object.GroupName);
@@ -207,6 +207,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
          this.dirty = true;
        }
     });
+  } catch (e) {
+    console.error(e);
+  }
   }
 
   private unsubAll() {

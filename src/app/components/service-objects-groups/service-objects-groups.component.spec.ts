@@ -66,6 +66,9 @@ describe('ServicesObjectsGroupsComponent', () => {
     expect(component.serviceObjectGroups[1].ServiceObjects[0].Name === 'Test4').toBeTruthy();
    });
 
+
+   
+
   it('should create service object', () => {
     component.createServiceObject();
     expect(component.serviceObjectModalMode === ModalMode.Create).toBeTruthy();

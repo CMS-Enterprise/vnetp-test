@@ -1,4 +1,6 @@
-export class ServiceObject {
+import { UniqueNameObject } from './unique-name-object.interface';
+
+export class ServiceObject implements UniqueNameObject {
     Name: string;
 
     Type: string;
