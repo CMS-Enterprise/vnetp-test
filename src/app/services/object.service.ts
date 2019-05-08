@@ -10,7 +10,7 @@ import { UniqueNameObject } from '../models/unique-name-object.interface';
 @Injectable({
   providedIn: 'root'
 })
-export class FirewallRuleService {
+export class ObjectService {
 
   constructor() { }
 

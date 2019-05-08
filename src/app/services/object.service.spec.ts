@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FirewallRuleService } from './firewall-rule.service';
+import { ObjectService } from './object.service';
 import { NetworkObject } from '../models/network-object';
 import { FirewallRule } from '../models/firewall-rule';
 import { RuleLocation } from '../models/rule-location';
@@ -12,7 +12,7 @@ describe('FirewallRuleService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: FirewallRuleService = TestBed.get(FirewallRuleService);
+    const service: ObjectService = TestBed.get(ObjectService);
     expect(service).toBeTruthy();
   });
 
@@ -21,7 +21,7 @@ describe('FirewallRuleService', () => {
     const networkObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObject>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Source);
+    ObjectService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceNetworkObject).toBeTruthy();
     expect(firewallRule.SourceNetworkObject.Name === 'Test2').toBeTruthy();
@@ -31,7 +31,7 @@ describe('FirewallRuleService', () => {
     const networkObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObject>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Destination);
+    ObjectService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Destination);
 
     expect(firewallRule.DestinationNetworkObject).toBeTruthy();
     expect(firewallRule.DestinationNetworkObject.Name === 'Test2').toBeTruthy();
@@ -40,7 +40,7 @@ describe('FirewallRuleService', () => {
   it('should throw error with invalid network object', () => {
     const firewallRule = {Name: 'Allow Test3'} as FirewallRule;
 
-    expect(() => {FirewallRuleService.mapNetworkObject(firewallRule, 'Test3', new Array<NetworkObject>(), RuleLocation.Destination); })
+    expect(() => {ObjectService.mapNetworkObject(firewallRule, 'Test3', new Array<NetworkObject>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Network Object.');
   });
 
@@ -49,7 +49,7 @@ describe('FirewallRuleService', () => {
     const networkObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObjectGroup>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Source);
+    ObjectService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Source);
 
     expect(firewallRule.SourceNetworkObjectGroup).toBeTruthy();
     expect(firewallRule.SourceNetworkObjectGroup.Name === 'Test2').toBeTruthy();
@@ -60,7 +60,7 @@ describe('FirewallRuleService', () => {
     const networkObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<NetworkObjectGroup>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Destination);
+    ObjectService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Destination);
 
     expect(firewallRule.DestinationNetworkObjectGroup).toBeTruthy();
     expect(firewallRule.DestinationNetworkObjectGroup.Name === 'Test2').toBeTruthy();
@@ -69,7 +69,7 @@ describe('FirewallRuleService', () => {
   it('should throw error with invalid network object group', () => {
     const firewallRule = {Name: 'Allow Test3'} as FirewallRule;
 
-    expect(() => {FirewallRuleService.mapNetworkObjectGroup(firewallRule, 'Test3', new Array<NetworkObjectGroup>(), RuleLocation.Source); })
+    expect(() => {ObjectService.mapNetworkObjectGroup(firewallRule, 'Test3', new Array<NetworkObjectGroup>(), RuleLocation.Source); })
     .toThrowError('Unable to find Network Object Group.');
   });
 
@@ -78,7 +78,7 @@ describe('FirewallRuleService', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
+    ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceServiceObject).toBeTruthy();
     expect(firewallRule.SourceServiceObject.Name === 'Test2').toBeTruthy();
@@ -88,7 +88,7 @@ describe('FirewallRuleService', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Destination);
+    ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Destination);
 
     expect(firewallRule.DestinationServiceObject).toBeTruthy();
     expect(firewallRule.DestinationServiceObject.Name === 'Test2').toBeTruthy();
@@ -97,7 +97,7 @@ describe('FirewallRuleService', () => {
   it('should throw error with invalid service object', () => {
     const firewallRule = {Name: 'Allow Test3'} as FirewallRule
 
-    expect(() => {FirewallRuleService.mapServiceObject(firewallRule, 'Test3', new Array<ServiceObject>(), RuleLocation.Destination); })
+    expect(() => {ObjectService.mapServiceObject(firewallRule, 'Test3', new Array<ServiceObject>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Service Object.');
   });
 
@@ -106,7 +106,7 @@ describe('FirewallRuleService', () => {
     const serviceObjects = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObject>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
+    ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceServiceObject).toBeTruthy();
     expect(firewallRule.SourceServiceObject.Name === 'Test2').toBeTruthy();
@@ -116,7 +116,7 @@ describe('FirewallRuleService', () => {
     const serviceObjectGroups = [{Name: 'Test'}, {Name: 'Test2'}] as Array<ServiceObjectGroup>;
     const firewallRule = {Name: 'Allow Test2'} as FirewallRule;
 
-    FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test2', serviceObjectGroups, RuleLocation.Destination);
+    ObjectService.mapServiceObjectGroup(firewallRule, 'Test2', serviceObjectGroups, RuleLocation.Destination);
 
     expect(firewallRule.DestinationServiceObjectGroup).toBeTruthy();
     expect(firewallRule.DestinationServiceObjectGroup.Name === 'Test2').toBeTruthy();
@@ -125,7 +125,7 @@ describe('FirewallRuleService', () => {
   it('should throw error with invalid service object', () => {
     const firewallRule = {Name: 'Allow Test3'} as FirewallRule
 
-    expect(() => {FirewallRuleService.mapServiceObjectGroup(firewallRule, 'Test3',
+    expect(() => {ObjectService.mapServiceObjectGroup(firewallRule, 'Test3',
      new Array<ServiceObjectGroup>(), RuleLocation.Destination); })
     .toThrowError('Unable to find Service Object Group.');
   });
@@ -134,7 +134,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: 'Test4'} as UniqueNameObject;
 
-    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects);
+    const result = ObjectService.objectIsUnique(uniqueObject, uniqueObjects);
 
     expect(result).toBeTruthy();
   });
@@ -144,7 +144,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: 'Test2'} as UniqueNameObject;
 
-    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects, false);
+    const result = ObjectService.objectIsUnique(uniqueObject, uniqueObjects, false);
 
     expect(result).toBeTruthy();
   });
@@ -153,7 +153,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: 'test2'} as UniqueNameObject;
 
-    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects);
+    const result = ObjectService.objectIsUnique(uniqueObject, uniqueObjects);
 
     expect(result).toBeFalsy();
   });
@@ -162,7 +162,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: 'TEST2'} as UniqueNameObject;
 
-    const result = FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects, false);
+    const result = ObjectService.objectIsUnique(uniqueObject, uniqueObjects, false);
 
     expect(result).toBeFalsy();
   });
@@ -170,14 +170,14 @@ describe('FirewallRuleService', () => {
   it('should throw error with null source object', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
 
-    expect(() => {FirewallRuleService.objectIsUnique(null, uniqueObjects); })
+    expect(() => {ObjectService.objectIsUnique(null, uniqueObjects); })
     .toThrowError('Null object or object collection.');
   });
 
   it('should throw error with null object collection', () => {
     const uniqueObject = {Name: ''} as UniqueNameObject;
 
-    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, null); })
+    expect(() => {ObjectService.objectIsUnique(uniqueObject, null); })
     .toThrowError('Null object or object collection.');
   });
 
@@ -185,7 +185,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: '   '} as UniqueNameObject;
 
-    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects); })
+    expect(() => {ObjectService.objectIsUnique(uniqueObject, uniqueObjects); })
     .toThrowError('Object must have a name.');
   });
 
@@ -193,7 +193,7 @@ describe('FirewallRuleService', () => {
     const uniqueObjects = [{Name: 'test'}, {Name: 'TEST2'}, {Name: 'TeSt3'}] as Array<UniqueNameObject>;
     const uniqueObject = {Name: null} as UniqueNameObject;
 
-    expect(() => {FirewallRuleService.objectIsUnique(uniqueObject, uniqueObjects); })
+    expect(() => {ObjectService.objectIsUnique(uniqueObject, uniqueObjects); })
     .toThrowError('Object must have a name.');
   });
 

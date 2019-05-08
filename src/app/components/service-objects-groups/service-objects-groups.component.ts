@@ -8,7 +8,7 @@ import { Papa } from 'ngx-papaparse';
 import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
+import { ObjectService } from 'src/app/services/object.service';
 
 @Component({
   selector: 'app-service-objects-groups',

@@ -11,7 +11,7 @@ import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { NetworkObjectDto } from 'src/app/models/network-object-dto';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { FirewallRuleService } from 'src/app/services/firewall-rule.service';
+import { ObjectService } from 'src/app/services/object.service';
 import { RuleLocation } from 'src/app/models/rule-location';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
@@ -60,10 +60,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (sourceNetworkType  === 'ip') {
     firewallRule.SourceIP = this.form.controls.sourceIp.value;
     } else if (sourceNetworkType === 'object') {
-      FirewallRuleService.mapNetworkObject(firewallRule, this.form.controls.sourceNetworkObject.value,
+      ObjectService.mapNetworkObject(firewallRule, this.form.controls.sourceNetworkObject.value,
          this.networkObjects, RuleLocation.Source);
     } else if (sourceNetworkType === 'objectGroup') {
-      FirewallRuleService.mapNetworkObjectGroup(firewallRule, this.form.controls.sourceNetworkObjectGroup.value,
+      ObjectService.mapNetworkObjectGroup(firewallRule, this.form.controls.sourceNetworkObjectGroup.value,
          this.networkObjectGroups, RuleLocation.Source);
       }
 
@@ -71,10 +71,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (sourceServiceType === 'port') {
       firewallRule.SourcePorts = this.form.controls.sourcePorts.value;
     } else if (sourceServiceType === 'object') {
-      FirewallRuleService.mapServiceObject(firewallRule, this.form.controls.sourceServiceObject.value,
+      ObjectService.mapServiceObject(firewallRule, this.form.controls.sourceServiceObject.value,
         this.serviceObjects, RuleLocation.Source);
     } else if (sourceServiceType === 'objectGroup') {
-      FirewallRuleService.mapServiceObjectGroup(firewallRule, this.form.controls.sourceServiceObjectGroup.value,
+      ObjectService.mapServiceObjectGroup(firewallRule, this.form.controls.sourceServiceObjectGroup.value,
         this.serviceObjectGroups, RuleLocation.Source);
     }
 
@@ -82,10 +82,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (destinationNetworkType === 'ip') {
       firewallRule.DestinationIP = this.form.controls.destinationIp.value;
     } else if (destinationNetworkType === 'object') {
-      FirewallRuleService.mapNetworkObject(firewallRule, this.form.controls.destinationNetworkObject.value,
+      ObjectService.mapNetworkObject(firewallRule, this.form.controls.destinationNetworkObject.value,
         this.networkObjects, RuleLocation.Destination);
     } else if (destinationNetworkType === 'objectGroup') {
-      FirewallRuleService.mapNetworkObjectGroup(firewallRule, this.form.controls.destinationNetworkObjectGroup.value,
+      ObjectService.mapNetworkObjectGroup(firewallRule, this.form.controls.destinationNetworkObjectGroup.value,
         this.networkObjectGroups, RuleLocation.Destination);
     }
 
@@ -93,10 +93,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (destinationServiceType === 'port') {
       firewallRule.DestinationPorts = this.form.controls.destinationPorts.value;
     } else if (destinationServiceType === 'object') {
-      FirewallRuleService.mapServiceObject(firewallRule, this.form.controls.destinationServiceObject.value,
+      ObjectService.mapServiceObject(firewallRule, this.form.controls.destinationServiceObject.value,
         this.serviceObjects, RuleLocation.Destination);
     } else if (destinationServiceType === 'objectGroup') {
-      FirewallRuleService.mapServiceObjectGroup(firewallRule, this.form.controls.destinationServiceObjectGroup.value,
+      ObjectService.mapServiceObjectGroup(firewallRule, this.form.controls.destinationServiceObjectGroup.value,
         this.serviceObjectGroups, RuleLocation.Destination);
     }
 
