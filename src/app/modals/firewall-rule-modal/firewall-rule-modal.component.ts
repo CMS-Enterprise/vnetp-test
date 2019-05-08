@@ -182,7 +182,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   getVrfCustomFields() {
     this.automationApiService.getVrfs().subscribe(data => {
 
-      console.log('here');
       const result = data;
 
       const vrf = result.find(v => v.id === this.vrfId);
