@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { MessageService } from 'src/app/services/message.service';
-import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subnet } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-networks-detail',
@@ -18,7 +18,6 @@ export class NetworksDetailComponent implements OnInit {
               private route: ActivatedRoute, private router: Router, private hs: HelpersService, 
               private ips: IpAddressService, public ngx: NgxSmartModalService ) {
     this.subnetIps = {};
-    this.subnet = new Subnet();
    }
 
   Id = '';
@@ -31,7 +30,6 @@ export class NetworksDetailComponent implements OnInit {
     this.Id  += this.route.snapshot.paramMap.get('id');
 
     this.getNetwork();
-    // this.getIps();
   }
 
   getNetwork() {
@@ -41,13 +39,6 @@ export class NetworksDetailComponent implements OnInit {
         this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
       });
   }
-
-  // getIps() {
-  //   this.automationApiService.getSubnetIps(this.Id).subscribe(
-  //     data => this.subnetIps = data,
-  //     error => console.error(error)
-  //   );
-  // }
 
   deleteSubnet() {
     if (this.deleteSubnetConfirm !== 'DELETE') { return; }

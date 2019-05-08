@@ -1,6 +1,6 @@
 <div class="text-center">
-  <h3>Network: {{ subnet.name }}</h3>
-  <p>{{ subnet.network }}/{{ subnet.mask_bits }}</p>
+  <h3>Network: {{ subnet?.name }}</h3>
+  <p>{{ subnet?.network }}/{{ subnet?.mask_bits }}</p>
   <button
     class="btn btn-danger"
     (click)="ngx.getModal('deleteSubnetModal').open()"
@@ -11,7 +11,7 @@
 
 <h3>IP Addresses</h3>
 
-<app-ipaddresses *ngIf="subnet" [subnetId]="subnet?.Id"></app-ipaddresses>
+<app-ipaddresses *ngIf="subnet" [subnetId]="subnet?.subnet_id"></app-ipaddresses>
 
 <ngx-smart-modal
   #deleteSubnetModal
@@ -19,7 +19,7 @@
   customClass="'modal-content'"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Delete Subnet '{{ subnet.name }}'?</h4>
+    <h4 class="modal-title">Delete Subnet '{{ subnet?.name }}'?</h4>
     <button
       type="button"
       class="close"

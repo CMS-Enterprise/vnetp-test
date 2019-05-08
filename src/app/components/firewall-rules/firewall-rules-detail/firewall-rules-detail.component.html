@@ -1,4 +1,4 @@
-<div class="offset-1 col-md-10">
+<div>
 
   <h5 aria-label="Firewall Rules">Firewall Rules: {{ subnet.name }}</h5>
 
@@ -39,12 +39,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let firewallRule of firewallRules"
-      [ngClass]="{
-        'table-danger': firewallRule.Deleted,
-        'table-warning': firewallRule.Updated
-      }"
-      >
+    <tr *ngFor="let firewallRule of firewallRules">
       <td>
         <p>{{firewallRule.Name}}</p>
       </td>
@@ -95,14 +90,7 @@
       </fa>
       <fa
       name ="trash"
-      (click)="firewallRule.Deleted = !firewallRule.Deleted"
-      [hidden]="firewallRule.Deleted"
-      >
-      </fa>
-      <fa
-      name ="undo"
-      (click)="firewallRule.Deleted = !firewallRule.Deleted"
-      [hidden]="!firewallRule.Deleted"
+      
       >
       </fa>
       <fa

@@ -181,6 +181,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   getVrfCustomFields() {
     this.automationApiService.getVrfs().subscribe(data => {
+
+      console.log('here');
       const result = data;
 
       const vrf = result.find(v => v.id === this.vrfId);
@@ -359,25 +361,25 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       // Source Network Info
       sourceNetworkType: ['ip'],
-      sourceIp: ['', Validators.required],
+      sourceIp: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
       sourceNetworkObject: [''],
       sourceNetworkObjectGroup: [''],
 
       // Source Service Info
       sourceServiceType: ['port'],
-      sourcePorts: ['', Validators.required],
+      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       sourceServiceObject: [''],
       sourceServiceObjectGroup: [''],
 
       // Destination Network Info
       destinationNetworkType: ['ip'],
-      destinationIp: ['', Validators.required],
+      destinationIp: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
       destinationNetworkObject: [''],
       destinationNetworkObjectGroup: [''],
 
       // Destination Service Info
       destinationServiceType: ['port'],
-      destinationPorts: ['', Validators.required],
+      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       destinationServiceObject: [''],
       destinationServiceObjectGroup: [''],
 

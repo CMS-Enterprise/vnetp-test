@@ -36,7 +36,7 @@ export class FirewallRulesDetailComponent implements OnInit {
 
 
   editFirewallRuleIndex: number;
-  networkObjectModalMode: ModalMode;
+  firewallRuleModalMode: ModalMode;
   networkObjectModalSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
@@ -123,13 +123,19 @@ export class FirewallRulesDetailComponent implements OnInit {
 
   createFirewallRule() {
     this.subscribeToFirewallRuleModal();
-    this.networkObjectModalMode = ModalMode.Create;
+    this.firewallRuleModalMode = ModalMode.Create;
+
+    const dto = new FirewallRuleModalDto();
+    dto.VrfId = this.subnet.vrf_group_id;
+
+    this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
+    this.firewallRuleModalMode = ModalMode.Create;
     this.ngx.getModal('firewallRuleModal').open();
   }
 
   editFirewallRule(firewallRule: FirewallRule) {
     this.subscribeToFirewallRuleModal();
-    this.networkObjectModalMode = ModalMode.Edit;
+    this.firewallRuleModalMode = ModalMode.Edit;
 
     const dto = new FirewallRuleModalDto();
     dto.FirewallRule = firewallRule;
@@ -145,7 +151,7 @@ export class FirewallRulesDetailComponent implements OnInit {
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as FirewallRuleModalDto;
 
-      if (data !== undefined) {
+      if (data.FirewallRule !== undefined) {
         data = Object.assign({}, data);
         this.saveFirewallRule(data.FirewallRule);
       }
@@ -155,7 +161,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   }
 
   saveFirewallRule(firewallRule: FirewallRule) {
-    if (this.networkObjectModalMode === ModalMode.Create) {
+    if (this.firewallRuleModalMode === ModalMode.Create) {
       this.firewallRules.push(firewallRule);
     } else {
       this.firewallRules[this.editFirewallRuleIndex] = firewallRule;

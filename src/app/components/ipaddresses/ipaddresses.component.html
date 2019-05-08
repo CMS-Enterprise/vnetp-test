@@ -21,7 +21,8 @@
             {{ ip?.ip }}
           </td>
           <td>
-            <a routerLink="/networks/edit/{{ ip?.subnet_id }}">{{ ip?.subnet }}</a>
+            <a *ngIf="!subnetId" routerLink="/networks/edit/{{ ip?.subnet_id }}">{{ ip?.subnet }}</a>
+            <p *ngIf="subnetId">This Subnet</p>
           </td>
           <td>
             <a *ngIf="ip?.device" routerLink="/devices/edit/{{ ip?.device_id }}">{{ ip?.device }}</a>
