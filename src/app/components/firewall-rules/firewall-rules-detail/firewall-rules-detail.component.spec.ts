@@ -126,6 +126,17 @@ describe('FirewallRulesDetailComponent', () => {
     // Should be deleted and new member should be in index 0.
     expect(component.firewallRules[0].Name === 'Test2').toBeTruthy();
     expect(component.firewallRules.length === 2).toBeTruthy();
+    expect(component.dirty).toBeTruthy();
+  });
+
+  it('should not delete if firewall rule does not exist', () => {
+    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
+    , { Name: 'Test3'} as FirewallRule];
+
+    component.deleteFirewallRule(component.firewallRules[0]);
+
+    expect(component.firewallRules.length === 3).toBeTruthy();
+    expect(component.dirty).toBeFalsy();
   });
 
   // TODO: Modal invocation tests and edit tests.
