@@ -16,5 +16,6 @@ export class SolarisCdom {
   ILOMIPAddress: string;
   Variables: string;
   Commands: string;
+  Metadata = new Array<any>();
 }
 

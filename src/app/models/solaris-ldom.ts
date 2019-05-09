@@ -1,5 +1,5 @@
 export class SolarisLdom {
-    NAme: string;
+    Name: string;
     Memory: number;
     vCPU: number;
     LUNs = new Array<string>();
