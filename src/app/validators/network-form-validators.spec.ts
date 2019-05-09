@@ -133,6 +133,9 @@ describe('Network Form Validators', () => {
     formControl.setValue('500-50');
     expect(ValidatePortRange(formControl)).toBeTruthy();
 
+    formControl.setValue('500-500');
+    expect(ValidatePortRange(formControl)).toBeTruthy();
+
     formControl.setValue('500--50');
     expect(ValidatePortRange(formControl)).toBeTruthy();
 
