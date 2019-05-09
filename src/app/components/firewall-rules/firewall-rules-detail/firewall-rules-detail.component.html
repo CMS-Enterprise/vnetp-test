@@ -90,13 +90,12 @@
       </fa>
       <fa
       name ="trash"
-      
+      (click)="deleteFirewallRule(firewallRule)"
       >
       </fa>
       <fa
       name="copy"
       (click)="duplicateFirewallRule(firewallRule)"
-      [hidden]="firewallRule.Deleted"
       ></fa>
       </td>
     </tr>

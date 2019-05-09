@@ -191,6 +191,14 @@ export class FirewallRulesDetailComponent implements OnInit {
     this.messageService.filter('Job Launched');
   }
 
+  deleteFirewallRule(firewallRule: FirewallRule) {
+    const index = this.firewallRules.indexOf(firewallRule);
+    if ( index > -1) {
+      this.firewallRules.splice(index, 1);
+      this.dirty = true;
+    }
+  }
+
   handleFileSelect(evt) {
     let files = evt.target.files; // FileList object
     let file = files[0];
