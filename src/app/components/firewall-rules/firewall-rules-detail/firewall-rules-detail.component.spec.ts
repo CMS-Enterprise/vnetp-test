@@ -133,7 +133,7 @@ describe('FirewallRulesDetailComponent', () => {
     component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
     , { Name: 'Test3'} as FirewallRule];
 
-    component.deleteFirewallRule(component.firewallRules[0]);
+    component.deleteFirewallRule(component.firewallRules[3]);
 
     expect(component.firewallRules.length === 3).toBeTruthy();
     expect(component.dirty).toBeFalsy();
