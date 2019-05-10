@@ -190,7 +190,7 @@ export class FirewallRulesDetailComponent implements OnInit {
       this.automationApiService.launchTemplate('save-acl', body).subscribe();
     }
 
-    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {

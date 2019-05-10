@@ -6,13 +6,17 @@ import { AppMessage } from '../models/app-message';
   providedIn: 'root'
 })
 export class MessageService {
-    private listeners = new Subject<any>();
+    private subject = new Subject<any>();
 
     listen(): Observable<AppMessage> {
-       return this.listeners.asObservable();
+       return this.subject.asObservable();
     }
 
-    filter(filterBy: AppMessage) {
-       this.listeners.next(filterBy);
+    sendMessage(m: AppMessage) {
+       this.subject.next(m);
+    }
+
+    clearMessages() {
+       this.subject.next();
     }
 }

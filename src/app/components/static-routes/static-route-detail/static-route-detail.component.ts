@@ -78,7 +78,7 @@ export class StaticRouteDetailComponent implements OnInit {
       this.automationApiService.launchTemplate('save-static-route', body).subscribe();
     }
 
-    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   getStaticRoutes() {

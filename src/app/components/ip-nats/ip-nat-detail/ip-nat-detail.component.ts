@@ -48,7 +48,7 @@ export class IpNatDetailComponent implements OnInit {
         () => this.toastr.warning('Deleting Network Address Translation')
       );
 
-      this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+      this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
     }
 
 }

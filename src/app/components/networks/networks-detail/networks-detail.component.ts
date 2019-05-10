@@ -51,7 +51,7 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService.launchTemplate('delete-network', body).subscribe();
 
-    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
 
     this.router.navigate(['/networks']);
   }

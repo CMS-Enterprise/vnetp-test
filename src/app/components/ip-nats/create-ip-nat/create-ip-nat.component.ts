@@ -90,7 +90,7 @@ export class CreateIpNatComponent implements OnInit {
       () => this.toastr.success('Creating Network Address Translation')
     );
 
-    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
 
     this.router.navigate(['/ip-nats']);
   }
