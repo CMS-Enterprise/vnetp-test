@@ -6,6 +6,8 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subnet } from 'src/app/models/d42/subnet';
+import { AppMessageType } from 'src/app/models/app-message-type';
+import { AppMessage } from 'src/app/models/app-message';
 
 @Component({
   selector: 'app-networks-detail',
@@ -49,7 +51,7 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService.launchTemplate('delete-network', body).subscribe();
 
-    this.messageService.filter('Job Launched');
+    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
 
     this.router.navigate(['/networks']);
   }

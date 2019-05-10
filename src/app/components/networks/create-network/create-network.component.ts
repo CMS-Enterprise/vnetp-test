@@ -6,6 +6,8 @@ import { IpAddressService } from 'src/app/services/ip-address.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { Vrf } from 'src/app/models/d42/vrf';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-create-network',
@@ -147,7 +149,7 @@ export class CreateNetworkComponent implements OnInit {
 
     this.automationApiService.launchTemplate('save-network', body).subscribe();
 
-    this.messageService.filter('Job Launched');
+    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
     this.router.navigate(['/networks']);
   }
 }

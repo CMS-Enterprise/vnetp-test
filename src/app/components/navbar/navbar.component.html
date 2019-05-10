@@ -134,3 +134,45 @@
     </button>
   </div>
 </ngx-smart-modal>
+
+<ngx-smart-modal
+  #jobLaunchModal
+  identifier="jobLaunchModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Job Launched</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="jobLaunchModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body text-center">
+    <fa name="check-circle-o" class="badge badge-success" size="5x" aria-hidden="true"></fa>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      routerLink="/jobs"
+      (click)="jobLaunchModal.close()"
+    >
+      View Jobs
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="jobLaunchModal.close()"
+    >
+      Ok
+    </button>
+  </div>
+</ngx-smart-modal>

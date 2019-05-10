@@ -3,6 +3,8 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'src/app/services/message.service';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-ip-nat-detail',
@@ -46,7 +48,7 @@ export class IpNatDetailComponent implements OnInit {
         () => this.toastr.warning('Deleting Network Address Translation')
       );
 
-      this.messageService.filter('Job Launched');
-  }
+      this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
+    }
 
 }

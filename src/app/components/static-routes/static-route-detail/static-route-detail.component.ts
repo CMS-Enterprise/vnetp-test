@@ -5,6 +5,8 @@ import { StaticRoute } from 'src/app/models/static-route';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -76,7 +78,7 @@ export class StaticRouteDetailComponent implements OnInit {
       this.automationApiService.launchTemplate('save-static-route', body).subscribe();
     }
 
-    this.messageService.filter('Job Launched');
+    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   getStaticRoutes() {

@@ -1,33 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
-import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
+
+  messageServiceSubscription: Subscription;
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
               private ngx: NgxSmartModalService , private auth: AuthService) {
     this.runningJobs = [];
     this.auth.currentUser.subscribe(u => this.currentUser = u);
-
-    this.messageService.listen().subscribe((m: any) => {
-      if (m === 'Job Launched') {
-        // Set running job count to 1 to immediately display running job
-        // if no jobs are currently running.
-        if (this.runningJobs.count <= 0) {
-          this.runningJobs = { count: 1};
-          this.skipNextUpdate = true;
-        }
-      }
-    });
   }
 
   loggedIn: boolean;
@@ -35,10 +28,28 @@ export class NavbarComponent implements OnInit {
   currentUser: User;
   skipNextUpdate: boolean;
 
-  jobPoller = setInterval(() => this.getRunningJobs() , 10000);
+  jobPoller = setInterval(() => this.getJobs() , 10000);
 
-  getRunningJobs() {
+  getMessageServiceSubscription() {
+    this.messageServiceSubscription = this.messageService.listen()
+    .subscribe((m: AppMessage) => {
+      this.messageHandler(m);
+    });
+  }
 
+  private messageHandler(m: AppMessage) {
+    switch (m.Type) {
+      case AppMessageType.JobLaunch:
+        if (this.runningJobs.count <= 0) {
+          this.runningJobs = { count: 1 };
+          this.skipNextUpdate = true;
+        }
+        this.ngx.getModal('jobLaunchModal').open();
+        break;
+    }
+  }
+
+  getJobs() {
     if (!this.currentUser) { return; }
     if (this.skipNextUpdate) {
       this.skipNextUpdate = false;
@@ -55,7 +66,18 @@ export class NavbarComponent implements OnInit {
     this.auth.logout();
   }
 
+  private unsubAll() {
+    if (this.messageServiceSubscription) {
+      this.messageServiceSubscription.unsubscribe();
+    }
+  }
+
   ngOnInit() {
-    this.getRunningJobs();
+    this.getJobs();
+    this.getMessageServiceSubscription();
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
   }
 }

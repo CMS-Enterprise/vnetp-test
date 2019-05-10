@@ -16,6 +16,8 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -188,7 +190,7 @@ export class FirewallRulesDetailComponent implements OnInit {
       this.automationApiService.launchTemplate('save-acl', body).subscribe();
     }
 
-    this.messageService.filter('Job Launched');
+    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {

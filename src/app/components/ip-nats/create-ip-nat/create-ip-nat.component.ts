@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-create-ip-nat',
@@ -88,7 +90,7 @@ export class CreateIpNatComponent implements OnInit {
       () => this.toastr.success('Creating Network Address Translation')
     );
 
-    this.messageService.filter('Job Launched');
+    this.messageService.filter(new AppMessage('', AppMessageType.JobLaunch));
 
     this.router.navigate(['/ip-nats']);
   }
