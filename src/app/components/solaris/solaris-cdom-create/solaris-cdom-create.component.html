@@ -5,34 +5,66 @@
       <div class="form-group row">
         <label for="inputCDOMName" class="col-md-1 col-form-label">CDOM Name</label>
         <div class="col-md-2">
-          <input name="inputCDOMName" aria-label="Input CDOM Name" appIsAlphanumeric type="text" class="form-control"
-            placeholder="Name" #name="ngModel" [(ngModel)]="CDOM.name">
+          <input
+            name="inputCDOMName"
+            aria-label="Input CDOM Name"
+            appIsAlphanumeric type="text" 
+            class="form-control"
+            placeholder="Name"
+            #name="ngModel"
+            [(ngModel)]="CDOM.name"
+          >
         </div>
         <label for="inputCDOMCloneFrom" class="col-md-1 col-form-label offset-md-1">Clone CDOM From:</label>
         <div class="col-md-2">
-          <input name="inputCDOMCloneFrom" aria-label="Clone from CDOM" appIsAlphanumeric type="text"
-            class="form-control" placeholder="Name" #name="ngModel" [(ngModel)]="CDOM.name">
-
+          <input
+            name="inputCDOMCloneFrom"
+            aria-label="Clone from CDOM"
+            appIsAlphanumeric type="text"
+            class="form-control"
+            placeholder="Name"
+            #name="ngModel"
+            [(ngModel)]="CDOM.name"
+          >
         </div>
       </div>
       <div class="form-group row">
         <label for="inputCDOMMemory" class="col-1 col-form-label offset-md-1">RAM (GB)</label>
         <div class="col-1">
-          <input name="inputCDOMMemory" aria-label="RAM in Gigabytes" appIsAlphanumeric type="text" class="form-control"
-            placeholder="# GB" #name="ngModel" [(ngModel)]="CDOM.RAM">
+          <input
+            name="inputCDOMMemory"
+            aria-label="RAM in Gigabytes"
+            appIsAlphanumeric type="text"
+            class="form-control"
+            placeholder="# GB"
+            #name="ngModel"
+            [(ngModel)]="CDOM.RAM"
+          >
         </div>
         <label for="inputCDOMvCPU" class="col-1 col-form-label offset-2">vCPU</label>
         <div class="col-1">
-          <input name="inputCDOMvCPU" aria-label="Clone from CDOM" appIsAlphanumeric type="text" class="form-control"
-            placeholder="# vCPU" #name="ngModel" [(ngModel)]="CDOM.vCPU">
-
+          <input
+            name="inputCDOMvCPU"
+            aria-label="vCPU for CDOM"
+            appIsAlphanumeric type="text"
+            class="form-control"
+            placeholder="# vCPU"
+            #name="ngModel"
+            [(ngModel)]="CDOM.vcpu"
+          >
         </div>
       </div>
       <div class="form-group row">
         <label for="inputCDOMSPConfig" class="col-1 col-form-label offset-md-1">SPConfig</label>
         <div class="col-1 offset-md-4">
-          <input name="inputCDOMSPConfig" aria-label="CDOM SP Config" appIsAlphanumeric type="text" class="form-control"
-           #name="ngModel" [(ngModel)]="CDOM.SPConfig">
+          <input
+            name="inputCDOMSPConfig"
+            aria-label="CDOM SP Config"
+            appIsAlphanumeric type="text"
+            class="form-control"
+            #name="ngModel"
+            [(ngModel)]="CDOM.spconfig"
+          >
         </div>
       </div>
       <div class="form-group row">
@@ -86,7 +118,7 @@
              type="text"
              class="form-control"
              #name="ngModel"
-             [(ngModel)]="CDOM.LUNS"
+             [(ngModel)]="CDOM.luns"
              >
           </div>
       </div>
@@ -100,7 +132,7 @@
              type="text"
              class="form-control"
              #name="ngModel"
-             [(ngModel)]="CDOM.VLANS"
+             [(ngModel)]="CDOM.vlans"
              >
           </div>
       </div>

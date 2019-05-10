@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { SolarisCdom } from '../../../models/solaris-cdom';
 import { SolarisLdom } from '../../../models/solaris-ldom';
-import { listenToElementOutputs } from '@angular/core/src/view/element';
+import { SolarisServiceService } from '../solaris-services/solaris-service.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-solaris-cdom-list',
   templateUrl: './solaris-cdom-list.component.html',
@@ -13,12 +11,13 @@ import { listenToElementOutputs } from '@angular/core/src/view/element';
 })
 export class SolarisCdomListComponent implements OnInit {
   devices: Array<any>;
-  returnDevices: Array<SolarisCdom>;
-  returnLDOMs: Array<SolarisLdom>;
+  returnDevices: Array<any>;
+  returnLDOMs: Array<any>;
   CDOMDeviceArray: Array<any>;
-  constructor(private automationApiService: AutomationApiService) {
+  constructor(private automationApiService: AutomationApiService,
+    private solarisService: SolarisServiceService, private router: Router) {
     this.devices = new Array<any>();
-    this.returnDevices = new Array<SolarisCdom>();
+    this.returnDevices = new Array<any>();
   }
   ngOnInit() {
     this.loadDevices();
@@ -27,8 +26,6 @@ export class SolarisCdomListComponent implements OnInit {
   loadDevices() {
      const CDOMDevice = new SolarisCdom();
      const LDOMDevice = new SolarisLdom();
-     let CDOMDict: string[];
-     //const CDOMDevice = new Array<any>;
      this.automationApiService.doqlQuery(
         'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
       ).subscribe(data => {
@@ -36,54 +33,21 @@ export class SolarisCdomListComponent implements OnInit {
         this.devices = result;
         for(let i = this.devices.length - 1; i >= 0 ; --i){
           if(this.devices[i].DeviceType == 'solaris_cdom'){
-            let jsonStr: string = this.devices[i].Metadata;
-            jsonStr = jsonStr.replace(/\\n/g, ' ');
-            let tmpMetadata: any = JSON.parse(jsonStr);
-            console.log(tmpMetadata['DeviceType']);
-            CDOMDevice.AssociatedLDOMS = tmpMetadata['associatedldoms'];
-            CDOMDevice.Name = tmpMetadata['cdomname'];
-            CDOMDevice.LUNs = tmpMetadata['luns'];
-            CDOMDevice.VLANs = tmpMetadata['vlans'];
-            CDOMDevice.Variables = tmpMetadata['variables'];
-            CDOMDevice.ILOMName = tmpMetadata['ilomname'];
-            CDOMDevice.ILOMIPAddress = tmpMetadata['ilomip'];
-            CDOMDevice.VCC = tmpMetadata['vccports'];
-            CDOMDevice.Vswitch = tmpMetadata['vswitch'];
-            //Determine number of vCPU's, non hyperthread Core * Count, hyperthreaded (Core * Count) * 2
-            let numVCPU: number = this.devices[i].cpucount * this.devices[i].cpucore;
-            if(this.devices[i].Hyperthreading == 'Yes'){
-              numVCPU = numVCPU * 2;
-              CDOMDevice.CPU = numVCPU;
-            } else{
-              CDOMDevice.CPU = numVCPU;
-            }
-            //normalize RAM to GB
-            let RAMRawData  = this.devices[i].ram;
-            if(this.devices[i].ram_size_type != 'GB'){
-               RAMRawData = Math.round(RAMRawData / 1024);
-            }
-            CDOMDevice.Memory = RAMRawData;
-            this.returnDevices.push(CDOMDevice);
+            const currentDevice = this.solarisService.getCDOMDevice(this.devices[i]);
+            this.returnDevices.push(currentDevice);
           }
           else if(this.devices[i].DeviceType == 'solaris_ldom'){
-            let jsonStr: string = this.devices[i].Metadata;
-            jsonStr = jsonStr.replace(/\\n/g, ' ');
-            let tmpMetadata: any = JSON.parse(jsonStr);
-            //Loop through all ldom devices, create dictionary with key of CDOM
-            let tmpThisCDOM: string = tmpMetadata.AssociatedCDOM;
-            console.log(tmpThisCDOM);
-            LDOMDevice.AssociatedCDOM = tmpMetadata['AssociatedCDOM'];
-            LDOMDevice.Name = tmpMetadata['Name'];
-            LDOMDevice.LUNs = tmpMetadata['luns'];
-            LDOMDevice.VLANs = tmpMetadata['vlans'];
-            LDOMDevice.Variables = tmpMetadata['variables'];
-            LDOMDevice.Vswitch = tmpMetadata['vswitch'];
-            CDOMDict[LDOMDevice.Name]=(LDOMDevice);
-            console.log(CDOMDict[LDOMDevice.Name]);
+            let currentDevice = this.solarisService.getLDOMDevice(this.devices[i]);
           }
         }
         console.log(this.devices[0]);
         this.devices = this.returnDevices;
       });
+  }
+
+
+  getLdoms(Ldoms: string[]) {
+    this.solarisService.ldomFilter = Ldoms;
+    this.router.navigate(['/solaris-ldom-create']);
   }
 }

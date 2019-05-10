@@ -1,21 +1,23 @@
 export class SolarisCdom {
-  Name: string;
-  Make: string;
-  Location: string;
+  name: string;
+  make: string;
+  location: string;
   IPAddress: string;
-  Memory: number;
-  CPU: number;
-  LUNs = new Array<string>();
-  VLANs = new Array<number>();
-  AssociatedLDOMS = new Array<string>();
-  VCC: string;
-  VCSDevs: string;
-  Vswitch: string;
-  VNet: string;
-  ILOMName: string;
-  ILOMIPAddress: string;
-  Variables: string;
-  Commands: string;
-  Metadata = new Array<any>();
+  ram: number;
+  ram_size_type: string;
+  vcpu: number;
+  cpucount: number;
+  cpucore: number;
+  luns = new Array<string>();
+  vlans = new Array<number>();
+  associatedldoms = new Array<string>();
+  vcc: string;
+  vcsdevs: string;
+  vswitch: string;
+  vnet: string;
+  ilomname: string;
+  ilomipaddress: string;
+  variables: string;
+  commands: string;
 }
 

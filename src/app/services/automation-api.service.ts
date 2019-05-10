@@ -37,10 +37,12 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/ipnat/');
   }
 
-  getDevices() {
-    return this.http.get(environment.apiBase + '/api/1.0/devices/');
+  getDevicesbtID(id: string) {
+    return this.http.get(environment.apiBase + `/api/1.0/devices/${id}/`);
   }
-
+  getDevices(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/`);
+  }
   getSubnets() {
     return this.http.get(environment.apiBase + '/api/1.0/subnets/');
   }

@@ -30,10 +30,10 @@
           <fa name="server"></fa>
         </td>
         <td>
-          <a href='/dashboard'>{{device.Name}}</a>
+          <a href='/dashboard'>{{device.name}}</a>
         </td>
           <td class="spaced"> 
-            <a href='/dashboard'>Associated LDOMs </a>
+            <button class="btn btn-default" (click)="getLdoms([1,2,3])">Associated LDOMs</button>
           </td>
       </tr>
   </tbody>

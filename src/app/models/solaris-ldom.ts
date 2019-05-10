@@ -1,13 +1,17 @@
 export class SolarisLdom {
-    Name: string;
-    Memory: number;
-    vCPU: number;
-    LUNs = new Array<string>();
-    VLANs = new Array<number>();
-    AssociatedCDOM: string;
-    Variables: string;
-    VCSDevs: string;
-    Vswitch: string;
-    VNet: string;
+    name: string;
+    devicetype: string;
+    ram: number;
+    ram_size_type: string;
+    cpucount: number;
+    cpucore: number;
+    vcpu: number;
+    luns = new Array<string>();
+    vlans = new Array<number>();
+    associatedcdom: string;
+    variables: string;
+    vcsdevs: string;
+    vswitch: string;
+    vnet: string;
     Commands: string;
 }
