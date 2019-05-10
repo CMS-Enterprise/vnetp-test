@@ -1,6 +1,6 @@
+// FIXME
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { StaticRoute } from 'src/app/models/static-route';
 
 @Component({
   selector: 'app-static-routes',
@@ -25,8 +25,7 @@ export class StaticRoutesComponent implements OnInit {
 
   getNetworks() {
     this.automationApiService.getSubnets().subscribe(
-      data => this.subnets = data,
-      () => this.getRoutingTable()
+      data => this.subnets = data
       );
   }
 
@@ -46,6 +45,7 @@ export class StaticRoutesComponent implements OnInit {
     return staticRoutes;
   }
 
+  // FIXME
   getRoutingTable() {
 
     this.routingTable = [];

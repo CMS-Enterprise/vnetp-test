@@ -277,6 +277,7 @@ describe('IpAddressService', () => {
     expect(result[1] === 'vlan').toBeTruthy();
     expect(result[2]).toBeTruthy();
   });
+
 });
 
 

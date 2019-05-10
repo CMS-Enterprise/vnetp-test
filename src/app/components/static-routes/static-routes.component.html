@@ -1,4 +1,4 @@
-<div class="offset-1 col-10">
+<div>
 
   <ul class="nav nav-tabs">
     <li class="nav-item"  (click)="navIndex = 0">
@@ -22,15 +22,19 @@
         <tr>
           <th scope="col">Interface Name</th>
           <th scope="col">Static Routes</th>
+          <th scope="col">VRF</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let subnet of subnets.subnets">
           <td>
-            <a href="/static-routes/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            <a routerLink="/static-routes/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>
             {{ getStaticRoutesCount(subnet) }}
+          </td>
+          <td>
+            {{ subnet.vrf_group_name }}
           </td>
         </tr>
       </tbody>

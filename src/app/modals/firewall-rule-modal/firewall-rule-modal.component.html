@@ -1,0 +1,453 @@
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="firewallRuleModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="large-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Firewall Rule</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="type">Action</label>
+          <select
+            name="action"
+            formControlName="action"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
+            aria-label="Type"
+          >
+            <option value="deny">Deny</option>
+            <option value="permit">Permit</option>
+          </select>
+          <div *ngIf="submitted && f.action.errors" class="invalid-feedback">
+            <div *ngIf="f.action.errors.required">Type is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="type">Protocol</label>
+          <select
+            name="protocol"
+            formControlName="protocol"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
+            aria-label="Protocol"
+          >
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+          </select>
+          <div *ngIf="submitted && f.protocol.errors" class="invalid-feedback">
+            <div *ngIf="f.protocol.errors.required">Protocol is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="name">Source Network Type</label>
+          <select
+            name="sourceNetworkType"
+            formControlName="sourceNetworkType"
+            class="form-control"
+            aria-label="Source Network Type"
+          >
+            <option value="ip">IP</option>
+            <option value="object">Network Object</option>
+            <option value="objectGroup">Network Object Group</option>
+          </select>
+
+          <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'ip'"
+            >Source IP</label
+          >
+          <input
+            type="text"
+            formControlName="sourceIp"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
+            aria-label="Source IP"
+            *ngIf="f.sourceNetworkType.value === 'ip'"
+          />
+          <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceIp.errors.required">
+              Source IP is required
+            </div>
+          </div>
+
+          <label for="name" *ngIf="f.sourceNetworkType.value === 'object'"
+            >Source Object</label
+          >
+          <select
+            formControlName="sourceNetworkObject"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceNetworkObject.errors
+            }"
+            aria-label="Source Object"
+            *ngIf="f.sourceNetworkType.value === 'object'"
+          >
+            <option
+              *ngFor="let networkObject of networkObjects"
+              [ngValue]="networkObject.Name"
+              >{{ networkObject.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.sourceNetworkObject.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourceNetworkObject.errors.required">
+              Source Object is required
+            </div>
+          </div>
+
+          <label
+            for="sourceNetworkObjectGroup"
+            *ngIf="f.sourceNetworkType.value === 'objectGroup'"
+            >Source Object Group</label
+          >
+          <select
+            formControlName="sourceNetworkObjectGroup"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceNetworkObjectGroup.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.sourceNetworkType.value === 'objectGroup'"
+          >
+            <option
+              *ngFor="let networkObjectGroup of networkObjectGroups"
+              [ngValue]="networkObjectGroup.Name"
+              >{{ networkObjectGroup.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.sourceNetworkObjectGroup.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourceNetworkObjectGroup.errors.required">
+              Source Object Group is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="name">Source Service Type</label>
+          <select
+            name="sourceServiceType"
+            formControlName="sourceServiceType"
+            class="form-control"
+            aria-label="Source Service Type"
+          >
+            <option value="port">Port</option>
+            <option value="object">Service Object</option>
+            <option value="objectGroup">Service Object Group</option>
+          </select>
+
+          <label for="name" *ngIf="f.sourceServiceType.value === 'port'"
+            >Source Ports</label
+          >
+          <input
+            type="text"
+            formControlName="sourcePorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+            aria-label="Name"
+            *ngIf="f.sourceServiceType.value === 'port'"
+          />
+          <div
+            *ngIf="submitted && f.sourcePorts.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourcePorts.errors.required">
+              Source Ports is required
+            </div>
+          </div>
+
+          <label for="name" *ngIf="f.sourceServiceType.value === 'object'"
+            >Source Service Object
+          </label>
+          <select
+            formControlName="sourceServiceObject"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceServiceObject.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.sourceServiceType.value === 'object'"
+          >
+            <option
+              *ngFor="let serviceObject of serviceObjects"
+              [ngValue]="serviceObject.Name"
+              >{{ serviceObject.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.sourceServiceObject.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourceServiceObject.errors.required">
+              Source Object is required
+            </div>
+          </div>
+
+          <label
+            for="name"
+            *ngIf="f.sourceServiceType.value === 'objectGroup'"
+            >Source Service Object Group</label
+          >
+          <select
+            formControlName="sourceServiceObjectGroup"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceServiceObjectGroup.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.sourceServiceType.value === 'objectGroup'"
+          >
+            <option
+              *ngFor="let serviceObjectGroup of serviceObjectGroups"
+              [ngValue]="serviceObjectGroup.Name"
+              >{{ serviceObjectGroup.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.sourceServiceObjectGroup.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourceServiceObjectGroup.errors.required">
+              Source Object Group is required
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="name">Destination Network Type</label>
+          <select
+            name="destinationNetworkType"
+            formControlName="destinationNetworkType"
+            class="form-control"
+            aria-label="Destination Network Type"
+          >
+            <option value="ip">IP</option>
+            <option value="object">Network Object</option>
+            <option value="objectGroup">Network Object Group</option>
+          </select>
+
+          <label
+            for="destinationIp"
+            *ngIf="f.destinationNetworkType.value === 'ip'"
+            >Destination IP</label
+          >
+          <input
+            type="text"
+            formControlName="destinationIp"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
+            aria-label="Destination IP"
+            *ngIf="f.destinationNetworkType.value === 'ip'"
+          />
+          <div
+            *ngIf="submitted && f.destinationIp.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationIp.errors.required">
+              Destination IP is required
+            </div>
+          </div>
+
+          <label for="name" *ngIf="f.destinationNetworkType.value === 'object'"
+            >Destination Object</label
+          >
+          <select
+            formControlName="destinationNetworkObject"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationNetworkObject.errors
+            }"
+            aria-label="Destination Object"
+            *ngIf="f.destinationNetworkType.value === 'object'"
+          >
+            <option
+              *ngFor="let networkObject of networkObjects"
+              [ngValue]="networkObject.Name"
+              >{{ networkObject.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.destinationNetworkObject.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationNetworkObject.errors.required">
+              Destination Object is required
+            </div>
+          </div>
+
+          <label
+            for="destinationNetworkObjectGroup"
+            *ngIf="f.destinationNetworkType.value === 'objectGroup'"
+            >Destination Object Group</label
+          >
+          <select
+            formControlName="destinationNetworkObjectGroup"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationNetworkObjectGroup.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.destinationNetworkType.value === 'objectGroup'"
+          >
+            <option
+              *ngFor="let networkObjectGroup of networkObjectGroups"
+              [ngValue]="networkObjectGroup.Name"
+              >{{ networkObjectGroup.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.destinationNetworkObjectGroup.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationNetworkObjectGroup.errors.required">
+              Destination Object Group is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="name">Destination Service Type</label>
+          <select
+            name="destinationServiceType"
+            formControlName="destinationServiceType"
+            class="form-control"
+            aria-label="Destination Service Type"
+          >
+            <option value="port">Port</option>
+            <option value="object">Service Object</option>
+            <option value="objectGroup">Service Object Group</option>
+          </select>
+
+          <label for="destinationPorts" *ngIf="f.destinationServiceType.value === 'port'"
+            >Destination Ports</label
+          >
+          <input
+            type="text"
+            formControlName="destinationPorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+            aria-label="Name"
+            *ngIf="f.destinationServiceType.value === 'port'"
+          />
+          <div
+            *ngIf="submitted && f.destinationPorts.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationPorts.errors.required">
+              Destination Ports is required
+            </div>
+          </div>
+
+          <label for="name" *ngIf="f.destinationServiceType.value === 'object'"
+            >Destination Service Object
+          </label>
+          <select
+            formControlName="destinationServiceObject"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationServiceObject.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.destinationServiceType.value === 'object'"
+          >
+            <option
+              *ngFor="let serviceObject of serviceObjects"
+              [ngValue]="serviceObject.Name"
+              >{{ serviceObject.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.destinationServiceObject.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationServiceObject.errors.required">
+              Destination Object is required
+            </div>
+          </div>
+
+          <label
+            for="name"
+            *ngIf="f.destinationServiceType.value === 'objectGroup'"
+            >Destination Service Object Group</label
+          >
+          <select
+            formControlName="destinationServiceObjectGroup"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationServiceObjectGroup.errors
+            }"
+            aria-label="Name"
+            *ngIf="f.destinationServiceType.value === 'objectGroup'"
+          >
+            <option
+              *ngFor="let serviceObjectGroup of serviceObjectGroups"
+              [ngValue]="serviceObjectGroup.Name"
+              >{{ serviceObjectGroup.Name }}</option
+            >
+          </select>
+          <div
+            *ngIf="submitted && f.destinationServiceObjectGroup.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.destinationServiceObjectGroup.errors.required">
+              Destination Object Group is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

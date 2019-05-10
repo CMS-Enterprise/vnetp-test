@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="currentUser">
-  <a class="navbar-brand" href="dashboard">
+  <a class="navbar-brand" routerLink="dashboard">
     <h4>DRaaS</h4>
   </a>
  
@@ -19,7 +19,6 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle"
-          href="#"
           id="navbarDropdown"
           role="button"
           data-toggle="dropdown"
@@ -28,32 +27,50 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="networks">Networks</a>
-          <a class="dropdown-item" href="ipaddresses">IP Addresses</a>
-          <a class="dropdown-item" href="static-routes">Static Routes</a>
+          <a class="dropdown-item" routerLink="networks">Subnets</a>
+          <a class="dropdown-item" routerLink="static-routes">Routing</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="network-security-profiles">Network Security</a>
-          <a class="dropdown-item" href="ip-nats">Network Address Translation</a>
+          <a class="dropdown-item" routerLink="firewall-rules">Firewall Rules</a>
+          <a class="dropdown-item" routerLink="ip-nats">Network Address Translation</a>
         </div>
       </li>
-    </ul>
+  
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >IPAM
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink="ipaddresses">IP Addresses</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="network-objects-groups">Network Objects/Groups</a>
+            <a class="dropdown-item" routerLink="service-objects-groups">Service Objects/Groups</a>
+          </div>
+        </li>
+      </ul>
+
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         <a
           class="nav-link"
           [routerLinkActive]="['active']"
-          [routerLink]="['jobs']"
-          href="jobs"
+          routerLink="jobs"
           ><fa name="spinner fa-spin"
             style="padding-right:5px;"
             [hidden]="!runningJobs.count"></fa>
           <span class="badge badge-success" [hidden]="!runningJobs.count">{{runningJobs.count}}</span> Jobs</a>
       </li>
 
+
+
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
-          href="#"
           id="navbarDropdown"
           role="button"
           data-toggle="dropdown"
@@ -68,7 +85,7 @@
       </li>
 
       <li class="nav-item">
-          <button class="btn btn-danger" routerLink="/deploy">Deploy</button>
+          <button class="btn btn-danger" routerLink="deploy">Deploy</button>
       </li>
 
       <ul class="navbar-nav ml-auto">
@@ -96,9 +113,6 @@
       (click)="logoutModal.close()"
     ></button>
   </div>
-<!-- 
-  <div class="modal-body text-center">
-  </div> -->
 
   <div class="modal-footer">
     <button

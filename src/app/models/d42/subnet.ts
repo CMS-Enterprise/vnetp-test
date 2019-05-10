@@ -1,8 +1,9 @@
-import { CustomFieldsObject, CustomField } from '../custom-fields-object-interface';
+import { CustomFieldsObject, CustomField } from '../custom-fields-object.interface';
 
 // tslint:disable variable-name
 export class Subnet implements CustomFieldsObject {
     public subnet_id: number;
+    public vrf_group_id?: number;
     public name: string;
     public description: string;
     public network: string;

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DeployComponent } from './deploy.component';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('DeployComponent', () => {
   let component: DeployComponent;
@@ -8,7 +9,8 @@ describe('DeployComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeployComponent ]
+      declarations: [ DeployComponent ],
+      providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();
   }));

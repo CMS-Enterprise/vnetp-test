@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule } from '@angular/forms';
+import {FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
@@ -20,9 +20,9 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { NetworksComponent } from './components/networks/networks.component';
-import { NetworkSecurityProfilesComponent } from './components/network-security-profiles/network-security-profiles.component';
+import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { NetworkSecurityProfileDetailComponent } from './components/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
+import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -37,8 +37,14 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
-import { YesNoModalComponent } from './components/modals/yes-no-modal/yes-no-modal.component';
 import { DeployComponent } from './components/deploy/deploy.component';
+import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
+import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
+import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
+import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
+import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +53,8 @@ import { DeployComponent } from './components/deploy/deploy.component';
     LoginComponent,
     NetworksComponent,
     NetworksDetailComponent,
-    NetworkSecurityProfilesComponent,
-    NetworkSecurityProfileDetailComponent,
+    FirewallRulesComponent,
+    FirewallRulesDetailComponent,
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent,
@@ -62,8 +68,14 @@ import { DeployComponent } from './components/deploy/deploy.component';
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
-    YesNoModalComponent,
     DeployComponent,
+    NetworkObjectsGroupsComponent,
+    NetworkObjectModalComponent,
+    NetworkObjectGroupModalComponent,
+    ServiceObjectsGroupsComponent,
+    ServiceObjectModalComponent,
+    ServiceObjectGroupModalComponent,
+    FirewallRuleModalComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +84,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
     CommonModule,
     HttpClientModule,
     AngularFontAwesomeModule,
+    ReactiveFormsModule,
     FormsModule,
     PapaParseModule,
     NgxMaskModule.forRoot(),
@@ -83,7 +96,7 @@ import { DeployComponent } from './components/deploy/deploy.component';
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService, FormBuilder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

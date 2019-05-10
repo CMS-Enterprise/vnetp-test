@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
+import { Vrf } from '../models/d42/vrf';
 
 
 @Injectable({
@@ -44,15 +45,25 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/devices/');
   }
 
-  getSubnets() {
-    return this.http.get(environment.apiBase + '/api/1.0/subnets/');
+  getVrfs() {
+    return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
   }
 
-  getSubnet(id: string){
+  getSubnets(vrfId?: number) {
+    let uri = '/api/1.0/subnets';
+
+    if (vrfId) {
+      uri += `?vrf_group_id=${vrfId}`;
+    }
+
+    return this.http.get(environment.apiBase + uri);
+  }
+
+  getSubnet(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/subnets/${id}`);
   }
 
-  getSubnetIps(id: string){
+  getSubnetIps(id: number) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
   }
 }

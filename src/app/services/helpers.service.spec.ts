@@ -23,7 +23,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'deployed', value: 'yes', notes: ''}]
+      custom_fields: [{key: 'deployed', value: 'Yes', notes: ''}]
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
