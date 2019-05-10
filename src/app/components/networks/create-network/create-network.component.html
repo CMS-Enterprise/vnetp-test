@@ -1,6 +1,6 @@
 <h4>Create Network</h4>
 
-<div class="offset-1 col-md-10">
+<div>
   <div>
     <form
       name="networkForm"
@@ -137,20 +137,18 @@
           </div>
         </div>
         <div class="form-group offset-md-3 col-md-6">
-          <label for="tier">Tier</label>
+          <label for="vrf">VRF</label>
           <select
-          name="tier" 
+          name="vrf" 
           class="form-control"
           aria-label="Tier"
           #formTier="ngModel"
-          [(ngModel)]=tier
+          [(ngModel)]="subnet.vrf_group_id"
           [ngClass]="{ 'is-invalid': form.submitted && formTier.invalid }"
-           id="tier"
+           id="vrf"
            required
            >
-            <option value="web">Web</option>
-            <option value="app">App</option>
-            <option value="db">DB</option>
+            <option *ngFor='let vrf of vrfs' [ngValue]=vrf.id>{{vrf.name}}</option>
           </select>
         </div>
       </div>

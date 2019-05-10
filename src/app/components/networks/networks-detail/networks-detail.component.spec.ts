@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaskModule } from 'ngx-mask';
+import { IpaddressesComponent } from '../../ipaddresses/ipaddresses.component';
 
 describe('NetworksDetailComponent', () => {
   let component: NetworksDetailComponent;
@@ -15,7 +16,7 @@ describe('NetworksDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxSmartModalModule],
-      declarations: [ NetworksDetailComponent ],
+      declarations: [ NetworksDetailComponent, IpaddressesComponent ],
       providers: [HttpClient, HttpHandler, CookieService, NgxSmartModalService]
     })
     .compileComponents();

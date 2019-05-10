@@ -1,0 +1,175 @@
+<ngx-smart-modal
+  #networkObjectModal
+  identifier="networkObjectModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Network Object</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select
+          name="type"
+          formControlName="type"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+          aria-label="Type"
+        >
+          <option></option>
+          <option value="host">Host</option>
+          <option value="range">Range</option>
+          <option value="network">Network</option>
+        </select>
+        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+          <div *ngIf="f.type.errors.required">Type is required</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'host'">
+        <label for="name">Host Address</label>
+        <input
+          type="text"
+          name="name"
+          formControlName="hostAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.hostAddress.errors }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099"
+          aria-label="Host Address"
+          *ngIf="f.type.value == 'host'"
+        />
+        <div *ngIf="submitted && f.hostAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.hostAddress.errors.required">
+            IP Address is required
+          </div>
+          <div *ngIf="f.hostAddress.errors.validIpv4Address">
+            IP Address is invalid
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name" *ngIf="f.type.value == 'network'">CIDR Address</label>
+        <input
+          type="text"
+          name="name"
+          formControlName="cidrAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.cidrAddress.errors }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099/09"
+          aria-label="CIDR Address"
+          *ngIf="f.type.value == 'network'"
+        />
+        <div *ngIf="submitted && f.cidrAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.cidrAddress.errors.required">
+            CIDR Address is required.
+          </div>
+          <div *ngIf="f.cidrAddress.errors.validIpv4Address">
+            CIDR Address is invalid.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subnetMask" *ngIf="f.type.value == 'range'"
+          >Start Address</label
+        >
+        <input
+          type="text"
+          name="startAddress"
+          class="form-control"
+          formControlName="startAddress"
+          [ngClass]="{
+            'is-invalid': submitted && f.startAddress.errors
+          }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099"
+          aria-label="Start Address"
+          *ngIf="f.type.value == 'range'"
+        />
+
+        <div
+          *ngIf="submitted && f.startAddress.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.startAddress.errors && f.startAddress.errors.required">
+            Start Address is required
+          </div>
+          <div
+            *ngIf="
+              f.startAddress.errors && f.startAddress.errors.validIpv4Address
+            "
+          >
+            IP Address is invalid
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subnetMask" *ngIf="f.type.value == 'range'"
+          >End Address</label
+        >
+        <input
+          type="text"
+          name="endAddress"
+          class="form-control"
+          formControlName="endAddress"
+          [ngClass]="{ 'is-invalid': submitted && f.endAddress.errors }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099"
+          aria-label="End Address"
+          *ngIf="f.type.value == 'range'"
+        />
+        <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.endAddress.errors.validIpv4Address">
+            IP Address is invalid
+          </div>
+          <div *ngIf="f.endAddress.errors.required">
+            End Address is required
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

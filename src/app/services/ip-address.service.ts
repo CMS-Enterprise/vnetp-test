@@ -1,8 +1,10 @@
+// TODO: Better error handling.
 import { Injectable } from '@angular/core';
 import { IPv4Range } from 'ip-num/IPv4Range';
 import { Validator } from 'ip-num/Validator';
 import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';
 import { Subnet } from '../models/d42/subnet';
+import { IPv4 } from 'ip-num/IPv4';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +14,20 @@ export class IpAddressService {
 
   // Returns a boolean indicating if an IPv4 string is valid.
   public isValidIPv4String(ipAddress: string): [boolean, string[]] {
-    return Validator.isValidIPv4String(ipAddress);
+    try {
+      return Validator.isValidIPv4String(ipAddress);
+    } catch (e) {
+      return [false, null];
+    }
   }
 
   // Returns a boolean indicating if an IPv4 cidr notaion is valid.
   public isValidIPv4CidrNotation(cidr: string): [boolean, string[]] {
-    return Validator.isValidIPv4CidrNotation(cidr);
+    try {
+      return Validator.isValidIPv4CidrNotation(cidr);
+    } catch (e) {
+      return [false, null];
+    }
   }
 
   // Returns an IPv4 range from a cidr formatted IPv4 address.

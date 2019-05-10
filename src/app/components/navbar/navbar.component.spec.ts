@@ -24,7 +24,7 @@ describe('NavbarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router)
+    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 

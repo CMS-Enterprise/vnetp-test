@@ -7,6 +7,12 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule } from 'ngx-mask';
+import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -15,14 +21,21 @@ describe('AppComponent', () => {
         RouterTestingModule,
         AngularFontAwesomeModule,
         NgxSmartModalModule,
-        HttpClientModule
+        NgxMaskModule.forRoot(),
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [
         AppComponent,
         NavbarComponent,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        NetworkObjectModalComponent,
+        NetworkObjectGroupModalComponent,
+        ServiceObjectModalComponent,
+        ServiceObjectGroupModalComponent
       ],
-      providers: [CookieService, NgxSmartModalService]
+      providers: [CookieService, NgxSmartModalService, FormBuilder]
     }).compileComponents();
   }));
 
