@@ -7,6 +7,7 @@ import { AppMessage } from '../models/app-message';
 })
 export class MessageService {
     private subject = new Subject<any>();
+    public messageHistory = new Array<AppMessage>();
 
     listen(): Observable<AppMessage> {
        return this.subject.asObservable();
@@ -14,9 +15,11 @@ export class MessageService {
 
     sendMessage(m: AppMessage) {
        this.subject.next(m);
+       this.messageHistory.push(m);
     }
 
     clearMessages() {
        this.subject.next();
+       this.messageHistory = new Array<AppMessage>();
     }
 }
