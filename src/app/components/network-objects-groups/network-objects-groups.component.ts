@@ -160,6 +160,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.network_object_dto = dto;
+    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
 
     const body = { extra_vars };
 
