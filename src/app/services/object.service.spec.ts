@@ -24,7 +24,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceNetworkObject).toBeTruthy();
-    expect(firewallRule.SourceNetworkObject.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.SourceNetworkObject === 'Test2').toBeTruthy();
   });
 
   it('should map destination network object', () => {
@@ -34,7 +34,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapNetworkObject(firewallRule, 'Test2', networkObjects, RuleLocation.Destination);
 
     expect(firewallRule.DestinationNetworkObject).toBeTruthy();
-    expect(firewallRule.DestinationNetworkObject.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.DestinationNetworkObject === 'Test2').toBeTruthy();
   });
 
   it('should throw error with invalid network object', () => {
@@ -52,7 +52,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Source);
 
     expect(firewallRule.SourceNetworkObjectGroup).toBeTruthy();
-    expect(firewallRule.SourceNetworkObjectGroup.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.SourceNetworkObjectGroup === 'Test2').toBeTruthy();
   });
 
 
@@ -63,7 +63,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapNetworkObjectGroup(firewallRule, 'Test2', networkObjectGroups, RuleLocation.Destination);
 
     expect(firewallRule.DestinationNetworkObjectGroup).toBeTruthy();
-    expect(firewallRule.DestinationNetworkObjectGroup.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.DestinationNetworkObjectGroup === 'Test2').toBeTruthy();
   });
 
   it('should throw error with invalid network object group', () => {
@@ -81,7 +81,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceServiceObject).toBeTruthy();
-    expect(firewallRule.SourceServiceObject.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.SourceServiceObject === 'Test2').toBeTruthy();
   });
 
   it('should map destination service object', () => {
@@ -91,7 +91,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Destination);
 
     expect(firewallRule.DestinationServiceObject).toBeTruthy();
-    expect(firewallRule.DestinationServiceObject.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.DestinationServiceObject === 'Test2').toBeTruthy();
   });
 
   it('should throw error with invalid service object', () => {
@@ -109,7 +109,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapServiceObject(firewallRule, 'Test2', serviceObjects, RuleLocation.Source);
 
     expect(firewallRule.SourceServiceObject).toBeTruthy();
-    expect(firewallRule.SourceServiceObject.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.SourceServiceObject === 'Test2').toBeTruthy();
   });
 
   it('should map destination service object', () => {
@@ -119,7 +119,7 @@ describe('FirewallRuleService', () => {
     ObjectService.mapServiceObjectGroup(firewallRule, 'Test2', serviceObjectGroups, RuleLocation.Destination);
 
     expect(firewallRule.DestinationServiceObjectGroup).toBeTruthy();
-    expect(firewallRule.DestinationServiceObjectGroup.Name === 'Test2').toBeTruthy();
+    expect(firewallRule.DestinationServiceObjectGroup === 'Test2').toBeTruthy();
   });
 
   it('should throw error with invalid service object', () => {
