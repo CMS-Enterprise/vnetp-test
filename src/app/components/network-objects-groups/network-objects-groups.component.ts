@@ -20,6 +20,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
+  deletedNetworkObjects: Array<NetworkObject>;
   navIndex = 0;
 
   editNetworkObjectIndex: number;
@@ -56,6 +57,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.networkObjectGroups = new Array<NetworkObjectGroup>();
       } else {
       this.networkObjects = networkObjectDto.NetworkObjects;
+      this.deletedNetworkObjects = new Array<NetworkObject>();
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
       }
   }
@@ -129,6 +131,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.networkObjects.indexOf(networkObject);
     if ( index > -1) {
       this.networkObjects.splice(index, 1);
+
+      if (!this.deletedNetworkObjects) { this.deletedNetworkObjects = new Array<NetworkObject>(); }
+      this.deletedNetworkObjects.push(networkObject);
+
       this.dirty = true;
     }
   }
@@ -151,6 +157,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   saveAll() {
+    // TODO: Display warning if objects will be deleted.
+
     this.dirty = false;
     const dto = new NetworkObjectDto();
 
@@ -161,11 +169,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.network_object_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.deleted_network_objects = this.deletedNetworkObjects;
 
     const body = { extra_vars };
 
     this.api.launchTemplate('save-network-object-dto', body).subscribe(data => {
-    }, error => { this.dirty = true;});
+    }, error => { this.dirty = true; });
+
+    this.deletedNetworkObjects = new Array<NetworkObject>();
   }
 
   handleFileSelect(evt) {
