@@ -57,7 +57,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.networkObjectGroups = new Array<NetworkObjectGroup>();
       } else {
       this.networkObjects = networkObjectDto.NetworkObjects;
-      this.deletedNetworkObjects = new Array<NetworkObject>();
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
       }
   }

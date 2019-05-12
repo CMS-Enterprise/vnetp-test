@@ -21,6 +21,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   currentVrf: Vrf;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
+  deletedServiceObjects: Array<ServiceObject>;
   navIndex = 0;
 
   editServiceObjectIndex: number;
@@ -130,6 +131,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.serviceObjects.indexOf(serviceObject);
     if ( index > -1) {
       this.serviceObjects.splice(index, 1);
+
+      if (!this.deletedServiceObjects) { this.deletedServiceObjects = new Array<ServiceObject>(); }
+      this.deletedServiceObjects.push(serviceObject);
       this.dirty = true;
     }
   }
@@ -161,11 +165,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.service_object_dto = dto;
+    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.deleted_service_objects = this.deletedServiceObjects;
 
     const body = { extra_vars };
 
     this.api.launchTemplate('save-service-object-dto', body).subscribe(data => { },
       error => { this.dirty = true; });
+
+    this.deletedServiceObjects = new Array<ServiceObject>();
   }
 
   handleFileSelect(evt) {
