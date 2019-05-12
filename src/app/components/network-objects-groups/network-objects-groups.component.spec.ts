@@ -165,6 +165,7 @@ describe('NetworkObjectsGroupsComponent', () => {
 
     component.deleteNetworkObjectGroup(component.networkObjectGroups[1]);
     expect(component.networkObjectGroups.length === 1).toBeTruthy();
+    expect(component.deletedNetworkObjectGroups.length === 1).toBeTruthy();
     expect(component.dirty).toBeTruthy();
   });
 });

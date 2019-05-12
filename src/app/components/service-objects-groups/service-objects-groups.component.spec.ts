@@ -170,6 +170,7 @@ describe('ServicesObjectsGroupsComponent', () => {
 
     component.deleteServiceObjectGroup(component.serviceObjectGroups[1]);
     expect(component.serviceObjectGroups.length === 1).toBeTruthy();
+    expect(component.deletedServiceObjectGroups.length === 1).toBeTruthy();
     expect(component.dirty).toBeTruthy();
   });
 });
