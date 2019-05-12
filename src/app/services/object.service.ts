@@ -22,9 +22,9 @@ export class ObjectService {
 
     if (networkObject) {
       if (ruleLocation === RuleLocation.Source) {
-        firewallRule.SourceNetworkObject = Object.assign({}, networkObject);
+        firewallRule.SourceNetworkObject = networkObject.Name;
       } else if (ruleLocation === RuleLocation.Destination) {
-        firewallRule.DestinationNetworkObject = Object.assign({}, networkObject);
+        firewallRule.DestinationNetworkObject = networkObject.Name;
       }
     } else if (!networkObject) {
       throw new Error('Unable to find Network Object.');
@@ -38,9 +38,9 @@ export class ObjectService {
 
     if (networkObjectGroup) {
       if (ruleLocation === RuleLocation.Source) {
-        firewallRule.SourceNetworkObjectGroup = Object.assign({}, networkObjectGroup);
+        firewallRule.SourceNetworkObjectGroup = networkObjectGroup.Name;
       } else if (ruleLocation === RuleLocation.Destination) {
-        firewallRule.DestinationNetworkObjectGroup = Object.assign({}, networkObjectGroup);
+        firewallRule.DestinationNetworkObjectGroup = networkObjectGroup.Name;
       }
     } else if (!networkObjectGroup) {
       throw new Error('Unable to find Network Object Group.');
@@ -54,9 +54,9 @@ export class ObjectService {
 
    if (serviceObject) {
       if (ruleLocation === RuleLocation.Source) {
-        firewallRule.SourceServiceObject = Object.assign({}, serviceObject);
+        firewallRule.SourceServiceObject = serviceObject.Name;
       } else if (ruleLocation === RuleLocation.Destination) {
-        firewallRule.DestinationServiceObject = Object.assign({}, serviceObject);
+        firewallRule.DestinationServiceObject = serviceObject.Name;
       }
     } else if (!serviceObject) {
       throw new Error('Unable to find Service Object.');
@@ -70,9 +70,9 @@ export class ObjectService {
 
   if (serviceObjectGroup) {
       if (ruleLocation === RuleLocation.Source) {
-        firewallRule.SourceServiceObjectGroup = Object.assign({}, serviceObjectGroup);
+        firewallRule.SourceServiceObjectGroup = serviceObjectGroup.Name;
       } else if (ruleLocation === RuleLocation.Destination) {
-        firewallRule.DestinationServiceObjectGroup = Object.assign({}, serviceObjectGroup);
+        firewallRule.DestinationServiceObjectGroup = serviceObjectGroup.Name;
       }
     } else if (!serviceObjectGroup) {
       throw new Error('Unable to find Service Object Group.');

@@ -135,10 +135,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.form.controls.sourceIp.setValue(firewallRule.SourceIP);
         } else if (firewallRule.SourceNetworkObject) {
           this.form.controls.sourceNetworkType.setValue('object');
-          this.form.controls.sourceNetworkObject.setValue(firewallRule.SourceNetworkObject.Name);
+          this.form.controls.sourceNetworkObject.setValue(firewallRule.SourceNetworkObject);
         } else if (firewallRule.SourceNetworkObjectGroup) {
           this.form.controls.sourceNetworkType.setValue('objectGroup');
-          this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.SourceNetworkObjectGroup.Name);
+          this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.SourceNetworkObjectGroup);
         }
 
         if (firewallRule.SourcePorts) {
@@ -146,10 +146,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.form.controls.sourcePorts.setValue(firewallRule.SourcePorts);
         } else if (firewallRule.SourceServiceObject) {
           this.form.controls.sourceServiceType.setValue('object');
-          this.form.controls.sourceServiceObject.setValue(firewallRule.SourceServiceObject.Name);
+          this.form.controls.sourceServiceObject.setValue(firewallRule.SourceServiceObject);
         } else if (firewallRule.SourceServiceObjectGroup) {
           this.form.controls.sourceServiceType.setValue('objectGroup');
-          this.form.controls.sourceServiceObjectGroup.setValue(firewallRule.SourceServiceObjectGroup.Name);
+          this.form.controls.sourceServiceObjectGroup.setValue(firewallRule.SourceServiceObjectGroup);
         }
 
         if (firewallRule.DestinationIP) {
@@ -157,10 +157,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.form.controls.destinationIp.setValue(firewallRule.DestinationIP);
         } else if (firewallRule.DestinationNetworkObject) {
           this.form.controls.destinationNetworkType.setValue('object');
-          this.form.controls.destinationNetworkObject.setValue(firewallRule.DestinationNetworkObject.Name);
+          this.form.controls.destinationNetworkObject.setValue(firewallRule.DestinationNetworkObject);
         } else if (firewallRule.DestinationNetworkObjectGroup) {
           this.form.controls.destinationNetworkType.setValue('objectGroup');
-          this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.DestinationNetworkObjectGroup.Name);
+          this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.DestinationNetworkObjectGroup);
         }
 
         if (firewallRule.DestinationPorts) {
@@ -168,10 +168,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.form.controls.destinationPorts.setValue(firewallRule.DestinationPorts);
         } else if (firewallRule.DestinationServiceObject) {
           this.form.controls.destinationServiceType.setValue('object');
-          this.form.controls.destinationServiceObject.setValue(firewallRule.DestinationServiceObject.Name);
+          this.form.controls.destinationServiceObject.setValue(firewallRule.DestinationServiceObject);
         } else if (firewallRule.DestinationServiceObjectGroup) {
           this.form.controls.destinationServiceType.setValue('objectGroup');
-          this.form.controls.destinationServiceObjectGroup.setValue(firewallRule.DestinationServiceObjectGroup.Name);
+          this.form.controls.destinationServiceObjectGroup.setValue(firewallRule.DestinationServiceObjectGroup);
         }
 
         this.form.updateValueAndValidity();
