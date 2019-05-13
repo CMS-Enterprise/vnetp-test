@@ -158,10 +158,10 @@ describe('NetworkObjectModalComponent', () => {
     expect(endAddress.valid).toBeFalsy();
   });
 
-  // Form State when Type: Network selected
+  // Form State when Type: Subnet selected
   it ('cidrAddress should be required', () => {
     const type = component.form.controls.type;
-    type.setValue('network');
+    type.setValue('subnet');
     const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeFalsy();
   });

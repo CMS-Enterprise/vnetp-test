@@ -20,6 +20,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
+  deletedNetworkObjects: Array<NetworkObject>;
+  deletedNetworkObjectGroups: Array<NetworkObjectGroup>;
   navIndex = 0;
 
   editNetworkObjectIndex: number;
@@ -129,6 +131,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.networkObjects.indexOf(networkObject);
     if ( index > -1) {
       this.networkObjects.splice(index, 1);
+
+      if (!this.deletedNetworkObjects) { this.deletedNetworkObjects = new Array<NetworkObject>(); }
+      this.deletedNetworkObjects.push(networkObject);
+
       this.dirty = true;
     }
   }
@@ -146,11 +152,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.networkObjectGroups.indexOf(networkObjectGroup);
     if ( index > -1) {
       this.networkObjectGroups.splice(index, 1);
+
+      if (!this.deletedNetworkObjectGroups) { this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>(); }
+      this.deletedNetworkObjectGroups.push(networkObjectGroup);
+
       this.dirty = true;
     }
   }
 
   saveAll() {
+    // TODO: Display warning if objects will be deleted.
+
     this.dirty = false;
     const dto = new NetworkObjectDto();
 
@@ -160,11 +172,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.network_object_dto = dto;
+    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.deleted_network_objects = this.deletedNetworkObjects;
+    extra_vars.deleted_network_object_groups = this.deletedNetworkObjectGroups;
 
     const body = { extra_vars };
 
     this.api.launchTemplate('save-network-object-dto', body).subscribe(data => {
-    }, error => { this.dirty = true;});
+    }, error => { this.dirty = true; });
+
+    this.deletedNetworkObjects = new Array<NetworkObject>();
+    this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
   handleFileSelect(evt) {

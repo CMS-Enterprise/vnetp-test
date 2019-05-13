@@ -117,6 +117,7 @@ describe('ServicesObjectsGroupsComponent', () => {
     { Name: 'Test2'} as ServiceObject];
 
     component.deleteServiceObject(component.serviceObjects[1]);
+    expect(component.deletedServiceObjects.length === 1).toBeTruthy();
     expect(component.serviceObjects.length === 1).toBeTruthy();
   });
 
@@ -169,5 +170,7 @@ describe('ServicesObjectsGroupsComponent', () => {
 
     component.deleteServiceObjectGroup(component.serviceObjectGroups[1]);
     expect(component.serviceObjectGroups.length === 1).toBeTruthy();
+    expect(component.deletedServiceObjectGroups.length === 1).toBeTruthy();
+    expect(component.dirty).toBeTruthy();
   });
 });

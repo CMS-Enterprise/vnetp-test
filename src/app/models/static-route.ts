@@ -1,17 +1,12 @@
 export class StaticRoute {
     InterfaceName: string;
 
-    IpAddress: string;
-
-    SubnetMask: string;
+    CidrAddress: string;
 
     NextHop: string;
 
+    // TODO: Remove
     Edit: boolean;
-
-    Deleted: boolean;
-
-    Updated: boolean;
 }
 
 
