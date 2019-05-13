@@ -74,6 +74,8 @@ export class StaticRouteDetailComponent implements OnInit {
     }
 
     this.messageService.filter('Job Launched');
+
+    this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
   getStaticRoutes() {
