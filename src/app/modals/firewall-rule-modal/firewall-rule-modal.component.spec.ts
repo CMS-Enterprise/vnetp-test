@@ -56,6 +56,11 @@ describe('FirewallRuleModalComponent', () => {
     expect(protocol.valid).toBeFalsy();
   });
 
+  it('log should not be required', () => {
+    const log = component.form.controls.log;
+    expect(log.valid).toBeTruthy();
+  });
+
   it('direction should not be required', () => {
     const direction = component.form.controls.direction;
     expect(direction.valid).toBeTruthy();

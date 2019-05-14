@@ -35,6 +35,7 @@
       <th scope="col">Source Service</th>
       <th scope="col">Destination Address</th>
       <th scope="col">Destination Service</th> 
+      <th scope="col">Log</th>
       <th></th>
     </tr>
   </thead>
@@ -50,7 +51,7 @@
         <p>{{firewallRule.Protocol}}</p>
       </td>
       <td>
-       {{firewallRule.Direction}}
+       <p>{{firewallRule.Direction}}</p>
       </td>
       <td>
         <p *ngIf="firewallRule.SourceIP" aria-label="Source IP">{{firewallRule.SourceIP}}</p>
@@ -71,6 +72,9 @@
         <p *ngIf="firewallRule.DestinationPorts" aria-label="Destination Ports">{{firewallRule.DestinationPorts}}</p>    
         <p *ngIf="firewallRule.DestinationServiceObject" aria-label="Destination Service Object"> {{firewallRule.DestinationServiceObject}} (Object)</p>   
         <p *ngIf="firewallRule.DestinationServiceObjectGroup" aria-label="Destination Service Object Group">{{firewallRule.DestinationServiceObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p>{{firewallRule.Log}}</p>
       </td>
       <td>  
         <fa 
