@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { HelpersService } from './helpers.service';
 import { Subnet } from '../models/d42/subnet';
 import { isUndefined } from 'util';
+import { CustomFieldsObject } from '../models/custom-fields-object.interface';
+import { Vrf } from '../models/d42/vrf';
 
 describe('HelpersService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -213,4 +215,12 @@ describe('HelpersService', () => {
     expect(result === '').toBeTruthy();
   });
 
+  it('should return null when custom_field not present', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const vrf = new Vrf();
+
+    const result = service.getJsonCustomField(vrf, 'network_objects');
+    expect(result).toBeFalsy();
+  });
 });

@@ -38,6 +38,7 @@ describe('ServiceObjectGroupModalComponent', () => {
   it('save should set ngxModal data', () => {
     component.form.controls.name.setValue('Name');
     component.form.controls.description.setValue('Description');
+    component.form.controls.type.setValue(true);
     component.serviceObjects.push({ Name: 'Test'} as ServiceObject);
     expect(component.form.valid).toBeTruthy();
     component.save();
@@ -56,6 +57,11 @@ describe('ServiceObjectGroupModalComponent', () => {
   it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
+  });
+
+  it('type should be required', () => {
+    const type = component.form.controls.type;
+    expect(type.valid).toBeFalsy();
   });
 
   it('description should not be required', () => {

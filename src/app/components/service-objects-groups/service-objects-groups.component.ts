@@ -9,6 +9,7 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { ObjectService } from 'src/app/services/object.service';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -35,7 +36,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.serviceObjects = new Array<ServiceObject>();
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
   }
@@ -52,7 +53,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getVrfObjects(vrf: Vrf) {
-      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+      const serviceObjectDto = this.hs.getJsonCustomField(vrf, 'service_objects') as ServiceObjectDto;
 
       if (!serviceObjectDto) {
         this.serviceObjects = new Array<ServiceObject>();
