@@ -54,8 +54,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   getVrfObjects(vrf: Vrf) {
     const networkObjectDto = this.hs.getJsonCustomField(vrf, 'network_objects') as NetworkObjectDto;
 
-
-      if (!networkObjectDto) {
+    if (!networkObjectDto) {
         this.networkObjects = new Array<NetworkObject>();
         this.networkObjectGroups = new Array<NetworkObjectGroup>();
       } else {
