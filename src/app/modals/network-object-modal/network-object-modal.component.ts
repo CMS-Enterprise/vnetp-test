@@ -60,6 +60,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     const hostAddress = this.form.get('hostAddress');
     const startAddress = this.form.get('startAddress');
     const endAddress = this.form.get('endAddress');
+    const nat = this.form.get('nat');
 
     this.networkTypeSubscription = this.form.get('type').valueChanges
       .subscribe( type => {
@@ -82,6 +83,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           hostAddress.setValue(null);
           cidrAddress.setValidators(null);
           cidrAddress.setValue(null);
+          nat.setValidators(null);
+          nat.setValue(false);
         }
 
         if (type === 'subnet') {
@@ -92,12 +95,15 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           startAddress.setValue(null);
           endAddress.setValidators(null);
           endAddress.setValue(null);
+          nat.setValidators(null);
+          nat.setValue(false);
         }
 
         cidrAddress.updateValueAndValidity();
         hostAddress.updateValueAndValidity();
         startAddress.updateValueAndValidity();
         endAddress.updateValueAndValidity();
+        nat.updateValueAndValidity();
       });
 
     this.natSubscription = this.form.get('nat').valueChanges
@@ -112,9 +118,6 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           this.form.controls.translatedPort.setValidators(Validators.compose([Validators.required, ValidatePortRange ]));
 
         } else if (!nat) {
-          this.form.controls.type.enable();
-          this.form.controls.type.updateValueAndValidity();
-
           this.form.controls.translatedIp.setValue(null);
           this.form.controls.translatedIp.setValidators(null);
           this.form.controls.natProtocol.setValue(null);
