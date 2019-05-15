@@ -37,6 +37,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
     serviceObjectGroup.Name = this.form.value.name;
     serviceObjectGroup.Description = this.form.value.description;
+    serviceObjectGroup.Type = this.form.value.type;
     serviceObjectGroup.ServiceObjects = Object.assign([], this.serviceObjects);
 
     this.ngx.resetModalData('serviceObjectGroupModal');
@@ -100,6 +101,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     if (serviceObjectGroup !== undefined) {
       this.form.controls.name.setValue(serviceObjectGroup.Name);
       this.form.controls.description.setValue(serviceObjectGroup.Description);
+      this.form.controls.type.setValue(serviceObjectGroup.Type);
       if (serviceObjectGroup.ServiceObjects) {
         this.serviceObjects = serviceObjectGroup.ServiceObjects;
       } else {
@@ -111,7 +113,8 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
+      type: ['', Validators.required]
     });
   }
 

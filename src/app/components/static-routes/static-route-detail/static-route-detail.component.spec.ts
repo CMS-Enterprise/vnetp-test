@@ -6,6 +6,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgxMaskModule } from 'ngx-mask';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
@@ -14,7 +15,7 @@ describe('StaticRouteDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]) ],
+      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxMaskModule.forRoot() ],
       declarations: [ StaticRouteDetailComponent ],
       providers: [HttpClient, HttpHandler, CookieService]
     })

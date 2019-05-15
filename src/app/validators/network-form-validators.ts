@@ -67,6 +67,10 @@ export function ValidatePortRange(control: FormControl) {
         return null;
     }
 
+    if (control.value === 'any') {
+        return null;
+    }
+
     const value = control.value;
     const valueArray = value.split('-');
 

@@ -135,6 +135,7 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
+              <th scope="col">Type</th>
               <th scope="col">Members</th>
               <th scope="col"></th>
             </tr>
@@ -143,6 +144,9 @@
             <tr *ngFor="let serviceObjectGroup of serviceObjectGroups">
               <td>
                 <p>{{ serviceObjectGroup.Name }}</p>
+              </td>
+              <td>
+                <p>{{ serviceObjectGroup.Type }}</p>
               </td>
               <td>
                 <p>{{ serviceObjectGroup.ServiceObjects.length }}</p>

@@ -123,6 +123,9 @@ describe('Network Form Validators', () => {
 
     formControl.setValue('1-65535');
     expect(ValidatePortRange(formControl)).toBeNull();
+
+    formControl.setValue('any');
+    expect(ValidatePortRange(formControl)).toBeNull();
   });
 
   it('should be invalid port/port range', () => {
@@ -146,6 +149,9 @@ describe('Network Form Validators', () => {
     expect(ValidatePortRange(formControl)).toBeTruthy();
 
     formControl.setValue('one-twenty');
+    expect(ValidatePortRange(formControl)).toBeTruthy();
+
+    formControl.setValue('any ');
     expect(ValidatePortRange(formControl)).toBeTruthy();
   });
 });

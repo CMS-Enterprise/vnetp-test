@@ -19,27 +19,27 @@ export class FirewallRule implements UniqueNameObject {
 
     SourceIP: string;
 
-    SourceNetworkObject: NetworkObject;
+    SourceNetworkObject: string;
 
-    SourceNetworkObjectGroup: NetworkObjectGroup;
+    SourceNetworkObjectGroup: string;
 
     SourcePorts: string;
 
-    SourceServiceObject: ServiceObject;
+    SourceServiceObject: string;
 
-    SourceServiceObjectGroup: ServiceObjectGroup;
+    SourceServiceObjectGroup: string;
 
     DestinationIP: string;
 
-    DestinationNetworkObject: NetworkObject;
+    DestinationNetworkObject: string;
 
-    DestinationNetworkObjectGroup: NetworkObjectGroup;
+    DestinationNetworkObjectGroup: string;
 
     DestinationPorts: string;
 
-    DestinationServiceObject: ServiceObject;
+    DestinationServiceObject: string;
 
-    DestinationServiceObjectGroup: ServiceObjectGroup;
+    DestinationServiceObjectGroup: string;
 
     Log: boolean;
 

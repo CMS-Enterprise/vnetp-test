@@ -9,6 +9,7 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { ObjectService } from 'src/app/services/object.service';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -21,6 +22,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   currentVrf: Vrf;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
+  deletedServiceObjects: Array<ServiceObject>;
+  deletedServiceObjectGroups: Array<ServiceObjectGroup>;
   navIndex = 0;
 
   editServiceObjectIndex: number;
@@ -33,7 +36,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.serviceObjects = new Array<ServiceObject>();
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
   }
@@ -50,7 +53,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getVrfObjects(vrf: Vrf) {
-      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+      const serviceObjectDto = this.hs.getJsonCustomField(vrf, 'service_objects') as ServiceObjectDto;
 
       if (!serviceObjectDto) {
         this.serviceObjects = new Array<ServiceObject>();
@@ -130,6 +133,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.serviceObjects.indexOf(serviceObject);
     if ( index > -1) {
       this.serviceObjects.splice(index, 1);
+
+      if (!this.deletedServiceObjects) { this.deletedServiceObjects = new Array<ServiceObject>(); }
+      this.deletedServiceObjects.push(serviceObject);
       this.dirty = true;
     }
   }
@@ -147,6 +153,10 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const index = this.serviceObjectGroups.indexOf(serviceObjectGroup);
     if ( index > -1) {
       this.serviceObjectGroups.splice(index, 1);
+
+      if (!this.deletedServiceObjectGroups) { this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>(); }
+      this.deletedServiceObjectGroups.push(serviceObjectGroup);
+
       this.dirty = true;
     }
   }
@@ -161,11 +171,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.service_object_dto = dto;
+    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.deleted_service_objects = this.deletedServiceObjects;
+    extra_vars.deleted_service_object_groups = this.deletedServiceObjectGroups;
 
     const body = { extra_vars };
 
     this.api.launchTemplate('save-service-object-dto', body).subscribe(data => { },
       error => { this.dirty = true; });
+
+    this.deletedServiceObjects = new Array<ServiceObject>();
+    this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>();
   }
 
   handleFileSelect(evt) {
