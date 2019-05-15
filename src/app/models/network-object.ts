@@ -14,4 +14,12 @@ export class NetworkObject implements UniqueNameObject {
     StartAddress: string;
 
     EndAddress: string;
+
+    Nat: boolean;
+
+    TranslatedIpAddress: string;
+
+    SourcePort: string;
+
+    TranslatedPort: string;
 }

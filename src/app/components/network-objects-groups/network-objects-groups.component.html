@@ -78,6 +78,8 @@
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Address</th>
+            <th scope="col">Translated Address</th>
+            <th scope="col">Source/Translated Port</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -97,6 +99,12 @@
               <p *ngIf="netObj.Type === 'subnet'">
                 {{ netObj.CidrAddress }}
               </p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Nat">{{ netObj.TranslatedAddress}}</p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Nat">{{netObj.SourcePort}}:{{netObj.TranslatedPort}}</p>
             </td>
             <td>
               <fa

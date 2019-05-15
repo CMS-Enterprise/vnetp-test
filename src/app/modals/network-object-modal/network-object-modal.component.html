@@ -156,6 +156,71 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <div class="form-check form-check-inline">
+          <input
+            type="checkbox"
+            name="nat"
+            class="form-check-input"
+            formControlName="nat"
+            aria-label="NAT"
+          />
+
+          <label class="form-check-label" for="nat">
+            NAT
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group"  *ngIf="f.nat.value">
+        <label for="translatedIp">
+          Translated IP
+        </label>
+
+        <input
+        type="text"
+        name="translatedIp"
+        class="form-control"
+        formControlName="translatedIp"
+        aria-label="Translated IP"
+        [ngClass]="{ 'is-invalid': submitted && f.translatedIp.errors }"
+        [dropSpecialCharacters]="false"
+        mask="099.099.099.099"
+        />
+      </div>
+
+      <div class="form-row" *ngIf="f.nat.value">
+        <div class="form-group col-md-6">
+          <label for="sourcePort">
+            Source Port
+          </label>
+
+          <input
+          type="text"
+          name="sourcePort"
+          class="form-control"
+          formControlName="sourcePort"
+          [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
+          mask="09999"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="translatedPort">
+              Translated Port
+            </label>
+  
+            <input
+            type="text"
+            name="translatedPort"
+            class="form-control"
+            formControlName="translatedPort"
+            [ngClass]="{ 'is-invalid': submitted && f.translatedPort.errors }"
+            mask="09999"
+            />
+          </div>
+      </div>
+
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">
           Save
