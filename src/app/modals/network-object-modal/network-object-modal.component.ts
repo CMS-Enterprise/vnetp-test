@@ -27,7 +27,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
     const networkObject = new NetworkObject();
     networkObject.Name = this.form.value.name;
-    networkObject.Type = this.form.value.type;
+    networkObject.Type = this.form.getRawValue().type;
     networkObject.HostAddress = this.form.value.hostAddress;
     networkObject.CidrAddress = this.form.value.cidrAddress;
     networkObject.StartAddress = this.form.value.startAddress;
@@ -37,6 +37,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
     if (networkObject.Nat) {
       networkObject.TranslatedIpAddress = this.form.value.translatedIp;
+      networkObject.NatProtocol = this.form.value.natProtocol;
       networkObject.SourcePort = this.form.value.sourcePort;
       networkObject.TranslatedPort = this.form.value.translatedPort;
     }
@@ -103,10 +104,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       .subscribe( nat => {
         if (nat) {
           this.form.controls.type.setValue('host');
-          this.form.controls.type.disable();
           this.form.controls.type.updateValueAndValidity();
 
           this.form.controls.translatedIp.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+          this.form.controls.natProtocol.setValidators(Validators.compose([Validators.required]));
           this.form.controls.sourcePort.setValidators(Validators.compose([Validators.required, ValidatePortRange ]));
           this.form.controls.translatedPort.setValidators(Validators.compose([Validators.required, ValidatePortRange ]));
 
@@ -116,6 +117,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
           this.form.controls.translatedIp.setValue(null);
           this.form.controls.translatedIp.setValidators(null);
+          this.form.controls.natProtocol.setValue(null);
+          this.form.controls.natProtocol.setValidators(null);
           this.form.controls.sourcePort.setValue(null);
           this.form.controls.sourcePort.setValidators(null);
           this.form.controls.translatedPort.setValue(null);
@@ -123,6 +126,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         }
 
         this.form.controls.translatedIp.updateValueAndValidity();
+        this.form.controls.natProtocol.updateValueAndValidity();
         this.form.controls.sourcePort.updateValueAndValidity();
         this.form.controls.translatedPort.updateValueAndValidity();
       });
@@ -137,6 +141,11 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
       this.form.controls.startAddress.setValue(networkObject.StartAddress);
       this.form.controls.endAddress.setValue(networkObject.EndAddress);
+      this.form.controls.nat.setValue(networkObject.Nat);
+      this.form.controls.translatedIp.setValue(networkObject.TranslatedIpAddress);
+      this.form.controls.natProtocol.setValue(networkObject.NatProtocol);
+      this.form.controls.sourcePort.setValue(networkObject.SourcePort);
+      this.form.controls.translatedPort.setValue(networkObject.TranslatedPort);
     }
   }
 
@@ -151,6 +160,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       endAddress: [''],
       nat: [false],
       translatedIp: [''],
+      natService: [false],
+      natProtocol: [''],
       sourcePort: [''],
       translatedPort: ['']
     });

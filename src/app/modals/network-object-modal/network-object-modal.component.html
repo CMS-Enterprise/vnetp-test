@@ -189,6 +189,24 @@
         />
       </div>
 
+      <div class="form-group">
+          <label for="type">NAT Protocol</label>
+          <select
+            name="natProtocol"
+            formControlName="natProtocol"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.natProtocol.errors }"
+            aria-label="NAT Protocol Type"
+          >
+            <option></option>
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+          </select>
+          <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
+            <div *ngIf="f.natProtocol.errors.required">NAT Protocol is required</div>
+          </div>
+        </div>
+
       <div class="form-row" *ngIf="f.nat.value">
         <div class="form-group col-md-6">
           <label for="sourcePort">
