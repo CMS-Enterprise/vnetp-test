@@ -8,6 +8,7 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -34,7 +35,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.networkObjects = new Array<NetworkObject>();
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
@@ -51,7 +52,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getVrfObjects(vrf: Vrf) {
-      const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+    const networkObjectDto = this.hs.getJsonCustomField(vrf, 'network_objects') as NetworkObjectDto;
+
 
       if (!networkObjectDto) {
         this.networkObjects = new Array<NetworkObject>();
