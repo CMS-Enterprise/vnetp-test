@@ -128,7 +128,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.form.controls.action.setValue(firewallRule.Action);
         this.form.controls.protocol.setValue(firewallRule.Protocol);
         this.form.controls.direction.setValue(firewallRule.Direction);
-        this.form.controls.log.setValue(firewallRule.Log);
+
+        if (firewallRule.Log) {
+          this.form.controls.log.setValue(firewallRule.Log);
+        }
 
         if (firewallRule.SourceIP) {
           this.form.controls.sourceNetworkType.setValue('ip');
@@ -382,7 +385,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationServiceObject: [''],
       destinationServiceObjectGroup: [''],
 
-      log: ['']
+      log: [false]
     });
   }
 
