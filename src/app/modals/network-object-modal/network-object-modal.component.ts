@@ -33,15 +33,12 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     networkObject.CidrAddress = this.form.value.cidrAddress;
     networkObject.StartAddress = this.form.value.startAddress;
     networkObject.EndAddress = this.form.value.endAddress;
-
     networkObject.Nat = this.form.value.nat;
-
-    if (networkObject.Nat) {
-      networkObject.TranslatedIpAddress = this.form.value.translatedIp;
-      networkObject.NatProtocol = this.form.value.natProtocol;
-      networkObject.SourcePort = this.form.value.sourcePort;
-      networkObject.TranslatedPort = this.form.value.translatedPort;
-    }
+    networkObject.TranslatedIpAddress = this.form.value.translatedIp;
+    networkObject.NatService = this.form.value.natService;
+    networkObject.NatProtocol = this.form.value.natProtocol;
+    networkObject.SourcePort = this.form.value.sourcePort;
+    networkObject.TranslatedPort = this.form.value.translatedPort;
 
     this.ngx.resetModalData('networkObjectModal');
     this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');

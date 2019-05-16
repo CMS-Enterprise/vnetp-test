@@ -1,5 +1,6 @@
 import { UniqueNameObject } from './unique-name-object.interface';
 
+// TODO: Add destination subnet (source would be FW interface towards ACI L3 Out)
 export class NetworkObject implements UniqueNameObject {
     Name: string;
 
