@@ -104,7 +104,7 @@
               <p *ngIf="netObj.Nat">{{ netObj.TranslatedIpAddress}}</p>
             </td>
             <td>
-              <p *ngIf="netObj.Nat">{{netObj.SourcePort}}:{{netObj.TranslatedPort}}</p>
+              <p *ngIf="netObj.Nat">{{netObj.NatProtocol}} {{netObj.SourcePort}}:{{netObj.TranslatedPort}}</p>
             </td>
             <td>
               <fa
