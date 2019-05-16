@@ -1,5 +1,5 @@
 import { Pool } from './pool';
-import { VirtualServer } from '../virtual-server';
+import { VirtualServer } from './virtual-server';
 
 export class LoadBalancerDto {
     Pools: Pool;

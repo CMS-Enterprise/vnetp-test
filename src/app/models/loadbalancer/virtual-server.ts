@@ -6,4 +6,6 @@ export class VirtualServer {
     DestinationAddress: string;
 
     Port: string;
+
+    Pool: string;
 }
