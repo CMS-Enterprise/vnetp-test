@@ -84,7 +84,6 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           hostAddress.setValue(null);
           cidrAddress.setValidators(null);
           cidrAddress.setValue(null);
-          nat.setValidators(null);
           nat.setValue(false);
         }
 
@@ -96,7 +95,6 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           startAddress.setValue(null);
           endAddress.setValidators(null);
           endAddress.setValue(null);
-          nat.setValidators(null);
           nat.setValue(false);
         }
 
@@ -104,7 +102,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         hostAddress.updateValueAndValidity();
         startAddress.updateValueAndValidity();
         endAddress.updateValueAndValidity();
-        nat.updateValueAndValidity();
+        nat.updateValueAndValidity({emitEvent: false});
       });
 
     this.natSubscription = this.form.get('nat').valueChanges

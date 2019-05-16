@@ -165,4 +165,38 @@ describe('NetworkObjectModalComponent', () => {
     const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeFalsy();
   });
+
+  // Form State when NAT Selected
+  it('translated address should be required', () => {
+    const nat = component.form.controls.nat;
+    nat.setValue(true);
+
+    const translatedAddress = component.form.controls.translatedIp;
+    expect(translatedAddress.valid).toBeFalsy();
+  });
+
+  // Form State when NAT Service Selected
+  it('nat protocol should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const natProtocol = component.form.controls.natProtocol;
+    expect(natProtocol.valid).toBeFalsy();
+  });
+
+  it('source port should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const sourcePort = component.form.controls.sourcePort;
+    expect(sourcePort.valid).toBeFalsy();
+  });
+
+  it('translated port should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const translatedPort = component.form.controls.translatedPort;
+    expect(translatedPort.valid).toBeFalsy();
+  });
 });
