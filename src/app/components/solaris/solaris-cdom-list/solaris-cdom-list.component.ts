@@ -25,7 +25,6 @@ export class SolarisCdomListComponent implements OnInit {
   ngOnInit() {
     this.loadDevices();
   }
-
   loadDevices() {
     const CDOMDevice = new SolarisCdom();
     const LDOMDevice = new SolarisLdom();

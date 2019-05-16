@@ -1,5 +1,7 @@
 export class SolarisLdom {
     name: string;
+    device_id: number;
+    customer_name: string;
     devicetype: string;
     associatedcdom: string;
     add_domain: string;

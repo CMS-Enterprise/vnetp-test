@@ -33,6 +33,7 @@ export class SolarisServiceService {
    // LDOMDevice.vlans = tmpMetadata.vlans;
    LDOMDevice.set_variable = tmpMetadata.variables;
    // LDOMDevice.vswitch = tmpMetadata.vswitch;
+   LDOMDevice.device_id = tmpMetadata.device_id;
    return LDOMDevice;
   }
   getCDOMDevice(device: any){
@@ -75,7 +76,7 @@ export class SolarisServiceService {
     // Launch required automation jobs
     private launchCDOMJobs() {
       const body = {
-        extra_vars: `{\"vlans\": ${this.CDOM.vlans},\"luns\": ${this.CDOM.luns }
+        extra_vars: `{\"vlans\": ${this.CDOM},\"luns\": ${this.CDOM.luns }
         ,\"associatedldoms\": ${this.CDOM.associatedldoms},\"variables\": ${this.CDOM.variables}
         ,\"vcsdevs\": ${this.CDOM.vcsdevs}}, \"vnet\": ${this.CDOM.vnet}, \"vswitch\": ${this.CDOM.vswitch}`
       };
@@ -86,11 +87,26 @@ export class SolarisServiceService {
       // Launch required automation jobs
   private launchLDOMJobs() {
     const body = {
-      extra_vars: `\"associatedcdom\": ${this.LDOM.associatedcdom},\"variables\": ${this.LDOM.set_variable}`
+      extra_vars: `\"associatedcdom\": ${this.LDOM.associatedcdom},\"set_variable\": ${this.LDOM.set_variable}
+                  ,\"add_domain\": ${this.LDOM.add_domain}, \"add_vcpu\": ${this.LDOM.add_vcpu}
+                  ,\"add_memory\": ${this.LDOM.add_memory}, \"add_vdsdev\": ${this.LDOM.add_vdsdev},
+                  ,\"add_vnet_cmd"\: ${this.LDOM.add_vnet_cmd}, \"add_vdisk_cmd\": ${this.LDOM.add_vdisk_cmd},
+                  ,\"add_vnet"\: ${this.LDOM.add_vnet}, \"add_vdisk\": ${this.LDOM.add_vdisk}
+                  ,\"bip"\: ${this.LDOM.bip}, \"bmask\": ${this.LDOM.bmask}, \"bgw\": ${this.LDOM.bgw}`
     };
-
-    this.automationApiService.launchTemplate('save_device', body).subscribe();
+    //this.automationApiService
+    const customerName = this.getCustomerNamebyDeviceID(this.LDOM.device_id);
+    this.automationApiService.launchTemplate(`${customerName}_save_device`, body).subscribe();
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
+  }
+  getCustomerNamebyDeviceID (id: string){
+    this.automationApiService.getDevicesbyID(id).subscribe(
+      singleDevData => {
+        let singleDevResult = singleDevData as any;
+
+        console.log(singleDevResult.customer);
+        return singleDevResult.customer;
+      });
   }
 }

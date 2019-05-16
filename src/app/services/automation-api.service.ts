@@ -38,7 +38,7 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/ipnat/');
   }
 
-  getDevicesbtID(id: string) {
+  getDevicesbyID(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/${id}/`);
   }
   getDevices(){
