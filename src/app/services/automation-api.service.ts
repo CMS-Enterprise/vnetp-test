@@ -26,6 +26,7 @@ export class AutomationApiService {
   }
 
   doqlQuery(query: string) {
+    //note: bypassing proxy with d42base
     return this.http.get(environment.apiBase + '/services/data/v1.0/query/?query=' + query + '&output_type=json');
   }
 

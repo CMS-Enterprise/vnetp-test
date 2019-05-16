@@ -56,7 +56,7 @@
       </div>
       <div class="form-group row">
         <label for="inputCDOMSPConfig" class="col-1 col-form-label offset-md-1">SPConfig</label>
-        <div class="col-1 offset-md-4">
+        <div class="col-4 offset-md-4">
           <input
             name="inputCDOMSPConfig"
             aria-label="CDOM SP Config"
@@ -74,43 +74,78 @@
             {{subnet.name}}
             </option>
            research *ngFor to dynamically populate lists
-          -->
-          <select id="inputCDOMVDS" class="custom-select col-1 offset-md-4">
+          --
+          <select id="inputCDOMVDS" class="custom-select col-4 offset-md-4">
             <option selected>Choose...</option>
             <option>...</option>
           </select>
-      </div>
+        -->
+        <div class="col-4 offset-md-4">
+           <input
+              name="inputCDOMVDS"
+              aria-label="CDOM VDS Config"
+              appIsAlphanumeric type="text"
+              class="form-control"
+              #name="ngModel"
+              [(ngModel)]="CDOM.vds"
+            >
+         </div>
+        </div>
       <div class="form-group row">
           <label for="inputCDOMVDSDevs" class="col-1 col-form-label offset-md-1">VDSDevs</label>
-          <select id="inputCDOMVDSDevs" class="custom-select col-1 offset-md-4">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
+          <div class="col-4 offset-md-4">
+            <input
+               name="inputCDOMVDS"
+               aria-label="CDOM VDS Config"
+               appIsAlphanumeric type="text"
+               class="form-control"
+               #name="ngModel"
+               [(ngModel)]="CDOM.vds"
+             >
+          </div>
       </div>
       <div class="form-group row">
         <label for="inputCDOMVCC" class="col-1 col-form-label offset-md-1">VCC</label>
-          <select id="inputCDOMVCC" class="custom-select col-1 offset-md-4">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
+        <div class="col-4 offset-md-4">
+          <input
+             name="inputCDOMVDS"
+             aria-label="CDOM VDS Config"
+             appIsAlphanumeric type="text"
+             class="form-control"
+             #name="ngModel"
+             [(ngModel)]="CDOM.vds"
+           >
+        </div>
       </div>
       <div class="form-group row">
           <label for="inputCDOMVSW" class="col-1 col-form-label offset-md-1">VSW</label>
-          <select id="inputCDOMVSW" class="custom-select col-1 offset-md-4">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
+          <div class="col-4 offset-md-4">
+            <input
+               name="inputCDOMVDS"
+               aria-label="CDOM VDS Config"
+               appIsAlphanumeric type="text"
+               class="form-control"
+               #name="ngModel"
+               [(ngModel)]="CDOM.vds"
+             >
+          </div>
       </div>
       <div class="form-group row">
         <label for="inputCDOMVNet" class="col-1 col-form-label offset-md-1">VNET</label>
-          <select id="inputCDOMVnet" class="custom-select col-1 offset-md-4">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
+        <div class="col-4 offset-md-4">
+          <input
+             name="inputCDOMVDS"
+             aria-label="CDOM VDS Config"
+             appIsAlphanumeric type="text"
+             class="form-control"
+             #name="ngModel"
+             [(ngModel)]="CDOM.vds"
+           >
+        </div>
       </div>
       <div class="form-group row">
           <label for="inputCDOMLUNS" class="col-1 col-form-label offset-md-1">LUNS</label>
-          <div class="col-1 offset-md-4">
+          <div class="col-4 offset-md-4">
             <input
              name="inputCDOMLUNS"
              aria-label="CDOM LUNS"
@@ -124,7 +159,7 @@
       </div>
       <div class="form-group row">
           <label for="inputCDOMVLANs" class="col-1 col-form-label offset-md-1">VLANS</label>
-          <div class="col-1 offset-md-4">
+          <div class="col-4 offset-md-4">
             <input
              name="inputCDOMVLANs"
              aria-label="CDOM VLANS"

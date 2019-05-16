@@ -29,10 +29,10 @@ export class SolarisServiceService {
    const tmpMetadata: any = this.sanitizeMetadata(device.Metadata);
    LDOMDevice.associatedcdom = tmpMetadata.associatedcdom;
    LDOMDevice.name = tmpMetadata.Name;
-   LDOMDevice.luns = tmpMetadata.luns;
-   LDOMDevice.vlans = tmpMetadata.vlans;
-   LDOMDevice.variables = tmpMetadata.variables;
-   LDOMDevice.vswitch = tmpMetadata.vswitch;
+   // LDOMDevice.luns = tmpMetadata.luns;
+   // LDOMDevice.vlans = tmpMetadata.vlans;
+   LDOMDevice.set_variable = tmpMetadata.variables;
+   // LDOMDevice.vswitch = tmpMetadata.vswitch;
    return LDOMDevice;
   }
   getCDOMDevice(device: any){
@@ -67,7 +67,6 @@ export class SolarisServiceService {
     }
     CDOMDevice.ram = RAMRawData;
     return CDOMDevice;
-    
   }
   sanitizeMetadata(metadata: string){
     metadata = metadata.replace(/\\n/g, ' ');
@@ -80,22 +79,17 @@ export class SolarisServiceService {
         ,\"associatedldoms\": ${this.CDOM.associatedldoms},\"variables\": ${this.CDOM.variables}
         ,\"vcsdevs\": ${this.CDOM.vcsdevs}}, \"vnet\": ${this.CDOM.vnet}, \"vswitch\": ${this.CDOM.vswitch}`
       };
-  
       this.automationApiService.launchTemplate('save_device', body).subscribe();
-  
       this.messageService.filter('Job Launched');
       this.router.navigate(['/solaris']);
     }
       // Launch required automation jobs
   private launchLDOMJobs() {
     const body = {
-      extra_vars: `{\"vlans\": ${this.LDOM.vlans},\"luns\": ${this.LDOM.luns }
-      ,\"associatedcdom\": ${this.LDOM.associatedcdom},\"variables\": ${this.LDOM.variables}
-      ,\"vcsdevs\": ${this.LDOM.vcsdevs}}, \"vnet\": ${this.LDOM.vnet}, \"vswitch\": ${this.LDOM.vswitch}`
+      extra_vars: `\"associatedcdom\": ${this.LDOM.associatedcdom},\"variables\": ${this.LDOM.set_variable}`
     };
 
     this.automationApiService.launchTemplate('save_device', body).subscribe();
-
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }

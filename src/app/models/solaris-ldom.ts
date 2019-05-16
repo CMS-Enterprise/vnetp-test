@@ -1,17 +1,22 @@
 export class SolarisLdom {
     name: string;
     devicetype: string;
-    ram: number;
-    ram_size_type: string;
-    cpucount: number;
-    cpucore: number;
-    vcpu: number;
-    luns = new Array<string>();
-    vlans = new Array<number>();
     associatedcdom: string;
-    variables: string;
-    vcsdevs: string;
-    vswitch: string;
-    vnet: string;
-    Commands: string;
+    add_domain: string;
+    add_vcpu: number;
+    add_memory: string;
+    add_vnet = new Array<string>();
+    add_vnet_cmd = new Array<string>();
+    set_variable: string;
+    add_vdsdev: string;
+    add_vdisk = new Array<string>();
+    add_vdisk_cmd = new Array<string>();
+    bind_domain: boolean;
+    start_domain: boolean;
+    net_install: string;
+    add_config: string;
+    bip: string;
+    bmask: string;
+    bgw: string;
+    create_manifest: string;
 }
