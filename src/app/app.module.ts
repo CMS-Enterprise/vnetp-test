@@ -45,6 +45,7 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
     ServiceObjectsGroupsComponent,
     ServiceObjectModalComponent,
     ServiceObjectGroupModalComponent,
-    FirewallRuleModalComponent
+    FirewallRuleModalComponent,
+    LoadBalancersComponent
   ],
   imports: [
     BrowserModule,
