@@ -33,6 +33,11 @@ export class AuthService {
     return this.http.get<any>(environment.apiBase + '/api/1.0/customers/', httpOptions)
         .pipe(map(result => {
           const user = new User(userpass);
+
+          if (!result.Customers || result.Customers.length === 0){
+            throw Error('No Permissions to any Customer.');
+          }
+
           const customer = result.Customers[0];
 
           if (customer) {
