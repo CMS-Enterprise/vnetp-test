@@ -10,6 +10,7 @@ import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
+import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -66,6 +67,10 @@ export class LoadBalancersComponent implements OnInit {
 
   createVirtualServer() {
     this.subscribeToVirtualServerModal();
+    const dto = new VirtualServerModalDto();
+    dto.Pools = this.pools;
+
+    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
     this.virtualServerModalMode = ModalMode.Create;
     this.ngx.getModal('virtualServerModal').open();
   }
@@ -79,7 +84,12 @@ export class LoadBalancersComponent implements OnInit {
   editVirtualServer(virtualServer: VirtualServer) {
     this.subscribeToVirtualServerModal();
     this.virtualServerModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, virtualServer), 'virtualServerModal');
+
+    const dto = new VirtualServerModalDto();
+    dto.Pools = this.pools;
+    dto.VirtualServer = virtualServer;
+
+    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
     this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
     this.ngx.getModal('virtualServerModal').open();
   }

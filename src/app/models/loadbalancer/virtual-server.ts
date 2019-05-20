@@ -3,6 +3,8 @@ export class VirtualServer {
 
     Description: string;
 
+    SourceAddress: string;
+
     DestinationAddress: string;
 
     ServicePort: string;

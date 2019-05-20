@@ -41,12 +41,66 @@
           aria-label="Type"
         >
           <option></option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
+          <option value="standard">Standard</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
           <div *ngIf="f.type.errors.required">Type is required</div>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label for="sourceAddress">Source Address</label>
+
+        <input
+          name="sourceAddress"
+          formControlName="sourceAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
+          aria-label="Source Address"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="sourceAddress">Destination Address</label>
+
+        <input
+          name="destinationAddress"
+          formControlName="destinationAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.destinationAddress.errors }"
+          aria-label="Destination Address"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="servicePort">
+          Service Port
+        </label>
+
+        <input
+          class="form-control"
+          name="servicePort"
+          formControlName="servicePort"
+          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+          aria-label="Service Port"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="pool">
+          Pool
+        </label>
+
+        <select
+        class="form-control"
+        name="pool"
+        formControlName="pool"
+        [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
+        aria-label="Pool"
+        >
+      <option></option>
+      <option *ngFor="let pool of pools" [ngValue]=pool.Name>{{ pool.Name }}</option>
+      </select>
       </div>
 
       <div class="modal-footer">

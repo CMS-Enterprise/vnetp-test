@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
+import { ValidateIpv4CidrAddress } from 'src/app/validators/network-form-validators';
+import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { Pool } from 'src/app/models/loadbalancer/pool';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -11,6 +14,7 @@ import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
+  pools: Array<Pool>;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -24,6 +28,10 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     const serviceObject = new VirtualServer();
     serviceObject.Name = this.form.value.name;
     serviceObject.Type = this.form.value.type;
+    serviceObject.SourceAddress = this.form.value.sourceAddress;
+    serviceObject.DestinationAddress = this.form.value.destinationAddress;
+    serviceObject.ServicePort = this.form.value.servicePort;
+    serviceObject.Pool = this.form.value.pool;
 
     this.ngx.resetModalData('virtualServerModal');
     this.ngx.setModalData(Object.assign({}, serviceObject), 'virtualServerModal');
@@ -42,7 +50,11 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const virtualServer =  Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServer);
+    const dto =  Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
+
+    this.pools = dto.Pools;
+    const virtualServer = dto.VirtualServer;
+
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.Name);
       this.form.controls.type.setValue(virtualServer.Type);
@@ -52,7 +64,12 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      type: ['', Validators.required]
+      description: [''],
+      type: ['', Validators.required],
+      sourceAddress: ['0.0.0.0/0', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      pool: ['', Validators.required]
     });
   }
 
