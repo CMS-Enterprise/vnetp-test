@@ -45,6 +45,7 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
+import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 
 @NgModule({
@@ -77,6 +78,7 @@ import { LoadBalancersComponent } from './components/load-balancers/load-balance
     ServiceObjectModalComponent,
     ServiceObjectGroupModalComponent,
     FirewallRuleModalComponent,
+    VirtualServerModalComponent,
     LoadBalancersComponent
   ],
   imports: [
