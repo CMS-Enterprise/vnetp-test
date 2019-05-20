@@ -25,21 +25,22 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const serviceObject = new VirtualServer();
-    serviceObject.Name = this.form.value.name;
-    serviceObject.Type = this.form.value.type;
-    serviceObject.SourceAddress = this.form.value.sourceAddress;
-    serviceObject.DestinationAddress = this.form.value.destinationAddress;
-    serviceObject.ServicePort = this.form.value.servicePort;
-    serviceObject.Pool = this.form.value.pool;
+    const virtualServer = new VirtualServer();
+    virtualServer.Name = this.form.value.name;
+    virtualServer.Type = this.form.value.type;
+    virtualServer.SourceAddress = this.form.value.sourceAddress;
+    virtualServer.DestinationAddress = this.form.value.destinationAddress;
+    virtualServer.ServicePort = this.form.value.servicePort;
+    virtualServer.Pool = this.form.value.pool;
 
     this.ngx.resetModalData('virtualServerModal');
-    this.ngx.setModalData(Object.assign({}, serviceObject), 'virtualServerModal');
+    this.ngx.setModalData(Object.assign({}, virtualServer), 'virtualServerModal');
     this.ngx.close('virtualServerModal');
     this.reset();
   }
 
   cancel() {
+    console.log('cancel');
     this.ngx.close('virtualServerModal');
     this.reset();
   }
@@ -58,6 +59,10 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.Name);
       this.form.controls.type.setValue(virtualServer.Type);
+      this.form.controls.sourceAddress.setValue(virtualServer.SourceAddress);
+      this.form.controls.destinationAddress.setValue(virtualServer.DestinationAddress);
+      this.form.controls.servicePort.setValue(virtualServer.ServicePort);
+      this.form.controls.pool.setValue(virtualServer.Pool);
       }
   }
 

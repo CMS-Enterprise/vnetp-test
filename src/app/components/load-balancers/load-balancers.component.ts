@@ -105,11 +105,11 @@ export class LoadBalancersComponent implements OnInit {
   subscribeToVirtualServerModal() {
     this.virtualServerModalSubscription =
     this.ngx.getModal('virtualServerModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as VirtualServer;
+      let data = modal.getData() as VirtualServerModalDto;
 
-      if (data !== undefined) {
+      if (data.VirtualServer !== undefined) {
         data = Object.assign({}, data);
-        this.saveVirtualServer(data);
+        this.saveVirtualServer(data.VirtualServer);
       }
       this.ngx.resetModalData('virtualServerModal');
       this.virtualServerModalSubscription.unsubscribe();
@@ -131,6 +131,7 @@ export class LoadBalancersComponent implements OnInit {
   }
 
   saveVirtualServer(virtualServer: VirtualServer) {
+    console.log('save')
     if (this.virtualServerModalMode === ModalMode.Create) {
       this.virtualServers.push(virtualServer);
     } else {

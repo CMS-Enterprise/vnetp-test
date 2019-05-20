@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
-import { ValidateIpv4Any } from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Any, ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -55,7 +55,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     .subscribe( type => {
 
       if (type === 'ipaddress') {
-        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
         ipAddress.setValue(null);
         fqdn.setValidators(null);
         fqdn.setValue(null);
