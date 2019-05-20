@@ -31,24 +31,6 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="type">Type</label>
-        <select
-          name="type"
-          formControlName="type"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-          aria-label="Type"
-        >
-          <option></option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
-        </select>
-        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
-          <div *ngIf="f.type.errors.required">Type is required</div>
-        </div>
-      </div>
-
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">
           Save
