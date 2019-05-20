@@ -20,6 +20,7 @@ import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'service-objects-groups', component: ServiceObjectsGroupsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Service Objects'}},
   {path: 'firewall-rules', component: FirewallRulesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules'}},
   {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
+  {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
   {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'ip-nats', component: IpNatsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Network Address Translation'}},
