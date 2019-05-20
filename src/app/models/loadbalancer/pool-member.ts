@@ -4,4 +4,4 @@ export class PoolMember {
     IpAddress: string;
 
     Port: number;
-}
+};

@@ -2,7 +2,9 @@ import { Pool } from './pool';
 import { VirtualServer } from './virtual-server';
 
 export class LoadBalancerDto {
-    Pools: Pool;
+    Pools: Array<Pool>;
 
-    VirtualServer: Array<VirtualServer>;
+    VirtualServers: Array<VirtualServer>;
+
+    VrfId: number;
 }
