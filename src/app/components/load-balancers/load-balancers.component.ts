@@ -26,8 +26,8 @@ export class LoadBalancersComponent implements OnInit {
   deletedPools: Array<Pool>;
   navIndex = 0;
 
-  editServiceObjectIndex: number;
-  editServiceObjectGroupIndex: number;
+  editVirtualServerIndex: number;
+  editPoolIndex: number;
 
   virtualServerModalMode: ModalMode;
   poolModalMode: ModalMode;
@@ -80,7 +80,7 @@ export class LoadBalancersComponent implements OnInit {
     this.subscribeToVirtualServerModal();
     this.virtualServerModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, virtualServer), 'virtualServerModal');
-    this.editServiceObjectIndex = this.virtualServers.indexOf(virtualServer);
+    this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
     this.ngx.getModal('virtualServerModal').open();
   }
 
@@ -88,7 +88,7 @@ export class LoadBalancersComponent implements OnInit {
     this.subscribeToPoolModal() ;
     this.poolModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
-    this.editServiceObjectGroupIndex = this.pools.indexOf(pool);
+    this.editPoolIndex = this.pools.indexOf(pool);
     this.ngx.getModal('poolModal').open();
   }
 
@@ -124,7 +124,7 @@ export class LoadBalancersComponent implements OnInit {
     if (this.virtualServerModalMode === ModalMode.Create) {
       this.virtualServers.push(virtualServer);
     } else {
-      this.virtualServers[this.editServiceObjectIndex] = virtualServer;
+      this.virtualServers[this.editVirtualServerIndex] = virtualServer;
     }
     this.dirty = true;
   }
@@ -144,7 +144,7 @@ export class LoadBalancersComponent implements OnInit {
     if (this.poolModalMode === ModalMode.Create) {
       this.pools.push(pool);
     } else {
-      this.pools[this.editServiceObjectGroupIndex] = pool;
+      this.pools[this.editPoolIndex] = pool;
     }
     this.dirty = true;
   }
@@ -210,9 +210,9 @@ export class LoadBalancersComponent implements OnInit {
     try {
     objects.forEach(object => {
       if (object.GroupName) {
-        const group = this.pools.find(g => g.Name === object.GroupName);
-        if (group != null) {
-          group.Members.push(object);
+        const pool = this.pools.find(g => g.Name === object.GroupName);
+        if (pool != null) {
+          pool.Members.push(object);
         } else {
           const newGroup = new Pool();
           newGroup.Name = object.GroupName;
