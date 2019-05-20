@@ -33,14 +33,16 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     virtualServer.ServicePort = this.form.value.servicePort;
     virtualServer.Pool = this.form.value.pool;
 
+    const dto = new VirtualServerModalDto();
+    dto.VirtualServer = virtualServer;
+
     this.ngx.resetModalData('virtualServerModal');
-    this.ngx.setModalData(Object.assign({}, virtualServer), 'virtualServerModal');
+    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
     this.ngx.close('virtualServerModal');
     this.reset();
   }
 
   cancel() {
-    console.log('cancel');
     this.ngx.close('virtualServerModal');
     this.reset();
   }
@@ -71,7 +73,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      sourceAddress: ['0.0.0.0/0', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      sourceAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
       destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
       servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required]

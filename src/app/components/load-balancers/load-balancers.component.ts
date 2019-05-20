@@ -131,7 +131,6 @@ export class LoadBalancersComponent implements OnInit {
   }
 
   saveVirtualServer(virtualServer: VirtualServer) {
-    console.log('save')
     if (this.virtualServerModalMode === ModalMode.Create) {
       this.virtualServers.push(virtualServer);
     } else {
