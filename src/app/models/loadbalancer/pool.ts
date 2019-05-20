@@ -3,7 +3,9 @@ import { PoolMember } from './pool-member';
 export class Pool {
     Name: string;
 
-    LoadBalanceMethod: string;
+    LoadBalancingMethod: string;
+
+    HealthMonitors: Array<string>; // TODO: Refactor
 
     Members: Array<PoolMember>;
 }

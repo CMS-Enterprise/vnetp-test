@@ -3,5 +3,13 @@ export class PoolMember {
 
     IpAddress: string;
 
-    Port: number;
-};
+    Fqdn: string;
+
+    ServicePort: number;
+
+    Priority: number;
+
+    AutoPopulate: boolean;
+}
+
+
