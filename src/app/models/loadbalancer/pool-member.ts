@@ -1,6 +1,8 @@
 export class PoolMember {
     Name: string;
 
+    Type: string;
+
     IpAddress: string;
 
     Fqdn: string;
