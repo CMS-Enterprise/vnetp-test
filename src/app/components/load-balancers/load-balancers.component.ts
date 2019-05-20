@@ -160,6 +160,13 @@ export class LoadBalancersComponent implements OnInit {
   }
 
   deletePool(pool: Pool) {
+    for (const vs of this.virtualServers) {
+      if (vs.Pool === pool.Name) {
+        console.log('Pool in-use!'); // TODO: Toastr
+        return;
+      }
+    }
+
     const index = this.pools.indexOf(pool);
     if ( index > -1) {
       this.pools.splice(index, 1);

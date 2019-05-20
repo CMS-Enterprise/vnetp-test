@@ -73,7 +73,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      sourceAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      sourceAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])], //TODO: Do we allow 'any' or '0.0.0.0/0' or both??
       destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
       servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required]
