@@ -49,6 +49,60 @@
         </div>
       </div>
 
+      <div class="form-group" *ngIf="f.type.value == 'ipaddress'">
+        <label for="ipAddress">IP Address</label>
+
+        <input
+          name="ipAddress"
+          formControlName="ipAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
+          aria-label="IP Address"
+        />
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+        <label for="fqdn">FQDN</label>
+
+        <input
+          name="fqdn"
+          formControlName="fqdn"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.fqdn.errors }"
+          aria-label="IP Address"
+        />
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+        <div class="form-check form-check-inline">
+          <input
+            type="checkbox"
+            name="autoPopulate"
+            class="form-check-input"
+            formControlName="autoPopulate"
+            aria-label="FQDN"
+          />
+
+          <label class="form-check-label" for="autoPopulate">
+            Auto Populate
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="servicePort">
+          Service Port
+        </label>
+
+        <input
+        class="form-control"
+        name="servicePort"
+        formControlName="servicePort"
+        [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+        aria-label="Service Port"
+        />
+      </div>
+
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">
           Save

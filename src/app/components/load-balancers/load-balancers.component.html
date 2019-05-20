@@ -151,21 +151,22 @@
               <p>{{ pool.Name }}</p>
             </td>
             <td>
-              <p>{{ pool.LoadBalanceMethod }}</p>
+              <p>{{ pool.LoadBalancingMethod }}</p>
             </td>
             <td>
-              <p>{{ pool.Members.length }}</p>
+              <p>{{ pool.Members?.length }}</p>
             </td>
             <td>
               <fa
                 name="pencil"
-                (click)="editVirtualServerGroup(pool)"
+                (click)="editPool(pool)"
                 aria-label="Edit Pool"
               >
               </fa>
               <fa
               name ="trash"
-              (click)="deleteVirtualServerGroup(pool)"
+              (click)="deletePool(pool)"
+              aria-label="Delete Pool"
               >
               </fa>
             </td>

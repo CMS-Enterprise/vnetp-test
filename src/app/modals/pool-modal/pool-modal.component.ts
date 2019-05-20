@@ -31,7 +31,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
     const pool = new Pool();
     pool.Name = this.form.value.name;
+    console.log(this.form.value.loadBalancingMethod);
     pool.LoadBalancingMethod = this.form.value.loadBalancingMethod;
+    pool.Members = Object.assign([], this.poolMembers);
 
     this.ngx.resetModalData('poolModal');
     this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
@@ -68,12 +70,13 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.subscribeToPoolMemberModal();
     this.poolMemberModalMode = ModalMode.Create;
     this.ngx.getModal('poolMemberModal').toggle();
-
   }
 
-  editPoolMember(){
+  editPoolMember(poolMember: PoolMember) {
     this.subscribeToPoolMemberModal();
     this.poolMemberModalMode = ModalMode.Edit;
+    this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
+    this.editPoolMemberIndex = this.poolMembers.indexOf(poolMember);
     this.ngx.getModal('poolMemberModal').toggle();
   }
 
@@ -96,6 +99,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.Name);
       this.form.controls.loadBalancingMethod.setValue(pool.LoadBalancingMethod);
+      }
+    if (pool.Members) {
+        this.poolMembers = pool.Members;
+      } else {
+        this.poolMembers = new Array<PoolMember>();
       }
   }
 

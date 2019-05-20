@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
+import { ValidateIpv4Any } from 'src/app/validators/network-form-validators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pool-member-modal',
@@ -11,6 +13,7 @@ import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 export class PoolMemberModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
+  typeSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -24,6 +27,11 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     const poolMember = new PoolMember();
     poolMember.Name = this.form.value.name;
     poolMember.Type = this.form.value.type;
+    poolMember.IpAddress = this.form.value.ipAddress;
+    poolMember.Fqdn = this.form.value.fqdn;
+    poolMember.AutoPopulate = this.form.value.autoPopulate;
+    poolMember.ServicePort = this.form.value.servicePort;
+    poolMember.Priority = this.form.value.priority;
 
     this.ngx.resetModalData('poolMemberModal');
     this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
@@ -39,6 +47,33 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
   get f() { return this.form.controls; }
 
   private setFormValidators() {
+    const fqdn = this.form.get('fqdn');
+    const autoPopulate = this.form.get('autoPopulate');
+    const ipAddress = this.form.get('ipAddress');
+
+    this.typeSubscription = this.form.get('type').valueChanges
+    .subscribe( type => {
+
+      if (type === 'ipaddress') {
+        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+        ipAddress.setValue(null);
+        fqdn.setValidators(null);
+        fqdn.setValue(null);
+        autoPopulate.setValue(false);
+      }
+
+      if (type === 'fqdn') {
+        fqdn.setValidators(Validators.compose([Validators.required])); //TODO: Write FQDN Validator
+        fqdn.setValue(null);
+        ipAddress.setValidators(null);
+        ipAddress.setValue(null);
+        autoPopulate.setValue(false);
+      }
+
+      fqdn.updateValueAndValidity();
+      autoPopulate.updateValueAndValidity();
+      ipAddress.updateValueAndValidity();
+    });
   }
 
   getData() {
@@ -46,6 +81,10 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     if (poolMember !== undefined) {
       this.form.controls.name.setValue(poolMember.Name);
       this.form.controls.type.setValue(poolMember.Type);
+      this.form.controls.ipAddress.setValue(poolMember.IpAddress);
+      this.form.controls.fqdn.setValue(poolMember.Fqdn);
+      this.form.controls.autoPopulate.setValue(poolMember.AutoPopulate);
+      this.form.controls.servicePort.setValue(poolMember.ServicePort);
       }
   }
 
@@ -55,13 +94,15 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       type: ['', Validators.required],
       ipAddress: [''],
       fqdn: [''],
-      servicePort: [0],
-      Priority: [0],
-      AutoPopulate: [false]
+      autoPopulate: [false],
+      servicePort: [0, Validators.required],
     });
   }
 
   private unsubAll() {
+    if (this.typeSubscription) {
+        this.typeSubscription.unsubscribe();
+    }
   }
 
   private reset() {

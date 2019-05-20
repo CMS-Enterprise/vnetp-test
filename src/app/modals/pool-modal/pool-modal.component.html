@@ -42,8 +42,8 @@
         aria-label="Load Balancing Method">
         <!--TODO: Do we want to expose all LB methods to users?-->
         <option></option>
-        <option [ngValue]='round-robin'>Round Robin</option>
-        <option [ngValue]='least-connections'>Least Connections</option>
+        <option value="round-robin">Round Robin</option>
+        <option value="least-connections">Least Connections</option>
       </select>
       <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
           <div *ngIf="f.name.load.required">Name is required</div>
@@ -67,6 +67,7 @@
         <thead>
           <tr>
             <th scope="col">Name</th>
+            <th scope="col">Type</th>
             <th scope="col">FQDN/Address</th>
             <th scope="col">Service Port</th>
             <th scope="col">Auto Populate</th>
@@ -78,6 +79,17 @@
               <p>{{ poolMember.Name }}</p>
             </td>
             <td>
+              <p>{{ poolMember.Type }}</p>
+            </td>
+            <td>
+              <p *ngIf="poolMember.Type == 'ipaddress'">{{ poolMember.IpAddress }}</p>
+              <p *ngIf="poolMember.Type == 'fqdn'">{{ poolMember.Fqdn }}</p>
+            </td>
+            <td>
+              <p>{{ poolMember.ServicePort }}</p>
+            </td>
+            <td>
+              <p>{{ poolMember.AutoPopulate }}</p>
             </td>
             <td>
               <fa name="pencil" (click)="editPoolMember(poolMember)"> </fa>
