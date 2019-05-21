@@ -3,6 +3,7 @@
   identifier="virtualServerModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  customClass="large-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Virtual Server</h4>
@@ -105,6 +106,31 @@
       <option></option>
       <option *ngFor="let pool of pools" [ngValue]=pool.Name>{{ pool.Name }}</option>
       </select>
+      </div>
+
+
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="selectedIRules">IRules</label>
+
+          <select multiple class="form-control" id="selectedIRules">
+            <option>1</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-2 text-center">
+          <button><-</button>
+          <button>-></button>
+        </div>
+
+        <div class="form-group col-md-5">
+          <label for="selectedIRules">IRules</label>
+
+          <select multiple class="form-control" id="selectedIRules">
+            <option>1</option>
+          </select>
+        </div>
+
       </div>
 
       <div class="modal-footer">
