@@ -50,7 +50,7 @@
       </div>
 
       <div class="form-row">
-      <div class="form-group">
+      <div class="form-group col-md-6">
         <label for="sourceAddress">Source Address</label>
 
         <input
@@ -64,7 +64,7 @@
         />
       </div>
 
-      <div class="form-group">
+      <div class="form-group col-md-6">
         <label for="destinationAddress">Destination Address</label>
 
         <input
@@ -79,7 +79,8 @@
       </div>
     </div>
 
-      <div class="form-group">
+    <div class="form-row">
+      <div class="form-group col-md-6">
         <label for="servicePort">
           Service Port
         </label>
@@ -93,7 +94,7 @@
         />
       </div>
 
-      <div class="form-group">
+      <div class="form-group col-md-6">
         <label for="pool">
           Pool
         </label>
@@ -111,9 +112,10 @@
           }}</option>
         </select>
       </div>
+    </div>
 
       <div class="form-row">
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-6">
           <label for="selectedIRules">Selected iRules</label>
 
           <table class="table table-striped table-sm">
@@ -136,16 +138,14 @@
           </table>
         </div>
 
-        <div class="form-group col-md-2 text-center"></div>
-
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-6">
           <label for="availableIRules">Available iRules</label>
 
           <select class="form-control" id="availableRules" formControlName="selectedIRule">
             <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{ irule }}</option>
           </select>
 
-          <button type="button" class="btn btn-success" (click)="selectIRule(selectedIRule)">Add iRule</button>
+          <button type="button" class="btn btn-success" (click)="selectIRule(selectedIRule)">Select iRule</button>
         </div>
       </div>
 
