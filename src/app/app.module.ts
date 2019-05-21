@@ -49,6 +49,7 @@ import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtu
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member
     VirtualServerModalComponent,
     LoadBalancersComponent,
     PoolModalComponent,
-    PoolMemberModalComponent
+    PoolMemberModalComponent,
+    IRuleModalComponent
   ],
   imports: [
     BrowserModule,

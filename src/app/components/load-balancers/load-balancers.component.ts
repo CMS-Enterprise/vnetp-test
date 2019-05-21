@@ -11,6 +11,7 @@ import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { IRule } from 'src/app/models/loadbalancer/irule';
 
 @Component({
   selector: 'app-load-balancers',
@@ -23,19 +24,24 @@ export class LoadBalancersComponent implements OnInit {
   currentVrf: Vrf;
   virtualServers: Array<VirtualServer>;
   pools: Array<Pool>;
+  irules: Array<IRule>;
   deletedVirtualServers: Array<VirtualServer>;
   deletedPools: Array<Pool>;
+  deletedIRules: Array<IRule>;
   navIndex = 0;
 
   editVirtualServerIndex: number;
   editPoolIndex: number;
+  editIRuleIndex: number;
 
   virtualServerModalMode: ModalMode;
   poolModalMode: ModalMode;
+  iruleModalMode: ModalMode;
   dirty: boolean;
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
+  iruleModalSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.virtualServers = new Array<VirtualServer>();
@@ -59,9 +65,11 @@ export class LoadBalancersComponent implements OnInit {
       if (!loadBalancerDto) {
         this.virtualServers = new Array<VirtualServer>();
         this.pools = new Array<Pool>();
+        this.irules = new Array<IRule>();
        } else if (loadBalancerDto) {
         this.virtualServers = loadBalancerDto.VirtualServers;
         this.pools = loadBalancerDto.Pools;
+        this.irules = loadBalancerDto.IRules;
     }
   }
 
@@ -79,6 +87,12 @@ export class LoadBalancersComponent implements OnInit {
     this.subscribeToPoolModal();
     this.poolModalMode = ModalMode.Create;
     this.ngx.getModal('poolModal').open();
+  }
+
+  createIRule() {
+    this.subscribeToIRuleModal();
+    this.iruleModalMode = ModalMode.Create;
+    this.ngx.getModal('iruleModal').open();
   }
 
   editVirtualServer(virtualServer: VirtualServer) {
@@ -100,6 +114,14 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
     this.editPoolIndex = this.pools.indexOf(pool);
     this.ngx.getModal('poolModal').open();
+  }
+
+  editIRule(irule: IRule){
+    this.subscribeToIRuleModal();
+    this.iruleModalMode = ModalMode.Edit;
+    this.ngx.setModalData(Object.assign({}, irule), 'iruleModal');
+    this.editIRuleIndex = this.irules.indexOf(irule);
+    this.ngx.getModal('iruleModal').open();
   }
 
   subscribeToVirtualServerModal() {
@@ -127,6 +149,20 @@ export class LoadBalancersComponent implements OnInit {
       }
       this.ngx.resetModalData('poolModal');
       this.poolModalSubscription.unsubscribe();
+    });
+  }
+
+  subscribeToIRuleModal() {
+    this.iruleModalSubscription =
+    this.ngx.getModal('iruleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as IRule;
+
+      if (data !== undefined) {
+        data = Object.assign({}, data);
+        this.saveIRule(data);
+      }
+      this.ngx.resetModalData('iruleModal');
+      this.iruleModalSubscription.unsubscribe();
     });
   }
 
@@ -178,6 +214,19 @@ export class LoadBalancersComponent implements OnInit {
     }
   }
 
+  saveIRule(irule: IRule){
+    if (this.iruleModalMode === ModalMode.Create){
+      this.irules.push(irule);
+    } else {
+      this.irules[this.editIRuleIndex] = irule;
+    }
+    this.dirty = true;
+  }
+
+  deleteIRule(){
+    throw new Error('Not Implemented');
+  }
+
   saveAll() {
     this.dirty = false;
     const dto = new LoadBalancerDto();
@@ -185,6 +234,7 @@ export class LoadBalancersComponent implements OnInit {
     dto.VirtualServers = this.virtualServers;
     dto.Pools = this.pools;
     dto.VrfId = this.currentVrf.id;
+    dto.IRules = this.irules;
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.load_balancer_dto = dto;
