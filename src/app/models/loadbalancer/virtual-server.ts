@@ -1,3 +1,5 @@
+import { IRule } from './irule';
+
 export class VirtualServer {
     Name: string;
 
@@ -12,4 +14,6 @@ export class VirtualServer {
     Type: string;
 
     Pool: string;
+
+    IRules: Array<IRule>;
 }
