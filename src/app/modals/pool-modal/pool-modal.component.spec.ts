@@ -32,4 +32,15 @@ describe('PoolModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // Initial Form State
+  it('name should be required', () => {
+    const name = component.form.controls.name;
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('load balancing should be required', () => {
+    const loadBalancingMethod = component.form.controls.loadBalancingMethod;
+    expect(loadBalancingMethod.valid).toBeFalsy();
+  });
 });

@@ -5,9 +5,6 @@ import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { ValidateIpv4CidrAddress } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
-import { IRule } from 'src/app/models/loadbalancer/irule';
-import { isRegExp } from 'util';
-import { stringify } from '@angular/core/src/render3/util';
 
 @Component({
   selector: 'app-virtual-server-modal',

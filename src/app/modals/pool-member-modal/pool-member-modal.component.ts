@@ -63,7 +63,8 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       }
 
       if (type === 'fqdn') {
-        fqdn.setValidators(Validators.compose([Validators.required])); //TODO: Write FQDN Validator
+        // TODO: Write FQDN Validator
+        fqdn.setValidators(Validators.compose([Validators.required]));
         fqdn.setValue(null);
         ipAddress.setValidators(null);
         ipAddress.setValue(null);
@@ -95,7 +96,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      servicePort: [0, Validators.required],
+      servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
     });
   }
 

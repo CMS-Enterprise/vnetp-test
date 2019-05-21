@@ -29,7 +29,54 @@ describe('PoolMemberModalComponent', () => {
     fixture.detectChanges();
   });
 
+  // Initial Form State
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('name should be required', () => {
+    const name = component.form.controls.name;
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('type should be required', () => {
+    const type = component.form.controls.type;
+    expect(type.valid).toBeFalsy();
+  });
+
+  it('ip address should not be required', () => {
+    const ipAddress = component.form.controls.ipAddress;
+    expect(ipAddress.valid).toBeTruthy();
+  });
+
+  it('fqdn should not be required', () => {
+    const fqdn = component.form.controls.fqdn;
+    expect(fqdn.valid).toBeTruthy();
+  });
+
+  it('auto populate should not be required', () => {
+    const autoPopulate = component.form.controls.autoPopulate;
+    expect(autoPopulate.valid).toBeTruthy();
+  });
+
+  it('service port should be required', () => {
+    const servicePort = component.form.controls.servicePort;
+    expect(servicePort.valid).toBeFalsy();
+  });
+
+  // Form State when Type: FQDN selected
+  it ('ipaddress should be required', () => {
+    const type = component.form.controls.type;
+    type.setValue('ipaddress');
+    const ipAddress = component.form.controls.ipAddress;
+    expect(ipAddress.valid).toBeFalsy();
+  });
+
+  // Form State when Type: FQDN selected
+  it ('fqdn should be required', () => {
+    const type = component.form.controls.type;
+    type.setValue('fqdn');
+    const fqdn = component.form.controls.fqdn;
+    expect(fqdn.valid).toBeFalsy();
   });
 });
