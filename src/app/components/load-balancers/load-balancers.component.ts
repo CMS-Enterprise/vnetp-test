@@ -77,6 +77,7 @@ export class LoadBalancersComponent implements OnInit {
     this.subscribeToVirtualServerModal();
     const dto = new VirtualServerModalDto();
     dto.Pools = this.pools;
+    dto.IRules = this.irules;
 
     this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
     this.virtualServerModalMode = ModalMode.Create;
@@ -102,6 +103,7 @@ export class LoadBalancersComponent implements OnInit {
     const dto = new VirtualServerModalDto();
     dto.Pools = this.pools;
     dto.VirtualServer = virtualServer;
+    dto.IRules = this.irules;
 
     this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
     this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);

@@ -97,40 +97,54 @@
         </label>
 
         <select
-        class="form-control"
-        name="pool"
-        formControlName="pool"
-        [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
-        aria-label="Pool"
+          class="form-control"
+          name="pool"
+          formControlName="pool"
+          [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
+          aria-label="Pool"
         >
-      <option></option>
-      <option *ngFor="let pool of pools" [ngValue]=pool.Name>{{ pool.Name }}</option>
-      </select>
+          <option></option>
+          <option *ngFor="let pool of pools" [ngValue]="pool.Name">{{
+            pool.Name
+          }}</option>
+        </select>
       </div>
-
 
       <div class="form-row">
         <div class="form-group col-md-5">
-          <label for="selectedIRules">IRules</label>
+          <label for="selectedIRules">Selected iRules</label>
 
-          <select multiple class="form-control" id="selectedIRules">
-            <option>1</option>
-          </select>
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let irule of selectedIRules">
+                <td>
+                  {{ irule }}
+                </td>
+                <td>
+                  <fa name="trash" (click)="unselectIRule(irule)"> </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="form-group col-md-2 text-center">
-          <button><-</button>
-          <button>-></button>
-        </div>
+        <div class="form-group col-md-2 text-center"></div>
 
         <div class="form-group col-md-5">
-          <label for="selectedIRules">IRules</label>
+          <label for="availableIRules">Available iRules</label>
 
-          <select multiple class="form-control" id="selectedIRules">
-            <option>1</option>
+          <select class="form-control" id="availableRules" formControlName="selectedIRule">
+            <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{ irule }}</option>
           </select>
-        </div>
 
+          <button type="button" class="btn btn-success" (click)="selectIRule(selectedIRule)">Add iRule</button>
+        </div>
       </div>
 
       <div class="modal-footer">

@@ -15,5 +15,5 @@ export class VirtualServer {
 
     Pool: string;
 
-    IRules: Array<IRule>;
+    IRules: Array<string>;
 }
