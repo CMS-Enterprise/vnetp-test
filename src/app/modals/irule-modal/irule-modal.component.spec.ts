@@ -31,4 +31,15 @@ describe('IRuleModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // Initial Form State
+  it('name should be required', () => {
+    const name = component.form.controls.name;
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('definition should be required', () => {
+    const definition = component.form.controls.definition;
+    expect(definition.valid).toBeFalsy();
+  });
 });

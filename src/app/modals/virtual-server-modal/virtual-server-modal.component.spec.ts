@@ -4,6 +4,7 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
@@ -13,7 +14,7 @@ describe('VirtualServerModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
+      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
       declarations: [ VirtualServerModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
