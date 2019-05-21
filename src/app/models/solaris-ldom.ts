@@ -1,6 +1,6 @@
 export class SolarisLdom {
     name: string;
-    device_id: number;
+    device_id: string;
     customer_name: string;
     devicetype: string;
     associatedcdom: string;

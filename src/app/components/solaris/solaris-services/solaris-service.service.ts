@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { SolarisCdom } from '../../../models/solaris-cdom';
 import { SolarisLdom } from '../../../models/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
+// import { Router } from '@angular/router';
+// import { MessageService } from 'src/app/services/message.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +14,26 @@ export class SolarisServiceService {
   public ldomFilter: string[];
   private LDOM: SolarisLdom;
   private CDOM: SolarisCdom;
-
+  CDOMDevice = new SolarisCdom();
+  LDOMDevice = new SolarisLdom();
+  CDOMArray: Array<any>;
+  LDOMArray: Array<any>;
+  currentUser: User;
+  AllDevices: Array<any>;
+  AllSolaris: Array<any>;
   constructor(
-  //  private LDOM: SolarisLdom,
-  //  private CDOM: SolarisCdom,
     private automationApiService: AutomationApiService,
-    private router: Router,
-    private messageService: MessageService
-
+    // private router: Router,
+    // private messageService: MessageService,
+    private auth: AuthService
   ) {
      // this.LDOM = new SolarisLdom();
       // this.CDOM = new SolarisCdom();
+      this.CDOMArray = new Array<any>();
+      this.LDOMArray = new Array<any>();
+      this.auth.currentUser.subscribe(u => this.currentUser = u);
+      this.AllSolaris = new Array<any>();
+
    }
   getLDOMDevice(device: any){
    const LDOMDevice = new SolarisLdom();
@@ -31,9 +42,12 @@ export class SolarisServiceService {
    LDOMDevice.name = tmpMetadata.Name;
    // LDOMDevice.luns = tmpMetadata.luns;
    // LDOMDevice.vlans = tmpMetadata.vlans;
+   LDOMDevice.customer_name = this.currentUser.CustomerName;
+   LDOMDevice.associatedcdom = tmpMetadata.associatedcdom;
    LDOMDevice.set_variable = tmpMetadata.variables;
    // LDOMDevice.vswitch = tmpMetadata.vswitch;
-   LDOMDevice.device_id = tmpMetadata.device_id;
+   LDOMDevice.device_id = device.device_pk;
+   console.log(this.getCustomerNamebyDeviceID(device.device_pk));
    return LDOMDevice;
   }
   getCDOMDevice(device: any){
@@ -69,6 +83,46 @@ export class SolarisServiceService {
     CDOMDevice.ram = RAMRawData;
     return CDOMDevice;
   }
+  loadDevices(result : any) {
+    //load already configured devices and settings from Device42
+    // return new Promise(resolve => {
+    // this.automationApiService
+    //   .doqlQuery(
+    //     "SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk"
+    //   )
+    //   .subscribe(data => {
+    //     let result = data as any;
+        this.AllDevices = result;
+        for (let i = this.AllDevices.length - 1; i >= 0; --i) {
+          if (this.AllDevices[i].DeviceType == "solaris_cdom") {
+            const currentDevice = this.getCDOMDevice(
+              this.AllDevices[i]
+            );
+            console.log(currentDevice);
+            this.CDOMArray.push(currentDevice);
+          } else if (this.AllDevices[i].DeviceType == "solaris_ldom") {
+            const currentDevice = this.getLDOMDevice(
+              this.AllDevices[i]
+            );
+            console.log(currentDevice);
+            this.LDOMArray.push(currentDevice);
+          }
+          console.log(this.LDOMArray);
+        }
+        //finished looping through all devices, create dictionary to store CDOM/LDOM objects
+        this.AllSolaris.push({
+          key: "CDOM",
+          value: this.CDOMArray
+        });
+        this.AllSolaris.push({
+          key: "LDOM",
+          value: this.LDOMArray
+        });
+        console.log('Service',this.AllSolaris);
+        return this.AllSolaris;
+    //   });
+    // });
+  }
   sanitizeMetadata(metadata: string){
     metadata = metadata.replace(/\\n/g, ' ');
     return JSON.parse(metadata);
@@ -81,32 +135,31 @@ export class SolarisServiceService {
         ,\"vcsdevs\": ${this.CDOM.vcsdevs}}, \"vnet\": ${this.CDOM.vnet}, \"vswitch\": ${this.CDOM.vswitch}`
       };
       this.automationApiService.launchTemplate('save_device', body).subscribe();
-      this.messageService.filter('Job Launched');
-      this.router.navigate(['/solaris']);
+      // this.messageService.filter('Job Launched');
+      // this.router.navigate(['/solaris']);
     }
       // Launch required automation jobs
-  private launchLDOMJobs() {
-    const body = {
-      extra_vars: `\"associatedcdom\": ${this.LDOM.associatedcdom},\"set_variable\": ${this.LDOM.set_variable}
-                  ,\"add_domain\": ${this.LDOM.add_domain}, \"add_vcpu\": ${this.LDOM.add_vcpu}
-                  ,\"add_memory\": ${this.LDOM.add_memory}, \"add_vdsdev\": ${this.LDOM.add_vdsdev},
-                  ,\"add_vnet_cmd"\: ${this.LDOM.add_vnet_cmd}, \"add_vdisk_cmd\": ${this.LDOM.add_vdisk_cmd},
-                  ,\"add_vnet"\: ${this.LDOM.add_vnet}, \"add_vdisk\": ${this.LDOM.add_vdisk}
-                  ,\"bip"\: ${this.LDOM.bip}, \"bmask\": ${this.LDOM.bmask}, \"bgw\": ${this.LDOM.bgw}`
-    };
-    //this.automationApiService
-    const customerName = this.getCustomerNamebyDeviceID(this.LDOM.device_id);
-    this.automationApiService.launchTemplate(`${customerName}_save_device`, body).subscribe();
-    this.messageService.filter('Job Launched');
-    this.router.navigate(['/solaris']);
-  }
+
   getCustomerNamebyDeviceID (id: string){
     this.automationApiService.getDevicesbyID(id).subscribe(
       singleDevData => {
-        let singleDevResult = singleDevData as any;
+        const singleDevResult = singleDevData as any;
 
         console.log(singleDevResult.customer);
         return singleDevResult.customer;
       });
+  }
+
+
+  returnUnique(array : Array<any>){
+    const uniqueArray = new Array<any>();
+
+    array.forEach( (obj) => {
+      if (uniqueArray.indexOf(obj) < 0) {
+        uniqueArray.push(obj);
+      }
+    });
+
+    return uniqueArray;
   }
 }

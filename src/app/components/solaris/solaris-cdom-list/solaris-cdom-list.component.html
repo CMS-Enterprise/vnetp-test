@@ -1,4 +1,4 @@
-<h4>CDOM List : {{ devices.length }}</h4>
+<h4>CDOM List : {{ devices?.length }}</h4>
 
 <div class="table table-striped">
   <thead>
@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-      <tr *ngFor="let device of devices">
+      <tr *ngFor="let device of CDOMDeviceArray">
         <td>
           <fa name="server"></fa>
         </td>

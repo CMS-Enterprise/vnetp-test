@@ -8,21 +8,76 @@
           <input
             name="inputLDOMName"
             aria-label="Input LDOM Name"
-            appIsAlphanumeric type="text" 
             class="form-control"
             placeholder="Name"
-            #name="ngModel"
+            #inputLDOMName="ngModel"
             [(ngModel)]="LDOM.name"
           >
         </div>
+        <div class="form-group row">
+          <label for="inputLDOMaddCDOM" class="col-sm-1 col-form-label offset-sm-1">Control Domain</label>
+          <div class="col-4 offset-sm-4">
+            <!-- <input 
+             name="inputLDOMaddCDOM"
+             aria-label="LDOM Control Domain"
+             appIsAlphanumeric
+             type="text"
+             class="form-control"
+             #name="ngModel"
+             [(ngModel)]="LDOM.associatedcdom"
+             >
+          -->
+          <select
+           name="cdomSelect"
+           class="form-control"
+           id="inputLDOMaddCDOM"
+           #cdomInputName="ngModel"
+            [(ngModel)]="cdomInput"
+            (ngModelChange)="printCDOM(cdomInput)"
+          >
+            <option class="list-group-item" *ngFor="let cdom of CDOMDeviceArray"
+            [ngValue]="cdom">
+              {{ cdom.name }}
+            </option> 
+          </select>
+
+        </div>
+        
+        <div>
+          <li>{{ currentCDOM?.name }}</li>
+        </div>
       </div>
+     
+      </div>
+      
+<!--EXAMPLE-->
+      <div class="form-group row">
+        <label for="vnet" class="col-sm-1 col-form-label offset-sm-1">
+          Control Domain
+        </label>
+        <div class="col-4 offset-sm-4">
+
+        <select
+         name="cdomSelect"
+         class="form-control"
+         id="testInput"
+        >
+          <option class="list-group-item" *ngFor="let vnet of currentCDOM?.vlans.split(',')">
+            {{ vnet }}
+          </option> 
+        </select>
+
+      </div>
+    </div>
+<!--END EXAMPLE-->
+
       <div class="form-group row">
         <label for="inputLDOMadddomain" class="col-sm-1 col-form-label offset-sm-1">Add Domain</label>
         <div class="col-sm-1">
           <input
             name="inputLDOMadddomain"
             aria-label="Add LDOM Domain"
-            appIsAlphanumeric type="text"
+
             class="form-control"
             placeholder=""
             #name="ngModel"
@@ -34,7 +89,7 @@
           <input
             name="inputLDOMvCPU"
             aria-label="vCPU count for LDOM"
-            appIsAlphanumeric type="text"
+
             class="form-control"
             placeholder="# vCPU"
             #name="ngModel"
@@ -42,13 +97,15 @@
           >
         </div>
       </div>
+     
+
       <div class="form-group row">
         <label for="inputLDOMmemory" class="col-sm-1 col-form-label offset-sm-1">Memory</label>
         <div class="col-4 offset-sm-4">
           <input
             name="inputLDOMmemory"
             aria-label="LDOM Memory"
-            appIsAlphanumeric type="text"
+
             class="form-control"
             #name="ngModel"
             [(ngModel)]="LDOM.add_memory"
@@ -59,15 +116,15 @@
         <label for="inputLDOMvnets" class="col-sm-1 offset-sm-1">vNet</label>
         <div class="col-4 offset-sm-4">
           <ul class="list-group" *ngIf="vnets">
-            <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet_cmd">
+            <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
               <fa 
               name="chevron-up"
-              (click)="moveObjectPosition(-1,vnet,LDOM.add_vnet_cmd)"
+              (click)="moveObjectPosition(-1,vnet,LDOM.add_vnet)"
               >
               </fa>
               <fa 
               name="chevron-down"
-              (click)="moveObjectPosition(1,vnet,LDOM.add_vnet_cmd)"
+              (click)="moveObjectPosition(1,vnet,LDOM.add_vnet)"
               >
               </fa>
                 {{vnet}}
@@ -94,7 +151,7 @@
             <input
                name="inputLDOMvdsdev"
                aria-label="LDOM VDS Config"
-               appIsAlphanumeric type="text"
+   
                class="form-control"
                #name="ngModel"
                [(ngModel)]="LDOM.add_vdsdev"
@@ -107,7 +164,7 @@
           <input
              name="inputLDOMvariable"
              aria-label="LDOM VDS Config"
-             appIsAlphanumeric type="text"
+ 
              class="form-control"
              #name="ngModel"
              [(ngModel)]="LDOM.set_variable"
@@ -120,7 +177,7 @@
             <input
                name="inputLDOMVDS"
                aria-label="LDOM VDS Config"
-               appIsAlphanumeric type="text"
+   
                class="form-control"
                #name="ngModel"
                [(ngModel)]="LDOM.add_vdisk"
@@ -133,7 +190,7 @@
           <input
              name="inputLDOMbinddomain"
              aria-label="LDOM Bind Domain Config"
-             appIsAlphanumeric type="text"
+ 
              class="form-control"
              #name="ngModel"
              [(ngModel)]="LDOM.bind_domain"
@@ -168,20 +225,7 @@
              >
           </div>
       </div>
-      <div class="form-group row">
-        <label for="inputLDOMaddconfig" class="col-sm-1 col-form-label offset-sm-1">Control Domain</label>
-        <div class="col-4 offset-sm-4">
-          <input
-           name="inputLDOMaddconfig"
-           aria-label="LDOM Control Domain"
-           appIsAlphanumeric
-           type="text"
-           class="form-control"
-           #name="ngModel"
-           [(ngModel)]="LDOM.associatedcdom"
-           >
-        </div>
-    </div>
+
     <div class="form-group row">
       <label for="inputLDOMbip" class="col-sm-1 col-form-label offset-sm-1">IP</label>
       <div class="col-4 offset-sm-4">
@@ -196,7 +240,7 @@
          >
       </div>
   </div>
-  <div class="form-group row">
+      <div class="form-group row">
     <label for="inputLDOMbmask" class="col-sm-1 col-form-label offset-sm-1">Net Mask</label>
     <div class="col-4 offset-sm-4">
       <input
@@ -209,8 +253,8 @@
        [(ngModel)]="LDOM.bmask"
        >
       </div>
-    </div>
-    <div class="form-group row">
+      </div>
+      <div class="form-group row">
       <label for="inputLDOMbgw" class="col-sm-1 col-form-label offset-sm-1">Gateway</label>
       <div class="col-4 offset-sm-4">
         <input
@@ -223,20 +267,47 @@
          [(ngModel)]="LDOM.bgw"
          >
       </div>
-    </div>
-    <div class="btn-group offset-1">
-      <button class="btn btn-success" aria-label="Save" disabled>
-          Save
-        </button>
-        <button
+      </div>
+       <div class="btn-group offset-1">
+      <button 
+      class="btn btn-success"
+      aria-label="Save"
+      (click)="launchLDOMJobs()"
+      >
+        Save
+      </button>
+      <button
           class="btn btn-danger"
           aria-label="Deploy"
           type="submit"
-        >
-          Deploy
-        </button>
-      </div>
+      >
+        Deploy
+    </button>
+  </div>
     </form>
   </div>
+</div>
+<div class="table table-striped">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>CDOM Name</th>
+      <th class="col-md-4 offset-md-4"> AA</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let device of CDOMDeviceArray">
+        <td>
+          <fa name="server"></fa>
+        </td>
+        <td>
+          <a href='/dashboard'>{{device.name}}</a>
+        </td>
+          <td class="spaced"> 
+            <button class="btn btn-default" (click)="getLdoms([1,2,3])">Associated LDOMs</button>
+          </td>
+      </tr>
+  </tbody>
 </div>
 <!-- https://mdbootstrap.com/docs/angular/forms/inputs/ -->
