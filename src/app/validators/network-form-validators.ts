@@ -135,6 +135,5 @@ function isValidIpAddress(ipAddress: string): boolean {
 }
 
 function isValidNetMask(netMask: number): boolean {
-    console.log(netMask);
     return (!isNaN(netMask) && netMask >= 0 && netMask <= 32);
 }
