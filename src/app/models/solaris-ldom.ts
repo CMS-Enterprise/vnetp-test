@@ -13,6 +13,8 @@ export class SolarisLdom {
     add_vdsdev: string;
     add_vdisk = new Array<string>();
     add_vdisk_cmd = new Array<string>();
+    add_vds = new Array<string>();
+    add_vds_cmd = new Array<string>();
     bind_domain: boolean;
     start_domain: boolean;
     net_install: string;

@@ -19,6 +19,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   vnets: Array<any>;
   vdisks: string[];
   inputLDOMvnet: string;
+  inputLDOMvds: string;
   returnDevices: Array<any>;
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
@@ -36,25 +37,22 @@ export class SolarisLdomCreateComponent implements OnInit {
   }
   printCDOM(cdomInput: SolarisCdom){
     this.currentCDOM = cdomInput;
-    console.log(this.currentCDOM);
   }
   addvnets(){
-    /*
-    var vnetUL = document.getElementById("vnetUL");
-
-    var li = document.createElement("li");
-    li.setAttribute('id', vnetInput.nodeValue);
-    li.appendChild(document.createTextNode(vnetName));
-    vnetUL.appendChild(li);
-    */
-   // var vnetInputtest = (<HTMLInputElement>document.getElementById("inputLDOMvnet")).value;
    this.LDOM.add_vnet.push(this.inputLDOMvnet);
    //Create commands that will be sent as add-vnet parameter 
    const vnetIndex = this.LDOM.add_vnet.length - 1
    const vnetCmdString = `id=${vnetIndex} vnet${vnetIndex} ${this.inputLDOMvnet}`
    this.LDOM.add_vnet_cmd.push(vnetCmdString);
    this.inputLDOMvnet = '';
-   console.log(this.vnets);
+  }
+  addvds(vdsWWN: string){
+   this.LDOM.add_vds.push(this.inputLDOMvds);
+   //Create commands that will be sent as add-vnet parameter 
+   const vdsIndex = this.LDOM.add_vds.length - 1
+   const vdsCmdString = `/dev/dsk/${vdsWWN} ${this.LDOM.name}@${this.inputLDOMvds}`
+   this.LDOM.add_vds_cmd.push(vdsCmdString);
+   this.inputLDOMvds = '';
   }
   moveObjectPosition(value: number, obj, objArray){
     //determine the current index in the array
@@ -71,15 +69,6 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   }
   launchLDOMJobs() {
-    // const body = {
-    //   extra_vars: `\"associatedcdom\": \"${this.LDOM.associatedcdom}\",\"set_variable\": \"${this.LDOM.set_variable}\"
-    //               ,\"add_domain\": \"${this.LDOM.add_domain}\", \"add_vcpu\": \"${this.LDOM.add_vcpu}\"
-    //               ,\"add_memory\": \"${this.LDOM.add_memory}\", \"add_vdsdev\": \"${this.LDOM.add_vdsdev}\",
-    //               ,\"add_vnet_cmd"\: \"${this.LDOM.add_vnet_cmd}\", \"add_vdisk_cmd\": \"${this.LDOM.add_vdisk_cmd}\",
-    //               ,\"add_vnet"\: \"${this.LDOM.add_vnet}\", \"add_vdisk\": \"${this.LDOM.add_vdisk}\"
-    //               ,\"bip"\: \"${this.LDOM.bip}\", \"bmask\": \"${this.LDOM.bmask}\", \"bgw\": \"${this.LDOM.bgw}\"`
-    // };
-
     let extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = "solaris_ldom";
@@ -94,14 +83,6 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
-  getLdoms() {
-
-    if (this.ldomFilter) {
-    // this.apiService.getLdoms(this.ldomFilter);
-    } else if (!this.ldomFilter) {
-      // this.apiService.getLdoms();
-    }
-  }
   ngOnInit() {
     /*
     this.ldomFilter = Object.assign([], this.solarisService.ldomFilter as string[]);
@@ -112,7 +93,6 @@ export class SolarisLdomCreateComponent implements OnInit {
   )
   .subscribe(data => {
     this.returnDevices = this.solarisService.loadDevices(data);
-    console.log('Component',this.returnDevices);
     this.returnDevices.forEach((obj) => {
      if(obj.key === "LDOM"){
        this.LDOMDeviceArray = obj.value;
@@ -121,12 +101,8 @@ export class SolarisLdomCreateComponent implements OnInit {
       this.CDOMDeviceArray = obj.value;
      }
      // this.vnets = this.CDOMDeviceArray
-     console.log(this.CDOMDeviceArray);
     });
     //  this.CDOMDeviceArray = this.returnDevices[0].value;
-    console.log(this.CDOMDeviceArray);
   });
-  //Get Unique vswitches
-  
   }
 }

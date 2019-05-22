@@ -47,7 +47,6 @@ export class SolarisServiceService {
    LDOMDevice.set_variable = tmpMetadata.variables;
    // LDOMDevice.vswitch = tmpMetadata.vswitch;
    LDOMDevice.device_id = device.device_pk;
-   console.log(this.getCustomerNamebyDeviceID(device.device_pk));
    return LDOMDevice;
   }
   getCDOMDevice(device: any){
@@ -60,16 +59,10 @@ export class SolarisServiceService {
     CDOMDevice.variables = tmpMetadata.variables;
     CDOMDevice.ilomname = tmpMetadata.ilomname;
     CDOMDevice.ilomipaddress = tmpMetadata.ilomip;
-    CDOMDevice.vcc = tmpMetadata.vccports;
+    CDOMDevice.add_vcc = tmpMetadata.vccports;
     CDOMDevice.vswitch = tmpMetadata.vswitch;
-    //Determine number of vCPU's, non hyperthread Core * Count, hyperthreaded (Core * Count) * 2
-    let numVCPU: number = device.cpucount * device.cpucore;
-    if(device.Hyperthreading === 'Yes'){
-      numVCPU = numVCPU * 2;
-      CDOMDevice.vcpu = numVCPU;
-    } else{
-      CDOMDevice.vcpu = numVCPU;
-    }
+    CDOMDevice.add_vds = tmpMetadata.add_vds;
+    CDOMDevice.set_vcpu = tmpMetadata.add_vcpu
     //normalize RAM to GB.  TODO, allow dynamic update
     let RAMRawData  = device.ram;
     if(device.ram_size_type == 'MB'){
@@ -80,7 +73,7 @@ export class SolarisServiceService {
     } else if (device.ram_size_type === 'GB' ){
       //standard, don't do anything
     }
-    CDOMDevice.ram = RAMRawData;
+    CDOMDevice.set_mem = device.ram;
     return CDOMDevice;
   }
   loadDevices(result : any) {
@@ -140,15 +133,19 @@ export class SolarisServiceService {
     }
       // Launch required automation jobs
 
-  getCustomerNamebyDeviceID (id: string){
-    this.automationApiService.getDevicesbyID(id).subscribe(
-      singleDevData => {
-        const singleDevResult = singleDevData as any;
-
-        console.log(singleDevResult.customer);
-        return singleDevResult.customer;
-      });
-  }
+  moveObjectPosition(value: number, obj, objArray){
+        //determine the current index in the array
+        const objIndex = objArray.indexOf(obj);
+        // If the object isn't in the array, is at the start of the array and requested to move up
+        // or if the object is at the end of the array, return.
+        if (objIndex === -1 || objIndex === 0 && value === -1 || objIndex + value === objArray.length) { return; }
+        const nextObj = objArray[objIndex + value];
+        //If next object doesn't exist, return
+        if (nextObj == null ) { return ;}
+        const nextObjIndex = objArray.indexOf(nextObj);
+        [objArray[objIndex], objArray[nextObjIndex]] =
+        [objArray[nextObjIndex], objArray[objIndex]]
+   }
 
 
   returnUnique(array : Array<any>){
