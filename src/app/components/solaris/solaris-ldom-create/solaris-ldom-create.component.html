@@ -1,295 +1,288 @@
-<h4>LDOM Create or Clone</h4>
-<div class="col-sm-12">
-  <div>
-    <form name="LDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
-      <div class="form-group row">
-        <label for="inputLDOMName" class="col-sm-1 col-form-label">LDOM Name</label>
-        <div class="col-md-2">
+<div>
+  <form name="LDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
+    <div class="form-row">
+      <div class="form-group col-md-4 ">
+        <label for="inputLDOMName">LDOM Name</label>
+        <input
+          name="inputLDOMName"
+          aria-label="Input LDOM Name"
+          class="form-control"
+          placeholder="Name"
+          #inputLDOMName="ngModel"
+          [(ngModel)]="LDOM.name"
+        />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputLDOMaddCDOM">Hypervisor</label>
+        <select
+          name="cdomSelect"
+          class="form-control"
+          id="inputLDOMaddCDOM"
+          #cdomInputName="ngModel"
+          [(ngModel)]="cdomInput"
+          (ngModelChange)="printCDOM(cdomInput)"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let cdom of CDOMDeviceArray"
+            [ngValue]="cdom"
+          >
+            {{ cdom.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputLDOMvariable">Variables</label>
+        <div>
           <input
-            name="inputLDOMName"
-            aria-label="Input LDOM Name"
+            name="inputLDOMvariable"
+            aria-label="LDOM VDS Config"
             class="form-control"
-            placeholder="Name"
-            #inputLDOMName="ngModel"
-            [(ngModel)]="LDOM.name"
-          >
-        </div>
-        <div class="form-group row">
-          <label for="inputLDOMaddCDOM" class="col-sm-3 col-form-label offset-1 ">Hypervisor</label>
-          <div class="col-7 offset-sm-1">
-          <select
-           name="cdomSelect"
-           class="form-control"
-           id="inputLDOMaddCDOM"
-           #cdomInputName="ngModel"
-            [(ngModel)]="cdomInput"
-            (ngModelChange)="printCDOM(cdomInput)"
-          >
-            <option class="list-group-item" *ngFor="let cdom of CDOMDeviceArray"
-            [ngValue]="cdom">
-              {{ cdom.name }}
-            </option> 
-          </select>
+            #name="ngModel"
+            [(ngModel)]="LDOM.set_variable"
+          />
         </div>
       </div>
-      <label for="inputLDOMadddomain" class="col-sm-1 col-form-label offset-sm-1">Add Domain</label>
-      <div class="col-sm-2">
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMbinddomain">Bind Domain</label>
+        <input
+          name="inputLDOMbinddomain"
+          aria-label="LDOM Bind Domain Config"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.bind_domain"
+        />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputLDOMstartdomain">Start Domain</label>
+        <input
+          name="inputLDOMstartdomain"
+          aria-label="LDOM Start Domain"
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.start_domain"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputLDOMadddomain">Add Domain</label>
         <input
           name="inputLDOMadddomain"
           aria-label="Add LDOM Domain"
-
           class="form-control"
           placeholder=""
           #name="ngModel"
           [(ngModel)]="LDOM.add_domain"
-        >
-      </div>
-      </div>
-
-<!--EXAMPLE--
-      <div class="form-group row">
-        <label for="vnet" class="col-sm-1 col-form-label offset-sm-1">
-          Control Domain
-        </label>
-        <div class="col-4 offset-sm-4">
-
-        <select
-         name="cdomSelect"
-         class="form-control"
-         id="testInput"
-        >
-          <option class="list-group-item" *ngFor="let vnet of currentCDOM?.vlans">
-            {{ vnet }}
-          </option> 
-        </select>
-
+        />
       </div>
     </div>
-<--END EXAMPLE-->
 
-      <div class="form-group row">
+    <hr />
 
-        <label for="inputLDOMvCPU" class="col-sm-1 col-form-label">vCPU Count</label>
-        <div class="col-sm-2">
-          <input
-            name="inputLDOMvCPU"
-            aria-label="vCPU count for LDOM"
-
-            class="form-control"
-            placeholder="# vCPU"
-            #name="ngModel"
-            [(ngModel)]="LDOM.add_vcpu"
-          >
-        </div>
-        <label for="inputLDOMmemory" class="col-sm-1 col-form-label">Memory</label>
-        <div class="col-4">
-          <input
-            name="inputLDOMmemory"
-            aria-label="LDOM Memory"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="LDOM.add_memory"
-          >
-        </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMvCPU">vCPU Count</label>
+        <input
+          name="inputLDOMvCPU"
+          aria-label="vCPU count for LDOM"
+          class="form-control"
+          placeholder="# vCPU"
+          #name="ngModel"
+          [(ngModel)]="LDOM.add_vcpu"
+        />
       </div>
-      <div class="form-group row">
-
+      <div class="form-group col-md-4">
+        <label for="inputLDOMmemory">
+          Memory
+        </label>
+        <input
+          name="inputLDOMmemory"
+          aria-label="LDOM Memory"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.add_memory"
+        />
       </div>
-      <div class="form-group row">
-        <label for="inputLDOMvnet" class="col-sm-1">vNet</label>
-        <div class="col-3">
-          <ul class="list-group" *ngIf="vnets">
-            <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
-              <fa 
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMvnet">vNet</label>
+        <ul class="list-group" *ngIf="vnets">
+          <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
+            <fa
               name="chevron-up"
-              (click)="moveObjectPosition(-1,vnet,LDOM.add_vnet)"
-              >
-              </fa>
-              <fa 
+              (click)="moveObjectPosition(-1, vnet, LDOM.add_vnet)"
+            >
+            </fa>
+            <fa
               name="chevron-down"
-              (click)="moveObjectPosition(1,vnet,LDOM.add_vnet)"
-              >
-              </fa>
-              <fa
-              name ="trash"
-              (click)="deleteObject(vnet,LDOM.add_vnet)"
-              >
-              </fa>
-                {{vnet}}
-            </li>
-           </ul>
-           <select
-           name="vnetSelect"
-           class="form-control"
-           id="inputLDOMvnet"
-           #cdomInputName="ngModel"
-           [(ngModel)]="inputLDOMvnet"
-           (ngModelChange)="addvnets()"
+              (click)="moveObjectPosition(1, vnet, LDOM.add_vnet)"
+            >
+            </fa>
+            <fa name="trash" (click)="deleteObject(vnet, LDOM.add_vnet)"> </fa>
+            {{ vnet }}
+          </li>
+        </ul>
+        <select
+          name="vnetSelect"
+          class="form-control"
+          id="inputLDOMvnet"
+          #cdomInputName="ngModel"
+          [(ngModel)]="inputLDOMvnet"
+          (ngModelChange)="addvnets()"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let vswitch of currentCDOM?.vswitch"
+            [ngValue]="vswitch"
           >
-            <option class="list-group-item" *ngFor="let vswitch of currentCDOM?.vswitch"
-            [ngValue]="vswitch">
-              {{ vswitch }}
-            </option> 
-          </select>
-            <button class="btn btn-outline-info" id="enterVnet" type="button" (click)="addvnets()">Add Vnet</button>
-         </div>
+            {{ vswitch }}
+          </option>
+        </select>
+        <button
+          class="btn btn-outline-info"
+          id="enterVnet"
+          type="button"
+          (click)="addvnets()"
+        >
+          Add Vnet
+        </button>
       </div>
-      <div class="form-group row">
-          <label for="inputLDOMvCPU" class="col-sm-1 col-form-label">VDS WWN</label>
-          <div class="col-sm-3">
-            <input
-              name="inputLDOMvdswwn"
-              aria-label="WWN for VDS"
-              class="form-control"
-              placeholder="WWN"
-              #name="ngModel"
-              [(ngModel)]="vdswwn"
+
+      <div class="form-group col-md-4">
+        <label for="inputLDOMvCPU">VDS WWN</label>
+        <input
+          name="inputLDOMvdswwn"
+          aria-label="WWN for VDS"
+          class="form-control"
+          placeholder="WWN"
+          #name="ngModel"
+          [(ngModel)]="vdswwn"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputLDOMvdsdev">VDS</label>
+        <ul class="list-group" *ngIf="vnets">
+          <li class="list-group-item" *ngFor="let vds of LDOM.add_vds">
+            <fa
+              name="chevron-up"
+              (click)="moveObjectPosition(-1, vds, LDOM.add_vds)"
             >
-          </div>
-          <label for="inputLDOMvdsdev" class="col-sm-1">VDS</label>
-          <div class="col-3">
-            <ul class="list-group" *ngIf="vnets">
-              <li class="list-group-item" *ngFor="let vds of LDOM.add_vds">
-                <fa 
-                name="chevron-up"
-                (click)="moveObjectPosition(-1,vds,LDOM.add_vds)"
-                >
-                </fa>
-                <fa 
-                name="chevron-down"
-                (click)="moveObjectPosition(1,vds,LDOM.add_vds)"
-                >
-              </fa>
-                <fa
-                name ="trash"
-                (click)="deleteObject(vds, LDOM.add_vds)"
-                >
-                </fa>
-                  {{vds}}
-               
-              </li>
-             </ul>
-             <select
-             name="vdsSelect"
-             class="form-control"
-             id="inputLDOMvds"
-             #cdomInputName="ngModel"
-             [(ngModel)]="inputLDOMvds"
-             (ngModelChange)="addvds(vdswwn)"
+            </fa>
+            <fa
+              name="chevron-down"
+              (click)="moveObjectPosition(1, vds, LDOM.add_vds)"
             >
-              <option class="list-group-item" *ngFor="let vds of currentCDOM?.add_vds"
-              [ngValue]="vds">
-                {{ vds }}
-              </option> 
-            </select>
-              <button class="btn btn-outline-info" id="enterVds" type="button" (click)="addvds(vdswwn)">Add VDS</button>
-           </div>
-        </div>
-      <div class="form-group row">
+            </fa>
+            <fa name="trash" (click)="deleteObject(vds, LDOM.add_vds)"> </fa>
+            {{ vds }}
+          </li>
+        </ul>
+        <select
+          name="vdsSelect"
+          class="form-control"
+          id="inputLDOMvds"
+          #cdomInputName="ngModel"
+          [(ngModel)]="inputLDOMvds"
+          (ngModelChange)="addvds(vdswwn)"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let vds of currentCDOM?.add_vds"
+            [ngValue]="vds"
+          >
+            {{ vds }}
+          </option>
+        </select>
+        <button
+          class="btn btn-outline-info"
+          id="enterVds"
+          type="button"
+          (click)="addvds(vdswwn)"
+        >
+          Add VDS
+        </button>
+      </div>
+    </div>
 
-      </div>
-      <div class="form-group row">
-        <label for="inputLDOMbinddomain" class="col-sm-1 col-form-label">Bind Domain</label>
-        <div class="col-sm-3">
-          <input
-             name="inputLDOMbinddomain"
-             aria-label="LDOM Bind Domain Config"
-             class="form-control"
-             #name="ngModel"
-             [(ngModel)]="LDOM.bind_domain"
-           >
-        </div>
-        <label for="inputLDOMstartdomain" class="col-sm-1 col-form-label">Start Domain</label>
-        <div class="col-sm-3">
-          <input
-           name="inputLDOMstartdomain"
-           aria-label="LDOM Start Domain" 
-           type="text"
-           class="form-control"
-           #name="ngModel"
-           [(ngModel)]="LDOM.start_domain"
-           >
-        </div>
-      </div>
-      <div class="form-group row">
+    <hr />
 
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMnetinstall">Net Install</label>
+        <input
+          name="inputLDOMnetinstall"
+          aria-label="LDOM Net Install"
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.net_install"
+        />
       </div>
-      <div class="form-group row">
-          <label for="inputLDOMnetinstall" class="col-sm-1 col-form-label">Net Install</label>
-          <div class="col-sm-3">
-            <input
-             name="inputLDOMnetinstall"
-             aria-label="LDOM Net Install"
-             type="text"
-             class="form-control"
-             #name="ngModel"
-             [(ngModel)]="LDOM.net_install"
-             >
-          </div>
-          <label for="inputLDOMvariable" class="col-sm-1 col-form-label">Variables</label>
-          <div class="col-3">
-            <input
-               name="inputLDOMvariable"
-               aria-label="LDOM VDS Config"
-               class="form-control"
-               #name="ngModel"
-               [(ngModel)]="LDOM.set_variable"
-             >
-          </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMbip">IP</label>
+        <input
+          name="inputLDOMbip"
+          aria-label="LDOM Net Install"
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.bip"
+        />
       </div>
 
-    <div class="form-group row">
-      <label for="inputLDOMbip" class="col-sm-1 col-form-label">IP</label>
-      <div class="col-3">
+      <div class="form-group col-md-4">
+        <label for="inputLDOMbmask">Net Mask</label>
         <input
-         name="inputLDOMbip"
-         aria-label="LDOM Net Install"
-         type="text"
-         class="form-control"
-         #name="ngModel"
-         [(ngModel)]="LDOM.bip"
-         >
+          name="inputLDOMbmask"
+          aria-label="LDOM Net Install"
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.bmask"
+        />
       </div>
-      <label for="inputLDOMbmask" class="col-sm-1 col-form-label">Net Mask</label>
-      <div class="col-3">
+
+      <div class="form-group col-md-4">
+        <label for="inputLDOMbgw">Gateway</label>
         <input
-         name="inputLDOMbmask"
-         aria-label="LDOM Net Install"
-         type="text"
-         class="form-control"
-         #name="ngModel"
-         [(ngModel)]="LDOM.bmask"
-         >
+          name="inputLDOMbgw"
+          aria-label="LDOM Net Install"
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="LDOM.bgw"
+        />
       </div>
-      <label for="inputLDOMbgw" class="col-sm-1 col-form-label">Gateway</label>
-      <div class="col-3">
-        <input
-         name="inputLDOMbgw"
-         aria-label="LDOM Net Install"
-         type="text"
-         class="form-control"
-         #name="ngModel"
-         [(ngModel)]="LDOM.bgw"
-         >
-      </div>
-  </div>
-  <div class="btn-group offset-1">
-      <button 
-      class="btn btn-success"
-      aria-label="Save"
-      (click)="launchLDOMJobs()"
+    </div>
+
+    <div class="btn-group offset-1">
+      <button
+        class="btn btn-success"
+        aria-label="Save"
+        (click)="launchLDOMJobs()"
       >
         Save
       </button>
-      <button
-          class="btn btn-danger"
-          aria-label="Deploy"
-          type="submit"
-      >
+      <button class="btn btn-danger" aria-label="Deploy" type="submit">
         Deploy
-    </button>
-  </div>
-    </form>
-  </div>
+      </button>
+    </div>
+  </form>
 </div>
-<!-- https://mdbootstrap.com/docs/angular/forms/inputs/ -->
