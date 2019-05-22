@@ -58,8 +58,6 @@
           formControlName="sourceAddress"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099/09"
           aria-label="Source Address"
         />
       </div>
@@ -107,9 +105,9 @@
           aria-label="Pool"
         >
           <option></option>
-          <option *ngFor="let pool of pools" [ngValue]="pool.Name">{{
-            pool.Name
-          }}</option>
+          <option *ngFor="let pool of pools" [ngValue]="pool.Name">
+            {{ pool.Name }}
+          </option>
         </select>
       </div>
     </div>

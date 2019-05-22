@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
-import { ValidateIpv4CidrAddress } from 'src/app/validators/network-form-validators';
+import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 
@@ -125,9 +125,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      // TODO: Do we allow 'any' or '0.0.0.0/0' or both??
-      sourceAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])], 
-      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
+      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
       servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
       selectedIRule: ['']
