@@ -12,6 +12,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { PapaParseModule } from 'ngx-papaparse';
+import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -32,7 +33,8 @@ describe('LoadBalancersComponent', () => {
         VirtualServerModalComponent,
         PoolModalComponent,
         IRuleModalComponent,
-        PoolMemberModalComponent
+        PoolMemberModalComponent,
+        HealthMonitorModalComponent
       ],
       providers: [
         NgxSmartModalService,

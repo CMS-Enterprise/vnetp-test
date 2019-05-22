@@ -50,6 +50,8 @@ import { LoadBalancersComponent } from './components/load-balancers/load-balance
 import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
+import { HealthMonitor } from './models/loadbalancer/health-monitor';
+import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,8 @@ import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component'
     LoadBalancersComponent,
     PoolModalComponent,
     PoolMemberModalComponent,
-    IRuleModalComponent
+    IRuleModalComponent,
+    HealthMonitorModalComponent
   ],
   imports: [
     BrowserModule,

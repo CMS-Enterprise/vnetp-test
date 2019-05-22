@@ -294,6 +294,7 @@ export class LoadBalancersComponent implements OnInit {
     dto.Pools = this.pools;
     dto.VrfId = this.currentVrf.id;
     dto.IRules = this.irules;
+    dto.HealthMonitors = this.healthMonitors;
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.load_balancer_dto = dto;
