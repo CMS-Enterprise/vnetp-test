@@ -15,7 +15,7 @@
           >
         </div>
         <div class="form-group row">
-          <label for="inputLDOMaddCDOM" class="col-sm-3 col-form-label ">Hypervisor</label>
+          <label for="inputLDOMaddCDOM" class="col-sm-3 col-form-label offset-1 ">Hypervisor</label>
           <div class="col-7 offset-sm-1">
           <select
            name="cdomSelect"
@@ -33,7 +33,7 @@
         </div>
       </div>
       <label for="inputLDOMadddomain" class="col-sm-1 col-form-label offset-sm-1">Add Domain</label>
-      <div class="col-sm-1">
+      <div class="col-sm-2">
         <input
           name="inputLDOMadddomain"
           aria-label="Add LDOM Domain"
@@ -69,8 +69,8 @@
 
       <div class="form-group row">
 
-        <label for="inputLDOMvCPU" class="col-sm-1 col-form-label offset-1">vCPU Count</label>
-        <div class="col-sm-1">
+        <label for="inputLDOMvCPU" class="col-sm-1 col-form-label">vCPU Count</label>
+        <div class="col-sm-2">
           <input
             name="inputLDOMvCPU"
             aria-label="vCPU count for LDOM"
@@ -86,7 +86,6 @@
           <input
             name="inputLDOMmemory"
             aria-label="LDOM Memory"
-
             class="form-control"
             #name="ngModel"
             [(ngModel)]="LDOM.add_memory"
@@ -97,8 +96,8 @@
 
       </div>
       <div class="form-group row">
-        <label for="inputLDOMvnet" class="col-sm-1 offset-sm-1">vNet</label>
-        <div class="col-3 offset-sm-2">
+        <label for="inputLDOMvnet" class="col-sm-1">vNet</label>
+        <div class="col-3">
           <ul class="list-group" *ngIf="vnets">
             <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
               <fa 
@@ -111,8 +110,12 @@
               (click)="moveObjectPosition(1,vnet,LDOM.add_vnet)"
               >
               </fa>
+              <fa
+              name ="trash"
+              (click)="deleteObject(vnet,LDOM.add_vnet)"
+              >
+              </fa>
                 {{vnet}}
-             
             </li>
            </ul>
            <select
@@ -132,7 +135,7 @@
          </div>
       </div>
       <div class="form-group row">
-          <label for="inputLDOMvCPU" class="col-sm-1 col-form-label offset-1">VDS WWN</label>
+          <label for="inputLDOMvCPU" class="col-sm-1 col-form-label">VDS WWN</label>
           <div class="col-sm-3">
             <input
               name="inputLDOMvdswwn"
@@ -155,6 +158,11 @@
                 <fa 
                 name="chevron-down"
                 (click)="moveObjectPosition(1,vds,LDOM.add_vds)"
+                >
+              </fa>
+                <fa
+                name ="trash"
+                (click)="deleteObject(vds, LDOM.add_vds)"
                 >
                 </fa>
                   {{vds}}
@@ -181,23 +189,21 @@
 
       </div>
       <div class="form-group row">
-        <label for="inputLDOMbinddomain" class="col-sm-1 col-form-label offset-sm-1">Bind Domain</label>
-        <div class="col-sm-2">
+        <label for="inputLDOMbinddomain" class="col-sm-1 col-form-label">Bind Domain</label>
+        <div class="col-sm-3">
           <input
              name="inputLDOMbinddomain"
              aria-label="LDOM Bind Domain Config"
- 
              class="form-control"
              #name="ngModel"
              [(ngModel)]="LDOM.bind_domain"
            >
         </div>
-        <label for="inputLDOMstartdomain" class="col-sm-1 col-form-label offset-sm-1">Start Domain</label>
-        <div class="col-sm-2">
+        <label for="inputLDOMstartdomain" class="col-sm-1 col-form-label">Start Domain</label>
+        <div class="col-sm-3">
           <input
            name="inputLDOMstartdomain"
-           aria-label="LDOM Start Domain"
-           appIsAlphanumeric
+           aria-label="LDOM Start Domain" 
            type="text"
            class="form-control"
            #name="ngModel"
@@ -209,24 +215,22 @@
 
       </div>
       <div class="form-group row">
-          <label for="inputLDOMnetinstall" class="col-sm-1 col-form-label offset-sm-1">Net Install</label>
-          <div class="col-4">
+          <label for="inputLDOMnetinstall" class="col-sm-1 col-form-label">Net Install</label>
+          <div class="col-sm-3">
             <input
              name="inputLDOMnetinstall"
              aria-label="LDOM Net Install"
-             appIsAlphanumeric
              type="text"
              class="form-control"
              #name="ngModel"
              [(ngModel)]="LDOM.net_install"
              >
           </div>
-          <label for="inputLDOMvariable" class="col-sm-1 col-form-label offset-sm-1">Variables</label>
+          <label for="inputLDOMvariable" class="col-sm-1 col-form-label">Variables</label>
           <div class="col-3">
             <input
                name="inputLDOMvariable"
                aria-label="LDOM VDS Config"
-   
                class="form-control"
                #name="ngModel"
                [(ngModel)]="LDOM.set_variable"
@@ -235,48 +239,41 @@
       </div>
 
     <div class="form-group row">
-      <label for="inputLDOMbip" class="col-sm-1 col-form-label offset-sm-1">IP</label>
-      <div class="col-4 offset-sm-4">
+      <label for="inputLDOMbip" class="col-sm-1 col-form-label">IP</label>
+      <div class="col-3">
         <input
          name="inputLDOMbip"
          aria-label="LDOM Net Install"
-         appIsAlphanumeric
          type="text"
          class="form-control"
          #name="ngModel"
          [(ngModel)]="LDOM.bip"
          >
       </div>
-  </div>
-      <div class="form-group row">
-    <label for="inputLDOMbmask" class="col-sm-1 col-form-label offset-sm-1">Net Mask</label>
-    <div class="col-4 offset-sm-4">
-      <input
-       name="inputLDOMbmask"
-       aria-label="LDOM Net Install"
-       appIsAlphanumeric
-       type="text"
-       class="form-control"
-       #name="ngModel"
-       [(ngModel)]="LDOM.bmask"
-       >
+      <label for="inputLDOMbmask" class="col-sm-1 col-form-label">Net Mask</label>
+      <div class="col-3">
+        <input
+         name="inputLDOMbmask"
+         aria-label="LDOM Net Install"
+         type="text"
+         class="form-control"
+         #name="ngModel"
+         [(ngModel)]="LDOM.bmask"
+         >
       </div>
-      </div>
-      <div class="form-group row">
-      <label for="inputLDOMbgw" class="col-sm-1 col-form-label offset-sm-1">Gateway</label>
-      <div class="col-4 offset-sm-4">
+      <label for="inputLDOMbgw" class="col-sm-1 col-form-label">Gateway</label>
+      <div class="col-3">
         <input
          name="inputLDOMbgw"
          aria-label="LDOM Net Install"
-         appIsAlphanumeric
          type="text"
          class="form-control"
          #name="ngModel"
          [(ngModel)]="LDOM.bgw"
          >
       </div>
-      </div>
-       <div class="btn-group offset-1">
+  </div>
+  <div class="btn-group offset-1">
       <button 
       class="btn btn-success"
       aria-label="Save"

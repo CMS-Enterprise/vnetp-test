@@ -10,6 +10,8 @@ export class SolarisCdom {
   luns = new Array<string>();
   vlans = new Array<number>();
   associatedldoms = new Array<string>();
+  vccports: string;
+  vccname: string;
   add_vcc: string;
   add_vsw = new Array<string>();
   vcsdevs: string;

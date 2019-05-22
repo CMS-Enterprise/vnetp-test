@@ -62,7 +62,8 @@ export class SolarisServiceService {
     CDOMDevice.add_vcc = tmpMetadata.vccports;
     CDOMDevice.vswitch = tmpMetadata.vswitch;
     CDOMDevice.add_vds = tmpMetadata.add_vds;
-    CDOMDevice.set_vcpu = tmpMetadata.add_vcpu
+    CDOMDevice.set_vcpu = device.cpucore; 
+    CDOMDevice.set_mem = `${device.ram}${device.ram_size_type}`
     //normalize RAM to GB.  TODO, allow dynamic update
     let RAMRawData  = device.ram;
     if(device.ram_size_type == 'MB'){
@@ -145,6 +146,12 @@ export class SolarisServiceService {
         const nextObjIndex = objArray.indexOf(nextObj);
         [objArray[objIndex], objArray[nextObjIndex]] =
         [objArray[nextObjIndex], objArray[objIndex]]
+   }
+   deleteObject(obj, objArray){
+     const objIndex = objArray.indexOf(obj);
+     if(objIndex > -1){
+       objArray.splice(objIndex, 1);
+     }
    }
 
 

@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
    styleUrls: ['./solaris-ldom-create.component.css']
 })
 export class SolarisLdomCreateComponent implements OnInit {
-  LDOM: SolarisLdom
+  LDOM: SolarisLdom;
   ldomFilter: string[];
   vnets: Array<any>;
   vdisks: string[];
@@ -55,18 +55,10 @@ export class SolarisLdomCreateComponent implements OnInit {
    this.inputLDOMvds = '';
   }
   moveObjectPosition(value: number, obj, objArray){
-    //determine the current index in the array
-    const objIndex = objArray.indexOf(obj);
-    // If the object isn't in the array, is at the start of the array and requested to move up
-    // or if the object is at the end of the array, return.
-    if (objIndex === -1 || objIndex === 0 && value === -1 || objIndex + value === objArray.length) { return; }
-    const nextObj = objArray[objIndex + value];
-    //If next object doesn't exist, return
-    if (nextObj == null ) { return ;}
-    const nextObjIndex = objArray.indexOf(nextObj);
-    [objArray[objIndex], objArray[nextObjIndex]] =
-    [objArray[nextObjIndex], objArray[objIndex]]
-
+   this.solarisService.moveObjectPosition(value, obj, objArray)
+  }
+  deleteObject(obj, objArray){
+    this.solarisService.deleteObject(obj, objArray);
   }
   launchLDOMJobs() {
     let extra_vars: {[k: string]: any} = {};
@@ -92,6 +84,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     "SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk"
   )
   .subscribe(data => {
+
     this.returnDevices = this.solarisService.loadDevices(data);
     this.returnDevices.forEach((obj) => {
      if(obj.key === "LDOM"){
@@ -99,6 +92,8 @@ export class SolarisLdomCreateComponent implements OnInit {
      }
      else if(obj.key === "CDOM"){
       this.CDOMDeviceArray = obj.value;
+      //add blank CDOM to CDOMDeviceArray to allow menus to be cleared
+      this.CDOMDeviceArray.push(new SolarisCdom());
      }
      // this.vnets = this.CDOMDeviceArray
     });
