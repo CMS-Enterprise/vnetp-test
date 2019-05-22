@@ -121,6 +121,7 @@ export class LoadBalancersComponent implements OnInit {
     const dto = new PoolModalDto();
     dto.HealthMonitors = this.healthMonitors;
 
+    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
     this.poolModalMode = ModalMode.Create;
     this.ngx.getModal('poolModal').open();
   }
@@ -156,7 +157,7 @@ export class LoadBalancersComponent implements OnInit {
     this.poolModalMode = ModalMode.Edit;
 
     const dto = new PoolModalDto();
-    dto.pool = pool;
+    dto.Pool = pool;
     dto.HealthMonitors = this.healthMonitors;
 
     this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
@@ -197,11 +198,11 @@ export class LoadBalancersComponent implements OnInit {
   subscribeToPoolModal() {
     this.poolModalSubscription =
     this.ngx.getModal('poolModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as Pool;
+      let data = modal.getData() as PoolModalDto;
 
-      if (data !== undefined) {
+      if (data.Pool !== undefined) {
         data = Object.assign({}, data);
-        this.savePool(data);
+        this.savePool(data.Pool);
       }
       this.ngx.resetModalData('poolModal');
       this.poolModalSubscription.unsubscribe();
