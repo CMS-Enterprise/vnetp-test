@@ -49,7 +49,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'solaris', component: SolarisComponent},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent},
-  {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent},
+  {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
   {path: 'solaris-cdom-list', component: SolarisCdomListComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
