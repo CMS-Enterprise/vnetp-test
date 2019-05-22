@@ -43,10 +43,24 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   getVrfs() {
     this.dirty = false;
+
+    let vrfId: number = null;
+
+    if (this.currentVrf) {
+      vrfId = this.currentVrf.id;
+    }
+
     this.api.getVrfs().subscribe(data => {
       this.vrfs = data;
-      if (!this.currentVrf) {
+
+      if (!vrfId) {
         this.currentVrf = this.vrfs[0];
+      } else {
+        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
+
+        if (!this.currentVrf) {
+          this.currentVrf = this.vrfs[0];
+        }
       }
       this.getVrfObjects(this.currentVrf);
     });
