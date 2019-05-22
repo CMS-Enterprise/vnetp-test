@@ -14,6 +14,7 @@ import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { componentHostSyntheticProperty } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-load-balancers',
@@ -259,10 +260,19 @@ export class LoadBalancersComponent implements OnInit {
     this.dirty = true;
   }
 
+  saveIRule(irule: IRule) {
+    if (this.iruleModalMode === ModalMode.Create){
+      this.irules.push(irule);
+    } else {
+      this.irules[this.editIRuleIndex] = irule;
+    }
+    this.dirty = true;
+  }
+
   deletePool(pool: Pool) {
     for (const vs of this.virtualServers) {
       if (vs.Pool === pool.Name) {
-        console.log('Pool in-use!'); // TODO: Toastr
+        console.log('Pool in use!'); // TODO: Toastr
         return;
       }
     }
@@ -278,21 +288,42 @@ export class LoadBalancersComponent implements OnInit {
     }
   }
 
-  saveIRule(irule: IRule) {
-    if (this.iruleModalMode === ModalMode.Create){
-      this.irules.push(irule);
-    } else {
-      this.irules[this.editIRuleIndex] = irule;
+  deleteIRule(irule: IRule) {
+    for (const vs of this.virtualServers) {
+      if (vs.IRules.includes(irule.Name)) {
+        console.log('iRule in use!'); // TODO: Toastr
+        return;
+      }
     }
-    this.dirty = true;
+
+    const index = this.irules.indexOf(irule);
+    if (index > -1) {
+      this.irules.splice(index, 1);
+
+      if (!this.deletedIRules) { this.deletedIRules = new Array<IRule>(); }
+      this.deletedIRules.push(irule);
+
+      this.dirty = true;
+    }
   }
 
-  deleteIRule(){
-    throw new Error('Not Implemented');
-  }
+  deleteHealthMonitor(healthMonitor: HealthMonitor) {
+    for (const p of this.pools) {
+      if (p.HealthMonitors.includes(healthMonitor.Name)) {
+        console.log('Health Monitor in use!'); // TODO: Toastr
+        return;
+      }
+    }
 
-  deleteHealthMonitor(){
-    throw new Error('Not Implemeneted');
+    const index = this.healthMonitors.indexOf(healthMonitor);
+    if (index > -1) {
+      this.healthMonitors.splice(index, 1);
+
+      if (!this.deletedHealthMonitors) { this.deletedHealthMonitors = new Array<HealthMonitor>(); }
+      this.deletedHealthMonitors.push(healthMonitor);
+
+      this.dirty = true;
+    }
   }
 
   saveAll() {

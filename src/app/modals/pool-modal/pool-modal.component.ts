@@ -63,6 +63,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   savePoolMember(poolMember: PoolMember) {
+    if (!this.poolMembers) {
+      this.poolMembers = new Array<PoolMember>();
+    }
+
     if (this.poolMemberModalMode === ModalMode.Create) {
       this.poolMembers.push(poolMember);
     } else {

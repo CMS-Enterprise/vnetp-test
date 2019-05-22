@@ -125,7 +125,7 @@
             </td>
           </tr>
           <tr *ngIf="virtualServers?.length === 0" class="text-center">
-              <td colspan="4">No Virtual Servers in this VRF.</td>
+              <td colspan="5">No Virtual Servers in this VRF.</td>
             </tr>
         </tbody>
       </table>
@@ -151,6 +151,7 @@
             <th scope="col">Name</th>
             <th scope="col">LB Method</th>
             <th scope="col">Pool Members</th>
+            <th scope="col">Health Monitors</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -164,6 +165,9 @@
             </td>
             <td>
               <p>{{ pool.Members?.length }}</p>
+            </td>
+            <td>
+              <p>{{ pool.HealthMonitors?.length }}</p>
             </td>
             <td>
               <fa
@@ -181,7 +185,7 @@
             </td>
           </tr>
           <tr *ngIf="pools?.length === 0" class="text-center">
-              <td colspan="3">No Pools in this VRF.</td>
+              <td colspan="5">No Pools in this VRF.</td>
             </tr>
         </tbody>
       </table>
@@ -255,6 +259,10 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Service Port</th>
+          <th scope="col">Interval</th>
+          <th scope="col">Timeout</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -291,7 +299,7 @@
           </td>
         </tr>
         <tr *ngIf="healthMonitors?.length === 0" class="text-center">
-            <td colspan="2">No Health Monitors in this VRF.</td>
+            <td colspan="6">No Health Monitors in this VRF.</td>
           </tr>
       </tbody>
     </table>
