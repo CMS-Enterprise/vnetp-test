@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NetworksComponent } from './components/networks/networks.component';
-import { NetworkSecurityProfilesComponent } from './components//network-security-profiles/network-security-profiles.component';
+import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
-import { NetworkSecurityProfileDetailComponent } from './components/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
+import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
@@ -21,14 +21,24 @@ import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
 import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
 import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
+import { DeployComponent } from './components/deploy/deploy.component';
+import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
+import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+
+
 const routes: Routes = [
-  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
-  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
-  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Networks'}},
+  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
+  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create Subnet'}},
+  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
+  {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},
   {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
   {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
-  {path: 'network-security-profiles', component: NetworkSecurityProfilesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
-  {path: 'network-security-profiles/edit/:id', component: NetworkSecurityProfileDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Security'}},
+  {path: 'network-objects-groups', component: NetworkObjectsGroupsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Objects'}},
+  {path: 'service-objects-groups', component: ServiceObjectsGroupsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Service Objects'}},
+  {path: 'firewall-rules', component: FirewallRulesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules'}},
+  {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
+  {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
   {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'ip-nats', component: IpNatsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Network Address Translation'}},

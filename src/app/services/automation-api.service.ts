@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
+import { Vrf } from '../models/d42/vrf';
 
 
 @Injectable({
@@ -18,7 +19,8 @@ export class AutomationApiService {
   }
 
   launchTemplate(jobName: string, ansibleBody) {
-    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + jobName + '/launch/', ansibleBody);
+    const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
+    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
   getAdminGroups() {
@@ -26,7 +28,6 @@ export class AutomationApiService {
   }
 
   doqlQuery(query: string) {
-    //note: bypassing proxy with d42base
     return this.http.get(environment.apiBase + '/services/data/v1.0/query/?query=' + query + '&output_type=json');
   }
 
@@ -44,15 +45,26 @@ export class AutomationApiService {
   getDevices(){
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
-  getSubnets() {
-    return this.http.get(environment.apiBase + '/api/1.0/subnets/');
+
+  getVrfs() {
+    return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
   }
 
-  getSubnet(id: string){
+  getSubnets(vrfId?: number) {
+    let uri = '/api/1.0/subnets';
+
+    if (vrfId) {
+      uri += `?vrf_group_id=${vrfId}`;
+    }
+
+    return this.http.get(environment.apiBase + uri);
+  }
+
+  getSubnet(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/subnets/${id}`);
   }
 
-  getSubnetIps(id: string){
+  getSubnetIps(id: number) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
   }
 }

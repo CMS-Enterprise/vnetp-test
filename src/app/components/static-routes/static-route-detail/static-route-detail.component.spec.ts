@@ -1,14 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgxMaskModule } from 'ngx-mask';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
   let fixture: ComponentFixture<StaticRouteDetailComponent>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StaticRouteDetailComponent ]
+      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxMaskModule.forRoot() ],
+      declarations: [ StaticRouteDetailComponent ],
+      providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();
   }));
@@ -16,6 +25,7 @@ describe('StaticRouteDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRouteDetailComponent);
     component = fixture.componentInstance;
+    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 

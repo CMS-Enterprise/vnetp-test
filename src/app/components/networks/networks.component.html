@@ -1,9 +1,9 @@
-<div class="offset-1 col-10">
+<div>
   <div class="btn-group" role="group">
     <button type="button" class="btn btn-info" (click)="getNetworks()">
       <fa name="refresh" size="2x"></fa>
     </button>
-    <button type="button" class="btn btn-success" [routerLink]="['create']">
+    <button type="button" class="btn btn-success" aria-label="New Network" [routerLink]="['create']">
       <fa name="plus" size="2x"></fa>
     </button>
   </div>
@@ -14,14 +14,18 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Address Range</th>
+          <th scope="col">Deployed</th>
+          <th scope="col">Tier (VRF)</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let subnet of subnets.subnets">
+        <tr *ngFor="let subnet of subnets">
           <td>
-            <a href="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            <a routerLink="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
+          <td>{{ getDeployedState(subnet) }}</td>
+          <td>{{ subnet.vrf_group_name }}</td>
         </tr>
       </tbody>
     </table>

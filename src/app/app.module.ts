@@ -4,13 +4,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule } from '@angular/forms';
+import {FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
+import { CookieService } from 'ngx-cookie-service';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -18,9 +20,9 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { NetworksComponent } from './components/networks/networks.component';
-import { NetworkSecurityProfilesComponent } from './components/network-security-profiles/network-security-profiles.component';
+import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { NetworkSecurityProfileDetailComponent } from './components/network-security-profiles/network-security-profile-detail/network-security-profile-detail.component';
+import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -39,6 +41,21 @@ import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
 import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
 import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
+import { DeployComponent } from './components/deploy/deploy.component';
+import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
+import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
+import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
+import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
+import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
+import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
+import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
+import { HealthMonitor } from './models/loadbalancer/health-monitor';
+import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +64,8 @@ import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list
     LoginComponent,
     NetworksComponent,
     NetworksDetailComponent,
-    NetworkSecurityProfilesComponent,
-    NetworkSecurityProfileDetailComponent,
+    FirewallRulesComponent,
+    FirewallRulesDetailComponent,
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent,
@@ -66,6 +83,20 @@ import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list
     SolarisCdomCreateComponent,
     SolarisLdomCreateComponent,
     SolarisCdomListComponent,
+    DeployComponent,
+    NetworkObjectsGroupsComponent,
+    NetworkObjectModalComponent,
+    NetworkObjectGroupModalComponent,
+    ServiceObjectsGroupsComponent,
+    ServiceObjectModalComponent,
+    ServiceObjectGroupModalComponent,
+    FirewallRuleModalComponent,
+    VirtualServerModalComponent,
+    LoadBalancersComponent,
+    PoolModalComponent,
+    PoolMemberModalComponent,
+    IRuleModalComponent,
+    HealthMonitorModalComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +105,7 @@ import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list
     CommonModule,
     HttpClientModule,
     AngularFontAwesomeModule,
+    ReactiveFormsModule,
     FormsModule,
     PapaParseModule,
     NgxMaskModule.forRoot(),
@@ -82,9 +114,10 @@ import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list
       progressBar: true,
       closeButton: true,
       preventDuplicates: true
-    })
+    }),
+    NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService, FormBuilder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

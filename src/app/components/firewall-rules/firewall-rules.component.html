@@ -1,0 +1,34 @@
+<div>
+    <h5 aria-label="Firewall Rules">Firewall Rules</h5>
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-info" (click)="getNetworks()" aria-label="Refresh Networks">
+          <fa name="refresh" size="2x"></fa>
+        </button>
+      </div>
+
+    <div class="card">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Subnet</th>
+            <th scope="col">Firewall Rules</th>
+            <th scope="col">Tier (VRF)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let subnet of subnets.subnets">
+            <td>
+              <a routerLink="/firewall-rules/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            </td>
+            <td>
+              {{ getFirewallRulesCount(subnet) }}
+            </td>
+            <td>
+              {{ subnet.vrf_group_name }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

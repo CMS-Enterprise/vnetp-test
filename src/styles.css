@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~ngx-toastr/toastr.css';
+@import '~ngx-smart-modal/ngx-smart-modal';
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~font-awesome/css/font-awesome.css';
 
@@ -26,7 +27,12 @@
     line-height:50px;
 }
 
-.padded-router-outlet{
-    padding-top:5px;
+.large-modal {
+    max-width: 1000px;
+    max-height: 1000px;
 }
 
+.medium-modal {
+    max-width: 800px;
+    max-height: 800px;
+}

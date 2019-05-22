@@ -1,0 +1,314 @@
+<div>
+
+  <div class="input-group pb-2">
+    <div class="input-group-prepend">
+      <span class="input-group-text">VRF</span>
+    </div>
+
+    <select
+      name="vrf"
+      class="form-control col-md-3"
+      [(ngModel)]="currentVrf"
+      (ngModelChange)="getVrfObjects(currentVrf)"
+      [disabled]="dirty"
+    >
+      <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+    </select>
+    <span class="pl-2 input-group-btn">
+        <button
+        type="button"
+        class="btn btn-danger"
+        aria-label="Save Changes to Current VRF"
+        (click)="saveAll()"
+        [hidden]="!dirty"
+      >
+      Save Changes to Current VRF
+    </button>   
+    <button
+      type="button"
+      class="btn btn-warning"
+      aria-label="Clear Changes to Current VRF"
+      (click)="getVrfs()"
+      [hidden]="!dirty"
+      >
+      Clear Changes to Current VRF
+    </button>
+    <button
+      type="button"
+      class="btn btn-info"
+      (click)="uploader.click()"
+      aria-label="Import CSV"
+    >
+      Import CSV
+    </button>
+    </span>
+  </div>
+
+  <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+        >Virtual Servers</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >Pools</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
+        >iRules</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 3">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"
+        >Health Monitors</a
+      >
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createVirtualServer()"
+        aria-label="Create Virtual Server"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
+    </div>
+
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Destination Address</th>
+            <th scope="col">Service Port</th>
+            <th scope="col">Pool</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let virtualServer of virtualServers">
+            <td>
+              <p>{{ virtualServer.Name }}</p>
+            </td>
+            <td>
+              <p>{{ virtualServer.Type }}</p>
+            </td>
+            <td>
+              <p>{{ virtualServer.DestinationAddress }}</p>
+            </td>
+            <td>
+              <p>{{ virtualServer.ServicePort }}</p>
+            </td>
+            <td>
+              <p>{{ virtualServer.Pool }}</p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editVirtualServer(virtualServer)"
+                aria-label="Edit Virtual Server"
+              >
+              </fa>
+              <fa
+              name ="trash"
+              (click)="deleteVirtualServer(virtualServer)"
+              >
+              </fa>
+            </td>
+          </tr>
+          <tr *ngIf="virtualServers?.length === 0" class="text-center">
+              <td colspan="6">No Virtual Servers in this VRF.</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="navIndex == 1">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createPool()"
+        aria-label="Pools"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
+    </div>
+
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">LB Method</th>
+            <th scope="col">Pool Members</th>
+            <th scope="col">Health Monitors</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pool of pools">
+            <td>
+              <p>{{ pool.Name }}</p>
+            </td>
+            <td>
+              <p>{{ pool.LoadBalancingMethod }}</p>
+            </td>
+            <td>
+              <p>{{ pool.Members?.length }}</p>
+            </td>
+            <td>
+              <p>{{ pool.HealthMonitors?.length }}</p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editPool(pool)"
+                aria-label="Edit Pool"
+              >
+              </fa>
+              <fa
+              name ="trash"
+              (click)="deletePool(pool)"
+              aria-label="Delete Pool"
+              >
+              </fa>
+            </td>
+          </tr>
+          <tr *ngIf="pools?.length === 0" class="text-center">
+              <td colspan="5">No Pools in this VRF.</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="navIndex == 2">
+  <div class="btn-group-sm" role="group">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="createIRule()"
+      aria-label="iRules"
+    >
+      <fa name="plus" size="2x"></fa>
+    </button>
+  </div>
+
+  <div class="card">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let irule of irules">
+          <td>
+            <p>{{ irule.Name }}</p>
+          </td>
+          <td>
+            <fa
+              name="pencil"
+              (click)="editIRule(irule)"
+              aria-label="Edit iRule"
+            >
+            </fa>
+            <fa
+            name ="trash"
+            (click)="deleteIRule(irule)"
+            aria-label="Delete iRule"
+            >
+            </fa>
+          </td>
+        </tr>
+        <tr *ngIf="irules?.length === 0" class="text-center">
+            <td colspan="2">No iRules in this VRF.</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div *ngIf="navIndex == 3">
+  <div class="btn-group-sm" role="group">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="createHealthMonitor()"
+      aria-label="Health Monitors"
+    >
+      <fa name="plus" size="2x"></fa>
+    </button>
+  </div>
+
+  <div class="card">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Service Port</th>
+          <th scope="col">Interval</th>
+          <th scope="col">Timeout</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let healthMonitor of healthMonitors">
+          <td>
+            <p>{{ healthMonitor.Name }}</p>
+          </td>
+          <td>
+            <p>{{ healthMonitor.Type }}</p>
+          </td>
+          <td>
+            <p>{{ healthMonitor.ServicePort }}</p>
+          </td>
+          <td>
+            <p>{{ healthMonitor.Interval }}</p>
+          </td>
+          <td>
+            <p>{{ healthMonitor.Timeout }}</p>
+          </td>
+          <td>
+            <fa
+              name="pencil"
+              (click)="editHealthMonitor(healthMonitor)"
+              aria-label="Edit Health Monitor"
+            >
+            </fa>
+            <fa
+            name ="trash"
+            (click)="deleteHealthMonitor(healthMonitor)"
+            aria-label="Delete Health Monitor"
+            >
+            </fa>
+          </td>
+        </tr>
+        <tr *ngIf="healthMonitors?.length === 0" class="text-center">
+            <td colspan="6">No Health Monitors in this VRF.</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-virtual-server-modal></app-virtual-server-modal>
+<app-pool-modal></app-pool-modal>
+<app-pool-member-modal></app-pool-member-modal>
+<app-irule-modal></app-irule-modal>
+<app-health-monitor-modal></app-health-monitor-modal>
+

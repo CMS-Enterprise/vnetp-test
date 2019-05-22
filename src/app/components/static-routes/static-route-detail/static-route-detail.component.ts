@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/static-route';
 import { MessageService } from 'src/app/services/message.service';
+import { Subnet } from 'src/app/models/d42/subnet';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -12,13 +14,15 @@ import { MessageService } from 'src/app/services/message.service';
 export class StaticRouteDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService) {
-    this.subnet = {};
+              private messageService: MessageService, private hs: HelpersService) {
+                this.subnet = new Subnet();
    }
 
   Id = '';
-  subnet: any;
-  staticRoutes: any;
+  subnet: Subnet;
+  deployedState: boolean;
+  staticRoutes: Array<StaticRoute>;
+  deletedStaticRoutes: Array<StaticRoute>;
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -27,58 +31,58 @@ export class StaticRouteDetailComponent implements OnInit {
 
   getNetwork() {
     this.automationApiService.getSubnet(this.Id).subscribe(
-      data => this.subnet = data,
-      error => console.error(error),
-      () => this.getStaticRoutes()
+      data => {
+        this.subnet = data as Subnet;
+        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
+        this.getStaticRoutes();
+      }
     );
   }
 
   addStaticRoute() {
-    if (this.staticRoutes == null) { this.staticRoutes = []; }
+    if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
 
     const staticRoute = new StaticRoute();
-    staticRoute.Edit = true;
-    staticRoute.Deleted = false;
-    staticRoute.Updated = false;
     staticRoute.InterfaceName = this.subnet.name;
+    staticRoute.Edit = true;
 
     this.staticRoutes.push(staticRoute);
   }
 
+  deleteStaticRoute(staticRoute: StaticRoute) {
+    const index = this.staticRoutes.indexOf(staticRoute);
+
+    if (index > -1) {
+      this.staticRoutes.splice(index, 1);
+      if (!this.deletedStaticRoutes) { this.deletedStaticRoutes = new Array<StaticRoute>(); }
+      this.deletedStaticRoutes.push(staticRoute);
+    }
+  }
+
   updateStaticRoutes() {
+    let extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet = this.subnet;
+    extra_vars.static_routes = this.staticRoutes;
 
-    // TODO: Handle updates to existing static routes
+    var body = { extra_vars };
 
-    // Deleted Static Routes are added to the deleted static routes array.
-    const deletedStaticRoutes = this.staticRoutes.filter(r => r.Deleted);
-
-    // All not deleted or not deleted and updated routes are added to the local static routes
-    // array. This is the array that will be persisted into the device 42 static_routes custom
-    // property.
-    const staticRoutes = this.staticRoutes.filter(r => !r.Deleted || !r.Deleted && r.Updated);
-
-    const body = {
-      extra_vars: `{\"customer_id\": ${this.subnet.name},
-      \"subnet_id\": ${this.subnet.subnet_id},
-      \"updated_static_routes\": ${JSON.stringify(staticRoutes)},
-      \"deleted_static_routes\":${JSON.stringify(deletedStaticRoutes)}}`
-    };
-
-    this.automationApiService.launchTemplate('update_asa_static_routes', body).subscribe();
+    if (this.deployedState) {
+      extra_vars.deleted_static_routes = this.deletedStaticRoutes;
+      this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
+    } else {
+      this.automationApiService.launchTemplate('save-static-route', body).subscribe();
+    }
 
     this.messageService.filter('Job Launched');
+
+    this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
   getStaticRoutes() {
     const staticRoutes = this.subnet.custom_fields.find(c => c.key === 'static_routes');
 
     if (staticRoutes) {
-      this.staticRoutes = JSON.parse(staticRoutes.value);
-
-      this.staticRoutes.forEach((route) => {
-        route.Updated = false;
-        route.Edit = false;
-      });
+      this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
     }
   }
 }

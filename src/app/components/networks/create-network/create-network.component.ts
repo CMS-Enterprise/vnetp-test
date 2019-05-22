@@ -1,5 +1,3 @@
-// TODO: Input argument is not an input element
-
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
@@ -7,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-create-network',
@@ -15,6 +14,7 @@ import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 })
 export class CreateNetworkComponent implements OnInit {
   subnet: Subnet;
+  vrfs: Vrf[];
 
   cidrAddress: string;
   usableRange: string;
@@ -38,7 +38,15 @@ export class CreateNetworkComponent implements OnInit {
     this.subnet = new Subnet();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getVrf();
+  }
+
+  getVrf() {
+    this.automationApiService.getVrfs().subscribe(data => {
+      this.vrfs = data;
+    });
+  }
 
   calculateNetwork() {
     this.nameExists = false;
@@ -70,23 +78,26 @@ export class CreateNetworkComponent implements OnInit {
     this.showDetails = true;
 }
 
-  createNetwork() {
+  createNetwork(action: string) {
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
+    console.log(this.subnet);
+
     if (!isValid || !this.subnet.name || !this.subnet.network ||
-      !this.subnet.mask_bits || !this.subnet.subnet_mask) {
+      !this.subnet.mask_bits || !this.subnet.subnet_mask ||
+      !this.subnet.vrf_group_id) {
       this.toastr.error('Invalid Data');
       return;
     }
 
-    this.automationApiService.getSubnets().subscribe(data => {
+    this.automationApiService.getSubnets(this.subnet.vrf_group_id).subscribe(data => {
       const subnetResponse = data as SubnetResponse;
-      this.checkNetwork(subnetResponse.subnets);
+      this.checkNetwork(subnetResponse.subnets, action);
     });
   }
 
   // Validate that network isn't a duplicate of another and that it doesn't overlap with any existing networks.
-  private checkNetwork(existingSubnets: Subnet[]) {
+  private checkNetwork(existingSubnets: Subnet[], action: string) {
     let error = false;
 
     const checkDuplicateResult = this.ipService.checkIPv4SubnetDuplicate(this.subnet, this.vlanId, existingSubnets);
@@ -126,15 +137,13 @@ export class CreateNetworkComponent implements OnInit {
 
   // Launch required automation jobs
   private launchJobs() {
-    const body = {
-      extra_vars: `{\"vlan_id\": ${this.vlanId},\"ip_address\": ${this.subnet.gateway }
-      ,\"subnet_mask\": ${this.subnet.subnet_mask},\"customer_id\": ${this.subnet.name}
-      ,\"subnet_mask_bits\": ${this.subnet.mask_bits}}`
-    };
+    let extra_vars: {[k: string]: any} = {};
+    extra_vars.subnet = this.subnet;
+    extra_vars.vlan_id = this.vlanId;
 
-    this.automationApiService.launchTemplate('create_asa_subinterface', body).subscribe();
-    this.automationApiService.launchTemplate('create_vlan', body).subscribe();
-    this.automationApiService.launchTemplate('create_device42_subnet', body).subscribe();
+    const body = { extra_vars };
+
+    this.automationApiService.launchTemplate('save-network', body).subscribe();
 
     this.messageService.filter('Job Launched');
     this.router.navigate(['/networks']);

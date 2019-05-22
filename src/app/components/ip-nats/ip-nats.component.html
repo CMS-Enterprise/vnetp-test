@@ -1,4 +1,4 @@
-<div class="offset-1 col-10">
+<div>
 
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-info" (click)="getIpNats()" aria-label="Refresh Networks">
@@ -23,7 +23,7 @@
         <tbody>
           <tr *ngFor="let ipnat of ipnats.ipnats">
             <td>
-              <a href="/ip-nats/edit/{{ ipnat.id }}">{{ ipnat.name }}</a>
+              <a routerLink="/ip-nats/edit/{{ ipnat.id }}">{{ ipnat.name }}</a>
             </td>
             <td>
               {{ ipnat.ip_address_from}}

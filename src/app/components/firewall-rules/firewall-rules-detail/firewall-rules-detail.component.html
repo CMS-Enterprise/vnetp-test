@@ -1,0 +1,111 @@
+<div>
+
+  <h5 aria-label="Firewall Rules">Firewall Rules: {{ subnet.name }}</h5>
+
+  <div class="btn-group" role="group">
+
+    <button type="button" class="btn btn-warning" (click)="updateFirewallRules()" aria-label="Update Firewall Rules">
+      <fa name="floppy-o" size="2x"></fa>
+    </button>
+  
+    <button type="button" class="btn btn-info" (click)="getSubnet()" aria-label="Refresh Firewall Rules">
+      <fa name="refresh" size="2x"></fa> 
+    </button>
+
+    <button type="button" class="btn btn-success" (click)="createFirewallRule()" aria-label="Add Firewall Rule"> 
+      <fa name="plus" size="2x"></fa>  
+    </button>  
+
+    <button type="button" class="btn btn-info" (click)="uploader.click()" aria-label="Upload CSV">
+      <fa name="file-text-o" size="2x"></fa>
+    </button>
+
+    <input hidden type="file" #uploader (change)="handleFileSelect($event)"/>
+  </div>
+
+<div class="card">
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Action</th>
+      <th scope="col">Protocol</th>
+      <th scope="col">Direction</th> 
+      <th scope="col">Source Address</th>
+      <th scope="col">Source Service</th>
+      <th scope="col">Destination Address</th>
+      <th scope="col">Destination Service</th> 
+      <th scope="col">Log</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let firewallRule of firewallRules">
+      <td>
+        <p>{{firewallRule.Name}}</p>
+      </td>
+      <td>
+        <p>{{firewallRule.Action}}</p>
+      </td>
+      <td>
+        <p>{{firewallRule.Protocol}}</p>
+      </td>
+      <td>
+       <p>{{firewallRule.Direction}}</p>
+      </td>
+      <td>
+        <p *ngIf="firewallRule.SourceIP" aria-label="Source IP">{{firewallRule.SourceIP}}</p>
+        <p *ngIf="firewallRule.SourceNetworkObject" aria-label="Source Network Object">{{firewallRule.SourceNetworkObject}} (Object)</p>
+        <p *ngIf="firewallRule.SourceNetworkObjectGroup" aria-label="Source Network Object Group">{{firewallRule.SourceNetworkObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p *ngIf="firewallRule.SourcePorts" aria-label="Source Ports">{{firewallRule.SourcePorts}}</p>    
+        <p *ngIf="firewallRule.SourceServiceObject" aria-label="Source Service Object"> {{firewallRule.SourceServiceObject}} (Object)</p> 
+        <p *ngIf="firewallRule.SourceServiceObjectGroup" aria-label="Source Service Object Group">{{firewallRule.SourceServiceObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p *ngIf="firewallRule.DestinationIP" aria-label="Destination IP">{{firewallRule.DestinationIP}}</p>
+        <p *ngIf="firewallRule.DestinationNetworkObject" aria-label="Destination Network Object">{{firewallRule.DestinationNetworkObject}} (Object)</p>
+        <p *ngIf="firewallRule.DestinationNetworkObjectGroup" aria-label="Destination Network Object Group">{{firewallRule.DestinationNetworkObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p *ngIf="firewallRule.DestinationPorts" aria-label="Destination Ports">{{firewallRule.DestinationPorts}}</p>    
+        <p *ngIf="firewallRule.DestinationServiceObject" aria-label="Destination Service Object"> {{firewallRule.DestinationServiceObject}} (Object)</p>   
+        <p *ngIf="firewallRule.DestinationServiceObjectGroup" aria-label="Destination Service Object Group">{{firewallRule.DestinationServiceObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p>{{firewallRule.Log}}</p>
+      </td>
+      <td>  
+        <fa 
+        name="pencil" 
+        (click)="editFirewallRule(firewallRule)" 
+      >
+      </fa>  
+      <fa
+      name="chevron-up"
+      (click)="moveFirewallRule(-1,firewallRule)"
+      >
+      </fa>
+      <fa
+      name="chevron-down"
+      (click)="moveFirewallRule(1,firewallRule)"
+      >
+      </fa>
+      <fa
+      name ="trash"
+      (click)="deleteFirewallRule(firewallRule)"
+      >
+      </fa>
+      <fa
+      name="copy"
+      (click)="duplicateFirewallRule(firewallRule)"
+      ></fa>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<app-firewall-rule-modal></app-firewall-rule-modal>

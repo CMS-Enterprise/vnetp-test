@@ -1,3 +1,38 @@
-<p>
-  ipaddresses works!
-</p>
+<div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-info" (click)="getIps()">
+      <fa name="refresh" size="2x"></fa>
+    </button>
+  </div>
+
+  <div class="card">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">IP Address</th>
+          <th scope="col">Subnet</th>
+          <th scope="col">Device</th>
+          <th scope="col">Available</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ip of ipResult?.ips">
+          <td>
+            {{ ip?.ip }}
+          </td>
+          <td>
+            <a *ngIf="!subnetId" routerLink="/networks/edit/{{ ip?.subnet_id }}">{{ ip?.subnet }}</a>
+            <p *ngIf="subnetId">This Subnet</p>
+          </td>
+          <td>
+            <a *ngIf="ip?.device" routerLink="/devices/edit/{{ ip?.device_id }}">{{ ip?.device }}</a>
+            <p *ngIf="!ip?.device">N/A</p>
+          </td>
+          <td>
+            {{ip?.available}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
