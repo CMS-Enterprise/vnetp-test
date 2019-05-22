@@ -34,7 +34,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     virtualServer.DestinationAddress = this.form.value.destinationAddress;
     virtualServer.ServicePort = this.form.value.servicePort;
     virtualServer.Pool = this.form.value.pool;
-    virtualServer.IRules = this.selectedIRules;
+    virtualServer.IRules = Object.assign([], this.selectedIRules);
 
     const dto = new VirtualServerModalDto();
     dto.VirtualServer = virtualServer;
@@ -99,11 +99,18 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
   selectIRule() {
     const irule = this.form.value.selectedIRule;
+
+    if (!irule) {
+      return;
+    }
+
     this.selectedIRules.push(irule);
     const availableIndex = this.availableIRules.indexOf(irule);
     if (availableIndex > -1) {
       this.availableIRules.splice(availableIndex, 1);
     }
+    this.form.controls.selectedIRule.setValue(null);
+    this.form.controls.selectedIRule.updateValueAndValidity();
   }
 
   unselectIRule(irule) {

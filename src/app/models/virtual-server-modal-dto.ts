@@ -8,6 +8,4 @@ export class VirtualServerModalDto {
     IRules: Array<IRule>;
 
     VirtualServer: VirtualServer;
-
-    // TODO: IRules: Array<IRule>;
 }

@@ -5,6 +5,8 @@ import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
+import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 
 @Component({
   selector: 'app-pool-modal',
@@ -19,6 +21,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   poolMemberModalMode: ModalMode;
   editPoolMemberIndex: any;
   poolMemberModalSubscription: Subscription;
+  selectedHealthMonitors: string[];
+  availableHealthMonitors: string[];
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -31,9 +35,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
     const pool = new Pool();
     pool.Name = this.form.value.name;
-    console.log(this.form.value.loadBalancingMethod);
     pool.LoadBalancingMethod = this.form.value.loadBalancingMethod;
     pool.Members = Object.assign([], this.poolMembers);
+    pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
 
     this.ngx.resetModalData('poolModal');
     this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
@@ -95,22 +99,77 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const pool =  Object.assign({}, this.ngx.getModalData('poolModal') as Pool);
+    const dto =  Object.assign({}, this.ngx.getModalData('poolModal') as PoolModalDto);
+
+    const pool = dto.pool;
+
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.Name);
       this.form.controls.loadBalancingMethod.setValue(pool.LoadBalancingMethod);
+
+      if (dto.pool.HealthMonitors) {
+        this.selectedHealthMonitors = dto.pool.HealthMonitors;
+      } else {
+        this.selectedHealthMonitors = new Array<string>();
+      }
+
       }
     if (pool.Members) {
         this.poolMembers = pool.Members;
       } else {
         this.poolMembers = new Array<PoolMember>();
       }
+
+    this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
+  }
+
+  private getAvailableHealthMonitors(healthMonitors: Array<string>) {
+    this.availableHealthMonitors = new Array<string>();
+
+    if (!this.selectedHealthMonitors) {
+      this.selectedHealthMonitors = new Array<string>();
+    }
+
+    if (!this.availableHealthMonitors){
+      this.availableHealthMonitors = new Array<string>();
+    }
+
+    healthMonitors.forEach( healthMonitor => {
+      if (!this.selectedHealthMonitors.includes(healthMonitor)) {
+        this.availableHealthMonitors.push(healthMonitor);
+      }
+    });
+  }
+
+  selectHealthMonitor() {
+    const healthMonitor = this.form.value.selectedHealthMonitor;
+
+    if (!healthMonitor) {
+      return;
+    }
+
+    this.selectedHealthMonitors.push(healthMonitor);
+    const availableIndex = this.availableHealthMonitors.indexOf(healthMonitor);
+    if (availableIndex > -1) {
+      this.availableHealthMonitors.splice(availableIndex, 1);
+    }
+    this.form.controls.selectedHealthMonitor.setValue(null);
+    this.form.controls.selectedHealthMonitor.updateValueAndValidity();
+  }
+
+  unselectHealthMonitor(healthMonitor) {
+    this.availableHealthMonitors.push(healthMonitor);
+    const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
+    if (selectedIndex > -1) {
+      this.selectedHealthMonitors.splice(selectedIndex, 1);
+    }
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      loadBalancingMethod: ['', Validators.required]
+      loadBalancingMethod: ['', Validators.required],
+      selectedHealthMonitor: ['']
     });
   }
 

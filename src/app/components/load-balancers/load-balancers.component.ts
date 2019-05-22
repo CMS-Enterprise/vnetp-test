@@ -13,6 +13,7 @@ import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
+import { PoolModalDto } from 'src/app/models/pool-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -102,6 +103,9 @@ export class LoadBalancersComponent implements OnInit {
 
   createPool() {
     this.subscribeToPoolModal();
+    const dto = new PoolModalDto();
+    dto.HealthMonitors = this.healthMonitors;
+
     this.poolModalMode = ModalMode.Create;
     this.ngx.getModal('poolModal').open();
   }
@@ -135,7 +139,12 @@ export class LoadBalancersComponent implements OnInit {
   editPool(pool: Pool) {
     this.subscribeToPoolModal() ;
     this.poolModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
+
+    const dto = new PoolModalDto();
+    dto.pool = pool;
+    dto.HealthMonitors = this.healthMonitors;
+
+    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
     this.editPoolIndex = this.pools.indexOf(pool);
     this.ngx.getModal('poolModal').open();
   }
@@ -269,7 +278,7 @@ export class LoadBalancersComponent implements OnInit {
     }
   }
 
-  saveIRule(irule: IRule){
+  saveIRule(irule: IRule) {
     if (this.iruleModalMode === ModalMode.Create){
       this.irules.push(irule);
     } else {
