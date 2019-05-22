@@ -141,6 +141,7 @@
           <label for="availableIRules">Available iRules</label>
 
           <select class="form-control" id="availableRules" formControlName="selectedIRule">
+            <option></option>
             <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{ irule }}</option>
           </select>
 

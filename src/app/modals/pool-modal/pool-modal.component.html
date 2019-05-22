@@ -130,6 +130,7 @@
           <label for="availableHealthMonitors">Available Health Monitors</label>
 
           <select class="form-control" id="availableHealthMonitors" formControlName="selectedHealthMonitor">
+            <option></option>
             <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor">{{ healthMonitor }}</option>
           </select>
 
