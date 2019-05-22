@@ -49,9 +49,9 @@ describe('VirtualServerModalComponent', () => {
     expect(type.valid).toBeFalsy();
   });
 
-  it('source address should be required', () => {
+  it('source address should not be required', () => {
     const sourceAddress = component.form.controls.sourceAddress;
-    expect(sourceAddress.valid).toBeFalsy();
+    expect(sourceAddress.valid).toBeTruthy();
   });
 
   it('destination address should be required', () => {
