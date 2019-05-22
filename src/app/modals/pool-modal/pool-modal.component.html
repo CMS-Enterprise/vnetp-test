@@ -43,7 +43,9 @@
         <!--TODO: Do we want to expose all LB methods to users?-->
         <option></option>
         <option value="round-robin">Round Robin</option>
-        <option value="least-connections">Least Connections</option>
+        <option value="least-sessions">Least Sessions</option>
+        <option value="fastest-node">Fastest Node</option>
+        <option value="fastest-app-response">Fastest App Response</option>
       </select>
       <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
           <div *ngIf="f.name.load.required">Name is required</div>
