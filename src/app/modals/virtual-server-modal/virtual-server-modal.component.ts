@@ -60,7 +60,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     this.pools = dto.Pools;
 
-
     const virtualServer = dto.VirtualServer;
 
     if (virtualServer !== undefined) {

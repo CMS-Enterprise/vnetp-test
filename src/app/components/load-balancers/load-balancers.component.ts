@@ -14,7 +14,7 @@ import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { PoolModalDto } from 'src/app/models/pool-modal-dto';
-import { componentHostSyntheticProperty } from '@angular/core/src/render3';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-load-balancers',
@@ -54,17 +54,32 @@ export class LoadBalancersComponent implements OnInit {
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
+              private toastr: ToastrService) {
     this.virtualServers = new Array<VirtualServer>();
     this.pools = new Array<Pool>();
   }
 
   getVrfs() {
     this.dirty = false;
+
+    let vrfId: number = null;
+
+    if (this.currentVrf) {
+      vrfId = this.currentVrf.id;
+    }
+
     this.api.getVrfs().subscribe(data => {
       this.vrfs = data;
-      if (!this.currentVrf) {
+
+      if (!vrfId) {
         this.currentVrf = this.vrfs[0];
+      } else {
+        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
+
+        if (!this.currentVrf) {
+          this.currentVrf = this.vrfs[0];
+        }
       }
       this.getVrfObjects(this.currentVrf);
     });
@@ -82,13 +97,12 @@ export class LoadBalancersComponent implements OnInit {
         this.virtualServers = loadBalancerDto.VirtualServers;
         this.pools = loadBalancerDto.Pools;
         this.irules = loadBalancerDto.IRules;
-
-        if (loadBalancerDto.HealthMonitors) {
         this.healthMonitors = loadBalancerDto.HealthMonitors;
-        } else {
-          this.healthMonitors = new Array<HealthMonitor>();
-        }
     }
+      this.deletedVirtualServers = new Array<VirtualServer>();
+      this.deletedPools = new Array<Pool>();
+      this.deletedIRules = new Array<IRule>();
+      this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
   createVirtualServer() {
@@ -272,6 +286,7 @@ export class LoadBalancersComponent implements OnInit {
   deletePool(pool: Pool) {
     for (const vs of this.virtualServers) {
       if (vs.Pool === pool.Name) {
+        this.toastr.error(`Pool in use! Virtual Server: ${vs.Name}`);
         console.log('Pool in use!'); // TODO: Toastr
         return;
       }
@@ -291,6 +306,7 @@ export class LoadBalancersComponent implements OnInit {
   deleteIRule(irule: IRule) {
     for (const vs of this.virtualServers) {
       if (vs.IRules.includes(irule.Name)) {
+        this.toastr.error(`iRule in use! Virtual Server: ${vs.Name}`);
         console.log('iRule in use!'); // TODO: Toastr
         return;
       }
@@ -310,6 +326,7 @@ export class LoadBalancersComponent implements OnInit {
   deleteHealthMonitor(healthMonitor: HealthMonitor) {
     for (const p of this.pools) {
       if (p.HealthMonitors.includes(healthMonitor.Name)) {
+        this.toastr.error(`Health Monitor in use! Pool: ${p.Name}`);
         console.log('Health Monitor in use!'); // TODO: Toastr
         return;
       }
@@ -349,6 +366,8 @@ export class LoadBalancersComponent implements OnInit {
 
     this.deletedVirtualServers = new Array<VirtualServer>();
     this.deletedPools = new Array<Pool>();
+    this.deletedIRules = new Array<IRule>();
+    this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
   handleFileSelect(evt) {

@@ -6,7 +6,6 @@ import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/pool-modal-dto';
-import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 
 @Component({
   selector: 'app-pool-modal',
@@ -103,7 +102,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
+ 
+
     const dto =  Object.assign({}, this.ngx.getModalData('poolModal') as PoolModalDto);
+
+    console.log(dto);
 
     const pool = dto.pool;
 
@@ -117,13 +120,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         this.selectedHealthMonitors = new Array<string>();
       }
 
-      }
-    if (pool.Members) {
+      if (pool.Members) {
         this.poolMembers = pool.Members;
       } else {
         this.poolMembers = new Array<PoolMember>();
       }
-
+    }
     this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
   }
 
@@ -175,6 +177,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: ['']
     });
+
+    this.poolMembers = new Array<PoolMember>();
   }
 
   private unsubAll() {
