@@ -40,8 +40,13 @@ export function ValidateIpv4CidrAddress(control: FormControl) {
 
     if (valueArray.length !== 2) {
         return {validIpv4Address: true };
-    } else if (!isValidIpAddress(valueArray[0]) ||
-    !isValidNetMask(Number(valueArray[1]))) {
+    }
+
+    if (!valueArray[1].length) {
+        return {validIpv4Address: true };
+    }
+
+    if (!isValidIpAddress(valueArray[0]) || !isValidNetMask(Number(valueArray[1]))) {
         return { validIpv4Address: true };
     }
     return null;
