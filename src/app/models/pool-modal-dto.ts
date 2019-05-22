@@ -2,7 +2,7 @@ import { HealthMonitor } from './loadbalancer/health-monitor';
 import { Pool } from './loadbalancer/pool';
 
 export class PoolModalDto {
-    pool: Pool;
+    Pool: Pool;
 
     HealthMonitors: Array<HealthMonitor>;
 }

@@ -57,9 +57,9 @@ export class HealthMonitorModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      servicePort: [0, Validators.compose([Validators.required,  Validators.min(1), Validators.max(65535)])],
-      interval: [0, Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)]) ],
-      timeout: [0, Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)])]
+      servicePort: ['', Validators.compose([Validators.required,  Validators.min(1), Validators.max(65535)])],
+      interval: ['', Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)]) ],
+      timeout: ['', Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)])]
     });
   }
 

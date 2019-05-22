@@ -96,7 +96,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
     });
   }
 

@@ -38,8 +38,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     pool.Members = Object.assign([], this.poolMembers);
     pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
 
+    const dto = new PoolModalDto();
+    dto.Pool = pool;
+
     this.ngx.resetModalData('poolModal');
-    this.ngx.setModalData(Object.assign({}, pool), 'poolModal');
+    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
     this.ngx.close('poolModal');
     this.reset();
   }
@@ -102,20 +105,17 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
- 
 
     const dto =  Object.assign({}, this.ngx.getModalData('poolModal') as PoolModalDto);
 
-    console.log(dto);
-
-    const pool = dto.pool;
+    const pool = dto.Pool;
 
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.Name);
       this.form.controls.loadBalancingMethod.setValue(pool.LoadBalancingMethod);
 
-      if (dto.pool.HealthMonitors) {
-        this.selectedHealthMonitors = dto.pool.HealthMonitors;
+      if (dto.Pool.HealthMonitors) {
+        this.selectedHealthMonitors = dto.Pool.HealthMonitors;
       } else {
         this.selectedHealthMonitors = new Array<string>();
       }
@@ -126,7 +126,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         this.poolMembers = new Array<PoolMember>();
       }
     }
-    this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
+
+    if (dto.HealthMonitors) {
+      this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
+    }
   }
 
   private getAvailableHealthMonitors(healthMonitors: Array<string>) {
@@ -177,8 +180,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: ['']
     });
-
-    this.poolMembers = new Array<PoolMember>();
   }
 
   private unsubAll() {
@@ -188,6 +189,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
+    this.poolMembers = new Array<PoolMember>();
+    this.selectedHealthMonitors = new Array<string>();
+    this.availableHealthMonitors = new Array<string>();
   }
 
   ngOnInit() {

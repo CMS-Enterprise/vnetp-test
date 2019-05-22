@@ -127,7 +127,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
       destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
-      servicePort: [0, Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
       selectedIRule: ['']
     });
