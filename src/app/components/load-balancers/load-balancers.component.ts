@@ -12,6 +12,7 @@ import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
+import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 
 @Component({
   selector: 'app-load-balancers',
@@ -19,29 +20,37 @@ import { IRule } from 'src/app/models/loadbalancer/irule';
   styleUrls: ['./load-balancers.component.css']
 })
 export class LoadBalancersComponent implements OnInit {
+  navIndex = 0;
 
   vrfs: Vrf[];
   currentVrf: Vrf;
+
   virtualServers: Array<VirtualServer>;
   pools: Array<Pool>;
   irules: Array<IRule>;
+  healthMonitors: Array<HealthMonitor>;
+
   deletedVirtualServers: Array<VirtualServer>;
   deletedPools: Array<Pool>;
   deletedIRules: Array<IRule>;
-  navIndex = 0;
+  deletedHealthMonitors: Array<HealthMonitor>;
 
   editVirtualServerIndex: number;
   editPoolIndex: number;
   editIRuleIndex: number;
+  editHealthMonitorIndex: number;
 
   virtualServerModalMode: ModalMode;
   poolModalMode: ModalMode;
   iruleModalMode: ModalMode;
+  healthMonitorModalMode: ModalMode;
+
   dirty: boolean;
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
   iruleModalSubscription: Subscription;
+  healthMonitorModalSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.virtualServers = new Array<VirtualServer>();
@@ -66,10 +75,17 @@ export class LoadBalancersComponent implements OnInit {
         this.virtualServers = new Array<VirtualServer>();
         this.pools = new Array<Pool>();
         this.irules = new Array<IRule>();
+        this.healthMonitors = new Array<HealthMonitor>();
        } else if (loadBalancerDto) {
         this.virtualServers = loadBalancerDto.VirtualServers;
         this.pools = loadBalancerDto.Pools;
         this.irules = loadBalancerDto.IRules;
+
+        if (loadBalancerDto.HealthMonitors) {
+        this.healthMonitors = loadBalancerDto.HealthMonitors;
+        } else {
+          this.healthMonitors = new Array<HealthMonitor>();
+        }
     }
   }
 
@@ -94,6 +110,12 @@ export class LoadBalancersComponent implements OnInit {
     this.subscribeToIRuleModal();
     this.iruleModalMode = ModalMode.Create;
     this.ngx.getModal('iruleModal').open();
+  }
+
+  createHealthMonitor() {
+    this.subscribeToHealthMonitorModal();
+    this.healthMonitorModalMode = ModalMode.Create;
+    this.ngx.getModal('healthMonitorModal').open();
   }
 
   editVirtualServer(virtualServer: VirtualServer) {
@@ -124,6 +146,14 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.setModalData(Object.assign({}, irule), 'iruleModal');
     this.editIRuleIndex = this.irules.indexOf(irule);
     this.ngx.getModal('iruleModal').open();
+  }
+
+  editHealthMonitor(healthMonitor: HealthMonitor) {
+    this.subscribeToHealthMonitorModal();
+    this.healthMonitorModalMode = ModalMode.Edit;
+    this.ngx.setModalData(Object.assign({}, healthMonitor), 'healthMonitorModal');
+    this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
+    this.ngx.getModal('healthMonitorModal').open();
   }
 
   subscribeToVirtualServerModal() {
@@ -168,6 +198,20 @@ export class LoadBalancersComponent implements OnInit {
     });
   }
 
+  subscribeToHealthMonitorModal() {
+    this.healthMonitorModalSubscription =
+    this.ngx.getModal('healthMonitorModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as HealthMonitor;
+
+      if (data !== undefined) {
+        data = Object.assign({}, data);
+        this.saveHealthMonitor(data);
+      }
+      this.ngx.resetModalData('healthMonitorModal');
+      this.healthMonitorModalSubscription.unsubscribe();
+    });
+  }
+
   saveVirtualServer(virtualServer: VirtualServer) {
     if (this.virtualServerModalMode === ModalMode.Create) {
       this.virtualServers.push(virtualServer);
@@ -193,6 +237,15 @@ export class LoadBalancersComponent implements OnInit {
       this.pools.push(pool);
     } else {
       this.pools[this.editPoolIndex] = pool;
+    }
+    this.dirty = true;
+  }
+
+  saveHealthMonitor(healthMonitor: HealthMonitor) {
+    if (this.healthMonitorModalMode === ModalMode.Create) {
+      this.healthMonitors.push(healthMonitor);
+    } else {
+      this.healthMonitors[this.editHealthMonitorIndex] = healthMonitor;
     }
     this.dirty = true;
   }
@@ -227,6 +280,10 @@ export class LoadBalancersComponent implements OnInit {
 
   deleteIRule(){
     throw new Error('Not Implemented');
+  }
+
+  deleteHealthMonitor(){
+    throw new Error('Not Implemeneted');
   }
 
   saveAll() {
