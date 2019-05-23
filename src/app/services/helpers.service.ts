@@ -67,7 +67,7 @@ export class HelpersService {
   }
 
   public deepCopy(obj: any): any {
-    if (obj) {
+    if (!obj) {
       throw new Error('Null Object.');
     }
     return JSON.parse(JSON.stringify(obj));
