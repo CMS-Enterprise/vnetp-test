@@ -1,3 +1,6 @@
+
+<!--TODO: Replace Test Data in getLdoms()-->
+<!--TODO: routerLink should navigate to CDOM Device Detail View -->
 <h4>CDOM List : {{ devices?.length }}</h4>
 
 <div class="table table-striped">
@@ -15,7 +18,7 @@
           <fa name="server"></fa>
         </td>
         <td>
-          <a href='/dashboard'>{{device.name}}</a>
+          <a routerLink='/dashboard'>{{device.name}}</a>
         </td>
           <td class="spaced"> 
             <button class="btn btn-default" (click)="getLdoms([1,2,3])">Associated LDOMs</button>
@@ -23,5 +26,3 @@
       </tr>
   </tbody>
 </div>
-
-<!-- https://mdbootstrap.com/docs/angular/forms/inputs/ -->
