@@ -223,4 +223,17 @@ describe('HelpersService', () => {
     const result = service.getJsonCustomField(vrf, 'network_objects');
     expect(result).toBeFalsy();
   });
+
+  it('should deep copy', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const test = {Name: 'Test', Children: ['Test1', 'Test2']};
+
+    const testCopy = service.deepCopy(test);
+
+    testCopy.Children.splice(0, 1);
+
+    expect(test.Children.length === 2).toBeTruthy();
+  });
+
 });
