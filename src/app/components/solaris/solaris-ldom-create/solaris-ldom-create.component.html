@@ -154,6 +154,7 @@
           id="enterVnet"
           type="button"
           (click)="addvnetObject(inputLDOMvnet, LDOM.add_vnet)"
+          [disabled]="!inputLDOMvnet"
         >
           Add Vnet
         </button>
