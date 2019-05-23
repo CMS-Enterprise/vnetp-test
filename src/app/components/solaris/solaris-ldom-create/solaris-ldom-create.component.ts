@@ -38,13 +38,22 @@ export class SolarisLdomCreateComponent implements OnInit {
   printCDOM(cdomInput: SolarisCdom){
     this.currentCDOM = cdomInput;
   }
-  addvnets(){
-   this.LDOM.add_vnet.push(this.inputLDOMvnet);
+  addvnetObject(obj: any, objArray: Array<any>){
+     objArray.push(obj);
+     this.inputLDOMvnet = '';
+  }
+  addvdsObject(obj: any, objArray: Array<any>){
+    objArray.push(obj);
+    this.inputLDOMvds = '';
+ }
+  getvnetsCmds(){
    //Create commands that will be sent as add-vnet parameter 
-   const vnetIndex = this.LDOM.add_vnet.length - 1
-   const vnetCmdString = `id=${vnetIndex} vnet${vnetIndex} ${this.inputLDOMvnet}`
-   this.LDOM.add_vnet_cmd.push(vnetCmdString);
-   this.inputLDOMvnet = '';
+   for(let i = 0; i < this.LDOM.add_vnet.length;i++){
+    const vnetCmdString = `id=${i} vnet${i} ${this.LDOM.add_vnet[i]}`
+    this.LDOM.add_vnet_cmd.push(vnetCmdString);
+    this.inputLDOMvnet = '';
+   }
+
   }
   addvds(vdsWWN: string){
    this.LDOM.add_vds.push(this.inputLDOMvds);
@@ -92,8 +101,6 @@ export class SolarisLdomCreateComponent implements OnInit {
      }
      else if(obj.key === "CDOM"){
       this.CDOMDeviceArray = obj.value;
-      //add blank CDOM to CDOMDeviceArray to allow menus to be cleared
-      this.CDOMDeviceArray.push(new SolarisCdom());
      }
      // this.vnets = this.CDOMDeviceArray
     });

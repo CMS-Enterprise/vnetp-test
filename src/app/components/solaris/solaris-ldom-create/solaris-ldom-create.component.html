@@ -21,7 +21,8 @@
           #cdomInputName="ngModel"
           [(ngModel)]="cdomInput"
           (ngModelChange)="printCDOM(cdomInput)"
-        >
+        > 
+        <option></option>
           <option
             class="list-group-item"
             *ngFor="let cdom of CDOMDeviceArray"
@@ -139,7 +140,6 @@
           id="inputLDOMvnet"
           #cdomInputName="ngModel"
           [(ngModel)]="inputLDOMvnet"
-          (ngModelChange)="addvnets()"
         >
           <option
             class="list-group-item"
@@ -153,7 +153,7 @@
           class="btn btn-outline-info"
           id="enterVnet"
           type="button"
-          (click)="addvnets()"
+          (click)="addvnetObject(inputLDOMvnet, LDOM.add_vnet)"
         >
           Add Vnet
         </button>
@@ -195,7 +195,6 @@
           id="inputLDOMvds"
           #cdomInputName="ngModel"
           [(ngModel)]="inputLDOMvds"
-          (ngModelChange)="addvds(vdswwn)"
         >
           <option
             class="list-group-item"
@@ -209,7 +208,8 @@
           class="btn btn-outline-info"
           id="enterVds"
           type="button"
-          (click)="addvds(vdswwn)"
+          (click)="addvdsObject(inputLDOMvds, LDOM.add_vds)"
+          [disabled]="!vdswwn"
         >
           Add VDS
         </button>

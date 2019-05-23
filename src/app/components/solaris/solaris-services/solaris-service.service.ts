@@ -86,6 +86,10 @@ export class SolarisServiceService {
     //   )
     //   .subscribe(data => {
     //     let result = data as any;
+        //clear previously loaded devices
+        this.AllSolaris = new Array<any>();
+        this.CDOMArray = new Array<any>();
+        this.LDOMArray = new Array<any>();
         this.AllDevices = result;
         for (let i = this.AllDevices.length - 1; i >= 0; --i) {
           if (this.AllDevices[i].DeviceType == "solaris_cdom") {
