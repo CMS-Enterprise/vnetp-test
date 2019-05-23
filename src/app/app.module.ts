@@ -52,6 +52,7 @@ import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitor } from './models/loadbalancer/health-monitor';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
+import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
     PoolModalComponent,
     PoolMemberModalComponent,
     IRuleModalComponent,
-    HealthMonitorModalComponent
+    HealthMonitorModalComponent,
+    NetworkInterfacesComponent
   ],
   imports: [
     BrowserModule,

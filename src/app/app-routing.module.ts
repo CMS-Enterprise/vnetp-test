@@ -21,12 +21,14 @@ import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 
 
 const routes: Routes = [
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create Subnet'}},
   {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
+  {path: 'network-interfaces', component: NetworkInterfacesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Interfaces'}},
   {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},
   {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
   {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
