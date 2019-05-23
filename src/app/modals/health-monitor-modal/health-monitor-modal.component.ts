@@ -50,6 +50,7 @@ export class HealthMonitorModalComponent implements OnInit {
       this.form.controls.interval.setValue(healthMonitor.Interval);
       this.form.controls.timeout.setValue(healthMonitor.Timeout);
       }
+    this.ngx.resetModalData('healthMonitorModal');
   }
 
   // TODO: Confirm min/max on interval and timeout.
