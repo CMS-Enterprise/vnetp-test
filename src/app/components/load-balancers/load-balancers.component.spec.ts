@@ -13,6 +13,7 @@ import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http'
 import { CookieService } from 'ngx-cookie-service';
 import { PapaParseModule } from 'ngx-papaparse';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -25,6 +26,7 @@ describe('LoadBalancersComponent', () => {
         ReactiveFormsModule,
         NgxSmartModalModule,
         PapaParseModule,
+        ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
         AngularFontAwesomeModule
       ],
