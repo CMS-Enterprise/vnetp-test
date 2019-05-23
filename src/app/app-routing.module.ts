@@ -47,10 +47,10 @@ const routes: Routes = [
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
-  {path: 'solaris', component: SolarisComponent},
-  {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent},
+  {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
+  {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
   {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
-  {path: 'solaris-cdom-list', component: SolarisCdomListComponent},
+  {path: 'solaris-cdom-list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
 ];
