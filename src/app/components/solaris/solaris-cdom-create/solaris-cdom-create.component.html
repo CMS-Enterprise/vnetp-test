@@ -1,200 +1,196 @@
-<h4>CDOM Create or Clone</h4>
-<div class="col-sm-12">
-  <div>
-    <form name="CDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
-
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="inputCDOMName">CDOM Name</label>
-          <input
-            name="inputCDOMName"
-            aria-label="Input CDOM Name"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            placeholder="Name"
-            #name="ngModel"
-            [(ngModel)]="CDOM.name"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMCloneFrom">Clone CDOM From:</label>
-          <select
-            name="cdomSelect"
-            class="form-control"
-            id="inputLDOMaddCDOM"
-            #cdomInputName="ngModel"
-            [(ngModel)]="cdomInput"
-            (ngModelChange)="setCurrentCDOM(cdomInput)"
-          >
-            <option
-              class="list-group-item"
-              *ngFor="let cdom of CDOMDeviceArray"
-              [ngValue]="cdom"
-            >
-              {{ cdom.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMSPConfig">SPConfig</label>
-          <input
-            name="inputCDOMSPConfig"
-            aria-label="CDOM SP Config"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.add_config"
-          />
-        </div>
+<div>
+  <form name="CDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMName">CDOM Name</label>
+        <input
+          name="inputCDOMName"
+          aria-label="Input CDOM Name"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          placeholder="Name"
+          #name="ngModel"
+          [(ngModel)]="CDOM.name"
+        />
       </div>
 
-      <hr/>
-
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="inputCDOMMemory">RAM (GB)</label>
-          <input
-            name="inputCDOMMemory"
-            aria-label="RAM in Gigabytes"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            placeholder="# GB"
-            #name="ngModel"
-            [(ngModel)]="CDOM.set_mem"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMvCPU">vCPU</label>
-          <input
-            name="inputCDOMvCPU"
-            aria-label="vCPU for CDOM"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            placeholder="# vCPU"
-            #name="ngModel"
-            [(ngModel)]="CDOM.set_vcpu"
-          />
-        </div>
-      </div>
-
-      <hr/>
-
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVDS">VDS</label>
-          <input
-            name="inputCDOMVDS"
-            aria-label="CDOM VDS Config"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vds"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVDSDevs">VDSDevs</label>
-          <input
-            name="inputCDOMVDS"
-            aria-label="CDOM VDS Config"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vds"
-          />
-        </div>
-      </div>
-
-      <hr/>
-
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVCCname">VCC Name</label>
-          <input
-            name="inputCDOMVCCname"
-            aria-label="CDOM VCC name"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vccname"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVCCports">VCC Ports</label>
-          <input
-            name="inputCDOMVCCports"
-            aria-label="CDOM VCC Ports"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vccports"
-          />
-        </div>
-      </div>
-
-      <hr/>
-
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVSW">VSW</label>
-          <input
-            name="inputCDOMVDS"
-            aria-label="CDOM VDS Config"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vds"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVNet">VNET</label>
-          <input
-            name="inputCDOMVDS"
-            aria-label="CDOM VDS Config"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vds"
-          />
-        </div>
-
-        <div class="form-group col-md-4">
-          <label for="inputCDOMVLANs">VLANS</label>
-          <input
-            name="inputCDOMVLANs"
-            aria-label="CDOM VLANS"
-            appIsAlphanumeric
-            type="text"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="CDOM.vlans"
-          />
-        </div>
-      </div>
-
-      <div class="btn-group">
-        <button
-          class="btn btn-success"
-          aria-label="Save"
-          (click)="launchLDOMJobs()"
+      <div class="form-group col-md-4">
+        <label for="inputCDOMCloneFrom">Clone CDOM From:</label>
+        <select
+          name="cdomSelect"
+          class="form-control"
+          id="inputLDOMaddCDOM"
+          #cdomInputName="ngModel"
+          [(ngModel)]="cdomInput"
+          (ngModelChange)="setCurrentCDOM(cdomInput)"
         >
-          Save
-        </button>
-        <button disabled class="btn btn-danger" aria-label="Deploy" type="submit">
-          Deploy
-        </button>
+          <option
+            class="list-group-item"
+            *ngFor="let cdom of CDOMDeviceArray"
+            [ngValue]="cdom"
+          >
+            {{ cdom.name }}
+          </option>
+        </select>
       </div>
-    </form>
-  </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMSPConfig">SPConfig</label>
+        <input
+          name="inputCDOMSPConfig"
+          aria-label="CDOM SP Config"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.add_config"
+        />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMMemory">RAM (GB)</label>
+        <input
+          name="inputCDOMMemory"
+          aria-label="RAM in Gigabytes"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          placeholder="# GB"
+          #name="ngModel"
+          [(ngModel)]="CDOM.set_mem"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMvCPU">vCPU</label>
+        <input
+          name="inputCDOMvCPU"
+          aria-label="vCPU for CDOM"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          placeholder="# vCPU"
+          #name="ngModel"
+          [(ngModel)]="CDOM.set_vcpu"
+        />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVDS">VDS</label>
+        <input
+          name="inputCDOMVDS"
+          aria-label="CDOM VDS Config"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vds"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVDSDevs">VDSDevs</label>
+        <input
+          name="inputCDOMVDS"
+          aria-label="CDOM VDS Config"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vds"
+        />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVCCname">VCC Name</label>
+        <input
+          name="inputCDOMVCCname"
+          aria-label="CDOM VCC name"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vccname"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVCCports">VCC Ports</label>
+        <input
+          name="inputCDOMVCCports"
+          aria-label="CDOM VCC Ports"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vccports"
+        />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVSW">VSW</label>
+        <input
+          name="inputCDOMVDS"
+          aria-label="CDOM VDS Config"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vds"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVNet">VNET</label>
+        <input
+          name="inputCDOMVDS"
+          aria-label="CDOM VDS Config"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vds"
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="inputCDOMVLANs">VLANS</label>
+        <input
+          name="inputCDOMVLANs"
+          aria-label="CDOM VLANS"
+          appIsAlphanumeric
+          type="text"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.vlans"
+        />
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button
+        class="btn btn-success"
+        aria-label="Save"
+        (click)="launchLDOMJobs()"
+      >
+        Save
+      </button>
+      <button disabled class="btn btn-danger" aria-label="Deploy" type="submit">
+        Deploy
+      </button>
+    </div>
+  </form>
 </div>
