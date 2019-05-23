@@ -36,7 +36,7 @@ const routes: Routes = [
   {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
   {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
-  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
+  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Routes'}},
   {path: 'ip-nats', component: IpNatsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Network Address Translation'}},
   {path: 'ip-nats/create', component: CreateIpNatComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create IP NAT'}},
   {path: 'ip-nats/edit/:id', component: IpNatDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Network Address Translation'}},
