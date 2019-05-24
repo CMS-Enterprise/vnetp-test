@@ -6,6 +6,10 @@ import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { ModalMode } from 'src/app/models/modal-mode';
+import { Subscription } from 'rxjs';
+import { LogicalInterfaceModalDto } from 'src/app/models/logical-interface-modal-dto';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-network-interfaces',
@@ -14,7 +18,8 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class NetworkInterfacesComponent implements OnInit {
 
-  constructor(private hs: HelpersService, private api: AutomationApiService) { }
+  constructor(private hs: HelpersService, private api: AutomationApiService,
+              private ngx: NgxSmartModalService) { }
 
   LogicalInterfaces: Array<LogicalInterface>;
   PhysicalInterfaces: Array<PhysicalInterface>;
@@ -23,6 +28,11 @@ export class NetworkInterfacesComponent implements OnInit {
   currentVrf: Vrf;
   dirty: boolean;
   navIndex = 0;
+
+  editLogicalInterfaceIndex: number;
+  editLogicalInterfaceModalMode: ModalMode;
+  logicalInterfaceModalSubscription: Subscription;
+
 
   getVrfs() {
     this.dirty = false;
@@ -69,10 +79,94 @@ export class NetworkInterfacesComponent implements OnInit {
     });
   }
 
+  createLogicalInterface() {
+    this.subscribeToLogicalInterfaceModal();
+    const dto = new LogicalInterfaceModalDto();
+
+    // TODO: Get only unused Physical Interfaces.
+    dto.PhysicalInterfaces = this.PhysicalInterfaces;
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
+    this.editLogicalInterfaceModalMode = ModalMode.Create;
+    this.ngx.getModal('logicalInterfaceModal').open();
+  }
+
+  editLogicalInterface(logicalInterface: LogicalInterface) {
+    this.subscribeToLogicalInterfaceModal();
+    const dto = new LogicalInterfaceModalDto();
+
+    dto.LogicalInterface = logicalInterface;
+    dto.PhysicalInterfaces = this.PhysicalInterfaces;
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
+    this.editLogicalInterfaceModalMode = ModalMode.Edit;
+    this.ngx.getModal('logicalInterfaceModal').open();
+  }
+
+  subscribeToLogicalInterfaceModal() {
+    this.logicalInterfaceModalSubscription =
+    this.ngx.getModal('logicalInterfaceModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent ) => {
+      const data = modal.getData() as LogicalInterfaceModalDto;
+      
+      if (data && data.LogicalInterface)  {
+        this.saveLogicalInterface(data.LogicalInterface);
+      }
+      this.ngx.resetModalData('logicalInterfaceModal');
+      this.logicalInterfaceModalSubscription.unsubscribe();
+    });
+  }
+
+  saveLogicalInterface(logicalInterface: LogicalInterface) {
+    if (this.editLogicalInterfaceModalMode === ModalMode.Create) {
+      this.LogicalInterfaces.push(logicalInterface);
+    } else {
+      this.LogicalInterfaces[this.editLogicalInterfaceIndex] = logicalInterface;
+    }
+
+    logicalInterface.PhysicalInterfaces.forEach(name => {
+      const physicalInterface = this.PhysicalInterfaces.find(p => p.Name === name);
+
+      if (physicalInterface) {
+        physicalInterface.LogicalInterfaceName = logicalInterface.Name;
+      }
+    });
+
+    this.dirty = true;
+  }
+
+  deleteLogicalInterface(logicalInterface: LogicalInterface) {
+    const index = this.LogicalInterfaces.indexOf(logicalInterface);
+    if (index > -1) {
+      this.LogicalInterfaces.splice(index, 1);
+      // TODO: Pass to deleted array
+      this.dirty = true;
+    }
+  }
+
+  saveAll() {
+    this.dirty = false;
+    const dto = new NetworkInterfacesDto();
+
+    dto.LogicalInterfaces = this.LogicalInterfaces;
+    dto.PhysicalInterfaces = this.PhysicalInterfaces;
+    dto.VrfId = this.currentVrf.id;
+
+    let extra_vars: {[k: string]: any} = {};
+    extra_vars.network_interfaces_dto = dto;
+    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+
+    // TODO: Handle Deletes.
+
+    const body = { extra_vars };
+
+    this.api.launchTemplate('save-network-interfaces-dto', body).subscribe(data => {
+      // TODO: Provide to message service
+     });
+  }
+
   ngOnInit() {
     this.getVrfs();
   }
-
-
-
 }

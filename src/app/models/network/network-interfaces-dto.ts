@@ -5,4 +5,6 @@ export class NetworkInterfacesDto {
     LogicalInterfaces: Array<LogicalInterface>;
 
     PhysicalInterfaces: Array<PhysicalInterface>;
+
+    VrfId: number;
 }

@@ -1,6 +1,5 @@
 <div>
-
-<div class="input-group pb-2">
+  <div class="input-group pb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">VRF</span>
     </div>
@@ -15,117 +14,131 @@
       <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
     </select>
     <span class="pl-2 input-group-btn">
-        <button
+      <button
         type="button"
         class="btn btn-danger"
         aria-label="Save Changes to Current VRF"
         (click)="saveAll()"
         [hidden]="!dirty"
       >
-      Save Changes to Current VRF
-    </button>   
-    <button
-      type="button"
-      class="btn btn-warning"
-      aria-label="Clear Changes to Current VRF"
-      (click)="getVrfs()"
-      [hidden]="!dirty"
+        Save Changes to Current VRF
+      </button>
+      <button
+        type="button"
+        class="btn btn-warning"
+        aria-label="Clear Changes to Current VRF"
+        (click)="getVrfs()"
+        [hidden]="!dirty"
       >
-      Clear Changes to Current VRF
-    </button>
+        Clear Changes to Current VRF
+      </button>
     </span>
   </div>
 
   <ul class="nav nav-tabs">
-      <li class="nav-item" (click)="navIndex = 0">
-        <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-          >Logical Interfaces</a
-        >
-      </li>
-      <li class="nav-item" (click)="navIndex = 1">
-        <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-          >Physical Interfaces</a
-        >
-      </li>
-    </ul>
+    <li class="nav-item" (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+        >Logical Interfaces</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >Physical Interfaces</a
+      >
+    </li>
+  </ul>
 
-    <div *ngIf="navIndex == 0">
-        <div class="btn-group-sm" role="group">
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="createLogicalInterface()"
-            aria-label="Create Logical Interface"
-          >
-            <fa name="plus" size="2x"></fa>
-          </button>
-        </div>
-    
-        <div class="card">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Physical Interfaces</th>
-                <th scope="col">Native Subnet</th>
-                <th scope="col">Tagged Subnet</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let logicalInterface of LogicalInterfaces">
-                <td>
-                  <p>{{ logicalInterface.Name }}</p>
-                </td>
-                <td>
-                  <p>{{ PhysicalInterfaces?.length }}</p>
-                </td>
-                <td>
-                    <p>{{ NativeSubnet }}</p>
-                  </td>
-                  <td>
-                      <p>{{ TaggedSubnets }}</p>
-                    </td>
-              </tr>
-              <tr *ngIf="logicalInterfaces?.length === 0" class="text-center">
-                  <td colspan="6">No Logical Interfaces in this VRF.</td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    
-      <div *ngIf="navIndex == 1">
-        <div class="card">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Logical Interface</th>
-                <th scope="col">Speed</th>
-                <th scope="col">Leaf Switch</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let physicalInterface of PhysicalInterfaces">
-                <td>
-                  <p>{{ physicalInterface.Name }}</p>
-                </td>
-                <td>
-                  <p>{{ physicalInterface.LogicalInterfaceName }}</p>
-                </td>
-                <td>
-                  <p>{{ physicalInterface.Speed }}</p>
-                </td>
-                <td>
-                  <p>{{ physicalInterface.LeafSwitch }}</p>
-                </td>
-              </tr>
-              <tr *ngIf="PhysicalInterfaces?.length === 0" class="text-center">
-                  <td colspan="5">No Physical Interfaces in this VRF.</td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="createLogicalInterface()"
+        aria-label="Create Logical Interface"
+      >
+        <fa name="plus" size="2x"></fa>
+      </button>
+    </div>
+
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Physical Interfaces</th>
+            <th scope="col">Native VLAN</th>
+            <th scope="col">Tagged VLANs</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let logicalInterface of LogicalInterfaces">
+            <td>
+              <p>{{ logicalInterface.Name }}</p>
+            </td>
+            <td>
+              <p>{{ PhysicalInterfaces?.length }}</p>
+            </td>
+            <td>
+              <p>{{ logicalInterface.NativeSubnet }}</p>
+            </td>
+            <td>
+              <p>{{ logicalInterface.TaggedSubnets?.length }}</p>
+            </td>
+            <td>
+              <fa
+                name="pencil"
+                (click)="editLogicalInterface(logicalInterface)"
+              >
+              </fa>
+              <fa
+                name="trash"
+                (click)="deleteLogicalInterface(logicalInterface)"
+              >
+              </fa>
+            </td>
+          </tr>
+          <tr *ngIf="logicalInterfaces?.length === 0" class="text-center">
+            <td colspan="6">No Logical Interfaces in this VRF.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="navIndex == 1">
+    <div class="card">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Logical Interface</th>
+            <th scope="col">Speed</th>
+            <th scope="col">Leaf Switch</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let physicalInterface of PhysicalInterfaces">
+            <td>
+              <p>{{ physicalInterface.Name }}</p>
+            </td>
+            <td>
+              <p>{{ physicalInterface.LogicalInterfaceName }}</p>
+            </td>
+            <td>
+              <p>{{ physicalInterface.Speed }}</p>
+            </td>
+            <td>
+              <p>{{ physicalInterface.LeafSwitch }}</p>
+            </td>
+          </tr>
+          <tr *ngIf="PhysicalInterfaces?.length === 0" class="text-center">
+            <td colspan="5">No Physical Interfaces in this VRF.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
+<app-logical-interface-modal></app-logical-interface-modal>

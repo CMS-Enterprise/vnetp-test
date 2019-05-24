@@ -354,6 +354,7 @@ export class LoadBalancersComponent implements OnInit {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.load_balancer_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.vrf_id = this.currentVrf.id;
     extra_vars.deleted_virtual_servers = this.deletedVirtualServers;
     extra_vars.deleted_pools = this.deletedPools;
 

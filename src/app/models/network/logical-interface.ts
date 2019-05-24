@@ -5,10 +5,11 @@ export class LogicalInterface {
 
     Description: string;
 
-    PhysicalInterfaces: Array<PhysicalInterface>;
 
     // Array of strings for now.
     NativeSubnet: string;
 
     TaggedSubnets: Array<string>;
+
+    PhysicalInterfaces: Array<string>;
 }
