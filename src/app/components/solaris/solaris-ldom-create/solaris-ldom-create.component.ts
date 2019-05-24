@@ -20,6 +20,8 @@ export class SolarisLdomCreateComponent implements OnInit {
   vdisks: string[];
   inputLDOMvnet: string;
   inputLDOMvds: string;
+  inputLDOMvdswwn: string;
+  inputLDOMvdiskname: string;
   returnDevices: Array<any>;
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
@@ -42,19 +44,32 @@ export class SolarisLdomCreateComponent implements OnInit {
      objArray.push(obj);
      this.inputLDOMvnet = '';
   }
-  addvdsObject(obj: any, objArray: Array<any>){
-    objArray.push(obj);
+  addvdsObject(objVDSwwn: string, objvDiskname: string, objVDS: string, objArray: Array<any>){
+    objArray.push(`${objVDSwwn},${objvDiskname},${objVDS}`);
     this.inputLDOMvds = '';
+    this.inputLDOMvdswwn = '';
+    this.inputLDOMvdiskname = '';
  }
-  getvnetsCmds(){
-   //Create commands that will be sent as add-vnet parameter 
+  getvnetCmds(){
+   // Create commands that will be sent as add-vnet parameter 
    for(let i = 0; i < this.LDOM.add_vnet.length;i++){
     const vnetCmdString = `id=${i} vnet${i} ${this.LDOM.add_vnet[i]}`
     this.LDOM.add_vnet_cmd.push(vnetCmdString);
     this.inputLDOMvnet = '';
    }
-
+   console.log(this.LDOM.add_vnet_cmd);
   }
+  getvdsCmds(){
+    // Create commands that will be sent as add-vnet parameter 
+    for(let i = 0; i < this.LDOM.add_vds.length;i++){
+     const vdsCmdString = `/dev/disk/c0t${this.LDOM.add_vds[i].split(',')[0]}d0s2 ${this.LDOM.add_vds[i].split(',')[1]}@${this.LDOM.add_vds[i].split(',')[2]}`
+     this.LDOM.add_vds_cmd.push(vdsCmdString);
+     this.inputLDOMvdiskname = '';
+     this.inputLDOMvdswwn = '';
+     this.inputLDOMvds = '';
+    }
+    console.log(this.LDOM.add_vds_cmd);
+   }
   addvds(vdsWWN: string){
    this.LDOM.add_vds.push(this.inputLDOMvds);
    //Create commands that will be sent as add-vnet parameter 

@@ -22,7 +22,7 @@ export class SolarisCdomCreateComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private messageService: MessageService
-    ){
+    ) {
     this.CDOM = new SolarisCdom();
   }
   setCurrentCDOM(cdomInput: SolarisCdom){
@@ -30,15 +30,15 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
   ngOnInit() {
     this.automationApiService.doqlQuery(
-      "SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk"
+      'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
     )
     .subscribe(data => {
       this.returnDevices = this.solarisService.loadDevices(data);
       this.returnDevices.forEach((obj) => {
-       if(obj.key === "LDOM"){
+       if(obj.key === 'LDOM'){
          this.LDOMDeviceArray = obj.value;
        }
-       else if(obj.key === "CDOM"){
+       else if(obj.key === 'CDOM'){
         this.CDOMDeviceArray = obj.value;
         this.CDOMDeviceArray.push(new SolarisCdom());
        }
@@ -53,9 +53,9 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
   launchCDOMJobs() {
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: {[k: string]: any} = {};
     this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
-    this.CDOM.devicetype = "solaris_cdom";
+    this.CDOM.devicetype = 'solaris_cdom';
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
