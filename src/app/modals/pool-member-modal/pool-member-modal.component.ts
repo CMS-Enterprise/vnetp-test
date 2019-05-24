@@ -87,6 +87,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       this.form.controls.autoPopulate.setValue(poolMember.AutoPopulate);
       this.form.controls.servicePort.setValue(poolMember.ServicePort);
       }
+    this.ngx.resetModalData('poolMemberModal');
   }
 
   private buildForm() {

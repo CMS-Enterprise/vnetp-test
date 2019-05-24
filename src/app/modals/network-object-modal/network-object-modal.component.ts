@@ -101,6 +101,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.startAddress.setValue(networkObject.StartAddress);
       this.form.controls.endAddress.setValue(networkObject.EndAddress);
     }
+    this.ngx.resetModalData('networkObjectModal');
   }
 
   private buildForm() {

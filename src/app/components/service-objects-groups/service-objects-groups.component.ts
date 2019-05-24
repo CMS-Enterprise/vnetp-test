@@ -93,7 +93,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   editServiceObject(serviceObject: ServiceObject) {
     this.subscribeToServiceObjectModal();
     this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
     this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
     this.ngx.getModal('serviceObjectModal').open();
   }
@@ -101,7 +101,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   editServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {
     this.subscribeToServiceObjectGroupModal() ;
     this.serviceObjectGroupModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, serviceObjectGroup), 'serviceObjectGroupModal');
+    this.ngx.setModalData(this.hs.deepCopy(serviceObjectGroup), 'serviceObjectGroupModal');
     this.editServiceObjectGroupIndex = this.serviceObjectGroups.indexOf(serviceObjectGroup);
     this.ngx.getModal('serviceObjectGroupModal').open();
   }
@@ -112,7 +112,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       let data = modal.getData() as ServiceObject;
 
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveServiceObject(data);
       }
       this.ngx.resetModalData('serviceObjectModal');
@@ -126,7 +125,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       let data = modal.getData() as ServiceObjectGroup;
 
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveServiceObjectGroup(data);
       }
       this.ngx.resetModalData('serviceObjectGroupModal');
