@@ -42,6 +42,16 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
+import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
+import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
+import { HealthMonitor } from './models/loadbalancer/health-monitor';
+import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
+import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
+import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
+import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +79,15 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
     ServiceObjectsGroupsComponent,
     ServiceObjectModalComponent,
     ServiceObjectGroupModalComponent,
-    FirewallRuleModalComponent
+    FirewallRuleModalComponent,
+    VirtualServerModalComponent,
+    LoadBalancersComponent,
+    PoolModalComponent,
+    PoolMemberModalComponent,
+    IRuleModalComponent,
+    HealthMonitorModalComponent,
+    NetworkInterfacesComponent,
+    LogicalInterfaceModalComponent
   ],
   imports: [
     BrowserModule,

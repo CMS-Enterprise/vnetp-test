@@ -42,6 +42,9 @@ describe('Network Form Validators', () => {
 
     formControl.setValue('0.0.0.0/-1');
     expect(ValidateIpv4Any(formControl)).toBeTruthy();
+
+    formControl.setValue('0.0.0.0/');
+    expect(ValidateIpv4Any(formControl)).toBeTruthy();
   });
 
   it('should be valid ip addresses', () => {

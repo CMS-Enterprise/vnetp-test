@@ -66,12 +66,10 @@ describe('ServicesObjectsGroupsComponent', () => {
     expect(component.serviceObjectGroups[1].ServiceObjects[0].Name === 'Test4').toBeTruthy();
    });
 
-
-   
-
   it('should create service object', () => {
     component.createServiceObject();
     expect(component.serviceObjectModalMode === ModalMode.Create).toBeTruthy();
+    expect(component.serviceObjectModalSubscription).toBeTruthy();
   });
 
   it('should edit service object', () => {
@@ -80,11 +78,8 @@ describe('ServicesObjectsGroupsComponent', () => {
 
     component.editServiceObject(component.serviceObjects[1]);
     expect(component.editServiceObjectIndex === 1).toBeTruthy();
-
-    const modal = ngx.getModal('serviceObjectModal');
-    const data = modal.getData() as ServiceObject;
-
-    expect(data.Name === 'Test2').toBeTruthy();
+    expect(component.serviceObjectGroupModalMode === ModalMode.Edit);
+    expect(component.serviceObjectModalSubscription).toBeTruthy();
   });
 
   it('should save new service object', () => {
@@ -124,6 +119,7 @@ describe('ServicesObjectsGroupsComponent', () => {
   it('should create service object group', () => {
     component.createServiceObjectGroup();
     expect(component.serviceObjectGroupModalMode === ModalMode.Create).toBeTruthy();
+    expect(component.serviceObjectGroupModalSubscription).toBeTruthy();
   });
 
   it('should edit service object group', () => {
@@ -132,11 +128,8 @@ describe('ServicesObjectsGroupsComponent', () => {
 
     component.editServiceObjectGroup(component.serviceObjectGroups[1]);
     expect(component.editServiceObjectGroupIndex === 1).toBeTruthy();
-
-    const modal = ngx.getModal('serviceObjectGroupModal');
-    const data = modal.getData() as ServiceObjectGroup;
-
-    expect(data.Name === 'Test2').toBeTruthy();
+    expect(component.serviceObjectGroupModalMode === ModalMode.Edit);
+    expect(component.serviceObjectGroupModalSubscription).toBeTruthy();
   });
 
   it('should save new service object group', () => {

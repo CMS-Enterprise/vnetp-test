@@ -158,6 +158,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.sourcePort.setValue(networkObject.SourcePort);
       this.form.controls.translatedPort.setValue(networkObject.TranslatedPort);
     }
+    this.ngx.resetModalData('networkObjectModal');
   }
 
   private buildForm() {

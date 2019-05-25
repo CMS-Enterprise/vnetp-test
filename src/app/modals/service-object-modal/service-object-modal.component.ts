@@ -65,6 +65,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.destinationPort.setValue(serviceObject.DestinationPort);
       this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
       }
+    this.ngx.resetModalData('serviceObjectModal');
   }
 
   private buildForm() {
