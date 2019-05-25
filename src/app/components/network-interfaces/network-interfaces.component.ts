@@ -94,6 +94,7 @@ export class NetworkInterfacesComponent implements OnInit {
 
   editLogicalInterface(logicalInterface: LogicalInterface) {
     this.subscribeToLogicalInterfaceModal();
+    this.editLogicalInterfaceIndex = this.LogicalInterfaces.indexOf(logicalInterface);
     const dto = new LogicalInterfaceModalDto();
 
     dto.LogicalInterface = logicalInterface;

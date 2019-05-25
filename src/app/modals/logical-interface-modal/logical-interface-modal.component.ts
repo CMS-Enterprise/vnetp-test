@@ -3,6 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LogicalInterfaceModalDto } from 'src/app/models/logical-interface-modal-dto';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-logical-interface-modal',
@@ -20,7 +21,7 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
   availableSubnets = new Array<string>();
   nativeSubnetSubscription: any;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
   }
 
   save() {
@@ -39,7 +40,7 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
     dto.LogicalInterface = logicalInterface;
 
     this.ngx.resetModalData('logicalInterfaceModal');
-    this.ngx.setModalData(Object.assign({}, dto), 'logicalInterfaceModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
     this.ngx.close('logicalInterfaceModal');
     this.reset();
   }
