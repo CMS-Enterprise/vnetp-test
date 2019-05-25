@@ -76,6 +76,6 @@ export class DeployComponent implements OnInit {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('deploy-network', body).subscribe();
+    this.automationApiService.launchTemplate('deploy-network', body, true).subscribe();
   }
 }

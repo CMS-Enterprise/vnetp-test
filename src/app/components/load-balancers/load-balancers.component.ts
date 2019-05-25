@@ -360,7 +360,7 @@ export class LoadBalancersComponent implements OnInit {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-load-balancer-dto', body).subscribe(data => { },
+    this.api.launchTemplate('save-load-balancer-dto', body, true).subscribe(data => { },
       error => { this.dirty = true; });
 
     this.deletedVirtualServers = new Array<VirtualServer>();
