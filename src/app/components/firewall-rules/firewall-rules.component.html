@@ -1,6 +1,4 @@
 <div>
-    <h5 aria-label="Firewall Rules">Firewall Rules</h5>
-
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-info" (click)="getNetworks()" aria-label="Refresh Networks">
           <fa name="refresh" size="2x"></fa>
@@ -11,9 +9,9 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">Interface Name</th>
+            <th scope="col">Subnet</th>
             <th scope="col">Firewall Rules</th>
-            <th scope="col">VRF</th>
+            <th scope="col">Tier (VRF)</th>
           </tr>
         </thead>
         <tbody>

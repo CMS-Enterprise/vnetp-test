@@ -6,5 +6,7 @@ export class ServiceObjectGroup implements UniqueNameObject {
 
     Description: string;
 
+    Type: string;
+
     ServiceObjects: Array<ServiceObject>;
 }

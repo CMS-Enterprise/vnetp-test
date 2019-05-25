@@ -117,7 +117,7 @@ export class FirewallRulesDetailComponent implements OnInit {
 
     if (ruleIndex === -1) { return; }
 
-    const dupRule = Object.assign({}, rule);
+    const dupRule = this.hs.deepCopy(rule);
     dupRule.Deleted = false;
 
     this.firewallRules.splice(ruleIndex, 0, dupRule);
@@ -130,7 +130,7 @@ export class FirewallRulesDetailComponent implements OnInit {
     const dto = new FirewallRuleModalDto();
     dto.VrfId = this.subnet.vrf_group_id;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
     this.firewallRuleModalMode = ModalMode.Create;
     this.ngx.getModal('firewallRuleModal').open();
   }
@@ -143,7 +143,7 @@ export class FirewallRulesDetailComponent implements OnInit {
     dto.FirewallRule = firewallRule;
     dto.VrfId = this.subnet.vrf_group_id;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'firewallRuleModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
     this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
     this.ngx.getModal('firewallRuleModal').open();
   }
@@ -153,8 +153,7 @@ export class FirewallRulesDetailComponent implements OnInit {
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as FirewallRuleModalDto;
 
-      if (data.FirewallRule !== undefined) {
-        data = Object.assign({}, data);
+      if (data && data.FirewallRule !== undefined) {
         this.saveFirewallRule(data.FirewallRule);
       }
       this.ngx.resetModalData('firewallRuleModal');

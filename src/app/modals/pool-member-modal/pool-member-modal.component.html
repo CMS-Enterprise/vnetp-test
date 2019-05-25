@@ -1,0 +1,125 @@
+<ngx-smart-modal
+  #poolMemberModal
+  identifier="poolMemberModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Pool Member</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select
+          name="type"
+          formControlName="type"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+          aria-label="Type"
+        >
+          <option></option>
+          <option value="ipaddress">IP Address</option>
+          <option value="fqdn">FQDN</option>
+        </select>
+        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+          <div *ngIf="f.type.errors.required">Type is required</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'ipaddress'">
+        <label for="ipAddress">IP Address</label>
+
+        <input
+          name="ipAddress"
+          formControlName="ipAddress"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099"
+          aria-label="IP Address"
+        />
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+        <label for="fqdn">FQDN</label>
+
+        <input
+          name="fqdn"
+          formControlName="fqdn"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.fqdn.errors }"
+          aria-label="IP Address"
+        />
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+        <div class="form-check form-check-inline">
+          <input
+            type="checkbox"
+            name="autoPopulate"
+            class="form-check-input"
+            formControlName="autoPopulate"
+            aria-label="FQDN"
+          />
+
+          <label class="form-check-label" for="autoPopulate">
+            Auto Populate
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="servicePort">
+          Service Port
+        </label>
+
+        <input
+        class="form-control"
+        name="servicePort"
+        formControlName="servicePort"
+        [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+        mask="09999"
+        aria-label="Service Port"
+        />
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

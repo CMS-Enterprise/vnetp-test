@@ -25,7 +25,6 @@ export class CreateNetworkComponent implements OnInit {
   networkExists: boolean;
   vlanExists: boolean;
   networkOverlaps: boolean;
-  tier: string;
 
   existingSubnet: Subnet;
   showDetails: boolean;
@@ -142,7 +141,6 @@ export class CreateNetworkComponent implements OnInit {
   private launchJobs() {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
-    extra_vars.vrf_ = this.tier;
     extra_vars.vlan_id = this.vlanId;
 
     const body = { extra_vars };

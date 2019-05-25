@@ -74,10 +74,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           cidrAddress.setValue(null);
         }
 
-        if (type === 'network') {
+        if (type === 'subnet') {
           cidrAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4CidrAddress]));
           hostAddress.setValidators(null);
-          hostAddress.setValidators(null);
+          hostAddress.setValue(null);
           startAddress.setValidators(null);
           startAddress.setValue(null);
           endAddress.setValidators(null);
@@ -101,6 +101,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.startAddress.setValue(networkObject.StartAddress);
       this.form.controls.endAddress.setValue(networkObject.EndAddress);
     }
+    this.ngx.resetModalData('networkObjectModal');
   }
 
   private buildForm() {

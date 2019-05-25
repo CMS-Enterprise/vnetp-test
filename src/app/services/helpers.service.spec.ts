@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { HelpersService } from './helpers.service';
 import { Subnet } from '../models/d42/subnet';
 import { isUndefined } from 'util';
+import { CustomFieldsObject } from '../models/custom-fields-object.interface';
+import { Vrf } from '../models/d42/vrf';
 
 describe('HelpersService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -211,6 +213,27 @@ describe('HelpersService', () => {
 
     const result = service.getStringCustomField(subnet, 'random123');
     expect(result === '').toBeTruthy();
+  });
+
+  it('should return null when custom_field not present', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const vrf = new Vrf();
+
+    const result = service.getJsonCustomField(vrf, 'network_objects');
+    expect(result).toBeFalsy();
+  });
+
+  it('should deep copy', () => {
+    const service: HelpersService = TestBed.get(HelpersService);
+
+    const test = {Name: 'Test', Children: ['Test1', 'Test2']};
+
+    const testCopy = service.deepCopy(test);
+
+    testCopy.Children.splice(0, 1);
+
+    expect(test.Children.length === 2).toBeTruthy();
   });
 
 });

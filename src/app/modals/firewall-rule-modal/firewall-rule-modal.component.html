@@ -1,5 +1,5 @@
 <ngx-smart-modal
-  #networkObjectModal
+  #firewallRuleModal
   identifier="firewallRuleModal"
   [dismissable]="false"
   (onOpen)="getData()"
@@ -66,8 +66,25 @@
             <div *ngIf="f.protocol.errors.required">Protocol is required</div>
           </div>
         </div>
-      </div>
 
+        <div class="form-group col-md-4">
+          <label for="type">Log</label>
+          <select
+            name="log"
+            formControlName="log"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.log.errors }"
+            aria-label="Log"
+          >
+            <option [ngValue]=false>False</option>
+            <option [ngValue]=true>True</option>
+          </select>
+          <div *ngIf="submitted && f.log.errors" class="invalid-feedback">
+            <div *ngIf="f.log.errors.required">Protocol is required</div>
+          </div>
+        </div>
+      </div>
+      
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Network Type</label>

@@ -55,4 +55,21 @@ export class HelpersService {
       return +customField.value;
     }
   }
+
+  public getJsonCustomField(object: CustomFieldsObject, fieldName: string): any {
+    const result = this.getCustomField(object, fieldName);
+    if (result[0] === false) { return null; }
+
+    const customField = result[1];
+    if (customField.value == null || customField.value === undefined || customField.value === '') { return null; } else {
+      return JSON.parse(customField.value);
+    }
+  }
+
+  public deepCopy(obj: any): any {
+    if (!obj) {
+      throw new Error('Null Object.');
+    }
+    return JSON.parse(JSON.stringify(obj));
+  }
 }

@@ -1,6 +1,6 @@
 <div>
 
-  <h5 aria-label="Firewall Rules">Firewall Rules: {{ subnet.name }}</h5>
+  <h5 aria-label="Subnet Name">Subnet: {{ subnet.name }}</h5>
 
   <div class="btn-group" role="group">
 
@@ -35,6 +35,7 @@
       <th scope="col">Source Service</th>
       <th scope="col">Destination Address</th>
       <th scope="col">Destination Service</th> 
+      <th scope="col">Log</th>
       <th></th>
     </tr>
   </thead>
@@ -50,27 +51,30 @@
         <p>{{firewallRule.Protocol}}</p>
       </td>
       <td>
-       {{firewallRule.Direction}}
+       <p>{{firewallRule.Direction}}</p>
       </td>
       <td>
         <p *ngIf="firewallRule.SourceIP" aria-label="Source IP">{{firewallRule.SourceIP}}</p>
-        <p *ngIf="firewallRule.SourceNetworkObject" aria-label="Source Network Object">{{firewallRule.SourceNetworkObject.Name}} (Object)</p>
-        <p *ngIf="firewallRule.SourceNetworkObjectGroup" aria-label="Source Network Object Group">{{firewallRule.SourceNetworkObjectGroup.Name}} (Object Group)</p>
+        <p *ngIf="firewallRule.SourceNetworkObject" aria-label="Source Network Object">{{firewallRule.SourceNetworkObject}} (Object)</p>
+        <p *ngIf="firewallRule.SourceNetworkObjectGroup" aria-label="Source Network Object Group">{{firewallRule.SourceNetworkObjectGroup}} (Object Group)</p>
       </td>
       <td>
         <p *ngIf="firewallRule.SourcePorts" aria-label="Source Ports">{{firewallRule.SourcePorts}}</p>    
-        <p *ngIf="firewallRule.SourceServiceObject" aria-label="Source Service Object"> {{firewallRule.SourceServiceObject.Name}} (Object)</p> 
-        <p *ngIf="firewallRule.SourceServiceObjectGroup" aria-label="Source Service Object Group">{{firewallRule.SourceServiceObjectGroup.Name}} (Object Group)</p>
+        <p *ngIf="firewallRule.SourceServiceObject" aria-label="Source Service Object"> {{firewallRule.SourceServiceObject}} (Object)</p> 
+        <p *ngIf="firewallRule.SourceServiceObjectGroup" aria-label="Source Service Object Group">{{firewallRule.SourceServiceObjectGroup}} (Object Group)</p>
       </td>
       <td>
         <p *ngIf="firewallRule.DestinationIP" aria-label="Destination IP">{{firewallRule.DestinationIP}}</p>
-        <p *ngIf="firewallRule.DestinationNetworkObject" aria-label="Destination Network Object">{{firewallRule.DestinationNetworkObject.Name}} (Object)</p>
-        <p *ngIf="firewallRule.DestinationNetworkObjectGroup" aria-label="Destination Network Object Group">{{firewallRule.DestinationNetworkObjectGroup.Name}} (Object Group)</p>
+        <p *ngIf="firewallRule.DestinationNetworkObject" aria-label="Destination Network Object">{{firewallRule.DestinationNetworkObject}} (Object)</p>
+        <p *ngIf="firewallRule.DestinationNetworkObjectGroup" aria-label="Destination Network Object Group">{{firewallRule.DestinationNetworkObjectGroup}} (Object Group)</p>
       </td>
       <td>
         <p *ngIf="firewallRule.DestinationPorts" aria-label="Destination Ports">{{firewallRule.DestinationPorts}}</p>    
-        <p *ngIf="firewallRule.DestinationServiceObject" aria-label="Destination Service Object"> {{firewallRule.DestinationServiceObject.Name}} (Object)</p>   
-        <p *ngIf="firewallRule.DestinationServiceObjectGroup" aria-label="Destination Service Object Group">{{firewallRule.DestinationServiceObjectGroup.Name}} (Object Group)</p>
+        <p *ngIf="firewallRule.DestinationServiceObject" aria-label="Destination Service Object"> {{firewallRule.DestinationServiceObject}} (Object)</p>   
+        <p *ngIf="firewallRule.DestinationServiceObjectGroup" aria-label="Destination Service Object Group">{{firewallRule.DestinationServiceObjectGroup}} (Object Group)</p>
+      </td>
+      <td>
+        <p>{{firewallRule.Log}}</p>
       </td>
       <td>  
         <fa 

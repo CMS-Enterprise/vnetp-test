@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ModalMode } from 'src/app/models/modal-mode';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -22,7 +23,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   serviceObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
     this.serviceObjects = new Array<ServiceObject>();
    }
 
@@ -37,6 +38,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
     serviceObjectGroup.Name = this.form.value.name;
     serviceObjectGroup.Description = this.form.value.description;
+    serviceObjectGroup.Type = this.form.value.type;
     serviceObjectGroup.ServiceObjects = Object.assign([], this.serviceObjects);
 
     this.ngx.resetModalData('serviceObjectGroupModal');
@@ -76,7 +78,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   editServiceObject(serviceObject: ServiceObject) {
     this.subscribeToServiceObjectModal();
     this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
     this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
     this.ngx.getModal('serviceObjectModal').toggle();
   }
@@ -85,9 +87,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.serviceObjectModalSubscription =
     this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as ServiceObject;
-      console.log(data);
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveServiceObject(data);
       }
       this.ngx.resetModalData('serviceObjectModal');
@@ -100,18 +100,21 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     if (serviceObjectGroup !== undefined) {
       this.form.controls.name.setValue(serviceObjectGroup.Name);
       this.form.controls.description.setValue(serviceObjectGroup.Description);
+      this.form.controls.type.setValue(serviceObjectGroup.Type);
       if (serviceObjectGroup.ServiceObjects) {
         this.serviceObjects = serviceObjectGroup.ServiceObjects;
       } else {
         this.serviceObjects = new Array<ServiceObject>();
       }
-      }
+    }
+    this.ngx.resetModalData('serviceObjectGroupModal');
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
+      type: ['', Validators.required]
     });
   }
 

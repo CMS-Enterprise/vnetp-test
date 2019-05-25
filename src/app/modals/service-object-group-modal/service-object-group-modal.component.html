@@ -1,5 +1,5 @@
 <ngx-smart-modal
-  #serviceObjectModal
+  #serviceObjectGroupModal
   identifier="serviceObjectGroupModal"
   [dismissable]="false"
   (onOpen)="getData()"
@@ -19,7 +19,6 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-
         <label for="name">Name</label>
         <input
           type="text"
@@ -30,6 +29,27 @@
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="type">Type</label>
+          <select
+            name="type"
+            formControlName="type"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+            aria-label="Type"
+          >
+            <option></option>
+            <option value="tcp-udp">TCP-UDP</option>
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+          </select>
+          <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+            <div *ngIf="f.type.errors.required">Type is required</div>
+          </div>
         </div>
       </div>
 
@@ -89,10 +109,7 @@
                 aria-label="Edit Service Object"
               >
               </fa>
-              <fa
-              name ="trash"
-              (click)="deleteServiceObject(serviceObject)"
-              >
+              <fa name="trash" (click)="deleteServiceObject(serviceObject)">
               </fa>
             </td>
           </tr>

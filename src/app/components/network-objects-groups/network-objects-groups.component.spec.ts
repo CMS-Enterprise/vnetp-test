@@ -66,6 +66,7 @@ describe('NetworkObjectsGroupsComponent', () => {
 
   it('should create network object', () => {
     component.createNetworkObject();
+    expect(component.networkObjectModalSubscription).toBeTruthy();
     expect(component.networkObjectModalMode === ModalMode.Create).toBeTruthy();
   });
 
@@ -74,12 +75,9 @@ describe('NetworkObjectsGroupsComponent', () => {
     { Name: 'Test2'} as NetworkObject];
 
     component.editNetworkObject(component.networkObjects[1]);
+    expect(component.networkObjectModalSubscription).toBeTruthy();
     expect(component.editNetworkObjectIndex === 1).toBeTruthy();
-
-    const modal = ngx.getModal('networkObjectModal');
-    const data = modal.getData() as NetworkObject;
-
-    expect(data.Name === 'Test2').toBeTruthy();
+    expect(component.networkObjectModalMode === ModalMode.Edit);
   });
 
   it('should save new network object', () => {
@@ -112,25 +110,25 @@ describe('NetworkObjectsGroupsComponent', () => {
     { Name: 'Test2'} as NetworkObject];
 
     component.deleteNetworkObject(component.networkObjects[1]);
+    expect(component.deletedNetworkObjects.length === 1).toBeTruthy();
     expect(component.networkObjects.length === 1).toBeTruthy();
   });
 
   it('should create network object group', () => {
     component.createNetworkObjectGroup();
+    expect(component.networkObjectGroupModalSubscription).toBeTruthy();
     expect(component.networkObjectGroupModalMode === ModalMode.Create).toBeTruthy();
   });
 
-  it('should edit network object group', () => {
+  it('should set subscription, modal mode and index on edit', () => {
     component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
     { Name: 'Test2'} as NetworkObjectGroup];
 
     component.editNetworkObjectGroup(component.networkObjectGroups[1]);
+
+    expect(component.networkObjectGroupModalSubscription).toBeTruthy();
+    expect(component.networkObjectGroupModalMode === ModalMode.Edit);
     expect(component.editNetworkObjectGroupIndex === 1).toBeTruthy();
-
-    const modal = ngx.getModal('networkObjectGroupModal');
-    const data = modal.getData() as NetworkObjectGroup;
-
-    expect(data.Name === 'Test2').toBeTruthy();
   });
 
   it('should save new network object group', () => {
@@ -164,5 +162,7 @@ describe('NetworkObjectsGroupsComponent', () => {
 
     component.deleteNetworkObjectGroup(component.networkObjectGroups[1]);
     expect(component.networkObjectGroups.length === 1).toBeTruthy();
+    expect(component.deletedNetworkObjectGroups.length === 1).toBeTruthy();
+    expect(component.dirty).toBeTruthy();
   });
 });

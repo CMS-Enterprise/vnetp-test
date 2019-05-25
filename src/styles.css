@@ -31,3 +31,8 @@
     max-width: 1000px;
     max-height: 1000px;
 }
+
+.medium-modal {
+    max-width: 800px;
+    max-height: 800px;
+}

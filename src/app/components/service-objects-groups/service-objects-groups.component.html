@@ -2,7 +2,7 @@
 
     <div class="input-group pb-2">
       <div class="input-group-prepend">
-        <span class="input-group-text">VRF</span>
+        <span class="input-group-text">Tier (VRF)</span>
       </div>
 
       <select
@@ -22,7 +22,7 @@
           (click)="saveAll()"
           [hidden]="!dirty"
         >
-        Save Changes to Current VRF
+        Save Changes to Current Tier (VRF)
       </button>   
       <button
         type="button"
@@ -31,7 +31,7 @@
         (click)="getVrfs()"
         [hidden]="!dirty"
         >
-        Clear Changes to Current VRF
+        Clear Changes to Current TIer (VRF)
       </button>
       <button
         type="button"
@@ -111,7 +111,7 @@
               </td>
             </tr>
             <tr *ngIf="serviceObjects?.length === 0" class="text-center">
-                <td colspan="4">No Service Objects in this VRF.</td>
+                <td colspan="4">No Service Objects in this TIer (VRF).</td>
               </tr>
           </tbody>
         </table>
@@ -135,6 +135,7 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
+              <th scope="col">Type</th>
               <th scope="col">Members</th>
               <th scope="col"></th>
             </tr>
@@ -143,6 +144,9 @@
             <tr *ngFor="let serviceObjectGroup of serviceObjectGroups">
               <td>
                 <p>{{ serviceObjectGroup.Name }}</p>
+              </td>
+              <td>
+                <p>{{ serviceObjectGroup.Type }}</p>
               </td>
               <td>
                 <p>{{ serviceObjectGroup.ServiceObjects.length }}</p>
@@ -162,7 +166,7 @@
               </td>
             </tr>
             <tr *ngIf="serviceObjectGroups?.length === 0" class="text-center">
-                <td colspan="3">No Service Object Groups in this VRF.</td>
+                <td colspan="3">No Service Object Groups in this Tier (VRF).</td>
               </tr>
           </tbody>
         </table>
