@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { MessageService } from 'src/app/services/message.service';
-import { AppMessage } from 'src/app/models/app-message';
-import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-ip-nat-detail',
@@ -13,7 +10,7 @@ import { AppMessageType } from 'src/app/models/app-message-type';
 })
 export class IpNatDetailComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+  constructor(private automationApiService: AutomationApiService,
               private route: ActivatedRoute, private router: Router, private toastr: ToastrService) {
     this.ipnat = {};
   }
@@ -44,11 +41,9 @@ export class IpNatDetailComponent implements OnInit {
         extra_vars: `{\"ipnat\": ${JSON.stringify(this.ipnat)}}`
       };
 
-      this.automationApiService.launchTemplate('delete_asa_ipnat', body).subscribe(
+      this.automationApiService.launchTemplate('delete_asa_ipnat', body, true).subscribe(
         () => this.toastr.warning('Deleting Network Address Translation')
       );
-
-      this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
     }
 
 }

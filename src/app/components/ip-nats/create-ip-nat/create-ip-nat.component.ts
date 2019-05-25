@@ -3,11 +3,8 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { IpNat } from 'src/app/models/ip-nat';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { AppMessage } from 'src/app/models/app-message';
-import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-create-ip-nat',
@@ -16,7 +13,7 @@ import { AppMessageType } from 'src/app/models/app-message-type';
 })
 export class CreateIpNatComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
+  constructor(private automationApiService: AutomationApiService,
               private router: Router, private toastr: ToastrService, private hs: HelpersService) {
     this.subnets = [];
     this.sourceSubnetIps = [];
@@ -86,12 +83,9 @@ export class CreateIpNatComponent implements OnInit {
       \"ipnat\": ${JSON.stringify(this.ipNat)}}`
     };
 
-    this.automationApiService.launchTemplate('deploy-ipnat', body).subscribe(
+    this.automationApiService.launchTemplate('deploy-ipnat', body, true).subscribe(
       () => this.toastr.success('Creating Network Address Translation')
     );
-
-    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
-
     this.router.navigate(['/ip-nats']);
   }
 }

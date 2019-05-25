@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/static-route';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { AppMessage } from 'src/app/models/app-message';
@@ -16,7 +15,7 @@ import { AppMessageType } from 'src/app/models/app-message-type';
 export class StaticRouteDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService, private hs: HelpersService) {
+              private hs: HelpersService) { 
                 this.subnet = new Subnet();
    }
 
@@ -70,12 +69,10 @@ export class StaticRouteDetailComponent implements OnInit {
 
     if (this.deployedState) {
       extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-      this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('save-static-route', body, true).subscribe();
     }
-
-    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   getStaticRoutes() {

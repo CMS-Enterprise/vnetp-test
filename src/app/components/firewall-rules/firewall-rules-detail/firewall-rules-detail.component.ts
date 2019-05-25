@@ -3,7 +3,6 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { FirewallRule } from 'src/app/models/firewall-rule';
 import { Papa } from 'ngx-papaparse';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -41,7 +40,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
     this.firewallRules = [];
@@ -184,12 +183,10 @@ export class FirewallRulesDetailComponent implements OnInit {
     const body = { extra_vars };
 
     if (this.deployedState) {
-      this.automationApiService.launchTemplate('deploy-acl', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-acl', body).subscribe();
+      this.automationApiService.launchTemplate('save-acl', body, true).subscribe();
     }
-
-    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {

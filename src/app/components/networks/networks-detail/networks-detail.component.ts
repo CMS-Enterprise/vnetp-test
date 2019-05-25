@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { MessageService } from 'src/app/services/message.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -16,8 +15,8 @@ import { AppMessage } from 'src/app/models/app-message';
 })
 export class NetworksDetailComponent implements OnInit {
 
-  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private route: ActivatedRoute, private router: Router, private hs: HelpersService, 
+  constructor(private automationApiService: AutomationApiService, private route: ActivatedRoute, 
+              private router: Router, private hs: HelpersService,
               private ips: IpAddressService, public ngx: NgxSmartModalService ) {
     this.subnetIps = {};
    }
@@ -49,9 +48,7 @@ export class NetworksDetailComponent implements OnInit {
     extra_vars.subnet_id = this.subnet.subnet_id;
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('delete-network', body).subscribe();
-
-    this.messageService.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
+    this.automationApiService.launchTemplate('delete-network', body, true).subscribe();
 
     this.router.navigate(['/networks']);
   }
