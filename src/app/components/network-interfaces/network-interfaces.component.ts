@@ -82,9 +82,15 @@ export class NetworkInterfacesComponent implements OnInit {
   createLogicalInterface() {
     this.subscribeToLogicalInterfaceModal();
     const dto = new LogicalInterfaceModalDto();
+    dto.PhysicalInterfaces = new Array<PhysicalInterface>();
 
-    // TODO: Get only unused Physical Interfaces.
-    dto.PhysicalInterfaces = this.PhysicalInterfaces;
+    // Get only unused Physical Interfaces.
+    this.PhysicalInterfaces.forEach(int => {
+      if (!int.LogicalInterfaceName) {
+        dto.PhysicalInterfaces.push(int);
+      }
+    });
+
     dto.Subnets = this.Subnets;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
@@ -98,7 +104,15 @@ export class NetworkInterfacesComponent implements OnInit {
     const dto = new LogicalInterfaceModalDto();
 
     dto.LogicalInterface = logicalInterface;
-    dto.PhysicalInterfaces = this.PhysicalInterfaces;
+    dto.PhysicalInterfaces = new Array<PhysicalInterface>();
+
+    // Get only unused Physical Interfaces.
+    this.PhysicalInterfaces.forEach(int => {
+      if (logicalInterface.Name === int.LogicalInterfaceName || !int.LogicalInterfaceName) {
+        dto.PhysicalInterfaces.push(int);
+      }
+    });
+
     dto.Subnets = this.Subnets;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
@@ -110,7 +124,7 @@ export class NetworkInterfacesComponent implements OnInit {
     this.logicalInterfaceModalSubscription =
     this.ngx.getModal('logicalInterfaceModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent ) => {
       const data = modal.getData() as LogicalInterfaceModalDto;
-      
+
       if (data && data.LogicalInterface)  {
         this.saveLogicalInterface(data.LogicalInterface);
       }
@@ -140,8 +154,14 @@ export class NetworkInterfacesComponent implements OnInit {
   deleteLogicalInterface(logicalInterface: LogicalInterface) {
     const index = this.LogicalInterfaces.indexOf(logicalInterface);
     if (index > -1) {
+
+      this.PhysicalInterfaces.forEach(p => {
+        if (p.LogicalInterfaceName === logicalInterface.Name) {
+          p.LogicalInterfaceName = '';
+        }
+      });
+
       this.LogicalInterfaces.splice(index, 1);
-      // TODO: Pass to deleted array
       this.dirty = true;
     }
   }

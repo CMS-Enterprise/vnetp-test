@@ -1,3 +1,5 @@
+<!--TODO: Show more info for subnets andc interfaces (cidr, interface speed, switch name, etc)-->
+
 <ngx-smart-modal
   #logicalInterfaceModal
   identifier="logicalInterfaceModal"
@@ -68,7 +70,7 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Type</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -111,7 +113,7 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Type</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -120,7 +122,7 @@
                 <p>{{ physicalInterface }}</p>
               </td>
               <td>
-                <fa name="trash" (click)="unselectPhysicalInterface()"> </fa>
+                <fa name="trash" (click)="unselectPhysicalInterface(physicalInterface)"> </fa>
               </td>
             </tr>
           </tbody>
