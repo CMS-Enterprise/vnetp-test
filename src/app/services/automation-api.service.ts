@@ -25,8 +25,13 @@ export class AutomationApiService {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
     if (sendJobLaunchEvent) {
+      try {
       this.ms.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
+      } catch (e) {
+        console.error(e);
+      }
     }
+
     return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
