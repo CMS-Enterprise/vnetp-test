@@ -21,10 +21,10 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/v2/jobs/' + query);
   }
 
-  launchTemplate(jobName: string, ansibleBody, sendJobLaunchEvent = false) {
+  launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
-    if (sendJobLaunchEvent) {
+    if (sendJobLaunchMessage) {
       try {
       this.ms.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
       } catch (e) {
