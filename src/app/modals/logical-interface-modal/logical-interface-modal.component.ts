@@ -149,7 +149,7 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
   selectSubnet() {
     const selectSubnet = this.form.value.selectedTaggedSubnet;
 
-    if (!selectSubnet) {
+    if (!selectSubnet || selectSubnet === this.form.value.nativeSubnet) {
       return;
     }
 
@@ -160,6 +160,7 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
     }
     this.form.controls.selectedTaggedSubnet.setValue(null);
     this.form.controls.selectedTaggedSubnet.updateValueAndValidity();
+    this.form.controls.nativeSubnet.updateValueAndValidity();
   }
 
   unselectSubnet(subnet) {
