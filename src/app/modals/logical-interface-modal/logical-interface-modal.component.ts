@@ -1,3 +1,7 @@
+// TODO: Currently we are doing a 1:1 mapping of VLAN:Subnet.
+// To support multiple subnets per VLAN and also use proper
+// terminology, native and tagged should refer to VLANs.
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -171,5 +175,3 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-
