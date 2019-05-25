@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http'
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { Vrf } from '../models/d42/vrf';
+import { MessageService } from './message.service';
+import { AppMessage } from '../models/app-message';
+import { AppMessageType } from '../models/app-message-type';
 
 
 @Injectable({
@@ -10,7 +13,7 @@ import { Vrf } from '../models/d42/vrf';
 })
 export class AutomationApiService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient, private auth: AuthService, private ms: MessageService) { }
 
   getJobs(query?: string) {
     if (query == null) { query = ''; }
@@ -18,8 +21,12 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/v2/jobs/' + query);
   }
 
-  launchTemplate(jobName: string, ansibleBody) {
+  launchTemplate(jobName: string, ansibleBody, sendJobLaunchEvent = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
+
+    if (sendJobLaunchEvent) {
+      this.ms.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
+    }
     return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
