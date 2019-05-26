@@ -62,13 +62,21 @@ export class SolarisLdomCreateComponent implements OnInit {
   getvdsCmds(){
     // Create commands that will be sent as add-vnet parameter 
     for(let i = 0; i < this.LDOM.add_vds.length;i++){
-     const vdsCmdString = `/dev/disk/c0t${this.LDOM.add_vds[i].split(',')[0]}d0s2 ${this.LDOM.add_vds[i].split(',')[1]}@${this.LDOM.add_vds[i].split(',')[2]}`
+     const WWN = this.LDOM.add_vcpu[i].split(',')[0];
+     const diskName = this.LDOM.add_vcpu[i].split(',')[1];
+     const VDS = this.LDOM.add_vcpu[i].split(',')[2];
+     const vdsCmdString = `/dev/disk/c0t${WWN}d0s2 ${diskName}@${VDS}`
+     const vdiskCmdString = `id=${i} ${diskName} ${diskName}@${VDS}`
      this.LDOM.add_vds_cmd.push(vdsCmdString);
-     this.inputLDOMvdiskname = '';
-     this.inputLDOMvdswwn = '';
-     this.inputLDOMvds = '';
+     this.LDOM.add_vdisk_cmd.push(vdiskCmdString);
+     
+     // add_vdisk: 'id=0 lde43s032pdisk1 lde43s032pdisk1@primary-vds0'
     }
+    this.inputLDOMvdiskname = '';
+    this.inputLDOMvdswwn = '';
+    this.inputLDOMvds = '';
     console.log(this.LDOM.add_vds_cmd);
+    console.log(this.LDOM.add_vdisk_cmd);
    }
   addvds(vdsWWN: string){
    this.LDOM.add_vds.push(this.inputLDOMvds);
