@@ -78,6 +78,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       }
 
     this.getAvailableIRules(dto.IRules.map(i => i.Name));
+    this.ngx.resetModalData('virtualServerModal');
   }
 
   private getAvailableIRules(irules: Array<string>) {

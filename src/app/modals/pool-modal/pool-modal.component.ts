@@ -130,6 +130,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     if (dto.HealthMonitors) {
       this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
     }
+    this.ngx.resetModalData('poolModal');
   }
 
   private getAvailableHealthMonitors(healthMonitors: Array<string>) {

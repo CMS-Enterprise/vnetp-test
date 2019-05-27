@@ -111,7 +111,7 @@ export class LoadBalancersComponent implements OnInit {
     dto.Pools = this.pools;
     dto.IRules = this.irules;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'virtualServerModal');
     this.virtualServerModalMode = ModalMode.Create;
     this.ngx.getModal('virtualServerModal').open();
   }
@@ -121,7 +121,7 @@ export class LoadBalancersComponent implements OnInit {
     const dto = new PoolModalDto();
     dto.HealthMonitors = this.healthMonitors;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
     this.poolModalMode = ModalMode.Create;
     this.ngx.getModal('poolModal').open();
   }
@@ -147,7 +147,7 @@ export class LoadBalancersComponent implements OnInit {
     dto.VirtualServer = virtualServer;
     dto.IRules = this.irules;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'virtualServerModal');
     this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
     this.ngx.getModal('virtualServerModal').open();
   }
@@ -160,15 +160,16 @@ export class LoadBalancersComponent implements OnInit {
     dto.Pool = pool;
     dto.HealthMonitors = this.healthMonitors;
 
-    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
     this.editPoolIndex = this.pools.indexOf(pool);
     this.ngx.getModal('poolModal').open();
   }
 
-  editIRule(irule: IRule){
+  editIRule(irule: IRule) {
     this.subscribeToIRuleModal();
     this.iruleModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, irule), 'iruleModal');
+
+    this.ngx.setModalData(this.hs.deepCopy(irule), 'iruleModal');
     this.editIRuleIndex = this.irules.indexOf(irule);
     this.ngx.getModal('iruleModal').open();
   }
@@ -176,7 +177,7 @@ export class LoadBalancersComponent implements OnInit {
   editHealthMonitor(healthMonitor: HealthMonitor) {
     this.subscribeToHealthMonitorModal();
     this.healthMonitorModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, healthMonitor), 'healthMonitorModal');
+    this.ngx.setModalData(this.hs.deepCopy(healthMonitor), 'healthMonitorModal');
     this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
     this.ngx.getModal('healthMonitorModal').open();
   }
@@ -186,8 +187,7 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.getModal('virtualServerModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as VirtualServerModalDto;
 
-      if (data.VirtualServer !== undefined) {
-        data = Object.assign({}, data);
+      if (data && data.VirtualServer !== undefined) {
         this.saveVirtualServer(data.VirtualServer);
       }
       this.ngx.resetModalData('virtualServerModal');
@@ -200,8 +200,7 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.getModal('poolModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as PoolModalDto;
 
-      if (data.Pool !== undefined) {
-        data = Object.assign({}, data);
+      if (data && data.Pool !== undefined) {
         this.savePool(data.Pool);
       }
       this.ngx.resetModalData('poolModal');
@@ -214,8 +213,7 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.getModal('iruleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as IRule;
 
-      if (data !== undefined) {
-        data = Object.assign({}, data);
+      if (data && data !== undefined) {
         this.saveIRule(data);
       }
       this.ngx.resetModalData('iruleModal');
@@ -228,8 +226,7 @@ export class LoadBalancersComponent implements OnInit {
     this.ngx.getModal('healthMonitorModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as HealthMonitor;
 
-      if (data !== undefined) {
-        data = Object.assign({}, data);
+      if (data && data !== undefined) {
         this.saveHealthMonitor(data);
       }
       this.ngx.resetModalData('healthMonitorModal');
@@ -357,6 +354,7 @@ export class LoadBalancersComponent implements OnInit {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.load_balancer_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
+    extra_vars.vrf_id = this.currentVrf.id;
     extra_vars.deleted_virtual_servers = this.deletedVirtualServers;
     extra_vars.deleted_pools = this.deletedPools;
 

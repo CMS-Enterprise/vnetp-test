@@ -44,6 +44,7 @@ export class IRuleModalComponent implements OnInit {
       this.form.controls.name.setValue(irule.Name);
       this.form.controls.definition.setValue(irule.Definition);
       }
+    this.ngx.resetModalData('iruleModal');
   }
 
   private buildForm() {

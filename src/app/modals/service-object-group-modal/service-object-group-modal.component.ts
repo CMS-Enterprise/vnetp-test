@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ModalMode } from 'src/app/models/modal-mode';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -22,7 +23,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   serviceObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
     this.serviceObjects = new Array<ServiceObject>();
    }
 
@@ -77,7 +78,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   editServiceObject(serviceObject: ServiceObject) {
     this.subscribeToServiceObjectModal();
     this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
     this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
     this.ngx.getModal('serviceObjectModal').toggle();
   }
@@ -86,9 +87,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.serviceObjectModalSubscription =
     this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       let data = modal.getData() as ServiceObject;
-      console.log(data);
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveServiceObject(data);
       }
       this.ngx.resetModalData('serviceObjectModal');
@@ -107,7 +106,8 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
       } else {
         this.serviceObjects = new Array<ServiceObject>();
       }
-      }
+    }
+    this.ngx.resetModalData('serviceObjectGroupModal');
   }
 
   private buildForm() {
