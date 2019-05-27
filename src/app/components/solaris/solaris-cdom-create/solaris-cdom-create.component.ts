@@ -55,24 +55,7 @@ export class SolarisCdomCreateComponent implements OnInit {
      console.log('Logical Interface',this.LogicalInterfaces);
     });
   }
-  // getVrfObjects(vrf: Vrf) {
-  //   const networkInterfacesDto = this.hs.getJsonCustomField(vrf, 'network_interfaces') as NetworkInterfacesDto;
 
-  //   if (!networkInterfacesDto) {
-  //     this.LogicalInterfaces = new Array<LogicalInterface>();
-  //     this.PhysicalInterfaces = new Array<PhysicalInterface>();
-  //    } else if (networkInterfacesDto) {
-  //     this.LogicalInterfaces = networkInterfacesDto.LogicalInterfaces;
-  //     this.PhysicalInterfaces = networkInterfacesDto.PhysicalInterfaces;
-  //   }
-  //   this.getVrfSubnets(vrf);
-  // }
-  // getVrfSubnets(vrf: Vrf) {
-  //   this.automationApiService.getSubnets(vrf.id).subscribe(data => {
-  //     const result = data as SubnetResponse;
-  //     this.Subnets = result.subnets;
-  //   });
-  // }
   ngOnInit() {
     this.automationApiService.doqlQuery(
       'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
@@ -102,7 +85,9 @@ export class SolarisCdomCreateComponent implements OnInit {
 
     const extra_vars: {[k: string]: any} = {};
     this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
+    //static listing of commands to be ran, needed for Solaris automation
     this.CDOM.devicetype = 'solaris_cdom';
+    this.CDOM.cmds = 'add_vds,add_vcc,set_vcpu,set_mem,add_vsw,add_config';
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };

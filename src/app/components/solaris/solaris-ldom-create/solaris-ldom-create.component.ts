@@ -98,6 +98,8 @@ export class SolarisLdomCreateComponent implements OnInit {
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
+    //static listing of commands to be ran, needed for Solaris automation
+    this.LDOM.cmds = 'add_domain,add_memory,add_vcpu,add_vnet,add_vdsdev,add_vdisk,set_variable,bind_domain,create_manifest,add_config,start_domain,net_install';
     extra_vars.LDOM = this.LDOM;
 
     const body = { extra_vars };

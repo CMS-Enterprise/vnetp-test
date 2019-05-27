@@ -23,4 +23,5 @@ export class SolarisLdom {
     bmask: string;
     bgw: string;
     create_manifest: string;
+    cmds: string;
 }

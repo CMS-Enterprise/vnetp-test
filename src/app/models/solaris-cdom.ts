@@ -21,5 +21,6 @@ export class SolarisCdom {
   ilomipaddress: string;
   variables: string;
   add_vds = new Array<string>();
+  cmds: string;
 }
 
