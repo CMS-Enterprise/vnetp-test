@@ -50,6 +50,20 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="sourceSubnet">Subnet</label>
+        <select
+        name="sourceSubnet"
+        formControlName="sourceSubnet"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.sourceSubnet.errors }"
+        aria-label="Source Subnet"
+        >
+        <option></option>
+        <option ngValue="subnet" *ngFor="let subnet of Subnets">{{ subnet.name }} ({{ subnet.network }}/{{ subnet.mask_bits }})</option>
+        </select>
+      </div>
+
       <div class="form-group" *ngIf="f.type.value == 'host'">
         <label for="name">Host Address</label>
         <input

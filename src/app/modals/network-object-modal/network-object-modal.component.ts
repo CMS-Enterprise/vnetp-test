@@ -4,6 +4,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange} from 'src/app/validators/network-form-validators';
+import { NetworkObjectModalDto } from 'src/app/models/network-object-modal-dto';
+import { Subnet } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -16,6 +18,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   networkTypeSubscription: Subscription;
   natSubscription: Subscription;
   natServiceSubscription: Subscription;
+  Subnets: Array<Subnet>;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
   }
@@ -40,8 +43,12 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     networkObject.SourcePort = this.form.value.sourcePort;
     networkObject.TranslatedPort = this.form.value.translatedPort;
 
+    let dto = new NetworkObjectModalDto();
+
+    dto.NetworkObject = networkObject;
+
     this.ngx.resetModalData('networkObjectModal');
-    this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
+    this.ngx.setModalData(Object.assign({}, dto), 'networkObjectModal');
     this.ngx.close('networkObjectModal');
     this.reset();
   }
@@ -143,7 +150,14 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const networkObject = Object.assign({}, this.ngx.getModalData('networkObjectModal') as NetworkObject);
+    const dto = Object.assign({}, this.ngx.getModalData('networkObjectModal') as NetworkObjectModalDto);
+
+    if (dto.Subnets) {
+      this.Subnets = dto.Subnets;
+    }
+
+    const networkObject = dto.NetworkObject;
+
     if (networkObject !== undefined) {
       this.form.controls.name.setValue(networkObject.Name);
       this.form.controls.type.setValue(networkObject.Type);
@@ -170,6 +184,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       hostAddress: [''],
       startAddress: [''],
       endAddress: [''],
+      sourceSubnet: [''],
       nat: [false],
       translatedIp: [''],
       natService: [false],
