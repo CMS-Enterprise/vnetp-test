@@ -39,7 +39,7 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('should read network object from service', () => {
-    const modal = ngx.getModal('networkObjectModal')
+    const modal = ngx.getModal('networkObjectModal');
     const networkObject = new NetworkObject();
     networkObject.Name = 'Test';
     networkObject.Type = 'host';
@@ -115,6 +115,16 @@ describe('NetworkObjectModalComponent', () => {
     expect(type.valid).toBeFalsy();
   });
 
+  it ('source subnet should be required', () => {
+    const sourceSubnet = component.form.controls.sourceSubnet;
+    expect(sourceSubnet.valid).toBeFalsy();
+  });
+
+  it ('destination subnet should not be required', () => {
+    const destinationSubnet = component.form.controls.destinationSubnet;
+    expect(destinationSubnet.valid).toBeTruthy();
+  });
+
   it ('hostAddress should not be required', () =>  {
     const hostAddress = component.form.controls.hostAddress;
     expect(hostAddress.valid).toBeTruthy();
@@ -173,6 +183,14 @@ describe('NetworkObjectModalComponent', () => {
 
     const translatedAddress = component.form.controls.translatedIp;
     expect(translatedAddress.valid).toBeFalsy();
+  });
+
+  it('destination subnet should be required', () => {
+  const nat = component.form.controls.nat;
+  nat.setValue(true);
+
+  const destinationSubnet = component.form.controls.destinationSubnet;
+  expect(destinationSubnet.valid).toBeFalsy();
   });
 
   // Form State when NAT Service Selected

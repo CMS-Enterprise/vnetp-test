@@ -27,4 +27,8 @@ export class NetworkObject implements UniqueNameObject {
     SourcePort: string;
 
     TranslatedPort: string;
+
+    SourceSubnet: string;
+
+    DestinationSubnet: string;
 }

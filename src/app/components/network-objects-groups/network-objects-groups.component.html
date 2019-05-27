@@ -77,8 +77,10 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
+            <th scope="col">Source Subnet</th>
             <th scope="col">Address</th>
             <th scope="col">Translated Address</th>
+            <th scope="col">Destination Subnet</th>
             <th scope="col">Source/Translated Port</th>
             <th scope="col"></th>
           </tr>
@@ -92,6 +94,9 @@
               <p>{{ netObj.Type }}</p>
             </td>
             <td>
+              <p>{{ netObj.SourceSubnet }}</p>
+            </td>
+            <td>
               <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
               <p *ngIf="netObj.Type === 'range'">
                 {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
@@ -102,6 +107,9 @@
             </td>
             <td>
               <p *ngIf="netObj.Nat">{{ netObj.TranslatedIpAddress}}</p>
+            </td>
+            <td>
+              <p>{{ netObj.DestinationSubnet }}</p>
             </td>
             <td>
               <p *ngIf="netObj.Nat">{{netObj.NatProtocol}} {{netObj.SourcePort}}:{{netObj.TranslatedPort}}</p>

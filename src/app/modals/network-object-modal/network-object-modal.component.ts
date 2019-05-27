@@ -32,6 +32,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     const networkObject = new NetworkObject();
     networkObject.Name = this.form.value.name;
     networkObject.Type = this.form.getRawValue().type;
+    networkObject.SourceSubnet = this.form.value.sourceSubnet;
+    networkObject.DestinationSubnet = this.form.value.destinationSubnet;
     networkObject.HostAddress = this.form.value.hostAddress;
     networkObject.CidrAddress = this.form.value.cidrAddress;
     networkObject.StartAddress = this.form.value.startAddress;
@@ -43,8 +45,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     networkObject.SourcePort = this.form.value.sourcePort;
     networkObject.TranslatedPort = this.form.value.translatedPort;
 
-    let dto = new NetworkObjectModalDto();
-
+    const dto = new NetworkObjectModalDto();
     dto.NetworkObject = networkObject;
 
     this.ngx.resetModalData('networkObjectModal');
@@ -114,18 +115,17 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         if (natValue) {
           this.form.controls.type.setValue('host');
           this.form.controls.type.updateValueAndValidity();
-
           this.form.controls.translatedIp.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
-
-
+          this.form.controls.destinationSubnet.setValidators(Validators.compose([Validators.required]));
         } else if (!natValue) {
           this.form.controls.translatedIp.setValue(null);
           this.form.controls.translatedIp.setValidators(null);
-
+          this.form.controls.destinationSubnet.setValue(null);
+          this.form.controls.destinationSubnet.setValidators(null);
         }
 
         this.form.controls.translatedIp.updateValueAndValidity();
-
+        this.form.controls.destinationSubnet.updateValueAndValidity();
       });
 
     this.natServiceSubscription = this.form.get('natService').valueChanges
@@ -161,6 +161,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     if (networkObject !== undefined) {
       this.form.controls.name.setValue(networkObject.Name);
       this.form.controls.type.setValue(networkObject.Type);
+      this.form.controls.sourceSubnet.setValue(networkObject.SourceSubnet);
+      this.form.controls.destinationSubnet.setValue(networkObject.DestinationSubnet);
       this.form.controls.hostAddress.setValue(networkObject.HostAddress);
       this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
       this.form.controls.startAddress.setValue(networkObject.StartAddress);
@@ -184,7 +186,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       hostAddress: [''],
       startAddress: [''],
       endAddress: [''],
-      sourceSubnet: [''],
+      sourceSubnet: ['', Validators.required],
+      destinationSubnet: [''],
       nat: [false],
       translatedIp: [''],
       natService: [false],
