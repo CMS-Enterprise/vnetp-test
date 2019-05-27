@@ -144,7 +144,8 @@
   customClass="'modal-content'"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Job Launched</h4>
+    <h4 *ngIf="jobMessage?.Success" class="modal-title">Job Launched </h4>
+    <h4 *ngIf="!jobMessage?.Success" class="modal-title">Job Launch Failed </h4>
     <button
       type="button"
       class="close"
@@ -155,7 +156,7 @@
   </div>
 
   <div class="modal-body text-center">
-    <fa name="check-circle-o" class="badge badge-success" size="5x" aria-hidden="true"></fa>
+    {{ jobMessage?.Text }}
   </div>
 
   <div class="modal-footer">
@@ -165,6 +166,7 @@
       data-dismiss="modal"
       routerLink="/jobs"
       (click)="jobLaunchModal.close()"
+      *ngIf="jobMessage?.Success"
     >
       View Jobs
     </button>

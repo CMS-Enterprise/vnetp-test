@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   loggedIn: boolean;
   runningJobs: any;
   currentUser: User;
-  skipNextUpdate: boolean;
+  jobMessage: AppMessage;
 
   jobPoller = setInterval(() => this.getJobs() , 10000);
 
@@ -39,22 +39,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private messageHandler(m: AppMessage) {
     switch (m.Type) {
-      case AppMessageType.JobLaunch:
+      case AppMessageType.JobLaunchSuccess:
         if (this.runningJobs.count <= 0) {
           this.runningJobs = { count: 1 };
-          this.skipNextUpdate = true;
+        } else {
+          this.getJobs();
         }
+
+        this.jobMessage = m;
         this.ngx.getModal('jobLaunchModal').open();
         break;
+      case AppMessageType.JobLaunchFail:
+        this.jobMessage = m;
+        this.ngx.getModal('jobLaunchModal').open();
     }
   }
 
   getJobs() {
     if (!this.currentUser) { return; }
-    if (this.skipNextUpdate) {
-      this.skipNextUpdate = false;
-      return;
-    }
 
     this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(
       data => this.runningJobs = data

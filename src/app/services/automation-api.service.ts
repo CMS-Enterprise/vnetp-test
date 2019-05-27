@@ -6,6 +6,8 @@ import { Vrf } from '../models/d42/vrf';
 import { AppMessage } from '../models/app-message';
 import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 
 @Injectable({
@@ -24,15 +26,18 @@ export class AutomationApiService {
   launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
-    if (sendJobLaunchMessage) {
-      try {
-      this.ms.sendMessage(new AppMessage('', AppMessageType.JobLaunch));
-      } catch (e) {
-        console.error(e);
+    return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody)
+    .pipe(map( response => {
+      if (sendJobLaunchMessage) {
+        this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, AppMessageType.JobLaunchSuccess));
       }
-    }
-
-    return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
+      return response;
+     }),
+     catchError( error => {
+       this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
+       // FIXME: Depreceated
+       return Observable.throw(error);
+     }));
   }
 
   getAdminGroups() {
