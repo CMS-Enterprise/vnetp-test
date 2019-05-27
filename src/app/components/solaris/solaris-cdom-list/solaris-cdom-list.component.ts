@@ -4,6 +4,7 @@ import { SolarisCdom } from "../../../models/solaris-cdom";
 import { SolarisLdom } from "../../../models/solaris-ldom";
 import { SolarisServiceService } from "../solaris-services/solaris-service.service";
 import { Router } from "@angular/router";
+
 @Component({
   selector: "app-solaris-cdom-list",
   templateUrl: "./solaris-cdom-list.component.html",
@@ -19,9 +20,12 @@ export class SolarisCdomListComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private solarisService: SolarisServiceService,
     private router: Router
+
   ) {
 
   }
+
+
   ngOnInit() {
   //  this.solarisService.loadDevices().then((data: any) => {
   //   this.returnDevices = data;

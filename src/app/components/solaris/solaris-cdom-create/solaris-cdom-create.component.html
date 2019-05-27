@@ -84,15 +84,21 @@
     -->
       <div class="form-group col-md-4">
         <label for="inputCDOMVDSDevs">VDSDevs</label>
-        <input
-          name="inputCDOMVDS"
-          aria-label="CDOM VDS Config"
-          type="text"
-          placeholder="primary-vds0"
+        <select
+          name="inputCDOMVDSDevs"
           class="form-control"
-          #name="ngModel"
-          [(ngModel)]="CDOM.vds"
-        />
+          id="inputCDOMVDSDevs"
+          #cdomInputName="ngModel"
+          [(ngModel)]="inputCDOMVDSDevs"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let logicalInterface of LogicalInterfaces"
+            [ngValue]="logicalInterface"
+          >
+            {{ logicalInterface.Name }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -172,6 +178,9 @@
       </button>
       <button disabled class="btn btn-danger" aria-label="Deploy" type="submit">
         Deploy
+      </button>
+      <button class="btn btn-danger" aria-label="View vrfs" type="submit" (click)="getVrfs()">
+        View Vrfs
       </button>
     </div>
   </form>

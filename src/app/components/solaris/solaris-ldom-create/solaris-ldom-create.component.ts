@@ -62,6 +62,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   getvdsCmds() {
     // Create commands that will be sent as add-vnet parameter
     for (let i = 0; i < this.LDOM.add_vds.length; i++) {
+    //TODO:  Split array and ensure it is 3 elements
      const WWN = this.LDOM.add_vcpu[i].split(',')[0];
      const diskName = this.LDOM.add_vcpu[i].split(',')[1];
      const VDS = this.LDOM.add_vcpu[i].split(',')[2];

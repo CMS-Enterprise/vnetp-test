@@ -5,6 +5,12 @@ import { SolarisServiceService } from '../solaris-services/solaris-service.servi
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
+import { Vrf } from 'src/app/models/d42/vrf';
+import { LogicalInterface } from 'src/app/models/network/logical-interface';
+import { PhysicalInterface } from 'src/app/models/network/physical-interface';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
+import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -16,18 +22,57 @@ export class SolarisCdomCreateComponent implements OnInit {
   CDOMDeviceArray: Array<any>;
   returnDevices: Array<any>;
   clonefromCDOM: SolarisCdom;
+  LogicalInterfaces: Array<LogicalInterface>;
+  PhysicalInterfaces: Array<PhysicalInterface>;
+  vrfs: Array<Vrf>;
+  dirty: boolean;
+  currentVrf: Vrf;
+  Subnets: Array<Subnet>;
   constructor(
     private automationApiService: AutomationApiService,
     private solarisService: SolarisServiceService,
     private router: Router,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private hs: HelpersService
     ) {
     this.CDOM = new SolarisCdom();
   }
   setCurrentCDOM(cdomInput: SolarisCdom){
     this.CDOM = cdomInput;
   }
+  getVrfs() {
+    this.LogicalInterfaces = new Array<LogicalInterface>();
+
+    this.automationApiService.getVrfs().subscribe(data => {
+     data.forEach(d => {
+      const dto = this.hs.getJsonCustomField(d, 'network_interfaces') as NetworkInterfacesDto;
+      console.log('here')
+      dto.LogicalInterfaces.forEach(l => {
+        this.LogicalInterfaces.push(l);
+      });
+     });
+     console.log('Logical Interface',this.LogicalInterfaces);
+    });
+  }
+  // getVrfObjects(vrf: Vrf) {
+  //   const networkInterfacesDto = this.hs.getJsonCustomField(vrf, 'network_interfaces') as NetworkInterfacesDto;
+
+  //   if (!networkInterfacesDto) {
+  //     this.LogicalInterfaces = new Array<LogicalInterface>();
+  //     this.PhysicalInterfaces = new Array<PhysicalInterface>();
+  //    } else if (networkInterfacesDto) {
+  //     this.LogicalInterfaces = networkInterfacesDto.LogicalInterfaces;
+  //     this.PhysicalInterfaces = networkInterfacesDto.PhysicalInterfaces;
+  //   }
+  //   this.getVrfSubnets(vrf);
+  // }
+  // getVrfSubnets(vrf: Vrf) {
+  //   this.automationApiService.getSubnets(vrf.id).subscribe(data => {
+  //     const result = data as SubnetResponse;
+  //     this.Subnets = result.subnets;
+  //   });
+  // }
   ngOnInit() {
     this.automationApiService.doqlQuery(
       'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
@@ -46,6 +91,8 @@ export class SolarisCdomCreateComponent implements OnInit {
       });
       //  this.CDOMDeviceArray = this.returnDevices[0].value;
     });
+    this.getVrfs();
+    console.log(this.vrfs);
   }
 
   moveObjectPosition(value: number, obj, objArray){
