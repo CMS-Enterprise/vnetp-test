@@ -45,7 +45,7 @@ export class HttpConfigInterceptor {
             catchError((error: HttpErrorResponse) => {
 
                 // Redirect to login page if a 401 error is returned.
-                if (!environment.authBypass && error.status === 401) {
+                if (error.status === 401) {
                     this.auth.logout();
                     return;
                 }
