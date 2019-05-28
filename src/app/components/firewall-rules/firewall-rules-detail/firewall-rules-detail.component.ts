@@ -42,6 +42,8 @@ export class FirewallRulesDetailComponent implements OnInit {
   downloadJsonHref: any;
   downloadCsvHref: any;
 
+  importFileType: string;
+
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService, private sanitizer: DomSanitizer) {
     this.subnet = new Subnet();
@@ -207,7 +209,12 @@ export class FirewallRulesDetailComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
-      this.parseCsv(reader.result);
+      console.log('break');
+      if (this.importFileType === 'csv') {
+        this.parseCsv(reader.result);
+      } else if (this.importFileType === 'json') {
+        this.parseJson(reader.result);
+      }
     };
   }
 
@@ -219,6 +226,13 @@ export class FirewallRulesDetailComponent implements OnInit {
       }
     };
     this.papa.parse(csv, options);
+  }
+
+  parseJson(json) {
+    const importFirewallRules = JSON.parse(json) as Array<FirewallRule>;
+    importFirewallRules.forEach(fwRule => {
+      this.firewallRules.push(fwRule);
+    });
   }
 
   insertFirewallRules(rules) {

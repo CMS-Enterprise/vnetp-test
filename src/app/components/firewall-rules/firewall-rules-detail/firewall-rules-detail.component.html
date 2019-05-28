@@ -16,9 +16,13 @@
       <fa name="plus" size="2x"></fa>  
     </button>  
 
-    <button type="button" class="btn btn-info" (click)="uploader.click()" aria-label="Upload CSV">
+    <button type="button" class="btn btn-info" (click)="importFileType='csv';uploader.click()" aria-label="Upload CSV">
       <fa name="file-text-o" size="2x"></fa>
     </button>
+
+    <a class="btn btn-success" (click)="importFileType='json';uploader.click()">Import JSON</a>
+    <a class="btn btn-success" title="Download JSON" [href]="downloadJsonHref" download="fwRules.json" (click)="downloadJson()">Export JSON</a>
+    <a class="btn btn-success" title="Download CSV" [href]="downloadCsvHref" download="fwRules.csv" (click)="downloadCsv()">Export CSV</a>
 
     <input hidden type="file" #uploader (change)="handleFileSelect($event)"/>
   </div>
@@ -107,9 +111,6 @@
 </table>
 </div>
 </div>
-
-<a class="btn btn-success" title="Download JSON" [href]="downloadJsonHref" download="fwRules-{{ subnet.Name }}.json" (click)="downloadJson()">Get JSON</a>
-<a class="btn btn-success" title="Download CSV" [href]="downloadCsvHref" download="fwRules-{{ subnet.Name }}.csv" (click)="downloadCsv()">Get CSV</a>
 
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
