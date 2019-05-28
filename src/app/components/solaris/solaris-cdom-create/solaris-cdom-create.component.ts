@@ -90,17 +90,14 @@ export class SolarisCdomCreateComponent implements OnInit {
   launchCDOMJobs() {
 
     const extra_vars: {[k: string]: any} = {};
-    this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
     // static listing of commands to be ran, needed for Solaris automation
     this.CDOM.devicetype = 'solaris_cdom';
+    // FIXME: [jvf] move hardcodes out of UI
     this.CDOM.cmds = 'add_vds,add_vcc,set_vcpu,set_mem,add_vsw,add_config';
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
-
-    // this.automationApiService
-    // const customerName = this.solarisService.getCustomerNamebyDeviceID(this.LDOM.device_id);
-    this.automationApiService.launchTemplate(`${this.CDOM.customer_name}-save-device`, body).subscribe();
+    this.automationApiService.launchTemplate(`save-device`, body).subscribe();
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
