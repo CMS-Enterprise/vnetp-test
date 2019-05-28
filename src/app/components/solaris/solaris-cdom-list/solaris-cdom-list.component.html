@@ -1,0 +1,28 @@
+
+<!--TODO: Replace Test Data in getLdoms()-->
+<!--TODO: routerLink should navigate to CDOM Device Detail View -->
+<h4>CDOM List : {{ devices?.length }}</h4>
+
+<div class="table table-striped">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>CDOM Name</th>
+      <th class="col-md-4 offset-md-4"> AA</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let device of CDOMDeviceArray">
+        <td>
+          <fa name="server"></fa>
+        </td>
+        <td>
+          <a routerLink='/dashboard'>{{device.name}}</a>
+        </td>
+          <td class="spaced"> 
+            <button class="btn btn-default" (click)="getLdoms([1,2,3])">Associated LDOMs</button>
+          </td>
+      </tr>
+  </tbody>
+</div>

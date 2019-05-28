@@ -180,6 +180,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.form.updateValueAndValidity();
      }
     this.getVrfCustomFields();
+    this.ngx.resetModalData('firewallRuleModal');
   }
 
   getVrfCustomFields() {

@@ -1,0 +1,157 @@
+<ngx-smart-modal
+  #poolModal
+  identifier="poolModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Pool</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="loadBalancingMethod">Load Balancing Method</label>
+        <select
+        formControlName="loadBalancingMethod"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.loadBalancingMethod.errors }"
+        aria-label="Load Balancing Method">
+        <!--TODO: Do we want to expose all LB methods to users?-->
+        <option></option>
+        <option value="round-robin">Round Robin</option>
+        <option value="least-sessions">Least Sessions</option>
+        <option value="fastest-node">Fastest Node</option>
+        <option value="fastest-app-response">Fastest App Response</option>
+      </select>
+      <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
+          <div *ngIf="f.name.load.required">Name is required</div>
+        </div>
+      </div>
+
+      Pool Members
+
+      <div class="btn-group-sm" role="group">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="createPoolMember()"
+            aria-label="Create Pool Member"
+          >
+            <fa name="plus" size="1x"></fa>
+          </button>
+        </div>
+
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">FQDN/Address</th>
+            <th scope="col">Service Port</th>
+            <th scope="col">Auto Populate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let poolMember of poolMembers">
+            <td>
+              <p>{{ poolMember.Name }}</p>
+            </td>
+            <td>
+              <p>{{ poolMember.Type }}</p>
+            </td>
+            <td>
+              <p *ngIf="poolMember.Type == 'ipaddress'">{{ poolMember.IpAddress }}</p>
+              <p *ngIf="poolMember.Type == 'fqdn'">{{ poolMember.Fqdn }}</p>
+            </td>
+            <td>
+              <p>{{ poolMember.ServicePort }}</p>
+            </td>
+            <td>
+              <p>{{ poolMember.AutoPopulate }}</p>
+            </td>
+            <td>
+              <fa name="pencil" (click)="editPoolMember(poolMember)"> </fa>
+              <fa name="trash" (click)="deletePoolMember(poolMember)">
+              </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="selectedHealthMonitors">Selected Health Monitors</label>
+
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let healthMonitor of selectedHealthMonitors">
+                <td>
+                  {{ healthMonitor }}
+                </td>
+                <td>
+                  <fa name="trash" (click)="unselectHealthMonitor(healthMonitor)"> </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="availableHealthMonitors">Available Health Monitors</label>
+
+          <select class="form-control" id="availableHealthMonitors" formControlName="selectedHealthMonitor">
+            <option></option>
+            <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor">{{ healthMonitor }}</option>
+          </select>
+
+          <button type="button" class="btn btn-success" (click)="selectHealthMonitor()">Select Health Monitor</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

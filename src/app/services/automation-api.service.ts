@@ -19,9 +19,7 @@ export class AutomationApiService {
   }
 
   launchTemplate(jobName: string, ansibleBody) {
-    // Append Customer Identifier to Job Name
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
-    console.log(fullJobName);
     return this.http.post(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody);
   }
 
@@ -41,8 +39,11 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/ipnat/');
   }
 
-  getDevices() {
-    return this.http.get(environment.apiBase + '/api/1.0/devices/');
+  getDevicesbyID(id: string) {
+    return this.http.get(environment.apiBase + `/api/1.0/devices/${id}/`);
+  }
+  getDevices(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
 
   getVrfs() {

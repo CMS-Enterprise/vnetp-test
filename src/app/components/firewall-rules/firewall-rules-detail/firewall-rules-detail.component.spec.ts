@@ -13,6 +13,7 @@ import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/f
 import { FirewallRule } from 'src/app/models/firewall-rule';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { ModalMode } from 'src/app/models/modal-mode';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -43,27 +44,24 @@ describe('FirewallRulesDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set vrf id in firewall rule dto on create', () => {
+  it('should set set subscription and modal mode on create', () => {
     component.subnet = {name: 'Test', vrf_group_id: 101} as Subnet;
+
     component.createFirewallRule();
 
-    const dto = ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
-
     expect(component.firewallRuleModalSubscription).toBeTruthy();
-    expect(dto.VrfId === 101).toBeTruthy();
+    expect(component.firewallRuleModalMode === ModalMode.Create).toBeTruthy();
   });
 
-  it('should set vrf id and firewall rule in dto on edit', () => {
+  it('should set subscription, modal mode and index on edit', () => {
     component.subnet = {name: 'Test', vrf_group_id: 102} as Subnet;
     component.firewallRules = [{Name: 'TestRule'}] as Array<FirewallRule>;
 
     component.editFirewallRule(component.firewallRules[0]);
 
-    const dto = ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
-
     expect(component.firewallRuleModalSubscription).toBeTruthy();
-    expect(dto.VrfId === 102).toBeTruthy();
-    expect(dto.FirewallRule.Name === 'TestRule').toBeTruthy();
+    expect(component.firewallRuleModalMode === ModalMode.Edit).toBeTruthy();
+    expect(component.editFirewallRuleIndex === 0).toBeTruthy();
   });
 
   it('should move firewall rule up', () => {

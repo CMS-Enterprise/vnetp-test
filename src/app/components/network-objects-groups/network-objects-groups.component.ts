@@ -42,10 +42,24 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   getVrfs() {
     this.dirty = false;
+
+    let vrfId: number = null;
+
+    if (this.currentVrf) {
+      vrfId = this.currentVrf.id;
+    }
+
     this.api.getVrfs().subscribe(data => {
       this.vrfs = data;
-      if (!this.currentVrf){
+
+      if (!vrfId) {
         this.currentVrf = this.vrfs[0];
+      } else {
+        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
+
+        if (!this.currentVrf) {
+          this.currentVrf = this.vrfs[0];
+        }
       }
       this.getVrfObjects(this.currentVrf);
     });
@@ -78,7 +92,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   editNetworkObject(networkObject: NetworkObject) {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, networkObject), 'networkObjectModal');
+    this.ngx.setModalData(this.hs.deepCopy(networkObject), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
     this.ngx.getModal('networkObjectModal').open();
   }
@@ -86,7 +100,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
     this.subscribeToNetworkObjectGroupModal() ;
     this.networkObjectGroupModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, networkObjectGroup), 'networkObjectGroupModal');
+    this.ngx.setModalData(this.hs.deepCopy(networkObjectGroup), 'networkObjectGroupModal');
     this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
     this.ngx.getModal('networkObjectGroupModal').open();
   }
@@ -97,7 +111,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       let data = modal.getData() as NetworkObject;
 
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveNetworkObject(data);
       }
       this.ngx.resetModalData('networkObjectModal');
@@ -111,7 +124,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       let data = modal.getData() as NetworkObjectGroup;
 
       if (data !== undefined) {
-        data = Object.assign({}, data);
         this.saveNetworkObjectGroup(data);
       }
       this.ngx.resetModalData('networkObjectGroupModal');

@@ -37,6 +37,10 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
+import { SolarisComponent } from './components/solaris/solaris.component';
+import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
+import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
+import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
@@ -45,6 +49,16 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
+import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
+import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
+import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
+import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
+import { HealthMonitor } from './models/loadbalancer/health-monitor';
+import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
+import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
+import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
+import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +82,10 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
+    SolarisComponent,
+    SolarisCdomCreateComponent,
+    SolarisLdomCreateComponent,
+    SolarisCdomListComponent,
     DeployComponent,
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
@@ -75,7 +93,15 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
     ServiceObjectsGroupsComponent,
     ServiceObjectModalComponent,
     ServiceObjectGroupModalComponent,
-    FirewallRuleModalComponent
+    FirewallRuleModalComponent,
+    VirtualServerModalComponent,
+    LoadBalancersComponent,
+    PoolModalComponent,
+    PoolMemberModalComponent,
+    IRuleModalComponent,
+    HealthMonitorModalComponent,
+    NetworkInterfacesComponent,
+    LogicalInterfaceModalComponent
   ],
   imports: [
     BrowserModule,
