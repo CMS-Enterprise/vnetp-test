@@ -22,5 +22,6 @@ export class SolarisCdom {
   variables: string;
   add_vds = new Array<string>();
   cmds: string;
+  vds: string;
 }
 

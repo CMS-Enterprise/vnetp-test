@@ -28,6 +28,13 @@ export class SolarisCdomCreateComponent implements OnInit {
   dirty: boolean;
   currentVrf: Vrf;
   Subnets: Array<Subnet>;
+
+  // Added as type any
+  inputCDOMVDSDevs: any;
+  vds: any;
+  cdomInput: any;
+  launchLDOMJobs: any;
+
   constructor(
     private automationApiService: AutomationApiService,
     private solarisService: SolarisServiceService,

@@ -26,6 +26,10 @@ export class SolarisLdomCreateComponent implements OnInit {
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
+
+  // Added as type any
+  cdomInput: any;
+
   constructor(
     private solarisService: SolarisServiceService,
     private automationApiService: AutomationApiService,
