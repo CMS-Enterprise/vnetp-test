@@ -97,7 +97,7 @@ export class SolarisCdomCreateComponent implements OnInit {
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
-    this.automationApiService.launchTemplate(`save-device`, body).subscribe();
+    this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
