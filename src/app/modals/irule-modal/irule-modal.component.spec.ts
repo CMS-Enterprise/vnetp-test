@@ -38,8 +38,8 @@ describe('IRuleModalComponent', () => {
     expect(name.valid).toBeFalsy();
   });
 
-  it('definition should be required', () => {
-    const definition = component.form.controls.definition;
-    expect(definition.valid).toBeFalsy();
+  it('content should be required', () => {
+    const content = component.form.controls.content;
+    expect(content.valid).toBeFalsy();
   });
 });
