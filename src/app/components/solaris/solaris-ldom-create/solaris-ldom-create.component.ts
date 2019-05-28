@@ -66,7 +66,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   getvdsCmds() {
     // Create commands that will be sent as add-vnet parameter
     for (let i = 0; i < this.LDOM.add_vds.length; i++) {
-    //TODO:  Split array and ensure it is 3 elements
+    // TODO:  Split array and ensure it is 3 elements
      const WWN = this.LDOM.add_vcpu[i].split(',')[0];
      const diskName = this.LDOM.add_vcpu[i].split(',')[1];
      const VDS = this.LDOM.add_vcpu[i].split(',')[2];
@@ -102,7 +102,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
-    //static listing of commands to be ran, needed for Solaris automation
+    // static listing of commands to be ran, needed for Solaris automation
     this.LDOM.cmds = 'add_domain,add_memory,add_vcpu,add_vnet,add_vdsdev,add_vdisk,set_variable,bind_domain,create_manifest,add_config,start_domain,net_install';
     extra_vars.LDOM = this.LDOM;
 
