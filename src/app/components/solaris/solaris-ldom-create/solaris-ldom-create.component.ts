@@ -102,16 +102,14 @@ export class SolarisLdomCreateComponent implements OnInit {
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
+    // FIXME: [jvf] if it's hard coded in the UI, it's better for it to be hardcoded in userland rather than running it across the wire and through the DB.
     // static listing of commands to be ran, needed for Solaris automation
     this.LDOM.cmds = 'add_domain,add_memory,add_vcpu,add_vnet,add_vdsdev,add_vdisk,set_variable,bind_domain,create_manifest,add_config,start_domain,net_install';
     extra_vars.LDOM = this.LDOM;
 
     const body = { extra_vars };
 
-    // this.automationApiService
-    // const customerName = this.solarisService.getCustomerNamebyDeviceID(this.LDOM.device_id);
-    const customerName = 'contoso';
-    this.automationApiService.launchTemplate(`${customerName}-save-device`, body).subscribe();
+    this.automationApiService.launchTemplate(`save-device`, body).subscribe();
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
