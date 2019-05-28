@@ -50,104 +50,121 @@
       </div>
 
       <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="sourceAddress">Source Address</label>
+        <div class="form-group col-md-6">
+          <label for="sourceAddress">Source Address</label>
 
-        <input
-          name="sourceAddress"
-          formControlName="sourceAddress"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
-          aria-label="Source Address"
-        />
+          <input
+            name="sourceAddress"
+            formControlName="sourceAddress"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
+            aria-label="Source Address"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="destinationAddress">Destination Address</label>
+
+          <input
+            name="destinationAddress"
+            formControlName="destinationAddress"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationAddress.errors
+            }"
+            [dropSpecialCharacters]="false"
+            mask="099.099.099.099/09"
+            aria-label="Destination Address"
+          />
+        </div>
       </div>
-
-      <div class="form-group col-md-6">
-        <label for="destinationAddress">Destination Address</label>
-
-        <input
-          name="destinationAddress"
-          formControlName="destinationAddress"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099/09"
-          aria-label="Destination Address"
-        />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="servicePort">
-          Service Port
-        </label>
-
-        <input
-          class="form-control"
-          name="servicePort"
-          formControlName="servicePort"
-          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-          mask="09999"
-          aria-label="Service Port"
-        />
-      </div>
-
-      <div class="form-group col-md-6">
-        <label for="pool">
-          Pool
-        </label>
-
-        <select
-          class="form-control"
-          name="pool"
-          formControlName="pool"
-          [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
-          aria-label="Pool"
-        >
-          <option></option>
-          <option *ngFor="let pool of pools" [ngValue]="pool.Name">
-            {{ pool.Name }}
-          </option>
-        </select>
-      </div>
-    </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="selectedIRules">Selected iRules</label>
+          <label for="servicePort">
+            Service Port
+          </label>
 
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let irule of selectedIRules">
-                <td>
-                  {{ irule }}
-                </td>
-                <td>
-                  <fa name="trash" (click)="unselectIRule(irule)"> </fa>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <input
+            class="form-control"
+            name="servicePort"
+            formControlName="servicePort"
+            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+            mask="09999"
+            aria-label="Service Port"
+          />
         </div>
 
         <div class="form-group col-md-6">
-          <label for="availableIRules">Available iRules</label>
+          <label for="pool">
+            Pool
+          </label>
 
-          <select class="form-control" id="availableRules" formControlName="selectedIRule">
+          <select
+            class="form-control"
+            name="pool"
+            formControlName="pool"
+            [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
+            aria-label="Pool"
+          >
             <option></option>
-            <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{ irule }}</option>
+            <option *ngFor="let pool of pools" [ngValue]="pool.Name">
+              {{ pool.Name }}
+            </option>
           </select>
-
-          <button type="button" class="btn btn-success" (click)="selectIRule()">Select iRule</button>
         </div>
       </div>
+
+      iRules
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <select
+            class="form-control"
+            id="availableRules"
+            formControlName="selectedIRule"
+          >
+            <option></option>
+            <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{
+              irule
+            }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button type="button" class="btn btn-success" (click)="selectIRule()">
+            <fa name="plus" size="1x"></fa>
+          </button>
+        </div>
+      </div>
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let irule of selectedIRules">
+            <td>
+              {{ irule }}
+            </td>
+            <td>
+              <fa name="trash" (click)="unselectIRule(irule)"> </fa>
+              <fa
+                name="chevron-up"
+                (click)="moveIRule(-1, irule)"
+              >
+              </fa>
+              <fa
+                name="chevron-down"
+                (click)="moveIRule(1, irule)"
+              >
+              </fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">
