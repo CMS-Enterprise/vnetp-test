@@ -16,6 +16,7 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -38,9 +39,11 @@ export class FirewallRulesDetailComponent implements OnInit {
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
+  downloadJsonHref: any;
+  downloadCsvHref: any;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
-              private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
+              private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService, private sanitizer: DomSanitizer) {
     this.subnet = new Subnet();
     this.firewallRules = [];
    }
@@ -149,7 +152,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   subscribeToFirewallRuleModal() {
     this.firewallRuleModalSubscription =
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as FirewallRuleModalDto;
+      const data = modal.getData() as FirewallRuleModalDto;
 
       if (data && data.FirewallRule !== undefined) {
         this.saveFirewallRule(data.FirewallRule);
@@ -175,7 +178,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   updateFirewallRules() {
     const firewallRules = this.firewallRules.filter(r => !r.Deleted);
 
-    var extra_vars: {[k: string]: any} = {};
+    let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
     extra_vars.firewall_rules = firewallRules;
 
@@ -199,9 +202,9 @@ export class FirewallRulesDetailComponent implements OnInit {
   }
 
   handleFileSelect(evt) {
-    let files = evt.target.files; // FileList object
-    let file = files[0];
-    let reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
       this.parseCsv(reader.result);
@@ -226,4 +229,16 @@ export class FirewallRulesDetailComponent implements OnInit {
       }
     });
   }
+
+ downloadJson() {
+    const fwRulesJson = JSON.stringify(this.firewallRules);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(fwRulesJson));
+    this.downloadJsonHref = uri;
+}
+
+downloadCsv() {
+  const fwRulesCsv = this.papa.unparse(this.firewallRules);
+  const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/csv;charset=UTF-8,' + encodeURIComponent(fwRulesCsv));
+  this.downloadCsvHref = uri;
+}
 }
