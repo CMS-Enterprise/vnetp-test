@@ -85,4 +85,13 @@ export class StaticRouteDetailComponent implements OnInit {
       this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
     }
   }
+
+  insertStaticRoutes(routes){
+    if (!this.staticRoutes) { this.staticRoutes = new Array<StaticRoute>(); }
+    routes.forEach(route => {
+      if (routes.Name !== '') {
+        this.staticRoutes.push(route);
+      }
+    });
+  }
 }
