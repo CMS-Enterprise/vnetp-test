@@ -45,6 +45,14 @@ export class AutomationApiService {
   getDevices(){
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
+  
+  getCDoms(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`);
+  }
+  
+  getLDoms(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
+  }
 
   getVrfs() {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
