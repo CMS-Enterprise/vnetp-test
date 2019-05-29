@@ -33,6 +33,14 @@
         Clear Changes to Current VRF
       </button>
     </span>
+
+    <div class="pull-right" *ngIf="currentVrf">
+        <app-import-export
+        [exportObject]="LogicalInterfaces"
+        exportFileName="logicalInterfaces-{{currentVrf.name}}"
+        (import)="insertLogicalInterfaces($event)"
+      ></app-import-export>
+    </div>
   </div>
 
   <ul class="nav nav-tabs">
