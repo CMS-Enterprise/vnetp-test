@@ -22,7 +22,7 @@
       <app-import-export
         [exportObject]="staticRoutes"
         exportFileName="staticRoutes-{{subnet.name}}-{{subnet.vrf_group_name}}"
-        (import)="insertFirewallRules($event)"
+        (import)="insertStaticRoutes($event)"
       ></app-import-export>
     </div>
   
