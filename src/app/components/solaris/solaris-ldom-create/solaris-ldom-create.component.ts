@@ -114,25 +114,10 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.router.navigate(['/solaris']);
   }
   ngOnInit() {
-    /*
-    this.ldomFilter = Object.assign([], this.solarisService.ldomFilter as string[]);
-    this.getLdoms();
-    */
-   this.automationApiService.doqlQuery(
-    'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
-  )
-  .subscribe(data => {
-
-    this.returnDevices = this.solarisService.loadDevices(data);
-    this.returnDevices.forEach((obj) => {
-     if (obj.key === 'LDOM') {
-       this.LDOMDeviceArray = obj.value;
-     } else if (obj.key === 'CDOM') {
-      this.CDOMDeviceArray = obj.value;
-     }
-     // this.vnets = this.CDOMDeviceArray
+    this.automationApiService.getCDoms()
+      .subscribe(data => {
+        const cdomResponse = data as SolarisCdomResponse;
+        this.CDOMDeviceArray = cdomResponse.Devices;
     });
-    //  this.CDOMDeviceArray = this.returnDevices[0].value;
-  });
   }
 }
