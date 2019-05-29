@@ -25,3 +25,10 @@ export class SolarisLdom {
     create_manifest: string;
     cmds: string;
 }
+
+export interface SolarisLdomResponse {
+    total_count: number;
+    offset: number;
+    limit: number;
+    Devices: SolarisLdom[];
+}

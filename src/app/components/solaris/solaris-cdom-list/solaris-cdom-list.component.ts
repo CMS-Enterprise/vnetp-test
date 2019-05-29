@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AutomationApiService } from "src/app/services/automation-api.service";
 import { SolarisCdom, SolarisCdomResponse } from "../../../models/solaris-cdom";
-import { SolarisLdom } from "../../../models/solaris-ldom";
+import { SolarisLdom, SolarisLdomResponse } from "../../../models/solaris-ldom";
 import { SolarisServiceService } from "../solaris-services/solaris-service.service";
 import { Router } from "@angular/router";
 
@@ -27,18 +27,21 @@ export class SolarisCdomListComponent implements OnInit {
 
 
   ngOnInit() {
+    this.automationApiService.getCDoms()
+      .subscribe(data => {
+        const cdomResponse = data as SolarisCdomResponse;
+        this.CDOMDeviceArray = cdomResponse.Devices;
+    });
+  }
 
-  this.automationApiService.getCDoms()
+  getLdomsForCDom(name: string) {
+    console.log(name);
+    this.automationApiService.getLDomsForCDom(name)
     .subscribe(data => {
-      console.log(data)
-      const cdomResponse = data as SolarisCdomResponse;
-      this.CDOMDeviceArray = cdomResponse.Devices;
-   });
- }
-
-
-  // getLdoms(Ldoms: string[]) {
-//     this.solarisService.ldomFilter = Ldoms;
-//     this.router.navigate(["/solaris-ldom-create"]);
-//   }
+      console.log(data);
+      const ldomForCDomResponse = data as SolarisLdomResponse;
+      this.returnLDOMs = ldomForCDomResponse.Devices;
+    })
+    
+  }
 }
