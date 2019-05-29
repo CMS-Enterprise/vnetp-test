@@ -13,7 +13,7 @@ export class ImportExportComponent implements OnInit {
   
 
   @Input() exportObjects: any;
-  @Output() onImport = new EventEmitter<any>();
+  @Output() import = new EventEmitter<any>();
 
 
   constructor(private impexp: ImportExportService) { }
@@ -26,7 +26,7 @@ export class ImportExportComponent implements OnInit {
   }
 
   importCallback(rules) {
-    this.onImport.emit(rules);
+    this.import.emit(rules);
     this.importFileType = '';
   }
 

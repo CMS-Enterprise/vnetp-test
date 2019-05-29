@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { FirewallRule } from 'src/app/models/firewall-rule';
-import { Papa } from 'ngx-papaparse';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -16,8 +15,6 @@ import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ImportExportService } from 'src/app/services/import-export.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -45,7 +42,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   downloadHref: any;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
-              private hs: HelpersService, private ngx: NgxSmartModalService, private impexp: ImportExportService) {
+              private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
     this.firewallRules = [];
    }

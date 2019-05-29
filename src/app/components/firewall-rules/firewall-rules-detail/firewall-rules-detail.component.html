@@ -102,6 +102,6 @@
 </div>
 </div>
 
-<app-import-export [exportObjects]=firewallRules (onImport)=insertFirewallRules($event)></app-import-export>
+<app-import-export [exportObjects]=firewallRules (import)=insertFirewallRules($event)></app-import-export>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
