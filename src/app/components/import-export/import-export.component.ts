@@ -22,7 +22,7 @@ export class ImportExportComponent implements OnInit {
   }
 
   importFile(evt) {
-    this.Import(evt, this.importFileType, rules => this.importCallback(rules));
+    this.Import(evt, rules => this.importCallback(rules));
   }
 
   importCallback(rules) {
@@ -34,9 +34,10 @@ export class ImportExportComponent implements OnInit {
     this.downloadHref = this.Export(this.exportObject, exportType);
   }
 
-  private Import(evt: any, importType: string, importCallback: any): any {
+  private Import(evt: any, importCallback: any): any {
     const files = evt.target.files;
     const file = files[0];
+    const importType = file.name.split('.')[1];
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {

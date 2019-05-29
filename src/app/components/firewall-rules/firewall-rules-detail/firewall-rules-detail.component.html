@@ -15,7 +15,15 @@
     <button type="button" class="btn btn-success" (click)="createFirewallRule()" aria-label="Add Firewall Rule"> 
       <fa name="plus" size="2x"></fa>  
     </button>  
+
+
   </div>
+
+  <div class="pull-right">
+      <app-import-export [exportObject]=firewallRules (import)=insertFirewallRules($event)></app-import-export>
+    </div>
+
+
 
 <div class="card">
 <table class="table table-sm table-striped">
@@ -101,7 +109,5 @@
 </table>
 </div>
 </div>
-
-<app-import-export [exportObject]=firewallRules (import)=insertFirewallRules($event)></app-import-export>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>

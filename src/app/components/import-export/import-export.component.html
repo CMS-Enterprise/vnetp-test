@@ -1,5 +1,34 @@
-<a class="btn btn-success" (click)="importFileType='csv';uploader.click()">Import CSV</a>
-<a class="btn btn-success" (click)="importFileType='json';uploader.click()">Import JSON</a>
-<a class="btn btn-success" title="Download JSON" [href]="downloadHref" download="fwRules.json" (click)="exportFile('json')">Export JSON</a>
-<a class="btn btn-success" title="Download CSV" [href]="downloadHref" download="fwRules.csv" (click)="exportFile('csv')">Export CSV</a>
-<input hidden type="file" #uploader (change)="importFile($event)" [(ngModel)]="fileInput"/>
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+    <button class="btn btn-warning" (click)="uploader.click()">Import CSV/JSON</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="Second group">
+    <a
+      class="btn btn-success"
+      title="Download JSON"
+      [href]="downloadHref"
+      download="fwRules.json"
+      (click)="exportFile('json')"
+      >Export JSON</a
+    >
+  </div>
+
+  <div class="btn-group mr-2">
+    <a
+      class="btn btn-success"
+      title="Download CSV"
+      [href]="downloadHref"
+      download="fwRules.csv"
+      (click)="exportFile('csv')"
+      >Export CSV</a
+    >
+  </div>
+</div>
+
+<input
+  hidden
+  type="file"
+  #uploader
+  (change)="importFile($event)"
+  [(ngModel)]="fileInput"
+/>
