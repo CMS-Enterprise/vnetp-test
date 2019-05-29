@@ -371,50 +371,23 @@ export class LoadBalancersComponent implements OnInit {
     this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      this.parseCsv(reader.result);
-    };
+
+  exportLoadBalancerConfig(){
+    const dto = new LoadBalancerDto();
+
+    dto.VirtualServers = this.virtualServers;
+    dto.Pools = this.pools;
+    dto.IRules = this.irules;
+    dto.HealthMonitors = this.healthMonitors;
+
+    return dto;
   }
 
-  private parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.importObjects(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
-  }
-
-  importObjects(objects) {
-    // Validate Uniqueness
-
-    try {
-    objects.forEach(object => {
-      if (object.GroupName) {
-        const pool = this.pools.find(g => g.Name === object.GroupName);
-        if (pool != null) {
-          pool.Members.push(object);
-        } else {
-          const newGroup = new Pool();
-          newGroup.Name = object.GroupName;
-          newGroup.Members = new Array<PoolMember>();
-          this.pools.push(newGroup);
-          this.dirty = true;
-        }
-       } else if (object.Name) {
-         this.virtualServers.push(object as VirtualServer);
-         this.dirty = true;
-       }
-    });
-  } catch (e) {
-    console.error(e);
-  }
+  importLoadBalancerConfig(importObject) {
+    this.virtualServers = importObject.VirtualServers;
+    this.pools = importObject.Pools;
+    this.irules = importObject.IRules;
+    this.healthMonitors = importObject.HealthMonitors;
   }
 
   private unsubAll() {

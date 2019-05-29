@@ -33,18 +33,16 @@
       >
       Clear Changes to Current VRF
     </button>
-    <button
-      type="button"
-      class="btn btn-info"
-      (click)="uploader.click()"
-      aria-label="Import CSV"
-    >
-      Import CSV
-    </button>
     </span>
-  </div>
 
-  <input hidden type="file" #uploader (change)="handleFileSelect($event)" />
+    <div class="pull-right" *ngIf="currentVrf">
+        <app-import-export
+        [exportObject]="exportLoadBalancerConfig()"
+        exportFileName="loadBalancers-{{currentVrf.name}}"
+        (import)="importLoadBalancerConfig($event)"
+      ></app-import-export>
+    </div>
+  </div>
 
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0">
