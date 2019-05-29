@@ -215,7 +215,6 @@ export class FirewallRulesDetailComponent implements OnInit {
       } else if (this.importFileType === 'json') {
         this.parseJson(reader.result);
       }
-      console.log(this.fileInput);
       this.fileInput = '';
     };
   }
