@@ -16,6 +16,10 @@ export class ImportExportComponent implements OnInit {
 
   @Input() exportObject: any;
   @Input() exportFileName: string;
+
+  @Input() disableJson?: boolean;
+  @Input() disableCsv?: boolean;
+
   @Output() import = new EventEmitter<any>();
 
 
@@ -52,6 +56,7 @@ export class ImportExportComponent implements OnInit {
 
         switch (importType) {
             case 'csv':
+              if (this.disableCsv) { throw new Error('Invalid File Type'); }
               const options = {
                 header: true,
                 complete: results => {
@@ -61,7 +66,11 @@ export class ImportExportComponent implements OnInit {
               this.papa.parse(importObject, options);
               break;
             case 'json':
+              if (this.disableJson) { throw new Error('Invalid File Type'); }
               importCallback(JSON.parse(importObject));
+              break;
+            default:
+              throw new Error('Invalid File Type');
           }
     };
   }
@@ -69,12 +78,14 @@ export class ImportExportComponent implements OnInit {
   private Export(exportObject: any, exportType: string): SafeUrl {
     switch (exportType) {
       case 'csv':
+        if (this.disableJson) { throw new Error('Invalid File Type'); }
         const exportCsv = this.papa.unparse(exportObject);
         return this.sanitizer.bypassSecurityTrustUrl(
           'data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv)
         );
 
       case 'json':
+        if (this.disableJson) { throw new Error('Invalid File Type'); }
         const exportJson = JSON.stringify(exportObject);
         return this.sanitizer.bypassSecurityTrustUrl(
           'data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson)
