@@ -388,6 +388,8 @@ export class LoadBalancersComponent implements OnInit {
     this.pools = importObject.Pools;
     this.irules = importObject.IRules;
     this.healthMonitors = importObject.HealthMonitors;
+    
+    this.dirty = true;
   }
 
   private unsubAll() {
