@@ -43,6 +43,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   downloadCsvHref: any;
 
   importFileType: string;
+  fileInput: any;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService, private sanitizer: DomSanitizer) {
@@ -209,12 +210,13 @@ export class FirewallRulesDetailComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
-      console.log('break');
       if (this.importFileType === 'csv') {
         this.parseCsv(reader.result);
       } else if (this.importFileType === 'json') {
         this.parseJson(reader.result);
       }
+      console.log(this.fileInput);
+      this.fileInput = '';
     };
   }
 
