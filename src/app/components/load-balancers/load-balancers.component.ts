@@ -370,6 +370,16 @@ export class LoadBalancersComponent implements OnInit {
     this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
+  importLoadBalancerConfig(importObject) {
+    // TODO: Import Validation.
+    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
+    this.virtualServers = importObject.VirtualServers;
+    this.pools = importObject.Pools;
+    this.irules = importObject.IRules;
+    this.healthMonitors = importObject.HealthMonitors;
+
+    this.dirty = true;
+  }
 
   exportLoadBalancerConfig(){
     const dto = new LoadBalancerDto();
@@ -378,18 +388,9 @@ export class LoadBalancersComponent implements OnInit {
     dto.Pools = this.pools;
     dto.IRules = this.irules;
     dto.HealthMonitors = this.healthMonitors;
+    dto.VrfId = this.currentVrf.id;
 
     return dto;
-  }
-
-  importLoadBalancerConfig(importObject) {
-    // TODO: Import Validation.
-    this.virtualServers = importObject.VirtualServers;
-    this.pools = importObject.Pools;
-    this.irules = importObject.IRules;
-    this.healthMonitors = importObject.HealthMonitors;
-    
-    this.dirty = true;
   }
 
   private unsubAll() {
