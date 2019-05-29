@@ -17,6 +17,7 @@ import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImportExportService } from 'src/app/services/import-export.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -35,7 +36,6 @@ export class FirewallRulesDetailComponent implements OnInit {
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
 
-
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
@@ -46,7 +46,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   fileInput: any;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
-              private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService, private sanitizer: DomSanitizer) {
+              private hs: HelpersService, private ngx: NgxSmartModalService, private impexp: ImportExportService) {
     this.subnet = new Subnet();
     this.firewallRules = [];
    }
@@ -204,38 +204,6 @@ export class FirewallRulesDetailComponent implements OnInit {
     }
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      if (this.importFileType === 'csv') {
-        this.parseCsv(reader.result);
-      } else if (this.importFileType === 'json') {
-        this.parseJson(reader.result);
-      }
-      this.fileInput = '';
-    };
-  }
-
-  parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.insertFirewallRules(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
-  }
-
-  parseJson(json) {
-    const importFirewallRules = JSON.parse(json) as Array<FirewallRule>;
-    importFirewallRules.forEach(fwRule => {
-      this.firewallRules.push(fwRule);
-    });
-  }
-
   insertFirewallRules(rules) {
     if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
     rules.forEach(rule => {
@@ -245,15 +213,27 @@ export class FirewallRulesDetailComponent implements OnInit {
     });
   }
 
- downloadJson() {
-    const fwRulesJson = JSON.stringify(this.firewallRules);
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(fwRulesJson));
-    this.downloadJsonHref = uri;
+  handleFileSelect(evt) {
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      const result = this.impexp.Import(reader.result.toString(), this.importFileType, rules => this.importCallback(rules));
+
+    };
+  }
+
+  importCallback(rules){
+    this.insertFirewallRules(rules);
+    this.importFileType = '';
+  }
+
+ exportJson() {
+  this.downloadJsonHref = this.impexp.Export(this.firewallRules, 'json');
 }
 
-downloadCsv() {
-  const fwRulesCsv = this.papa.unparse(this.firewallRules);
-  const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/csv;charset=UTF-8,' + encodeURIComponent(fwRulesCsv));
-  this.downloadCsvHref = uri;
+exportCsv() {
+  this.downloadCsvHref = this.impexp.Export(this.firewallRules, 'csv');
 }
 }
