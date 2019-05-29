@@ -12,7 +12,7 @@ export class ImportExportComponent implements OnInit {
   downloadHref;
   
 
-  @Input() exportObjects: any;
+  @Input() exportObject: any;
   @Output() import = new EventEmitter<any>();
 
 
@@ -31,6 +31,6 @@ export class ImportExportComponent implements OnInit {
   }
 
   exportFile(exportType: string) {
-    this.downloadHref = this.impexp.Export(this.exportObjects, exportType);
+    this.downloadHref = this.impexp.Export(this.exportObject, exportType);
   }
 }
