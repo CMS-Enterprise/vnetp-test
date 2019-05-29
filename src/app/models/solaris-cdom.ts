@@ -13,7 +13,7 @@ export class SolarisCdom {
   vccports: string;
   vccname: string;
   add_vcc: string;
-  add_vsw = new Array<string>();
+  add_vsw: string;
   vcsdevs: string;
   vswitch: string;
   vnet: string;

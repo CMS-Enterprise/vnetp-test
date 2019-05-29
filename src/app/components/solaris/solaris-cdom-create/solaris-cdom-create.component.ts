@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SolarisCdom } from '../../../models/solaris-cdom';
+import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisServiceService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
@@ -64,21 +64,11 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.automationApiService.doqlQuery(
-      'SELECT * FROM view_device_custom_fields_flat_v1 cust LEFT JOIN view_device_v1 std ON std.device_pk = cust.device_fk'
-    )
-    .subscribe(data => {
-      this.returnDevices = this.solarisService.loadDevices(data);
-      this.returnDevices.forEach((obj) => {
-       if (obj.key === 'LDOM') {
-         this.LDOMDeviceArray = obj.value;
-       } else if (obj.key === 'CDOM') {
-        this.CDOMDeviceArray = obj.value;
-        this.CDOMDeviceArray.push(new SolarisCdom());
-       }
-       // this.vnets = this.CDOMDeviceArray
-      });
-      //  this.CDOMDeviceArray = this.returnDevices[0].value;
+    this.CDOM.add_vsw = "net-dev=net0 primary-admin";
+    this.automationApiService.getCDoms()
+      .subscribe(data => {
+        const cdomResponse = data as SolarisCdomResponse;
+        this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
     console.log(this.vrfs);
