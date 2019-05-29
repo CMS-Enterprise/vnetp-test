@@ -9,7 +9,6 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
-import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
@@ -384,6 +383,7 @@ export class LoadBalancersComponent implements OnInit {
   }
 
   importLoadBalancerConfig(importObject) {
+    // TODO: Import Validation.
     this.virtualServers = importObject.VirtualServers;
     this.pools = importObject.Pools;
     this.irules = importObject.IRules;
