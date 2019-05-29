@@ -39,11 +39,10 @@ export class FirewallRulesDetailComponent implements OnInit {
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
-  downloadJsonHref: any;
-  downloadCsvHref: any;
 
   importFileType: string;
   fileInput: any;
+  downloadHref: any;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private hs: HelpersService, private ngx: NgxSmartModalService, private impexp: ImportExportService) {
@@ -213,27 +212,16 @@ export class FirewallRulesDetailComponent implements OnInit {
     });
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      const result = this.impexp.Import(reader.result.toString(), this.importFileType, rules => this.importCallback(rules));
-
-    };
+  importFile(evt) {
+    this.impexp.Import(evt, this.importFileType, rules => this.importCallback(rules));
   }
 
-  importCallback(rules){
+  importCallback(rules) {
     this.insertFirewallRules(rules);
     this.importFileType = '';
   }
 
- exportJson() {
-  this.downloadJsonHref = this.impexp.Export(this.firewallRules, 'json');
-}
-
-exportCsv() {
-  this.downloadCsvHref = this.impexp.Export(this.firewallRules, 'csv');
-}
+  exportFile(exportType: string) {
+    this.downloadHref = this.impexp.Export(this.firewallRules, exportType);
+  }
 }

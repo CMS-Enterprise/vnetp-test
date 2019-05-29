@@ -8,21 +8,28 @@ import { Injectable } from '@angular/core';
 export class ImportExportService {
   constructor(private sanitizer: DomSanitizer, private papa: Papa) {}
 
-  public Import(importObject: any, importType: string, importCallback: Function): any {
+  public Import(evt: any, importType: string, importCallback: any): any {
+    const files = evt.target.files;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+        const importObject = reader.result.toString();
 
-    switch (importType) {
-      case 'csv':
-        const options = {
-          header: true,
-          complete: results => {
-            importCallback(results.data);
+        switch (importType) {
+            case 'csv':
+              const options = {
+                header: true,
+                complete: results => {
+                  importCallback(results.data);
+                }
+              };
+              this.papa.parse(importObject, options);
+              break;
+            case 'json':
+              importCallback(JSON.parse(importObject));
           }
-        };
-        this.papa.parse(importObject, options);
-        break;
-      case 'json':
-        importCallback(JSON.parse(importObject));
-    }
+    };
   }
 
   public Export(exportObject: any, exportType: string): SafeUrl {

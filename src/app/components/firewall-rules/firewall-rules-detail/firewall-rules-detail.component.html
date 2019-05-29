@@ -102,12 +102,10 @@
 </div>
 </div>
 
-<!--TODO: Fix Styling!-->
 <a class="btn btn-success" (click)="importFileType='csv';uploader.click()">Import CSV</a>
 <a class="btn btn-success" (click)="importFileType='json';uploader.click()">Import JSON</a>
-<a class="btn btn-success" title="Download JSON" [href]="downloadJsonHref" download="fwRules.json" (click)="exportJson()">Export JSON</a>
-<a class="btn btn-success" title="Download CSV" [href]="downloadCsvHref" download="fwRules.csv" (click)="exportCsv()">Export CSV</a>
-
-<input hidden type="file" #uploader (change)="handleFileSelect($event)" [(ngModel)]="fileInput"/>
+<a class="btn btn-success" title="Download JSON" [href]="downloadHref" download="fwRules.json" (click)="exportFile('json')">Export JSON</a>
+<a class="btn btn-success" title="Download CSV" [href]="downloadHref" download="fwRules.csv" (click)="exportCsv('csv')">Export CSV</a>
+<input hidden type="file" #uploader (change)="importFile($event)" [(ngModel)]="fileInput"/>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
