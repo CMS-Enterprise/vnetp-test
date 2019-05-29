@@ -8,6 +8,15 @@
     </button>
   </div>
 
+  <div class="pull-right">
+      <app-import-export
+      [exportObject]="exportNetworkConfig()"
+      exportFileName="subnets"
+      disableCsv=true
+      (import)="importNetworkConfig($event)"
+    ></app-import-export>
+  </div>
+
   <div class="card">
     <table class="table table-striped">
       <thead>
