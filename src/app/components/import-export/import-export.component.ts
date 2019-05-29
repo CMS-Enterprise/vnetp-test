@@ -11,8 +11,11 @@ export class ImportExportComponent implements OnInit {
 
   importFileType: string;
   downloadHref: SafeUrl;
+  currentDate: string;
+
 
   @Input() exportObject: any;
+  @Input() exportFileName: string;
   @Output() import = new EventEmitter<any>();
 
 
@@ -32,6 +35,10 @@ export class ImportExportComponent implements OnInit {
 
   exportFile(exportType: string) {
     this.downloadHref = this.Export(this.exportObject, exportType);
+  }
+
+  getDate() {
+    this.currentDate = new Date().toISOString().slice(0, 19);
   }
 
   private Import(evt: any, importCallback: any): any {

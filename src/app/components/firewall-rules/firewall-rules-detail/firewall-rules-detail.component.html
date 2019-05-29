@@ -33,6 +33,7 @@
   <div class="pull-right">
     <app-import-export
       [exportObject]="firewallRules"
+      exportFileName="firewallRules-{{subnet.name}}-{{subnet.vrf_group_name}}"
       (import)="insertFirewallRules($event)"
     ></app-import-export>
   </div>
