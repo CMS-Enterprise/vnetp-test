@@ -1,0 +1,5 @@
+<a class="btn btn-success" (click)="importFileType='csv';uploader.click()">Import CSV</a>
+<a class="btn btn-success" (click)="importFileType='json';uploader.click()">Import JSON</a>
+<a class="btn btn-success" title="Download JSON" [href]="downloadHref" download="fwRules.json" (click)="exportFile('json')">Export JSON</a>
+<a class="btn btn-success" title="Download CSV" [href]="downloadHref" download="fwRules.csv" (click)="exportFile('csv')">Export CSV</a>
+<input hidden type="file" #uploader (change)="importFile($event)" [(ngModel)]="fileInput"/>

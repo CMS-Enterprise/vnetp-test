@@ -59,6 +59,7 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
+import { ImportExportComponent } from './components/import-export/import-export.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal
     IRuleModalComponent,
     HealthMonitorModalComponent,
     NetworkInterfacesComponent,
-    LogicalInterfaceModalComponent
+    LogicalInterfaceModalComponent,
+    ImportExportComponent
   ],
   imports: [
     BrowserModule,

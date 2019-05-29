@@ -211,17 +211,4 @@ export class FirewallRulesDetailComponent implements OnInit {
       }
     });
   }
-
-  importFile(evt) {
-    this.impexp.Import(evt, this.importFileType, rules => this.importCallback(rules));
-  }
-
-  importCallback(rules) {
-    this.insertFirewallRules(rules);
-    this.importFileType = '';
-  }
-
-  exportFile(exportType: string) {
-    this.downloadHref = this.impexp.Export(this.firewallRules, exportType);
-  }
 }
