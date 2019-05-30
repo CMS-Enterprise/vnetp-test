@@ -357,6 +357,8 @@ export class LoadBalancersComponent implements OnInit {
     extra_vars.vrf_id = this.currentVrf.id;
     extra_vars.deleted_virtual_servers = this.deletedVirtualServers;
     extra_vars.deleted_pools = this.deletedPools;
+    extra_vars.deleted_irules = this.deletedIRules;
+    extra_vars.deleted_healthmonitors = this.deletedHealthMonitors;
 
     const body = { extra_vars };
 
