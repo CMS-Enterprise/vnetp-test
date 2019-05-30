@@ -84,22 +84,14 @@
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputCDOMVDSDevs">VDSDevs</label>
-        <select
+        <input
           name="inputCDOMVDSDevs"
+          aria-label="CDOM vDisk name"
           class="form-control"
           id="inputCDOMVDSDevs"
           #cdomInputName="ngModel"
           [(ngModel)]="CDOM.vds"
         >
-          <option value="primary-vds0">primary-vds0</option>
-          <option
-            class="list-group-item"
-            *ngFor="let logicalInterface of LogicalInterfaces"
-            [ngValue]="logicalInterface"
-          >
-            {{ logicalInterface.Name }}
-          </option>
-        </select>
       </div>
     </div>
 
@@ -118,7 +110,7 @@
       </div>
 
       <div class="form-group col-md-4">
-        <label for="inputCDOMVCCports">VCC Ports</label>
+        <label for="inputCDOMVCCports">VCC Ports (e.g. 5000-5100)</label>
         <input
           name="inputCDOMVCCports"
           aria-label="CDOM VCC Ports"
@@ -132,7 +124,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-2">
         <label for="inputCdomVsw">VSW</label>
         <input
           name="inputCdomVsw"
@@ -143,6 +135,18 @@
           [(ngModel)]="CDOM.add_vsw"
         />
       </div>
+      
+      <div class="form-group col-md-2">
+        <label for="inputCdomVsw">Net Device</label>
+        <input
+          name="inputCdomNetDevice"
+          aria-label="CDOM Net Device for VSW"
+          type="text"
+          class="form-control"
+          #addVsw="ngModel"
+          [(ngModel)]="CDOM.net_device"
+        />
+      </div>      
 
       <div class="form-group col-md-4">
         <label for="inputCDOMVNet">VNET</label>

@@ -57,6 +57,8 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.CDOM.add_vsw = 'primary-vsw';
     this.CDOM.vccname = 'primary-vcc';
     this.CDOM.vds = 'primary-vds0';
+    this.CDOM.vnet = 'vnet0';
+    this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
