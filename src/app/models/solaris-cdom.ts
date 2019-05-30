@@ -8,7 +8,6 @@ export class SolarisCdom {
   vlans = new Array<number>();
   associatedldoms = new Array<string>();
   vccports: string;
-  vccname: string;
   vcsdevs: string;
   vswitch: string;
   vnet: string;
@@ -16,8 +15,13 @@ export class SolarisCdom {
   ilomipaddress: string;
   variables: string;
   
-  vds = new Array<string>();
+  /** Virtual Disks */
+  vds = new Array<any>();
+  /** Virtual Console Concentrator */
   vcc: string;
+  /** Virtual Console Concentrator Name */
+  vccname: string;
+  /** Virtual Switch */
   vsw: string;
   config: string;
 

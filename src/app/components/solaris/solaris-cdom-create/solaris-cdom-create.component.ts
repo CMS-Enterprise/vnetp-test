@@ -22,8 +22,6 @@ export class SolarisCdomCreateComponent implements OnInit {
   LogicalInterfaces: Array<LogicalInterface>;
   vrfs: Array<Vrf>;
 
-  vdsDevs: Array<object>;
-
   // Added as type any
   inputCDOMVDSDevs: any;
   vds: any;
@@ -31,6 +29,10 @@ export class SolarisCdomCreateComponent implements OnInit {
   launchLDOMJobs: any;
 
   addVdsDev: any;
+
+
+  cpuCountArray: Array<number>;
+  ramCountArray: Array<number>;
 
   constructor(
     private automationApiService: AutomationApiService,
@@ -69,7 +71,10 @@ export class SolarisCdomCreateComponent implements OnInit {
     });
     this.getVrfs();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
-    this.vdsDevs = new Array<any>();
+    this.CDOM.vds = new Array<any>();
+
+    this.cpuCountArray = this.solarisService.buildNumberArray(2,32,2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2,64,2);
   }
 
   moveObjectPosition(value: number, obj, objArray) {
@@ -91,20 +96,17 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   insertVds() {
-    this.vdsDevs.push(Object.assign({}, this.addVdsDev));
+    this.CDOM.vds.push(Object.assign({}, this.addVdsDev));
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModal').close();
 
   }
 
   deleteVdsDev(vdsDev: any) {
-    const vdsIndex = this.vdsDevs.indexOf(vdsDev);
+    const vdsIndex = this.CDOM.vds.indexOf(vdsDev);
 
     if (vdsIndex > -1 ) {
-      this.vdsDevs.splice(vdsIndex, 1);
+      this.CDOM.vds.splice(vdsIndex, 1);
     }
   }
-
-
-
 }

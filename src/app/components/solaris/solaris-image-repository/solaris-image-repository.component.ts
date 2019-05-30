@@ -19,6 +19,9 @@ export class SolarisImageRepositoryComponent implements OnInit {
 
   ngOnInit() {
     this.SolarisImages = new Array<SolarisImage>();
+    this.SolarisImages.push({Name: 'Solaris Image 1', Size: 4200, Version: '10', Type: 'Solaris', Source: ''},
+    {Name: 'Solaris Image 2', Size: 3700, Version: '9', Type: 'Solaris', Source: ''});
+
     this.newSolarisImage = new SolarisImage();
   }
 

@@ -30,6 +30,8 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   // Added as type any
   cdomInput: any;
+  cpuCountArray: number[];
+  ramCountArray: number[];
 
   constructor(
     private solarisService: SolarisService,
@@ -134,5 +136,8 @@ export class SolarisLdomCreateComponent implements OnInit {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
+
+    this.cpuCountArray = this.solarisService.buildNumberArray(2,128,2);
+    this.ramCountArray = this.solarisService.buildNumberArray(0,512,32);
   }
 }

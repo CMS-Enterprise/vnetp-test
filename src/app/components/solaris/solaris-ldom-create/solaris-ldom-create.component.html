@@ -48,7 +48,7 @@
         >
           <option></option>
           <option
-            *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
+            *ngFor="let cpuCount of cpuCountArray"
             [ngValue]="cpuCount"
             >{{ cpuCount }} vCPU's</option
           >
@@ -66,7 +66,7 @@
         >
           <option></option>
           <option
-            *ngFor="let ramAmount of [0.5, 1, 2, 4, 8, 16, 32, 64]"
+            *ngFor="let ramAmount of ramCountArray"
             [ngValue]="ramAmount"
             >{{ ramAmount }} GB</option
           >
@@ -205,44 +205,33 @@
 
     <div class="form-row">
       <div class="form-group col-md-2">
-        <div class="input-group">
-        <label for="inputLDOMnetinstall">Net Install</label>
-        <input
-          name="inputLDOMnetinstall"
-          aria-label="LDOM Net Install"
-          type="checkbox"
-          #netInstall="ngModel"
-          [(ngModel)]="LDOM.net_install"
-        />
-      </div>
-      </div>
-      <div class="form-group col-md-2">
-          <button
-          class="btn btn-success"
-          (click)="uploader.click()">
-        Image</button>
-        </div>
-        <input
-        hidden
-        type="file"
-        #uploader
-        (change)="importFile($event)"
-        [(ngModel)]="fileInput"
-      />
-
-      <div class="form-group col-md-4">
-          <label for="imagePath">Image Path</label>
+        <div class="form-check form-check-inline">
           <input
-            name="imagePath"
-            aria-label="Image Path"
-            class="form-control"       
+            name="inputLDOMnetinstall"
+            aria-label="LDOM Net Install"
+            type="checkbox"
+            class="form-check-input"
+            #netInstall="ngModel"
+            [(ngModel)]="LDOM.net_install"
           />
-  
-  
+          <label class="form-check-label" for="inputLDOMnetinstall"
+            >Net Install</label
+          >
+        </div>
+      </div>
+
+      <div class="form-group col-md-4" *ngIf="LDOM.net_install">
+        <select
+          name="imageSelect"
+          class="form-control"
+          [(ngModel)]="LDOM.image"
+        >
+          <option></option>
+          <option value="solaris-image-1">Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option>
+          <option value="solaris-image-2">Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option>
+        </select>
       </div>
     </div>
-
-
 
     <hr />
 
@@ -287,9 +276,7 @@
     <div class="form-row">
       <div class="form-group offset-6 col-md-6">
         <label for="inputLDOMvariable">Variables</label>
-        <table 
-        name="variableTable"
-        class="table">
+        <table name="variableTable" class="table">
           <thead>
             <tr>
               <th>Key</th>
@@ -301,19 +288,28 @@
             <tr *ngFor="let variable of LDOM.variables">
               <td>{{ variable.key }}</td>
               <td>{{ variable.value }}</td>
-              <td>      
-                <fa
-                name ="trash"
-                (click)="deleteVariable(variable)">
-                </fa>
+              <td>
+                <fa name="trash" (click)="deleteVariable(variable)"> </fa>
               </td>
             </tr>
           </tbody>
         </table>
 
         <div class="input-group">
-          <input name="addVariableKey" type="text" class="form-control" placeholder="Key" [(ngModel)]="newVariable.key"/>
-          <input name="addVariableValue" type="text" class="form-control" placeholder="Value" [(ngModel)]="newVariable.value"/>
+          <input
+            name="addVariableKey"
+            type="text"
+            class="form-control"
+            placeholder="Key"
+            [(ngModel)]="newVariable.key"
+          />
+          <input
+            name="addVariableValue"
+            type="text"
+            class="form-control"
+            placeholder="Value"
+            [(ngModel)]="newVariable.value"
+          />
           <button type="button" class="btn btn-success" (click)="addVariable()">
             Add Variable
           </button>

@@ -138,4 +138,16 @@ export class SolarisService {
 
     return uniqueArray;
   }
+
+  buildNumberArray(start, end, step): Array<number> {
+    const array = new Array<number>();
+    let current = start;
+    while (current <= end) {
+      if (current > 0) {
+        array.push(current);
+      }
+      current += step;
+    }
+    return array;
+  }
 }

@@ -53,7 +53,7 @@
         >
           <option></option>
           <option
-            *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
+            *ngFor="let cpuCount of cpuCountArray"
             [ngValue]="cpuCount"
             >{{ cpuCount }} vCPU</option
           >
@@ -71,7 +71,7 @@
         >
           <option></option>
           <option
-            *ngFor="let ramAmount of [8, 16, 32, 64]"
+            *ngFor="let ramAmount of ramCountArray"
             [ngValue]="ramAmount"
             >{{ ramAmount }} GB</option
           >
@@ -174,7 +174,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let vds of vdsDevs">
+              <tr *ngFor="let vds of CDOM.vds">
                 <td>{{ vds.vds }}</td>
                 <td>{{ vds.diskName }}</td>
                 <td>{{ vds.diskSize }}</td>
@@ -222,7 +222,7 @@
       class="close"
       data-dismiss="modal"
       aria-label="Close"
-      (click)="logoutModal.close()"
+      (click)="vdsDevModal.close()"
     ></button>
   </div>
 
