@@ -44,7 +44,7 @@
           aria-label="vCPU for CDOM"
           class="form-control"
           #addvCPU="ngModel"
-          [(ngModel)]="LDOM.add_vcpu"
+          [(ngModel)]="LDOM.vcpu"
         >
           <option></option>
           <option
@@ -62,7 +62,7 @@
           aria-label="RAM GB"
           class="form-control"
           #addMemory="ngModel"
-          [(ngModel)]="LDOM.add_memory"
+          [(ngModel)]="LDOM.memory"
         >
           <option></option>
           <option
@@ -80,7 +80,7 @@
       <div class="form-group col-md-3">
         <label for="inputLDOMvnet">vNet</label>
         <ul class="list-group" *ngIf="vnets">
-          <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
+          <li class="list-group-item" *ngFor="let vnet of LDOM.vnet">
             <fa
               name="chevron-up"
               (click)="moveObjectPosition(-1, vnet, LDOM.add_vnet)"
@@ -91,7 +91,7 @@
               (click)="moveObjectPosition(1, vnet, LDOM.add_vnet)"
             >
             </fa>
-            <fa name="trash" (click)="deleteObject(vnet, LDOM.add_vnet)"> </fa>
+            <fa name="trash" (click)="deleteObject(vnet, LDOM.vnet)"> </fa>
             {{ vnet }}
           </li>
         </ul>
@@ -114,7 +114,7 @@
           class="btn btn-outline-info"
           id="enterVnet"
           type="button"
-          (click)="addvnetObject(inputLDOMvnet, LDOM.add_vnet)"
+          (click)="addvnetObject(inputLDOMvnet, LDOM.vnet)"
           [disabled]="!inputLDOMvnet"
         >
           Add Vnet
