@@ -62,7 +62,7 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   ngOnInit() {
     this.CDOM = new SolarisCdom();
-    this.CDOM.vccname = 'primary-vcc';
+    this.CDOM.vccname = 'primary-vcc0';
     this.CDOM.vnet = 'vnet0';
     this.CDOM.vccports = '5000-5100';
     this.CDOM.net_device = 'net0';
