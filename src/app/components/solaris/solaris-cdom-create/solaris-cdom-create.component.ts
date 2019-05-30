@@ -71,8 +71,8 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.CDOM.vds = new Array<any>();
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2,32,2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2,64,2);
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(0, 512, 32);
   }
 
   moveObjectPosition(value: number, obj, objArray) {
