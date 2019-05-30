@@ -83,7 +83,8 @@ export class SolarisLdomCreateComponent implements OnInit {
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
-    // FIXME: [jvf] if it's hard coded in the UI, it's better for it to be hardcoded in userland rather than running it across the wire and through the DB.
+    // FIXME: [jvf] if it's hard coded in the UI, it's better for it to be hardcoded
+    // in userland rather than running it across the wire and through the DB.
     // static listing of commands to be ran, needed for Solaris automation
     extra_vars.LDOM = this.LDOM;
 
@@ -101,11 +102,10 @@ export class SolarisLdomCreateComponent implements OnInit {
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2,128,2);
-    this.ramCountArray = this.solarisService.buildNumberArray(0,512,32);
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(0, 512, 32);
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
-
   }
 
   openVdsModal() {
