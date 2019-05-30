@@ -60,18 +60,16 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   ngOnInit() {
     this.CDOM = new SolarisCdom();
-    //this.CDOM.add_vsw = 'primary-vsw';
     this.CDOM.vccname = 'primary-vcc';
     this.CDOM.vds = 'primary-vds0';
     this.CDOM.vnet = 'vnet0';
-    //this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    this.addVdsDev = {vds: "", diskName: "", diskSize: 0}
+    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.vdsDevs = new Array<any>();
   }
 
@@ -80,10 +78,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
   launchCDOMJobs() {
     const extra_vars: {[k: string]: any} = {};
-    // static listing of commands to be ran, needed for Solaris automation
     this.CDOM.devicetype = 'solaris_cdom';
-    // FIXME: [jvf] move hardcodes out of UI
-    this.CDOM.cmds = 'add_vds,add_vcc,set_vcpu,set_mem,add_vsw,add_config';
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
@@ -98,7 +93,7 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   insertVds() {
     this.vdsDevs.push(Object.assign({}, this.addVdsDev));
-    this.addVdsDev = {vds: "", diskName: "", diskSize: 0}
+    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModal').close();
 
   }
@@ -106,8 +101,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   deleteVdsDev(vdsDev: any) {
     const vdsIndex = this.vdsDevs.indexOf(vdsDev);
 
-    if (vdsIndex > -1 )
-    {
+    if (vdsIndex > -1 ) {
       this.vdsDevs.splice(vdsIndex, 1);
     }
   }
