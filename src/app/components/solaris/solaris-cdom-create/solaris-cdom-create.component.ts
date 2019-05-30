@@ -7,10 +7,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
-import { PhysicalInterface } from 'src/app/models/network/physical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
-import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
+import { Subnet } from 'src/app/models/d42/subnet';
+
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -23,7 +23,6 @@ export class SolarisCdomCreateComponent implements OnInit {
   returnDevices: Array<any>;
   clonefromCDOM: SolarisCdom;
   LogicalInterfaces: Array<LogicalInterface>;
-  PhysicalInterfaces: Array<PhysicalInterface>;
   vrfs: Array<Vrf>;
   dirty: boolean;
   currentVrf: Vrf;
