@@ -47,6 +47,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
   setCurrentCDOM(cdomInput: SolarisCdom) {
     this.CDOM = cdomInput;
+    console.log(cdomInput);
   }
   getVrfs() {
     this.LogicalInterfaces = new Array<LogicalInterface>();
@@ -54,24 +55,22 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.automationApiService.getVrfs().subscribe(data => {
      data.forEach(d => {
       const dto = this.hs.getJsonCustomField(d, 'network_interfaces') as NetworkInterfacesDto;
-      console.log('here');
       dto.LogicalInterfaces.forEach(l => {
         this.LogicalInterfaces.push(l);
       });
      });
-     console.log('Logical Interface', this.LogicalInterfaces);
     });
   }
 
   ngOnInit() {
     this.CDOM.add_vsw = "net-dev=net0 primary-admin";
+    this.CDOM.add_vcc = 'primary-vcc';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    console.log(this.vrfs);
   }
 
   moveObjectPosition(value: number, obj, objArray) {
