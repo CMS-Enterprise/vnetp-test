@@ -37,7 +37,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-1">
         <label for="inputCDOMvCPU">vCPU</label>
         <select
           name="inputCDOMvCPU"
@@ -55,7 +55,7 @@
         </select>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-1">
         <label for="inputCDOMMemory">RAM (GB)</label>
         <select
           name="inputCDOMMemory"
@@ -324,15 +324,6 @@
         (click)="launchLDOMJobs()"
       >
         Save
-      </button>
-
-      <button
-        class="btn btn-danger"
-        aria-label="Deploy"
-        type="submit"
-        (click)="getvdsCmds()"
-      >
-        test add_vnet_cmd
       </button>
     </div>
   </form>
