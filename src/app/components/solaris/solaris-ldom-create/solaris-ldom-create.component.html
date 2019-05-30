@@ -204,18 +204,45 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-2">
+        <div class="input-group">
         <label for="inputLDOMnetinstall">Net Install</label>
         <input
           name="inputLDOMnetinstall"
           aria-label="LDOM Net Install"
-          type="text"
-          class="form-control"
+          type="checkbox"
           #netInstall="ngModel"
           [(ngModel)]="LDOM.net_install"
         />
       </div>
+      </div>
+      <div class="form-group col-md-2">
+          <button
+          class="btn btn-success"
+          (click)="uploader.click()">
+        Image</button>
+        </div>
+        <input
+        hidden
+        type="file"
+        #uploader
+        (change)="importFile($event)"
+        [(ngModel)]="fileInput"
+      />
+
+      <div class="form-group col-md-4">
+          <label for="imagePath">Image Path</label>
+          <input
+            name="imagePath"
+            aria-label="Image Path"
+            class="form-control"       
+          />
+  
+  
+      </div>
     </div>
+
+
 
     <hr />
 

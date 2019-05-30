@@ -49,7 +49,8 @@ export class SolarisLdomCreateComponent implements OnInit {
   addVariable() {
     if (!this.newVariable) { return; }
     if (!this.LDOM.variables) { this.LDOM.variables = new Array<SolarisVariable>(); }
-    this.LDOM.variables.push(this.newVariable);
+    this.LDOM.variables.push(Object.assign({}, this.newVariable));
+    this.newVariable = new SolarisVariable();
   }
   deleteVariable(solarisVariable: SolarisVariable) {
     const index = this.LDOM.variables.indexOf(solarisVariable);

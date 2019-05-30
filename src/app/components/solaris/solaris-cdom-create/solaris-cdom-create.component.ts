@@ -8,6 +8,7 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
+import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-solaris-cdom-create',
@@ -21,18 +22,23 @@ export class SolarisCdomCreateComponent implements OnInit {
   LogicalInterfaces: Array<LogicalInterface>;
   vrfs: Array<Vrf>;
 
+  vdsDevs: Array<object>;
+
   // Added as type any
   inputCDOMVDSDevs: any;
   vds: any;
   cdomInput: any;
   launchLDOMJobs: any;
 
+  addVdsDev: any;
+
   constructor(
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private router: Router,
     private messageService: MessageService,
-    private hs: HelpersService
+    private hs: HelpersService,
+    private ngxSm: NgxSmartModalService
     ) {
   }
   cloneCdom() {
@@ -54,17 +60,19 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   ngOnInit() {
     this.CDOM = new SolarisCdom();
-    this.CDOM.add_vsw = 'primary-vsw';
+    //this.CDOM.add_vsw = 'primary-vsw';
     this.CDOM.vccname = 'primary-vcc';
     this.CDOM.vds = 'primary-vds0';
     this.CDOM.vnet = 'vnet0';
-    this.CDOM.net_device = 'net0';
+    //this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
+    this.addVdsDev = {vds: "", diskName: "", diskSize: 0}
+    this.vdsDevs = new Array<any>();
   }
 
   moveObjectPosition(value: number, obj, objArray) {
@@ -83,4 +91,27 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
+
+  openVdsModal() {
+    this.ngxSm.getModal('vdsDevModal').open();
+  }
+
+  insertVds() {
+    this.vdsDevs.push(Object.assign({}, this.addVdsDev));
+    this.addVdsDev = {vds: "", diskName: "", diskSize: 0}
+    this.ngxSm.getModal('vdsDevModal').close();
+
+  }
+
+  deleteVdsDev(vdsDev: any) {
+    const vdsIndex = this.vdsDevs.indexOf(vdsDev);
+
+    if (vdsIndex > -1 )
+    {
+      this.vdsDevs.splice(vdsIndex, 1);
+    }
+  }
+
+
+
 }

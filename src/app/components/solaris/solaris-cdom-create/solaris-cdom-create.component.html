@@ -42,7 +42,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-1">
         <label for="inputCDOMvCPU">vCPU</label>
         <select
           name="inputCDOMvCPU"
@@ -55,12 +55,12 @@
           <option
             *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
             [ngValue]="cpuCount"
-            >{{ cpuCount }} vCPU's</option
+            >{{ cpuCount }} vCPU</option
           >
         </select>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-1">
         <label for="inputCDOMMemory">RAM (GB)</label>
         <select
           name="inputCDOMMemory"
@@ -71,27 +71,11 @@
         >
           <option></option>
           <option
-            *ngFor="let ramAmount of [0.5, 1, 2, 4, 8, 16, 32, 64]"
+            *ngFor="let ramAmount of [8, 16, 32, 64]"
             [ngValue]="ramAmount"
             >{{ ramAmount }} GB</option
           >
         </select>
-      </div>
-    </div>
-
-    <hr />
-
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVDSDevs">VDSDevs</label>
-        <input
-          name="inputCDOMVDSDevs"
-          aria-label="CDOM vDisk name"
-          class="form-control"
-          id="inputCDOMVDSDevs"
-          #cdomInputName="ngModel"
-          [(ngModel)]="CDOM.vds"
-        >
       </div>
     </div>
 
@@ -135,7 +119,7 @@
           [(ngModel)]="CDOM.add_vsw"
         />
       </div>
-      
+
       <div class="form-group col-md-2">
         <label for="inputCdomVsw">Net Device</label>
         <input
@@ -146,7 +130,7 @@
           #addVsw="ngModel"
           [(ngModel)]="CDOM.net_device"
         />
-      </div>      
+      </div>
 
       <div class="form-group col-md-4">
         <label for="inputCDOMVNet">VNET</label>
@@ -173,6 +157,47 @@
       </div>
     </div>
 
+    <hr />
+
+    <div class="form-row">
+
+      <div class="form-group offset-6 col-md-6">
+          <table 
+          name="vdsTable"
+          class="table">
+            <thead>
+              <tr>
+                <th>VDS</th>
+                <th>Disk Name</th>
+                <th>Size</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vds of vdsDevs">
+                <td>{{ vds.vds }}</td>
+                <td>{{ vds.diskName }}</td>
+                <td>{{ vds.diskSize }}</td>
+                <td>      
+                  <fa
+                  name ="trash"
+                  (click)="deleteVdsDev(vds)">
+                  </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
+
+      </div>
+
+      <div class="form-group col-md-2">
+      </div>
+    </div>
+
+    <hr />
+
     <div class="btn-group">
       <button
         class="btn btn-success"
@@ -184,3 +209,71 @@
     </div>
   </form>
 </div>
+
+<ngx-smart-modal
+  #vdsDevModal
+  identifier="vdsDevModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Add VDS Dev</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="logoutModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="inputCDOMVDS">VDS</label>
+            <select
+              name="inputCDOMVDS"
+              aria-label="CDOM vDisk name"
+              class="form-control"
+              id="inputCDOMVDS"
+              #formVds="ngModel"
+              [(ngModel)]="addVdsDev.vds"
+            >
+              <option value="primary-vds0">primary-vds0</option>
+              <option value="secondary-vds0">secondary-vds0</option>
+            </select>
+          </div>
+    </div>
+
+    <div class="form-row">
+
+
+    <div class="form-group col-md-8">
+      <label for="diskName">Disk Name</label>
+      <input class="form-control" [(ngModel)]="addVdsDev.diskName" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="diskName">Disk Size</label>
+        <input class="form-control" type="number" [(ngModel)]="addVdsDev.diskSize" />
+      </div>
+  </div>
+
+
+</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+    (click)="insertVds()">
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vdsDevModal.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>
