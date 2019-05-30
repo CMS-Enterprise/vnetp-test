@@ -32,84 +32,45 @@
           </option>
         </select>
       </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputLDOMvariable">Variables</label>
-        <div>
-          <input
-            name="inputLDOMvariable"
-            aria-label="LDOM VDS Config"
-            class="form-control"
-            #name="ngModel"
-            [(ngModel)]="LDOM.set_variable"
-          />
-        </div>
-      </div>
     </div>
 
     <hr />
 
     <div class="form-row">
       <div class="form-group col-md-4">
-        <label for="inputLDOMbinddomain">Bind Domain</label>
-        <input
-          name="inputLDOMbinddomain"
-          aria-label="LDOM Bind Domain Config"
+        <label for="inputCDOMvCPU">vCPU</label>
+        <select
+          name="inputCDOMvCPU"
+          aria-label="vCPU for CDOM"
           class="form-control"
-          #name="ngModel"
-          [(ngModel)]="LDOM.bind_domain"
-        />
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputLDOMstartdomain">Start Domain</label>
-        <input
-          name="inputLDOMstartdomain"
-          aria-label="LDOM Start Domain"
-          type="text"
-          class="form-control"
-          #name="ngModel"
-          [(ngModel)]="LDOM.start_domain"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputLDOMadddomain">Add Domain</label>
-        <input
-          name="inputLDOMadddomain"
-          aria-label="Add LDOM Domain"
-          class="form-control"
-          placeholder=""
-          #name="ngModel"
-          [(ngModel)]="LDOM.add_domain"
-        />
-      </div>
-    </div>
-
-    <hr />
-
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputLDOMvCPU">vCPU Count</label>
-        <input
-          name="inputLDOMvCPU"
-          aria-label="vCPU count for LDOM"
-          class="form-control"
-          placeholder="# vCPU"
-          #name="ngModel"
+          #addvCPU="ngModel"
           [(ngModel)]="LDOM.add_vcpu"
-        />
+        >
+          <option></option>
+          <option
+            *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
+            [ngValue]="cpuCount"
+            >{{ cpuCount }} vCPU's</option
+          >
+        </select>
       </div>
+
       <div class="form-group col-md-4">
-        <label for="inputLDOMmemory">
-          Memory
-        </label>
-        <input
-          name="inputLDOMmemory"
-          aria-label="LDOM Memory"
+        <label for="inputCDOMMemory">RAM (GB)</label>
+        <select
+          name="inputCDOMMemory"
+          aria-label="RAM GB"
           class="form-control"
-          #name="ngModel"
+          #addMemory="ngModel"
           [(ngModel)]="LDOM.add_memory"
-        />
+        >
+          <option></option>
+          <option
+            *ngFor="let ramAmount of [0.5, 1, 2, 4, 8, 16, 32, 64]"
+            [ngValue]="ramAmount"
+            >{{ ramAmount }} GB</option
+          >
+        </select>
       </div>
     </div>
 
@@ -138,7 +99,7 @@
           name="vnetSelect"
           class="form-control"
           id="inputLDOMvnet"
-          #cdomInputName="ngModel"
+          #ldomVnetInput="ngModel"
           [(ngModel)]="inputLDOMvnet"
         >
           <option
@@ -173,20 +134,20 @@
           name="inputLDOMvdswwn"
           aria-label="World Wide Name for VDS"
           class="form-control"
-          #name="ngModel"
+          #vdsWwn="ngModel"
           [(ngModel)]="inputLDOMvdswwn"
         />
       </div>
       <div class="form-group col-md-4">
-      <label for="inputLDOMvdiskname">vDisk Name</label>
-      <input
-        name="inputLDOMvdsiskname"
-        aria-label="vDisk name"
-        class="form-control"
-        placeholder="vDisk name"
-        #name="ngModel"
-        [(ngModel)]="inputLDOMvdiskname"
-      />
+        <label for="inputLDOMvdiskname">vDisk Name</label>
+        <input
+          name="inputLDOMvdsiskname"
+          aria-label="vDisk name"
+          class="form-control"
+          placeholder="vDisk name"
+          #vdiskName="ngModel"
+          [(ngModel)]="inputLDOMvdiskname"
+        />
       </div>
       <div class="form-group col-md-4">
         <label for="inputLDOMvdsdev">VDS</label>
@@ -250,7 +211,7 @@
           aria-label="LDOM Net Install"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #netInstall="ngModel"
           [(ngModel)]="LDOM.net_install"
         />
       </div>
@@ -266,7 +227,7 @@
           aria-label="LDOM Net Install"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #bip="ngModel"
           [(ngModel)]="LDOM.bip"
         />
       </div>
@@ -278,7 +239,7 @@
           aria-label="LDOM Net Install"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #netmask="ngModel"
           [(ngModel)]="LDOM.bmask"
         />
       </div>
@@ -290,9 +251,46 @@
           aria-label="LDOM Net Install"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #bgw="ngModel"
           [(ngModel)]="LDOM.bgw"
         />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group offset-6 col-md-6">
+        <label for="inputLDOMvariable">Variables</label>
+        <table 
+        name="variableTable"
+        class="table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let variable of LDOM.variables">
+              <td>{{ variable.key }}</td>
+              <td>{{ variable.value }}</td>
+              <td>      
+                <fa
+                name ="trash"
+                (click)="deleteVariable(variable)">
+                </fa>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="input-group">
+          <input name="addVariableKey" type="text" class="form-control" placeholder="Key" [(ngModel)]="newVariable.key"/>
+          <input name="addVariableValue" type="text" class="form-control" placeholder="Value" [(ngModel)]="newVariable.value"/>
+          <button type="button" class="btn btn-success" (click)="addVariable()">
+            Add Variable
+          </button>
+        </div>
       </div>
     </div>
 
@@ -304,6 +302,7 @@
       >
         Save
       </button>
+
       <button
         class="btn btn-danger"
         aria-label="Deploy"

@@ -24,6 +24,7 @@ export class SolarisLdom {
     bgw: string;
     create_manifest: string;
     cmds: string;
+    variables: Array<SolarisVariable>;
 }
 
 export interface SolarisLdomResponse {
@@ -31,4 +32,9 @@ export interface SolarisLdomResponse {
     offset: number;
     limit: number;
     Devices: SolarisLdom[];
+}
+
+export class SolarisVariable implements KeyValuePair {
+    key: string;
+    value: string;
 }

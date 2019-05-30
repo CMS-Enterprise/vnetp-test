@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { SolarisServiceService } from '../solaris-services/solaris-service.service';
+import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
-import { PhysicalInterface } from 'src/app/models/network/physical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
-import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
+
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -18,16 +16,10 @@ import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 })
 export class SolarisCdomCreateComponent implements OnInit {
   CDOM: SolarisCdom;
-  LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
-  returnDevices: Array<any>;
   clonefromCDOM: SolarisCdom;
   LogicalInterfaces: Array<LogicalInterface>;
-  PhysicalInterfaces: Array<PhysicalInterface>;
   vrfs: Array<Vrf>;
-  dirty: boolean;
-  currentVrf: Vrf;
-  Subnets: Array<Subnet>;
 
   // Added as type any
   inputCDOMVDSDevs: any;
@@ -37,48 +29,48 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   constructor(
     private automationApiService: AutomationApiService,
-    private solarisService: SolarisServiceService,
+    private solarisService: SolarisService,
     private router: Router,
-    private authService: AuthService,
     private messageService: MessageService,
     private hs: HelpersService
     ) {
-    this.CDOM = new SolarisCdom();
   }
-  setCurrentCDOM(cdomInput: SolarisCdom) {
-    this.CDOM = cdomInput;
+  cloneCdom() {
+    this.CDOM = this.cdomInput;
   }
+
   getVrfs() {
     this.LogicalInterfaces = new Array<LogicalInterface>();
 
     this.automationApiService.getVrfs().subscribe(data => {
      data.forEach(d => {
       const dto = this.hs.getJsonCustomField(d, 'network_interfaces') as NetworkInterfacesDto;
-      console.log('here');
       dto.LogicalInterfaces.forEach(l => {
         this.LogicalInterfaces.push(l);
       });
      });
-     console.log('Logical Interface', this.LogicalInterfaces);
     });
   }
 
   ngOnInit() {
-    this.CDOM.add_vsw = "net-dev=net0 primary-admin";
+    this.CDOM = new SolarisCdom();
+    this.CDOM.add_vsw = 'primary-vsw';
+    this.CDOM.vccname = 'primary-vcc';
+    this.CDOM.vds = 'primary-vds0';
+    this.CDOM.vnet = 'vnet0';
+    this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    console.log(this.vrfs);
   }
 
   moveObjectPosition(value: number, obj, objArray) {
    this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
-
     const extra_vars: {[k: string]: any} = {};
     // static listing of commands to be ran, needed for Solaris automation
     this.CDOM.devicetype = 'solaris_cdom';

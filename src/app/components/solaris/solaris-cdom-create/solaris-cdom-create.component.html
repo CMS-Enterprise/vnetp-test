@@ -15,90 +15,83 @@
       </div>
 
       <div class="form-group col-md-4">
-        <label for="inputCDOMCloneFrom">Clone CDOM From:</label>
-        <select
-          name="cdomSelect"
-          class="form-control"
-          id="inputLDOMaddCDOM"
-          #cdomInputName="ngModel"
-          [(ngModel)]="cdomInput"
-          (ngModelChange)="setCurrentCDOM(cdomInput)"
-        >
-          <option
-            class="list-group-item"
-            *ngFor="let cdom of CDOMDeviceArray"
-            [ngValue]="cdom"
+        <label for="cdomClone">Clone CDOM From:</label>
+        <div class="input-group">
+          <select
+            name="cdomClone"
+            class="form-control"
+            id="cdomClone"
+            #cdomClone="ngModel"
+            [(ngModel)]="cdomInput"
           >
-            {{ cdom.name }}
-          </option>
+            <option
+              class="list-group-item"
+              *ngFor="let cdom of CDOMDeviceArray"
+              [ngValue]="cdom"
+            >
+              {{ cdom.name }}
+            </option>
+          </select>
+          <button class="btn btn-success" (click)="cloneCdom()">
+            Clone
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputCDOMvCPU">vCPU</label>
+        <select
+          name="inputCDOMvCPU"
+          aria-label="vCPU for CDOM"
+          class="form-control"
+          #name="ngModel"
+          [(ngModel)]="CDOM.set_vcpu"
+        >
+          <option></option>
+          <option
+            *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
+            [ngValue]="cpuCount"
+            >{{ cpuCount }} vCPU's</option
+          >
         </select>
       </div>
 
-    </div>
-
-    <hr />
-
-    <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputCDOMMemory">RAM (GB)</label>
-        <input
+        <select
           name="inputCDOMMemory"
-          aria-label="RAM in Gigabytes"
-          type="text"
+          aria-label="RAM GB"
           class="form-control"
-          placeholder="# GB"
           #name="ngModel"
           [(ngModel)]="CDOM.set_mem"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputCDOMvCPU">vCPU</label>
-        <input
-          name="inputCDOMvCPU"
-          aria-label="vCPU for CDOM"
-          type="text"
-          class="form-control"
-          placeholder="# vCPU"
-          #name="ngModel"
-          [(ngModel)]="CDOM.set_vcpu"
-        />
+        >
+          <option></option>
+          <option
+            *ngFor="let ramAmount of [0.5, 1, 2, 4, 8, 16, 32, 64]"
+            [ngValue]="ramAmount"
+            >{{ ramAmount }} GB</option
+          >
+        </select>
       </div>
     </div>
 
     <hr />
- 
+
     <div class="form-row">
-      <!--  Remove VDS input right now, will put "primary-vds0 in all metadata fields"
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVDS">VDS</label>
-        <input
-          name="inputCDOMVDS"
-          aria-label="CDOM VDS Config"
-          type="text"
-          class="form-control"
-          #name="ngModel"
-          [(ngModel)]="CDOM.vds"
-        />
-      </div>
-    -->
       <div class="form-group col-md-4">
         <label for="inputCDOMVDSDevs">VDSDevs</label>
-        <select
+        <input
           name="inputCDOMVDSDevs"
+          aria-label="CDOM vDisk name"
           class="form-control"
           id="inputCDOMVDSDevs"
           #cdomInputName="ngModel"
-          [(ngModel)]="inputCDOMVDSDevs"
+          [(ngModel)]="CDOM.vds"
         >
-          <option
-            class="list-group-item"
-            *ngFor="let logicalInterface of LogicalInterfaces"
-            [ngValue]="logicalInterface"
-          >
-            {{ logicalInterface.Name }}
-          </option>
-        </select>
       </div>
     </div>
 
@@ -111,18 +104,18 @@
           name="inputCDOMVCCname"
           aria-label="CDOM VCC name"
           class="form-control"
-          #name="ngModel"
+          #vccName="ngModel"
           [(ngModel)]="CDOM.vccname"
         />
       </div>
 
       <div class="form-group col-md-4">
-        <label for="inputCDOMVCCports">VCC Ports</label>
+        <label for="inputCDOMVCCports">VCC Ports (e.g. 5000-5100)</label>
         <input
           name="inputCDOMVCCports"
           aria-label="CDOM VCC Ports"
           class="form-control"
-          #name="ngModel"
+          #vccPorts="ngModel"
           [(ngModel)]="CDOM.vccports"
         />
       </div>
@@ -131,18 +124,29 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVSW">VSW</label>
+      <div class="form-group col-md-2">
+        <label for="inputCdomVsw">VSW</label>
         <input
-          name="inputCDOMVDS"
+          name="inputCdomVsw"
           aria-label="CDOM VDS Config"
           type="text"
           class="form-control"
-          value="testing"
-          #name="ngModel"
+          #addVsw="ngModel"
           [(ngModel)]="CDOM.add_vsw"
         />
       </div>
+      
+      <div class="form-group col-md-2">
+        <label for="inputCdomVsw">Net Device</label>
+        <input
+          name="inputCdomNetDevice"
+          aria-label="CDOM Net Device for VSW"
+          type="text"
+          class="form-control"
+          #addVsw="ngModel"
+          [(ngModel)]="CDOM.net_device"
+        />
+      </div>      
 
       <div class="form-group col-md-4">
         <label for="inputCDOMVNet">VNET</label>
@@ -151,7 +155,7 @@
           aria-label="CDOM VDS Config"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #vnet="ngModel"
           [(ngModel)]="CDOM.vnet"
         />
       </div>
@@ -163,7 +167,7 @@
           aria-label="CDOM VLANS"
           type="text"
           class="form-control"
-          #name="ngModel"
+          #vlans="ngModel"
           [(ngModel)]="CDOM.vlans"
         />
       </div>
@@ -176,12 +180,6 @@
         (click)="launchCDOMJobs()"
       >
         Save
-      </button>
-      <button disabled class="btn btn-danger" aria-label="Deploy" type="submit">
-        Deploy
-      </button>
-      <button class="btn btn-danger" aria-label="View vrfs" type="submit" (click)="getVrfs()">
-        View Vrfs
       </button>
     </div>
   </form>

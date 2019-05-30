@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AutomationApiService } from "src/app/services/automation-api.service";
 import { SolarisCdom, SolarisCdomResponse } from "../../../models/solaris-cdom";
 import { SolarisLdom, SolarisLdomResponse } from "../../../models/solaris-ldom";
-import { SolarisServiceService } from "../solaris-services/solaris-service.service";
+import { SolarisService } from "../solaris-services/solaris-service.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -18,7 +18,7 @@ export class SolarisCdomListComponent implements OnInit {
 
   constructor(
     private automationApiService: AutomationApiService,
-    private solarisService: SolarisServiceService,
+    private solarisService: SolarisService,
     private router: Router
 
   ) {

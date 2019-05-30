@@ -14,6 +14,7 @@ export class SolarisCdom {
   vccname: string;
   add_vcc: string;
   add_vsw: string;
+  net_device: string;
   vcsdevs: string;
   vswitch: string;
   vnet: string;

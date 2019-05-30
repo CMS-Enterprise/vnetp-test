@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { SolarisServiceService } from '../solaris-services/solaris-service.service';
-import { SolarisLdom } from 'src/app/models/solaris-ldom';
+import { Component, OnInit, KeyValueDiffers } from '@angular/core';
+import { SolarisService } from '../solaris-services/solaris-service.service';
+import { SolarisLdom, SolarisVariable } from 'src/app/models/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { extractStyleParams } from '@angular/animations/browser/src/util';
 import { SolarisCdom, SolarisCdomResponse } from 'src/app/models/solaris-cdom';
 import { AuthService } from 'src/app/services/auth.service';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-solaris-ldom-create',
@@ -27,11 +28,13 @@ export class SolarisLdomCreateComponent implements OnInit {
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
 
+  newVariable: SolarisVariable;
+
   // Added as type any
   cdomInput: any;
 
   constructor(
-    private solarisService: SolarisServiceService,
+    private solarisService: SolarisService,
     private automationApiService: AutomationApiService,
     private router: Router,
     private messageService: MessageService,
@@ -42,7 +45,19 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   }
   printCDOM(cdomInput: SolarisCdom) {
+    console.log(cdomInput);
     this.currentCDOM = cdomInput;
+  }
+  addVariable() {
+    if (!this.newVariable) { return; }
+    if (!this.LDOM.variables) { this.LDOM.variables = new Array<SolarisVariable>(); }
+    this.LDOM.variables.push(this.newVariable);
+  }
+  deleteVariable(solarisVariable: SolarisVariable) {
+    const index = this.LDOM.variables.indexOf(solarisVariable);
+    if ( index > -1) {
+      this.LDOM.variables.splice(index, 1);
+    }
   }
   addvnetObject(obj: any, objArray: Array<any>) {
      objArray.push(obj);
@@ -114,6 +129,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.router.navigate(['/solaris']);
   }
   ngOnInit() {
+    this.newVariable = new SolarisVariable();
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
