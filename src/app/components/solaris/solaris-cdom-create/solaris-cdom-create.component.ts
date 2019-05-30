@@ -6,10 +6,9 @@ import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
-import { PhysicalInterface } from 'src/app/models/network/physical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
-import { Subnet} from 'src/app/models/d42/subnet';
+
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -17,16 +16,10 @@ import { Subnet} from 'src/app/models/d42/subnet';
 })
 export class SolarisCdomCreateComponent implements OnInit {
   CDOM: SolarisCdom;
-  LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
-  returnDevices: Array<any>;
   clonefromCDOM: SolarisCdom;
   LogicalInterfaces: Array<LogicalInterface>;
-  PhysicalInterfaces: Array<PhysicalInterface>;
   vrfs: Array<Vrf>;
-  dirty: boolean;
-  currentVrf: Vrf;
-  Subnets: Array<Subnet>;
 
   // Added as type any
   inputCDOMVDSDevs: any;
