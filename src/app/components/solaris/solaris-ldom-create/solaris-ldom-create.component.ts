@@ -1,5 +1,5 @@
 import { Component, OnInit, KeyValueDiffers } from '@angular/core';
-import { SolarisServiceService } from '../solaris-services/solaris-service.service';
+import { SolarisService } from '../solaris-services/solaris-service.service';
 import { SolarisLdom, SolarisVariable } from 'src/app/models/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   cdomInput: any;
 
   constructor(
-    private solarisService: SolarisServiceService,
+    private solarisService: SolarisService,
     private automationApiService: AutomationApiService,
     private router: Router,
     private messageService: MessageService,

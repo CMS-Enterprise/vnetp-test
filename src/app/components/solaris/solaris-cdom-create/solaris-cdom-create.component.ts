@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { SolarisServiceService } from '../solaris-services/solaris-service.service';
+import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
@@ -29,7 +29,7 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   constructor(
     private automationApiService: AutomationApiService,
-    private solarisService: SolarisServiceService,
+    private solarisService: SolarisService,
     private router: Router,
     private messageService: MessageService,
     private hs: HelpersService

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SolarisServiceService } from './solaris-service.service';
+import { SolarisService } from './solaris-service.service';
 import { HttpHandler, HttpClient } from '@angular/common/http';
 
 describe('SolarisServiceService', () => {
@@ -9,12 +9,12 @@ describe('SolarisServiceService', () => {
   }));
 
   it('should be created', () => {
-    const service: SolarisServiceService = TestBed.get(SolarisServiceService);
+    const service: SolarisService = TestBed.get(SolarisService);
     expect(service).toBeTruthy();
   });
 
   it('should be created 2', () => {
-    const service: SolarisServiceService = TestBed.get(SolarisServiceService);
+    const service: SolarisService = TestBed.get(SolarisService);
     let test = [1, 2, 3 , 4 , 5, 5];
     let result = service.returnUnique(test);
 

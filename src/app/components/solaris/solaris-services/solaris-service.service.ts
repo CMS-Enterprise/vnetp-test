@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SolarisCdom } from '../../../models/solaris-cdom';
 import { SolarisLdom } from '../../../models/solaris-ldom';
-
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SolarisServiceService {
+export class SolarisService {
   public ldomFilter: string[];
   CDOMDevice = new SolarisCdom();
   LDOMDevice = new SolarisLdom();
@@ -53,6 +52,8 @@ export class SolarisServiceService {
     CDOMDevice.add_vds = tmpMetadata.add_vds;
     CDOMDevice.set_vcpu = device.cpucore;
     CDOMDevice.set_mem = `${device.ram}${device.ram_size_type}`;
+
+    // FIXME: This can probably get removed.
     // normalize RAM to GB.  TODO, allow dynamic update
     let RAMRawData  = device.ram;
     if (device.ram_size_type === 'MB') {
