@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { AutomationApiService } from "src/app/services/automation-api.service";
-import { SolarisCdom, SolarisCdomResponse } from "../../../models/solaris-cdom";
-import { SolarisLdom, SolarisLdomResponse } from "../../../models/solaris-ldom";
-import { SolarisService } from "../solaris-services/solaris-service.service";
-import { Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { SolarisCdomResponse } from '../../../models/solaris-cdom';
+import { SolarisLdomResponse } from '../../../models/solaris-ldom';
+import { SolarisService } from '../solaris-services/solaris-service.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "app-solaris-cdom-list",
-  templateUrl: "./solaris-cdom-list.component.html",
-  styleUrls: ["./solaris-cdom-list.component.css"]
+  selector: 'app-solaris-cdom-list',
+  templateUrl: './solaris-cdom-list.component.html',
+  styleUrls: ['./solaris-cdom-list.component.css']
 })
 export class SolarisCdomListComponent implements OnInit {
   devices: Array<any>;
@@ -21,10 +21,7 @@ export class SolarisCdomListComponent implements OnInit {
     private solarisService: SolarisService,
     private router: Router
 
-  ) {
-
-  }
-
+  ) {}
 
   ngOnInit() {
     this.automationApiService.getCDoms()
@@ -41,7 +38,7 @@ export class SolarisCdomListComponent implements OnInit {
       console.log(data);
       const ldomForCDomResponse = data as SolarisLdomResponse;
       this.returnLDOMs = ldomForCDomResponse.Devices;
-    })
-    
+    });
+
   }
 }

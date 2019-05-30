@@ -90,7 +90,7 @@ export class SolarisCdomCreateComponent implements OnInit {
     const body = { extra_vars };
     this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
     this.messageService.filter('Job Launched');
-    this.router.navigate(['/solaris']);
+    //this.router.navigate(['/solaris-cdom-list']);
   }
 
   openVdsModal() {
@@ -101,12 +101,10 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.CDOM.vds.push(Object.assign({}, this.addVdsDev));
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModal').close();
-
   }
 
   deleteVdsDev(vdsDev: any) {
     const vdsIndex = this.CDOM.vds.indexOf(vdsDev);
-
     if (vdsIndex > -1 ) {
       this.CDOM.vds.splice(vdsIndex, 1);
     }

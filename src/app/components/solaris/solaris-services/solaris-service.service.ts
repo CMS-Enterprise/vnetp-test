@@ -33,7 +33,7 @@ export class SolarisService {
    LDOMDevice.name = tmpMetadata.Name;
    LDOMDevice.customer_name = this.currentUser.CustomerName;
    LDOMDevice.associatedcdom = tmpMetadata.associatedcdom;
-   LDOMDevice.set_variable = tmpMetadata.variables;
+   LDOMDevice.variables = tmpMetadata.variables;
    LDOMDevice.device_id = device.device_pk;
    return LDOMDevice;
   }
@@ -42,29 +42,12 @@ export class SolarisService {
     const tmpMetadata: any = this.sanitizeMetadata(device.Metadata);
     CDOMDevice.associatedldoms = tmpMetadata.associatedldoms;
     CDOMDevice.name = tmpMetadata.cdomname;
-    CDOMDevice.luns = tmpMetadata.luns;
     CDOMDevice.vlans = tmpMetadata.vlans;
     CDOMDevice.variables = tmpMetadata.variables;
-    CDOMDevice.ilomname = tmpMetadata.ilomname;
-    CDOMDevice.ilomipaddress = tmpMetadata.ilomip;
     CDOMDevice.vcc = tmpMetadata.vccports;
-    CDOMDevice.vswitch = tmpMetadata.vswitch;
     CDOMDevice.vds = tmpMetadata.add_vds;
     CDOMDevice.vcpu = device.cpucore;
-    CDOMDevice.mem = `${device.ram}${device.ram_size_type}`;
-
-    // FIXME: This can probably get removed.
-    // normalize RAM to GB.  TODO, allow dynamic update
-    let RAMRawData  = device.ram;
-    if (device.ram_size_type === 'MB') {
-       RAMRawData = Math.round(RAMRawData / 1024);
-    } else if (device.ram_size_type === 'TB') {
-        // multiply by 1024 to get GB
-        RAMRawData = Math.round(RAMRawData * 1024);
-    } else if (device.ram_size_type === 'GB' ) {
-      // standard, don't do anything
-    }
-    CDOMDevice.mem = device.ram;
+    CDOMDevice.memory = device.ram;
     return CDOMDevice;
   }
   loadDevices(result: any) {

@@ -104,7 +104,7 @@
         >
           <option
             class="list-group-item"
-            *ngFor="let vswitch of currentCDOM?.vswitch"
+            *ngFor="let vswitch of currentCDOM?.vsw"
             [ngValue]="vswitch"
           >
             {{ vswitch }}
@@ -121,83 +121,43 @@
         </button>
       </div>
     </div>
+  
+    <hr/>
 
     <div class="form-row">
-      <!--
-        Note from Steve M on WWN naming
-        names can only be [a-z, A-Z, 0-9] and start with a letter.
-        I'd even suggest forcing all lower a-z to keep it simple too.
-      -->
-      <div class="form-group col-md-4">
-        <label for="inputLDOMvdswwn">VDS WWN</label>
-        <input
-          name="inputLDOMvdswwn"
-          aria-label="World Wide Name for VDS"
-          class="form-control"
-          #vdsWwn="ngModel"
-          [(ngModel)]="inputLDOMvdswwn"
-        />
+
+      <div class="form-group col-md-6">
+          <table 
+          name="vdsTable"
+          class="table">
+            <thead>
+              <tr>
+                <th>VDS</th>
+                <th>Disk Name</th>
+                <th>Size</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vds of LDOM.vds">
+                <td>{{ vds.vds }}</td>
+                <td>{{ vds.diskName }}</td>
+                <td>{{ vds.diskSize }}</td>
+                <td>      
+                  <fa
+                  name ="trash"
+                  (click)="deleteVdsDev(vds)">
+                  </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button type="button" name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
+
       </div>
-      <div class="form-group col-md-4">
-        <label for="inputLDOMvdiskname">vDisk Name</label>
-        <input
-          name="inputLDOMvdsiskname"
-          aria-label="vDisk name"
-          class="form-control"
-          placeholder="vDisk name"
-          #vdiskName="ngModel"
-          [(ngModel)]="inputLDOMvdiskname"
-        />
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputLDOMvdsdev">VDS</label>
-        <ul class="list-group" *ngIf="vnets">
-          <li class="list-group-item" *ngFor="let vds of LDOM.add_vds">
-            <fa
-              name="chevron-up"
-              (click)="moveObjectPosition(-1, vds, LDOM.add_vds)"
-            >
-            </fa>
-            <fa
-              name="chevron-down"
-              (click)="moveObjectPosition(1, vds, LDOM.add_vds)"
-            >
-            </fa>
-            <fa name="trash" (click)="deleteObject(vds, LDOM.add_vds)"> </fa>
-            {{ vds }}
-          </li>
-        </ul>
-        <select
-          name="vdsSelect"
-          class="form-control"
-          id="inputLDOMvds"
-          #cdomInputName="ngModel"
-          [(ngModel)]="inputLDOMvds"
-        >
-          <option
-            class="list-group-item"
-            *ngFor="let vds of currentCDOM?.add_vds"
-            [ngValue]="vds"
-          >
-            {{ vds }}
-          </option>
-        </select>
-        <button
-          class="btn btn-outline-info"
-          id="enterVds"
-          type="button"
-          (click)="
-            addvdsObject(
-              inputLDOMvdswwn,
-              inputLDOMvdiskname,
-              inputLDOMvds,
-              LDOM.add_vds
-            )
-          "
-          [disabled]="!inputLDOMvdswwn && !inputLDOMvdiskname && !inputLDOMvds"
-        >
-          Add VDS
-        </button>
+
+      <div class="form-group col-md-2">
       </div>
     </div>
 
@@ -301,14 +261,14 @@
             type="text"
             class="form-control"
             placeholder="Key"
-            [(ngModel)]="newVariable.key"
+            [(ngModel)]="newSolarisVariable.key"
           />
           <input
             name="addVariableValue"
             type="text"
             class="form-control"
             placeholder="Value"
-            [(ngModel)]="newVariable.value"
+            [(ngModel)]="newSolarisVariable.value"
           />
           <button type="button" class="btn btn-success" (click)="addVariable()">
             Add Variable
@@ -328,3 +288,71 @@
     </div>
   </form>
 </div>
+
+<ngx-smart-modal
+  #vdsDevModalLdom
+  identifier="vdsDevModalLdom"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Add VDS Dev</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="vdsDevModalLdom.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="inputCDOMVDS">VDS</label>
+            <select
+              name="inputCDOMVDS"
+              aria-label="CDOM vDisk name"
+              class="form-control"
+              id="inputCDOMVDS"
+              #formVds="ngModel"
+              [(ngModel)]="addVdsDev.vds"
+            >
+              <option value="primary-vds0">primary-vds0</option>
+              <option value="secondary-vds0">secondary-vds0</option>
+            </select>
+          </div>
+    </div>
+
+    <div class="form-row">
+
+
+    <div class="form-group col-md-8">
+      <label for="diskName">Disk Name</label>
+      <input class="form-control" [(ngModel)]="addVdsDev.diskName" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="diskName">Disk Size</label>
+        <input class="form-control" type="number" [(ngModel)]="addVdsDev.diskSize" />
+      </div>
+  </div>
+
+
+</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+    (click)="insertVds()">
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vdsDevModalLdom.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>
