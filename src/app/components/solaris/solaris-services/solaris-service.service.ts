@@ -47,11 +47,11 @@ export class SolarisService {
     CDOMDevice.variables = tmpMetadata.variables;
     CDOMDevice.ilomname = tmpMetadata.ilomname;
     CDOMDevice.ilomipaddress = tmpMetadata.ilomip;
-    CDOMDevice.add_vcc = tmpMetadata.vccports;
+    CDOMDevice.vcc = tmpMetadata.vccports;
     CDOMDevice.vswitch = tmpMetadata.vswitch;
-    CDOMDevice.add_vds = tmpMetadata.add_vds;
-    CDOMDevice.set_vcpu = device.cpucore;
-    CDOMDevice.set_mem = `${device.ram}${device.ram_size_type}`;
+    CDOMDevice.vds = tmpMetadata.add_vds;
+    CDOMDevice.vcpu = device.cpucore;
+    CDOMDevice.mem = `${device.ram}${device.ram_size_type}`;
 
     // FIXME: This can probably get removed.
     // normalize RAM to GB.  TODO, allow dynamic update
@@ -64,7 +64,7 @@ export class SolarisService {
     } else if (device.ram_size_type === 'GB' ) {
       // standard, don't do anything
     }
-    CDOMDevice.set_mem = device.ram;
+    CDOMDevice.mem = device.ram;
     return CDOMDevice;
   }
   loadDevices(result: any) {

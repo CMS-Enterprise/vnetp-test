@@ -21,7 +21,9 @@ export class SolarisCdom {
   vsw: string;
   config: string;
 
+  /** Virtual CPU */
   vcpu: number;
+  /** Memory in GB */
   mem: string;
 
   // Related to Logical Interface from Network Module.
