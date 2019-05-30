@@ -21,15 +21,11 @@ export class SolarisCdomCreateComponent implements OnInit {
   clonefromCDOM: SolarisCdom;
   LogicalInterfaces: Array<LogicalInterface>;
   vrfs: Array<Vrf>;
-
-  // Added as type any
   inputCDOMVDSDevs: any;
   vds: any;
   cdomInput: any;
   launchLDOMJobs: any;
-
   addVdsDev: any;
-
 
   cpuCountArray: Array<number>;
   ramCountArray: Array<number>;
@@ -40,7 +36,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private hs: HelpersService,
-    private ngxSm: NgxSmartModalService
     ) {
   }
   cloneCdom() {
@@ -66,6 +61,7 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.CDOM.vnet = 'vnet0';
     this.CDOM.vccports = '5000-5100';
     this.CDOM.net_device = 'net0';
+    this.CDOM.vsw = 'primary-admin';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
@@ -90,23 +86,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     const body = { extra_vars };
     this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
     this.messageService.filter('Job Launched');
-    //this.router.navigate(['/solaris-cdom-list']);
-  }
-
-  openVdsModal() {
-    this.ngxSm.getModal('vdsDevModal').open();
-  }
-
-  insertVds() {
-    this.CDOM.vds.push(Object.assign({}, this.addVdsDev));
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
-    this.ngxSm.getModal('vdsDevModal').close();
-  }
-
-  deleteVdsDev(vdsDev: any) {
-    const vdsIndex = this.CDOM.vds.indexOf(vdsDev);
-    if (vdsIndex > -1 ) {
-      this.CDOM.vds.splice(vdsIndex, 1);
-    }
+    this.router.navigate(['/solaris-cdom-list']);
   }
 }

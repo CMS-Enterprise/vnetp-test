@@ -7,8 +7,8 @@ export class SolarisLdom {
   /** CDOM that LDOM is assigned to. */
   associatedcdom: string;
 
- // Compute
- /** Virtual CPU */
+  // Compute
+  /** Virtual CPU */
   vcpu: number;
   /** Memory in GB */
   memory: number;
@@ -16,15 +16,11 @@ export class SolarisLdom {
   /** Net Install */
   net_install: boolean;
 
-  // Network Info
-  /** IP Address */
-  bip: string;
-  /** Netmask */
-  bmask: string;
-  /** Gateway */
-  bgw: string;
- /** Assigned vNets */
+  /** Assigned vNets */
   vnet = new Array<string>();
+
+  /** Solaris Variables */
+  variables: Array<SolarisVariable>;
 
   // TODO: Is this neeeded?
   // create_manifest: string;
@@ -36,9 +32,6 @@ export class SolarisLdom {
   add_vdsdev: string;
   add_vdisk = new Array<string>();
   vds = new Array<any>();
-
-  /** Solaris Variables */
-  variables: Array<SolarisVariable>;
 }
 
 export interface SolarisLdomResponse {

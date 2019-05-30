@@ -11,6 +11,9 @@ export class SolarisCdom {
   /** Virtual Disks */
   vds = new Array<any>();
 
+  /** Indicates whether Alternate VDS should be created. */
+  alternatevds: boolean;
+
   // Networking
   /** Virtual Network */
   vnet: string;

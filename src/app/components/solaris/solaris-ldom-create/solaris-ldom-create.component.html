@@ -77,7 +77,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         <label for="inputLDOMvnet">vNet</label>
         <ul class="list-group" *ngIf="vnets">
           <li class="list-group-item" *ngFor="let vnet of LDOM.add_vnet">
@@ -126,7 +126,8 @@
 
     <div class="form-row">
 
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-5">
+          <label>Virtual Disks</label>
           <table 
           name="vdsTable"
           class="table">
@@ -155,6 +156,49 @@
 
           <button type="button" name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
 
+      </div>
+
+      
+        <div class="form-group offset-2 col-md-5">
+          <label for="inputLDOMvariable">Variables</label>
+          <table name="variableTable" class="table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let variable of LDOM.variables">
+                <td>{{ variable.key }}</td>
+                <td>{{ variable.value }}</td>
+                <td>
+                  <fa name="trash" (click)="deleteVariable(variable)"> </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <div class="input-group">
+            <input
+              name="addVariableKey"
+              type="text"
+              class="form-control"
+              placeholder="Key"
+              [(ngModel)]="newSolarisVariable.key"
+            />
+            <input
+              name="addVariableValue"
+              type="text"
+              class="form-control"
+              placeholder="Value"
+              [(ngModel)]="newSolarisVariable.value"
+            />
+            <button type="button" class="btn btn-success" (click)="addVariable()">
+              Add Variable
+            </button>
+          </div>
       </div>
 
       <div class="form-group col-md-2">
@@ -195,88 +239,6 @@
 
     <hr />
 
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputLDOMbip">IP</label>
-        <input
-          name="inputLDOMbip"
-          aria-label="LDOM Net Install"
-          type="text"
-          class="form-control"
-          #bip="ngModel"
-          [(ngModel)]="LDOM.bip"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputLDOMbmask">Net Mask</label>
-        <input
-          name="inputLDOMbmask"
-          aria-label="LDOM Net Install"
-          type="text"
-          class="form-control"
-          #netmask="ngModel"
-          [(ngModel)]="LDOM.bmask"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputLDOMbgw">Gateway</label>
-        <input
-          name="inputLDOMbgw"
-          aria-label="LDOM Net Install"
-          type="text"
-          class="form-control"
-          #bgw="ngModel"
-          [(ngModel)]="LDOM.bgw"
-        />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group offset-6 col-md-6">
-        <label for="inputLDOMvariable">Variables</label>
-        <table name="variableTable" class="table">
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let variable of LDOM.variables">
-              <td>{{ variable.key }}</td>
-              <td>{{ variable.value }}</td>
-              <td>
-                <fa name="trash" (click)="deleteVariable(variable)"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="input-group">
-          <input
-            name="addVariableKey"
-            type="text"
-            class="form-control"
-            placeholder="Key"
-            [(ngModel)]="newSolarisVariable.key"
-          />
-          <input
-            name="addVariableValue"
-            type="text"
-            class="form-control"
-            placeholder="Value"
-            [(ngModel)]="newSolarisVariable.value"
-          />
-          <button type="button" class="btn btn-success" (click)="addVariable()">
-            Add Variable
-          </button>
-        </div>
-      </div>
-    </div>
-
     <div class="btn-group">
       <button
         class="btn btn-success"
@@ -293,6 +255,7 @@
   #vdsDevModalLdom
   identifier="vdsDevModalLdom"
   customClass="'modal-content'"
+  [dismissable]="false"
 >
   <div class="modal-header">
     <h4 class="modal-title">Add VDS Dev</h4>
