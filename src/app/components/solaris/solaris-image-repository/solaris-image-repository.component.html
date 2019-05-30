@@ -1,0 +1,104 @@
+<button class="btn btn-success" (click)="openImageModal()">Add Image</button>
+
+<table class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Size</th>
+        <th scope="col">Solaris Version</th>
+        <th scope="col">Source</th> 
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let solarisImage of SolarisImages">
+        <td>
+          <p>{{solarisImage.Name}}</p>
+        </td>
+        <td>
+          <p>{{solarisImage.Size}} MB</p>
+        </td>
+        <td>
+          <p>{{solarisImage.Version}}</p>
+        </td>
+        <td>
+            <p>{{solarisImage.Source}}</p>
+          </td>
+          <td>
+            <fa name='trash'
+            (click)=deleteImage(solarisImage)></fa>
+          </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ngx-smart-modal
+  #imageModal
+  identifier="imageModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Image</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="imageModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="inputCDOMVDS">VDS</label>
+            <select
+              name="inputCDOMVDS"
+              aria-label="CDOM vDisk name"
+              class="form-control"
+              id="inputCDOMVDS"
+              #formVds="ngModel"
+              [(ngModel)]="newSolarisImage.Type"
+            >
+              <option value="solaris">Solaris</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+    </div>
+
+    <div class="form-row">
+
+
+    <div class="form-group col-md-4">
+      <label>Image Name</label>
+      <input class="form-control" [(ngModel)]="newSolarisImage.Name" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>Version</label>
+        <input class="form-control" [(ngModel)]="newSolarisImage.Version" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>Source</label>
+        <input class="form-control" [(ngModel)]="newSolarisImage.Source" />
+    </div>
+  </div>
+</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+    (click)="insertImage()">
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vdsDevModal.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>
