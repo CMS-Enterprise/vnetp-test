@@ -36,7 +36,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     ) {
   }
   cloneCdom() {
-    console.log(this.cdomInput);
     this.CDOM = this.cdomInput;
   }
 
@@ -70,7 +69,6 @@ export class SolarisCdomCreateComponent implements OnInit {
    this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
-
     const extra_vars: {[k: string]: any} = {};
     // static listing of commands to be ran, needed for Solaris automation
     this.CDOM.devicetype = 'solaris_cdom';
