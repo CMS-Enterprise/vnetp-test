@@ -31,7 +31,6 @@ export class SolarisLdomCreateComponent implements OnInit {
   addVdsDev: any;
 
   // Added as type any
-  cdomInput: any;
   cpuCountArray: number[];
   ramCountArray: number[];
 
@@ -46,9 +45,6 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.vnets = new Array<any>();
     this.LDOM = new SolarisLdom();
 
-  }
-  printCDOM(cdomInput: SolarisCdom) {
-    this.currentCDOM = cdomInput;
   }
   addVariable() {
     if (!this.newSolarisVariable) { return; }
