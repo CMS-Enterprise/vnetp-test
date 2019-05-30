@@ -35,10 +35,11 @@ export class SolarisCdomCreateComponent implements OnInit {
     private hs: HelpersService
     ) {
   }
-  setCurrentCDOM(cdomInput: SolarisCdom) {
-    this.CDOM = cdomInput;
-    console.log(cdomInput);
+  cloneCdom() {
+    console.log(this.cdomInput);
+    this.CDOM = this.cdomInput;
   }
+
   getVrfs() {
     this.LogicalInterfaces = new Array<LogicalInterface>();
 

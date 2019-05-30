@@ -15,25 +15,28 @@
       </div>
 
       <div class="form-group col-md-4">
-        <label for="inputCDOMCloneFrom">Clone CDOM From:</label>
-        <select
-          name="cdomSelect"
-          class="form-control"
-          id="inputLDOMaddCDOM"
-          #cdomInputName="ngModel"
-          [(ngModel)]="cdomInput"
-          (ngModelChange)="setCurrentCDOM(cdomInput)"
-        >
-          <option
-            class="list-group-item"
-            *ngFor="let cdom of CDOMDeviceArray"
-            [ngValue]="cdom"
+        <label for="cdomClone">Clone CDOM From:</label>
+        <div class="input-group">
+          <select
+            name="cdomClone"
+            class="form-control"
+            id="cdomClone"
+            #cdomClone="ngModel"
+            [(ngModel)]="cdomInput"
           >
-            {{ cdom.name }}
-          </option>
-        </select>
+            <option
+              class="list-group-item"
+              *ngFor="let cdom of CDOMDeviceArray"
+              [ngValue]="cdom"
+            >
+              {{ cdom.name }}
+            </option>
+          </select>
+          <button class="btn btn-success" (click)="cloneCdom()">
+            Clone
+          </button>
+        </div>
       </div>
-
     </div>
 
     <hr />
@@ -48,10 +51,13 @@
           #name="ngModel"
           [(ngModel)]="CDOM.set_mem"
         >
-        <option></option>
-        <option *ngFor="let ramAmount of [0.5,1,2,4,8,16,32,64]" [ngValue]=ramAmount>{{ ramAmount }} GB</option>
-      </select>
-
+          <option></option>
+          <option
+            *ngFor="let ramAmount of [0.5, 1, 2, 4, 8, 16, 32, 64]"
+            [ngValue]="ramAmount"
+            >{{ ramAmount }} GB</option
+          >
+        </select>
       </div>
 
       <div class="form-group col-md-4">
@@ -63,14 +69,18 @@
           #name="ngModel"
           [(ngModel)]="CDOM.set_vcpu"
         >
-        <option></option>
-        <option *ngFor="let cpuCount of [1,2,4,6,8,10,12]" [ngValue]=cpuCount>{{ cpuCount }} vCPU's</option>
-      </select>
+          <option></option>
+          <option
+            *ngFor="let cpuCount of [1, 2, 4, 6, 8, 10, 12]"
+            [ngValue]="cpuCount"
+            >{{ cpuCount }} vCPU's</option
+          >
+        </select>
       </div>
     </div>
 
     <hr />
- 
+
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="inputCDOMVDSDevs">VDSDevs</label>
@@ -81,16 +91,17 @@
           #cdomInputName="ngModel"
           [(ngModel)]="CDOM.vds"
         >
-        <option value="primary-vds0">primary-vds0</option>
-        <option
-        class="list-group-item"
-        *ngFor="let logicalInterface of LogicalInterfaces"
-        [ngValue]="logicalInterface">    
-        {{ logicalInterface.Name }}   
-      </option>
-    </select>  
-  </div>    
-</div>
+          <option value="primary-vds0">primary-vds0</option>
+          <option
+            class="list-group-item"
+            *ngFor="let logicalInterface of LogicalInterfaces"
+            [ngValue]="logicalInterface"
+          >
+            {{ logicalInterface.Name }}
+          </option>
+        </select>
+      </div>
+    </div>
 
     <hr />
 
