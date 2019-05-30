@@ -10,6 +10,7 @@
       <th>CDOM Name</th>
       <th class="col-md-4 offset-md-4"> AA</th>
       <th>&nbsp;</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +23,9 @@
         </td>
           <td class="spaced"> 
             <button class="btn btn-default" (click)="getLdomsForCDom(device.name)">[Fetch]</button>
+          </td>
+          <td>
+            <button class="btn btn-default" (click)="addLdom()">Add LDOM</button>
           </td>
       </tr>
   </tbody>

@@ -35,10 +35,13 @@ export class SolarisCdomListComponent implements OnInit {
     console.log(name);
     this.automationApiService.getLDomsForCDom(name)
     .subscribe(data => {
-      console.log(data);
       const ldomForCDomResponse = data as SolarisLdomResponse;
       this.returnLDOMs = ldomForCDomResponse.Devices;
     });
+  }
 
+  addLdom(deviceName: string) {
+    this.solarisService.parentCdom = deviceName;
+    this.router.navigate(['/solaris-ldom-create']);
   }
 }
