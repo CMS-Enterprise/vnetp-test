@@ -3,14 +3,13 @@ import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisServiceService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { PhysicalInterface } from 'src/app/models/network/physical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
-import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
+import { Subnet} from 'src/app/models/d42/subnet';
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -39,11 +38,9 @@ export class SolarisCdomCreateComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private solarisService: SolarisServiceService,
     private router: Router,
-    private authService: AuthService,
     private messageService: MessageService,
     private hs: HelpersService
     ) {
-    this.CDOM = new SolarisCdom();
   }
   setCurrentCDOM(cdomInput: SolarisCdom) {
     this.CDOM = cdomInput;
@@ -63,8 +60,10 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.CDOM.add_vsw = "net-dev=net0 primary-admin";
-    this.CDOM.add_vcc = 'primary-vcc';
+    this.CDOM = new SolarisCdom();
+    this.CDOM.add_vsw = 'primary-vsw';
+    this.CDOM.vccname = 'primary-vcc';
+    this.CDOM.vds = 'primary-vds0';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
