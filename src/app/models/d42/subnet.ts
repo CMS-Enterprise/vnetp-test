@@ -4,6 +4,7 @@ import { CustomFieldsObject, CustomField } from '../custom-fields-object.interfa
 export class Subnet implements CustomFieldsObject {
     public subnet_id: number;
     public vrf_group_id?: number;
+    public vrf_group_name?: string;
     public name: string;
     public description: string;
     public network: string;
