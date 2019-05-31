@@ -1,6 +1,8 @@
-<!--TODO: Replace Test Data in getLdoms()-->
 <!--TODO: routerLink should navigate to CDOM Device Detail View -->
-<h4>CDOM List : {{ devices?.length }}</h4>
+<h4>CDOM List</h4>
+
+<button class="btn btn-success" routerLink="/solaris-cdom-create">New CDOM</button>
+
 <div>
   <div class="card">
     <table class="table table-striped">
@@ -9,13 +11,12 @@
           <th>CDOM Name</th>
           <th>Number of LDOMs</th>
           <th></th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let device of CDOMDeviceArray">
           <td>
-            <a routerLink="/dashboard"
+            <a routerLink="/solaris-cdom-create"
               ><fa name="server" style="color:black;"></fa> {{ device.name }}</a
             >
           </td>
