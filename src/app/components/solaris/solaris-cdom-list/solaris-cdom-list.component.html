@@ -1,32 +1,44 @@
-
 <!--TODO: Replace Test Data in getLdoms()-->
 <!--TODO: routerLink should navigate to CDOM Device Detail View -->
 <h4>CDOM List : {{ devices?.length }}</h4>
-
-<div class="table table-striped">
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>CDOM Name</th>
-      <th class="col-md-4 offset-md-4"> AA</th>
-      <th>&nbsp;</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let device of CDOMDeviceArray">
-        <td>
-          <fa name="server"></fa>
-        </td>
-        <td>
-          <a routerLink='/dashboard'>{{device.name}}</a>
-        </td>
-          <td class="spaced"> 
-            <button class="btn btn-default" (click)="getLdomsForCDom(device.name)">[Fetch]</button>
+<div>
+  <div class="card">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>CDOM Name</th>
+          <th>Number of LDOMs</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of CDOMDeviceArray">
+          <td>
+            <a routerLink="/dashboard"
+              ><fa name="server" style="color:black;"></fa> {{ device.name }}</a
+            >
           </td>
           <td>
-            <button class="btn btn-default" (click)="addLdom()">Add LDOM</button>
+            2
           </td>
-      </tr>
-  </tbody>
+          <td>
+            <div class="btn-toolbar" role="toolbar">
+              <div class="btn-group mr-2">
+                <button
+                  class="btn btn-dark"
+                  (click)="getLdomsForCDom(device.name)"
+                >
+                  View LDOMs
+                </button>
+                <button class="btn btn-success" (click)="addLdom()">
+                  Create new LDOM
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
