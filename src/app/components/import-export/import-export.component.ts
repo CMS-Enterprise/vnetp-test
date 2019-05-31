@@ -29,11 +29,11 @@ export class ImportExportComponent implements OnInit {
   }
 
   importFile(evt) {
-    this.Import(evt, rules => this.importCallback(rules));
+    this.Import(evt, importObjects => this.importCallback(importObjects));
   }
 
-  importCallback(rules) {
-    this.import.emit(rules);
+  importCallback(importObjects) {
+    this.import.emit(importObjects);
     this.importFileType = '';
   }
 
