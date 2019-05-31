@@ -190,4 +190,11 @@ export class NetworkInterfacesComponent implements OnInit {
   ngOnInit() {
     this.getVrfs();
   }
+
+  insertLogicalInterfaces(logicalIntefaces) {
+    if (!this.LogicalInterfaces) { this.LogicalInterfaces = new Array<LogicalInterface>(); }
+    logicalIntefaces.forEach(logicalInterface => {
+      this.LogicalInterfaces.push(logicalInterface);
+    })
+  }
 }

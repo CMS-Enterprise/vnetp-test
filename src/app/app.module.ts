@@ -60,6 +60,7 @@ import { NetworkInterfacesComponent } from './components/network-interfaces/netw
 import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
+import { ImportExportComponent } from './components/import-export/import-export.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { SolarisImageRepositoryComponent } from './components/solaris/solaris-im
     HealthMonitorModalComponent,
     NetworkInterfacesComponent,
     LogicalInterfaceModalComponent,
-    SolarisImageRepositoryComponent
+    SolarisImageRepositoryComponent,
+    ImportExportComponent
   ],
   imports: [
     BrowserModule,
