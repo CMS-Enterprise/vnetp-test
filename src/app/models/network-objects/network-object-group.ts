@@ -1,5 +1,5 @@
-import { NetworkObject } from './network-objects/network-object';
-import { UniqueNameObject } from './interfaces/unique-name-object.interface';
+import { NetworkObject } from './network-object';
+import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
 export class NetworkObjectGroup implements UniqueNameObject {
     Name: string;

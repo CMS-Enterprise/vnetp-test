@@ -10,8 +10,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ModalMode } from 'src/app/models/modal-mode';
-import { NetworkObject } from 'src/app/models/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;

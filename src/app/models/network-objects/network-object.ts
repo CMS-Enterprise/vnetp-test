@@ -1,4 +1,4 @@
-import { UniqueNameObject } from './interfaces/unique-name-object.interface';
+import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
 export class NetworkObject implements UniqueNameObject {
     Name: string;

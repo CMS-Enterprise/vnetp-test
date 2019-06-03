@@ -4,8 +4,8 @@ import { NetworkObjectGroupModalComponent } from './network-object-group-modal.c
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
-import { NetworkObject } from 'src/app/models/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;

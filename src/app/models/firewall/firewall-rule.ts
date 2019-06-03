@@ -1,6 +1,6 @@
-import { NetworkObjectGroup } from '../network-object-group';
+import { NetworkObjectGroup } from '../network-objects/network-object-group';
 import { ServiceObject } from '../service-object';
-import { NetworkObject } from '../network-object';
+import { NetworkObject } from '../network-objects/network-object';
 import { ServiceObjectGroup } from '../service-object-group';
 import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
