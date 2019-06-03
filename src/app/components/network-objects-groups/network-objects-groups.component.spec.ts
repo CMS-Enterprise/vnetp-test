@@ -12,6 +12,7 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
+import { ImportExportComponent } from '../import-export/import-export.component';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -31,7 +32,8 @@ describe('NetworkObjectsGroupsComponent', () => {
       declarations: [
         NetworkObjectsGroupsComponent,
         NetworkObjectModalComponent,
-        NetworkObjectGroupModalComponent],
+        NetworkObjectGroupModalComponent,
+      ImportExportComponent],
       providers: [{provide: NgxSmartModalService, useValue: ngx }, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
     .compileComponents();
@@ -45,21 +47,6 @@ describe('NetworkObjectsGroupsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should import', () => {
-
-   const objects = [{ GroupName: '', Name: 'Test1', Type: 'host', HostAddress: '1.1.1.1'},
-      {GroupName: '', Name: 'Test2', Type: 'network', CidrAddress: '1.1.1.0/24'},
-      {GroupName: 'Group1', Name: 'Test3', Type: 'host', CidrAddress: '1.1.1.1'},
-      {GroupName: 'Group2', Name: 'Test4', Type: 'network', CidrAddress: '1.1.1.0/24'}, ];
-
-   expect(component.networkObjects.length === 2).toBeTruthy();
-   expect(component.networkObjectGroups.length === 2).toBeTruthy();
-   expect(component.networkObjects[0].Name === 'Test1').toBeTruthy();
-   expect(component.networkObjects[1].Name === 'Test2').toBeTruthy();
-   expect(component.networkObjectGroups[0].NetworkObjects[0].Name === 'Test3').toBeTruthy();
-   expect(component.networkObjectGroups[1].NetworkObjects[0].Name === 'Test4').toBeTruthy();
   });
 
   it('should create network object', () => {

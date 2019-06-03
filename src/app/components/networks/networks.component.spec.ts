@@ -4,6 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { NetworksComponent } from './networks.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ImportExportComponent } from '../import-export/import-export.component';
+import { FormsModule } from '@angular/forms';
+import { PapaParseModule } from 'ngx-papaparse';
 
 describe('NetworksComponent', () => {
   let component: NetworksComponent;
@@ -11,8 +14,8 @@ describe('NetworksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]) ],
-      declarations: [ NetworksComponent ],
+      imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]), FormsModule, PapaParseModule ],
+      declarations: [ NetworksComponent, ImportExportComponent ],
       providers: [HttpClientModule, HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();

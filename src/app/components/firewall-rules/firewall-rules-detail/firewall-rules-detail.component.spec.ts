@@ -14,6 +14,7 @@ import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { ImportExportComponent } from '../../import-export/import-export.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -27,7 +28,7 @@ describe('FirewallRulesDetailComponent', () => {
       imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
       NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
       declarations: [ FirewallRulesDetailComponent,
-      FirewallRuleModalComponent ],
+      FirewallRuleModalComponent, ImportExportComponent ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
     .compileComponents();
