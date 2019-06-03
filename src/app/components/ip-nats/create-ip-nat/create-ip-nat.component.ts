@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { IpNat } from 'src/app/models/ip-nat';
+import { IpNat } from 'src/app/models/firewall/ip-nat';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';

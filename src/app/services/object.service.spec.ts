@@ -4,8 +4,8 @@ import { NetworkObject } from '../models/network-objects/network-object';
 import { FirewallRule } from '../models/firewall/firewall-rule';
 import { RuleLocation } from '../models/rule-location';
 import { NetworkObjectGroup } from '../models/network-objects/network-object-group';
-import { ServiceObject } from '../models/service-object';
-import { ServiceObjectGroup } from '../models/service-object-group';
+import { ServiceObject } from '../models/service-objects/service-object';
+import { ServiceObjectGroup } from '../models/service-objects/service-object-group';
 import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 describe('FirewallRuleService', () => {

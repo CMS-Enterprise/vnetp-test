@@ -11,9 +11,9 @@ import { Subscription } from 'rxjs';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 
 @Component({

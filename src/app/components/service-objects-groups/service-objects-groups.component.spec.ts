@@ -11,8 +11,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
 import { ModalMode } from 'src/app/models/modal-mode';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
