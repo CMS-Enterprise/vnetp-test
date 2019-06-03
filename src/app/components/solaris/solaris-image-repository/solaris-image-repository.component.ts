@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SolarisImage } from 'src/app/models/solaris-image';
+import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({

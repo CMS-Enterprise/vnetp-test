@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CustomFieldsObject, CustomField } from '../models/custom-fields-object.interface';
+import { CustomFieldsObject, CustomField } from '../models/interfaces/custom-fields-object.interface';
 
 @Injectable({
   providedIn: 'root'

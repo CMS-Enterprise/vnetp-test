@@ -1,5 +1,5 @@
-import { LogicalInterface } from './network/logical-interface';
-import { Subnet } from './d42/subnet';
+import { LogicalInterface } from '../network/logical-interface';
+import { Subnet } from '../d42/subnet';
 
 export class LogicalInterfaceModalDto {
 

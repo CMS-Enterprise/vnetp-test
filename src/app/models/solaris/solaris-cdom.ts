@@ -1,4 +1,4 @@
-import { SolarisVariable } from "./solaris-ldom";
+import { SolarisVariable } from './solaris-variable';
 
 export class SolarisCdom {
   name: string;
@@ -52,14 +52,5 @@ export class SolarisCdom {
   vcsdevs: string; // TODO: Is this valid?
 }
 
-export interface SolarisCdomResponse {
-  total_count: number;
-  offset: number;
-  limit: number;
-  Devices: SolarisCdom[];
-}
 
-export interface KeyValuePair {
-  key: string;
-  value: any;
-}
+

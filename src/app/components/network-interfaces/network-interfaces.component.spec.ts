@@ -10,6 +10,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { HttpClientModule, HttpHandler, HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { ImportExportComponent } from '../import-export/import-export.component';
 
 describe('NetworkInterfacesComponent', () => {
   let component: NetworkInterfacesComponent;
@@ -28,7 +29,8 @@ describe('NetworkInterfacesComponent', () => {
       ],
       declarations: [
 NetworkInterfacesComponent,
-LogicalInterfaceModalComponent
+LogicalInterfaceModalComponent,
+ImportExportComponent
       ],
       providers: [
         NgxSmartModalService,

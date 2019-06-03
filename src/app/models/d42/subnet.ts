@@ -1,4 +1,4 @@
-import { CustomFieldsObject, CustomField } from '../custom-fields-object.interface';
+import { CustomFieldsObject, CustomField } from '../interfaces/custom-fields-object.interface';
 
 // tslint:disable variable-name
 export class Subnet implements CustomFieldsObject {
