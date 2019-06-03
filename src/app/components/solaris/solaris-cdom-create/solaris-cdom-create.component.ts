@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris-cdom';
+import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
