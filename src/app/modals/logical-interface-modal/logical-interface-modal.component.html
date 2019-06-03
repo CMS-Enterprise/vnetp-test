@@ -93,57 +93,6 @@
           </tbody>
         </table>
 
-        Physical Interfaces
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <select
-              formControlName="selectedPhysicalInterface"
-              class="form-control"
-            >
-              <option></option>
-              <option
-                *ngFor="let interface of availablePhysicalInterfaces"
-                [ngValue]="interface"
-                >{{ interface }}</option
-              >
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <button
-              type="button"
-              class="btn btn-success"
-              (click)="selectPhysicalInterface()"
-            >
-              <fa name="plus" size="1x"></fa>
-            </button>
-          </div>
-        </div>
-
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let physicalInterface of selectedPhysicalInterfaces">
-              <td>
-                <p>{{ physicalInterface }}</p>
-              </td>
-              <td>
-                <fa
-                  name="trash"
-                  (click)="unselectPhysicalInterface(physicalInterface)"
-                >
-                </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
         <div class="modal-footer">
           <button class="btn btn-primary" data-dismiss="modal">
             Save

@@ -8,7 +8,6 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-solaris-cdom-create',
