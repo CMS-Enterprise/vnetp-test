@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { IpAddressService } from './ip-address.service';
 import { Subnet } from '../models/d42/subnet';
+import { IPv4Range } from 'ip-num/IPv4Range';
 
 describe('IpAddressService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -278,6 +279,22 @@ describe('IpAddressService', () => {
     expect(result[2]).toBeTruthy();
   });
 
+  it('should be valid gateway', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+
+    expect(service.isValidGateway('192.168.0.1', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
+    expect(service.isValidGateway('192.168.0.254', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
+    expect(service.isValidGateway('192.168.1.0', IPv4Range.fromCidr('192.168.0.0/23'))).toBeTruthy();
+    expect(service.isValidGateway('192.168.0.127', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
+  });
+
+  it('shoudl be invalid gateway', () => {
+    const service: IpAddressService = TestBed.get(IpAddressService);
+
+    expect(service.isValidGateway('192.168.0.0', IPv4Range.fromCidr('192.168.0.0/24'))).toBeFalsy();
+    expect(service.isValidGateway('192.168.0.255', IPv4Range.fromCidr('192.168.0.0/24'))).toBeFalsy();
+    expect(service.isValidGateway('192.168.1.0', IPv4Range.fromCidr('192.168.1.0/24'))).toBeFalsy();
+  });
 });
 
 
