@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { FirewallRule } from 'src/app/models/firewall-rule';
-import { Papa } from 'ngx-papaparse';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NetworkObjectDto } from 'src/app/models/network-object-dto';
-import { NetworkObject } from 'src/app/models/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
+import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -34,13 +33,16 @@ export class FirewallRulesDetailComponent implements OnInit {
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
 
-
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
 
+  importFileType: string;
+  fileInput: any;
+  downloadHref: any;
+
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
-              private papa: Papa, private hs: HelpersService, private ngx: NgxSmartModalService) {
+              private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
     this.firewallRules = [];
    }
@@ -149,7 +151,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   subscribeToFirewallRuleModal() {
     this.firewallRuleModalSubscription =
     this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as FirewallRuleModalDto;
+      const data = modal.getData() as FirewallRuleModalDto;
 
       if (data && data.FirewallRule !== undefined) {
         this.saveFirewallRule(data.FirewallRule);
@@ -175,7 +177,7 @@ export class FirewallRulesDetailComponent implements OnInit {
   updateFirewallRules() {
     const firewallRules = this.firewallRules.filter(r => !r.Deleted);
 
-    var extra_vars: {[k: string]: any} = {};
+    let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
     extra_vars.firewall_rules = firewallRules;
 
@@ -196,26 +198,6 @@ export class FirewallRulesDetailComponent implements OnInit {
       this.firewallRules.splice(index, 1);
       this.dirty = true;
     }
-  }
-
-  handleFileSelect(evt) {
-    let files = evt.target.files; // FileList object
-    let file = files[0];
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      this.parseCsv(reader.result);
-    };
-  }
-
-  parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.insertFirewallRules(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
   }
 
   insertFirewallRules(rules) {

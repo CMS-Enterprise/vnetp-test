@@ -3,8 +3,8 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
-import { ServiceObject } from 'src/app/models/Service-object';
-import { ServiceObjectGroup } from 'src/app/models/Service-object-group';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;

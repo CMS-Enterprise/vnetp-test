@@ -2,7 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ServiceObject } from 'src/app/models/service-object';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 

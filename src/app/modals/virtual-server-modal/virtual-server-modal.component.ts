@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
-import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 
 @Component({
@@ -119,6 +119,24 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     if (selectedIndex > -1) {
       this.selectedIRules.splice(selectedIndex, 1);
     }
+  }
+
+  moveIRule(value: number, rule) {
+    const ruleIndex = this.selectedIRules.indexOf(rule);
+
+    // If the rule isn't in the array, is at the start of the array and requested to move up
+    // or if the rule is at the end of the array, return.
+    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.selectedIRules.length) { return; }
+
+    const nextRule = this.selectedIRules[ruleIndex + value];
+
+    // If the next rule doesn't exist, return.
+    if (nextRule === null) { return; }
+
+    const nextRuleIndex = this.selectedIRules.indexOf(nextRule);
+
+    [this.selectedIRules[ruleIndex], this.selectedIRules[nextRuleIndex]] =
+    [this.selectedIRules[nextRuleIndex], this.selectedIRules[ruleIndex]];
   }
 
   private buildForm() {

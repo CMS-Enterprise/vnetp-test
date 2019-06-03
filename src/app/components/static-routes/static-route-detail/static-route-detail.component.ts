@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { StaticRoute } from 'src/app/models/static-route';
+import { StaticRoute } from 'src/app/models/network/static-route';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -84,5 +84,14 @@ export class StaticRouteDetailComponent implements OnInit {
     if (staticRoutes) {
       this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
     }
+  }
+
+  insertStaticRoutes(routes){
+    if (!this.staticRoutes) { this.staticRoutes = new Array<StaticRoute>(); }
+    routes.forEach(route => {
+      if (routes.Name !== '') {
+        this.staticRoutes.push(route);
+      }
+    });
   }
 }

@@ -3,9 +3,9 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 
 @Component({
   selector: 'app-pool-modal',
@@ -37,6 +37,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     pool.LoadBalancingMethod = this.form.value.loadBalancingMethod;
     pool.Members = Object.assign([], this.poolMembers);
     pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
+
+    pool.Name.trim();
 
     const dto = new PoolModalDto();
     dto.Pool = pool;

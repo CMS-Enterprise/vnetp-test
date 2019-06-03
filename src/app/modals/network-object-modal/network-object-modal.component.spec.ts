@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectModalComponent } from './network-object-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NetworkObject } from 'src/app/models/network-object';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxMaskModule } from 'ngx-mask';
 
 describe('NetworkObjectModalComponent', () => {

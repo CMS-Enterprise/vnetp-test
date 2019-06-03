@@ -14,7 +14,7 @@ export class NetworksComponent implements OnInit {
     this.subnets = [];
   }
 
-  subnets: any;
+  subnets: Array<Subnet>;
 
   ngOnInit() {
     this.getNetworks();
@@ -34,5 +34,13 @@ export class NetworksComponent implements OnInit {
 
     getTier(subnet: Subnet){
       return this.helperService.getStringCustomField(subnet, 'tier');
+    }
+
+    exportNetworkConfig() {
+      return this.subnets;
+    }
+
+    importNetworkConfig(subnets) {
+      throw new Error('Not Implemented');
     }
 }
