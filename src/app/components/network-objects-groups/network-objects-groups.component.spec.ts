@@ -54,8 +54,6 @@ describe('NetworkObjectsGroupsComponent', () => {
       {GroupName: 'Group1', Name: 'Test3', Type: 'host', CidrAddress: '1.1.1.1'},
       {GroupName: 'Group2', Name: 'Test4', Type: 'network', CidrAddress: '1.1.1.0/24'}, ];
 
-   component.importObjects(objects);
-
    expect(component.networkObjects.length === 2).toBeTruthy();
    expect(component.networkObjectGroups.length === 2).toBeTruthy();
    expect(component.networkObjects[0].Name === 'Test1').toBeTruthy();

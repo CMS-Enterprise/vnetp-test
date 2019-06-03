@@ -56,8 +56,6 @@ describe('ServicesObjectsGroupsComponent', () => {
        {GroupName: 'Group1', Name: 'Test3'},
        {GroupName: 'Group2', Name: 'Test4'}, ];
 
-    component.importObjects(objects);
-
     expect(component.serviceObjects.length === 2).toBeTruthy();
     expect(component.serviceObjectGroups.length === 2).toBeTruthy();
     expect(component.serviceObjects[0].Name === 'Test1').toBeTruthy();
