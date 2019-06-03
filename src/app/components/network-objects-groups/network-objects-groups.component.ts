@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
-import { NetworkObjectModalDto } from 'src/app/models/network-object-modal-dto';
+import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 
 @Component({
   selector: 'app-network-objects-groups',

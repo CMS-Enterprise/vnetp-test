@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange} from 'src/app/validators/network-form-validators';
-import { NetworkObjectModalDto } from 'src/app/models/network-object-modal-dto';
+import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
 
 @Component({
   selector: 'app-network-object-modal',
