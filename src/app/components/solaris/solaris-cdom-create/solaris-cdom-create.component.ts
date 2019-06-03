@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SolarisCdom, SolarisCdomResponse } from '../../../models/solaris/solaris-cdom';
+import { SolarisCdom } from '../../../models/solaris/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
+import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
 
 @Component({
   selector: 'app-solaris-cdom-create',
