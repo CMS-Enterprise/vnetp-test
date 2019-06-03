@@ -56,8 +56,23 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/1.0/ipnat/');
   }
 
-  getDevices() {
-    return this.http.get(environment.apiBase + '/api/1.0/devices/');
+  getDevicesbyID(id: string) {
+    return this.http.get(environment.apiBase + `/api/1.0/devices/${id}/`);
+  }
+  getDevices(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/`);
+  }
+  
+  getCDoms(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`);
+  }
+  
+  getLDoms(){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
+  }
+  
+  getLDomsForCDom(name: string){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
 
   getVrfs() {

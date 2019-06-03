@@ -37,6 +37,10 @@ import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
 import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
 import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
+import { SolarisComponent } from './components/solaris/solaris.component';
+import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
+import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
+import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
@@ -50,11 +54,11 @@ import { LoadBalancersComponent } from './components/load-balancers/load-balance
 import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
-import { HealthMonitor } from './models/loadbalancer/health-monitor';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
-import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
+import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
+import { ImportExportComponent } from './components/import-export/import-export.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +82,10 @@ import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal
     IpNatDetailComponent,
     CreateIpNatComponent,
     SpecialCharacterDirective,
+    SolarisComponent,
+    SolarisCdomCreateComponent,
+    SolarisLdomCreateComponent,
+    SolarisCdomListComponent,
     DeployComponent,
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
@@ -93,7 +101,9 @@ import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal
     IRuleModalComponent,
     HealthMonitorModalComponent,
     NetworkInterfacesComponent,
-    LogicalInterfaceModalComponent
+    LogicalInterfaceModalComponent,
+    SolarisImageRepositoryComponent,
+    ImportExportComponent
   ],
   imports: [
     BrowserModule,

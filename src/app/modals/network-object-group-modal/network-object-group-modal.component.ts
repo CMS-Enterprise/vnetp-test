@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { NetworkObject } from 'src/app/models/network-object';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({

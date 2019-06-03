@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FirewallRule } from '../models/firewall-rule';
-import { ServiceObject } from '../models/service-object';
-import { ServiceObjectGroup } from '../models/service-object-group';
-import { NetworkObject } from '../models/network-object';
-import { NetworkObjectGroup } from '../models/network-object-group';
-import { RuleLocation } from '../models/rule-location';
-import { UniqueNameObject } from '../models/unique-name-object.interface';
+import { FirewallRule } from '../models/firewall/firewall-rule';
+import { ServiceObject } from '../models/service-objects/service-object';
+import { ServiceObjectGroup } from '../models/service-objects/service-object-group';
+import { NetworkObject } from '../models/network-objects/network-object';
+import { NetworkObjectGroup } from '../models/network-objects/network-object-group';
+import { RuleLocation } from '../models/firewall/rule-location';
+import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 @Injectable({
   providedIn: 'root'

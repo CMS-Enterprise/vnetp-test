@@ -1,0 +1,320 @@
+<div>
+  <form name="LDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
+    <div class="form-row">
+      <div class="form-group col-md-4 ">
+        <label for="inputLDOMName">LDOM Name</label>
+        <input
+          name="inputLDOMName"
+          aria-label="Input LDOM Name"
+          class="form-control"
+          placeholder="Name"
+          #inputLDOMName="ngModel"
+          [(ngModel)]="LDOM.name"
+        />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputLDOMaddCDOM">CDOM</label>
+        <select
+          name="cdomSelect"
+          class="form-control"
+          id="inputLDOMaddCDOM"
+          #cdomInputName="ngModel"
+          [(ngModel)]="LDOM.associatedcdom"
+        >
+          <option></option>
+          <option
+            class="list-group-item"
+            *ngFor="let cdom of CDOMDeviceArray"
+            [ngValue]="cdom"
+          >
+            {{ cdom.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <label for="inputCDOMvCPU">vCPU</label>
+        <select
+          name="inputCDOMvCPU"
+          aria-label="vCPU for CDOM"
+          class="form-control"
+          #addvCPU="ngModel"
+          [(ngModel)]="LDOM.vcpu"
+        >
+          <option></option>
+          <option
+            *ngFor="let cpuCount of cpuCountArray"
+            [ngValue]="cpuCount"
+            >{{ cpuCount }} vCPU's</option
+          >
+        </select>
+      </div>
+
+      <div class="form-group col-md-1">
+        <label for="inputCDOMMemory">RAM (GB)</label>
+        <select
+          name="inputCDOMMemory"
+          aria-label="RAM GB"
+          class="form-control"
+          #addMemory="ngModel"
+          [(ngModel)]="LDOM.memory"
+        >
+          <option></option>
+          <option
+            *ngFor="let ramAmount of ramCountArray"
+            [ngValue]="ramAmount"
+            >{{ ramAmount }} GB</option
+          >
+        </select>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="inputLDOMvnet">vNet</label>
+        <ul class="list-group" *ngIf="vnets">
+          <li class="list-group-item" *ngFor="let vnet of LDOM.vnet">
+            <fa
+              name="chevron-up"
+              (click)="moveObjectPosition(-1, vnet, LDOM.add_vnet)"
+            >
+            </fa>
+            <fa
+              name="chevron-down"
+              (click)="moveObjectPosition(1, vnet, LDOM.add_vnet)"
+            >
+            </fa>
+            <fa name="trash" (click)="deleteObject(vnet, LDOM.vnet)"> </fa>
+            {{ vnet }}
+          </li>
+        </ul>
+        <select
+          name="vnetSelect"
+          class="form-control"
+          id="inputLDOMvnet"
+          #ldomVnetInput="ngModel"
+          [(ngModel)]="inputLDOMvnet"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let vswitch of currentCDOM?.vsw"
+            [ngValue]="vswitch"
+          >
+            {{ vswitch }}
+          </option>
+        </select>
+        <button
+          class="btn btn-outline-info"
+          id="enterVnet"
+          type="button"
+          (click)="addvnetObject(inputLDOMvnet, LDOM.vnet)"
+          [disabled]="!inputLDOMvnet"
+        >
+          Add Vnet
+        </button>
+      </div>
+    </div>
+  
+    <hr/>
+
+    <div class="form-row">
+
+      <div class="form-group col-md-5">
+          <label>Virtual Disks</label>
+          <table 
+          name="vdsTable"
+          class="table">
+            <thead>
+              <tr>
+                <th>VDS</th>
+                <th>Disk Name</th>
+                <th>Size</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vds of LDOM.vds">
+                <td>{{ vds.vds }}</td>
+                <td>{{ vds.diskName }}</td>
+                <td>{{ vds.diskSize }}</td>
+                <td>      
+                  <fa
+                  name ="trash"
+                  (click)="deleteVdsDev(vds)">
+                  </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button type="button" name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
+
+      </div>
+
+      
+        <div class="form-group offset-2 col-md-5">
+          <label for="inputLDOMvariable">Variables</label>
+          <table name="variableTable" class="table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let variable of LDOM.variables">
+                <td>{{ variable.key }}</td>
+                <td>{{ variable.value }}</td>
+                <td>
+                  <fa name="trash" (click)="deleteVariable(variable)"> </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <div class="input-group">
+            <input
+              name="addVariableKey"
+              type="text"
+              class="form-control"
+              placeholder="Key"
+              [(ngModel)]="newSolarisVariable.key"
+            />
+            <input
+              name="addVariableValue"
+              type="text"
+              class="form-control"
+              placeholder="Value"
+              [(ngModel)]="newSolarisVariable.value"
+            />
+            <button type="button" class="btn btn-success" (click)="addVariable()">
+              Add Variable
+            </button>
+          </div>
+      </div>
+
+      <div class="form-group col-md-2">
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-row">
+      <div class="form-group col-md-2">
+        <div class="form-check form-check-inline">
+          <input
+            name="inputLDOMnetinstall"
+            aria-label="LDOM Net Install"
+            type="checkbox"
+            class="form-check-input"
+            #netInstall="ngModel"
+            [(ngModel)]="LDOM.net_install"
+          />
+          <label class="form-check-label" for="inputLDOMnetinstall"
+            >Net Install</label
+          >
+        </div>
+      </div>
+
+      <div class="form-group col-md-4" *ngIf="LDOM.net_install">
+        <select
+          name="imageSelect"
+          class="form-control"
+          [(ngModel)]="LDOM.image"
+        >
+          <option></option>
+          <option value="solaris-image-1">Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option>
+          <option value="solaris-image-2">Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option>
+        </select>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="btn-group">
+      <button
+        class="btn btn-success"
+        aria-label="Save"
+        (click)="launchLDOMJobs()"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+
+<ngx-smart-modal
+  #vdsDevModalLdom
+  identifier="vdsDevModalLdom"
+  customClass="'modal-content'"
+  [dismissable]="false"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Add VDS Dev</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="vdsDevModalLdom.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="inputCDOMVDS">VDS</label>
+            <select
+              name="inputCDOMVDS"
+              aria-label="CDOM vDisk name"
+              class="form-control"
+              id="inputCDOMVDS"
+              #formVds="ngModel"
+              [(ngModel)]="addVdsDev.vds"
+            >
+              <option value="primary-vds0">primary-vds0</option>
+              <option value="secondary-vds0">secondary-vds0</option>
+            </select>
+          </div>
+    </div>
+
+    <div class="form-row">
+
+
+    <div class="form-group col-md-8">
+      <label for="diskName">Disk Name</label>
+      <input class="form-control" [(ngModel)]="addVdsDev.diskName" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="diskName">Disk Size</label>
+        <input class="form-control" type="number" [(ngModel)]="addVdsDev.diskSize" />
+      </div>
+  </div>
+
+
+</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+    (click)="insertVds()">
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vdsDevModalLdom.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>

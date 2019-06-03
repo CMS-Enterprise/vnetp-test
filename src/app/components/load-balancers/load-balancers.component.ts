@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
@@ -9,11 +9,10 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
-import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
-import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
-import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -357,6 +356,8 @@ export class LoadBalancersComponent implements OnInit {
     extra_vars.vrf_id = this.currentVrf.id;
     extra_vars.deleted_virtual_servers = this.deletedVirtualServers;
     extra_vars.deleted_pools = this.deletedPools;
+    extra_vars.deleted_irules = this.deletedIRules;
+    extra_vars.deleted_healthmonitors = this.deletedHealthMonitors;
 
     const body = { extra_vars };
 
@@ -369,50 +370,27 @@ export class LoadBalancersComponent implements OnInit {
     this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      this.parseCsv(reader.result);
-    };
+  importLoadBalancerConfig(importObject) {
+    // TODO: Import Validation.
+    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
+    this.virtualServers = importObject.VirtualServers;
+    this.pools = importObject.Pools;
+    this.irules = importObject.IRules;
+    this.healthMonitors = importObject.HealthMonitors;
+
+    this.dirty = true;
   }
 
-  private parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.importObjects(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
-  }
+  exportLoadBalancerConfig(){
+    const dto = new LoadBalancerDto();
 
-  importObjects(objects) {
-    // Validate Uniqueness
+    dto.VirtualServers = this.virtualServers;
+    dto.Pools = this.pools;
+    dto.IRules = this.irules;
+    dto.HealthMonitors = this.healthMonitors;
+    dto.VrfId = this.currentVrf.id;
 
-    try {
-    objects.forEach(object => {
-      if (object.GroupName) {
-        const pool = this.pools.find(g => g.Name === object.GroupName);
-        if (pool != null) {
-          pool.Members.push(object);
-        } else {
-          const newGroup = new Pool();
-          newGroup.Name = object.GroupName;
-          newGroup.Members = new Array<PoolMember>();
-          this.pools.push(newGroup);
-          this.dirty = true;
-        }
-       } else if (object.Name) {
-         this.virtualServers.push(object as VirtualServer);
-         this.dirty = true;
-       }
-    });
-  } catch (e) {
-    console.error(e);
-  }
+    return dto;
   }
 
   private unsubAll() {

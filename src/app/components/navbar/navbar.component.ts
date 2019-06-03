@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { User } from 'src/app/models/user';
+import { User } from 'src/app/models/user/user';
 import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';

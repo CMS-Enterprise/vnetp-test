@@ -23,7 +23,7 @@ export class IRuleModalComponent implements OnInit {
 
     const irule = new IRule();
     irule.Name = this.form.value.name;
-    irule.Definition = this.form.value.definition;
+    irule.Content = this.form.value.content;
 
     this.ngx.resetModalData('iruleModal');
     this.ngx.setModalData(Object.assign({}, irule), 'iruleModal');
@@ -42,7 +42,7 @@ export class IRuleModalComponent implements OnInit {
     const irule =  Object.assign({}, this.ngx.getModalData('iruleModal') as IRule);
     if (irule !== undefined) {
       this.form.controls.name.setValue(irule.Name);
-      this.form.controls.definition.setValue(irule.Definition);
+      this.form.controls.content.setValue(irule.Content);
       }
     this.ngx.resetModalData('iruleModal');
   }
@@ -50,7 +50,7 @@ export class IRuleModalComponent implements OnInit {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      definition: ['', Validators.required]
+      content: ['', Validators.required]
     });
   }
 

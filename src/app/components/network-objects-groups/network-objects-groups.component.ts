@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NetworkObject } from 'src/app/models/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
-import { NetworkObjectDto } from 'src/app/models/network-object-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
@@ -198,48 +198,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      this.parseCsv(reader.result);
-    };
-  }
-
-  private parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.importObjects(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
-  }
-
-  importObjects(objects) {
-    // TODO: Validation: Throw Error on Duplicate Name.
-    objects.forEach(object => {
-      if (object.GroupName) {
-        const group = this.networkObjectGroups.find(g => g.Name === object.GroupName);
-        if (group != null) {
-          group.NetworkObjects.push(object);
-        } else {
-          const newGroup = new NetworkObjectGroup();
-          newGroup.Name = object.GroupName;
-          newGroup.NetworkObjects = new Array<NetworkObject>();
-          newGroup.NetworkObjects.push(object as NetworkObject);
-          this.networkObjectGroups.push(newGroup);
-          this.dirty = true;
-        }
-       } else if (object.Name) {
-         this.networkObjects.push(object as NetworkObject);
-         this.dirty = true;
-       }
-    });
-  }
-
   private unsubAll() {
     [this.networkObjectModalSubscription,
     this.networkObjectGroupModalSubscription]
@@ -253,6 +211,26 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  importNetworkObjectConfig(config) {
+    // TODO: Import Validation
+    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
+    this.networkObjects = config.NetworkObjects;
+    this.networkObjectGroups = config.NetworkObjectGroups;
+
+    this.dirty = true;
+  }
+
+  exportNetworkObjectConfig(){
+    const dto = new NetworkObjectDto();
+
+    dto.NetworkObjects = this.networkObjects;
+    dto.NetworkObjectGroups = this.networkObjectGroups;
+    dto.VrfId = this.currentVrf.id;
+
+    return dto;
+  }
+
 
   ngOnInit() {
     this.getVrfs();

@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { ObjectService } from 'src/app/services/object.service';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
@@ -196,51 +195,23 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>();
   }
 
-  handleFileSelect(evt) {
-    const files = evt.target.files; // FileList object
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      this.parseCsv(reader.result);
-    };
+  importServiceObjectConfig(config) {
+    // TODO: Import Validation
+    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
+    this.serviceObjects = config.ServiceObjects;
+    this.serviceObjectGroups = config.ServiceObjectGroups;
+
+    this.dirty = true;
   }
 
-  private parseCsv(csv) {
-    const options = {
-      header: true,
-      complete: (results) => {
-        this.importObjects(results.data);
-      }
-    };
-    this.papa.parse(csv, options);
-  }
+  exportServiceObjectConfig() {
+    const dto = new ServiceObjectDto();
 
-  importObjects(objects) {
-    // Validate Uniqueness
+    dto.ServiceObjects = this.serviceObjects;
+    dto.ServiceObjectGroups = this.serviceObjectGroups;
+    dto.VrfId = this.currentVrf.id;
 
-    try {
-    objects.forEach(object => {
-      if (object.GroupName) {
-        const group = this.serviceObjectGroups.find(g => g.Name === object.GroupName);
-        if (group != null) {
-          group.ServiceObjects.push(object);
-        } else {
-          const newGroup = new ServiceObjectGroup();
-          newGroup.Name = object.GroupName;
-          newGroup.ServiceObjects = new Array<ServiceObject>();
-          newGroup.ServiceObjects.push(object as ServiceObject);
-          this.serviceObjectGroups.push(newGroup);
-          this.dirty = true;
-        }
-       } else if (object.Name) {
-         this.serviceObjects.push(object as ServiceObject);
-         this.dirty = true;
-       }
-    });
-  } catch (e) {
-    console.error(e);
-  }
+    return dto;
   }
 
   private unsubAll() {

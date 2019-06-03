@@ -1,4 +1,4 @@
-import { CustomFieldsObject, CustomField } from '../custom-fields-object.interface';
+import { CustomFieldsObject, CustomField } from '../interfaces/custom-fields-object.interface';
 
 export class Vrf implements CustomFieldsObject {
     id: number;
