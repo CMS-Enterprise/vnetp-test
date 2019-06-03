@@ -30,6 +30,18 @@ export class IpAddressService {
     }
   }
 
+  public isValidGateway(gateway: string, range: IPv4Range): boolean {
+    // Get an IPv4 Range from the gateway only by appending /32 to it.
+    const gatewayRange = IPv4Range.fromCidr(`${gateway}/32`);
+
+    // If the main range contains the gateway and the gateway isn't the first IP of the range return true
+    return (range.contains(gatewayRange))
+    // Ensure that first address (network address) is not the gateway that user chose.
+    && gatewayRange.getFirst().toString() !== range.getFirst().toString()
+    // Ensure that last address (broadcast address) is not the gateway that user chose.
+    && gatewayRange.getFirst().toString() !== range.getLast().toString();
+  }
+
   // Returns an IPv4 range from a cidr formatted IPv4 address.
   public getIpv4Range(cidr: string): IPv4Range {
     return IPv4Range.fromCidr(cidr);
