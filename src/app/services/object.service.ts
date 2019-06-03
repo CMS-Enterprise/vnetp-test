@@ -4,7 +4,7 @@ import { ServiceObject } from '../models/service-objects/service-object';
 import { ServiceObjectGroup } from '../models/service-objects/service-object-group';
 import { NetworkObject } from '../models/network-objects/network-object';
 import { NetworkObjectGroup } from '../models/network-objects/network-object-group';
-import { RuleLocation } from '../models/rule-location';
+import { RuleLocation } from '../models/firewall/rule-location';
 import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 @Injectable({

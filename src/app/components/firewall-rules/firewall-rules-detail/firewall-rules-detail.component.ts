@@ -6,7 +6,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';

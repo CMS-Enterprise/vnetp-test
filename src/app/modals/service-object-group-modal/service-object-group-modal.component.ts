@@ -4,7 +4,7 @@ import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({

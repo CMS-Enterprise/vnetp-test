@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ObjectService } from './object.service';
 import { NetworkObject } from '../models/network-objects/network-object';
 import { FirewallRule } from '../models/firewall/firewall-rule';
-import { RuleLocation } from '../models/rule-location';
+import { RuleLocation } from '../models/firewall/rule-location';
 import { NetworkObjectGroup } from '../models/network-objects/network-object-group';
 import { ServiceObject } from '../models/service-objects/service-object';
 import { ServiceObjectGroup } from '../models/service-objects/service-object-group';

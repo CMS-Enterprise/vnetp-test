@@ -12,7 +12,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { ObjectService } from 'src/app/services/object.service';
-import { RuleLocation } from 'src/app/models/rule-location';
+import { RuleLocation } from 'src/app/models/firewall/rule-location';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 

@@ -9,7 +9,7 @@ import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { PapaParseModule } from 'ngx-papaparse';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 

@@ -5,7 +5,7 @@ import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';

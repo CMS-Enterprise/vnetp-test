@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
