@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { FirewallRule } from 'src/app/models/firewall-rule';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -14,7 +14,7 @@ import { NetworkObjectGroup } from 'src/app/models/network-object-group';
 import { ServiceObject } from 'src/app/models/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',

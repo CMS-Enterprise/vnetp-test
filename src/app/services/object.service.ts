@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirewallRule } from '../models/firewall-rule';
+import { FirewallRule } from '../models/firewall/firewall-rule';
 import { ServiceObject } from '../models/service-object';
 import { ServiceObjectGroup } from '../models/service-object-group';
 import { NetworkObject } from '../models/network-object';

@@ -10,9 +10,9 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
-import { FirewallRule } from 'src/app/models/firewall-rule';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { Subnet } from 'src/app/models/d42/subnet';
-import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { ModalMode } from 'src/app/models/modal-mode';
 
 describe('FirewallRulesDetailComponent', () => {
