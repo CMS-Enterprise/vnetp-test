@@ -6,7 +6,7 @@ import { RuleLocation } from '../models/rule-location';
 import { NetworkObjectGroup } from '../models/network-object-group';
 import { ServiceObject } from '../models/service-object';
 import { ServiceObjectGroup } from '../models/service-object-group';
-import { UniqueNameObject } from '../models/unique-name-object.interface';
+import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 describe('FirewallRuleService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

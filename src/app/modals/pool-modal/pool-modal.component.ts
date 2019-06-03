@@ -5,7 +5,7 @@ import { Pool } from 'src/app/models/loadbalancer/pool';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
-import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 
 @Component({
   selector: 'app-pool-modal',

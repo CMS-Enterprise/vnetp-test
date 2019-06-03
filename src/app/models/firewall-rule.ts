@@ -2,7 +2,7 @@ import { NetworkObjectGroup } from './network-object-group';
 import { ServiceObject } from './service-object';
 import { NetworkObject } from './network-object';
 import { ServiceObjectGroup } from './service-object-group';
-import { UniqueNameObject } from './unique-name-object.interface';
+import { UniqueNameObject } from './interfaces/unique-name-object.interface';
 
 export class FirewallRule implements UniqueNameObject {
     Id: number;

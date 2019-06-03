@@ -5,7 +5,7 @@ import { ServiceObjectGroup } from '../models/service-object-group';
 import { NetworkObject } from '../models/network-object';
 import { NetworkObjectGroup } from '../models/network-object-group';
 import { RuleLocation } from '../models/rule-location';
-import { UniqueNameObject } from '../models/unique-name-object.interface';
+import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 @Injectable({
   providedIn: 'root'

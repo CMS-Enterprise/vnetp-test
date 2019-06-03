@@ -9,10 +9,10 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
-import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
-import { PoolModalDto } from 'src/app/models/pool-modal-dto';
+import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

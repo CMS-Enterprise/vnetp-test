@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { HelpersService } from './helpers.service';
 import { Subnet } from '../models/d42/subnet';
 import { isUndefined } from 'util';
-import { CustomFieldsObject } from '../models/custom-fields-object.interface';
+import { CustomFieldsObject } from '../models/interfaces/custom-fields-object.interface';
 import { Vrf } from '../models/d42/vrf';
 
 describe('HelpersService', () => {
