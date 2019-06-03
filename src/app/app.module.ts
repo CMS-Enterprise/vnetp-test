@@ -59,6 +59,7 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { LogicalInterfaceModalDto } from './models/logical-interface-modal-dto';
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
+import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 
 @NgModule({
@@ -103,6 +104,7 @@ import { ImportExportComponent } from './components/import-export/import-export.
     HealthMonitorModalComponent,
     NetworkInterfacesComponent,
     LogicalInterfaceModalComponent,
+    SolarisImageRepositoryComponent,
     ImportExportComponent
   ],
   imports: [

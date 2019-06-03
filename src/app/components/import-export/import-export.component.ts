@@ -12,6 +12,7 @@ export class ImportExportComponent implements OnInit {
   importFileType: string;
   downloadHref: SafeUrl;
   currentDate: string;
+  fileInput: any;
 
 
   @Input() exportObject: any;

@@ -1,27 +1,65 @@
+import { SolarisVariable } from "./solaris-ldom";
+
 export class SolarisCdom {
   name: string;
   customer_name: string;
   devicetype: string;
   make: string;
   location: string;
-  set_vcpu: number;
-  set_mem: string;
-  add_config: string;
-  luns = new Array<string>();
-  vlans = new Array<number>();
-  associatedldoms = new Array<string>();
-  vccports: string;
-  vccname: string;
-  add_vcc: string;
-  add_vsw = new Array<string>();
-  vcsdevs: string;
-  vswitch: string;
+
+  // Storage
+  /** Virtual Disks */
+  vds = new Array<any>();
+
+  /** Indicates whether Alternate VDS should be created. */
+  alternatevds: boolean;
+
+  // Networking
+  /** Virtual Network */
   vnet: string;
-  ilomname: string;
-  ilomipaddress: string;
-  variables: string;
-  add_vds = new Array<string>();
-  cmds: string;
-  vds: string;
+  /** VLANs */
+  vlans = new Array<number>();
+  /** Virtual Switch */
+  vsw: string;
+  // Related to Logical Interface from Network Module.
+  net_device: string;
+
+  /** Variables */
+  variables: Array<SolarisVariable>;
+
+  // Virtual Console
+  /** Virtual Console Concentrator */
+  vcc: string;
+  /** Virtual Console Concentrator Name */
+  vccname: string;
+  /** Virtual Console Concentrator Ports */
+  vccports: string;
+
+  // Compute
+  /** Virtual CPU */
+  vcpu: number;
+  /** Memory in GB */
+  memory: number;
+
+  /** Associated LDOMs */
+  associatedldoms = new Array<string>();
+
+  // TODO: Do we need these??
+  // ilomname: string;
+  // ilomipaddress: string;
+
+  /** Virtual Devices */
+  vcsdevs: string; // TODO: Is this valid?
 }
 
+export interface SolarisCdomResponse {
+  total_count: number;
+  offset: number;
+  limit: number;
+  Devices: SolarisCdom[];
+}
+
+export interface KeyValuePair {
+  key: string;
+  value: any;
+}
