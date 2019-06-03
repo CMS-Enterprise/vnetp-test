@@ -5,9 +5,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LogicalInterfaceModalDto } from 'src/app/models/logical-interface-modal-dto';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';
 
 @Component({
   selector: 'app-logical-interface-modal',

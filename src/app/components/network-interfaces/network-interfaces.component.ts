@@ -7,8 +7,8 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ModalMode } from 'src/app/models/modal-mode';
 import { Subscription } from 'rxjs';
-import { LogicalInterfaceModalDto } from 'src/app/models/logical-interface-modal-dto';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';
 
 @Component({
   selector: 'app-network-interfaces',
