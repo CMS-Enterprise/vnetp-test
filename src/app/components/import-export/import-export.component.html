@@ -1,39 +1,28 @@
-<div class="btn-toolbar" role="toolbar">
+  
+  <button class="btn btn-warning btn-sm mr-1" (click)="uploader.click()">
+    <span>Import </span>
+    <span *ngIf="!disableJson">JSON</span>
+    <span *ngIf="!disableJson && !disableCsv">/</span>
+    <span *ngIf="!disableCsv">CSV</span>
+  </button>
+  
+  <a
+    class="btn btn-success btn-sm mr-1"
+    title="Download JSON"
+    [href]="downloadHref"
+    download="{{ exportFileName }}-{{ currentDate }}.json"
+    (click)="getDate(); exportFile('json')"
+    >Export JSON</a
+  >
 
-  <div class="btn-group mr-2">
-    <button 
-    class="btn btn-warning" 
-    (click)="uploader.click()"
-    >
-      <span>Import </span> 
-      <span *ngIf="!disableJson">JSON</span> 
-      <span *ngIf="!disableJson && !disableCsv">/</span> 
-      <span *ngIf="!disableCsv">CSV</span>
-    </button>
-  </div>
-
-  <div class="btn-group mr-2" *ngIf="!disableJson">
-    <a
-      class="btn btn-success"
-      title="Download JSON"
-      [href]="downloadHref"
-      download="{{exportFileName}}-{{ currentDate }}.json"
-      (click)="getDate(); exportFile('json')"
-      >Export JSON</a
-    >
-  </div>
-
-  <div class="btn-group mr-2" *ngIf="!disableCsv">
-    <a
-      class="btn btn-success"
-      title="Download CSV"
-      [href]="downloadHref"
-      download="{{exportFileName}}-{{ currentDate }}.csv"
-      (click)="getDate(); exportFile('csv')"
-      >Export CSV</a
-    >
-  </div>
-</div>
+  <a
+    class="btn btn-success btn-sm mr-1"
+    title="Download CSV"
+    [href]="downloadHref"
+    download="{{ exportFileName }}-{{ currentDate }}.csv"
+    (click)="getDate(); exportFile('csv')"
+    >Export CSV</a
+  >
 
 <input
   hidden

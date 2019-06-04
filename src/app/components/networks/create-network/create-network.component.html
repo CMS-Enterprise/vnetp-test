@@ -51,14 +51,15 @@
               'is-invalid':
                 (form.submitted && networkAddress.invalid) ||
                 networkExists ||
-                networkOverlaps
+                networkOverlaps ||
+                invalidGateway
             }"
             [dropSpecialCharacters]="false"
             mask="099.099.099.099/09"
             required
           />
           <div
-            *ngIf="networkExists || networkOverlaps"
+            *ngIf="networkExists || networkOverlaps || invalidGateway"
             class="alert alert-danger"
           >
             <p *ngIf="networkExists">Subnet already in use.</p>
@@ -66,6 +67,7 @@
               Subnet overlaps with at least one existing subnet:
               {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }}
             </p>
+            <p *ngIf="invalidGateway">Invalid gateway.</p>
           </div>
         </div>
       </div>

@@ -33,9 +33,6 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
-import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
-import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
@@ -59,6 +56,8 @@ import { NetworkInterfacesComponent } from './components/network-interfaces/netw
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
+import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
+import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 
 @NgModule({
   declarations: [
@@ -78,9 +77,6 @@ import { ImportExportComponent } from './components/import-export/import-export.
     DevicesComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
-    IpNatsComponent,
-    IpNatDetailComponent,
-    CreateIpNatComponent,
     SpecialCharacterDirective,
     SolarisComponent,
     SolarisCdomCreateComponent,
@@ -103,7 +99,9 @@ import { ImportExportComponent } from './components/import-export/import-export.
     NetworkInterfacesComponent,
     LogicalInterfaceModalComponent,
     SolarisImageRepositoryComponent,
-    ImportExportComponent
+    ImportExportComponent,
+    PhysicalServerComponent,
+    PhysicalServerModalComponent
   ],
   imports: [
     BrowserModule,

@@ -14,9 +14,6 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
-import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
-import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
 import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
@@ -27,9 +24,11 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
+import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 
 
 const routes: Routes = [
+  {path: 'login', component: LoginComponent},
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create Subnet'}},
   {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
@@ -43,20 +42,17 @@ const routes: Routes = [
   {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
   {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
-  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Routes'}},
-  {path: 'ip-nats', component: IpNatsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Network Address Translation'}},
-  {path: 'ip-nats/create', component: CreateIpNatComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create IP NAT'}},
-  {path: 'ip-nats/edit/:id', component: IpNatDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Network Address Translation'}},
+  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent},
+  {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
   {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
   {path: 'solaris-cdom-list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
   {path: 'solaris-image-repository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
+  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

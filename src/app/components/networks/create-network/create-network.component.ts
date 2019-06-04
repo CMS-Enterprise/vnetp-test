@@ -22,6 +22,7 @@ export class CreateNetworkComponent implements OnInit {
   networkExists: boolean;
   vlanExists: boolean;
   networkOverlaps: boolean;
+  invalidGateway: boolean;
 
   existingSubnet: Subnet;
   showDetails: boolean;
@@ -51,6 +52,7 @@ export class CreateNetworkComponent implements OnInit {
     this.networkExists = false;
     this.vlanExists = false;
     this.networkOverlaps = false;
+    this.invalidGateway = false;
     this.showDetails = false;
 
     if (!this.cidrAddress) { return; }
@@ -65,12 +67,21 @@ export class CreateNetworkComponent implements OnInit {
     if (!isValid) {
       return; }
 
-    // Set additional properties
     const ipv4Range = this.ipService.getIpv4Range(this.cidrAddress);
-    this.usableRange = `${ipv4Range.getFirst().nextIPNumber().nextIPNumber()}-${ipv4Range.getLast().previousIPNumber()}`;
+    const gateway = this.cidrAddress.split('/')[0];
+    const result = this.ipService.isValidGateway(gateway, ipv4Range);
+
+    if (!result) {
+      this.invalidGateway = true;
+      return;
+    } else {
+      this.subnet.gateway = gateway;
+    }
+
+    // Set additional properties
+    this.usableRange = `${ipv4Range.getFirst().nextIPNumber()}-${ipv4Range.getLast().previousIPNumber()}`;
     this.rangeSize = ipv4Range.getSize().toString();
     this.subnet.network = ipv4Range.getFirst().toString();
-    this.subnet.gateway = `${ipv4Range.getFirst().nextIPNumber()}`;
     this.subnet.subnet_mask = this.ipService.calculateIPv4SubnetMask(this.cidrAddress);
     this.subnet.mask_bits = this.ipService.getIPv4CidrMask(this.cidrAddress);
     this.showDetails = true;
@@ -78,8 +89,6 @@ export class CreateNetworkComponent implements OnInit {
 
   createNetwork(action: string) {
     const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
-
-    console.log(this.subnet);
 
     if (!isValid || !this.subnet.name || !this.subnet.network ||
       !this.subnet.mask_bits || !this.subnet.subnet_mask ||

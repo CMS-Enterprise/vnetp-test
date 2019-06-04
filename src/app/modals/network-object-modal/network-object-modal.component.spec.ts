@@ -39,7 +39,7 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('should read network object from service', () => {
-    const modal = ngx.getModal('networkObjectModal')
+    const modal = ngx.getModal('networkObjectModal');
     const networkObject = new NetworkObject();
     networkObject.Name = 'Test';
     networkObject.Type = 'host';
@@ -115,6 +115,16 @@ describe('NetworkObjectModalComponent', () => {
     expect(type.valid).toBeFalsy();
   });
 
+  it ('source subnet should be required', () => {
+    const sourceSubnet = component.form.controls.sourceSubnet;
+    expect(sourceSubnet.valid).toBeFalsy();
+  });
+
+  it ('destination subnet should not be required', () => {
+    const destinationSubnet = component.form.controls.destinationSubnet;
+    expect(destinationSubnet.valid).toBeTruthy();
+  });
+
   it ('hostAddress should not be required', () =>  {
     const hostAddress = component.form.controls.hostAddress;
     expect(hostAddress.valid).toBeTruthy();
@@ -164,5 +174,47 @@ describe('NetworkObjectModalComponent', () => {
     type.setValue('subnet');
     const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeFalsy();
+  });
+
+  // Form State when NAT Selected
+  it('translated address should be required', () => {
+    const nat = component.form.controls.nat;
+    nat.setValue(true);
+
+    const translatedAddress = component.form.controls.translatedIp;
+    expect(translatedAddress.valid).toBeFalsy();
+  });
+
+  it('destination subnet should be required', () => {
+  const nat = component.form.controls.nat;
+  nat.setValue(true);
+
+  const destinationSubnet = component.form.controls.destinationSubnet;
+  expect(destinationSubnet.valid).toBeFalsy();
+  });
+
+  // Form State when NAT Service Selected
+  it('nat protocol should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const natProtocol = component.form.controls.natProtocol;
+    expect(natProtocol.valid).toBeFalsy();
+  });
+
+  it('source port should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const sourcePort = component.form.controls.sourcePort;
+    expect(sourcePort.valid).toBeFalsy();
+  });
+
+  it('translated port should be required', () => {
+    const natService = component.form.controls.natService;
+    natService.setValue(true);
+
+    const translatedPort = component.form.controls.translatedPort;
+    expect(translatedPort.valid).toBeFalsy();
   });
 });
