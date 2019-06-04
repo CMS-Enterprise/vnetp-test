@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
@@ -6,16 +6,17 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-network-interfaces',
   templateUrl: './network-interfaces.component.html',
   styleUrls: ['./network-interfaces.component.css']
 })
-export class NetworkInterfacesComponent implements OnInit {
+export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 
   constructor(private hs: HelpersService, private api: AutomationApiService,
               private ngx: NgxSmartModalService) { }
@@ -31,6 +32,10 @@ export class NetworkInterfacesComponent implements OnInit {
   editLogicalInterfaceModalMode: ModalMode;
   logicalInterfaceModalSubscription: Subscription;
 
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   getVrfs() {
     this.dirty = false;
