@@ -50,15 +50,13 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="solaris">Solaris Summary</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="solaris-cdom-create">Create CDOM</a>
           <a class="dropdown-item" routerLink="solaris-ldom-create">Create LDOM</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="solaris-cdom-list">CDOM List</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="solaris-image-repository">Solaris Image Respository</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="physical-server">Physical Servers</a>
         </div>
-
       </li>
   
         <li class="nav-item dropdown">
@@ -105,6 +103,9 @@
           {{currentUser.Username}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item">Ticketing System</a>
+          <a class="dropdown-item">Documentation</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
         </div>
       </li>

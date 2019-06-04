@@ -56,6 +56,8 @@ import { NetworkInterfacesComponent } from './components/network-interfaces/netw
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
+import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
+import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +99,9 @@ import { ImportExportComponent } from './components/import-export/import-export.
     NetworkInterfacesComponent,
     LogicalInterfaceModalComponent,
     SolarisImageRepositoryComponent,
-    ImportExportComponent
+    ImportExportComponent,
+    PhysicalServerComponent,
+    PhysicalServerModalComponent
   ],
   imports: [
     BrowserModule,
