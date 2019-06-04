@@ -1,0 +1,63 @@
+
+<div>
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-info" aria-label="Refresh Networks">
+          <fa name="refresh" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-success" (click)="createPhysicalServer()">
+            <fa name="plus" size="2x"></fa>
+          </button>
+      </div>
+
+    <div class="card">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Hardware Platform</th>
+            <th scope="col">vCPU Count</th>
+            <th scope="col">Memory</th>
+            <th scope="col">NIC Count</th>
+            <th scope="col">Local Storage</th>
+            <th scope="col">SAN Storage</th>
+            <th scope="col">OS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ps of physicalServers">
+            <td>
+              {{ ps.Name }}
+            </td>         
+            <td>                
+                {{ ps.HardwarePlatform }}                             
+            </td>            
+            <td>            
+                {{ ps.CpuCount}}                                  
+            </td>                
+            <td>                     
+                {{ ps.RamCount}}                  
+            </td>                 
+            <td>                         
+                {{ ps.NicCount}}                            
+            </td>                      
+            <td>                          
+                {{ ps.LocalStorage}}                           
+            </td>                           
+            <td>                               
+                {{ ps.SanStorage}}                                                        
+            </td>                         
+            <td>                              
+                {{ ps.OS}}                              
+            </td>                                                            
+            <td>          
+            <fa name="pencil" (click)="editPhysicalServer(ps)"></fa>
+            <fa name="trash" (click)="deletePhysicalServer(ps)"></fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-physical-server-modal></app-physical-server-modal>

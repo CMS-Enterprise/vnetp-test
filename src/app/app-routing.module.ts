@@ -27,6 +27,7 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
+import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 
 
 const routes: Routes = [
@@ -49,14 +50,15 @@ const routes: Routes = [
   {path: 'ip-nats/edit/:id', component: IpNatDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Network Address Translation'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent},
+  {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Server'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
   {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
   {path: 'solaris-cdom-list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
   {path: 'solaris-image-repository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]}
+  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]},
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({
