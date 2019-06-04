@@ -31,6 +31,7 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
 
 
 const routes: Routes = [
+  {path: 'login', component: LoginComponent},
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Create Subnet'}},
   {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
@@ -58,7 +59,6 @@ const routes: Routes = [
   {path: 'solaris-image-repository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({
