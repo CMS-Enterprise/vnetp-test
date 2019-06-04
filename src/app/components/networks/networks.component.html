@@ -1,27 +1,26 @@
 <div>
   <div class="btn-toolbar mb-2" role="toolbar">
-    <div class="button-group mr-2">
-      <button type="button" class="btn btn-info" (click)="getNetworks()">
+    <div class="button-group btn-group-sm">
+      <button type="button" class="btn btn-info mr-1" (click)="getNetworks()">
         Refresh
       </button>
-    </div>
-    <div class="button-group mr-2">
+
       <button
         type="button"
-        class="btn btn-success"
-        aria-label="New Network"
+        class="btn btn-success mr-1"
+        aria-label="Create Subnet"
         [routerLink]="['create']"
       >
         Create Subnet
       </button>
-    </div>
 
-    <app-import-export
-      [exportObject]="exportNetworkConfig()"
-      exportFileName="subnets"
-      disableCsv="true"
-      (import)="importNetworkConfig($event)"
-    ></app-import-export>
+      <app-import-export
+        [exportObject]="exportNetworkConfig()"
+        exportFileName="subnets"
+        disableCsv="true"
+        (import)="importNetworkConfig($event)"
+      ></app-import-export>
+    </div>
   </div>
 
   <div class="card">
@@ -38,7 +37,7 @@
         <tr *ngFor="let subnet of subnets">
           <td>
             <a routerLink="/networks/edit/{{ subnet.subnet_id }}">
-              {{subnet.name}}
+              {{ subnet.name }}
             </a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
