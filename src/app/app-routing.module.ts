@@ -51,7 +51,7 @@ const routes: Routes = [
   {path: 'ip-nats/edit/:id', component: IpNatDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Network Address Translation'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-  {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Server'}},
+  {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
   {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
