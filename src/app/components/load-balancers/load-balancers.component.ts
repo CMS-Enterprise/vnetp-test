@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Papa } from 'ngx-papaparse';
@@ -14,13 +14,14 @@ import { IRule } from 'src/app/models/loadbalancer/irule';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
   styleUrls: ['./load-balancers.component.css']
 })
-export class LoadBalancersComponent implements OnInit {
+export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   navIndex = 0;
 
   vrfs: Vrf[];
@@ -52,6 +53,11 @@ export class LoadBalancersComponent implements OnInit {
   poolModalSubscription: Subscription;
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
               private toastr: ToastrService) {
