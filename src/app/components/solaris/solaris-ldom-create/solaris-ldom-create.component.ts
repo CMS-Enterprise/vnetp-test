@@ -8,9 +8,8 @@ import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
 import { SolarisVswitch} from 'src/app/models/solaris/solaris-vswitch';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
-
+import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',

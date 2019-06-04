@@ -9,7 +9,8 @@ import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
-
+import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -26,11 +27,13 @@ export class SolarisCdomCreateComponent implements OnInit {
   cdomInput: any;
   launchLDOMJobs: any;
   addVdsDev: any;
+  addVswitch: Array<any>;
 
   cpuCountArray: Array<number>;
   ramCountArray: Array<number>;
 
   constructor(
+    private ngxSm: NgxSmartModalService,
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private router: Router,
@@ -61,14 +64,13 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.CDOM.vnet = 'vnet0';
     this.CDOM.vccports = '5000-5100';
     this.CDOM.net_device = 'net0';
-    this.CDOM.vsw = 'primary-admin';
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.CDOM.vsw = new Array<any>();
     this.CDOM.vds = new Array<any>();
 
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
@@ -87,5 +89,21 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris-cdom-list']);
+  }
+  openVswitchModal() {
+    this.ngxSm.getModal('vswitchModalCdom').open();
+  }
+
+  insertVswitch() {
+    this.CDOM.vsw.push(Object.assign({}, this.addVswitch));
+    this.addVswitch = {vSwitchName: '', vlansUntagged: '', vlansTagged: ''};
+    this.ngxSm.getModal('vswitchModalCdom').close();
+  }
+
+  deletevSwitch(vsw: any) {
+    const vswIndex = this.CDOM.vsw.indexOf(vsw);
+    if (vswIndex > -1 ) {
+      this.CDOM.vsw.splice(vswIndex, 1);
+    }
   }
 }

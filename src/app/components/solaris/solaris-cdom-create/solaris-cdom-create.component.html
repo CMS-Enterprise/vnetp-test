@@ -106,64 +106,80 @@
     </div>
 
     <hr />
-
     <div class="form-row">
+
+      <div class="form-group col-md-5">
+          <label>vSwitches</label>
+          <table 
+          name="vSwitchTable"
+          class="table">
+            <thead>
+              <tr>
+                <th>vSwitch Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vsw of CDOM.vsw">
+                <td>{{ vsw.name }}</td>
+                <td>      
+                  <fa
+                  name ="trash"
+                  (click)="deletevSwitch(vsw)">
+                  </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <button type="button" name="addVswitch" class="btn btn-success" (click)="openVswitchModal()">Add vSwitch</button>
+  
+      </div>
+  
+      
+        <div class="form-group offset-2 col-md-5">
+          <label for="inputLDOMvariable">Variables</label>
+          <table name="variableTable" class="table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let variable of LDOM.variables">
+                <td>{{ variable.key }}</td>
+                <td>{{ variable.value }}</td>
+                <td>
+                  <fa name="trash" (click)="deleteVariable(variable)"> </fa>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <div class="input-group">
+            <input
+              name="addVariableKey"
+              type="text"
+              class="form-control"
+              placeholder="Key"
+              [(ngModel)]="newSolarisVariable.key"
+            />
+            <input
+              name="addVariableValue"
+              type="text"
+              class="form-control"
+              placeholder="Value"
+              [(ngModel)]="newSolarisVariable.value"
+            />
+            <button type="button" class="btn btn-success" (click)="addVariable()">
+              Add Variable
+            </button>
+          </div>
+      </div>
+  
       <div class="form-group col-md-2">
-        <label for="inputCdomVsw">VSW</label>
-        <select
-          name="inputCdomVsw"
-          aria-label="CDOM VDS Config"
-          type="text"
-          class="form-control"
-          #addVsw="ngModel"
-          [(ngModel)]="CDOM.vsw"
-        >
-        <!--TODO: Make first option editable-->
-        <option value="primary-admin">primary-admin</option>
-        <option value="primary-mgmt">primary-mgmt</option>
-        <option value="primary-data">primary-data</option>
-        <option value="primary-oa">primary-oa</option>
-        <option value="primary-stmp">primary-stmp</option>
-        <option value="primary-bi">primary-bi</option>
-        <option value="primary-dmz">primary-dmz</option>
-        <option value="primary-dmz-pub">primary-dmz-pub</option>
-      </select>
-      </div>
-
-      <div class="form-group col-md-2">
-        <label for="inputCdomVsw">Net Device</label>
-        <input
-          name="inputCdomNetDevice"
-          aria-label="CDOM Net Device for VSW"
-          type="text"
-          class="form-control"
-          #addVsw="ngModel"
-          [(ngModel)]="CDOM.net_device"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVNet">VNET</label>
-        <input
-          name="inputCDOMVDS"
-          aria-label="CDOM VDS Config"
-          type="text"
-          class="form-control"
-          #vnet="ngModel"
-          [(ngModel)]="CDOM.vnet"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVLANs">VLANS (comma separated)</label>
-        <input
-          name="inputCDOMVLANs"
-          aria-label="CDOM VLANS"
-          type="text"
-          class="form-control"
-          #vlans="ngModel"
-          [(ngModel)]="CDOM.vlans"
-        />
       </div>
     </div>
 
@@ -201,3 +217,61 @@
   </form>
 </div>
 
+<ngx-smart-modal
+  #vnetModalLdom
+  identifier="vswitchModalCdom"
+  customClass="'modal-content'"
+  [dismissable]="false"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Add vNet</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="vswitchModalCdom.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="inputCDOMvswitch">vSwitch</label>
+            <select
+              name="inputCDOMvswitch"
+              aria-label="CDOM vSwitch name"
+              class="form-control"
+              id="inputCDOMvswitch"
+              #formVds="ngModel"
+              [(ngModel)]="addVswitch.Name"
+            >
+          </div>
+    </div>
+
+    <div class="form-row">
+    <div class="form-group col-md-8">
+      <label for="vNetName">vNet Name</label>
+      <input class="form-control" [(ngModel)]="addVnet.vnetName" />
+    </div>
+
+
+</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+    (click)="insertVnet()">
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vnetModalLdom.close()"
+    >
+      Cancel
+    </button>
+  </div>
+  </div>
+</ngx-smart-modal>

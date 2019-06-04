@@ -1,4 +1,5 @@
 import { SolarisVariable } from './solaris-variable';
+import {SolarisVswitch } from './solaris-vswitch';
 
 export class SolarisCdom {
   name: string;
@@ -20,7 +21,7 @@ export class SolarisCdom {
   /** VLANs */
   vlans = new Array<number>();
   /** Virtual Switch */
-  vsw: string;
+  vsw: Array<SolarisVswitch>;
   // Related to Logical Interface from Network Module.
   net_device: string;
 
