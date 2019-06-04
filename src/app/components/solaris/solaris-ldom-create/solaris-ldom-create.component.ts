@@ -5,6 +5,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
+import { SolarisVswitch} from 'src/app/models/solaris/solaris-vswitch';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
@@ -31,6 +32,7 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   newSolarisVariable: SolarisVariable;
   addVdsDev: any;
+  addVnet: any;
 
   // Added as type any
   cpuCountArray: number[];
@@ -105,6 +107,7 @@ export class SolarisLdomCreateComponent implements OnInit {
 
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.addVnet = {vnetName: '', vswName: ''};
   }
 
   openVdsModal() {
@@ -116,11 +119,25 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
+  openVnetModal(){
+    this.ngxSm.getModal('vnetModalLdom').open();
+  }
+  insertVnet(){
+    this.LDOM.vnet.push(Object.assign({}, this.addVnet));
+    this.addVnet = {vnetName: '', vswName: ''};
+    this.ngxSm.getModal('vnetModalLdom').close();
+  }
 
   deleteVdsDev(vdsDev: any) {
     const vdsIndex = this.LDOM.vds.indexOf(vdsDev);
     if (vdsIndex > -1 ) {
       this.LDOM.vds.splice(vdsIndex, 1);
+    }
+  }
+  deletevNet(vnetDev: any) {
+    const vnetIndex = this.LDOM.vnet.indexOf(vnetDev);
+    if (vnetIndex > -1 ) {
+      this.LDOM.vnet.splice(vnetIndex, 1);
     }
   }
 }
