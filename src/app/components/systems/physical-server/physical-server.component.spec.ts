@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PhysicalServerComponent } from './physical-server.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { PhysicalServerModalComponent } from 'src/app/modals/physical-server-modal/physical-server-modal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('PhysicalServerComponent', () => {
   let component: PhysicalServerComponent;
@@ -8,7 +12,9 @@ describe('PhysicalServerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhysicalServerComponent ]
+      imports: [ AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
+      declarations: [ PhysicalServerComponent, PhysicalServerModalComponent ],
+      providers: [ NgxSmartModalService ]
     })
     .compileComponents();
   }));
