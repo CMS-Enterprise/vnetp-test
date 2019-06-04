@@ -44,7 +44,7 @@ const routes: Routes = [
   {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
   {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
-  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Edit Static Route'}},
+  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Edit Static Route'}},
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
