@@ -9,20 +9,16 @@ import { Papa } from 'ngx-papaparse';
 })
 export class ImportExportComponent implements OnInit {
 
-  importFileType: string;
   downloadHref: SafeUrl;
   currentDate: string;
   fileInput: any;
 
-
   @Input() exportObject: any;
   @Input() exportFileName: string;
-
   @Input() disableJson?: boolean;
   @Input() disableCsv?: boolean;
 
   @Output() import = new EventEmitter<any>();
-
 
   constructor(private sanitizer: DomSanitizer, private papa: Papa) { }
 
@@ -35,7 +31,7 @@ export class ImportExportComponent implements OnInit {
 
   importCallback(importObjects) {
     this.import.emit(importObjects);
-    this.importFileType = '';
+    this.fileInput = '';
   }
 
   exportFile(exportType: string) {
