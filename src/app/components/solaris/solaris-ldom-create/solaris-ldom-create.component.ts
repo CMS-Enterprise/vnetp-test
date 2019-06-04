@@ -40,7 +40,6 @@ export class SolarisLdomCreateComponent implements OnInit {
     private solarisService: SolarisService,
     private automationApiService: AutomationApiService,
     private router: Router,
-    private messageService: MessageService,
     private authService: AuthService,
     private ngxSm: NgxSmartModalService
     ) {

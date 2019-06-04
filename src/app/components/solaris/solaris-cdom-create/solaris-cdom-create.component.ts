@@ -34,7 +34,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private router: Router,
-    private messageService: MessageService,
     private hs: HelpersService,
     ) {
   }
