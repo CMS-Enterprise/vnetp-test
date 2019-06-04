@@ -33,9 +33,6 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
-import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
-import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
@@ -80,9 +77,6 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     DevicesComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
-    IpNatsComponent,
-    IpNatDetailComponent,
-    CreateIpNatComponent,
     SpecialCharacterDirective,
     SolarisComponent,
     SolarisCdomCreateComponent,

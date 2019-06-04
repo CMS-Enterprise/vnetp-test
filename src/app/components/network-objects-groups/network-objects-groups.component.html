@@ -76,7 +76,11 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
+            <th scope="col">Source Subnet</th>
             <th scope="col">Address</th>
+            <th scope="col">Translated Address</th>
+            <th scope="col">Destination Subnet</th>
+            <th scope="col">Source/Translated Port</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -89,6 +93,9 @@
               <p>{{ netObj.Type }}</p>
             </td>
             <td>
+              <p>{{ netObj.SourceSubnet }}</p>
+            </td>
+            <td>
               <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
               <p *ngIf="netObj.Type === 'range'">
                 {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
@@ -96,6 +103,15 @@
               <p *ngIf="netObj.Type === 'subnet'">
                 {{ netObj.CidrAddress }}
               </p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Nat">{{ netObj.TranslatedIpAddress}}</p>
+            </td>
+            <td>
+              <p>{{ netObj.DestinationSubnet }}</p>
+            </td>
+            <td>
+              <p *ngIf="netObj.Nat">{{netObj.NatProtocol}} {{netObj.SourcePort}}:{{netObj.TranslatedPort}}</p>
             </td>
             <td>
               <fa
@@ -108,7 +124,7 @@
             </td>
           </tr>
           <tr *ngIf="networkObjects?.length === 0" class="text-center">
-              <td colspan="4">No Network Objects in this Tier (VRF).</td>
+              <td colspan="8">No Network Objects in this Tier (VRF).</td>
             </tr>
         </tbody>
       </table>
