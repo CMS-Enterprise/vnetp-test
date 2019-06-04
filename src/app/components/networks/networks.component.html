@@ -1,18 +1,25 @@
 <div>
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-info" (click)="getNetworks()">
-      <fa name="refresh" size="2x"></fa>
-    </button>
-    <button type="button" class="btn btn-success" aria-label="New Network" [routerLink]="['create']">
-      <fa name="plus" size="2x"></fa>
-    </button>
-  </div>
+  <div class="btn-toolbar mb-2" role="toolbar">
+    <div class="button-group mr-2">
+      <button type="button" class="btn btn-info" (click)="getNetworks()">
+        Refresh
+      </button>
+    </div>
+    <div class="button-group mr-2">
+      <button
+        type="button"
+        class="btn btn-success"
+        aria-label="New Network"
+        [routerLink]="['create']"
+      >
+        Create Subnet
+      </button>
+    </div>
 
-  <div class="pull-right">
-      <app-import-export
+    <app-import-export
       [exportObject]="exportNetworkConfig()"
       exportFileName="subnets"
-      disableCsv=true
+      disableCsv="true"
       (import)="importNetworkConfig($event)"
     ></app-import-export>
   </div>
@@ -30,7 +37,9 @@
       <tbody>
         <tr *ngFor="let subnet of subnets">
           <td>
-            <a routerLink="/networks/edit/{{ subnet.subnet_id }}">{{ subnet.name }}</a>
+            <a routerLink="/networks/edit/{{ subnet.subnet_id }}">
+              {{subnet.name}}
+            </a>
           </td>
           <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
           <td>{{ getDeployedState(subnet) }}</td>
