@@ -27,6 +27,7 @@ import { ServiceObjectsGroupsComponent } from './components/service-objects-grou
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
+import { BareMetalComponent } from './components/systems/bare-metal/bare-metal.component';
 
 
 const routes: Routes = [
@@ -50,6 +51,7 @@ const routes: Routes = [
   {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
+  {path: 'bare-metal', component: BareMetalComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Bare Metal'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
   {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
   {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},

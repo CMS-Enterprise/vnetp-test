@@ -1,0 +1,155 @@
+<ngx-smart-modal
+  #bareMetalModal
+  identifier="bareMetalModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Bare Metal</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Hardware Platform</label>
+        <select
+          name="hardwarePlatform"
+          formControlName="hardwarePlatform"
+          class="form-control"
+        >
+          <option></option>
+          <option value="x86">x86</option>
+          <option value="sparc">SPARC</option>
+          <option value="pseries">P-Series</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label>vCPUs</label>
+          <select
+            name="vCpuCount"
+            formControlName="vCpuCount"
+            class="form-control"
+          >
+            <option></option>
+            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">{{
+              cpuCount
+            }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>Memory</label>
+          <select
+            name="ramCount"
+            formControlName="ramCount"
+            class="form-control"
+          >
+            <option></option>
+            <option *ngFor="let ramCount of [1, 2, 4, 8, 16, 32]">{{
+              ramCount
+            }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>NICs</label>
+          <select
+            name="nicCount"
+            formControlName="nicCount"
+            class="form-control"
+          >
+            <option></option>
+            <option *ngFor="let nicCount of [1, 2, 3, 4, 5, 6, 7, 8]">{{
+              nicCount
+            }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Local Storage</label>
+          <input
+            name="localStorage"
+            formControlName="localStorage"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label>SAN Storage</label>
+          <input
+            name="sanStorage"
+            formControlName="sanStorage"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>OS</label>
+          <select name="os" formControlName="os" class="form-control">
+            <option></option>
+            <option value="redhat">RedHat</option>
+            <option value="solaris">Solaris</option>
+            <option value="windows">Windows</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Hypervisor</label>
+          <select
+            name="hypervisor"
+            formControlName="hypervisor"
+            class="form-control"
+          >
+            <option></option>
+            <option value="vmware">VMware</option>
+            <option value="kvm">KVM</option>
+            <option value="rhev">RHEV</option>
+            <option value="oracle">Oracle</option>
+            <option value="xenserver">XenServer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

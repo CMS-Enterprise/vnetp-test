@@ -1,0 +1,67 @@
+
+<div>
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-info" aria-label="Refresh Networks">
+          <fa name="refresh" size="2x"></fa>
+        </button>
+        <button type="button" class="btn btn-success" (click)="createBareMetal()">
+            <fa name="plus" size="2x"></fa>
+          </button>
+      </div>
+
+    <div class="card">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Hardware Platform</th>
+            <th scope="col">vCPU Count</th>
+            <th scope="col">Memory</th>
+            <th scope="col">NIC Count</th>
+            <th scope="col">Local Storage</th>
+            <th scope="col">SAN Storage</th>
+            <th scope="col">OS</th>
+            <th scope="col">Hypervisor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bm of bareMetals">
+            <td>
+              {{ bm.Name }}
+            </td>         
+            <td>                
+                {{ bm.HardwarePlatform }}                             
+            </td>            
+            <td>            
+                {{ bm.vCpuCount}}                                  
+            </td>                
+            <td>                     
+                {{ bm.RamCount}}                  
+            </td>                 
+            <td>                         
+                {{ bm.NicCount}}                            
+            </td>                      
+            <td>                          
+                {{ bm.LocalStorage}}                           
+            </td>                           
+            <td>                               
+                {{ bm.SanStorage}}                                                        
+            </td>                         
+            <td>                              
+                {{ bm.OS}}                              
+            </td>                                                            
+            <td>                            
+                {{ bm.Hypervisor}}                                 
+            </td>
+            <td>          
+            <fa name="pencil" (click)="editBareMetal(bm)"></fa>
+            <fa name="trash" (click)="deleteBareMetal(bm)"></fa>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-bare-metal-modal></app-bare-metal-modal>

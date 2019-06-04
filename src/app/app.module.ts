@@ -59,6 +59,8 @@ import { NetworkInterfacesComponent } from './components/network-interfaces/netw
 import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
+import { BareMetalComponent } from './components/systems/bare-metal/bare-metal.component';
+import { BareMetalModalComponent } from './modals/bare-metal-modal/bare-metal-modal.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +105,9 @@ import { ImportExportComponent } from './components/import-export/import-export.
     NetworkInterfacesComponent,
     LogicalInterfaceModalComponent,
     SolarisImageRepositoryComponent,
-    ImportExportComponent
+    ImportExportComponent,
+    BareMetalComponent,
+    BareMetalModalComponent
   ],
   imports: [
     BrowserModule,
