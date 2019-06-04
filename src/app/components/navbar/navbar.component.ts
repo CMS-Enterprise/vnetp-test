@@ -7,6 +7,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AppMessage } from 'src/app/models/app-message';
 import { AppMessageType } from 'src/app/models/app-message-type';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { Job } from 'src/app/models/other/job';
 
 @Component({
   selector: 'app-navbar',
@@ -18,17 +20,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
 
   constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private ngx: NgxSmartModalService , private auth: AuthService) {
+              private ngx: NgxSmartModalService , private auth: AuthService, private hs: HelpersService) {
     this.runningJobs = [];
     this.auth.currentUser.subscribe(u => this.currentUser = u);
   }
 
   loggedIn: boolean;
-  runningJobs: any;
+  runningJobs: Array<Job>;
   currentUser: User;
   jobMessage: AppMessage;
 
-  jobPoller = setInterval(() => this.getJobs() , 10000);
+  jobPoller = setInterval(() => this.getJobs() , 5000);
+
+  modalJob: Job;
 
   getMessageServiceSubscription() {
     this.messageServiceSubscription = this.messageService.listen()
@@ -40,13 +44,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private messageHandler(m: AppMessage) {
     switch (m.Type) {
       case AppMessageType.JobLaunchSuccess:
-        if (this.runningJobs.count <= 0) {
-          this.runningJobs = { count: 1 };
-        } else {
-          this.getJobs();
-        }
+
+        this.getJobs();
 
         this.jobMessage = m;
+        this.modalJob = this.hs.deepCopy(m.Object) as Job;
         this.ngx.getModal('jobLaunchModal').open();
         break;
       case AppMessageType.JobLaunchFail:
@@ -59,8 +61,32 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (!this.currentUser) { return; }
 
     this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(
-      data => this.runningJobs = data
+      data => {
+        const result = data as any;
+        this.runningJobs = result.results as Array<Job>;
+        this.updateModalJob();
+      }
     );
+  }
+
+  updateModalJob() {
+    if (this.modalJob) {
+     const updatedJob = this.runningJobs.find(j => j.id === this.modalJob.id);
+
+     if (updatedJob) {
+       this.modalJob = this.hs.deepCopy(updatedJob);
+     } else {
+       this.automationApiService.getJob(this.modalJob.id).subscribe(
+         data => {
+           this.modalJob = data as Job;
+         });
+     }
+    }
+  }
+
+  closeJobModal() {
+    this.ngx.getModal('jobLaunchModal').close();
+    this.modalJob = null;
   }
 
   logout() {

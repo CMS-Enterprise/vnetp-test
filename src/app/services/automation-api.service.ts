@@ -6,9 +6,8 @@ import { Vrf } from '../models/d42/vrf';
 import { AppMessage } from '../models/app-message';
 import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +22,17 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + '/api/v2/jobs/' + query);
   }
 
+  getJob(id: number) {
+    return this.http.get(environment.apiBase + '/api/v2/jobs/' + `${id}/`);
+  }
+
   launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
     return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody)
     .pipe(map( response => {
       if (sendJobLaunchMessage) {
-        this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, AppMessageType.JobLaunchSuccess));
+        this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
       }
       return response;
      }),
