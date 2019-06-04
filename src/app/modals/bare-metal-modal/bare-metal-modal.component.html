@@ -48,10 +48,10 @@
 
       <div class="form-row">
         <div class="form-group col-md-4">
-          <label>vCPUs</label>
+          <label>CPU Cores</label>
           <select
-            name="vCpuCount"
-            formControlName="vCpuCount"
+            name="cpuCount"
+            formControlName="cpuCount"
             class="form-control"
           >
             <option></option>
@@ -71,7 +71,7 @@
             <option></option>
             <option *ngFor="let ramCount of [1, 2, 4, 8, 16, 32]">{{
               ramCount
-            }}</option>
+            }} GB</option>
           </select>
         </div>
 
@@ -117,23 +117,13 @@
             <option value="redhat">RedHat</option>
             <option value="solaris">Solaris</option>
             <option value="windows">Windows</option>
-          </select>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Hypervisor</label>
-          <select
-            name="hypervisor"
-            formControlName="hypervisor"
-            class="form-control"
-          >
-            <option></option>
             <option value="vmware">VMware</option>
             <option value="kvm">KVM</option>
             <option value="rhev">RHEV</option>
             <option value="oracle">Oracle</option>
             <option value="xenserver">XenServer</option>
           </select>
-        </div>
+        </div>    
       </div>
 
       <div class="modal-footer">

@@ -22,7 +22,6 @@
             <th scope="col">Local Storage</th>
             <th scope="col">SAN Storage</th>
             <th scope="col">OS</th>
-            <th scope="col">Hypervisor</th>
           </tr>
         </thead>
         <tbody>
@@ -34,7 +33,7 @@
                 {{ bm.HardwarePlatform }}                             
             </td>            
             <td>            
-                {{ bm.vCpuCount}}                                  
+                {{ bm.CpuCount}}                                  
             </td>                
             <td>                     
                 {{ bm.RamCount}}                  
@@ -51,9 +50,6 @@
             <td>                              
                 {{ bm.OS}}                              
             </td>                                                            
-            <td>                            
-                {{ bm.Hypervisor}}                                 
-            </td>
             <td>          
             <fa name="pencil" (click)="editBareMetal(bm)"></fa>
             <fa name="trash" (click)="deleteBareMetal(bm)"></fa>

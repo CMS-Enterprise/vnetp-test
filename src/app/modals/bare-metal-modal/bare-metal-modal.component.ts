@@ -28,13 +28,12 @@ export class BareMetalModalComponent implements OnInit {
     const bareMetal = new BareMetal();
     bareMetal.Name = this.form.value.name;
     bareMetal.HardwarePlatform = this.form.value.hardwarePlatform;
-    bareMetal.vCpuCount = this.form.value.vCpuCount;
+    bareMetal.CpuCount = this.form.value.cpuCount;
     bareMetal.RamCount = this.form.value.ramCount;
     bareMetal.NicCount = this.form.value.nicCount;
     bareMetal.LocalStorage = this.form.value.localStorage;
     bareMetal.SanStorage = this.form.value.sanStorage;
     bareMetal.OS = this.form.value.os;
-    bareMetal.Hypervisor = this.form.value.hypervisor;
 
     this.ngx.resetModalData('bareMetalModal');
     this.ngx.setModalData(Object.assign({}, bareMetal), 'bareMetalModal');
@@ -54,13 +53,12 @@ export class BareMetalModalComponent implements OnInit {
     if (bareMetal !== undefined) {
       this.form.controls.name.setValue(bareMetal.Name);
       this.form.controls.hardwarePlatform.setValue(bareMetal.HardwarePlatform);
-      this.form.controls.vCpuCount.setValue(bareMetal.vCpuCount);
+      this.form.controls.cpuCount.setValue(bareMetal.CpuCount);
       this.form.controls.ramCount.setValue(bareMetal.RamCount);
       this.form.controls.nicCount.setValue(bareMetal.NicCount);
       this.form.controls.localStorage.setValue(bareMetal.LocalStorage);
       this.form.controls.sanStorage.setValue(bareMetal.SanStorage);
       this.form.controls.os.setValue(bareMetal.OS);
-      this.form.controls.hypervisor.setValue(bareMetal.Hypervisor);
       }
     this.ngx.resetModalData('bareMetalModal');
   }
@@ -70,13 +68,12 @@ export class BareMetalModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: [''],
       hardwarePlatform: [''],
-      vCpuCount: [''],
+      cpuCount: [''],
       ramCount: [''],
       nicCount: [''],
       localStorage: [''],
       sanStorage: [''],
       os: [''],
-      hypervisor: ['']
     });
   }
 
