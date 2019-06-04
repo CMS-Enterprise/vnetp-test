@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BareMetalComponent } from './bare-metal.component';
+import { PhysicalServerComponent } from './physical-server.component';
 
-describe('BareMetalComponent', () => {
-  let component: BareMetalComponent;
-  let fixture: ComponentFixture<BareMetalComponent>;
+describe('PhysicalServerComponent', () => {
+  let component: PhysicalServerComponent;
+  let fixture: ComponentFixture<PhysicalServerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BareMetalComponent ]
+      declarations: [ PhysicalServerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BareMetalComponent);
+    fixture = TestBed.createComponent(PhysicalServerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

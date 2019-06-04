@@ -1,4 +1,4 @@
-export class BareMetal {
+export class PhysicalServer {
     Name: string;
     HardwarePlatform: string;
     CpuCount: number;

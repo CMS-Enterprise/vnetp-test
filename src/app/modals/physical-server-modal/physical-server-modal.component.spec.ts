@@ -2,28 +2,28 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { BareMetalModalComponent } from './bare-metal-modal.component';
+import { PhysicalServerModalComponent } from './physical-server-modal.component';
 
-describe('BareMetalModalComponent', () => {
-  let component: BareMetalModalComponent;
-  let fixture: ComponentFixture<BareMetalModalComponent>;
+describe('PhysicalServerModalComponent', () => {
+  let component: PhysicalServerModalComponent;
+  let fixture: ComponentFixture<PhysicalServerModalComponent>;
 
   const ngx: NgxSmartModalService = new NgxSmartModalService();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ BareMetalModalComponent ],
+      declarations: [ PhysicalServerModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {
-      fixture = TestBed.createComponent(BareMetalModalComponent);
+      fixture = TestBed.createComponent(PhysicalServerModalComponent);
       component = fixture.componentInstance;
     });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BareMetalModalComponent);
+    fixture = TestBed.createComponent(PhysicalServerModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -5,7 +5,7 @@
         <button type="button" class="btn btn-info" aria-label="Refresh Networks">
           <fa name="refresh" size="2x"></fa>
         </button>
-        <button type="button" class="btn btn-success" (click)="createBareMetal()">
+        <button type="button" class="btn btn-success" (click)="createPhysicalServer()">
             <fa name="plus" size="2x"></fa>
           </button>
       </div>
@@ -25,34 +25,34 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let bm of bareMetals">
+          <tr *ngFor="let ps of physicalServers">
             <td>
-              {{ bm.Name }}
+              {{ ps.Name }}
             </td>         
             <td>                
-                {{ bm.HardwarePlatform }}                             
+                {{ ps.HardwarePlatform }}                             
             </td>            
             <td>            
-                {{ bm.CpuCount}}                                  
+                {{ ps.CpuCount}}                                  
             </td>                
             <td>                     
-                {{ bm.RamCount}}                  
+                {{ ps.RamCount}}                  
             </td>                 
             <td>                         
-                {{ bm.NicCount}}                            
+                {{ ps.NicCount}}                            
             </td>                      
             <td>                          
-                {{ bm.LocalStorage}}                           
+                {{ ps.LocalStorage}}                           
             </td>                           
             <td>                               
-                {{ bm.SanStorage}}                                                        
+                {{ ps.SanStorage}}                                                        
             </td>                         
             <td>                              
-                {{ bm.OS}}                              
+                {{ ps.OS}}                              
             </td>                                                            
             <td>          
-            <fa name="pencil" (click)="editBareMetal(bm)"></fa>
-            <fa name="trash" (click)="deleteBareMetal(bm)"></fa>
+            <fa name="pencil" (click)="editPhysicalServer(ps)"></fa>
+            <fa name="trash" (click)="deletePhysicalServer(ps)"></fa>
             </td>
           </tr>
         </tbody>
@@ -60,4 +60,4 @@
     </div>
   </div>
 
-  <app-bare-metal-modal></app-bare-metal-modal>
+  <app-physical-server-modal></app-physical-server-modal>
