@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ServiceObject } from 'src/app/models/service-object';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';

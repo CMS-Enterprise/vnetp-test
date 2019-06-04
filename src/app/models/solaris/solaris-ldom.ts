@@ -1,3 +1,5 @@
+import { SolarisVariable } from './solaris-variable';
+
 export class SolarisLdom {
   name: string;
   device_id: string;
@@ -34,14 +36,5 @@ export class SolarisLdom {
   vds = new Array<any>();
 }
 
-export interface SolarisLdomResponse {
-  total_count: number;
-  offset: number;
-  limit: number;
-  Devices: SolarisLdom[];
-}
 
-export class SolarisVariable implements KeyValuePair {
-  key: string;
-  value: string;
-}
+

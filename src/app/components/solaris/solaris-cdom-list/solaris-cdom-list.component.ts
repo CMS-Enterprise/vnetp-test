@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { SolarisCdomResponse } from '../../../models/solaris-cdom';
-import { SolarisLdomResponse } from '../../../models/solaris-ldom';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
+import { SolarisLdomResponse } from 'src/app/models/interfaces/solaris-load-balancer.interface';
+import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
 
 @Component({
   selector: 'app-solaris-cdom-list',

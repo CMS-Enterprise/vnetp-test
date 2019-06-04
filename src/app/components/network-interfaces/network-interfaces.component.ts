@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
-import { PhysicalInterface } from 'src/app/models/network/physical-interface';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-dto';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { LogicalInterfaceModalDto } from 'src/app/models/logical-interface-modal-dto';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';
 
 @Component({
   selector: 'app-network-interfaces',
@@ -22,7 +21,6 @@ export class NetworkInterfacesComponent implements OnInit {
               private ngx: NgxSmartModalService) { }
 
   LogicalInterfaces: Array<LogicalInterface>;
-  PhysicalInterfaces: Array<PhysicalInterface>;
   Subnets: Array<Subnet>;
   vrfs: Array<Vrf>;
   currentVrf: Vrf;
@@ -64,10 +62,8 @@ export class NetworkInterfacesComponent implements OnInit {
 
       if (!networkInterfacesDto) {
         this.LogicalInterfaces = new Array<LogicalInterface>();
-        this.PhysicalInterfaces = new Array<PhysicalInterface>();
        } else if (networkInterfacesDto) {
         this.LogicalInterfaces = networkInterfacesDto.LogicalInterfaces;
-        this.PhysicalInterfaces = networkInterfacesDto.PhysicalInterfaces;
       }
       this.getVrfSubnets(vrf);
   }
@@ -82,14 +78,6 @@ export class NetworkInterfacesComponent implements OnInit {
   createLogicalInterface() {
     this.subscribeToLogicalInterfaceModal();
     const dto = new LogicalInterfaceModalDto();
-    dto.PhysicalInterfaces = new Array<PhysicalInterface>();
-
-    // Get only unused Physical Interfaces.
-    this.PhysicalInterfaces.forEach(int => {
-      if (!int.LogicalInterfaceName) {
-        dto.PhysicalInterfaces.push(int);
-      }
-    });
 
     dto.Subnets = this.Subnets;
 
@@ -104,15 +92,6 @@ export class NetworkInterfacesComponent implements OnInit {
     const dto = new LogicalInterfaceModalDto();
 
     dto.LogicalInterface = logicalInterface;
-    dto.PhysicalInterfaces = new Array<PhysicalInterface>();
-
-    // Get only unused Physical Interfaces.
-    this.PhysicalInterfaces.forEach(int => {
-      if (logicalInterface.Name === int.LogicalInterfaceName || !int.LogicalInterfaceName) {
-        dto.PhysicalInterfaces.push(int);
-      }
-    });
-
     dto.Subnets = this.Subnets;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'logicalInterfaceModal');
@@ -140,27 +119,12 @@ export class NetworkInterfacesComponent implements OnInit {
       this.LogicalInterfaces[this.editLogicalInterfaceIndex] = logicalInterface;
     }
 
-    logicalInterface.PhysicalInterfaces.forEach(name => {
-      const physicalInterface = this.PhysicalInterfaces.find(p => p.Name === name);
-
-      if (physicalInterface) {
-        physicalInterface.LogicalInterfaceName = logicalInterface.Name;
-      }
-    });
-
     this.dirty = true;
   }
 
   deleteLogicalInterface(logicalInterface: LogicalInterface) {
     const index = this.LogicalInterfaces.indexOf(logicalInterface);
     if (index > -1) {
-
-      this.PhysicalInterfaces.forEach(p => {
-        if (p.LogicalInterfaceName === logicalInterface.Name) {
-          p.LogicalInterfaceName = '';
-        }
-      });
-
       this.LogicalInterfaces.splice(index, 1);
       this.dirty = true;
     }
@@ -171,7 +135,6 @@ export class NetworkInterfacesComponent implements OnInit {
     const dto = new NetworkInterfacesDto();
 
     dto.LogicalInterfaces = this.LogicalInterfaces;
-    dto.PhysicalInterfaces = this.PhysicalInterfaces;
     dto.VrfId = this.currentVrf.id;
 
     let extra_vars: {[k: string]: any} = {};

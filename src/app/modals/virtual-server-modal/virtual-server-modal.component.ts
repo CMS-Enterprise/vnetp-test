@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
-import { VirtualServerModalDto } from 'src/app/models/virtual-server-modal-dto';
+import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 
 @Component({

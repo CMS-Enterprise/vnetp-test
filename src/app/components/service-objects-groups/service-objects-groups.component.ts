@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({

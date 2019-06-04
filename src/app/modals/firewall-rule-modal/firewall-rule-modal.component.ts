@@ -2,18 +2,18 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { FirewallRule } from 'src/app/models/firewall-rule';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
-import { ServiceObject } from 'src/app/models/service-object';
-import { NetworkObject } from 'src/app/models/network-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { NetworkObjectDto } from 'src/app/models/network-object-dto';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
+import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { ObjectService } from 'src/app/services/object.service';
-import { RuleLocation } from 'src/app/models/rule-location';
-import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { RuleLocation } from 'src/app/models/firewall/rule-location';
+import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({

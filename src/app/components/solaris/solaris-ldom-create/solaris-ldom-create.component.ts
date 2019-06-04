@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SolarisService } from '../solaris-services/solaris-service.service';
-import { SolarisLdom, SolarisVariable } from 'src/app/models/solaris-ldom';
+import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
-import { SolarisCdom, SolarisCdomResponse } from 'src/app/models/solaris-cdom';
+import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
+import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
 
 @Component({
   selector: 'app-solaris-ldom-create',

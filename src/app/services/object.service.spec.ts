@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ObjectService } from './object.service';
-import { NetworkObject } from '../models/network-object';
-import { FirewallRule } from '../models/firewall-rule';
-import { RuleLocation } from '../models/rule-location';
-import { NetworkObjectGroup } from '../models/network-object-group';
-import { ServiceObject } from '../models/service-object';
-import { ServiceObjectGroup } from '../models/service-object-group';
-import { UniqueNameObject } from '../models/unique-name-object.interface';
+import { NetworkObject } from '../models/network-objects/network-object';
+import { FirewallRule } from '../models/firewall/firewall-rule';
+import { RuleLocation } from '../models/firewall/rule-location';
+import { NetworkObjectGroup } from '../models/network-objects/network-object-group';
+import { ServiceObject } from '../models/service-objects/service-object';
+import { ServiceObjectGroup } from '../models/service-objects/service-object-group';
+import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
 describe('FirewallRuleService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { FirewallRule } from 'src/app/models/firewall-rule';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NetworkObjectDto } from 'src/app/models/network-object-dto';
-import { NetworkObject } from 'src/app/models/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-object-group';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-object-dto';
-import { FirewallRuleModalDto } from 'src/app/models/firewall-rule-modal-dto';
+import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
+import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
+import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',

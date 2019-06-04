@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaskModule } from 'ngx-mask';
+import { ImportExportComponent } from '../../import-export/import-export.component';
+import { PapaParseModule } from 'ngx-papaparse';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
@@ -15,8 +17,8 @@ describe('StaticRouteDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxMaskModule.forRoot() ],
-      declarations: [ StaticRouteDetailComponent ],
+      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxMaskModule.forRoot(), PapaParseModule ],
+      declarations: [ StaticRouteDetailComponent, ImportExportComponent ],
       providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();

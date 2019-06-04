@@ -10,9 +10,10 @@ import { HttpClientModule, HttpHandler, HttpClient } from '@angular/common/http'
 import { CookieService } from 'ngx-cookie-service';
 import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
-import { ModalMode } from 'src/app/models/modal-mode';
-import { ServiceObject } from 'src/app/models/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-object-group';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { ServiceObject } from 'src/app/models/service-objects/service-object';
+import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { ImportExportComponent } from '../import-export/import-export.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -32,7 +33,8 @@ describe('ServicesObjectsGroupsComponent', () => {
      declarations: [
       ServiceObjectsGroupsComponent,
       ServiceObjectModalComponent,
-      ServiceObjectGroupModalComponent
+      ServiceObjectGroupModalComponent,
+      ImportExportComponent
     ],
      providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
@@ -48,23 +50,6 @@ describe('ServicesObjectsGroupsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should import', () => {
-
-    const objects = [{ GroupName: '', Name: 'Test1'},
-       {GroupName: '', Name: 'Test2'},
-       {GroupName: 'Group1', Name: 'Test3'},
-       {GroupName: 'Group2', Name: 'Test4'}, ];
-
-    component.importObjects(objects);
-
-    expect(component.serviceObjects.length === 2).toBeTruthy();
-    expect(component.serviceObjectGroups.length === 2).toBeTruthy();
-    expect(component.serviceObjects[0].Name === 'Test1').toBeTruthy();
-    expect(component.serviceObjects[1].Name === 'Test2').toBeTruthy();
-    expect(component.serviceObjectGroups[0].ServiceObjects[0].Name === 'Test3').toBeTruthy();
-    expect(component.serviceObjectGroups[1].ServiceObjects[0].Name === 'Test4').toBeTruthy();
-   });
 
   it('should create service object', () => {
     component.createServiceObject();
