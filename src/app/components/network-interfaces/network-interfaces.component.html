@@ -1,22 +1,22 @@
 <div>
-  <div class="input-group pb-2">
+  <div class="input-group input-group-sm pb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">VRF</span>
     </div>
 
     <select
       name="vrf"
-      class="form-control col-md-3"
+      class="form-control col-md-3 mr-1"
       [(ngModel)]="currentVrf"
       (ngModelChange)="getVrfObjects(currentVrf)"
       [disabled]="dirty"
     >
       <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
     </select>
-    <span class="pl-2 input-group-btn">
+    <div class="button-group btn-group-sm">
       <button
         type="button"
-        class="btn btn-danger"
+        class="btn btn-danger mr-1"
         aria-label="Save Changes to Current VRF"
         (click)="saveAll()"
         [hidden]="!dirty"
@@ -25,19 +25,19 @@
       </button>
       <button
         type="button"
-        class="btn btn-warning"
+        class="btn btn-warning mr-1"
         aria-label="Clear Changes to Current VRF"
         (click)="getVrfs()"
         [hidden]="!dirty"
       >
         Clear Changes to Current VRF
       </button>
-    </span>
+    </div>
 
-    <div class="pull-right" *ngIf="currentVrf">
-        <app-import-export
+    <div *ngIf="currentVrf">
+      <app-import-export
         [exportObject]="LogicalInterfaces"
-        exportFileName="logicalInterfaces-{{currentVrf.name}}"
+        exportFileName="logicalInterfaces-{{ currentVrf.name }}"
         (import)="insertLogicalInterfaces($event)"
       ></app-import-export>
     </div>
@@ -52,14 +52,14 @@
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm" role="group">
+    <div class="btn-group-sm m-2" role="group">
       <button
         type="button"
-        class="btn btn-success"
+        class="btn btn-success btn-sm"
         (click)="createLogicalInterface()"
         aria-label="Create Logical Interface"
       >
-        <fa name="plus" size="2x"></fa>
+        Create Logical Interface
       </button>
     </div>
 
