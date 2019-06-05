@@ -335,12 +335,14 @@
               class="form-control"
               id="inputCDOMvswitch"
               #formVds="ngModel"
-              [(ngModel)]="addVnet.VirtualSwitchName"
+              [(ngModel)]="vnetModalVswitch"
             >
-            <option *ngFor="let vsw of LDOM.associatedcdom?.vsw" [ngValue]="vsw.vSwitchName">{{ vsw.vSwitchName }}</option> -->
+            <option *ngFor="let vsw of vnetModalVswitches" [ngValue]="vsw.vSwitchName">{{ vsw.vSwitchName }}</option> -->
             </select>
           </div>
     </div>
+
+    <!-- <template type="checkbox" ngFor let-vlan [ngForOf]="[1,2,3]"></template> -->
 
     <div class="form-row">
     <div class="form-group col-md-8">

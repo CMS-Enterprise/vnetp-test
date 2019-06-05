@@ -32,6 +32,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   currentCDOM: SolarisCdom;
 
   vnetModalVswitches: Array<SolarisVswitch>;
+  vnetModalVswitch: SolarisVswitch;
 
   newSolarisVariable: SolarisVariable;
   addVdsDev: any;
@@ -130,7 +131,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
       const result = data as SolarisCdom;
       const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
-      this.LDOM.associatedcdom = cdomFull;
+      this.vnetModalVswitches = cdomFull.vsw;
       this.ngxSm.getModal('vnetModalLdom').open();
     });
   }
