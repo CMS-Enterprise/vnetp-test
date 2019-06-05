@@ -15,7 +15,6 @@ export class CdomDetailComponent implements OnInit {
 
   Cdom: SolarisCdom;
   CdomMetadata: SolarisCdom;
-  Ldoms: Array<SolarisLdom>;
 
   navIndex = 0;
 
@@ -30,24 +29,9 @@ export class CdomDetailComponent implements OnInit {
     this.automationApiService.getDevicesbyID(this.Id).subscribe(
       data => {
         this.Cdom = data as SolarisCdom;
-        this.CdomMetadata = this.hs.getJsonCustomField(this.Cdom, 'Metadata');
-
-        console.log(this.Cdom);
-        console.log(this.CdomMetadata);
-        this.getLdoms();
+        this.CdomMetadata = this.hs.getJsonCustomField(this.Cdom, 'Metadata') as SolarisCdom;
       }
     );
 
   }
-
-  getLdoms() {
-    this.automationApiService.getLDomsForCDom(this.Cdom.name).subscribe(
-      data => {
-        this.Ldoms = data as Array<SolarisLdom>;
-
-        console.log(this.Ldoms);
-      }
-    )
-  }
-
 }

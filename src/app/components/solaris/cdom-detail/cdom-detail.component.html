@@ -23,28 +23,13 @@
         <div class="form-row text-center">
           <div class="form-group col-md-4">vCPU: {{ CdomMetadata?.vcpu }}</div>
           <div class="form-group col-md-4">Memory: {{ CdomMetadata?.memory }}</div>
-          <div class="form-group col-md-4">VCC Name/Ports: {{ CdomMetadata?.vccname }} - {{ CdomMetadata.vccports }}</div>
+          <div class="form-group col-md-4">VCC Name/Ports: {{ CdomMetadata?.vccname }} - {{ CdomMetadata?.vccports }}</div>
         </div>
       </div>
     </div>
 
   <div *ngIf="navIndex == 1">
-      <div class="card">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ldom of Ldoms?.Devices">
-              <td>
-                <p>{{ ldom?.name }}</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<app-ldom-list *ngIf="Cdom" [CdomName]="Cdom?.Name"></app-ldom-list>
     </div>
 
     <div *ngIf="navIndex == 2">
