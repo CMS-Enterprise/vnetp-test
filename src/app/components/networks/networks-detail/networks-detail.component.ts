@@ -41,6 +41,15 @@ export class NetworksDetailComponent implements OnInit {
       });
   }
 
+  getDeployedState(subnet: Subnet) {
+    return this.hs.getBooleanCustomField(subnet, 'deployed');
+  }
+
+  getVlan(subnet: Subnet) {
+    return this.hs.getNumberCustomField(subnet, 'vlan_number');
+  }
+
+
   deleteSubnet() {
     if (this.deleteSubnetConfirm !== 'DELETE') { return; }
 
