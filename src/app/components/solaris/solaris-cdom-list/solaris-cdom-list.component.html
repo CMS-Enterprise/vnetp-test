@@ -16,7 +16,7 @@
       <tbody>
         <tr *ngFor="let device of CDOMDeviceArray">
           <td>
-            <a routerLink="/solaris-cdom-create"
+            <a routerLink="/solaris/cdom/detail/{{ device.device_id }}"
               ><fa name="server" style="color:black;"></fa> {{ device.name }}</a
             >
           </td>
