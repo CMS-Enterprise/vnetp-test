@@ -106,8 +106,8 @@ export class SolarisLdomCreateComponent implements OnInit {
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2, 32, 2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2, 64, 2);
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
 
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
