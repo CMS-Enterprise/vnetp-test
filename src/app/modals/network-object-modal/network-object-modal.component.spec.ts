@@ -51,59 +51,6 @@ describe('NetworkObjectModalComponent', () => {
     expect(component.form).toBeTruthy();
   });
 
-  it('save should set ngxModal data (Host)', () => {
-    component.form.controls.name.setValue('Test');
-    component.form.controls.type.setValue('host');
-    component.form.controls.hostAddress.setValue('192.168.10.10');
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('networkObjectModal');
-    const data = modal.getData() as NetworkObject;
-
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Test').toBeTruthy();
-    expect(data.Type === 'host').toBeTruthy();
-    expect(data.HostAddress = '192.168.10.10').toBeTruthy();
-  });
-
-  it('save should set ngxModal data (Range)', () => {
-    component.form.controls.name.setValue('Test');
-    component.form.controls.type.setValue('range');
-    component.form.controls.startAddress.setValue('192.168.10.10');
-    component.form.controls.endAddress.setValue('192.168.10.11');
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('networkObjectModal');
-    const data = modal.getData() as NetworkObject;
-
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Test').toBeTruthy();
-    expect(data.Type === 'range').toBeTruthy();
-    expect(data.EndAddress = '192.168.10.10').toBeTruthy();
-    expect(data.StartAddress = '192.168.10.11').toBeTruthy();
-  });
-
-  it('save should set ngxModal data (Network)', () => {
-    component.form.controls.name.setValue('Test');
-    component.form.controls.type.setValue('network');
-    component.form.controls.cidrAddress.setValue('192.168.10.0/24');
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('networkObjectModal');
-    const data = modal.getData() as NetworkObject;
-
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Test').toBeTruthy();
-    expect(data.Type === 'network').toBeTruthy();
-    expect(data.CidrAddress = '192.168.10.0/24').toBeTruthy();
-  });
-
   // Initial Form State
   it ('name should be required', () =>  {
     const name = component.form.controls.name;
