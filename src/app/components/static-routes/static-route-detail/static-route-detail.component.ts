@@ -1,28 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/network/static-route';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-static-route-detail',
   templateUrl: './static-route-detail.component.html',
   styleUrls: ['./static-route-detail.component.css']
 })
-export class StaticRouteDetailComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService, private hs: HelpersService) {
-                this.subnet = new Subnet();
-   }
-
+export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';
   subnet: Subnet;
   deployedState: boolean;
   staticRoutes: Array<StaticRoute>;
   deletedStaticRoutes: Array<StaticRoute>;
+  dirty: boolean;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
+
+  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
+              private messageService: MessageService, private hs: HelpersService) {
+                this.subnet = new Subnet();
+   }
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -47,6 +54,7 @@ export class StaticRouteDetailComponent implements OnInit {
     staticRoute.Edit = true;
 
     this.staticRoutes.push(staticRoute);
+    this.dirty = true;
   }
 
   deleteStaticRoute(staticRoute: StaticRoute) {
@@ -56,6 +64,7 @@ export class StaticRouteDetailComponent implements OnInit {
       this.staticRoutes.splice(index, 1);
       if (!this.deletedStaticRoutes) { this.deletedStaticRoutes = new Array<StaticRoute>(); }
       this.deletedStaticRoutes.push(staticRoute);
+      this.dirty = true;
     }
   }
 
@@ -74,6 +83,7 @@ export class StaticRouteDetailComponent implements OnInit {
     }
 
     this.messageService.filter('Job Launched');
+    this.dirty = false;
 
     this.deletedStaticRoutes = new Array<StaticRoute>();
   }
@@ -93,5 +103,6 @@ export class StaticRouteDetailComponent implements OnInit {
         this.staticRoutes.push(route);
       }
     });
+    this.dirty = true;
   }
 }

@@ -1,21 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-service-objects-groups',
   templateUrl: './service-objects-groups.component.html',
   styleUrls: ['./service-objects-groups.component.css']
 })
-export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
+export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
 
   vrfs: Vrf[];
   currentVrf: Vrf;
@@ -34,6 +35,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.serviceObjects = new Array<ServiceObject>();

@@ -8,11 +8,12 @@
         class="btn btn-warning mr-1"
         aria-label="Save Changes"
         (click)="updateStaticRoutes()"
+        *ngIf="dirty"
       >
         Save Changes
       </button>
 
-      <button type="button" class="btn btn-info mr-1" (click)="getNetwork()">
+      <button type="button" class="btn btn-info mr-1" (click)="getNetwork()" *ngIf="!dirty">
         Refresh
       </button>
 

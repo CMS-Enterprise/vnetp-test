@@ -58,6 +58,7 @@ import { SolarisImageRepositoryComponent } from './components/solaris/solaris-im
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PendingChangesGuard } from './guards/pending-changes.guard';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService, FormBuilder],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
+    NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

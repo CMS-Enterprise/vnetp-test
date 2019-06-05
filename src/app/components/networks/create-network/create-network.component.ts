@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -6,13 +6,15 @@ import { IpAddressService } from 'src/app/services/ip-address.service';
 import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { Vrf } from 'src/app/models/d42/vrf';
+import { ComponentCanDeactivate } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-network',
   templateUrl: './create-network.component.html',
   styleUrls: ['./create-network.component.css']
 })
-export class CreateNetworkComponent implements OnInit {
+export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
   subnet: Subnet;
   vrfs: Vrf[];
 
@@ -24,10 +26,14 @@ export class CreateNetworkComponent implements OnInit {
   vlanExists: boolean;
   networkOverlaps: boolean;
   invalidGateway: boolean;
-
   existingSubnet: Subnet;
   showDetails: boolean;
   vlanId: number;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return false; // TODO: Evaluate form state.
+  }
 
   constructor(
     private automationApiService: AutomationApiService,

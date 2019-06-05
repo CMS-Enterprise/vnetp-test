@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
@@ -7,7 +7,7 @@ import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
@@ -15,31 +15,34 @@ import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
   styleUrls: ['./firewall-rules-detail.component.css']
 })
-export class FirewallRulesDetailComponent implements OnInit {
+export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';
   subnet: Subnet;
   dirty: boolean;
   deployedState: boolean;
   firewallRules: Array<FirewallRule>;
-
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
-
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
-
   importFileType: string;
   fileInput: any;
   downloadHref: any;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
               private hs: HelpersService, private ngx: NgxSmartModalService) {
@@ -68,6 +71,8 @@ export class FirewallRulesDetailComponent implements OnInit {
 
     [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] =
     [this.firewallRules[nextRuleIndex], this.firewallRules[ruleIndex]];
+
+    this.dirty = true;
   }
 
   getSubnet() {
@@ -121,6 +126,7 @@ export class FirewallRulesDetailComponent implements OnInit {
     dupRule.Deleted = false;
 
     this.firewallRules.splice(ruleIndex, 0, dupRule);
+    this.dirty = true;
   }
 
   createFirewallRule() {
@@ -176,6 +182,7 @@ export class FirewallRulesDetailComponent implements OnInit {
 
   updateFirewallRules() {
     const firewallRules = this.firewallRules.filter(r => !r.Deleted);
+    this.dirty = false;
 
     let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
@@ -207,5 +214,6 @@ export class FirewallRulesDetailComponent implements OnInit {
         this.firewallRules.push(rule);
       }
     });
+    this.dirty = true;
   }
 }
