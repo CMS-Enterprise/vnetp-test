@@ -29,9 +29,11 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
   showDetails: boolean;
   vlanId: number;
 
+  dirty: boolean;
+
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
-    return false; // TODO: Evaluate form state.
+    return !this.dirty;
   }
 
   constructor(
@@ -60,6 +62,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
     this.networkOverlaps = false;
     this.invalidGateway = false;
     this.showDetails = false;
+    this.dirty = true;
 
     if (!this.cidrAddress) { return; }
 
@@ -150,6 +153,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
 
   // Launch required automation jobs
   private launchJobs() {
+    this.dirty = false;
     let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
     extra_vars.vlan_id = this.vlanId;
