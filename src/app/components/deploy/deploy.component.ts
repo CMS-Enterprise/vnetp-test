@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-deploy',
