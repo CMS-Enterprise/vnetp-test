@@ -103,7 +103,7 @@
           </tbody>
         </table>
 
-        <button type="button" name="addVnet" class="btn btn-success" (click)="openVnetModal()">Add vNet Device</button>
+        <button type="button" name="addVnet" class="btn btn-success" (click)="openVnetModal()" [disabled]="!LDOM.associatedcdom">Add vNet Device</button>
 
     </div>
 
