@@ -46,9 +46,7 @@
           [(ngModel)]="LDOM.vcpu"
         >
           <option></option>
-          <option
-            *ngFor="let cpuCount of cpuCountArray"
-            [ngValue]="cpuCount"
+          <option *ngFor="let cpuCount of cpuCountArray" [ngValue]="cpuCount"
             >{{ cpuCount }} vCPU's</option
           >
         </select>
@@ -64,9 +62,7 @@
           [(ngModel)]="LDOM.memory"
         >
           <option></option>
-          <option
-            *ngFor="let ramAmount of ramCountArray"
-            [ngValue]="ramAmount"
+          <option *ngFor="let ramAmount of ramCountArray" [ngValue]="ramAmount"
             >{{ ramAmount }} GB</option
           >
         </select>
@@ -75,17 +71,16 @@
 
     <hr />
 
-  <div class="form-row">
-
-    <div class="form-group col-md-5">
+    <div class="form-row">
+      <div class="form-group col-md-5">
         <label>vNets</label>
-        <table 
-        name="vnetTable"
-        class="table">
+        <table name="vnetTable" class="table">
           <thead>
             <tr>
               <th>vNet Name</th>
               <th>Virtual Switch</th>
+              <th>Untagged VLAN</th>
+              <th>Tagged VLANs</th>
               <th></th>
             </tr>
           </thead>
@@ -93,21 +88,26 @@
             <tr *ngFor="let vnet of LDOM.vnet">
               <td>{{ vnet?.Name }}</td>
               <td>{{ vnet?.VirtualSwitchName }}</td>
-              <td>      
-                <fa
-                name ="trash"
-                (click)="deletevNet(vnet)">
-                </fa>
+              <td>{{ vnet?.UntaggedVlan }}</td>
+              <td>{{ vnet?.TaggedVlans }}</td>
+              <td>
+                <fa name="trash" (click)="deletevNet(vnet)"> </fa>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <button type="button" name="addVnet" class="btn btn-success" (click)="openVnetModal()" [disabled]="!LDOM.associatedcdom">Add vNet Device</button>
+        <button
+          type="button"
+          name="modalVnet"
+          class="btn btn-success"
+          (click)="openVnetModal()"
+          [disabled]="!LDOM.associatedcdom"
+        >
+          Add vNet Device
+        </button>
+      </div>
 
-    </div>
-
-    
       <div class="form-group offset-2 col-md-5">
         <label for="inputLDOMvariable">Variables</label>
         <table name="variableTable" class="table">
@@ -148,49 +148,47 @@
             Add Variable
           </button>
         </div>
-    </div>
+      </div>
 
-    <div class="form-group col-md-2">
+      <div class="form-group col-md-2"></div>
     </div>
-  </div>
-    <hr/>
+    <hr />
 
     <div class="form-row">
-
       <div class="form-group col-md-5">
-          <label>Virtual Disks</label>
-          <table 
-          name="vdsTable"
-          class="table">
-            <thead>
-              <tr>
-                <th>VDS</th>
-                <th>Disk Name</th>
-                <th>Size</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let vds of LDOM.vds">
-                <td>{{ vds.vds }}</td>
-                <td>{{ vds.diskName }}</td>
-                <td>{{ vds.diskSize }}</td>
-                <td>      
-                  <fa
-                  name ="trash"
-                  (click)="deleteVdsDev(vds)">
-                  </fa>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <label>Virtual Disks</label>
+        <table name="vdsTable" class="table">
+          <thead>
+            <tr>
+              <th>VDS</th>
+              <th>Disk Name</th>
+              <th>Size</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vds of LDOM.vds">
+              <td>{{ vds.vds }}</td>
+              <td>{{ vds.diskName }}</td>
+              <td>{{ vds.diskSize }}</td>
+              <td>
+                <fa name="trash" (click)="deleteVdsDev(vds)"> </fa>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-          <button type="button" name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
-
+        <button
+          type="button"
+          name="addVdsDev"
+          class="btn btn-success"
+          (click)="openVdsModal()"
+        >
+          Add VDS Device
+        </button>
       </div>
 
-      <div class="form-group col-md-2">
-      </div>
+      <div class="form-group col-md-2"></div>
     </div>
 
     <hr />
@@ -219,8 +217,12 @@
           [(ngModel)]="LDOM.image"
         >
           <option></option>
-          <option value="solaris-image-1">Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option>
-          <option value="solaris-image-2">Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option>
+          <option value="solaris-image-1"
+            >Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option
+          >
+          <option value="solaris-image-2"
+            >Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option
+          >
         </select>
       </div>
     </div>
@@ -258,42 +260,46 @@
 
   <div class="modal-body">
     <div class="form-row">
-        <div class="form-group col-md-12">
-            <label for="inputCDOMVDS">VDS</label>
-            <select
-              name="inputCDOMVDS"
-              aria-label="CDOM vDisk name"
-              class="form-control"
-              id="inputCDOMVDS"
-              #formVds="ngModel"
-              [(ngModel)]="addVdsDev.vds"
-            >
-              <option value="primary-vds0">primary-vds0</option>
-              <option value="secondary-vds0">secondary-vds0</option>
-            </select>
-          </div>
+      <div class="form-group col-md-12">
+        <label for="inputCDOMVDS">VDS</label>
+        <select
+          name="inputCDOMVDS"
+          aria-label="CDOM vDisk name"
+          class="form-control"
+          id="inputCDOMVDS"
+          #formVds="ngModel"
+          [(ngModel)]="addVdsDev.vds"
+        >
+          <option value="primary-vds0">primary-vds0</option>
+          <option value="secondary-vds0">secondary-vds0</option>
+        </select>
+      </div>
     </div>
 
     <div class="form-row">
-
-
-    <div class="form-group col-md-8">
-      <label for="diskName">Disk Name</label>
-      <input class="form-control" [(ngModel)]="addVdsDev.diskName" />
-    </div>
-
-    <div class="form-group col-md-4">
-        <label for="diskName">Disk Size</label>
-        <input class="form-control" type="number" [(ngModel)]="addVdsDev.diskSize" />
+      <div class="form-group col-md-8">
+        <label for="diskName">Disk Name</label>
+        <input class="form-control" [(ngModel)]="addVdsDev.diskName" />
       </div>
+
+      <div class="form-group col-md-4">
+        <label for="diskName">Disk Size</label>
+        <input
+          class="form-control"
+          type="number"
+          [(ngModel)]="addVdsDev.diskSize"
+        />
+      </div>
+    </div>
   </div>
 
-
-</div>
-
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" data-dismiss="modal"
-    (click)="insertVds()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="insertVds()"
+    >
       Add
     </button>
 
@@ -327,52 +333,73 @@
 
   <div class="modal-body">
     <div class="form-row">
-        <div class="form-group col-md-12">
-            <label for="inputCDOMvswitch">vSwitch</label>
-            <select
-              name="inputCDOMvswitch"
-              aria-label="CDOM vSwitch name"
-              class="form-control"
-              id="inputCDOMvswitch"
-              #formVds="ngModel"
-              [(ngModel)]="vnetModalVswitch"
-            >
-            <option *ngFor="let vsw of vnetModalVswitches" [ngValue]="vsw.vSwitchName">{{ vsw.vSwitchName }}</option> -->
-            </select>
-          </div>
+      <div class="form-group col-md-12">
+        <label for="inputCDOMvswitch">vSwitch</label>
+        <select
+          name="inputCDOMvswitch"
+          aria-label="CDOM vSwitch name"
+          class="form-control"
+          id="inputCDOMvswitch"
+          #formVds="ngModel"
+          [(ngModel)]="vnetModalVswitch"
+        >
+          <option *ngFor="let vsw of vnetModalVswitches" [ngValue]="vsw">{{
+            vsw.vSwitchName
+          }}</option>
+          -->
+        </select>
+      </div>
     </div>
 
-    <ng-template ngFor let-vlan [ngForOf]="[1,2,3]">
-      <div class="input-group">
-        <input type="checkbox"/>
-      <label class="small">VLAN {{vlan}}</label>
-
+    <div class="form-group">
+      Native VLAN: {{ vnetModalVswitch?.vlansUntagged }}
     </div>
-    </ng-template>
+
+    <div class="form-group">
+      Untagged VLANs
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="addVnetInherit"
+        />
+        <label class="form-check-label">Inherit Untagged VLANs</label>
+      </div>
+
+      <div class="form-check form-check-inline" *ngIf="!addVnetInherit">
+        <ng-template ngFor let-vlan [ngForOf]="vnetModalVswitch?.vlansTagged">
+          <input class="form-check-input" type="checkbox" (change)="selectUntaggedVlan($event, vlan)" />
+          <label class="form-check-label mr-1">Vlan {{ vlan }} </label>
+        </ng-template>
+      </div>
+    </div>
 
     <div class="form-row">
-    <div class="form-group col-md-8">
-      <label for="vNetName">vNet Name</label>
-      <input class="form-control" [(ngModel)]="addVnet.Name" />
+      <div class="form-group col-md-8">
+        <label for="vNetName">vNet Name</label>
+        <input class="form-control" [(ngModel)]="modalVnet.Name" />
+      </div>
     </div>
 
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="insertVnet()"
+      >
+        Add
+      </button>
 
-</div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" data-dismiss="modal"
-    (click)="insertVnet()">
-      Add
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
-      data-dismiss="modal"
-      (click)="vnetModalLdom.close()"
-    >
-      Cancel
-    </button>
-  </div>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        (click)="vnetModalLdom.close()"
+      >
+        Cancel
+      </button>
+    </div>
   </div>
 </ngx-smart-modal>

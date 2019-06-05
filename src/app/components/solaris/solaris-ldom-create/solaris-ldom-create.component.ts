@@ -31,12 +31,19 @@ export class SolarisLdomCreateComponent implements OnInit {
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
 
-  vnetModalVswitches: Array<SolarisVswitch>;
-  vnetModalVswitch: SolarisVswitch;
 
   newSolarisVariable: SolarisVariable;
   addVdsDev: any;
-  addVnet: SolarisVnet;
+
+
+  modalVnet: SolarisVnet;
+  // modalSelectedVswitch: SolarisVswitch;
+
+  vnetModalVswitches: Array<SolarisVswitch>;
+  vnetModalVswitch: SolarisVswitch;
+  vnetModalUntaggedVlans: Array<number>;
+
+  addVnetInherit: boolean;
 
   // Added as type any
   cpuCountArray: number[];
@@ -112,7 +119,7 @@ export class SolarisLdomCreateComponent implements OnInit {
 
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
-    this.addVnet = new SolarisVnet();
+    this.modalVnet = new SolarisVnet();
   }
 
   openVdsModal() {
@@ -124,7 +131,14 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
+
+
   openVnetModal() {
+    this.addVnetInherit = true;
+    this.vnetModalUntaggedVlans = new Array<number>();
+    this.modalVnet = new SolarisVnet();
+    this.vnetModalVswitch = new SolarisVswitch();
+
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
       // the selected CDOM with its custom fields.
@@ -135,9 +149,17 @@ export class SolarisLdomCreateComponent implements OnInit {
       this.ngxSm.getModal('vnetModalLdom').open();
     });
   }
+
   insertVnet() {
-    this.LDOM.vnet.push(this.hs.deepCopy(this.addVnet));
-    this.addVnet = new SolarisVnet();
+    if (this.addVnetInherit) {
+      this.modalVnet.UntaggedVlan = this.vnetModalVswitch.vlansUntagged;
+      this.modalVnet.TaggedVlans = this.vnetModalVswitch.vlansTagged;
+    } else {
+      this.modalVnet.UntaggedVlan = this.vnetModalVswitch.vlansUntagged;
+      this.modalVnet.TaggedVlans = this.vnetModalUntaggedVlans;
+    }
+
+    this.LDOM.vnet.push(this.hs.deepCopy(this.modalVnet));
     this.ngxSm.getModal('vnetModalLdom').close();
   }
 
@@ -153,4 +175,18 @@ export class SolarisLdomCreateComponent implements OnInit {
       this.LDOM.vnet.splice(vnetIndex, 1);
     }
   }
+
+  selectUntaggedVlan(e, vlan: number) {
+    if (e.target.checked) {
+      if (!this.vnetModalUntaggedVlans.includes(vlan)) {
+        this.vnetModalUntaggedVlans.push(vlan);
+      }
+    } else if (!e.target.checked) {
+      const vlanIndex = this.vnetModalUntaggedVlans.indexOf(vlan);
+
+      if (vlanIndex > -1 ) {
+        this.vnetModalUntaggedVlans.splice(vlanIndex, 1);
+      }
+    }
+  } 
 }
