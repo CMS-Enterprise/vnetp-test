@@ -61,6 +61,8 @@ import { SolarisImageRepositoryComponent } from './components/solaris/solaris-im
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
+import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +109,9 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
-    PhysicalServerModalComponent
+    PhysicalServerModalComponent,
+    CdomDetailComponent,
+    LdomDetailComponent
   ],
   imports: [
     BrowserModule,
