@@ -194,7 +194,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-service-object-dto', body).subscribe(data => { },
+    this.api.launchTemplate('save-service-object-dto', body, true).subscribe(data => { },
       error => { this.dirty = true; });
 
     this.deletedServiceObjects = new Array<ServiceObject>();

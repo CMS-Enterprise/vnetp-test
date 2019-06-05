@@ -218,7 +218,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-object-dto', body).subscribe(data => {
+    this.api.launchTemplate('save-network-object-dto', body, true).subscribe(data => {
     }, error => { this.dirty = true; });
 
     this.deletedNetworkObjects = new Array<NetworkObject>();

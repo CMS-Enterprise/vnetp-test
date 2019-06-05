@@ -1,8 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -16,6 +14,7 @@ import { ServiceObjectGroup } from 'src/app/models/service-objects/service-objec
 import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -35,16 +34,13 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   editFirewallRuleIndex: number;
   firewallRuleModalMode: ModalMode;
   firewallRuleModalSubscription: Subscription;
-  importFileType: string;
-  fileInput: any;
-  downloadHref: any;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private messageService: MessageService,
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
               private hs: HelpersService, private ngx: NgxSmartModalService) {
     this.subnet = new Subnet();
     this.firewallRules = [];
@@ -191,12 +187,10 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     const body = { extra_vars };
 
     if (this.deployedState) {
-      this.automationApiService.launchTemplate('deploy-acl', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-acl', body).subscribe();
+      this.automationApiService.launchTemplate('save-acl', body, true).subscribe();
     }
-
-    this.messageService.filter('Job Launched');
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {

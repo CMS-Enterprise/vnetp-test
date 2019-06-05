@@ -20,7 +20,7 @@ export class JobsComponent implements OnInit {
   }
 
   getJobs() {
-    this.automationApiService.getJobs('?order_by=-created').subscribe(
+    this.automationApiService.getJobs('?order_by=-created&page_size=50').subscribe(
       data => this.jobs = data,
       error => console.error(error)
     );

@@ -3,7 +3,6 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { ComponentCanDeactivate } from 'src/app/guards/pending-changes.guard';
@@ -39,8 +38,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
     private automationApiService: AutomationApiService,
     private toastr: ToastrService,
     private router: Router,
-    private ipService: IpAddressService,
-    private messageService: MessageService
+    private ipService: IpAddressService
   ) {
     this.subnet = new Subnet();
   }
@@ -158,9 +156,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('save-network', body).subscribe();
-
-    this.messageService.filter('Job Launched');
+    this.automationApiService.launchTemplate('save-network', body, true).subscribe();
     this.router.navigate(['/networks']);
   }
 }

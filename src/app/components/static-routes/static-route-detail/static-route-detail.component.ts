@@ -2,11 +2,10 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/network/static-route';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -14,6 +13,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./static-route-detail.component.css']
 })
 export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
+
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
+              private hs: HelpersService) {
+                this.subnet = new Subnet();
+   }
+
   Id = '';
   subnet: Subnet;
   deployedState: boolean;
@@ -25,11 +30,6 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
-
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService, private hs: HelpersService) {
-                this.subnet = new Subnet();
-   }
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -77,14 +77,12 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
     if (this.deployedState) {
       extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-      this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('save-static-route', body, true).subscribe();
     }
 
-    this.messageService.filter('Job Launched');
     this.dirty = false;
-
     this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
