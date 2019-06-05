@@ -11,6 +11,6 @@ export interface ComponentCanDeactivate {
 export class PendingChangesGuard implements CanDeactivate<ComponentCanDeactivate> {
   canDeactivate(component: ComponentCanDeactivate): boolean | Observable<boolean> {
     return component.canDeactivate() ?
-      true : confirm('Your unsaved edits will be lost.');
+      true : confirm('WARNING: Unsaved changes will be lost.');
   }
 }
