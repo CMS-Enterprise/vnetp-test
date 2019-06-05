@@ -14,7 +14,7 @@ export class DeployComponent implements OnInit {
   tabIndex: number;
   subnets: Array<Subnet>;
 
-  constructor(private hs: HelpersService, private automationApiService: AutomationApiService, private ips: IpAddressService) {
+  constructor(private hs: HelpersService, private automationApiService: AutomationApiService) {
     this.subnets = new Array<Subnet>();
    }
 
@@ -31,7 +31,6 @@ export class DeployComponent implements OnInit {
     });
   }
 
-  //TODO: Move to helper service
   getPropertyLength(subnet: Subnet, propertyName: string) {
     const jsonFirewallRules = subnet.custom_fields.find(c => c.key === propertyName);
 

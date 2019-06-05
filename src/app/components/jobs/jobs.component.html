@@ -14,6 +14,8 @@
         <tr
           *ngFor="let job of jobs.results"
           [ngClass]="{
+            'text-info': job?.status === 'pending',
+            'text-warning': job?.status === 'running',
             'text-success': job?.status === 'successful',
             'text-danger': job?.status === 'failed'
           }"
