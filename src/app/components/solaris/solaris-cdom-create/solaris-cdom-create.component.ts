@@ -11,6 +11,8 @@ import { NetworkInterfacesDto } from 'src/app/models/network/network-interfaces-
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AuthService } from 'src/app/services/auth.service';
+
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -39,6 +41,7 @@ export class SolarisCdomCreateComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private hs: HelpersService,
+    private authService: AuthService
     ) {
   }
   cloneCdom() {
@@ -82,6 +85,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
   launchCDOMJobs() {
     const extra_vars: {[k: string]: any} = {};
+    this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.CDOM.devicetype = 'solaris_cdom';
     extra_vars.CDOM = this.CDOM;
 
