@@ -9,6 +9,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
 import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
+import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -28,9 +31,11 @@ export class SolarisLdomCreateComponent implements OnInit {
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
 
+  vnetModalVswitches: Array<SolarisVswitch>;
+
   newSolarisVariable: SolarisVariable;
   addVdsDev: any;
-  addVnet: any;
+  addVnet: SolarisVnet;
 
   // Added as type any
   cpuCountArray: number[];
@@ -42,6 +47,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private authService: AuthService,
+    private hs: HelpersService,
     private ngxSm: NgxSmartModalService
     ) {
     this.vnets = new Array<any>();
@@ -100,12 +106,12 @@ export class SolarisLdomCreateComponent implements OnInit {
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2,32,2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2,64,2);
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 32, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2, 64, 2);
 
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
-    this.addVnet = {vnetName: '', vswName: ''};
+    this.addVnet = new SolarisVnet();
   }
 
   openVdsModal() {
@@ -117,13 +123,20 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
-  openVnetModal(){
-    this.ngxSm.getModal('vnetModalLdom').open();
-    console.log('OPEN MODAL', this.LDOM.associatedcdom);
+  openVnetModal() {
+      // Since Devices returned from Device42 don't include custom fields, get the id
+      // of the device representing the CDOM and then get it from the API and hydrate
+      // the selected CDOM with its custom fields.
+    this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
+      const result = data as SolarisCdom;
+      const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
+      this.LDOM.associatedcdom = cdomFull;
+      this.ngxSm.getModal('vnetModalLdom').open();
+    });
   }
-  insertVnet(){
-    this.LDOM.vnet.push(Object.assign({}, this.addVnet));
-    this.addVnet = {vnetName: '', vswName: ''};
+  insertVnet() {
+    this.LDOM.vnet.push(this.hs.deepCopy(this.addVnet));
+    this.addVnet = new SolarisVnet();
     this.ngxSm.getModal('vnetModalLdom').close();
   }
 

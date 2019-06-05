@@ -1,6 +1,7 @@
 import { SolarisVariable } from './solaris-variable';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 import { SolarisCdom } from './solaris-cdom';
+import { SolarisVnet } from './solaris-vnet';
 
 export class SolarisLdom {
   public custom_fields: Array<CustomField>;
@@ -22,7 +23,7 @@ export class SolarisLdom {
   net_install: boolean;
 
   /** Assigned vNets */
-  vnet = new Array<string>();
+  vnet = new Array<SolarisVnet>();
 
   /** Solaris Variables */
   variables: Array<SolarisVariable>;

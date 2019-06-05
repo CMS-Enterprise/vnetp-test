@@ -91,8 +91,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let vnet of LDOM.vnet">
-              <td>{{ vnet.name }}</td>
-              <td>{{ vnet.vswName }}</td>
+              <td>{{ vnet?.Name }}</td>
+              <td>{{ vnet?.VirtualSwitchName }}</td>
               <td>      
                 <fa
                 name ="trash"
@@ -187,49 +187,6 @@
 
           <button type="button" name="addVdsDev" class="btn btn-success" (click)="openVdsModal()">Add VDS Device</button>
 
-      </div>
-
-      
-        <div class="form-group offset-2 col-md-5">
-          <label for="inputLDOMvariable">Variables</label>
-          <table name="variableTable" class="table">
-            <thead>
-              <tr>
-                <th>Key</th>
-                <th>Value</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let variable of LDOM.variables">
-                <td>{{ variable.key }}</td>
-                <td>{{ variable.value }}</td>
-                <td>
-                  <fa name="trash" (click)="deleteVariable(variable)"> </fa>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-  
-          <div class="input-group">
-            <input
-              name="addVariableKey"
-              type="text"
-              class="form-control"
-              placeholder="Key"
-              [(ngModel)]="newSolarisVariable.key"
-            />
-            <input
-              name="addVariableValue"
-              type="text"
-              class="form-control"
-              placeholder="Value"
-              [(ngModel)]="newSolarisVariable.value"
-            />
-            <button type="button" class="btn btn-success" (click)="addVariable()">
-              Add Variable
-            </button>
-          </div>
       </div>
 
       <div class="form-group col-md-2">
@@ -378,9 +335,9 @@
               class="form-control"
               id="inputCDOMvswitch"
               #formVds="ngModel"
-              [(ngModel)]="addVnet.vswName"
+              [(ngModel)]="addVnet.VirtualSwitchName"
             >
-            <option *ngFor="let vsw of LDOM.associatedcdom?.vsw">{{ vsw.vSwitchName }}</option> -->
+            <option *ngFor="let vsw of LDOM.associatedcdom?.vsw" [ngValue]="vsw.vSwitchName">{{ vsw.vSwitchName }}</option> -->
             </select>
           </div>
     </div>
@@ -388,7 +345,7 @@
     <div class="form-row">
     <div class="form-group col-md-8">
       <label for="vNetName">vNet Name</label>
-      <input class="form-control" [(ngModel)]="addVnet.vnetName" />
+      <input class="form-control" [(ngModel)]="addVnet.Name" />
     </div>
 
 

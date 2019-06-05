@@ -4,6 +4,8 @@ import { CustomField } from '../interfaces/custom-fields-object.interface';
 
 export class SolarisCdom {
   public custom_fields: Array<CustomField>;
+
+  device_id: string;
   name: string;
   customer_name: string;
   devicetype: string;
