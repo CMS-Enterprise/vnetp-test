@@ -103,10 +103,10 @@
           ><fa
             name="spinner fa-spin"
             style="padding-right:5px;"
-            [hidden]="!activeJobs.count"
+            [hidden]="!activeJobs.length"
           ></fa>
-          <span class="badge badge-success" [hidden]="!activeJobs.count">{{
-            activeJobs.count
+          <span class="badge badge-success" [hidden]="!activeJobs.length">{{
+            activeJobs.length
           }}</span>
           Jobs</a
         >
@@ -218,7 +218,7 @@
 
   <div class="modal-body" *ngIf="jobMessage?.Success">
     <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-6 text-center">
         <p
           [ngClass]="{
             'text-success': modalJob?.status === 'successful',
@@ -229,8 +229,8 @@
           Status: {{ modalJob?.status }}
         </p>
       </div>
-      <div class="form-group col-md-6">
-        Elapsed Time: {{ modalJob?.elapsed }}
+      <div class="form-group col-md-6 text-center">
+        Elapsed Time: {{ modalJob?.elapsed }}s
       </div>
     </div>
   </div>
@@ -244,7 +244,7 @@
       (click)="closeJobModal()"
       *ngIf="jobMessage?.Success && modalJob?.status !== 'failed'"
     >
-      View Jobs
+      View All Jobs
     </button>
 
     <button

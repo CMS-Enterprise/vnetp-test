@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
     // by showing failed jobs in the last day based on local
     // timezone vs UTC.
     this.automationApiService
-      .getJobs(`?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=100`)
+      .getJobs(`?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`)
       .subscribe(
         data => (this.jobs = data),
         error => {},
