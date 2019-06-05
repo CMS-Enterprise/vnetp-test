@@ -12,6 +12,7 @@ import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-resp
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-solaris-cdom-create',
@@ -27,11 +28,13 @@ export class SolarisCdomCreateComponent implements OnInit {
   inputCDOMVDSDevs: any;
   vds: any;
   cdomInput: any;
-  addVdsDev: any;
-  addVswitch: SolarisVswitch;
 
   cpuCountArray: Array<number>;
   ramCountArray: Array<number>;
+
+  addVdsDev: any;
+  modalVswitch: SolarisVswitch;
+  modalAddTaggedVlan: number;
 
   constructor(
     private ngxSm: NgxSmartModalService,
@@ -40,9 +43,9 @@ export class SolarisCdomCreateComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private hs: HelpersService,
-    private authService: AuthService
-    ) {
-  }
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
   cloneCdom() {
     this.CDOM = this.cdomInput;
   }
@@ -51,12 +54,13 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.LogicalInterfaces = new Array<LogicalInterface>();
 
     this.automationApiService.getVrfs().subscribe(data => {
-     data.forEach(d => {
-      const dto = this.hs.getJsonCustomField(d, 'network_interfaces') as NetworkInterfacesDto;
-      dto.LogicalInterfaces.forEach(l => {
-        this.LogicalInterfaces.push(l);
+      data.forEach(d => {
+        const dto = this.hs.getJsonCustomField(d, 'network_interfaces'
+        ) as NetworkInterfacesDto;
+        dto.LogicalInterfaces.forEach(l => {
+          this.LogicalInterfaces.push(l);
+        });
       });
-     });
     });
   }
 
@@ -66,13 +70,13 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.CDOM.vnet = 'vnet0';
     this.CDOM.vccports = '5000-5100';
     this.CDOM.net_device = 'net0';
-    this.automationApiService.getCDoms()
-      .subscribe(data => {
-        const cdomResponse = data as SolarisCdomResponse;
-        this.CDOMDeviceArray = cdomResponse.Devices;
+    this.automationApiService.getCDoms().subscribe(data => {
+      const cdomResponse = data as SolarisCdomResponse;
+      this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    this.addVswitch = new SolarisVswitch();
+    this.modalVswitch = new SolarisVswitch();
+    this.modalVswitch.vlansTagged = new Array<number>();
     this.CDOM.vsw = new Array<SolarisVswitch>();
     this.CDOM.vds = new Array<any>();
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
@@ -80,10 +84,10 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   moveObjectPosition(value: number, obj, objArray) {
-   this.solarisService.moveObjectPosition(value, obj, objArray);
+    this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
-    const extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.CDOM.devicetype = 'solaris_cdom';
     extra_vars.CDOM = this.CDOM;
@@ -93,20 +97,50 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris-cdom-list']);
   }
+
   openVswitchModal() {
     this.ngxSm.getModal('vswitchModalCdom').open();
   }
 
   insertVswitch() {
-    this.CDOM.vsw.push(Object.assign({}, this.addVswitch));
-    this.addVswitch = new SolarisVswitch();
+    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)){
+      this.toastr.error('Native VLAN cannot be in Tagged VLANs.')
+      return;
+    }
+
+    this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    this.modalVswitch = new SolarisVswitch();
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
 
   deletevSwitch(vsw: any) {
     const vswIndex = this.CDOM.vsw.indexOf(vsw);
-    if (vswIndex > -1 ) {
+    if (vswIndex > -1) {
       this.CDOM.vsw.splice(vswIndex, 1);
+    }
+  }
+
+  vswitchModalAddTaggedVlan() {
+
+    if (this.modalVswitch.vlansTagged.includes(this.modalAddTaggedVlan)) {
+      this.toastr.error('Duplicate Tagged VLAN');
+      return;
+    }
+
+    if (this.modalVswitch.vlansUntagged === this.modalAddTaggedVlan) {
+      this.toastr.error('Native VLAN cannot be added to Tagged VLANs');
+      return;
+    }
+
+    this.modalVswitch.vlansTagged.push(this.modalAddTaggedVlan);
+    this.modalAddTaggedVlan = null;
+  }
+
+  vswitchModalRemoveTaggedVlan(vlan: number) {
+    const vlanIndex = this.modalVswitch.vlansTagged.indexOf(vlan);
+
+    if (vlanIndex > -1) {
+      this.modalVswitch.vlansTagged.splice(vlanIndex, 1);
     }
   }
 }

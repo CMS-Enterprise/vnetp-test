@@ -132,7 +132,7 @@
 
         <button
           type="button"
-          name="addVswitch"
+          name="modalVswitch"
           class="btn btn-success"
           (click)="openVswitchModal()"
         >
@@ -200,31 +200,67 @@
           class="form-control"
           id="inputCDOMvswitch"
           #formVds="ngModel"
-          [(ngModel)]="addVswitch.vSwitchName"
+          [(ngModel)]="modalVswitch.vSwitchName"
         />
       </div>
     </div>
     <div class="form-group">
       <label for="unTaggedVlans">Untagged VLANS</label>
-      <input class="form-control" [(ngModel)]="addVswitch.vlansUntagged" />
+      <input class="form-control" type="number" [(ngModel)]="modalVswitch.vlansUntagged" />
+    </div>
+
+    Tagged VLANs
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input
+          class="form-control"
+          type="number"
+          [(ngModel)]="modalAddTaggedVlan"
+        />
+      </div>
+
+      <div class="form-group">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="vswitchModalAddTaggedVlan()"
+          aria-label="Add VLAN"
+        >
+          <fa name="plus" size="1x"></fa>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>VLAN ID</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let taggedVlan of modalVswitch.vlansTagged">
+            <td>{{ taggedVlan }}</td>
+            <td><fa name="trash" (click)="vswitchModalRemoveTaggedVlan(taggedVlan)"></fa></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="form-group">
-      <label for="taggedVlans">Tagged VLANS</label>
-      <input class="form-control" [(ngModel)]="addVswitch.vlansTagged" />
-
-      <div class="form-group">
-        <label>Network Device</label>
-        <select
-          name="vnetDevice"
-          class="form-control"
-          [(ngModel)]="addVswitch.netDevice"
+      <label>Logical Interface</label>
+      <select
+        name="vnetDevice"
+        class="form-control"
+        [(ngModel)]="modalVswitch.netDevice"
+      >
+        <option></option>
+        <option *ngFor="let li of LogicalInterfaces" [ngValue]="li?.Name">
+          {{ li.Name }}</option
         >
-          <option></option>
-          <option *ngFor="let li of LogicalInterfaces" [ngValue]="li.Name">
-            {{ li.Name }}</option>
-        </select>
-      </div>
+      </select>
     </div>
   </div>
 

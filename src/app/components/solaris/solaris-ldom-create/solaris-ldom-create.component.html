@@ -342,7 +342,13 @@
           </div>
     </div>
 
-    <!-- <template type="checkbox" ngFor let-vlan [ngForOf]="[1,2,3]"></template> -->
+    <ng-template ngFor let-vlan [ngForOf]="[1,2,3]">
+      <div class="input-group">
+        <input type="checkbox"/>
+      <label class="small">VLAN {{vlan}}</label>
+
+    </div>
+    </ng-template>
 
     <div class="form-row">
     <div class="form-group col-md-8">

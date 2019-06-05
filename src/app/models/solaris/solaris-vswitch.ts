@@ -1,7 +1,7 @@
 export class SolarisVswitch {
     vSwitchName: String;
     //array of all untagged/tagged vlan ids
-    vlansUntagged: string;
-    vlansTagged: string;
+    vlansUntagged: number;
+    vlansTagged: Array<number>;
     netDevice: string;
 }
