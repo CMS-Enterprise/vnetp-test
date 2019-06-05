@@ -27,7 +27,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   cdomInput: any;
   launchLDOMJobs: any;
   addVdsDev: any;
-  addVswitch: Array<any>;
+  addVswitch: SolarisVswitch;
 
   cpuCountArray: Array<number>;
   ramCountArray: Array<number>;
@@ -70,9 +70,9 @@ export class SolarisCdomCreateComponent implements OnInit {
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
     this.getVrfs();
-    this.CDOM.vsw = new Array<any>();
+    this.addVswitch = new SolarisVswitch();
+    this.CDOM.vsw = new Array<SolarisVswitch>();
     this.CDOM.vds = new Array<any>();
-
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
     this.ramCountArray = this.solarisService.buildNumberArray(0, 512, 32);
   }
@@ -96,7 +96,7 @@ export class SolarisCdomCreateComponent implements OnInit {
 
   insertVswitch() {
     this.CDOM.vsw.push(Object.assign({}, this.addVswitch));
-    this.addVswitch = {vSwitchName: '', vlansUntagged: '', vlansTagged: ''};
+    this.addVswitch = new SolarisVswitch();
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
 

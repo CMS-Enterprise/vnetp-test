@@ -74,53 +74,7 @@
     </div>
 
     <hr />
-   <!--
-    <div class="form-row">
-      <div class="form-group col-md-3">
-        <label for="inputLDOMvnet">vNet</label>
-        <ul class="list-group" *ngIf="vnets">
-          <li class="list-group-item" *ngFor="let vnet of LDOM.vnet">
-            <fa
-              name="chevron-up"
-              (click)="moveObjectPosition(-1, vnet, LDOM.add_vnet)"
-            >
-            </fa>
-            <fa
-              name="chevron-down"
-              (click)="moveObjectPosition(1, vnet, LDOM.add_vnet)"
-            >
-            </fa>
-            <fa name="trash" (click)="deleteObject(vnet, LDOM.vnet)"> </fa>
-            {{ vnet }}
-          </li>
-        </ul>
-        <select
-          name="vnetSelect"
-          class="form-control"
-          id="inputLDOMvnet"
-          #ldomVnetInput="ngModel"
-          [(ngModel)]="inputLDOMvnet"
-        >
-          <option
-            class="list-group-item"
-            *ngFor="let vswitch of currentCDOM?.vsw"
-            [ngValue]="vswitch"
-          >
-            {{ vswitch }}
-          </option>
-        </select>
-        <button
-          class="btn btn-outline-info"
-          id="enterVnet"
-          type="button"
-          (click)="addvnetObject(inputLDOMvnet, LDOM.vnet)"
-          [disabled]="!inputLDOMvnet"
-        >
-          Add Vnet
-        </button>
-      </div>
-    </div>
-  -->
+
   <div class="form-row">
 
     <div class="form-group col-md-5">
@@ -426,9 +380,7 @@
               #formVds="ngModel"
               [(ngModel)]="addVnet.vswName"
             >
-            <!-- <option *ngFor="let vsw of CDOM.vSwitches">{{ vsw.name }}</option> -->
-              <option value="primary-vds0">primary-vds0</option>
-              <option value="alternate-vds0">alternate-vds0</option>
+            <option *ngFor="let vsw of CDOM.vsw">{{ vsw.vSwitchName }}</option> -->
             </select>
           </div>
     </div>

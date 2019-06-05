@@ -5,7 +5,6 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
 import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
-import { SolarisVswitch} from 'src/app/models/solaris/solaris-vswitch';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
