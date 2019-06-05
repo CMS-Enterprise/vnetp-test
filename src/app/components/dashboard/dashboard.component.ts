@@ -1,10 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { AutomationApiService } from "src/app/services/automation-api.service";
+import { Component, OnInit } from '@angular/core';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.css"]
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   constructor(private automationApiService: AutomationApiService) {
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
     // by showing failed jobs in the last day based on local
     // timezone vs UTC.
     this.automationApiService
-      .getJobs(`?created__gte=${date}T00:00&created__lte=${date}T23:59`)
+      .getJobs(`?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=100`)
       .subscribe(
         data => (this.jobs = data),
         error => {},
@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
 
   sortJobs() {
     this.successfulJobs = this.jobs.results.filter(
-      job => !job.failed && job.status === "successful"
+      job => !job.failed && job.status === 'successful'
     ).length;
     this.failedJobs = this.jobs.results.filter(job => job.failed).length;
   }

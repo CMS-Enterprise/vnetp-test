@@ -103,10 +103,10 @@
           ><fa
             name="spinner fa-spin"
             style="padding-right:5px;"
-            [hidden]="!runningJobs.count"
+            [hidden]="!activeJobs.count"
           ></fa>
-          <span class="badge badge-success" [hidden]="!runningJobs.count">{{
-            runningJobs.count
+          <span class="badge badge-success" [hidden]="!activeJobs.count">{{
+            activeJobs.count
           }}</span>
           Jobs</a
         >

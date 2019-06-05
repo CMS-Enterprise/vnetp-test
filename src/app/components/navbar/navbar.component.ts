@@ -16,35 +16,39 @@ import { Job } from 'src/app/models/other/job';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-
   messageServiceSubscription: Subscription;
 
-  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private ngx: NgxSmartModalService , private auth: AuthService, private hs: HelpersService) {
-    this.runningJobs = [];
-    this.auth.currentUser.subscribe(u => this.currentUser = u);
+  constructor(
+    private automationApiService: AutomationApiService,
+    private messageService: MessageService,
+    private ngx: NgxSmartModalService,
+    private auth: AuthService,
+    private hs: HelpersService
+  ) {
+    this.activeJobs = [];
+    this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   loggedIn: boolean;
-  runningJobs: Array<Job>;
+  activeJobs: Array<Job>;
   currentUser: User;
   jobMessage: AppMessage;
 
-  jobPoller = setInterval(() => this.getJobs() , 5000);
+  jobPoller = setInterval(() => this.getJobs(), 5000);
 
   modalJob: Job;
 
   getMessageServiceSubscription() {
-    this.messageServiceSubscription = this.messageService.listen()
-    .subscribe((m: AppMessage) => {
-      this.messageHandler(m);
-    });
+    this.messageServiceSubscription = this.messageService
+      .listen()
+      .subscribe((m: AppMessage) => {
+        this.messageHandler(m);
+      });
   }
 
   private messageHandler(m: AppMessage) {
     switch (m.Type) {
       case AppMessageType.JobLaunchSuccess:
-
         this.getJobs();
 
         this.jobMessage = m;
@@ -58,29 +62,37 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   getJobs() {
-    if (!this.currentUser) { return; }
+    if (!this.currentUser) {
+      return;
+    }
 
-    this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(
-      data => {
+    this.automationApiService
+      .getJobs('?order_by=-created&or__status=running&or__status=pending')
+      .subscribe(data => {
         const result = data as any;
-        this.runningJobs = result.results as Array<Job>;
+        this.activeJobs = result.results as Array<Job>;
         this.updateModalJob();
-      }
-    );
+      });
   }
 
   updateModalJob() {
-    if (this.modalJob) {
-     const updatedJob = this.runningJobs.find(j => j.id === this.modalJob.id);
+    if (
+      this.modalJob &&
+      this.modalJob.status !== 'failed' &&
+      this.modalJob.status !== 'successful'
+    ) {
+      // Try to update the modal job from the activeJobs array.
+      const updatedJob = this.activeJobs.find(j => j.id === this.modalJob.id);
 
-     if (updatedJob) {
-       this.modalJob = this.hs.deepCopy(updatedJob);
-     } else {
-       this.automationApiService.getJob(this.modalJob.id).subscribe(
-         data => {
-           this.modalJob = data as Job;
-         });
-     }
+      if (updatedJob) {
+        this.modalJob = this.hs.deepCopy(updatedJob);
+      } else {
+        // If the job isn't in active jobs, it has either succeeded or failed.
+        // Get its status directly.
+        this.automationApiService.getJob(this.modalJob.id).subscribe(data => {
+          this.modalJob = data as Job;
+        });
+      }
     }
   }
 
