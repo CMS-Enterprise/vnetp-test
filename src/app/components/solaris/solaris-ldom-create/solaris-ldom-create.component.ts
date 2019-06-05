@@ -119,6 +119,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   }
   openVnetModal(){
     this.ngxSm.getModal('vnetModalLdom').open();
+    console.log('OPEN MODAL', this.LDOM.associatedcdom);
   }
   insertVnet(){
     this.LDOM.vnet.push(Object.assign({}, this.addVnet));

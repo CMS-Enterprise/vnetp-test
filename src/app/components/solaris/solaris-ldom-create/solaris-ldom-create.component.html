@@ -380,7 +380,7 @@
               #formVds="ngModel"
               [(ngModel)]="addVnet.vswName"
             >
-            <option *ngFor="let vsw of CDOM.vsw">{{ vsw.vSwitchName }}</option> -->
+            <option *ngFor="let vsw of LDOM.associatedcdom?.vsw">{{ vsw.vSwitchName }}</option> -->
             </select>
           </div>
     </div>

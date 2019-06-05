@@ -1,7 +1,9 @@
 import { SolarisVariable } from './solaris-variable';
 import {SolarisVswitch } from './solaris-vswitch';
+import { CustomField } from '../interfaces/custom-fields-object.interface';
 
 export class SolarisCdom {
+  public custom_fields: Array<CustomField>;
   name: string;
   customer_name: string;
   devicetype: string;

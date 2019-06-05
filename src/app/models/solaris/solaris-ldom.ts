@@ -1,13 +1,16 @@
 import { SolarisVariable } from './solaris-variable';
+import { CustomField } from '../interfaces/custom-fields-object.interface';
+import { SolarisCdom } from './solaris-cdom';
 
 export class SolarisLdom {
+  public custom_fields: Array<CustomField>;
   name: string;
   device_id: string;
   customer_name: string;
   devicetype: string;
 
   /** CDOM that LDOM is assigned to. */
-  associatedcdom: string;
+  associatedcdom: SolarisCdom;
 
   // Compute
   /** Virtual CPU */
