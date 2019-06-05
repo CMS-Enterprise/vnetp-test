@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 
 @Component({
   selector: 'app-cdom-detail',

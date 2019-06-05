@@ -13,6 +13,7 @@ export class LdomDetailComponent implements OnInit {
   Ldom: SolarisLdom;
   LdomMetadata: SolarisLdom;
   Id: string;
+  navIndex = 0;
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private hs: HelpersService) { }
 
@@ -26,8 +27,6 @@ export class LdomDetailComponent implements OnInit {
       data => {
         this.Ldom = data as SolarisLdom;
         this.LdomMetadata = this.hs.getJsonCustomField(this.Ldom, 'Metadata') as SolarisLdom;
-
-        console.log(this.LdomMetadata);
       }
     )
   }
