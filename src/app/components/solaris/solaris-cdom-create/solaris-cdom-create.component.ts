@@ -27,7 +27,6 @@ export class SolarisCdomCreateComponent implements OnInit {
   inputCDOMVDSDevs: any;
   vds: any;
   cdomInput: any;
-  launchLDOMJobs: any;
   addVdsDev: any;
   addVswitch: SolarisVswitch;
 
