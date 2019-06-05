@@ -63,6 +63,7 @@ import { PhysicalServerModalComponent } from './modals/physical-server-modal/phy
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
+import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detai
     PhysicalServerComponent,
     PhysicalServerModalComponent,
     CdomDetailComponent,
-    LdomDetailComponent
+    LdomDetailComponent,
+    LdomListComponent
   ],
   imports: [
     BrowserModule,
