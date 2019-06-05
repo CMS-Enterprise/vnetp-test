@@ -224,6 +224,7 @@
         <button
           type="button"
           class="btn btn-success"
+          [disabled]="!modalAddTaggedVlan"
           (click)="vswitchModalAddTaggedVlan()"
           aria-label="Add VLAN"
         >

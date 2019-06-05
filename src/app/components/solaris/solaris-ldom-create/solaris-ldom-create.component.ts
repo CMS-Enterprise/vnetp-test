@@ -138,6 +138,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.vnetModalUntaggedVlans = new Array<number>();
     this.modalVnet = new SolarisVnet();
     this.vnetModalVswitch = new SolarisVswitch();
+    this.vnetModalVswitches = new Array<SolarisVswitch>();
 
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
@@ -158,6 +159,8 @@ export class SolarisLdomCreateComponent implements OnInit {
       this.modalVnet.UntaggedVlan = this.vnetModalVswitch.vlansUntagged;
       this.modalVnet.TaggedVlans = this.vnetModalUntaggedVlans;
     }
+
+    this.modalVnet.VirtualSwitchName = this.vnetModalVswitch.vSwitchName;
 
     this.LDOM.vnet.push(this.hs.deepCopy(this.modalVnet));
     this.ngxSm.getModal('vnetModalLdom').close();

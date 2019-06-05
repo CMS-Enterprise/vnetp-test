@@ -57,9 +57,12 @@ export class SolarisCdomCreateComponent implements OnInit {
       data.forEach(d => {
         const dto = this.hs.getJsonCustomField(d, 'network_interfaces'
         ) as NetworkInterfacesDto;
+
+        if (dto) {
         dto.LogicalInterfaces.forEach(l => {
           this.LogicalInterfaces.push(l);
         });
+      }
       });
     });
   }
@@ -74,13 +77,14 @@ export class SolarisCdomCreateComponent implements OnInit {
       const cdomResponse = data as SolarisCdomResponse;
       this.CDOMDeviceArray = cdomResponse.Devices;
     });
-    this.getVrfs();
     this.modalVswitch = new SolarisVswitch();
     this.modalVswitch.vlansTagged = new Array<number>();
     this.CDOM.vsw = new Array<SolarisVswitch>();
     this.CDOM.vds = new Array<any>();
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
     this.ramCountArray = this.solarisService.buildNumberArray(0, 512, 32);
+    this.LogicalInterfaces = new Array<LogicalInterface>();
+    this.getVrfs();
   }
 
   moveObjectPosition(value: number, obj, objArray) {
@@ -99,6 +103,8 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   openVswitchModal() {
+    this.modalVswitch = new SolarisVswitch();
+    this.modalVswitch.vlansTagged = new Array<number>();
     this.ngxSm.getModal('vswitchModalCdom').open();
   }
 
@@ -109,7 +115,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     }
 
     this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
-    this.modalVswitch = new SolarisVswitch();
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
 
