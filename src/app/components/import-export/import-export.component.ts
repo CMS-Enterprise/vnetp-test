@@ -15,8 +15,12 @@ export class ImportExportComponent implements OnInit {
 
   @Input() exportObject: any;
   @Input() exportFileName: string;
+
   @Input() disableJson?: boolean;
   @Input() disableCsv?: boolean;
+
+  @Input() disableImport?: boolean;
+  @Input() disableExport?: boolean;
 
   @Output() import = new EventEmitter<any>();
 
