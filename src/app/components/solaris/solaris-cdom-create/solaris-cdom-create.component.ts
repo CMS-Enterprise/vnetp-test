@@ -46,8 +46,12 @@ export class SolarisCdomCreateComponent implements OnInit {
     private authService: AuthService,
     private toastr: ToastrService
   ) {}
+
   cloneCdom() {
-    this.CDOM = this.cdomInput;
+    this.automationApiService.getDevicesbyID(this.cdomInput.device_id).subscribe(data => {
+      const result = data as SolarisCdom;
+      this.CDOM = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
+    });
   }
 
   getVrfs() {
