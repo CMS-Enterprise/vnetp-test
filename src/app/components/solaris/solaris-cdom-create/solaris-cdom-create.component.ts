@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SolarisCdom } from '../../../models/solaris/solaris-cdom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { LogicalInterface } from 'src/app/models/network/logical-interface';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -13,13 +12,15 @@ import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
   styleUrls: ['./solaris-cdom-create.component.css']
 })
-export class SolarisCdomCreateComponent implements OnInit {
+export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   CDOM: SolarisCdom;
   CDOMDeviceArray: Array<any>;
   clonefromCDOM: SolarisCdom;
@@ -28,13 +29,17 @@ export class SolarisCdomCreateComponent implements OnInit {
   inputCDOMVDSDevs: any;
   vds: any;
   cdomInput: any;
-
   cpuCountArray: Array<number>;
   ramCountArray: Array<number>;
-
   addVdsDev: any;
   modalVswitch: SolarisVswitch;
   modalAddTaggedVlan: number;
+  dirty: boolean;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(
     private ngxSm: NgxSmartModalService,
@@ -71,6 +76,7 @@ export class SolarisCdomCreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dirty = true;
     this.CDOM = new SolarisCdom();
     this.CDOM.vccname = 'primary-vcc0';
     this.CDOM.vnet = 'vnet0';
@@ -94,6 +100,8 @@ export class SolarisCdomCreateComponent implements OnInit {
     this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
+    // TODO: Tie to reactive form pristine.
+    this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
     this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.CDOM.devicetype = 'solaris_cdom';
