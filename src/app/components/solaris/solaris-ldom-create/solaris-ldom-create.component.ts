@@ -127,7 +127,7 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   insertVds() {
     this.LDOM.vds.push(Object.assign({}, this.addVdsDev));
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
 
