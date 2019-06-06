@@ -12,6 +12,8 @@ export class Subnet implements CustomFieldsObject {
     public mask_bits: number;
     public subnet_mask: string;
     public custom_fields: Array<CustomField>;
+    public range_begin: string;
+    public range_end: string;
 }
 
 export interface SubnetResponse {
