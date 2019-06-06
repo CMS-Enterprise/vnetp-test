@@ -6,7 +6,6 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxMaskModule } from 'ngx-mask';
 import { IpaddressesComponent } from '../../ipaddresses/ipaddresses.component';
 
 describe('NetworksDetailComponent', () => {
