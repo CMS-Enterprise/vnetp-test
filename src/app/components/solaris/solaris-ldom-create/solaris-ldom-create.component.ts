@@ -191,12 +191,12 @@ export class SolarisLdomCreateComponent implements OnInit {
       }
     }
   }
-  insertVirtualDisks(vds) {
-    if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
-    rules.forEach(rule => {
-      if (rule.Name !== '') {
-        this.firewallRules.push(rule);
-      }
-    });
-  } 
+  // insertVirtualDisks(vds) {
+  //   if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
+  //   rules.forEach(rule => {
+  //     if (rule.Name !== '') {
+  //       this.firewallRules.push(rule);
+  //     }
+  //   });
+  // } 
 }
