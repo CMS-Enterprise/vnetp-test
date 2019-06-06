@@ -1,13 +1,17 @@
 import { SolarisVariable } from './solaris-variable';
-
+import { CustomField } from '../interfaces/custom-fields-object.interface';
+import { SolarisCdom } from './solaris-cdom';
+import { SolarisVnet } from './solaris-vnet';
+import { SolarisVdsDevs } from './solaris-vds-devs';
 export class SolarisLdom {
+  public custom_fields: Array<CustomField>;
   name: string;
   device_id: string;
   customer_name: string;
   devicetype: string;
 
   /** CDOM that LDOM is assigned to. */
-  associatedcdom: string;
+  associatedcdom: SolarisCdom;
 
   // Compute
   /** Virtual CPU */
@@ -19,7 +23,7 @@ export class SolarisLdom {
   net_install: boolean;
 
   /** Assigned vNets */
-  vnet = new Array<string>();
+  vnet = new Array<SolarisVnet>();
 
   /** Solaris Variables */
   variables: Array<SolarisVariable>;
@@ -34,6 +38,9 @@ export class SolarisLdom {
   add_vdsdev: string;
   add_vdisk = new Array<string>();
   vds = new Array<any>();
+
+  /** D42 Property for Parent */
+  virtual_host_name: string;
 }
 
 

@@ -26,6 +26,9 @@ import { NetworkInterfacesComponent } from './components/network-interfaces/netw
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
+import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
+import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
+import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 
 // tslint:disable: max-line-length
 
@@ -49,10 +52,13 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
-  {path: 'solaris-cdom-create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Create'}},
-  {path: 'solaris-ldom-create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Create'}},
-  {path: 'solaris-cdom-list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
-  {path: 'solaris-image-repository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
+  {path: 'solaris/cdom/create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'CDOM Create'}},
+  {path: 'solaris/ldom/create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'LDOM Create'}},
+  {path: 'solaris/cdom/list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
+  {path: 'solaris/imagerepository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
+  {path: 'solaris/ldom/list', component: LdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM List'}},
+  {path: 'solaris/ldom/detail/:id', component: LdomDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Detail'}},
+  {path: 'solaris/cdom/detail/:id', component: CdomDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Detail'}},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]},
 ];

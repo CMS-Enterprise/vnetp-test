@@ -52,9 +52,7 @@
           [(ngModel)]="CDOM.vcpu"
         >
           <option></option>
-          <option
-            *ngFor="let cpuCount of cpuCountArray"
-            [ngValue]="cpuCount"
+          <option *ngFor="let cpuCount of cpuCountArray" [ngValue]="cpuCount"
             >{{ cpuCount }} vCPU</option
           >
         </select>
@@ -70,9 +68,7 @@
           [(ngModel)]="CDOM.memory"
         >
           <option></option>
-          <option
-            *ngFor="let ramAmount of ramCountArray"
-            [ngValue]="ramAmount"
+          <option *ngFor="let ramAmount of ramCountArray" [ngValue]="ramAmount"
             >{{ ramAmount }} GB</option
           >
         </select>
@@ -93,6 +89,7 @@
         />
       </div>
 
+      <!--TODO: Add Range Validator-->
       <div class="form-group col-md-4">
         <label for="inputCDOMVCCports">VCC Ports</label>
         <input
@@ -108,62 +105,39 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-2">
-        <label for="inputCdomVsw">VSW</label>
-        <select
-          name="inputCdomVsw"
-          aria-label="CDOM VDS Config"
-          type="text"
-          class="form-control"
-          #addVsw="ngModel"
-          [(ngModel)]="CDOM.vsw"
+      <div class="form-group col-md-12">
+        <label>vSwitches</label>
+        <table name="vSwitchTable" class="table">
+          <thead>
+            <tr>
+              <th>vSwitch Name</th>
+              <th>Untagged VLAN</th>
+              <th>Tagged VLAN(s)</th>
+              <th>Net Device</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vsw of CDOM.vsw">
+              <td>{{ vsw.vSwitchName }}</td>
+              <td>{{ vsw.vlansUntagged }}</td>
+              <td>{{ vsw.vlansTagged }}</td>
+              <td>{{ vsw.netDevice }}</td>
+              <td>
+                <fa name="trash" (click)="deletevSwitch(vsw)"> </fa>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button
+          type="button"
+          name="modalVswitch"
+          class="btn btn-success"
+          (click)="openVswitchModal()"
         >
-        <!--TODO: Make first option editable-->
-        <option value="primary-admin">primary-admin</option>
-        <option value="primary-mgmt">primary-mgmt</option>
-        <option value="primary-data">primary-data</option>
-        <option value="primary-oa">primary-oa</option>
-        <option value="primary-stmp">primary-stmp</option>
-        <option value="primary-bi">primary-bi</option>
-        <option value="primary-dmz">primary-dmz</option>
-        <option value="primary-dmz-pub">primary-dmz-pub</option>
-      </select>
-      </div>
-
-      <div class="form-group col-md-2">
-        <label for="inputCdomVsw">Net Device</label>
-        <input
-          name="inputCdomNetDevice"
-          aria-label="CDOM Net Device for VSW"
-          type="text"
-          class="form-control"
-          #addVsw="ngModel"
-          [(ngModel)]="CDOM.net_device"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVNet">VNET</label>
-        <input
-          name="inputCDOMVDS"
-          aria-label="CDOM VDS Config"
-          type="text"
-          class="form-control"
-          #vnet="ngModel"
-          [(ngModel)]="CDOM.vnet"
-        />
-      </div>
-
-      <div class="form-group col-md-4">
-        <label for="inputCDOMVLANs">VLANS (comma separated)</label>
-        <input
-          name="inputCDOMVLANs"
-          aria-label="CDOM VLANS"
-          type="text"
-          class="form-control"
-          #vlans="ngModel"
-          [(ngModel)]="CDOM.vlans"
-        />
+          Add vSwitch
+        </button>
       </div>
     </div>
 
@@ -171,23 +145,21 @@
 
     <div class="form-row">
       <div class="form-group col-md-2">
-      <div class="form-check form-check-inline">
-        <input
-          name="alternateVds"
-          aria-label="Alternate VDS"
-          type="checkbox"
-          class="form-check-input"
-          #formAlternateVds="ngModel"
-          [(ngModel)]="CDOM.alternatevds"
-        />
-        <label class="form-check-label"
-          >Create Alternate VDS</label
-        >
+        <div class="form-check form-check-inline">
+          <input
+            name="alternateVds"
+            aria-label="Alternate VDS"
+            type="checkbox"
+            class="form-check-input"
+            #formAlternateVds="ngModel"
+            [(ngModel)]="CDOM.alternatevds"
+          />
+          <label class="form-check-label">Create Alternate VDS</label>
+        </div>
       </div>
     </div>
-    </div>
 
-    <hr/>
+    <hr />
 
     <div class="btn-group">
       <button
@@ -201,3 +173,115 @@
   </form>
 </div>
 
+<ngx-smart-modal
+  #vswitchModalCdom
+  identifier="vswitchModalCdom"
+  customClass="'modal-content'"
+  [dismissable]="false"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Add vSwitch</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="vswitchModalCdom.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="inputCDOMvswitch">vSwitch</label>
+        <input
+          name="inputCDOMvswitch"
+          aria-label="CDOM vSwitch name"
+          class="form-control"
+          id="inputCDOMvswitch"
+          #formVds="ngModel"
+          [(ngModel)]="modalVswitch.vSwitchName"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="unTaggedVlans">Untagged VLANS</label>
+      <input class="form-control" type="number" [(ngModel)]="modalVswitch.vlansUntagged" />
+    </div>
+
+    Tagged VLANs
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <input
+          class="form-control"
+          type="number"
+          [(ngModel)]="modalAddTaggedVlan"
+        />
+      </div>
+
+      <div class="form-group">
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="!modalAddTaggedVlan"
+          (click)="vswitchModalAddTaggedVlan()"
+          aria-label="Add VLAN"
+        >
+          <fa name="plus" size="1x"></fa>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>VLAN ID</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let taggedVlan of modalVswitch.vlansTagged">
+            <td>{{ taggedVlan }}</td>
+            <td><fa name="trash" (click)="vswitchModalRemoveTaggedVlan(taggedVlan)"></fa></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-group">
+      <label>Logical Interface</label>
+      <select
+        name="vnetDevice"
+        class="form-control"
+        [(ngModel)]="modalVswitch.netDevice"
+      >
+        <option></option>
+        <option *ngFor="let li of LogicalInterfaces" [ngValue]="li?.Name">
+          {{ li.Name }}</option
+        >
+      </select>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="insertVswitch()"
+    >
+      Add
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="vswitchModalCdom.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</ngx-smart-modal>

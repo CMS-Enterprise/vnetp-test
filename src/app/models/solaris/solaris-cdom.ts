@@ -1,6 +1,11 @@
 import { SolarisVariable } from './solaris-variable';
+import {SolarisVswitch } from './solaris-vswitch';
+import { CustomField } from '../interfaces/custom-fields-object.interface';
 
 export class SolarisCdom {
+  public custom_fields: Array<CustomField>;
+
+  device_id: string;
   name: string;
   customer_name: string;
   devicetype: string;
@@ -20,7 +25,7 @@ export class SolarisCdom {
   /** VLANs */
   vlans = new Array<number>();
   /** Virtual Switch */
-  vsw: string;
+  vsw: Array<SolarisVswitch>;
   // Related to Logical Interface from Network Module.
   net_device: string;
 
