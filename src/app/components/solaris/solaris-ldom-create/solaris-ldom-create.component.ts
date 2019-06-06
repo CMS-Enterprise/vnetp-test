@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
@@ -13,12 +13,14 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
 import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
    styleUrls: ['./solaris-ldom-create.component.css']
 })
-export class SolarisLdomCreateComponent implements OnInit {
+export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   LDOM: SolarisLdom;
   ldomFilter: string[];
   vnets: Array<any>;
@@ -31,24 +33,22 @@ export class SolarisLdomCreateComponent implements OnInit {
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
-  
-
   newSolarisVariable: SolarisVariable;
   addVdsDev: SolarisVdsDevs;
-
-
   modalVnet: SolarisVnet;
   // modalSelectedVswitch: SolarisVswitch;
-
   vnetModalVswitches: Array<SolarisVswitch>;
   vnetModalVswitch: SolarisVswitch;
   vnetModalUntaggedVlans: Array<number>;
-
   addVnetInherit: boolean;
-
-  // Added as type any
   cpuCountArray: number[];
   ramCountArray: number[];
+  dirty: boolean;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(
     private solarisService: SolarisService,
@@ -92,6 +92,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   }
   launchLDOMJobs() {
   // tslint:disable-next-line: variable-name
+    this.dirty = false;
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
@@ -102,10 +103,12 @@ export class SolarisLdomCreateComponent implements OnInit {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate(`save-ldom`, body).subscribe();
-    this.router.navigate(['/solaris']);
+    this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
+    // TODO: Tie to reactive form pristine.
+    this.dirty = true;
     this.newSolarisVariable = new SolarisVariable();
     this.automationApiService.getCDoms()
       .subscribe(data => {
