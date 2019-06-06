@@ -54,7 +54,6 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
   }
 
-  // FIXME: Returns all LDOMS.
   getLDomsForCDom(name: string){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
