@@ -28,11 +28,11 @@ export class SolarisCdomListComponent implements OnInit {
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
+        console.log(this.CDOMDeviceArray);
     });
   }
 
   getLdomsForCDom(name: string) {
-    console.log(name);
     this.automationApiService.getLDomsForCDom(name)
     .subscribe(data => {
       const ldomForCDomResponse = data as SolarisLdomResponse;

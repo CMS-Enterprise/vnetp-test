@@ -1,0 +1,64 @@
+<h4>{{ Cdom?.name }}</h4>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0">
+        <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+          >Summary</a
+        >
+      </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >LDOMs</a
+      >
+    </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
+        >Virtual Switches</a
+      >
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+      <div class="card">
+        <div class="form-row text-center">
+          <div class="form-group col-md-4">vCPU: {{ CdomMetadata?.vcpu }}</div>
+          <div class="form-group col-md-4">Memory: {{ CdomMetadata?.memory }}</div>
+          <div class="form-group col-md-4">VCC Name/Ports: {{ CdomMetadata?.vccname }} - {{ CdomMetadata?.vccports }}</div>
+        </div>
+      </div>
+    </div>
+
+  <div *ngIf="navIndex == 1">
+<app-ldom-list *ngIf="Cdom" [CdomName]="Cdom?.name"></app-ldom-list>
+    </div>
+
+    <div *ngIf="navIndex == 2">
+        <div class="card">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Net Device</th>
+                <th scope="col">Untagged VLAN</th>
+                <th scope="col">Tagged VLANs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vsw of CdomMetadata.vsw">
+                <td>
+                  <p>{{ vsw?.vSwitchName }}</p>
+                </td>
+                <td>
+                  <p>{{ vsw?.netDevice }}</p>
+                </td>
+                <td>
+                  <p>{{ vsw?.vlansUntagged }}</p>
+                </td>
+                <td>
+                  <p>{{ vsw?.vlansTagged }}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

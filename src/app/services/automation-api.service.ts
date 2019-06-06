@@ -65,15 +65,15 @@ export class AutomationApiService {
   getDevices(){
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
-  
-  getCDoms(){
+
+  getCDoms() {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`);
   }
-  
-  getLDoms(){
+
+  getLDoms() {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
   }
-  
+
   getLDomsForCDom(name: string){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }

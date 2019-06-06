@@ -2,7 +2,7 @@ import { SolarisVariable } from './solaris-variable';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 import { SolarisCdom } from './solaris-cdom';
 import { SolarisVnet } from './solaris-vnet';
-
+import { SolarisVdsDevs } from './solaris-vds-devs';
 export class SolarisLdom {
   public custom_fields: Array<CustomField>;
   name: string;
@@ -38,6 +38,9 @@ export class SolarisLdom {
   add_vdsdev: string;
   add_vdisk = new Array<string>();
   vds = new Array<any>();
+
+  /** D42 Property for Parent */
+  virtual_host_name: string;
 }
 
 
