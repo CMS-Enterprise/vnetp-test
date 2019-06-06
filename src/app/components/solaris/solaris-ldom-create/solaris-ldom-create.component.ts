@@ -12,6 +12,7 @@ import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
 import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
+import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -118,7 +119,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
 
     this.LDOM.vds = new Array<any>();
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.addVdsDev = 
     this.modalVnet = new SolarisVnet();
   }
 
@@ -191,5 +192,13 @@ export class SolarisLdomCreateComponent implements OnInit {
         this.vnetModalUntaggedVlans.splice(vlanIndex, 1);
       }
     }
+  }
+  insertVirtualDisks(vds) {
+    if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
+    rules.forEach(rule => {
+      if (rule.Name !== '') {
+        this.firewallRules.push(rule);
+      }
+    });
   } 
 }

@@ -2,7 +2,7 @@ import { SolarisVariable } from './solaris-variable';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 import { SolarisCdom } from './solaris-cdom';
 import { SolarisVnet } from './solaris-vnet';
-
+import { SolarisVdsDevs } from './solaris-vds-devs';
 export class SolarisLdom {
   public custom_fields: Array<CustomField>;
   name: string;
