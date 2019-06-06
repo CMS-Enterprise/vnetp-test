@@ -28,7 +28,6 @@ export class SolarisCdomListComponent implements OnInit {
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
-        console.log(this.CDOMDeviceArray);
     });
   }
 

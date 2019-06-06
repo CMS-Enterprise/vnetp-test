@@ -199,7 +199,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   insertVirtualDisks(vds) {
      if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
      vds.forEach(thisVds => {
-       console.log(thisVds);
      });
    }
 }
