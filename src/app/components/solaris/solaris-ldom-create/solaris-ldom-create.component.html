@@ -256,9 +256,9 @@
       aria-label="Close"
       (click)="vdsDevModalLdom.close()"
     ></button>
-       <app-import-export
-         (import)="insertVirtualDisks($event)"
-      ></app-import-export>
+    <app-import-export
+      (import)="insertVirtualDisks($event)"
+    ></app-import-export>
   </div>
 
   <div class="modal-body">
@@ -349,18 +349,23 @@
           <option *ngFor="let vsw of vnetModalVswitches" [ngValue]="vsw">{{
             vsw.vSwitchName
           }}</option>
-          -->
         </select>
       </div>
     </div>
 
+    <!--TODO: Hide until vsw selected-->
     <div class="form-group">
-      Native VLAN: {{ vnetModalVswitch?.vlansUntagged }}
+      <select name="" class="form-control" [(ngModel)]="vnetModalUntaggedVlan">
+        <option [ngValue]="vnetModalVswitch?.vlansUntagged" [ngValue]="vnetModalVswitch?.vlansUntagged">Default Native VLAN {{ vnetModalVswitch?.vlansUntagged }}
+        </option>
+        <option *ngFor="let vlan of vnetModalVswitch?.vlansTagged" [ngValue]="vlan">
+         VLAN {{ vlan }}
+        </option>
+      </select>
     </div>
 
     <div class="form-group">
       Tagged VLANs:
-
       <div class="form-check">
         <input
           class="form-check-input"

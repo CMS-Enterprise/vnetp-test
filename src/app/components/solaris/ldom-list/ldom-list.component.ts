@@ -25,13 +25,15 @@ export class LdomListComponent implements OnInit {
     if (!this.CdomName) {
       this.automationApiService.getLDoms().subscribe(
         data => {
-          this.Ldoms = data as Array<SolarisLdom>;
+          const result = data as any;
+          this.Ldoms = result.Devices as Array<SolarisLdom>;
         }
       );
   } else if (this.CdomName) {
     this.automationApiService.getLDomsForCDom(this.CdomName).subscribe(
       data => {
-        this.Ldoms = data as Array<SolarisLdom>;
+        const result = data as any;
+        this.Ldoms = result.Devices as Array<SolarisLdom>;
       });
      }
     }

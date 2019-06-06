@@ -39,11 +39,12 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   // modalSelectedVswitch: SolarisVswitch;
   vnetModalVswitches: Array<SolarisVswitch>;
   vnetModalVswitch: SolarisVswitch;
-  vnetModalUntaggedVlans: Array<number>;
+  vnetModalTaggedVlans: Array<number>;
   addVnetInherit: boolean;
   cpuCountArray: number[];
   ramCountArray: number[];
   dirty: boolean;
+  vnetModalUntaggedVlan: number;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -135,14 +136,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   editVds() {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
-
-
   }
-
 
   openVnetModal() {
     this.addVnetInherit = true;
-    this.vnetModalUntaggedVlans = new Array<number>();
+    this.vnetModalTaggedVlans = new Array<number>();
     this.modalVnet = new SolarisVnet();
     this.vnetModalVswitch = new SolarisVswitch();
     this.vnetModalVswitches = new Array<SolarisVswitch>();
@@ -160,13 +158,12 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
   insertVnet() {
     if (this.addVnetInherit) {
-      this.modalVnet.UntaggedVlan = this.vnetModalVswitch.vlansUntagged;
       this.modalVnet.TaggedVlans = this.vnetModalVswitch.vlansTagged;
     } else {
-      this.modalVnet.UntaggedVlan = this.vnetModalVswitch.vlansUntagged;
-      this.modalVnet.TaggedVlans = this.vnetModalUntaggedVlans;
+      this.modalVnet.TaggedVlans = this.vnetModalTaggedVlans;
     }
 
+    this.modalVnet.UntaggedVlan = this.vnetModalUntaggedVlan;
     this.modalVnet.VirtualSwitchName = this.vnetModalVswitch.vSwitchName;
 
     this.LDOM.vnet.push(this.hs.deepCopy(this.modalVnet));
@@ -188,14 +185,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
   selectUntaggedVlan(e, vlan: number) {
     if (e.target.checked) {
-      if (!this.vnetModalUntaggedVlans.includes(vlan)) {
-        this.vnetModalUntaggedVlans.push(vlan);
+      if (!this.vnetModalTaggedVlans.includes(vlan)) {
+        this.vnetModalTaggedVlans.push(vlan);
       }
     } else if (!e.target.checked) {
-      const vlanIndex = this.vnetModalUntaggedVlans.indexOf(vlan);
+      const vlanIndex = this.vnetModalTaggedVlans.indexOf(vlan);
 
       if (vlanIndex > -1 ) {
-        this.vnetModalUntaggedVlans.splice(vlanIndex, 1);
+        this.vnetModalTaggedVlans.splice(vlanIndex, 1);
       }
     }
   }
