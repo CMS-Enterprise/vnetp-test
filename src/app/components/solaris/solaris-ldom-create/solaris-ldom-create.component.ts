@@ -103,7 +103,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     const body = { extra_vars };
 
     this.automationApiService.launchTemplate(`save-ldom`, body).subscribe();
-    this.router.navigate(['/solaris']);
+    this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
     this.newSolarisVariable = new SolarisVariable();

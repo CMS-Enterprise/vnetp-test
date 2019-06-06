@@ -101,7 +101,7 @@ export class SolarisCdomCreateComponent implements OnInit {
 
     const body = { extra_vars };
     this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
-    this.router.navigate(['/solaris-cdom-list']);
+    this.router.navigate(['/solaris/cdom/list']);
   }
 
   openVswitchModal() {

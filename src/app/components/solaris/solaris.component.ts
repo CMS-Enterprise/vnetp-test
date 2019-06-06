@@ -21,14 +21,14 @@ export class SolarisComponent implements OnInit {
   getCdomCount() {
     this.automationApiService.getCDoms().subscribe(data => {
       const result = data as any;
-      this.CdomCount = result.total_count;
+      this.CdomCount = result.total_count || 0;
     });
   }
 
   getLdomCount() {
     this.automationApiService.getLDoms().subscribe(data => {
       const result = data as any;
-      this.LdomCount = result.total_count;
+      this.LdomCount = result.total_count || 0;
     });
   }
 }
