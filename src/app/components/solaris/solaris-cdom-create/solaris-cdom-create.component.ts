@@ -121,8 +121,13 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   openVswitchModal() {
-    this.modalVswitch = new SolarisVswitch();
-    this.modalVswitch.vlansTagged = new Array<number>();
+    if (this.solarisService.currentVswitch === null){
+       this.modalVswitch = new SolarisVswitch();
+       this.modalVswitch.vlansTagged = new Array<number>();
+    } else {
+      this.modalVswitch = this.solarisService.currentVswitch;
+      this.solarisService.currentVswitch = new SolarisVswitch();
+    }
     this.ngxSm.getModal('vswitchModalCdom').open();
   }
 
@@ -168,6 +173,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   editVswitch(vsw: any) {
     const vswIndex = this.CDOM.vsw.indexOf(vsw);
-    
+    this.solarisService.currentVswitch = vsw;
+    this.openVswitchModal();
+    this.CDOM.vsw.splice(vswIndex,1);
+
   }
 }
