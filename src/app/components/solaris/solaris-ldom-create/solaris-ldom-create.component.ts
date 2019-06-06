@@ -31,10 +31,10 @@ export class SolarisLdomCreateComponent implements OnInit {
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
-
+  
 
   newSolarisVariable: SolarisVariable;
-  addVdsDev: any;
+  addVdsDev: SolarisVdsDevs;
 
 
   modalVnet: SolarisVnet;
@@ -117,7 +117,7 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
 
     this.LDOM.vds = new Array<any>();
-    this.addVdsDev = 
+    this.addVdsDev = new SolarisVdsDevs();
     this.modalVnet = new SolarisVnet();
   }
 
