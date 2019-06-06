@@ -1,17 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { AppMessage } from '../models/app-message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-    private listeners = new Subject<any>();
+    private subject = new Subject<any>();
+    public messageHistory = new Array<AppMessage>();
 
-    listen(): Observable<any> {
-       return this.listeners.asObservable();
+    listen(): Observable<AppMessage> {
+       return this.subject.asObservable();
     }
 
-    filter(filterBy: string) {
-       this.listeners.next(filterBy);
+    sendMessage(m: AppMessage) {
+       this.subject.next(m);
+       this.messageHistory.push(m);
+    }
+
+    clearMessages() {
+       this.subject.next();
+       this.messageHistory = new Array<AppMessage>();
     }
 }

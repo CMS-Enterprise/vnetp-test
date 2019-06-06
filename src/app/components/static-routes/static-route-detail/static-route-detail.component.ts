@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/network/static-route';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { Observable } from 'rxjs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-static-route-detail',
   templateUrl: './static-route-detail.component.html',
   styleUrls: ['./static-route-detail.component.css']
 })
-export class StaticRouteDetailComponent implements OnInit {
+export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
-  constructor(private route: ActivatedRoute, private router: Router, private automationApiService: AutomationApiService,
-              private messageService: MessageService, private hs: HelpersService) {
+  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
+              private hs: HelpersService) {
                 this.subnet = new Subnet();
    }
 
@@ -23,6 +24,12 @@ export class StaticRouteDetailComponent implements OnInit {
   deployedState: boolean;
   staticRoutes: Array<StaticRoute>;
   deletedStaticRoutes: Array<StaticRoute>;
+  dirty: boolean;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   ngOnInit() {
     this.Id  += this.route.snapshot.paramMap.get('id');
@@ -47,6 +54,7 @@ export class StaticRouteDetailComponent implements OnInit {
     staticRoute.Edit = true;
 
     this.staticRoutes.push(staticRoute);
+    this.dirty = true;
   }
 
   deleteStaticRoute(staticRoute: StaticRoute) {
@@ -56,6 +64,7 @@ export class StaticRouteDetailComponent implements OnInit {
       this.staticRoutes.splice(index, 1);
       if (!this.deletedStaticRoutes) { this.deletedStaticRoutes = new Array<StaticRoute>(); }
       this.deletedStaticRoutes.push(staticRoute);
+      this.dirty = true;
     }
   }
 
@@ -68,13 +77,12 @@ export class StaticRouteDetailComponent implements OnInit {
 
     if (this.deployedState) {
       extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-      this.automationApiService.launchTemplate('deploy-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-static-route', body).subscribe();
+      this.automationApiService.launchTemplate('save-static-route', body, true).subscribe();
     }
 
-    this.messageService.filter('Job Launched');
-
+    this.dirty = false;
     this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
@@ -93,5 +101,6 @@ export class StaticRouteDetailComponent implements OnInit {
         this.staticRoutes.push(route);
       }
     });
+    this.dirty = true;
   }
 }

@@ -41,7 +41,6 @@ export class SolarisCdomCreateComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private router: Router,
-    private messageService: MessageService,
     private hs: HelpersService,
     private authService: AuthService,
     private toastr: ToastrService
@@ -102,7 +101,6 @@ export class SolarisCdomCreateComponent implements OnInit {
 
     const body = { extra_vars };
     this.automationApiService.launchTemplate(`save-cdom`, body).subscribe();
-    this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris-cdom-list']);
   }
 

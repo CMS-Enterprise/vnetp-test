@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -6,16 +6,19 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
+import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-network-objects-groups',
   templateUrl: './network-objects-groups.component.html',
   styleUrls: ['./network-objects-groups.component.css']
 })
-export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
+export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
   vrfs: Vrf[];
   currentVrf: Vrf;
 
@@ -34,6 +37,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
+  Subnets: Array<Subnet>;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
     this.networkObjects = new Array<NetworkObject>();
@@ -75,11 +84,24 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.networkObjects = networkObjectDto.NetworkObjects;
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
       }
+    this.getVrfSubnets(vrf);
+  }
+
+  getVrfSubnets(vrf: Vrf) {
+    this.api.getSubnets(vrf.id).subscribe(data => {
+      const result = data as SubnetResponse;
+      this.Subnets = result.subnets;
+    });
   }
 
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
+
+    const dto = new NetworkObjectModalDto();
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
 
@@ -92,7 +114,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   editNetworkObject(networkObject: NetworkObject) {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(networkObject), 'networkObjectModal');
+
+    const dto = new NetworkObjectModalDto();
+    dto.Subnets = this.Subnets;
+    dto.NetworkObject = networkObject;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
     this.ngx.getModal('networkObjectModal').open();
   }
@@ -108,10 +135,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription =
     this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObject;
+      let data = modal.getData() as NetworkObjectModalDto;
 
-      if (data !== undefined) {
-        this.saveNetworkObject(data);
+      if (data && data.NetworkObject) {
+        this.saveNetworkObject(data.NetworkObject);
       }
       this.ngx.resetModalData('networkObjectModal');
       this.networkObjectModalSubscription.unsubscribe();
@@ -191,7 +218,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-object-dto', body).subscribe(data => {
+    this.api.launchTemplate('save-network-object-dto', body, true).subscribe(data => {
     }, error => { this.dirty = true; });
 
     this.deletedNetworkObjects = new Array<NetworkObject>();

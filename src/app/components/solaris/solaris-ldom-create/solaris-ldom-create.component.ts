@@ -53,7 +53,6 @@ export class SolarisLdomCreateComponent implements OnInit {
     private solarisService: SolarisService,
     private automationApiService: AutomationApiService,
     private router: Router,
-    private messageService: MessageService,
     private authService: AuthService,
     private hs: HelpersService,
     private ngxSm: NgxSmartModalService
@@ -103,7 +102,6 @@ export class SolarisLdomCreateComponent implements OnInit {
     const body = { extra_vars };
 
     this.automationApiService.launchTemplate(`save-ldom`, body).subscribe();
-    this.messageService.filter('Job Launched');
     this.router.navigate(['/solaris']);
   }
   ngOnInit() {
