@@ -17,6 +17,7 @@ export class SolarisService {
   AllDevices: Array<any>;
   AllSolaris: Array<any>;
   parentCdom: string;
+  currentCdom = new SolarisCdom();
   constructor(
     private auth: AuthService
   ) {
