@@ -38,6 +38,9 @@ export class SolarisLdom {
   add_vdsdev: string;
   add_vdisk = new Array<string>();
   vds = new Array<any>();
+
+  /** D42 Property for Parent */
+  virtual_host_name: string;
 }
 
 
