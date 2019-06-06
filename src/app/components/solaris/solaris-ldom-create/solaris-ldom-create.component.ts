@@ -130,6 +130,11 @@ export class SolarisLdomCreateComponent implements OnInit {
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
+  editVds() {
+    const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+
+
+  }
 
 
   openVnetModal() {
@@ -191,12 +196,10 @@ export class SolarisLdomCreateComponent implements OnInit {
       }
     }
   }
-  // insertVirtualDisks(vds) {
-  //   if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
-  //   rules.forEach(rule => {
-  //     if (rule.Name !== '') {
-  //       this.firewallRules.push(rule);
-  //     }
-  //   });
-  // } 
+  insertVirtualDisks(vds) {
+     if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
+     vds.forEach(thisVds => {
+       console.log(thisVds);
+     });
+   }
 }

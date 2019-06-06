@@ -256,6 +256,9 @@
       aria-label="Close"
       (click)="vdsDevModalLdom.close()"
     ></button>
+       <app-import-export
+         (import)="insertVirtualDisks($event)"
+      ></app-import-export>
   </div>
 
   <div class="modal-body">
