@@ -1,53 +1,104 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user/user';
-import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { AppMessage } from 'src/app/models/app-message';
+import { AppMessageType } from 'src/app/models/app-message-type';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { Job } from 'src/app/models/other/job';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
+  messageServiceSubscription: Subscription;
 
-  constructor(private automationApiService: AutomationApiService, private messageService: MessageService,
-              private ngx: NgxSmartModalService , private auth: AuthService) {
-    this.runningJobs = [];
-    this.auth.currentUser.subscribe(u => this.currentUser = u);
-
-    this.messageService.listen().subscribe((m: any) => {
-      if (m === 'Job Launched') {
-        // Set running job count to 1 to immediately display running job
-        // if no jobs are currently running.
-        if (this.runningJobs.count <= 0) {
-          this.runningJobs = { count: 1};
-          this.skipNextUpdate = true;
-        }
-      }
-    });
+  constructor(
+    private automationApiService: AutomationApiService,
+    private messageService: MessageService,
+    private ngx: NgxSmartModalService,
+    private auth: AuthService,
+    private hs: HelpersService
+  ) {
+    this.activeJobs = [];
+    this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   loggedIn: boolean;
-  runningJobs: any;
+  activeJobs: Array<Job>;
   currentUser: User;
-  skipNextUpdate: boolean;
+  jobMessage: AppMessage;
 
-  jobPoller = setInterval(() => this.getRunningJobs() , 10000);
+  jobPoller = setInterval(() => this.getJobs(), 5000);
 
-  getRunningJobs() {
+  modalJob: Job;
 
-    if (!this.currentUser) { return; }
-    if (this.skipNextUpdate) {
-      this.skipNextUpdate = false;
+  getMessageServiceSubscription() {
+    this.messageServiceSubscription = this.messageService
+      .listen()
+      .subscribe((m: AppMessage) => {
+        this.messageHandler(m);
+      });
+  }
+
+  private messageHandler(m: AppMessage) {
+    switch (m.Type) {
+      case AppMessageType.JobLaunchSuccess:
+        this.getJobs();
+
+        this.jobMessage = m;
+        this.modalJob = this.hs.deepCopy(m.Object) as Job;
+        this.ngx.getModal('jobLaunchModal').open();
+        break;
+      case AppMessageType.JobLaunchFail:
+        this.jobMessage = m;
+        this.ngx.getModal('jobLaunchModal').open();
+    }
+  }
+
+  getJobs() {
+    if (!this.currentUser) {
       return;
     }
 
-    this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(
-      data => this.runningJobs = data
-    );
+    this.automationApiService
+      .getJobs('?order_by=-created&or__status=running&or__status=pending')
+      .subscribe(data => {
+        const result = data as any;
+        this.activeJobs = result.results as Array<Job>;
+        this.updateModalJob();
+      });
+  }
+
+  updateModalJob() {
+    if (
+      this.modalJob &&
+      this.modalJob.status !== 'failed' &&
+      this.modalJob.status !== 'successful'
+    ) {
+      // Try to update the modal job from the activeJobs array.
+      const updatedJob = this.activeJobs.find(j => j.id === this.modalJob.id);
+
+      if (updatedJob) {
+        this.modalJob = this.hs.deepCopy(updatedJob);
+      } else {
+        // If the job isn't in active jobs, it has either succeeded or failed.
+        // Get its status directly.
+        this.automationApiService.getJob(this.modalJob.id).subscribe(data => {
+          this.modalJob = data as Job;
+        });
+      }
+    }
+  }
+
+  closeJobModal() {
+    this.ngx.getModal('jobLaunchModal').close();
+    this.modalJob = null;
   }
 
   logout() {
@@ -55,7 +106,18 @@ export class NavbarComponent implements OnInit {
     this.auth.logout();
   }
 
+  private unsubAll() {
+    if (this.messageServiceSubscription) {
+      this.messageServiceSubscription.unsubscribe();
+    }
+  }
+
   ngOnInit() {
-    this.getRunningJobs();
+    this.getJobs();
+    this.getMessageServiceSubscription();
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
   }
 }

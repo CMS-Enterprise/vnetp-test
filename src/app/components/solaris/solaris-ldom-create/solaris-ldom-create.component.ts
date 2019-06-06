@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SolarisService } from '../solaris-services/solaris-service.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
@@ -7,15 +7,20 @@ import { MessageService } from 'src/app/services/message.service';
 import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
-
+import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
+import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
+import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
    styleUrls: ['./solaris-ldom-create.component.css']
 })
-export class SolarisLdomCreateComponent implements OnInit {
+export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   LDOM: SolarisLdom;
   ldomFilter: string[];
   vnets: Array<any>;
@@ -28,20 +33,30 @@ export class SolarisLdomCreateComponent implements OnInit {
   LDOMDeviceArray: Array<any>;
   CDOMDeviceArray: Array<any>;
   currentCDOM: SolarisCdom;
-
   newSolarisVariable: SolarisVariable;
-  addVdsDev: any;
-
-  // Added as type any
+  addVdsDev: SolarisVdsDevs;
+  modalVnet: SolarisVnet;
+  // modalSelectedVswitch: SolarisVswitch;
+  vnetModalVswitches: Array<SolarisVswitch>;
+  vnetModalVswitch: SolarisVswitch;
+  vnetModalTaggedVlans: Array<number>;
+  addVnetInherit: boolean;
   cpuCountArray: number[];
   ramCountArray: number[];
+  dirty: boolean;
+  vnetModalUntaggedVlan: number;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(
     private solarisService: SolarisService,
     private automationApiService: AutomationApiService,
     private router: Router,
-    private messageService: MessageService,
     private authService: AuthService,
+    private hs: HelpersService,
     private ngxSm: NgxSmartModalService
     ) {
     this.vnets = new Array<any>();
@@ -78,6 +93,7 @@ export class SolarisLdomCreateComponent implements OnInit {
   }
   launchLDOMJobs() {
   // tslint:disable-next-line: variable-name
+    this.dirty = false;
     const extra_vars: {[k: string]: any} = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
@@ -88,11 +104,12 @@ export class SolarisLdomCreateComponent implements OnInit {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate(`save-ldom`, body).subscribe();
-    this.messageService.filter('Job Launched');
-    this.router.navigate(['/solaris']);
+    this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
+    // TODO: Tie to reactive form pristine.
+    this.dirty = true;
     this.newSolarisVariable = new SolarisVariable();
     this.automationApiService.getCDoms()
       .subscribe(data => {
@@ -100,11 +117,12 @@ export class SolarisLdomCreateComponent implements OnInit {
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2,32,2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2,64,2);
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
 
     this.LDOM.vds = new Array<any>();
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.addVdsDev = new SolarisVdsDevs();
+    this.modalVnet = new SolarisVnet();
   }
 
   openVdsModal() {
@@ -113,8 +131,43 @@ export class SolarisLdomCreateComponent implements OnInit {
 
   insertVds() {
     this.LDOM.vds.push(Object.assign({}, this.addVdsDev));
-    this.addVdsDev = {vds: '', diskName: '', diskSize: 0};
+    this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
+  }
+  editVds() {
+    const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+  }
+
+  openVnetModal() {
+    this.addVnetInherit = true;
+    this.vnetModalTaggedVlans = new Array<number>();
+    this.modalVnet = new SolarisVnet();
+    this.vnetModalVswitch = new SolarisVswitch();
+    this.vnetModalVswitches = new Array<SolarisVswitch>();
+
+      // Since Devices returned from Device42 don't include custom fields, get the id
+      // of the device representing the CDOM and then get it from the API and hydrate
+      // the selected CDOM with its custom fields.
+    this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
+      const result = data as SolarisCdom;
+      const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
+      this.vnetModalVswitches = cdomFull.vsw;
+      this.ngxSm.getModal('vnetModalLdom').open();
+    });
+  }
+
+  insertVnet() {
+    if (this.addVnetInherit) {
+      this.modalVnet.TaggedVlans = this.vnetModalVswitch.vlansTagged;
+    } else {
+      this.modalVnet.TaggedVlans = this.vnetModalTaggedVlans;
+    }
+
+    this.modalVnet.UntaggedVlan = this.vnetModalUntaggedVlan;
+    this.modalVnet.VirtualSwitchName = this.vnetModalVswitch.vSwitchName;
+
+    this.LDOM.vnet.push(this.hs.deepCopy(this.modalVnet));
+    this.ngxSm.getModal('vnetModalLdom').close();
   }
 
   deleteVdsDev(vdsDev: any) {
@@ -123,4 +176,29 @@ export class SolarisLdomCreateComponent implements OnInit {
       this.LDOM.vds.splice(vdsIndex, 1);
     }
   }
+  deletevNet(vnetDev: any) {
+    const vnetIndex = this.LDOM.vnet.indexOf(vnetDev);
+    if (vnetIndex > -1 ) {
+      this.LDOM.vnet.splice(vnetIndex, 1);
+    }
+  }
+
+  selectUntaggedVlan(e, vlan: number) {
+    if (e.target.checked) {
+      if (!this.vnetModalTaggedVlans.includes(vlan)) {
+        this.vnetModalTaggedVlans.push(vlan);
+      }
+    } else if (!e.target.checked) {
+      const vlanIndex = this.vnetModalTaggedVlans.indexOf(vlan);
+
+      if (vlanIndex > -1 ) {
+        this.vnetModalTaggedVlans.splice(vlanIndex, 1);
+      }
+    }
+  }
+  insertVirtualDisks(vds) {
+     if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
+     vds.forEach(thisVds => {
+     });
+   }
 }

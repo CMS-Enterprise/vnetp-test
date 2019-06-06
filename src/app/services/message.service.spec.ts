@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MessageService } from './message.service';
+import { AppMessage } from '../models/app-message';
 
 describe('MessageService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -12,6 +13,6 @@ describe('MessageService', () => {
 
   it('should receive message', () => {
     const service: MessageService = TestBed.get(MessageService);
-    service.filter('Job Launched');
+    service.sendMessage(new AppMessage(''));
   });
 });

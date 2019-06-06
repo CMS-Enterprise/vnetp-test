@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { IpAddressService } from 'src/app/services/ip-address.service';
 
 @Component({
   selector: 'app-deploy',
@@ -14,7 +13,7 @@ export class DeployComponent implements OnInit {
   tabIndex: number;
   subnets: Array<Subnet>;
 
-  constructor(private hs: HelpersService, private automationApiService: AutomationApiService, private ips: IpAddressService) {
+  constructor(private hs: HelpersService, private automationApiService: AutomationApiService) {
     this.subnets = new Array<Subnet>();
    }
 
@@ -31,7 +30,6 @@ export class DeployComponent implements OnInit {
     });
   }
 
-  //TODO: Move to helper service
   getPropertyLength(subnet: Subnet, propertyName: string) {
     const jsonFirewallRules = subnet.custom_fields.find(c => c.key === propertyName);
 
@@ -76,6 +74,6 @@ export class DeployComponent implements OnInit {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('deploy-network', body).subscribe();
+    this.automationApiService.launchTemplate('deploy-network', body, true).subscribe();
   }
 }

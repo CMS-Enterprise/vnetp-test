@@ -33,9 +33,6 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { IpNatsComponent } from './components/ip-nats/ip-nats.component';
-import { IpNatDetailComponent } from './components/ip-nats/ip-nat-detail/ip-nat-detail.component';
-import { CreateIpNatComponent } from './components/ip-nats/create-ip-nat/create-ip-nat.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { SolarisComponent } from './components/solaris/solaris.component';
 import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
@@ -61,6 +58,10 @@ import { SolarisImageRepositoryComponent } from './components/solaris/solaris-im
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PendingChangesGuard } from './guards/pending-changes.guard';
+import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
+import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
+import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 
 @NgModule({
   declarations: [
@@ -80,9 +81,6 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     DevicesComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
-    IpNatsComponent,
-    IpNatDetailComponent,
-    CreateIpNatComponent,
     SpecialCharacterDirective,
     SolarisComponent,
     SolarisCdomCreateComponent,
@@ -107,7 +105,10 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
-    PhysicalServerModalComponent
+    PhysicalServerModalComponent,
+    CdomDetailComponent,
+    LdomDetailComponent,
+    LdomListComponent
   ],
   imports: [
     BrowserModule,
@@ -128,7 +129,8 @@ import { PhysicalServerComponent } from './components/systems/physical-server/ph
     }),
     NgxSmartModalModule.forRoot()
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, NgxSmartModalService, CookieService, FormBuilder],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
+    NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,23 +5,7 @@
         class="nav-link"
         [ngClass]="{ active: tabIndex === 0 }"
         (click)="tabIndex = 0"
-        >Network</a
-      >
-    </li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [ngClass]="{ active: tabIndex === 1 }"
-        (click)="tabIndex = 1"
-        >Solaris</a
-      >
-    </li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [ngClass]="{ active: tabIndex === 2 }"
-        (click)="tabIndex = 2"
-        >zLinux</a
+        >Networks</a
       >
     </li>
   </ul>
@@ -40,9 +24,6 @@
         <tbody>
           <tr *ngFor="let subnet of subnets">
             <td>
-              <input type="checkbox">
-            </td>
-            <td>
               <a href="/networks/edit/{{ subnet.subnet_id }}">{{
                 subnet.name
               }}</a>
@@ -55,9 +36,5 @@
       </table>
     </div>
   </div>
-  <button class="btn btn-danger" (click)="deployNetwork()" *ngIf="subnets.length">Deploy Selected Networks</button>
-</div>
-
-<div class="offset-1 col-md-10 text-center pt-5">
-  <button class="btn btn-danger">Deploy All Selected Items</button>
+  <button class="btn btn-danger" (click)="deployNetwork()" *ngIf="subnets.length">Deploy Networks</button>
 </div>

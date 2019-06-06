@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddressService } from 'src/app/services/ip-address.service';
-import { MessageService } from 'src/app/services/message.service';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { Vrf } from 'src/app/models/d42/vrf';
+import { ComponentCanDeactivate } from 'src/app/guards/pending-changes.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-network',
   templateUrl: './create-network.component.html',
   styleUrls: ['./create-network.component.css']
 })
-export class CreateNetworkComponent implements OnInit {
+export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
   subnet: Subnet;
   vrfs: Vrf[];
 
@@ -24,17 +25,22 @@ export class CreateNetworkComponent implements OnInit {
   vlanExists: boolean;
   networkOverlaps: boolean;
   invalidGateway: boolean;
-
   existingSubnet: Subnet;
   showDetails: boolean;
   vlanId: number;
+
+  dirty: boolean;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   constructor(
     private automationApiService: AutomationApiService,
     private toastr: ToastrService,
     private router: Router,
-    private ipService: IpAddressService,
-    private messageService: MessageService
+    private ipService: IpAddressService
   ) {
     this.subnet = new Subnet();
   }
@@ -56,6 +62,7 @@ export class CreateNetworkComponent implements OnInit {
     this.networkOverlaps = false;
     this.invalidGateway = false;
     this.showDetails = false;
+    this.dirty = true;
 
     if (!this.cidrAddress) { return; }
 
@@ -146,15 +153,14 @@ export class CreateNetworkComponent implements OnInit {
 
   // Launch required automation jobs
   private launchJobs() {
+    this.dirty = false;
     let extra_vars: {[k: string]: any} = {};
     extra_vars.subnet = this.subnet;
     extra_vars.vlan_id = this.vlanId;
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('save-network', body).subscribe();
-
-    this.messageService.filter('Job Launched');
+    this.automationApiService.launchTemplate('save-network', body, true).subscribe();
     this.router.navigate(['/networks']);
   }
 }

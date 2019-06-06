@@ -32,7 +32,6 @@ export class SolarisCdomListComponent implements OnInit {
   }
 
   getLdomsForCDom(name: string) {
-    console.log(name);
     this.automationApiService.getLDomsForCDom(name)
     .subscribe(data => {
       const ldomForCDomResponse = data as SolarisLdomResponse;

@@ -26,4 +26,10 @@ describe('ImportExportComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should reset file input', () => {
+    component.fileInput = '/some/file/path';
+    component.importCallback({});
+    expect(component.fileInput).toEqual('');
+  })
 });

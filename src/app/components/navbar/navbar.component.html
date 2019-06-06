@@ -2,7 +2,7 @@
   <a class="navbar-brand" routerLink="dashboard">
     <h4>DRaaS</h4>
   </a>
- 
+
   <button
     class="navbar-toggler"
     type="button"
@@ -18,7 +18,8 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle"
+        <a
+          class="nav-link dropdown-toggle"
           id="navbarDropdown"
           role="button"
           data-toggle="dropdown"
@@ -30,17 +31,22 @@
           <a class="dropdown-item" routerLink="networks">Subnets</a>
           <a class="dropdown-item" routerLink="static-routes">Routing</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="firewall-rules">Firewall Rules</a>
-          <a class="dropdown-item" routerLink="ip-nats">Network Address Translation</a>
+          <a class="dropdown-item" routerLink="firewall-rules"
+            >Firewall Rules</a
+          >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="load-balancers">Load Balancers</a>
+          <a class="dropdown-item" routerLink="load-balancers"
+            >Load Balancers</a
+          >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="network-interfaces">Network Interfaces</a>
+          <a class="dropdown-item" routerLink="network-interfaces"
+            >Network Interfaces</a
+          >
         </div>
-        
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle"
+        <a
+          class="nav-link dropdown-toggle"
           href="#"
           id="navbarDropdown"
           role="button"
@@ -51,46 +57,61 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="solaris">Solaris Summary</a>
-          <a class="dropdown-item" routerLink="solaris-cdom-create">Create CDOM</a>
-          <a class="dropdown-item" routerLink="solaris-ldom-create">Create LDOM</a>
-          <a class="dropdown-item" routerLink="solaris-cdom-list">CDOM List</a>
-          <a class="dropdown-item" routerLink="solaris-image-repository">Solaris Image Respository</a>
+          <a class="dropdown-item" routerLink="solaris/cdom/create"
+            >Create CDOM</a
+          >
+          <a class="dropdown-item" routerLink="solaris/ldom/create"
+            >Create LDOM</a
+          >
+          <a class="dropdown-item" routerLink="solaris/cdom/list">CDOM List</a>
+          <a class="dropdown-item" routerLink="solaris/ldom/list">LDOM List</a>
+          <a class="dropdown-item" routerLink="solaris/imagerepository"
+            >Solaris Image Respository</a
+          >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="physical-server">Physical Servers</a>
+          <a class="dropdown-item" routerLink="physical-server"
+            >Physical Servers</a
+          >
         </div>
       </li>
-  
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle"
-            id="navbarDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            >IPAM
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" routerLink="ipaddresses">IP Addresses</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="network-objects-groups">Network Objects/Groups</a>
-            <a class="dropdown-item" routerLink="service-objects-groups">Service Objects/Groups</a>
-          </div>
-        </li>
-      </ul>
+
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          >IPAM
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="ipaddresses">IP Addresses</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="network-objects-groups"
+            >Network Objects/Groups</a
+          >
+          <a class="dropdown-item" routerLink="service-objects-groups"
+            >Service Objects/Groups</a
+          >
+        </div>
+      </li>
+    </ul>
 
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLinkActive]="['active']"
-          routerLink="jobs"
-          ><fa name="spinner fa-spin"
+        <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs"
+          ><fa
+            name="spinner fa-spin"
             style="padding-right:5px;"
-            [hidden]="!runningJobs.count"></fa>
-          <span class="badge badge-success" [hidden]="!runningJobs.count">{{runningJobs.count}}</span> Jobs</a>
+            [hidden]="!activeJobs.length"
+          ></fa>
+          <span class="badge badge-success" [hidden]="!activeJobs.length">{{
+            activeJobs.length
+          }}</span>
+          Jobs</a
+        >
       </li>
-
-
 
       <li class="nav-item dropdown">
         <a
@@ -101,31 +122,30 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          {{currentUser.Username}}
+          {{ currentUser.Username }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item">Ticketing System</a>
+          <a class="dropdown-item" target="_blank" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item">Documentation</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
+          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()"
+            >Logout</a
+          >
         </div>
       </li>
 
       <li class="nav-item">
-          <button class="btn btn-danger" routerLink="deploy">Deploy</button>
+        <button class="btn btn-danger" routerLink="deploy">Deploy</button>
       </li>
 
       <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link disabled">{{ currentUser.CustomerName}}</a>
-          </li>  
-        </ul>
+        <li class="nav-item">
+          <a class="nav-link disabled">{{ currentUser.CustomerName }}</a>
+        </li>
+      </ul>
     </ul>
- 
- 
   </div>
 </nav>
-
 
 <ngx-smart-modal
   #logoutModal
@@ -160,6 +180,90 @@
       (click)="logoutModal.close()"
     >
       No
+    </button>
+  </div>
+</ngx-smart-modal>
+
+<ngx-smart-modal
+  #jobLaunchModal
+  identifier="jobLaunchModal"
+  customClass="'modal-content'"
+  [dismissable]="false"
+>
+  <div class="modal-header">
+    <h4
+      *ngIf="jobMessage?.Success"
+      class="modal-title"
+      [ngClass]="{
+        'text-success': modalJob?.status === 'successful',
+        'text-danger': modalJob?.status === 'failed'
+      }"
+    >
+      Job {{ modalJob?.id }} Status
+    </h4>
+    <h4 *ngIf="!jobMessage?.Success" class="modal-title text-danger">
+      Job Launch Failed
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="closeJobModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body text-center" *ngIf="!jobMessage?.Success">
+    {{ jobMessage?.Text }}
+  </div>
+
+  <div class="modal-body" *ngIf="jobMessage?.Success">
+    <div class="form-row">
+      <div class="form-group col-md-6 text-center">
+        <p
+          [ngClass]="{
+            'text-success': modalJob?.status === 'successful',
+            'text-danger': modalJob?.status === 'failed'
+          }"
+          class="text-capitalize"
+        >
+          Status: {{ modalJob?.status }}
+        </p>
+      </div>
+      <div class="form-group col-md-6 text-center">
+        Elapsed Time: {{ modalJob?.elapsed }}s
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      routerLink="/jobs"
+      (click)="closeJobModal()"
+      *ngIf="jobMessage?.Success && modalJob?.status !== 'failed'"
+    >
+      View All Jobs
+    </button>
+
+    <a
+      class="btn btn-danger"
+      *ngIf="!jobMessage?.Success || modalJob?.status === 'failed'"
+      target="_blank"
+      href="https://jiraent.cms.gov/"
+    >
+      Open Ticket
+    </a>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="closeJobModal()"
+    >
+      Close Dialog
     </button>
   </div>
 </ngx-smart-modal>
