@@ -127,6 +127,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     } else {
       this.modalVswitch = this.solarisService.currentVswitch;
       this.solarisService.currentVswitch = new SolarisVswitch();
+      this.modalVswitch.vlansTagged = new Array<number>();
     }
     this.ngxSm.getModal('vswitchModalCdom').open();
   }
@@ -149,7 +150,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   vswitchModalAddTaggedVlan() {
-
+    console.log(this.modalAddTaggedVlan);
     if (this.modalVswitch.vlansTagged.includes(this.modalAddTaggedVlan)) {
       this.toastr.error('Duplicate Tagged VLAN');
       return;
