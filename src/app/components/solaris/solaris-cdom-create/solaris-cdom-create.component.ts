@@ -176,6 +176,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     const vswIndex = this.CDOM.vsw.indexOf(vsw);
     this.solarisService.currentVswitch = vsw;
     this.openVswitchModal();
+    // check if modal canceled, and don't remove if so
     this.CDOM.vsw.splice(vswIndex,1);
 
   }
