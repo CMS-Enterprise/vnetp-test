@@ -36,6 +36,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   newSolarisVariable: SolarisVariable;
   addVdsDev: SolarisVdsDevs;
   modalVnet: SolarisVnet;
+  testCDOM: SolarisCdom;
   // modalSelectedVswitch: SolarisVswitch;
   vnetModalVswitches: Array<SolarisVswitch>;
   vnetModalVswitch: SolarisVswitch;
@@ -123,6 +124,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = new SolarisVdsDevs();
     this.modalVnet = new SolarisVnet();
+    if ( this.solarisService.parentCdom.device_id != null ) {
+      this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
+          const result = data as SolarisCdom;
+          this.LDOM.associatedcdom = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
+       });
+      this.solarisService.currentCdom = new SolarisCdom();
+    }
   }
 
   openVdsModal() {

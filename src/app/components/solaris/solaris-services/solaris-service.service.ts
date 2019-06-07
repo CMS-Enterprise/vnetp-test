@@ -17,7 +17,7 @@ export class SolarisService {
   currentUser: User;
   AllDevices: Array<any>;
   AllSolaris: Array<any>;
-  parentCdom: string;
+  parentCdom = new SolarisCdom();
   currentCdom = new SolarisCdom();
   currentVswitch = new SolarisVswitch();
   constructor(

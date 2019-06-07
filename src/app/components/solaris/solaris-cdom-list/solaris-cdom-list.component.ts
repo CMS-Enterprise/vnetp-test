@@ -40,8 +40,8 @@ export class SolarisCdomListComponent implements OnInit {
     });
   }
 
-  addLdom(deviceName: string) {
-    this.solarisService.parentCdom = deviceName;
+  addLdom(device: any) {
+    this.solarisService.parentCdom = device;
     this.router.navigate(['/solaris/ldom/create']);
   }
   editCdom(device: any){
