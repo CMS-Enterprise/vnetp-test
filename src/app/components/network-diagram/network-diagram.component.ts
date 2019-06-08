@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import * as d3 from 'd3';
 import { color } from 'd3';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-network-diagram',
@@ -17,6 +18,8 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
 
   svg: any;
   forceDiagram: any;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -187,6 +190,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
 
   OnNodeClick(id) {
     console.log(`Clicked node ${id}`);
+    // this.router.navigate([`/networks/edit/${id}`]);
   }
 
   // Sample Data
