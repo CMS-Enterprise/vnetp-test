@@ -88,6 +88,10 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
   }
 
   addGraphData() {
+
+    // Clear any current SVG elements.
+    d3.selectAll('svg > *').remove();
+
     // Draw Links
     const link = this.svg
       .append('g')
