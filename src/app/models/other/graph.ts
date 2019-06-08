@@ -36,7 +36,8 @@ export class Graph {
 
     Object.keys(obj).forEach(key => {
       // Recursively iterate child arrays.
-      if (obj.hasOwnProperty(key) && Array.isArray(obj[key])) {
+      if (obj.hasOwnProperty(key) && Array.isArray(obj[key])
+      && !['custom_fields'].includes(key.toLowerCase())) {
         obj[key].forEach(v => {
           this.objectIterator(v, (group + 1), graph, node.id);
         });
