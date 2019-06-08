@@ -8,6 +8,7 @@ import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { CustomerResponse } from '../models/d42/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,10 @@ export class AutomationApiService {
 
   getLDomsForCDom(name: string){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
+  }
+
+  getCustomers() {
+    return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
   }
 
   getVrfs() {
