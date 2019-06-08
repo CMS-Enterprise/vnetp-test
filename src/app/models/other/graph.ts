@@ -9,7 +9,7 @@ export class Graph {
     this.buildGraph(obj);
   }
 
-  title: string;
+  name: string;
 
   links: Array<GraphLink>;
 
@@ -27,7 +27,6 @@ export class Graph {
   ) {
     // Build a GraphNode for the object and add it to the Graph.
     const node = new GraphNode(group);
-    graph.nodes.push(node);
 
     // If the GraphNode has a parent create a link between it and the parent
     // and add it to the graph.
@@ -36,11 +35,19 @@ export class Graph {
     }
 
     Object.keys(obj).forEach(key => {
+      // Recursively iterate child arrays.
       if (obj.hasOwnProperty(key) && Array.isArray(obj[key])) {
         obj[key].forEach(v => {
           this.objectIterator(v, (group + 1), graph, node.id);
         });
+        // Set node title if suitable property available.
+        if (obj.hasOwnProperty(key) && !Array.isArray(obj[key])
+        && ['name', 'title'].includes(key.toLowerCase())) {
+          node.name = obj[key];
+         }
       }
     });
+
+    graph.nodes.push(node);
   }
 }
