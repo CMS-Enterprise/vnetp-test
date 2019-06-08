@@ -54,26 +54,25 @@ title = 'network-diagram';
     .force('charge', d3.forceManyBody().strength(-200).distanceMax(500).distanceMin(50))
 		.force('x', d3.forceX((d: any) => {
 			if (d.group === '1') {
-				return 5 * (this.width * 0.7) / 6;
+				return 5 * (this.width) / 6;
 			} else if (d.group === '2') {
-				return 4 * (this.width * 0.7) / 6;
+				return 4 * (this.width) / 6;
 			} else if (d.group === '3') {
-				return 3 * (this.width * 0.7) / 6;
+				return 3 * (this.width) / 6;
 			} else if (d.group === '4') {
-				return 2 * (this.width * 0.7) / 6;
+				return 2 * (this.width ) / 6;
 			} else if (d.group === '5') {
-				return 1 * (this.width * 0.7) / 6;
+				return 1 * (this.width ) / 6;
 			} else {
-        return 0 * (this.width * 0.7) / 6;
+        return 0 * (this.width ) / 6;
 			}
-     }).strength(2))    
+     }).strength(2))
      .force('y', d3.forceY(this.height / 2))
-    .force('center', d3.forceCenter((this.width * 0.7) / 2, this.height / 2))
+    .force('center', d3.forceCenter((this.width) / 2, this.height / 2))
     .force('collision', d3.forceCollide().radius(35));
 
     this.drawGraph();
   }
-
 
   drawGraph() {
     let link = this.svg.append('g')
@@ -91,14 +90,12 @@ title = 'network-diagram';
       .attr('target', '_blank')
       .attr('xlink:href',  function(d) { return (window.location.href + '?device=' + d.id); });
 
+      // Handle Click Event, disable default D3 actions.
     node.on('click', (d) => {
-      
       d3.event.preventDefault();
       d3.event.stopPropagation();
-      this.OnClickDetails(d.id)
-      
+      this.OnNodeClick(d.id);
     });
-    
 
     // node.call(d3.drag()
     //       .on('start', dragstarted)
@@ -142,7 +139,7 @@ title = 'network-diagram';
   }
 }
 
-  OnClickDetails(id) {
+  OnNodeClick(id) {
     console.log(`Clicked node ${id}`);
   }
 
