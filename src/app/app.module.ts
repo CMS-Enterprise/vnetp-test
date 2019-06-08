@@ -63,6 +63,7 @@ import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detai
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { GraphModule } from './modules/graph-module/graph-module.module';
+import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { GraphModule } from './modules/graph-module/graph-module.module';
     PhysicalServerModalComponent,
     CdomDetailComponent,
     LdomDetailComponent,
-    LdomListComponent
+    LdomListComponent,
+    NetworkTopologyComponent
   ],
   imports: [
     BrowserModule,
