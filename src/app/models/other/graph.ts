@@ -40,12 +40,13 @@ export class Graph {
         obj[key].forEach(v => {
           this.objectIterator(v, (group + 1), graph, node.id);
         });
-        // Set node title if suitable property available.
-        if (obj.hasOwnProperty(key) && !Array.isArray(obj[key])
-        && ['name', 'title'].includes(key.toLowerCase())) {
-          node.name = obj[key];
-         }
       }
+
+      // Set node title if suitable property available.
+      if (obj.hasOwnProperty(key) && !Array.isArray(obj[key])
+              && ['name', 'title'].includes(key.toLowerCase())) {
+                node.name = obj[key];
+               }
     });
 
     graph.nodes.push(node);

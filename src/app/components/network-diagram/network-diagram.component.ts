@@ -30,6 +30,8 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
   }
 
   createGraph() {
+    const t0 = performance.now();
+
     const rect = this.graphContainer.nativeElement.getBoundingClientRect();
     this.width = rect.width;
 
@@ -78,6 +80,9 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
       .force('collision', d3.forceCollide().radius(100));
 
     this.addGraphData();
+
+    const t1 = performance.now();
+    console.log(`Graph rendered in ${Math.round(t1 - t0) / 100}ms.`);
   }
 
   addGraphData() {
@@ -142,7 +147,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
       .attr('dx', -20)
       .attr('dy', '.35em')
       .text((d: any) => {
-        return d.id;
+        return d.name;
       });
 
     node.append('title').text((d: any) => {
@@ -200,6 +205,8 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     const obj = { name: 'Parent', childArray: [{name: 'Child1'}, {name: 'Child2'}]};
 
     const result = new Graph(obj);
+
+    console.log(result);
 
     this.graph = result as any;
     this.createGraph();
