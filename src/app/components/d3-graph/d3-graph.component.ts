@@ -15,7 +15,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   @Input() graphObject?: any;
   @Input() graph: Graph;
   @Input() disableAnimation?: boolean;
-  @Input() width = 960;
+  @Input() width = 800;
   @Input() height = 800;
 
   @Output() rendered = new EventEmitter<any>();
