@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import * as d3 from 'd3';
 import { color } from 'd3';
 
@@ -7,7 +7,7 @@ import { color } from 'd3';
   templateUrl: './network-diagram.component.html',
   styleUrls: ['./network-diagram.component.css']
 })
-export class NetworkDiagramComponent implements OnInit {
+export class NetworkDiagramComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
   @ViewChild('graphContainer') graphContainer: ElementRef;
 
@@ -16,22 +16,7 @@ export class NetworkDiagramComponent implements OnInit {
   colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   svg: any;
-  force: any;
-  path: any;
-  circle: any;
-  drag: any;
-  dragLine: any;
-
-  // mouse event vars
-  selectedNode = null;
-  selectedLink = null;
-  mousedownLink = null;
-  mousedownNode = null;
-  mouseupNode = null;
-
-  lastNodeId = 2;
-  // only respond once per keydown
-  lastKeyDown = -1;
+  forceDiagram: any;
 
   ngOnInit(): void {}
 
@@ -46,15 +31,16 @@ export class NetworkDiagramComponent implements OnInit {
       .attr('width', this.width)
       .attr('height', this.height);
 
-    this.force = d3
+    // Create Force Diaagram
+    this.forceDiagram = d3
       .forceSimulation()
       .force(
         'link',
         d3
           .forceLink()
           .id((d: any) => d.id)
-          .distance(100)
-          .strength(0.001)
+          .distance(200)
+          .strength(1)
       )
       .force(
         'charge',
@@ -80,32 +66,30 @@ export class NetworkDiagramComponent implements OnInit {
             } else if (d.group === '5') {
               return (1 * this.height) / 6;
             } else {
-              return (0 * this.width) / 6;
+              return (0 * this.height) / 6;
             }
           })
           .strength(2)
       )
       .force('x', d3.forceX(this.width / 2))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-      .force('collision', d3.forceCollide().radius(35));
+      .force('collision', d3.forceCollide().radius(100));
 
     this.drawGraph();
   }
 
   drawGraph() {
+    // Draw Links
     const link = this.svg
       .append('g')
       .selectAll('line')
       .data(this.graph.links)
       .enter()
       .append('line')
-      .attr('stroke', function(d) {
-        return color('gray');
-      })
-      .attr('stroke-width', function(d) {
-        return Math.sqrt(3);
-      });
+      .attr('stroke', '#778899')
+      .attr('stroke-width', 1.5);
 
+      // Draw Nodes
     const node = this.svg
       .append('g')
       .attr('class', 'nodes')
@@ -114,7 +98,7 @@ export class NetworkDiagramComponent implements OnInit {
       .enter()
       .append('a')
       .attr('target', '_blank')
-      .attr('xlink:href', function(d) {
+      .attr('xlink:href', (d: any) => {
         return window.location.href + '?device=' + d.id;
       });
 
@@ -125,75 +109,78 @@ export class NetworkDiagramComponent implements OnInit {
       this.OnNodeClick(d.id);
     });
 
+    // Drag Event Handlers
     node.call(d3.drag()
-          .on('start',d => { this.dragstarted(d)})
-          .on('drag', d => {this.dragged(d)})
-          .on('end', d => {this.dragended(d)}));
+          .on('start', d => { this.dragstarted(d);})
+          .on('drag', d => {this.dragged(d);})
+          .on('end', d => {this.dragended(d);}));
 
+    // Add Image to Node
     node
       .append('image')
-      .attr('xlink:href', function(d) {
+      .attr('xlink:href', (d) => {
         return 'assets/img/group' + d.group + '.png';
       })
       .attr('width', 32)
       .attr('height', 32)
       .attr('x', -16)
       .attr('y', -16)
-      .attr('fill', function(d) {
+      .attr('fill', (d: any) => {
         return color(d.group);
       });
 
+    // Add Text to Node
     node
       .append('text')
       .style('text-anchor', 'end')
-      .attr("dx", -20)
-      .attr("dy", ".35em")
-      .text(function(d) {
+      .attr('dx', -20)
+      .attr('dy', '.35em')
+      .text((d: any) => {
         return d.id;
       });
 
-    node.append('title').text(function(d) {
+    node.append('title').text((d: any) => {
       return d.id;
     });
 
-    this.force.nodes(this.graph.nodes).on('tick', ticked);
+    this.forceDiagram.nodes(this.graph.nodes).on('tick', ticked);
 
-    this.force.force('link').links(this.graph.links);
+    this.forceDiagram.force('link').links(this.graph.links);
 
     function ticked() {
       link
-        .attr('x1', function(d) {
+        .attr('x1', (d: any) => {
           return d.source.x;
         })
-        .attr('y1', function(d) {
+        .attr('y1', (d: any) => {
           return d.source.y;
         })
-        .attr('x2', function(d) {
+        .attr('x2', (d: any) => {
           return d.target.x;
         })
-        .attr('y2', function(d) {
+        .attr('y2', (d: any) => {
           return d.target.y;
         });
 
-      node.attr('transform', function(d) {
+      node.attr('transform', (d: any) => {
         return 'translate(' + d.x + ',' + d.y + ')';
       });
     }
   }
 
   dragstarted(d) {
-    if (!d3.event.active) this.force.alphaTarget(0.3).restart();
+    if (!d3.event.active) { this.forceDiagram.alphaTarget(0.3).restart(); }
     d.fx = d.x;
     d.fy = d.y;
   }
-  
+
   dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
   }
-  
+
   dragended(d) {
-    if (!d3.event.active) this.force.alphaTarget(0);
+    if (!d3.event.active) { this.forceDiagram.alphaTarget(0); }
     d.fx = null;
     d.fy = null;
   }
@@ -215,8 +202,24 @@ export class NetworkDiagramComponent implements OnInit {
         target: 'Application'
       },
       {
+        source: 'DRaaS Customer',
+        target: 'Database'
+      },
+      {
         source: 'Presentation',
         target: 'WebServers1',
+      },
+      {
+        source: 'Presentation',
+        target: 'WebServers2',
+      },
+      {
+        source: 'Application',
+        target: 'AppServers1',
+      },
+      {
+        source: 'Database',
+        target: 'DbServers1'
       }
     ],
     nodes: [
@@ -233,8 +236,24 @@ export class NetworkDiagramComponent implements OnInit {
         id: 'Application'
       },
       {
+        group: '2',
+        id: 'Database'
+      },
+      {
         group: '1',
         id: 'WebServers1'
+      },
+      {
+        group: '1',
+        id: 'WebServers2'
+      },
+      {
+        group: '1',
+        id: 'AppServers1'
+      },
+      {
+        group: '1',
+        id: 'DbServers1'
       }
     ]
   };
