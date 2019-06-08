@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { color } from 'd3';
-import { Router } from '@angular/router';
 import { Graph } from 'src/app/models/other/graph';
 
 @Component({
-  selector: 'app-network-diagram',
-  templateUrl: './network-diagram.component.html',
-  styleUrls: ['./network-diagram.component.css']
+  selector: 'app-d3-graph',
+  templateUrl: './app-d3-graph.component.html',
+  styleUrls: ['./app-d3-graph.component.css']
 })
-export class NetworkDiagramComponent implements OnInit, AfterContentInit {
+export class D3GraphComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
   @ViewChild('graphContainer') graphContainer: ElementRef;
 

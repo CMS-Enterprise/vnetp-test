@@ -29,14 +29,12 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { NetworkDiagramComponent } from './components/network-diagram/network-diagram.component';
 
 // tslint:disable: max-line-length
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
-  {path: 'network-diagram', component: NetworkDiagramComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Diagram'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Create Subnet'}},
   {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
   {path: 'network-interfaces', component: NetworkInterfacesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Interfaces'}},

@@ -62,7 +62,6 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
-import { NetworkDiagramComponent } from './components/network-diagram/network-diagram.component';
 
 @NgModule({
   declarations: [
@@ -109,8 +108,7 @@ import { NetworkDiagramComponent } from './components/network-diagram/network-di
     PhysicalServerModalComponent,
     CdomDetailComponent,
     LdomDetailComponent,
-    LdomListComponent,
-    NetworkDiagramComponent
+    LdomListComponent
   ],
   imports: [
     BrowserModule,
