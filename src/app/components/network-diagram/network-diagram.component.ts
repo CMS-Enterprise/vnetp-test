@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, AfterContentInit } from '@ang
 import * as d3 from 'd3';
 import { color } from 'd3';
 import { Router } from '@angular/router';
+import { ObjectService } from 'src/app/services/object.service';
+import { Graph } from 'src/app/models/other/graph';
 
 @Component({
   selector: 'app-network-diagram',
@@ -19,11 +21,15 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
   svg: any;
   forceDiagram: any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private objectService: ObjectService) {}
 
   ngOnInit(): void {}
 
   ngAfterContentInit() {
+    this.createGraph();
+  }
+
+  createGraph() {
     const rect = this.graphContainer.nativeElement.getBoundingClientRect();
     this.width = rect.width;
 
@@ -58,15 +64,15 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
         d3
           .forceY((d: any) => {
             // Support up to 6 hierarchy levels.
-            if (d.group === '1') {
+            if (d.group === '5') {
               return (5 * this.height) / 6;
-            } else if (d.group === '2') {
+            } else if (d.group === '4') {
               return (4 * this.height) / 6;
             } else if (d.group === '3') {
               return (3 * this.height) / 6;
-            } else if (d.group === '4') {
+            } else if (d.group === '2') {
               return (2 * this.height) / 6;
-            } else if (d.group === '5') {
+            } else if (d.group === '1') {
               return (1 * this.height) / 6;
             } else {
               return (0 * this.height) / 6;
@@ -78,10 +84,10 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
       .force('collision', d3.forceCollide().radius(100));
 
-    this.drawGraph();
+    this.addGraphData();
   }
 
-  drawGraph() {
+  addGraphData() {
     // Draw Links
     const link = this.svg
       .append('g')
@@ -114,9 +120,9 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
 
     // Drag Event Handlers
     node.call(d3.drag()
-          .on('start', d => { this.dragstarted(d);})
-          .on('drag', d => {this.dragged(d);})
-          .on('end', d => {this.dragended(d);}));
+          .on('start', d => { this.dragstarted(d); })
+          .on('drag', d => {this.dragged(d); })
+          .on('end', d => {this.dragended(d); }));
 
     // Add Image to Node
     node
@@ -193,6 +199,15 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     // this.router.navigate([`/networks/edit/${id}`]);
   }
 
+  OnTestClick() {
+    const obj = { name: 'Parent', childArray: [{name: 'Child1'}, {name: 'Child2'}]};
+
+    const result = new Graph(obj);
+
+    this.graph = result as any;
+    this.createGraph();
+  }
+
   // Sample Data
   // tslint:disable-next-line: member-ordering
   graph = {
@@ -228,7 +243,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     ],
     nodes: [
       {
-        group: '3',
+        group: '1',
         id: 'DRaaS Customer'
       },
       {
@@ -244,19 +259,19 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
         id: 'Database'
       },
       {
-        group: '1',
+        group: '3',
         id: 'WebServers1'
       },
       {
-        group: '1',
+        group: '3',
         id: 'WebServers2'
       },
       {
-        group: '1',
+        group: '3',
         id: 'AppServers1'
       },
       {
-        group: '1',
+        group: '3',
         id: 'DbServers1'
       }
     ]
