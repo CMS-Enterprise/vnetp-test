@@ -37,8 +37,6 @@ export class NetworkDiagramComponent implements OnInit {
 
   ngAfterContentInit() {
     const rect = this.graphContainer.nativeElement.getBoundingClientRect();
-    console.log(rect.width, rect.height);
-
     this.width = rect.width;
 
     // Create SVG
@@ -127,10 +125,10 @@ export class NetworkDiagramComponent implements OnInit {
       this.OnNodeClick(d.id);
     });
 
-    // node.call(d3.drag()
-    //       .on('start', dragstarted)
-    //       .on('drag', dragged)
-    //       .on('end', dragended));
+    node.call(d3.drag()
+          .on('start',d => { this.dragstarted(d)})
+          .on('drag', d => {this.dragged(d)})
+          .on('end', d => {this.dragended(d)}));
 
     node
       .append('image')
@@ -147,10 +145,9 @@ export class NetworkDiagramComponent implements OnInit {
 
     node
       .append('text')
-      .attr('font-size', '0.8em')
-      .attr('dx', 12)
-      .attr('dy', '.35em')
-      .attr('x', +8)
+      .style('text-anchor', 'end')
+      .attr("dx", -20)
+      .attr("dy", ".35em")
       .text(function(d) {
         return d.id;
       });
@@ -184,6 +181,23 @@ export class NetworkDiagramComponent implements OnInit {
     }
   }
 
+  dragstarted(d) {
+    if (!d3.event.active) this.force.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+  
+  dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+  
+  dragended(d) {
+    if (!d3.event.active) this.force.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
   OnNodeClick(id) {
     console.log(`Clicked node ${id}`);
   }
@@ -193,450 +207,34 @@ export class NetworkDiagramComponent implements OnInit {
   graph = {
     links: [
       {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm5',
-        value: '10'
+        source: 'DRaaS Customer',
+        target: 'Presentation',
       },
       {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm6',
-        value: '10'
+        source: 'DRaaS Customer',
+        target: 'Application'
       },
       {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm6',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esxm8',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esxm8',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'usplnMSVPCLAB1001',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'usplnAGVPCLAB1003',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'usplnAGVPCLAB1004',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esxm7',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esxm7',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'pln-ng1-esxm3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esx4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esx1',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esx3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'ng1-esx2',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'usplnACvpclab1001',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1002',
-        target: 'usplnACvpclab1001',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnAGVPCLAB1003',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnAGVPCLAB1004',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnACvpclab1002',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnMSVPCLAB2001',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnACvpclab1002',
-        value: '40'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'usplnMSVPCLAB1004',
-        value: '1'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esx2',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esx4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-devbox',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esxm8',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esxm8',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm4',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esxm7',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esxm7',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esx1',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm5',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'ng1-esx3',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm6',
-        value: '10'
-      },
-      {
-        source: 'usplnACvpclab1001',
-        target: 'pln-ng1-esxm6',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'usplnAGVPCLAB1003',
-        value: '40'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'ng1-esx12',
-        value: '20'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'ng1-esx11',
-        value: '20'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'AR21-U12-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'AR21-U12-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'AR21-U12-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB1',
-        target: 'AR21-U12-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'usplnAGVPCLAB1004',
-        value: '40'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'ng1-esx12',
-        value: '20'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'ng1-esx11',
-        value: '20'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'AR21-U12-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'AR21-U12-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'AR21-U12-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U12-ICB2',
-        target: 'AR21-U12-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'AR21-U23-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'AR21-U23-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'AR21-U23-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'AR21-U23-ICB2',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'usplnAGVPCLAB1003',
-        value: '40'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'ng1-esx13',
-        value: '20'
-      },
-      {
-        source: 'AR21-U23-ICB1',
-        target: 'ng1-esx14',
-        value: '20'
-      },
-      {
-        source: 'AR21-U23-ICB2',
-        target: 'AR21-U23-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB2',
-        target: 'AR21-U23-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB2',
-        target: 'AR21-U23-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB2',
-        target: 'AR21-U23-ICB1',
-        value: '10'
-      },
-      {
-        source: 'AR21-U23-ICB2',
-        target: 'usplnAGVPCLAB1004',
-        value: '40'
+        source: 'Presentation',
+        target: 'WebServers1',
       }
     ],
     nodes: [
       {
-        group: '2',
-        id: 'usplnACvpclab1002'
-      },
-      {
-        group: '1',
-        id: 'pln-ng1-esxm5'
-      },
-      {
-        group: '1',
-        id: 'pln-ng1-esxm6'
-      },
-      {
-        group: '1',
-        id: 'pln-ng1-esxm3'
-      },
-      {
-        group: '1',
-        id: 'pln-ng1-esxm4'
-      },
-      {
-        group: '1',
-        id: 'ng1-esxm8'
-      },
-      {
-        group: '1',
-        id: 'usplnMSVPCLAB1001'
-      },
-      {
         group: '3',
-        id: 'usplnAGVPCLAB1003'
-      },
-      {
-        group: '3',
-        id: 'usplnAGVPCLAB1004'
-      },
-      {
-        group: '1',
-        id: 'ng1-esxm7'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx4'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx1'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx3'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx2'
+        id: 'DRaaS Customer'
       },
       {
         group: '2',
-        id: 'usplnACvpclab1001'
-      },
-      {
-        group: '1',
-        id: 'usplnMSVPCLAB2001'
-      },
-      {
-        group: '1',
-        id: 'usplnMSVPCLAB1004'
-      },
-      {
-        group: '1',
-        id: 'ng1-devbox'
+        id: 'Presentation'
       },
       {
         group: '2',
-        id: 'AR21-U12-ICB1'
+        id: 'Application'
       },
       {
         group: '1',
-        id: 'ng1-esx12'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx11'
-      },
-      {
-        group: '2',
-        id: 'AR21-U12-ICB2'
-      },
-      {
-        group: '2',
-        id: 'AR21-U23-ICB1'
-      },
-      {
-        group: '2',
-        id: 'AR21-U23-ICB2'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx13'
-      },
-      {
-        group: '1',
-        id: 'ng1-esx14'
+        id: 'WebServers1'
       }
     ]
   };
