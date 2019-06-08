@@ -64,18 +64,11 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
         d3
           .forceY((d: any) => {
             // Support up to 6 hierarchy levels.
-            if (d.group === '5') {
-              return (5 * this.height) / 6;
-            } else if (d.group === '4') {
-              return (4 * this.height) / 6;
-            } else if (d.group === '3') {
-              return (3 * this.height) / 6;
-            } else if (d.group === '2') {
-              return (2 * this.height) / 6;
-            } else if (d.group === '1') {
-              return (1 * this.height) / 6;
+            if (d.group) {
+              return (d.group * this.height) / 6;
             } else {
-              return (0 * this.height) / 6;
+              console.error('Cannot place node on graph.', d);
+              return 0;
             }
           })
           .strength(2)
@@ -247,35 +240,35 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     ],
     nodes: [
       {
-        group: '1',
+        group: 1,
         id: 'DRaaS Customer'
       },
       {
-        group: '2',
+        group: 2,
         id: 'Presentation'
       },
       {
-        group: '2',
+        group: 2,
         id: 'Application'
       },
       {
-        group: '2',
+        group: 2,
         id: 'Database'
       },
       {
-        group: '3',
+        group: 3,
         id: 'WebServers1'
       },
       {
-        group: '3',
+        group: 3,
         id: 'WebServers2'
       },
       {
-        group: '3',
+        group: 3,
         id: 'AppServers1'
       },
       {
-        group: '3',
+        group: 3,
         id: 'DbServers1'
       }
     ]
