@@ -62,6 +62,7 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
+import { GraphModule } from './modules/graph-module/graph-module.module';
 
 @NgModule({
   declarations: [
@@ -127,7 +128,8 @@ import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.comp
       closeButton: true,
       preventDuplicates: true
     }),
-    NgxSmartModalModule.forRoot()
+    NgxSmartModalModule.forRoot(),
+    GraphModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
     NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],

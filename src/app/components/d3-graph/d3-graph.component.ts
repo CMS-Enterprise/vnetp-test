@@ -5,8 +5,8 @@ import { Graph } from 'src/app/models/other/graph';
 
 @Component({
   selector: 'app-d3-graph',
-  templateUrl: './app-d3-graph.component.html',
-  styleUrls: ['./app-d3-graph.component.css']
+  templateUrl: './d3-graph.component.html',
+  styleUrls: ['./d3-graph.component.css']
 })
 export class D3GraphComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
