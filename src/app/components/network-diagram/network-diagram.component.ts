@@ -91,12 +91,14 @@ title = 'network-diagram';
       .attr('target', '_blank')
       .attr('xlink:href',  function(d) { return (window.location.href + '?device=' + d.id); });
 
-    node.on('click', function(d, i) {
+    node.on('click', (d) => {
+      
       d3.event.preventDefault();
       d3.event.stopPropagation();
-      this.OnClickDetails(d.id);
-      }
-   );
+      this.OnClickDetails(d.id)
+      
+    });
+    
 
     // node.call(d3.drag()
     //       .on('start', dragstarted)
