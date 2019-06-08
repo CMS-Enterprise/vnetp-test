@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { color } from 'd3';
 import { Router } from '@angular/router';
-import { ObjectService } from 'src/app/services/object.service';
 import { Graph } from 'src/app/models/other/graph';
 
 @Component({
@@ -14,16 +13,30 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
   @ViewChild('graphContainer') graphContainer: ElementRef;
 
-  width = 960;
-  height = 800;
+  @Input() graphObject?: any;
+  @Input() graph: Graph;
+  @Input() disableAnimation?: boolean;
+  @Input() width = 960;
+  @Input() height = 800;
+
+  @Output() rendered = new EventEmitter<any>();
+  @Output() nodeClicked = new EventEmitter<any>();
+
   colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   svg: any;
   forceDiagram: any;
 
-  constructor(private router: Router, private objectService: ObjectService) {}
+  constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.graphObject) {
+      this.graph = new Graph(this.graphObject);
+    } else if (!this.graph) {
+      this.graph = new Graph({Name: 'No Data to Graph'});
+    }
+    // TODO: Handle disableAnimation
+  }
 
   ngAfterContentInit() {
     this.createGraph();
@@ -83,6 +96,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
 
     const t1 = performance.now();
     console.log(`Graph rendered in ${Math.round(t1 - t0) / 100}ms.`);
+    this.rendered.emit(true);
   }
 
   addGraphData() {
@@ -117,7 +131,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     node.on('click', d => {
       d3.event.preventDefault();
       d3.event.stopPropagation();
-      this.OnNodeClick(d.id);
+      this.OnNodeClick(d);
     });
 
     // Drag Event Handlers
@@ -196,88 +210,7 @@ export class NetworkDiagramComponent implements OnInit, AfterContentInit {
     d.fy = null;
   }
 
-  OnNodeClick(id) {
-    console.log(`Clicked node ${id}`);
-    // this.router.navigate([`/networks/edit/${id}`]);
+  OnNodeClick(node) {
+    this.nodeClicked.emit(node);
   }
-
-  OnTestClick() {
-    const obj = { name: 'Parent', childArray: [{name: 'Child1'}, {name: 'Child2'}]};
-
-    const result = new Graph(obj);
-
-    console.log(result);
-
-    this.graph = result as any;
-    this.createGraph();
-  }
-
-  // Sample Data
-  // tslint:disable-next-line: member-ordering
-  graph = {
-    links: [
-      {
-        source: 'DRaaS Customer',
-        target: 'Presentation',
-      },
-      {
-        source: 'DRaaS Customer',
-        target: 'Application'
-      },
-      {
-        source: 'DRaaS Customer',
-        target: 'Database'
-      },
-      {
-        source: 'Presentation',
-        target: 'WebServers1',
-      },
-      {
-        source: 'Presentation',
-        target: 'WebServers2',
-      },
-      {
-        source: 'Application',
-        target: 'AppServers1',
-      },
-      {
-        source: 'Database',
-        target: 'DbServers1'
-      }
-    ],
-    nodes: [
-      {
-        group: 1,
-        id: 'DRaaS Customer'
-      },
-      {
-        group: 2,
-        id: 'Presentation'
-      },
-      {
-        group: 2,
-        id: 'Application'
-      },
-      {
-        group: 2,
-        id: 'Database'
-      },
-      {
-        group: 3,
-        id: 'WebServers1'
-      },
-      {
-        group: 3,
-        id: 'WebServers2'
-      },
-      {
-        group: 3,
-        id: 'AppServers1'
-      },
-      {
-        group: 3,
-        id: 'DbServers1'
-      }
-    ]
-  };
 }
