@@ -2,9 +2,21 @@ import { GraphLink } from './graph-link';
 import { GraphNode } from './graph-node';
 
 export class Graph {
-  constructor(obj: any) {
+  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>) {
     this.nodes = new Array<GraphNode>();
     this.links = new Array<GraphLink>();
+
+    if (!ignoreArray) {
+      this.ignoreArray = new Array<string>();
+    } else {
+      this.ignoreArray = ignoreArray;
+    }
+
+    if (!nameArray) {
+      this.nameArray = new Array<string>();
+    } else {
+      this.nameArray = nameArray;
+    }
 
     this.buildGraph(obj);
   }
@@ -14,6 +26,10 @@ export class Graph {
   links: Array<GraphLink>;
 
   nodes: Array<GraphNode>;
+
+  ignoreArray: Array<string>;
+
+  nameArray: Array<string>;
 
   private buildGraph(obj: any) {
     this.objectIterator(obj, 1, this);
@@ -37,7 +53,7 @@ export class Graph {
     Object.keys(obj).forEach(key => {
       // Recursively iterate child arrays.
       if (obj.hasOwnProperty(key) && Array.isArray(obj[key])
-      && !['custom_fields'].includes(key.toLowerCase())) {
+      && !this.ignoreArray.includes(key.toLowerCase())) {
         obj[key].forEach(v => {
           this.objectIterator(v, (group + 1), graph, node.id);
         });
@@ -45,7 +61,7 @@ export class Graph {
 
       // Set node title if suitable property available.
       if (obj.hasOwnProperty(key) && !Array.isArray(obj[key])
-              && ['name', 'title'].includes(key.toLowerCase())) {
+              && this.nameArray.includes(key.toLowerCase())) {
                 node.name = obj[key];
                }
     });

@@ -18,6 +18,8 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   @Input() disableAnimation?: boolean;
   @Input() width = 800;
   @Input() height = 800;
+  @Input() ignoreArray = ['custom_fields'];
+  @Input() nameArray = ['name', 'title'];
 
   @Output() rendered = new EventEmitter<any>();
   @Output() nodeClicked = new EventEmitter<any>();
@@ -31,9 +33,9 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     if (this.graphObject) {
-      this.graph = new Graph(this.graphObject);
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray);
     } else if (!this.graph) {
-      this.graph = new Graph({Name: 'No Data to Graph'});
+      this.graph = new Graph({Name: 'No Data to Graph'}, [''], ['']);
     }
     // TODO: Handle disableAnimation
   }

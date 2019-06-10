@@ -29,6 +29,23 @@ describe('Graph', () => {
 
     });
 
+    it('graph should ignore properties in ignore array', () => {
+        const obj = { name: 'Parent', childArray: [{name: 'Child1'}, {name: 'Child2'}]};
+
+        const result = new Graph(obj, ['childarray']);
+
+        expect(result.links.length).toBe(0);
+        expect(result.nodes.length).toBe(1);
+    });
+
+    it('graph use name array elements to determine node names', () => {
+        const obj = { name: 'Parent', childArray: [{testName: 'Child1'}, {name: 'Child2'}]};
+
+        const result = new Graph(obj, [''], ['testname']);
+
+        expect(result.nodes[0].name).toBe('Child1');
+    });
+
     it('graph should have nodes with names 1', () => {
         const obj = { name: 'Parent', childArray: [{name: 'Child1'}, {name: 'Child2'}]};
 
