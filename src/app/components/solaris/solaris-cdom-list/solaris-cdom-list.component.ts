@@ -4,6 +4,8 @@ import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
 import { SolarisLdomResponse } from 'src/app/models/interfaces/solaris-load-balancer.interface';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
+import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
+import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 
 @Component({
   selector: 'app-solaris-cdom-list',
@@ -15,6 +17,8 @@ export class SolarisCdomListComponent implements OnInit {
   returnDevices: Array<any>;
   returnLDOMs: Array<any>;
   CDOMDeviceArray: Array<any>;
+  associatedLdoms: Array<any>;
+  finishedAssociatedLdomList = false;
 
   constructor(
     private automationApiService: AutomationApiService,
@@ -47,5 +51,26 @@ export class SolarisCdomListComponent implements OnInit {
   editCdom(device: any){
     this.solarisService.currentCdom = device;
     this.router.navigate(['/solaris/cdom/create']);
+  }
+
+  deleteCdom(device: SolarisCdom){ 
+    //returns an array of device ids to be deleted
+    this.automationApiService.getLDomsForCDom(device.name).subscribe(data => {
+      const result = data as Array<SolarisLdom>;
+      console.log(result);
+      let toDeleteIDs = new Array<string>();
+      //push CDOM id
+      toDeleteIDs.push(device.device_id);
+      // check if any LDOM ids to add.
+      if( result.length >= 1) {
+        //push each LDOM id to array
+        result.forEach(ldom => {
+            toDeleteIDs.push(ldom.device_id);
+        });
+      }
+    });
+  }
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
