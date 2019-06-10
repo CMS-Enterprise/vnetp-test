@@ -128,9 +128,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     if ( this.solarisService.parentCdom.device_id != null ) {
       this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
           const result = data as SolarisCdom;
-          this.LDOM.associatedcdom = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
+          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
        });
-      this.solarisService.currentCdom = new SolarisCdom();
+      this.solarisService.parentCdom = new SolarisCdom();
     }
   }
 
