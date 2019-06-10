@@ -15,6 +15,7 @@ import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
+import { markParentViewsForCheckProjectedViews } from '@angular/core/src/view/util';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -36,6 +37,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   newSolarisVariable: SolarisVariable;
   addVdsDev: SolarisVdsDevs;
   modalVnet: SolarisVnet;
+  testCDOM: SolarisCdom;
   // modalSelectedVswitch: SolarisVswitch;
   vnetModalVswitches: Array<SolarisVswitch>;
   vnetModalVswitch: SolarisVswitch;
@@ -123,9 +125,20 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = new SolarisVdsDevs();
     this.modalVnet = new SolarisVnet();
+    if ( this.solarisService.parentCdom.device_id != null ) {
+      this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
+          const result = data as SolarisCdom;
+          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+       });
+      this.solarisService.parentCdom = new SolarisCdom();
+    }
   }
 
   openVdsModal() {
+    if ( this.solarisService.currentVds != null){
+      this.addVdsDev = this.solarisService.currentVds;
+      this.solarisService.currentVds = null;
+    }
     this.ngxSm.getModal('vdsDevModalLdom').open();
   }
 
@@ -134,17 +147,36 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
-  editVds() {
+  editVds(vds: SolarisVdsDevs) {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+    this.solarisService.currentVds = vds;
+    this.openVdsModal();
+    //check if modal canceled, don't remove if so
+    this.LDOM.vds.splice(vdsIndex, 1);
+  }
+  editVnet(vnet: SolarisVnet){
+    const vnetIndex = this.LDOM.vnet.indexOf(vnet);
+    this.solarisService.currentVnet = vnet;
+    this.openVnetModal();
+    // check if modal canceled, don't remove if so
+    this.LDOM.vnet.splice(vnetIndex,1);
+
   }
 
   openVnetModal() {
     this.addVnetInherit = true;
-    this.vnetModalTaggedVlans = new Array<number>();
-    this.modalVnet = new SolarisVnet();
-    this.vnetModalVswitch = new SolarisVswitch();
-    this.vnetModalVswitches = new Array<SolarisVswitch>();
-
+    if ( this.solarisService.currentVnet === null ){
+      this.vnetModalTaggedVlans = new Array<number>();
+      this.modalVnet = new SolarisVnet();
+      this.vnetModalVswitch = new SolarisVswitch();
+      this.vnetModalVswitches = new Array<SolarisVswitch>();
+    } else {
+      this.addVnetInherit = false;
+      this.modalVnet = this.solarisService.currentVnet;
+      this.vnetModalTaggedVlans = this.solarisService.currentVnet.TaggedVlans;
+      this.vnetModalUntaggedVlan = this.solarisService.currentVnet.UntaggedVlan;
+      this.solarisService.currentVnet = null;
+    }
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
       // the selected CDOM with its custom fields.
@@ -176,7 +208,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.LDOM.vds.splice(vdsIndex, 1);
     }
   }
-  deletevNet(vnetDev: any) {
+  deleteVnet(vnetDev: any) {
     const vnetIndex = this.LDOM.vnet.indexOf(vnetDev);
     if (vnetIndex > -1 ) {
       this.LDOM.vnet.splice(vnetIndex, 1);

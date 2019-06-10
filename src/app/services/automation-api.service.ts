@@ -73,9 +73,15 @@ export class AutomationApiService {
   getLDoms() {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
   }
+  getLDomByName(name: string) {
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
+  }
 
   getLDomsForCDom(name: string){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
+  }
+  getCDomByID(id: any){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
 
   getVrfs() {
