@@ -91,7 +91,13 @@
               <td>{{ vnet?.UntaggedVlan }}</td>
               <td>{{ vnet?.TaggedVlans }}</td>
               <td>
-                <fa name="trash" (click)="deletevNet(vnet)"> </fa>
+                <fa name="chevron-up" (click)="moveObjectPosition(-1, vnet, LDOM.vnet)">
+                </fa>
+                <fa name="chevron-down" (click)="moveObjectPosition(1, vnet, LDOM.vnet)">
+                </fa>
+                <fa name="pencil" (click)="editVnet(vnet)"> </fa>
+                <fa name="trash" (click)="deleteVnet(vnet)"> </fa>
+                
               </td>
             </tr>
           </tbody>
@@ -172,7 +178,12 @@
               <td>{{ vds.diskName }}</td>
               <td>{{ vds.diskSize }}</td>
               <td>
-                <fa name="trash" (click)="deleteVdsDev(vds)"> </fa>
+                  <fa name="chevron-up" (click)="moveObjectPosition(-1, vds, LDOM.vds)">
+                  </fa>
+                  <fa name="chevron-down" (click)="moveObjectPosition(1, vds, LDOM.vds)">
+                  </fa>
+                  <fa name="pencil" (click)="editVds(vds)"> </fa>
+                  <fa name="trash" (click)="deleteVds(vds)"> </fa>
               </td>
             </tr>
           </tbody>
