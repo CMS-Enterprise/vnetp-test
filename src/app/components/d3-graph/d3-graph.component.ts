@@ -55,7 +55,10 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       .select('#graphContainer')
       .attr('oncontextmenu', 'return false;')
       .attr('width', this.width)
-      .attr('height', this.height);
+      .attr('height', this.height)
+      .call(d3.zoom().on('zoom', () => {
+        this.svg.attr('transform', d3.event.transform);
+      }));
 
     // Create Force Diaagram
     this.forceDiagram = d3
