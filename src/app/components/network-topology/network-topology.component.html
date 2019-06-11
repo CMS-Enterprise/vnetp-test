@@ -1,1 +1,1 @@
-<app-d3-graph *ngIf="showGraph" [graphObject]="selectedCustomer" (nodeClicked)="nodeClickHandler($event)"></app-d3-graph>
+<app-d3-graph *ngIf="showGraph" [ignoreArray]="['custom_fields', 'custom fields']" [graphObject]="selectedCustomer" (nodeClicked)="nodeClickHandler($event)"></app-d3-graph>
