@@ -56,21 +56,28 @@ export class SolarisCdomListComponent implements OnInit {
   deleteCdom(device: SolarisCdom){ 
     //returns an array of device ids to be deleted
     this.automationApiService.getLDomsForCDom(device.name).subscribe(data => {
-      const result = data as Array<SolarisLdom>;
-      console.log(result);
-      let toDeleteIDs = new Array<string>();
+      const result = data as any;
+      const toDeleteLdoms = result.Devices as Array<SolarisLdom>;
+      let toDeleteIDs = new Array<any>();
       //push CDOM id
       toDeleteIDs.push(device.device_id);
       // check if any LDOM ids to add.
-      if( result.length >= 1) {
+      if( toDeleteLdoms.length >= 1) {
         //push each LDOM id to array
-        result.forEach(ldom => {
+        toDeleteLdoms.forEach(ldom => {
             toDeleteIDs.push(ldom.device_id);
         });
       }
+      //TODO: if there are any LDOMs add an "are you sure" prompt
+      //call the Delete-Device playbook
+      toDeleteIDs.forEach(id => {
+        const extra_vars: {[k: string]: any} = {};
+        extra_vars.id = id;
+        const body = { extra_vars };
+        this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
+      });
+      this.router.navigate(['/solaris/ldom/list']);
+
     });
-  }
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
