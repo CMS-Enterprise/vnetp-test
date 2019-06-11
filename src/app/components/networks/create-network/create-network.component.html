@@ -24,7 +24,7 @@
             }"
             required
           />
-          <div *ngIf="nameExists" class="alert alert-danger">
+          <div *ngIf="nameExists" class="invalid-feedback">
             <div>Name already in use. Subnet names are case-insensitive.</div>
           </div>
         </div>
@@ -60,7 +60,7 @@
           />
           <div
             *ngIf="networkExists || networkOverlaps || invalidGateway"
-            class="alert alert-danger"
+            class="invalid-feedback"
           >
             <p *ngIf="networkExists">Subnet already in use.</p>
             <p *ngIf="networkOverlaps">
@@ -132,7 +132,7 @@
             mask="0999"
             required
           />
-          <div *ngIf="vlanExists" class="alert alert-danger">
+          <div *ngIf="vlanExists" class="invalid-feedback">
             <div>VLAN already in use.</div>
           </div>
         </div>

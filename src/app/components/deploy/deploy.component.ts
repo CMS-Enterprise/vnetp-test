@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-deploy',
@@ -13,7 +14,11 @@ export class DeployComponent implements OnInit {
   tabIndex: number;
   subnets: Array<Subnet>;
 
-  constructor(private hs: HelpersService, private automationApiService: AutomationApiService) {
+  constructor(
+    private hs: HelpersService,
+    private automationApiService: AutomationApiService,
+    private auth: AuthService
+    ) {
     this.subnets = new Array<Subnet>();
    }
 
@@ -66,6 +71,12 @@ export class DeployComponent implements OnInit {
     this.subnets.forEach(s => {
       this.deploySubnet(s);
     });
+  }
+  deploySolaris(){
+    var extra_vars: {[k: string]: any} = {};
+    extra_vars.customer_name = this.auth.currentUserValue.CustomerName;
+    const body = { extra_vars };
+    this.automationApiService.launchTemplate('deploy-solaris', body, true).subscribe();
   }
 
    private deploySubnet(subnet: Subnet) {
