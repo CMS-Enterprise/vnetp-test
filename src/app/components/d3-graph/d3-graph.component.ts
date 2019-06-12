@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
-import * as svg from 'save-svg-as-png';
+import * as save_svg_as_png from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
-import { disableBindings } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-d3-graph',
@@ -207,7 +206,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   saveImage() {
-    svg.saveSvgAsPng(document.getElementsByTagName('svg')[0], 'graph.png');
+    save_svg_as_png.saveSvgAsPng(document.getElementsByTagName('svg')[0], 'graph.png');
   }
 
   dragstarted(d) {
