@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import * as svg from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
+import { disableBindings } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-d3-graph',
@@ -15,7 +16,8 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   @Input() graphObject?: any;
   @Input() graph: Graph;
-  @Input() disableAnimation?: boolean;
+  @Input() disableAnimation = false;
+  @Input() disableDrag = false;
   @Input() width = 800;
   @Input() height = 800;
   @Input() ignoreArray = ['custom_fields'];
@@ -105,7 +107,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   resetTransform() {
-    this.svg.attr('transform', null)
+    this.svg.attr('transform', null);
   }
 
   addGraphData() {
@@ -144,10 +146,12 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     });
 
     // Drag Event Handlers
+    if (!this.disableDrag) {
     node.call(d3.drag()
           .on('start', d => { this.dragstarted(d); })
           .on('drag', d => {this.dragged(d); })
           .on('end', d => {this.dragended(d); }));
+    }
 
     // Add Image to Node
     node
