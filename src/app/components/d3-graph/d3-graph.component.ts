@@ -104,6 +104,10 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     this.rendered.emit(true);
   }
 
+  resetTransform() {
+    this.svg.attr('transform', null)
+  }
+
   addGraphData() {
 
     // Clear any current SVG elements.
