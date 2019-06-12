@@ -177,7 +177,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       });
 
     node.append('title').text((d: any) => {
-      return d.id;
+      return d.name;
     });
 
     this.forceDiagram.nodes(this.graph.nodes).on('tick', ticked);
