@@ -27,6 +27,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "d3": "^5.9.2",
+    "d3-context-menu": "^1.1.1",
     "font-awesome": "^4.7.0",
     "ip-num": "^1.1.1",
     "ip-subnet-calculator": "^1.1.8",

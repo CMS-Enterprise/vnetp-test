@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
+import * as contextMenuFactory from 'd3-context-menu';
 import * as save_svg_as_png from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
@@ -110,7 +111,6 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   addGraphData() {
-
     // Clear any current SVG elements.
     d3.selectAll('svg > *').remove();
 
@@ -143,6 +143,34 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       d3.event.stopPropagation();
       this.OnNodeClick(d);
     });
+
+
+    
+
+    // Handle Right Click
+    node.on('contextmenu', n => {
+      const contextMenu  = contextMenuFactory(d3);
+
+      var menu = [
+        {
+          title: 'Header',
+        },
+        {
+          title: 'Normal item',
+          action: function() {}
+        },
+        {
+          divider: true
+        },
+        {
+          title: 'Last item',
+          action: function() {}
+        }
+      ];
+      console.log('context menu');
+      contextMenu(menu);
+    });
+ 
 
     // Drag Event Handlers
     if (!this.disableDrag) {
