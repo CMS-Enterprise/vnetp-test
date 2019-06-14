@@ -12,6 +12,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -127,7 +128,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
     this.subscribeToNetworkObjectGroupModal() ;
     this.networkObjectGroupModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(networkObjectGroup), 'networkObjectGroupModal');
+
+    const dto = new NetworkObjectGroupModalDto();
+    dto.Subnets = this.Subnets;
+    dto.NetworkObjectGroup = networkObjectGroup;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
     this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
     this.ngx.getModal('networkObjectGroupModal').open();
   }
