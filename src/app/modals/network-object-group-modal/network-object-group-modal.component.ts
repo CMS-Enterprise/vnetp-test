@@ -111,8 +111,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
-    console.log(dto);
-
+    
     if (dto.Subnets) {
       this.Subnets = dto.Subnets;
     }
