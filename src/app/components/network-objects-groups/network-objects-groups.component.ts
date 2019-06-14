@@ -109,6 +109,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   createNetworkObjectGroup() {
     this.subscribeToNetworkObjectGroupModal();
     this.networkObjectGroupModalMode = ModalMode.Create;
+
+    const dto = new NetworkObjectGroupModalDto();
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 

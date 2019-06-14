@@ -215,6 +215,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   private reset() {
     this.unsubAll();
     this.submitted = false;
+    this.Subnets = new Array<Subnet>();
     this.buildForm();
     this.setFormValidators();
   }

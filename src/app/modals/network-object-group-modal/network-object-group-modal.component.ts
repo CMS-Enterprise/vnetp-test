@@ -75,6 +75,11 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
+
+    const dto = new NetworkObjectModalDto();
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').toggle();
   }
 
@@ -106,6 +111,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
+    console.log(dto);
 
     if (dto.Subnets) {
       this.Subnets = dto.Subnets;
@@ -142,6 +148,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.networkObjects = new Array<NetworkObject>();
+    this.Subnets = new Array<Subnet>();
     this.buildForm();
   }
 
