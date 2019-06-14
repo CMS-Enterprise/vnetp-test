@@ -9,28 +9,28 @@
 </div>
 
 <div class="card mt-3" *ngIf="subnet">
-  <div class="form-row text-center text-bold">
-    <div class="form-group col-md-2">
-      Network: {{ subnet?.network }}/{{ subnet?.mask_bits }}
+  <div>
+    <div>
+      <div class="text-bold">Network</div> {{ subnet?.network }}/{{ subnet?.mask_bits }}
     </div>
 
-    <div class="form-group col-md-2">
-      Gateway: {{ subnet?.gateway }}
+    <div>
+      <div class="text-bold">Gateway</div> {{ subnet?.gateway }}
     </div>
 
-    <div class="form-group col-md-2">
-      Range: {{ subnet?.range_begin }} - {{ subnet?.range_end }}
+    <div>
+      <div class="text-bold">Range</div> {{ subnet?.range_begin }} - {{ subnet?.range_end }}
     </div>
-    <div class="form-group col-md-2">
-      Tier (VRF): {{ subnet?.vrf_group_name }}
-    </div>
-
-    <div class="form-group col-md-2">
-      Deployed: {{ getDeployedState(subnet) }}
+    <div>
+      <div class="text-bold">Tier (VRF)</div>{{ subnet?.vrf_group_name }}
     </div>
 
-    <div class="form-group col-md-2">
-      VLAN: {{ getVlan(subnet) }}
+    <div>
+      <div class="text-bold">Deployed</div> {{ getDeployedState(subnet) }}
+    </div>
+
+    <div>
+      <div class="text-bold">VLAN</div> {{ getVlan(subnet) }}
     </div>
   </div>
 </div>
