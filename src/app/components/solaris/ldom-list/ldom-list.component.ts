@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ldom-list',
@@ -14,13 +15,22 @@ export class LdomListComponent implements OnInit {
 
   Ldoms: Array<SolarisLdom>;
 
-  constructor(private automationApiService: AutomationApiService) { }
+  constructor(
+    private automationApiService: AutomationApiService,
+    private router: Router
+    ) { }
 
   ngOnInit() {
     this.Ldoms = new Array<SolarisLdom>();
     this.getLdoms();
   }
-
+  deleteLdom(device: SolarisLdom){
+   const extra_vars: {[k:string]: any} = {};
+   extra_vars.id = device.device_id;
+   const body = { extra_vars };
+   this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
+   this.router.navigate(['/solaris/ldom/list']);
+  }
   getLdoms() {
     if (!this.CdomName) {
       this.automationApiService.getLDoms().subscribe(

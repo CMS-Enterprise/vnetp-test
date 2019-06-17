@@ -13,6 +13,7 @@
           <a routerLink="/solaris/ldom/detail/{{ ldom.device_id }}">
             <fa name="server" style="color:black;"></fa> {{ ldom.name }}
           </a>
+          <button class="btn btn-danger" (click)="deleteLdom(device)">Delete LDOM</button>
         </td>
       </tr>
     </tbody>
