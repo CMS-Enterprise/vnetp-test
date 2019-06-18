@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
@@ -15,7 +15,11 @@ export class LdomDetailComponent implements OnInit {
   Id: string;
   navIndex = 0;
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService, private hs: HelpersService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private automationApiService: AutomationApiService,
+    private hs: HelpersService,
+    private router: Router) { }
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
@@ -30,5 +34,12 @@ export class LdomDetailComponent implements OnInit {
       }
     )
   }
+  deleteLdom(device: SolarisLdom){
+    const extra_vars: {[k:string]: any} = {};
+    extra_vars.id = device.device_id;
+    const body = { extra_vars };
+    this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
+    this.router.navigate(['/solaris/ldom/list']);
+   }
 
 }

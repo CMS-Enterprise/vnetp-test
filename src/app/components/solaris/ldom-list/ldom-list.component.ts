@@ -24,13 +24,6 @@ export class LdomListComponent implements OnInit {
     this.Ldoms = new Array<SolarisLdom>();
     this.getLdoms();
   }
-  deleteLdom(device: SolarisLdom){
-   const extra_vars: {[k:string]: any} = {};
-   extra_vars.id = device.device_id;
-   const body = { extra_vars };
-   this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
-   this.router.navigate(['/solaris/ldom/list']);
-  }
   getLdoms() {
     if (!this.CdomName) {
       this.automationApiService.getLDoms().subscribe(

@@ -1,5 +1,5 @@
 <h4>{{ Ldom?.name }}</h4>
-
+<button class="btn btn-danger" (click)="deleteLdom(Ldom)">Delete LDOM</button>
 <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0">
         <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
