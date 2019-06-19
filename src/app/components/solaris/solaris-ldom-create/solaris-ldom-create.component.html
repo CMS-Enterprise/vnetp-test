@@ -73,11 +73,11 @@
 
     <div class="form-row">
       <div class="form-group col-md-5">
-        <label>vNets</label>
+        <label>vNics</label>
         <table name="vnetTable" class="table">
           <thead>
             <tr>
-              <th>vNet Name</th>
+              <th>vNic Name</th>
               <th>Virtual Switch</th>
               <th>Untagged VLAN</th>
               <th>Tagged VLANs</th>
@@ -110,7 +110,7 @@
           (click)="openVnetModal()"
           [disabled]="!LDOM.associatedcdom"
         >
-          Add vNet Device
+          Add vNic
         </button>
       </div>
 
@@ -335,7 +335,7 @@
   [dismissable]="false"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Add vNet</h4>
+    <h4 class="modal-title">Add vNic</h4>
     <button
       type="button"
       class="close"
