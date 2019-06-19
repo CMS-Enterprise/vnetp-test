@@ -21,6 +21,7 @@ export class SolarisService {
   AllSolaris: Array<any>;
   parentCdom = new SolarisCdom();
   currentCdom = new SolarisCdom();
+  currentLdom = new SolarisLdom();
   currentVswitch = new SolarisVswitch();
   currentVnet = new SolarisVnet();
   currentVds = new SolarisVdsDevs();

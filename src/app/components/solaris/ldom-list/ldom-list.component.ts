@@ -1,6 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
+import { SolarisService } from '../solaris-services/solaris-service.service';
+import { Router } from '@angular/router';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
 
 @Component({
   selector: 'app-ldom-list',
@@ -14,7 +18,12 @@ export class LdomListComponent implements OnInit {
 
   Ldoms: Array<SolarisLdom>;
 
-  constructor(private automationApiService: AutomationApiService) { }
+  constructor(
+    private automationApiService: AutomationApiService,
+    private solarisService: SolarisService,
+    private router: Router,
+    private hs: HelpersService
+    ) { }
 
   ngOnInit() {
     this.Ldoms = new Array<SolarisLdom>();
@@ -37,4 +46,13 @@ export class LdomListComponent implements OnInit {
       });
      }
     }
+  editLdom(device: SolarisLdom){
+    this.automationApiService.getDevicesbyID(device.device_id).subscribe(dataLdom => {
+      const resultLdom = dataLdom as SolarisLdom;
+      this.solarisService.currentLdom = this.hs.getJsonCustomField(resultLdom, 'Metadata') as SolarisLdom;
+      this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
+      console.log(this.solarisService.parentCdom);
+    });
+    this.router.navigate(['/solaris/ldom/create']);
+  }
 }

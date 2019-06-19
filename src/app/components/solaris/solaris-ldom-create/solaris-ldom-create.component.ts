@@ -16,6 +16,7 @@ import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
 import { markParentViewsForCheckProjectedViews } from '@angular/core/src/view/util';
+import { createHostListener } from '@angular/compiler/src/core';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -111,26 +112,31 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   ngOnInit() {
     // TODO: Tie to reactive form pristine.
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
     this.dirty = true;
     this.newSolarisVariable = new SolarisVariable();
+    this.LDOM.vds = new Array<any>();
+    this.addVdsDev = new SolarisVdsDevs();
+    this.modalVnet = new SolarisVnet();
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
+    if ( this.solarisService.currentLdom != null){
 
-    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
+      this.LDOM = this.solarisService.currentLdom;
+      
+    } else {
 
-    this.LDOM.vds = new Array<any>();
-    this.addVdsDev = new SolarisVdsDevs();
-    this.modalVnet = new SolarisVnet();
-    if ( this.solarisService.parentCdom.device_id != null ) {
-      this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
-          const result = data as SolarisCdom;
-          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
-       });
-      this.solarisService.parentCdom = new SolarisCdom();
+      if ( this.solarisService.parentCdom.device_id != null ) {
+        this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
+            const result = data as SolarisCdom;
+            this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+        });
+        this.solarisService.parentCdom = new SolarisCdom();
+      }
     }
   }
 
