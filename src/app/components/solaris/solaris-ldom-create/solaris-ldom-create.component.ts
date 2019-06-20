@@ -126,7 +126,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     if ( this.solarisService.currentLdom != null){
 
       this.LDOM = this.solarisService.currentLdom;
-    
+      console.log(this.LDOM);
       
     } else {
 
