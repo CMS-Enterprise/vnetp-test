@@ -116,7 +116,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
-    if ( this.solarisService.parentCdom.device_id != null && this.solarisService.currentLdom === null) {
+    if ( this.solarisService.parentCdom.device_id != null && this.solarisService.currentLdom.name == null) {
       this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
           const result = data as SolarisCdom;
           this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
@@ -126,6 +126,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     if ( this.solarisService.currentLdom.name != null){
 
       this.LDOM = this.solarisService.currentLdom;
+      this.automationApiService.getDevicesbyID(this.solarisService.currentLdom.associatedcdom.device_id).subscribe(data => {
+        const result = data as SolarisCdom;
+        this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+        this.solarisService.currentLdom = new SolarisLdom();
+    });
     }
   }
 
