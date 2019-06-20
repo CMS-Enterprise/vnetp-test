@@ -161,7 +161,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-5">
+      <div class="form-group col-md-6">
         <label>Virtual Disks</label>
         <table name="vdsTable" class="table">
           <thead>
@@ -197,6 +197,11 @@
         >
           Add VDS Device
         </button>
+        <app-import-export
+        [exportObject]="LDOM.vds"
+        exportFileName="LDOMVDS-{{ LDOM.name }}"
+        (import)="insertVirtualDisks($event)"
+      ></app-import-export>
       </div>
 
       <div class="form-group col-md-2"></div>
@@ -267,11 +272,6 @@
       aria-label="Close"
       (click)="vdsDevModalLdom.close()"
     ></button>
-    <app-import-export
-      [exportObject]="LDOM.vds"
-      exportFileName="LDOMVDS-{{ LDOM.name }}"
-      (import)="insertVirtualDisks($event)"
-    ></app-import-export>
   </div>
 
   <div class="modal-body">
