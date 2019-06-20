@@ -3,7 +3,6 @@ import { SolarisService } from '../solaris-services/solaris-service.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
 import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -15,8 +14,7 @@ import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-import { markParentViewsForCheckProjectedViews } from '@angular/core/src/view/util';
-import { createHostListener } from '@angular/compiler/src/core';
+
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -82,12 +80,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
      objArray.push(obj);
      this.inputLDOMvnet = '';
   }
-  addvdsObject(objVDSwwn: string, objvDiskname: string, objVDS: string, objArray: Array<any>) {
-    objArray.push(`${objVDSwwn},${objvDiskname},${objVDS}`);
-    this.inputLDOMvds = '';
-    this.inputLDOMvdswwn = '';
-    this.inputLDOMvdiskname = '';
- }
   moveObjectPosition(value: number, obj, objArray) {
    this.solarisService.moveObjectPosition(value, obj, objArray);
   }
@@ -210,7 +202,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.ngxSm.getModal('vnetModalLdom').close();
   }
 
-  deleteVdsDev(vdsDev: any) {
+  deleteVds(vdsDev: any) {
     const vdsIndex = this.LDOM.vds.indexOf(vdsDev);
     if (vdsIndex > -1 ) {
       this.LDOM.vds.splice(vdsIndex, 1);
@@ -239,7 +231,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   insertVirtualDisks(vds) {
      if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
      vds.forEach(thisVds => {
-       console.log(thisVds);
+      this.LDOM.vds.push(Object.assign({}, thisVds));
+      this.addVdsDev = new SolarisVdsDevs();
+
      });
+     this.ngxSm.getModal('vdsDevModalLdom').close();
+     console.log(this.LDOM.vds);
    }
 }

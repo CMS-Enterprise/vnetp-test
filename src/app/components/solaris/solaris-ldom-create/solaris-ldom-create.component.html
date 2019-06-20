@@ -268,6 +268,8 @@
       (click)="vdsDevModalLdom.close()"
     ></button>
     <app-import-export
+      [exportObject]="LDOM.vds"
+      exportFileName="LDOMVDS-{{ LDOM.name }}"
       (import)="insertVirtualDisks($event)"
     ></app-import-export>
   </div>
