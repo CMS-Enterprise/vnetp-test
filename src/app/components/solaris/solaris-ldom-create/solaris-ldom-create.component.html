@@ -166,15 +166,13 @@
         <table name="vdsTable" class="table">
           <thead>
             <tr>
-              <th>VDS</th>
-              <th>Disk Name</th>
+               <th>Disk Name</th>
               <th>Size</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let vds of LDOM.vds">
-              <td>{{ vds.vds }}</td>
               <td>{{ vds.diskName }}</td>
               <td>{{ vds.diskSize }}</td>
               <td>
