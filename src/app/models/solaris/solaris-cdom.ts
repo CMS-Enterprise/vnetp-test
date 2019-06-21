@@ -21,7 +21,7 @@ export class SolarisCdom {
 
   // Networking
   /** Virtual Network */
-  vnet: string;
+  vnic: string;
   /** VLANs */
   vlans = new Array<number>();
   /** Virtual Switch */

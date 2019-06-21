@@ -74,7 +74,7 @@
     <div class="form-row">
       <div class="form-group col-md-5">
         <label>vNics</label>
-        <table name="vnetTable" class="table">
+        <table name="vnicTable" class="table">
           <thead>
             <tr>
               <th>vNic Name</th>
@@ -85,18 +85,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let vnet of LDOM.vnet">
-              <td>{{ vnet?.Name }}</td>
-              <td>{{ vnet?.VirtualSwitchName }}</td>
-              <td>{{ vnet?.UntaggedVlan }}</td>
-              <td>{{ vnet?.TaggedVlans }}</td>
+            <tr *ngFor="let vnic of LDOM.vnic">
+              <td>{{ vnic?.Name }}</td>
+              <td>{{ vnic?.VirtualSwitchName }}</td>
+              <td>{{ vnic?.UntaggedVlan }}</td>
+              <td>{{ vnic?.TaggedVlans }}</td>
               <td>
-                <fa name="chevron-up" (click)="moveObjectPosition(-1, vnet, LDOM.vnet)">
+                <fa name="chevron-up" (click)="moveObjectPosition(-1, vnic, LDOM.vnic)">
                 </fa>
-                <fa name="chevron-down" (click)="moveObjectPosition(1, vnet, LDOM.vnet)">
+                <fa name="chevron-down" (click)="moveObjectPosition(1, vnic, LDOM.vnic)">
                 </fa>
-                <fa name="pencil" (click)="editVnet(vnet)"> </fa>
-                <fa name="trash" (click)="deleteVnet(vnet)"> </fa>
+                <fa name="pencil" (click)="editVnic(vnic)"> </fa>
+                <fa name="trash" (click)="deleteVnic(vnic)"> </fa>
                 
               </td>
             </tr>
@@ -105,9 +105,9 @@
 
         <button
           type="button"
-          name="modalVnet"
+          name="modalVnic"
           class="btn btn-success"
-          (click)="openVnetModal()"
+          (click)="openVnicModal()"
           [disabled]="!LDOM.associatedcdom"
         >
           Add vNic
@@ -331,8 +331,8 @@
 </ngx-smart-modal>
 
 <ngx-smart-modal
-  #vnetModalLdom
-  identifier="vnetModalLdom"
+  #vnicModalLdom
+  identifier="vnicModalLdom"
   customClass="'modal-content'"
   [dismissable]="false"
 >
@@ -343,7 +343,7 @@
       class="close"
       data-dismiss="modal"
       aria-label="Close"
-      (click)="vnetModalLdom.close()"
+      (click)="vnicModalLdom.close()"
     ></button>
   </div>
 
@@ -357,9 +357,9 @@
           class="form-control"
           id="inputCDOMvswitch"
           #formVds="ngModel"
-          [(ngModel)]="vnetModalVswitch"
+          [(ngModel)]="vnicModalVswitch"
         >
-          <option *ngFor="let vsw of vnetModalVswitches" [ngValue]="vsw">{{
+          <option *ngFor="let vsw of vnicModalVswitches" [ngValue]="vsw">{{
             vsw.vSwitchName
           }}</option>
         </select>
@@ -368,10 +368,10 @@
 
     <!--TODO: Hide until vsw selected-->
     <div class="form-group">
-      <select name="" class="form-control" [(ngModel)]="vnetModalUntaggedVlan">
-        <option [ngValue]="vnetModalVswitch?.vlansUntagged" [ngValue]="vnetModalVswitch?.vlansUntagged">Default Native VLAN {{ vnetModalVswitch?.vlansUntagged }}
+      <select name="" class="form-control" [(ngModel)]="vnicModalUntaggedVlan">
+        <option [ngValue]="vnicModalVswitch?.vlansUntagged" [ngValue]="vnicModalVswitch?.vlansUntagged">Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
         </option>
-        <option *ngFor="let vlan of vnetModalVswitch?.vlansTagged" [ngValue]="vlan">
+        <option *ngFor="let vlan of vnicModalVswitch?.vlansTagged" [ngValue]="vlan">
          VLAN {{ vlan }}
         </option>
       </select>
@@ -383,16 +383,16 @@
         <input
           class="form-check-input"
           type="checkbox"
-          [(ngModel)]="addVnetInherit"
+          [(ngModel)]="addVnicInherit"
         />
         <label class="form-check-label text-info">Inherit Tagged VLANs</label>
       </div>
 
       <ng-template
-        *ngIf="!addVnetInherit"
+        *ngIf="!addVnicInherit"
         ngFor
         let-vlan
-        [ngForOf]="vnetModalVswitch?.vlansTagged"
+        [ngForOf]="vnicModalVswitch?.vlansTagged"
       >
         <div class="form-check form-check-inline">
           <input
@@ -407,8 +407,8 @@
 
     <div class="form-row">
       <div class="form-group col-md-8">
-        <label for="vNetName">vNet Name</label>
-        <input class="form-control" [(ngModel)]="modalVnet.Name" />
+        <label for="vNicName">vNic Name</label>
+        <input class="form-control" [(ngModel)]="modalVnic.Name" />
       </div>
     </div>
 
@@ -417,7 +417,7 @@
         type="button"
         class="btn btn-primary"
         data-dismiss="modal"
-        (click)="insertVnet()"
+        (click)="insertVnic()"
       >
         Add
       </button>
@@ -426,7 +426,7 @@
         type="button"
         class="btn btn-secondary"
         data-dismiss="modal"
-        (click)="vnetModalLdom.close()"
+        (click)="vnicModalLdom.close()"
       >
         Cancel
       </button>

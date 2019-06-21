@@ -66,18 +66,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let vnet of LdomMetadata.vnet">
+              <tr *ngFor="let vnic of LdomMetadata.vnic">
                 <td>
-                  <p>{{ vnet?.Name }}</p>
+                  <p>{{ vnic?.Name }}</p>
                 </td>
                 <td>
-                  <p>{{ vnet?.VirtualSwitchName }}</p>
+                  <p>{{ vnic?.VirtualSwitchName }}</p>
                 </td>
                 <td>
-                  <p>{{ vnet?.TaggedVlans }}</p>
+                  <p>{{ vnic?.TaggedVlans }}</p>
                 </td>
                 <td>
-                  <p>{{ vnet?.UntaggedVlans }}</p>
+                  <p>{{ vnic?.UntaggedVlans }}</p>
                 </td>
               </tr>
             </tbody>

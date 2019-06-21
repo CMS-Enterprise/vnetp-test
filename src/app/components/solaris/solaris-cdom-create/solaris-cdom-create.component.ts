@@ -79,7 +79,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.dirty = true;
     this.CDOM = new SolarisCdom();
     this.CDOM.vccname = "primary-vcc0";
-    this.CDOM.vnet = "vnet0";
+    this.CDOM.vnic = "vnic0";
     this.CDOM.vccports = "5000-5100";
     this.CDOM.net_device = "net0";
     this.automationApiService.getCDoms().subscribe(data => {
