@@ -78,10 +78,10 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   ngOnInit() {
     this.dirty = true;
     this.CDOM = new SolarisCdom();
-    this.CDOM.vccname = "primary-vcc0";
-    this.CDOM.vnic = "vnic0";
-    this.CDOM.vccports = "100";
-    this.CDOM.net_device = "net0";
+    this.CDOM.vccname = 'primary-vcc0';
+    this.CDOM.vnic = 'vnic0';
+    this.CDOM.vccports = '100';
+    this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms().subscribe(data => {
       const cdomResponse = data as SolarisCdomResponse;
       this.CDOMDeviceArray = cdomResponse.Devices;
@@ -121,7 +121,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   openVswitchModal() {
-    if (this.solarisService.currentVswitch === null){
+    if (this.solarisService.currentVswitch === null) {
        this.modalVswitch = new SolarisVswitch();
        this.modalVswitch.vlansTagged = new Array<number>();
     } else {
@@ -133,8 +133,8 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVswitch() {
-    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)){
-      this.toastr.error('Native VLAN cannot be in Tagged VLANs.')
+    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)) {
+      this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
 
@@ -177,7 +177,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.solarisService.currentVswitch = vsw;
     this.openVswitchModal();
     // check if modal canceled, and don't remove if so
-    this.CDOM.vsw.splice(vswIndex,1);
+    this.CDOM.vsw.splice(vswIndex, 1);
 
   }
 }
