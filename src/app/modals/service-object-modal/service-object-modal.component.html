@@ -58,8 +58,6 @@
             formControlName="destinationPort"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.destinationPort.errors }"
-            [dropSpecialCharacters]="false"
-            mask="09999-09999"
             aria-label="Destination Port"
           />
           <div *ngIf="submitted && f.destinationPort.errors" class="invalid-feedback">
@@ -83,8 +81,6 @@
           formControlName="sourcePort"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
-          [dropSpecialCharacters]="false"
-          mask="09999-09999"
           aria-label="Source Port"
         />
         <div *ngIf="submitted && f.sourcePort.errors" class="invalid-feedback">

@@ -73,7 +73,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       type: ['', Validators.required],
       destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])],
-      sourcePort: ['', Validators.compose([ValidatePortRange])]
+      sourcePort: ['', Validators.compose([Validators.required , ValidatePortRange])]
     });
   }
 
