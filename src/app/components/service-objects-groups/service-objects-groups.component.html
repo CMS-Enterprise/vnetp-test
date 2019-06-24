@@ -23,7 +23,7 @@
           [hidden]="!dirty"
         >
         Save Changes to Current Tier (VRF)
-      </button>   
+      </button>
       <button
         type="button"
         class="btn btn-warning mr-1"
@@ -57,7 +57,7 @@
         >
       </li>
     </ul>
-  
+
     <div *ngIf="navIndex == 0">
       <div class="btn-group-sm m-2" role="group">
         <button
@@ -69,7 +69,7 @@
 Create Service Object
       </button>
       </div>
-  
+
       <div class="card">
         <table class="table table-striped table-sm">
           <thead>
@@ -95,7 +95,7 @@ Create Service Object
               <td>
                 <p>{{ serviceObject.DestinationPort }}</p>
               </td>
-              <td>
+              <td class="item-actions">
                 <fa
                   name="pencil"
                   (click)="editServiceObject(serviceObject)"
@@ -109,14 +109,14 @@ Create Service Object
                 </fa>
               </td>
             </tr>
-            <tr *ngIf="serviceObjects?.length === 0" class="text-center">
-                <td colspan="4">No Service Objects in this TIer (VRF).</td>
-              </tr>
+            <tr *ngIf="!serviceObjects?.length" class="text-center">
+              <td colspan="4">No Service Objects in this TIer (VRF).</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
-  
+
     <div *ngIf="navIndex == 1">
       <div class="btn-group-sm m-2" role="group">
         <button
@@ -127,7 +127,7 @@ Create Service Object
         >
 Create Service Object Group        </button>
       </div>
-  
+
       <div class="card">
         <table class="table table-striped table-sm">
           <thead>

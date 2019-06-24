@@ -1,8 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+// 3rd party imports
 @import '~ngx-toastr/toastr.css';
 @import '~ngx-smart-modal/ngx-smart-modal';
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~font-awesome/css/font-awesome.css';
+
+// custom imports
+@import 'variables',
+        'buttons',
+        'tables';
+
+a {
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+fa {
+  margin-right: 5px;
+}
+
+.disabled,
+*:disabled {
+    cursor: not-allowed;
+}
 
 .pill-default {
     background-color: #0d146d;
@@ -13,18 +33,12 @@
     padding: 2px 5px 2px 5px;
 }
 
-.fg-danger{
-    color: red;
+.fg-danger {
+    color: $danger;
 }
 
-.fg-success{
-    color:green;
-}
-
-.breadcrumbs{
-    height: 100px;
-    text-align:center;
-    line-height:50px;
+.fg-success {
+    color: $success;
 }
 
 .large-modal {
@@ -41,6 +55,6 @@
     text-transform: capitalize;
  }
 
- .text-bold{
-    font-weight:bold;
+ .text-bold {
+    font-weight: bold;
 }
