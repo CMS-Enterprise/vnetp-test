@@ -35,6 +35,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalVswitch: SolarisVswitch;
   modalAddTaggedVlan: number;
   dirty: boolean;
+  editCDOM: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -96,6 +97,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LogicalInterfaces = new Array<LogicalInterface>();
     this.getVrfs();
     if ( this.solarisService.currentCdom.device_id != null ) {
+      this.editCDOM = true;
       this.automationApiService.getDevicesbyID(this.solarisService.currentCdom.device_id).subscribe(data => {
           const result = data as SolarisCdom;
           this.CDOM = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
@@ -108,6 +110,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
+
     // TODO: Tie to reactive form pristine.
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
@@ -116,7 +119,12 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
-    this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+    if (this.editCDOM != true ) {
+      this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+    }
+    else{
+      this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
+    }
     this.router.navigate(['/solaris/cdom/list']);
   }
 

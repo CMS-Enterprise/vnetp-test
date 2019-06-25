@@ -46,6 +46,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   ramCountArray: number[];
   dirty: boolean;
   vnicModalUntaggedVlan: number;
+  editLdom: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -62,6 +63,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
+
 
   }
   addVariable() {
@@ -98,8 +100,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.LDOM = this.LDOM;
 
     const body = { extra_vars };
-
-    this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    if ( this.editLdom != true) {
+      this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    } else {
+      this.automationApiService.launchTemplate('edit-ldom', body, true).subscribe();
+    }
     this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
@@ -111,6 +116,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LDOM.vds = new Array<any>();
     this.addVdsDev = new SolarisVdsDevs();
     this.modalVnic = new SolarisVnic();
+    this.editLdom = false;
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
@@ -124,7 +130,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.solarisService.parentCdom = new SolarisCdom();
     }
     if ( this.solarisService.currentLdom.name != null){
-
+      this.editLdom = true;
       this.LDOM = this.solarisService.currentLdom;
       this.automationApiService.getDevicesbyID(this.solarisService.currentLdom.associatedcdom.device_id).subscribe(data => {
         const result = data as SolarisCdom;
