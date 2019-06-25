@@ -1,5 +1,5 @@
 <h4>{{ Cdom?.name }}</h4>
-<button class="btn btn-danger" (click)="deleteCdom(Cdom)">
+<button class="btn btn-danger" (click)="ngxSm.getModal('deleteCdomModal').open()">
   Delete CDOM
 </button>
 <ul class="nav nav-tabs">
@@ -64,3 +64,52 @@
           </table>
         </div>
       </div>
+
+<ngx-smart-modal
+  #deleteCdomModal
+  identifier="deleteCdomModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete CDOM?</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="deleteCdomConfirm = ''; deleteCdomModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body text-center">
+    <p>This will also delete all child objects associated with this CDOM.</p>
+
+    <h6 class="text-danger">
+      DANGER: The CDOM will be permanently deleted and deprovisioned.
+    </h6>
+
+    <p class="py-3">Type 'DELETE' and click 'Yes'</p>
+    <input class="form-control" [(ngModel)]="deleteCdomConfirm" />
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="deleteCdom()"
+      [disabled]="deleteCdomConfirm !== 'DELETE'"
+    >
+      Yes
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="deleteCdomConfirm = ''; deleteCdomModal.close()"
+    >
+      No
+    </button>
+  </div>
+</ngx-smart-modal>
