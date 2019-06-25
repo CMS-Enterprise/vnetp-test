@@ -1,20 +1,29 @@
-<button class="btn btn-success btn-sm mb-2" routerLink="/solaris/ldom/create">New LDOM</button>
+<h1>LDOM List</h1>
 
-<div class="card">
-  <table class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ldom of Ldoms">
-        <td>
-          <a routerLink="/solaris/ldom/detail/{{ ldom.device_id }}">
-            <fa name="server" style="color:black;"></fa> {{ ldom.name }}
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<button
+  class="btn btn-success btn-sm mb-2 pull-right"
+  routerLink="/solaris/ldom/create"
+>
+  <fa name="plus"></fa>
+  New LDOM
+</button>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let ldom of Ldoms">
+      <td>
+        <a routerLink="/solaris/ldom/detail/{{ ldom.device_id }}">
+          <fa name="server" style="color:black;"></fa> {{ ldom.name }}
+        </a>
+      </td>
+    </tr>
+    <tr *ngIf="!Ldoms?.length" class="text-center">
+      <td colspan="1">No LDOMs</td>
+    </tr>
+  </tbody>
+</table>

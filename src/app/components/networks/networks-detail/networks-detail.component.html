@@ -13,27 +13,18 @@
 </div>
 
 <div *ngIf="subnet">
-  <p>
-    <strong>Network:</strong> {{ subnet?.network }}/{{ subnet?.mask_bits }}
-  </p>
-  <p>
-    <strong>Gateway:</strong> {{ subnet?.gateway }}
-  </p>
+  <p><strong>Network:</strong> {{ subnet?.network }}/{{ subnet?.mask_bits }}</p>
+  <p><strong>Gateway:</strong> {{ subnet?.gateway }}</p>
   <p>
     <strong>Range:</strong> {{ subnet?.range_begin }} - {{ subnet?.range_end }}
   </p>
-  <p>
-    <strong>Tier (VRF):</strong> {{ subnet?.vrf_group_name }}
-  </p>
-  <p>
-    <strong>Deployed:</strong> {{ getDeployedState(subnet) }}
-  </p>
-  <p>
-    <strong>VLAN:</strong> {{ getVlan(subnet) }}
-  </p>
+  <p><strong>Tier (VRF):</strong> {{ subnet?.vrf_group_name }}</p>
+  <p><strong>Deployed:</strong> {{ getDeployedState(subnet) }}</p>
+  <p><strong>VLAN:</strong> {{ getVlan(subnet) }}</p>
 </div>
 
-<h3 class="mt-5">IP Addresses</h3>
+<hr />
+<!-- <h3 class="mt-5">IP Addresses</h3> -->
 
 <app-ipaddresses
   *ngIf="subnet"

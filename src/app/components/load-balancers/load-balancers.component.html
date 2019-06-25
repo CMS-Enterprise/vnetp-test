@@ -1,5 +1,6 @@
 <div>
   <h1>Load Balancers</h1>
+
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
       <span class="col-form-label mr-2">VRF</span>
@@ -58,7 +59,7 @@
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm m-2 pull-right mt-3" role="group">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button
         type="button"
         class="btn btn-success"
@@ -84,21 +85,21 @@
       <tbody>
         <tr *ngFor="let virtualServer of virtualServers">
           <td>
-            <p>{{ virtualServer.Name }}</p>
+            <span>{{ virtualServer.Name }}</span>
           </td>
           <td>
-            <p>{{ virtualServer.Type }}</p>
+            <span>{{ virtualServer.Type }}</span>
           </td>
           <td>
-            <p>{{ virtualServer.DestinationAddress }}</p>
+            <span>{{ virtualServer.DestinationAddress }}</span>
           </td>
           <td>
-            <p>{{ virtualServer.ServicePort }}</p>
+            <span>{{ virtualServer.ServicePort }}</span>
           </td>
           <td>
-            <p>{{ virtualServer.Pool }}</p>
+            <span>{{ virtualServer.Pool }}</span>
           </td>
-          <td>
+          <td class="item-actions">
             <fa
               name="pencil"
               (click)="editVirtualServer(virtualServer)"
@@ -116,7 +117,7 @@
   </div>
 
   <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm m-2 pull-right  mt-3" role="group">
+    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button
         type="button"
         class="btn btn-success"
@@ -141,18 +142,18 @@
       <tbody>
         <tr *ngFor="let pool of pools">
           <td>
-            <p>{{ pool.Name }}</p>
+            <span>{{ pool.Name }}</span>
           </td>
           <td>
-            <p>{{ pool.LoadBalancingMethod }}</p>
+            <span>{{ pool.LoadBalancingMethod }}</span>
           </td>
           <td>
-            <p>{{ pool.Members?.length }}</p>
+            <span>{{ pool.Members?.length }}</span>
           </td>
           <td>
-            <p>{{ pool.HealthMonitors?.length }}</p>
+            <span>{{ pool.HealthMonitors?.length }}</span>
           </td>
-          <td>
+          <td class="item-actions">
             <fa name="pencil" (click)="editPool(pool)" aria-label="Edit Pool">
             </fa>
             <fa
@@ -172,7 +173,7 @@
   <!-- </div> -->
 
   <div *ngIf="navIndex == 2">
-    <div class="btn-group-sm m-2 pull-right  mt-3" role="group">
+    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button
         type="button"
         class="btn btn-success"
@@ -194,9 +195,9 @@
       <tbody>
         <tr *ngFor="let irule of irules">
           <td>
-            <p>{{ irule.Name }}</p>
+            <span>{{ irule.Name }}</span>
           </td>
-          <td>
+          <td class="item-actions">
             <fa
               name="pencil"
               (click)="editIRule(irule)"
@@ -219,7 +220,7 @@
   </div>
 
   <div *ngIf="navIndex == 3">
-    <div class="btn-group-sm m-2 pull-right  mt-3" role="group">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button
         type="button"
         class="btn btn-success"
@@ -245,21 +246,21 @@
       <tbody>
         <tr *ngFor="let healthMonitor of healthMonitors">
           <td>
-            <p>{{ healthMonitor.Name }}</p>
+            <span>{{ healthMonitor.Name }}</span>
           </td>
           <td>
-            <p>{{ healthMonitor.Type }}</p>
+            <span>{{ healthMonitor.Type }}</span>
           </td>
           <td>
-            <p>{{ healthMonitor.ServicePort }}</p>
+            <span>{{ healthMonitor.ServicePort }}</span>
           </td>
           <td>
-            <p>{{ healthMonitor.Interval }}</p>
+            <span>{{ healthMonitor.Interval }}</span>
           </td>
           <td>
-            <p>{{ healthMonitor.Timeout }}</p>
+            <span>{{ healthMonitor.Timeout }}</span>
           </td>
-          <td>
+          <td class="item-actions">
             <fa
               name="pencil"
               (click)="editHealthMonitor(healthMonitor)"
@@ -281,15 +282,13 @@
     </table>
   </div>
 
-  <div class="pull-right">
-    <div *ngIf="currentVrf">
-      <app-import-export
-        [exportObject]="exportLoadBalancerConfig()"
-        exportFileName="loadBalancers-{{ currentVrf.name }}"
-        disableCsv="true"
-        (import)="importLoadBalancerConfig($event)"
-      ></app-import-export>
-    </div>
+  <div *ngIf="currentVrf" class="pull-right">
+    <app-import-export
+      [exportObject]="exportLoadBalancerConfig()"
+      exportFileName="loadBalancers-{{ currentVrf.name }}"
+      disableCsv="true"
+      (import)="importLoadBalancerConfig($event)"
+    ></app-import-export>
   </div>
 
   <app-virtual-server-modal></app-virtual-server-modal>

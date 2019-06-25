@@ -1,4 +1,6 @@
 <div>
+  <h1>IP Addresses</h1>
+
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <button type="button" class="btn btn-info" (click)="getIps()">
       <fa name="refresh"></fa>
@@ -21,15 +23,23 @@
           {{ ip?.ip }}
         </td>
         <td>
-          <a *ngIf="!subnetId" routerLink="/networks/edit/{{ ip?.subnet_id }}">{{ ip?.subnet }}</a>
-          <p *ngIf="subnetId">This Subnet</p>
+          <a
+            *ngIf="!subnetId"
+            routerLink="/networks/edit/{{ ip?.subnet_id }}"
+            >{{ ip?.subnet }}</a
+          >
+          <span *ngIf="subnetId">This Subnet</span>
         </td>
         <td>
-          <a *ngIf="ip?.device" routerLink="/devices/edit/{{ ip?.device_id }}">{{ ip?.device }}</a>
-          <p *ngIf="!ip?.device">N/A</p>
+          <a
+            *ngIf="ip?.device"
+            routerLink="/devices/edit/{{ ip?.device_id }}"
+            >{{ ip?.device }}</a
+          >
+          <span *ngIf="!ip?.device">N/A</span>
         </td>
         <td>
-          {{ip?.available}}
+          {{ ip?.available }}
         </td>
       </tr>
       <tr *ngIf="!ipResult?.ips?.length" class="text-center">

@@ -1,86 +1,92 @@
-<h4>{{ Ldom?.name }}</h4>
+<h1 class="mb-3">LDOM: {{ Ldom?.name }}</h1>
 
 <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0">
-        <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-          >Summary</a
-        >
-      </li>
-      <li class="nav-item" (click)="navIndex = 1">
-          <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-            >Virtual Disks</a
-          >
-        </li>
-    <li class="nav-item" (click)="navIndex = 2">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
-        >Virtual Networks</a
-      >
-    </li>
-  </ul>
+  <li class="nav-item" (click)="navIndex = 0">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Summary</a>
+  </li>
+  <li class="nav-item" (click)="navIndex = 1">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">Virtual Disks</a>
+  </li>
+  <li class="nav-item" (click)="navIndex = 2">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
+      >Virtual Networks</a
+    >
+  </li>
+</ul>
 
-  <div *ngIf="navIndex == 0">
-      <div class="card">
-        <div class="form-row text-center">
-          <div class="form-group col-md-4">vCPU: {{ LdomMetadata?.vcpu }}</div>
-          <div class="form-group col-md-4">Memory: {{ LdomMetadata?.memory }}</div>
-        </div>
-      </div>
-    </div>
+<div *ngIf="navIndex == 0">
+  <div class="p-3">
+    <p>
+      <strong>vCPU: </strong>
+      {{ LdomMetadata?.vcpu }}
+    </p>
+    <p>
+      <strong>Memory: </strong>
+      {{ LdomMetadata?.memory }}
+    </p>
+  </div>
+</div>
 
-    <div *ngIf="navIndex == 1">
-      <div class="card">
-          <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Disk Size</th>
-                  <th scope="col">VDS</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let vsw of LdomMetadata.vds">
-                  <td>
-                    <p>{{ vsw?.diskName }}</p>
-                  </td>
-                  <td>
-                    <p>{{ vsw?.diskSize }}</p>
-                  </td>
-                  <td>
-                    <p>{{ vsw?.vds }}</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-      </div>
-    </div>
+<div *ngIf="navIndex == 1">
+  <div class="p-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Disk Size</th>
+          <th scope="col">VDS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vsw of LdomMetadata.vds">
+          <td>
+            <span>{{ vsw?.diskName }}</span>
+          </td>
+          <td>
+            <span>{{ vsw?.diskSize }}</span>
+          </td>
+          <td>
+            <span>{{ vsw?.vds }}</span>
+          </td>
+        </tr>
+        <tr *ngIf="!LdomMetadata.vds?.length" class="text-center">
+          <td colspan="3">No Virtual Disks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    <div *ngIf="navIndex == 2">
-        <div class="card">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Virtual Switch Name</th>
-                <th scope="col">Untagged VLAN</th>
-                <th scope="col">Tagged VLANs</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let vnet of LdomMetadata.vnet">
-                <td>
-                  <p>{{ vnet?.Name }}</p>
-                </td>
-                <td>
-                  <p>{{ vnet?.VirtualSwitchName }}</p>
-                </td>
-                <td>
-                  <p>{{ vnet?.TaggedVlans }}</p>
-                </td>
-                <td>
-                  <p>{{ vnet?.UntaggedVlans }}</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+<div *ngIf="navIndex == 2">
+  <div class="p-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Virtual Switch Name</th>
+          <th scope="col">Untagged VLAN</th>
+          <th scope="col">Tagged VLANs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vnet of LdomMetadata.vnet">
+          <td>
+            <span>{{ vnet?.Name }}</span>
+          </td>
+          <td>
+            <span>{{ vnet?.VirtualSwitchName }}</span>
+          </td>
+          <td>
+            <span>{{ vnet?.TaggedVlans }}</span>
+          </td>
+          <td>
+            <span>{{ vnet?.UntaggedVlans }}</span>
+          </td>
+        </tr>
+        <tr *ngIf="!LdomMetadata.vnet?.length" class="text-center">
+          <td>No Virtual Networks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
