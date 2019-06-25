@@ -128,6 +128,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         }
 
         this.form.controls.translatedIp.updateValueAndValidity();
+        this.form.controls.sourceSubnet.updateValueAndValidity();
         this.form.controls.destinationSubnet.updateValueAndValidity();
       });
 
