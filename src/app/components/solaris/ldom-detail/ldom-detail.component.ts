@@ -22,7 +22,7 @@ export class LdomDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private automationApiService: AutomationApiService,
     private hs: HelpersService,
-    private ngxSm: NgxSmartModalService,
+    public ngxSm: NgxSmartModalService,
     private router: Router) { }
 
   ngOnInit() {
@@ -38,11 +38,11 @@ export class LdomDetailComponent implements OnInit {
       }
     )
   }
-  deleteLdom(device: SolarisLdom){
+  deleteLdom() {
     if (this.deleteLdomConfirm !== 'DELETE') { return; }
 
     const extra_vars: {[k:string]: any} = {};
-    extra_vars.id = device.device_id;
+    extra_vars.id = this.Ldom.device_id;
     const body = { extra_vars };
     this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
     this.router.navigate(['/solaris/ldom/list']);

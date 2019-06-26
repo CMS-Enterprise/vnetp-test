@@ -24,7 +24,7 @@ export class CdomDetailComponent implements OnInit {
       private route: ActivatedRoute,
       private automationApiService: AutomationApiService, 
       private hs: HelpersService,
-      private ngxSm: NgxSmartModalService,
+      public ngxSm: NgxSmartModalService,
       private router: Router) { }
 
   ngOnInit() {
@@ -41,16 +41,16 @@ export class CdomDetailComponent implements OnInit {
     );
 
   }
-  deleteCdom(device: SolarisCdom){ 
+  deleteCdom() { 
     if (this.deleteCdomConfirm !== 'DELETE') { return; }
 
     //returns an array of device ids to be deleted
-    this.automationApiService.getLDomsForCDom(device.name).subscribe(data => {
+    this.automationApiService.getLDomsForCDom(this.Cdom.name).subscribe(data => {
       const result = data as any;
       const toDeleteLdoms = result.Devices as Array<SolarisLdom>;
       let toDeleteIDs = new Array<any>();
       //push CDOM id
-      toDeleteIDs.push(device.device_id);
+      toDeleteIDs.push(this.Cdom.device_id);
       // check if any LDOM ids to add.
       if( toDeleteLdoms.length >= 1) {
         //push each LDOM id to array
