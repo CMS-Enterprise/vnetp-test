@@ -20,7 +20,7 @@ export class SolarisCdomListComponent implements OnInit {
   CDOMDeviceArray: Array<any>;
   associatedLdoms: Array<any>;
   finishedAssociatedLdomList = false;
-
+  LdomDict: {[k: string]: any} = {};
   deleteCdomConfirm: string;
   cdomToDelete: SolarisCdom;
 
@@ -41,10 +41,15 @@ export class SolarisCdomListComponent implements OnInit {
   }
 
   getLdomsForCDom(name: string) {
+    console.log('NAME', name);
     this.automationApiService.getLDomsForCDom(name)
     .subscribe(data => {
+      let length = 0;
       const ldomForCDomResponse = data as SolarisLdomResponse;
-      this.returnLDOMs = ldomForCDomResponse.Devices;
+      if ( ldomForCDomResponse != null) {
+        length = ldomForCDomResponse.total_count;
+      }
+      return length;
     });
   }
 
