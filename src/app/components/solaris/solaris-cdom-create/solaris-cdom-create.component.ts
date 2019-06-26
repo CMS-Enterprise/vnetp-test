@@ -35,6 +35,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalVswitch: SolarisVswitch;
   modalAddTaggedVlan: number;
   dirty: boolean;
+  editCDOM: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -78,10 +79,10 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   ngOnInit() {
     this.dirty = true;
     this.CDOM = new SolarisCdom();
-    this.CDOM.vccname = "primary-vcc0";
-    this.CDOM.vnet = "vnet0";
-    this.CDOM.vccports = "5000-5100";
-    this.CDOM.net_device = "net0";
+    this.CDOM.vccname = 'primary-vcc0';
+    this.CDOM.vnic = 'vnic0';
+    this.CDOM.vccports = '100';
+    this.CDOM.net_device = 'net0';
     this.automationApiService.getCDoms().subscribe(data => {
       const cdomResponse = data as SolarisCdomResponse;
       this.CDOMDeviceArray = cdomResponse.Devices;
@@ -96,6 +97,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LogicalInterfaces = new Array<LogicalInterface>();
     this.getVrfs();
     if ( this.solarisService.currentCdom.device_id != null ) {
+      this.editCDOM = true;
       this.automationApiService.getDevicesbyID(this.solarisService.currentCdom.device_id).subscribe(data => {
           const result = data as SolarisCdom;
           this.CDOM = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
@@ -108,6 +110,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
+
     // TODO: Tie to reactive form pristine.
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
@@ -116,12 +119,17 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
-    this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+    if (this.editCDOM != true ) {
+      this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+    }
+    else{
+      this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
+    }
     this.router.navigate(['/solaris/cdom/list']);
   }
 
   openVswitchModal() {
-    if (this.solarisService.currentVswitch === null){
+    if (this.solarisService.currentVswitch === null) {
        this.modalVswitch = new SolarisVswitch();
        this.modalVswitch.vlansTagged = new Array<number>();
     } else {
@@ -133,8 +141,8 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVswitch() {
-    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)){
-      this.toastr.error('Native VLAN cannot be in Tagged VLANs.')
+    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)) {
+      this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
 
@@ -177,7 +185,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.solarisService.currentVswitch = vsw;
     this.openVswitchModal();
     // check if modal canceled, and don't remove if so
-    this.CDOM.vsw.splice(vswIndex,1);
+    this.CDOM.vsw.splice(vswIndex, 1);
 
   }
 }
