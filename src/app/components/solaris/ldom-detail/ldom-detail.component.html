@@ -1,5 +1,7 @@
 <h1 class="mb-3">LDOM: {{ Ldom?.name }}</h1>
 
+<!--TODO: Fix Button Layout-->
+<button class="btn btn-danger" (click)="ngxSm.getModal('deleteLdomModal').open()">Delete LDOM</button>
 <ul class="nav nav-tabs">
   <li class="nav-item" (click)="navIndex = 0">
     <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Summary</a>
@@ -90,3 +92,52 @@
     </table>
   </div>
 </div>
+
+<ngx-smart-modal
+  #deleteLdomModal
+  identifier="deleteLdomModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete LDOM?</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="deleteLdomConfirm = ''; deleteLdomModal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body text-center">
+    <p>This will also delete all child objects associated with this LDOM.</p>
+
+    <h6 class="text-danger">
+      DANGER: The LDOM will be permanently deleted and deprovisioned.
+    </h6>
+
+    <p class="py-3">Type 'DELETE' and click 'Yes'</p>
+    <input class="form-control" [(ngModel)]="deleteLdomConfirm" />
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      (click)="deleteLdom()"
+      [disabled]="deleteLdomConfirm !== 'DELETE'"
+    >
+      Yes
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="deleteLdomConfirm = ''; deleteLdomModal.close()"
+    >
+      No
+    </button>
+  </div>
+</ngx-smart-modal>

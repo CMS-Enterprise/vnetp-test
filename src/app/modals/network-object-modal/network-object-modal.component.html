@@ -21,6 +21,7 @@
         <label for="name">Name</label>
         <input
           type="text"
+          appIsAlphanumeric
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -48,24 +49,6 @@
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
           <div *ngIf="f.type.errors.required">Type is required</div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="sourceSubnet">Source Subnet</label>
-        <select
-          name="sourceSubnet"
-          formControlName="sourceSubnet"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourceSubnet.errors }"
-          aria-label="Source Subnet"
-        >
-          <option></option>
-          <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets"
-            >{{ subnet.name }} ({{ subnet.network }}/{{
-              subnet.mask_bits
-            }})</option
-          >
-        </select>
       </div>
 
       <div class="form-group" *ngIf="f.type.value == 'host'">
@@ -188,6 +171,21 @@
             NAT
           </label>
         </div>
+      </div>
+
+      
+      <div class="form-group" *ngIf="f.nat.value">
+        <label for="sourceSubnet">Source Subnet</label>
+        <select
+        name="sourceSubnet"
+        formControlName="sourceSubnet"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.sourceSubnet.errors }"
+        aria-label="Source Subnet"
+        >
+        <option></option>
+        <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets">{{ subnet.name }} ({{ subnet.network }}/{{ subnet.mask_bits }})</option>
+        </select>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">

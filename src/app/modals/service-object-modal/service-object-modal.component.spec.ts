@@ -87,16 +87,8 @@ describe('ServiceObjectModalComponent', () => {
     expect(destinationPort.valid).toBeFalsy();
   });
 
-  it ('sourcePort should not be required', () =>  {
+  it ('sourcePort should be required', () =>  {
     const sourcePort = component.form.controls.sourcePort;
-    expect(sourcePort.valid).toBeTruthy();
-  });
-
-  // Source Port
-  it ('destination port should not be required when source port set', () => {
-    const sourcePort = component.form.controls.sourcePort;
-    sourcePort.setValue('80');
-    const destinationPort = component.form.controls.destinationPort;
-    expect(destinationPort.valid).toBeTruthy();
+    expect(sourcePort.valid).toBeFalsy();
   });
 });

@@ -22,6 +22,7 @@
         <label for="name">Name</label>
         <input
           type="text"
+          appIsAlphanumeric
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -82,7 +83,7 @@
               <p *ngIf="netObj.Type === 'range'">
                 {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
               </p>
-              <p *ngIf="netObj.Type === 'network'">
+              <p *ngIf="netObj.Type === 'subnet'">
                 {{ netObj.CidrAddress }}
               </p>
             </td>

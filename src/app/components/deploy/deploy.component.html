@@ -9,8 +9,16 @@
         >Networks</a
       >
     </li>
+    <li class="nav-item">
+        <a
+          class="nav-link"
+          [ngClass]="{ active: tabIndex === 1 }"
+          (click)="tabIndex = 1"
+          >Solaris</a
+        >
+      </li> 
   </ul>
-  <div class="p-3">
+  <div class="p-3" *ngIf="tabIndex == 0">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -46,4 +54,19 @@
   >
     Deploy Networks
   </button>
+
+  <div *ngIf="tabIndex == 1">
+    <div class="btn-group-sm m-2" role="group">
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="deploySolaris()"
+        aria-label="Create Pool"
+      >
+        Deploy Solaris
+      </button>
+    </div>
+
+
+  </div>
 </div>
