@@ -49,6 +49,8 @@ export class SolarisCdom {
   /** Associated LDOMs */
   associatedldoms = new Array<string>();
 
+  ldomCount: number
+
   // TODO: Do we need these??
   // ilomname: string;
   // ilomipaddress: string;
