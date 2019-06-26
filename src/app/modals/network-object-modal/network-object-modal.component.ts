@@ -117,14 +117,18 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           this.form.controls.type.updateValueAndValidity();
           this.form.controls.translatedIp.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
           this.form.controls.destinationSubnet.setValidators(Validators.compose([Validators.required]));
+          this.form.controls.sourceSubnet.setValidators(Validators.compose([Validators.required]));
         } else if (!natValue) {
           this.form.controls.translatedIp.setValue(null);
           this.form.controls.translatedIp.setValidators(null);
           this.form.controls.destinationSubnet.setValue(null);
           this.form.controls.destinationSubnet.setValidators(null);
+          this.form.controls.sourceSubnet.setValue(null);
+          this.form.controls.sourceSubnet.setValidators(null);
         }
 
         this.form.controls.translatedIp.updateValueAndValidity();
+        this.form.controls.sourceSubnet.updateValueAndValidity();
         this.form.controls.destinationSubnet.updateValueAndValidity();
       });
 
@@ -186,7 +190,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       hostAddress: [''],
       startAddress: [''],
       endAddress: [''],
-      sourceSubnet: ['', Validators.required],
+      sourceSubnet: [''],
       destinationSubnet: [''],
       nat: [false],
       translatedIp: [''],
@@ -215,6 +219,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   private reset() {
     this.unsubAll();
     this.submitted = false;
+    this.Subnets = new Array<Subnet>();
     this.buildForm();
     this.setFormValidators();
   }

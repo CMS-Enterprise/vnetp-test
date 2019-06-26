@@ -62,9 +62,9 @@ describe('NetworkObjectModalComponent', () => {
     expect(type.valid).toBeFalsy();
   });
 
-  it ('source subnet should be required', () => {
+  it ('source subnet should not be required', () => {
     const sourceSubnet = component.form.controls.sourceSubnet;
-    expect(sourceSubnet.valid).toBeFalsy();
+    expect(sourceSubnet.valid).toBeTruthy();
   });
 
   it ('destination subnet should not be required', () => {
@@ -130,6 +130,14 @@ describe('NetworkObjectModalComponent', () => {
 
     const translatedAddress = component.form.controls.translatedIp;
     expect(translatedAddress.valid).toBeFalsy();
+  });
+
+  it('source subnet should be required', () => {
+    const nat = component.form.controls.nat
+    nat.setValue(true);
+
+    const sourceSubnet = component.form.controls.sourceSubnet;
+    expect(sourceSubnet.valid).toBeFalsy();
   });
 
   it('destination subnet should be required', () => {

@@ -4,7 +4,7 @@ import { SolarisLdom } from '../../../models/solaris/solaris-ldom';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user/user';
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
-import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
+import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 
 @Injectable({
@@ -21,8 +21,9 @@ export class SolarisService {
   AllSolaris: Array<any>;
   parentCdom = new SolarisCdom();
   currentCdom = new SolarisCdom();
+  currentLdom = new SolarisLdom();
   currentVswitch = new SolarisVswitch();
-  currentVnet = new SolarisVnet();
+  currentVnic = new SolarisVnic();
   currentVds = new SolarisVdsDevs();
   constructor(
     private auth: AuthService
