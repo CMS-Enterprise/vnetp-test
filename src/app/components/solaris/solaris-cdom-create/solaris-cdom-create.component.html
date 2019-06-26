@@ -42,7 +42,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="inputCDOMvCPU">vCPU</label>
         <select
           name="inputCDOMvCPU"
@@ -58,7 +58,7 @@
         </select>
       </div>
 
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="inputCDOMMemory">RAM (GB)</label>
         <select
           name="inputCDOMMemory"
@@ -73,26 +73,7 @@
           >
         </select>
       </div>
-
-      <!--TODO: Validate ngModel and functionality -->
-    </div>
-
-    <hr />
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputCDOMVCCname">VCC Name</label>
-        <input
-          name="inputCDOMVCCname"
-          aria-label="CDOM VCC name"
-          class="form-control"
-          #vccName="ngModel"
-          [(ngModel)]="CDOM.vccname"
-        />
-      </div>
-
-      <!--TODO: Add Range Validator-->
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-4">
         <label for="inputCDOMVccports"># VCC Ports</label>
         <input
           name="inputCDOMVccports"
@@ -102,9 +83,11 @@
           [(ngModel)]="CDOM.vccports"
         >
        </div>
+      <!--TODO: Validate ngModel and functionality -->
     </div>
 
     <hr />
+
 
     <div class="form-group">
       <label>vSwitches</label>
