@@ -76,6 +76,9 @@ export class AutomationApiService {
   getLDomByName(name: string) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
+  getCDomByName(name: string) {
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&virtual_host_name=${name}`);
+  }
 
   getLDomsForCDom(name: string){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);

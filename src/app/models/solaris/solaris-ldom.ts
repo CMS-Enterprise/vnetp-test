@@ -1,7 +1,7 @@
 import { SolarisVariable } from './solaris-variable';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 import { SolarisCdom } from './solaris-cdom';
-import { SolarisVnet } from './solaris-vnet';
+import { SolarisVnic } from './solaris-vnic';
 import { SolarisVdsDevs } from './solaris-vds-devs';
 export class SolarisLdom {
   public custom_fields: Array<CustomField>;
@@ -22,8 +22,8 @@ export class SolarisLdom {
   /** Net Install */
   net_install: boolean;
 
-  /** Assigned vNets */
-  vnet = new Array<SolarisVnet>();
+  /** Assigned vNics */
+  vnic = new Array<SolarisVnic>();
 
   /** Solaris Variables */
   variables: Array<SolarisVariable>;
@@ -32,7 +32,7 @@ export class SolarisLdom {
   // create_manifest: string;
   // add_vds_cmd = new Array<string>();
   // add_vdisk_cmd = new Array<string>();
-  // add_vnet_cmd = new Array<string>();
+  // add_vnic_cmd = new Array<string>();
 
   // TODO: Review with Praveen
   add_vdsdev: string;
