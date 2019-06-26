@@ -32,7 +32,12 @@
         disableExport="true"
       ></app-import-export>
 
-      <button type="button" class="btn btn-info mr-1" (click)="getNetwork()" *ngIf="!dirty">
+      <button
+        type="button"
+        class="btn btn-info mr-1"
+        (click)="getNetwork()"
+        *ngIf="!dirty"
+      >
         <fa name="refresh"></fa>
         Refresh
       </button>
@@ -71,7 +76,7 @@
             mask="099.099.099.099"
           />
         </td>
-        <td>
+        <td class="item-actions">
           <fa
             name="floppy-o"
             (click)="route.Edit = !route.Edit"
@@ -86,7 +91,11 @@
     </tbody>
   </table>
 
-  <div *ngIf="staticRoutes?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
+  <div
+    *ngIf="staticRoutes?.length"
+    class="btn-toolbar mb-2 pull-right"
+    role="toolbar"
+  >
     <div class="btn-group-sm">
       <app-import-export
         [exportObject]="staticRoutes"

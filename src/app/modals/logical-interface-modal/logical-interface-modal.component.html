@@ -48,33 +48,35 @@
           }}</option>
         </select>
 
-        Tagged VLANS
-
         <div class="form-row">
-          <div class="form-group col-md-6">
-            <select formControlName="selectedTaggedSubnet" class="form-control">
-              <option></option>
-              <option
-                *ngFor="let subnet of availableSubnets"
-                [ngValue]="subnet"
-                >{{ subnet }}</option
+          <div class="form-group col-md-12">
+            <label>Tagged VLANS</label>
+            <div class="input-group align-items-center">
+              <select
+                formControlName="selectedTaggedSubnet"
+                class="form-control"
               >
-            </select>
-          </div>
-
-          <div class="form-group">
-            <button
-              type="button"
-              class="btn btn-success"
-              (click)="selectSubnet()"
-              aria-label="Add VLAN"
-            >
-              <fa name="plus" size="1x"></fa>
-            </button>
+                <option></option>
+                <option
+                  *ngFor="let subnet of availableSubnets"
+                  [ngValue]="subnet"
+                  >{{ subnet }}</option
+                >
+              </select>
+              <button
+                type="button"
+                class="btn btn-sm btn-success"
+                (click)="selectSubnet()"
+                aria-label="Add VLAN"
+              >
+                <fa name="plus"></fa>
+                Add VLAN
+              </button>
+            </div>
           </div>
         </div>
 
-        <table class="table table-striped table-sm">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -86,25 +88,29 @@
               <td>
                 <p>{{ subnet }}</p>
               </td>
-              <td>
+              <td class="item-actions">
                 <fa name="trash" (click)="unselectSubnet(subnet)"> </fa>
               </td>
+            </tr>
+            <tr *ngIf="!selectedSubnets?.length" class="text-center">
+              <td colspan="2">No Subnets Selected</td>
             </tr>
           </tbody>
         </table>
 
         <div class="modal-footer">
-          <button class="btn btn-primary" data-dismiss="modal">
-            Save
-          </button>
-
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-link"
             data-dismiss="modal"
             (click)="cancel()"
           >
             Cancel
+          </button>
+
+          <button class="btn btn-success" data-dismiss="modal">
+            <fa name="save"></fa>
+            Save
           </button>
         </div>
       </div>

@@ -77,17 +77,17 @@
     </div>
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-12">
         <label>Image Name</label>
         <input class="form-control" [(ngModel)]="newSolarisImage.Name" />
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-12">
         <label>Version</label>
         <input class="form-control" [(ngModel)]="newSolarisImage.Version" />
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-12">
         <label>Source</label>
         <input class="form-control" [(ngModel)]="newSolarisImage.Source" />
       </div>
@@ -97,20 +97,21 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-primary"
-      data-dismiss="modal"
-      (click)="insertImage()"
-    >
-      Add
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
+      class="btn btn-link"
       data-dismiss="modal"
       (click)="imageModal.close()"
     >
       Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-success"
+      data-dismiss="modal"
+      (click)="insertImage()"
+    >
+      <fa name="save"></fa>
+      Save
     </button>
   </div>
 </ngx-smart-modal>

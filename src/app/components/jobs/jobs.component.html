@@ -29,6 +29,9 @@
         <td>{{ job.finished | date: "medium" }}</td>
         <td>{{ job.elapsed }} seconds</td>
       </tr>
+      <tr *ngIf="!jobs.results?.length" class="text-center">
+        <td colspan="5">No Jobs</td>
+      </tr>
     </tbody>
   </table>
 </div>

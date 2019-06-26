@@ -1,48 +1,48 @@
 <div>
   <form name="CDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="inputCDOMName">CDOM Name</label>
-        <input
-          name="inputCDOMName"
-          aria-label="Input CDOM Name"
-          type="text"
-          class="form-control"
-          placeholder="Name"
-          #name="ngModel"
-          [(ngModel)]="CDOM.name"
-        />
-      </div>
+    <h1 class="mb-3">CDOM</h1>
 
-      <div class="form-group col-md-4">
-        <label for="cdomClone">Clone CDOM From:</label>
-        <div class="input-group">
-          <select
-            name="cdomClone"
-            class="form-control"
-            id="cdomClone"
-            #cdomClone="ngModel"
-            [(ngModel)]="cdomInput"
+    <div class="form-group">
+      <label for="inputCDOMName">CDOM Name</label>
+      <input
+        name="inputCDOMName"
+        aria-label="Input CDOM Name"
+        type="text"
+        class="form-control"
+        placeholder="Name"
+        #name="ngModel"
+        [(ngModel)]="CDOM.name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="cdomClone">Clone CDOM From:</label>
+      <div class="input-group">
+        <select
+          name="cdomClone"
+          class="form-control"
+          id="cdomClone"
+          #cdomClone="ngModel"
+          [(ngModel)]="cdomInput"
+        >
+          <option
+            class="list-group-item"
+            *ngFor="let cdom of CDOMDeviceArray"
+            [ngValue]="cdom"
           >
-            <option
-              class="list-group-item"
-              *ngFor="let cdom of CDOMDeviceArray"
-              [ngValue]="cdom"
-            >
-              {{ cdom.name }}
-            </option>
-          </select>
-          <button class="btn btn-success" (click)="cloneCdom()">
-            Clone
-          </button>
-        </div>
+            {{ cdom.name }}
+          </option>
+        </select>
+        <button class="btn btn-info btn-sm" (click)="cloneCdom()">
+          Clone
+        </button>
       </div>
     </div>
 
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-6">
         <label for="inputCDOMvCPU">vCPU</label>
         <select
           name="inputCDOMvCPU"
@@ -58,7 +58,7 @@
         </select>
       </div>
 
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-6">
         <label for="inputCDOMMemory">RAM (GB)</label>
         <select
           name="inputCDOMMemory"
@@ -78,7 +78,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label for="inputCDOMVCCname">VCC Name</label>
         <input
           name="inputCDOMVCCname"
@@ -90,7 +90,7 @@
       </div>
 
       <!--TODO: Add Range Validator-->
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label for="inputCDOMVCCports">VCC Ports</label>
         <input
           name="inputCDOMVCCports"
@@ -104,70 +104,75 @@
 
     <hr />
 
-    <div class="form-row">
-      <div class="form-group col-md-12">
-        <label>vSwitches</label>
-        <table name="vSwitchTable" class="table">
-          <thead>
-            <tr>
-              <th>vSwitch Name</th>
-              <th>Untagged VLAN</th>
-              <th>Tagged VLAN(s)</th>
-              <th>Net Device</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let vsw of CDOM.vsw">
-              <td>{{ vsw.vSwitchName }}</td>
-              <td>{{ vsw.vlansUntagged }}</td>
-              <td>{{ vsw.vlansTagged }}</td>
-              <td>{{ vsw.netDevice }}</td>
-              <td>
-                <fa name="pencil" (click)="editVswitch(vsw)"> </fa>
-                <fa name="trash" (click)="deletevSwitch(vsw)"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <button
-          type="button"
-          name="modalVswitch"
-          class="btn btn-success"
-          (click)="openVswitchModal()"
-        >
-          Add vSwitch
-        </button>
-      </div>
+    <div class="form-group">
+      <label>vSwitches</label>
+      <button
+        type="button"
+        name="modalVswitch"
+        class="btn btn-sm btn-success pull-right mb-2"
+        (click)="openVswitchModal()"
+      >
+        <fa name="plus"></fa>
+        Add vSwitch
+      </button>
+      <table name="vSwitchTable" class="table table-striped">
+        <thead>
+          <tr>
+            <th>vSwitch Name</th>
+            <th>Untagged VLAN</th>
+            <th>Tagged VLAN(s)</th>
+            <th>Net Device</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vsw of CDOM.vsw">
+            <td>{{ vsw.vSwitchName }}</td>
+            <td>{{ vsw.vlansUntagged }}</td>
+            <td>{{ vsw.vlansTagged }}</td>
+            <td>{{ vsw.netDevice }}</td>
+            <td class="item-actions">
+              <fa name="pencil" (click)="editVswitch(vsw)"> </fa>
+              <fa name="trash" (click)="deletevSwitch(vsw)"> </fa>
+            </td>
+          </tr>
+          <tr *ngIf="!CDOM.vsw?.length" class="text-center">
+            <td colspan="5">No vSwitches</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <hr />
 
-    <div class="form-row">
-      <div class="form-group col-md-2">
-        <div class="form-check form-check-inline">
-          <input
-            name="alternateVds"
-            aria-label="Alternate VDS"
-            type="checkbox"
-            class="form-check-input"
-            #formAlternateVds="ngModel"
-            [(ngModel)]="CDOM.alternatevds"
-          />
-          <label class="form-check-label">Create Alternate VDS</label>
-        </div>
+    <div class="form-group">
+      <div class="form-check form-check-inline">
+        <input
+          name="alternateVds"
+          aria-label="Alternate VDS"
+          type="checkbox"
+          class="form-check-input"
+          #formAlternateVds="ngModel"
+          [(ngModel)]="CDOM.alternatevds"
+        />
+        <label class="form-check-label">Create Alternate VDS</label>
       </div>
     </div>
 
-    <hr />
-
-    <div class="btn-group">
+    <div class="pull-right mb-3">
+      <a
+        class="btn btn-link"
+        aria-label="Cancel"
+        routerLink="/solaris/cdom/list"
+      >
+        Cancel
+      </a>
       <button
         class="btn btn-success"
         aria-label="Save"
         (click)="launchCDOMJobs()"
       >
+        <fa name="save"></fa>
         Save
       </button>
     </div>
@@ -179,6 +184,7 @@
   identifier="vswitchModalCdom"
   customClass="'modal-content'"
   [dismissable]="false"
+  customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Add vSwitch</h4>
@@ -207,35 +213,38 @@
     </div>
     <div class="form-group">
       <label for="unTaggedVlans">Untagged VLANS</label>
-      <input class="form-control" type="number" [(ngModel)]="modalVswitch.vlansUntagged" />
-    </div>
-
-    Tagged VLANs
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <input
-          class="form-control"
-          type="number"
-          [(ngModel)]="modalAddTaggedVlan"
-        />
-      </div>
-
-      <div class="form-group">
-        <button
-          type="button"
-          class="btn btn-success"
-          [disabled]="!modalAddTaggedVlan"
-          (click)="vswitchModalAddTaggedVlan()"
-          aria-label="Add VLAN"
-        >
-          <fa name="plus" size="1x"></fa>
-        </button>
-      </div>
+      <input
+        class="form-control"
+        type="number"
+        [(ngModel)]="modalVswitch.vlansUntagged"
+      />
     </div>
 
     <div class="form-row">
-      <table class="table table-sm table-striped">
+      <div class="form-group col-md-12">
+        <label>Tagged VLANs</label>
+        <div class="input-group align-items-center">
+          <input
+            class="form-control"
+            type="number"
+            [(ngModel)]="modalAddTaggedVlan"
+          />
+          <button
+            type="button"
+            class="btn btn-sm btn-success"
+            [disabled]="!modalAddTaggedVlan"
+            (click)="vswitchModalAddTaggedVlan()"
+            aria-label="Add VLAN"
+          >
+            <fa name="plus"></fa>
+            Add VLAN
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>VLAN ID</th>
@@ -245,7 +254,15 @@
         <tbody>
           <tr *ngFor="let taggedVlan of modalVswitch.vlansTagged">
             <td>{{ taggedVlan }}</td>
-            <td><fa name="trash" (click)="vswitchModalRemoveTaggedVlan(taggedVlan)"></fa></td>
+            <td class="item-actions">
+              <fa
+                name="trash"
+                (click)="vswitchModalRemoveTaggedVlan(taggedVlan)"
+              ></fa>
+            </td>
+          </tr>
+          <tr *ngIf="!modalVswitch.vlansTagged?.length" class="text-center">
+            <td colspan="2">No Tagged VLANs</td>
           </tr>
         </tbody>
       </table>
@@ -269,20 +286,21 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-primary"
-      data-dismiss="modal"
-      (click)="insertVswitch()"
-    >
-      Add
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
+      class="btn btn-link"
       data-dismiss="modal"
       (click)="vswitchModalCdom.close()"
     >
       Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-success"
+      data-dismiss="modal"
+      (click)="insertVswitch()"
+    >
+      <fa name="save"></fa>
+      Save
     </button>
   </div>
 </ngx-smart-modal>
