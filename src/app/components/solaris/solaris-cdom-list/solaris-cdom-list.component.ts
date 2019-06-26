@@ -4,6 +4,9 @@ import { SolarisService } from '../solaris-services/solaris-service.service';
 import { Router } from '@angular/router';
 import { SolarisLdomResponse } from 'src/app/models/interfaces/solaris-load-balancer.interface';
 import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
+import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
+import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-solaris-cdom-list',
@@ -15,12 +18,17 @@ export class SolarisCdomListComponent implements OnInit {
   returnDevices: Array<any>;
   returnLDOMs: Array<any>;
   CDOMDeviceArray: Array<any>;
+  associatedLdoms: Array<any>;
+  finishedAssociatedLdomList = false;
+
+  deleteCdomConfirm: string;
+  cdomToDelete: SolarisCdom;
 
   constructor(
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
-    private router: Router
-
+    private router: Router,
+    private ngxSm: NgxSmartModalService
   ) {}
 
   ngOnInit() {

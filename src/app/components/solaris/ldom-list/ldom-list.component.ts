@@ -29,7 +29,6 @@ export class LdomListComponent implements OnInit {
     this.Ldoms = new Array<SolarisLdom>();
     this.getLdoms();
   }
-
   getLdoms() {
     if (!this.CdomName) {
       this.automationApiService.getLDoms().subscribe(
