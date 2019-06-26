@@ -5,6 +5,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { Router } from '@angular/router';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-cdom-detail',
   templateUrl: './cdom-detail.component.html',
@@ -17,10 +18,13 @@ export class CdomDetailComponent implements OnInit {
 
   navIndex = 0;
 
+  deleteCdomConfirm: string;
+
   constructor(
       private route: ActivatedRoute,
       private automationApiService: AutomationApiService, 
       private hs: HelpersService,
+      private ngxSm: NgxSmartModalService,
       private router: Router) { }
 
   ngOnInit() {
@@ -38,6 +42,8 @@ export class CdomDetailComponent implements OnInit {
 
   }
   deleteCdom(device: SolarisCdom){ 
+    if (this.deleteCdomConfirm !== 'DELETE') { return; }
+
     //returns an array of device ids to be deleted
     this.automationApiService.getLDomsForCDom(device.name).subscribe(data => {
       const result = data as any;

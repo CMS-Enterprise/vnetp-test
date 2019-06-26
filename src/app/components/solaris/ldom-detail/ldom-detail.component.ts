@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-ldom-detail',
@@ -15,10 +16,13 @@ export class LdomDetailComponent implements OnInit {
   Id: string;
   navIndex = 0;
 
+  deleteLdomConfirm = '';
+
   constructor(
     private route: ActivatedRoute,
     private automationApiService: AutomationApiService,
     private hs: HelpersService,
+    private ngxSm: NgxSmartModalService,
     private router: Router) { }
 
   ngOnInit() {
@@ -35,6 +39,8 @@ export class LdomDetailComponent implements OnInit {
     )
   }
   deleteLdom(device: SolarisLdom){
+    if (this.deleteLdomConfirm !== 'DELETE') { return; }
+
     const extra_vars: {[k:string]: any} = {};
     extra_vars.id = device.device_id;
     const body = { extra_vars };
