@@ -50,8 +50,7 @@ export class LdomListComponent implements OnInit {
       const resultLdom = dataLdom as SolarisLdom;
       this.solarisService.currentLdom = this.hs.getJsonCustomField(resultLdom, 'Metadata') as SolarisLdom;
       this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
-      console.log(this.solarisService.parentCdom);
+      this.router.navigate(['/solaris/ldom/create']);
     });
-    this.router.navigate(['/solaris/ldom/create']);
   }
 }
