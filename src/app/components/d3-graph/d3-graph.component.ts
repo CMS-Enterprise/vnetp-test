@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
-import * as contextMenuFactory from 'd3-context-menu';
+import contextMenuFactory from 'd3-context-menu';
 import * as save_svg_as_png from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
@@ -144,12 +144,11 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       this.OnNodeClick(d);
     });
 
-
-    
-
     // Handle Right Click
+    const contextMenu  = contextMenuFactory(d3);
+
     node.on('contextmenu', n => {
-      const contextMenu  = contextMenuFactory(d3);
+
 
       var menu = [
         {
@@ -170,7 +169,6 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       console.log('context menu');
       contextMenu(menu);
     });
- 
 
     // Drag Event Handlers
     if (!this.disableDrag) {
