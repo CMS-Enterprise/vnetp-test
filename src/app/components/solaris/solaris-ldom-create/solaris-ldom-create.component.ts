@@ -122,6 +122,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
+    // first case is for new LDOM within a CDOM
     if ( this.solarisService.parentCdom.device_id != null && this.solarisService.currentLdom.name == null) {
       this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
           const result = data as SolarisCdom;
@@ -129,6 +130,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       });
       this.solarisService.parentCdom = new SolarisCdom();
     }
+    // this case is for edit LDOM
     if ( this.solarisService.currentLdom.name != null){
       this.editLdom = true;
       this.LDOM = this.solarisService.currentLdom;
