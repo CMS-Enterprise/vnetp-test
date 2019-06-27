@@ -1,93 +1,77 @@
-<div class="text-center">
-  <h1>Dashboard</h1>
-</div>
+<div class="container mt-4">
+  <h2>Service Status</h2>
 
-<div class="container text-center">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Networks
-        </div>
-        <div class="card-body">
-          <h6>{{ subnets.subnets.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/networks">View</button>
-        </div>
+  <div class="card mt-3 mb-5">
+    <div class="row p-3">
+      <div *ngFor="let service of services" class="col-md-4 status-item">
+        <span>
+          {{ service.title }}
+        </span>
+        <div class="status-light" [ngClass]="service.status"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Jobs Executed Today</h2>
+  <div class="row p-3">
+    <div class="chart-wrap col-md-8">
+      <!-- TODO: pie chart -->
+      <div class="chart mt-2"></div>
+      <div class="legend">
+        <p>
+          <span class="legend-color success"></span>
+          <span class="legend-label">Successful Jobs</span>
+        </p>
+        <span class="legend-subtitle">Total: {{ successfulJobs }}</span>
+        <p>
+          <span class="legend-color danger"></span>
+          <span class="legend-label">Failed Jobs</span>
+        </p>
+        <span class="legend-subtitle">Total: {{ failedJobs }}</span>
       </div>
     </div>
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          Devices
+        <div class="card-header text-center">
+          <!-- TODO: get real title -->
+          <h4 class="mb-0">Your Statistics</h4>
         </div>
-        <div class="card-body">
-          <h6>{{ devices.Devices.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/solaris">View</button>
-        </div>
-      </div>
-    </div>
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          IP Addresses
-        </div>
-        <div class="card-body">
-          <h6>{{ ips.ips.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/ipaddresses">View</button>
+        <div class="p-3">
+          <ul class="dash-info">
+            <li>
+              <span>Networks</span>
+              <span class="inline-block ml-auto">
+                {{ subnets.subnets.length }}
+              </span>
+              <a routerLink="/networks">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+
+            <li>
+              <span>Devices</span>
+              <span class="inline-block ml-auto">
+                {{ devices.Devices.length }}
+              </span>
+              <a routerLink="/solaris">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+
+            <li>
+              <span>IP Addresses</span>
+              <span class="inline-block ml-auto">
+                {{ ips.ips.length }}
+              </span>
+              <a routerLink="/ipaddresses">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-  
-  <hr>
-
-  <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Jobs executed Today
-          </div>
-          <div class="card-body">
-            <h6>{{ jobs.results.length }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Successful Jobs Today
-          </div>
-          <div class="card-body">
-            <h6 [ngClass]="{'text-success': successfulJobs > 0}">{{ successfulJobs }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Failed Jobs Today
-          </div>
-          <div class="card-body">
-            <h6 [ngClass]="{'text-danger': failedJobs > 0}">{{ failedJobs }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-    </div>
-
 </div>
