@@ -114,21 +114,12 @@
               </td>
             </tr>
             <tr *ngIf="!LDOM.vnic?.length" class="text-center">
-<<<<<<< HEAD
               <td colspan="5">No vNics</td>
             </tr>
-=======
-                <td colspan="5">No vNets</td>
-              </tr>
->>>>>>> 685a4f9b376634a8b0f2cf710f1217eff1c61b5b
           </tbody>
         </table>
       </div>
-<<<<<<< HEAD
     </div>
-=======
-      </div>
->>>>>>> 685a4f9b376634a8b0f2cf710f1217eff1c61b5b
 
     <hr />
     <!--TODO: Verify functionality of virtual disks and vars tables-->
@@ -397,8 +388,13 @@
     <!--TODO: Hide until vsw selected-->
     <div class="form-group">
       <label for="vnicUntaggedVlan">Untagged VLAN:</label>
-      <select name="vnicUntaggedVlan" class="form-control" [(ngModel)]="vnicModalUntaggedVlan">
-        <option [ngValue]="vnicModalVswitch?.vlansUntagged">Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
+      <select
+        name="vnicUntaggedVlan"
+        class="form-control"
+        [(ngModel)]="vnicModalUntaggedVlan"
+      >
+        <option [ngValue]="vnicModalVswitch?.vlansUntagged"
+          >Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
         </option>
         <option
           *ngFor="let vlan of vnicModalVswitch?.vlansTagged"
