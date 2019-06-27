@@ -30,14 +30,14 @@ export class NetworkTopologyComponent implements OnInit {
 
     // Customer Level Menu
     const customerMenu = new GraphContextMenu();
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Networks',  () => {this.router.navigate(['/networks']); }));
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Static Routes',  () => {this.router.navigate(['/static-routes']); }));
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Firewall Rules',  () => {this.router.navigate(['/firewall-rules']); }));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Networks',  true));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Static Routes',  true));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Firewall Rules',  true));
 
 
     // VRF Level Menu
     const vrfMenu = new GraphContextMenu();
-    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet', () => {this.router.navigate(['/networks/create']); }));
+    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet',true));
 
 
     // Network Level Menu

@@ -1,16 +1,14 @@
 export class GraphContextMenuItem {
 
-    constructor(title: string, action?: any, resolveId?: boolean) {
+    constructor(title: string, emitEvent: boolean = false) {
         this.title = title;
-
-        if (action) {
-        this.action = action;
-    }
+        this.emitEvent = emitEvent;
     }
 
     title: string;
     divider: boolean;
     action: any;
 
-
+    actionString: string;
+    emitEvent: boolean;
 }

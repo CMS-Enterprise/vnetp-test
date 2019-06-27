@@ -3,7 +3,7 @@ import { GraphNode } from './graph-node';
 import { GraphContextMenu } from './graph-context-menu';
 
 export class Graph {
-  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>) {
+  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
     this.nodes = new Array<GraphNode>();
     this.links = new Array<GraphLink>();
 
@@ -25,6 +25,12 @@ export class Graph {
       this.contextMenuArray = contextMenuArray;
     }
 
+    if (!contextMenuCallback) {
+      this.contextMenuCallback = null;
+    } else {
+      this.contextMenuCallback = contextMenuCallback;
+    }
+
     this.buildGraph(obj);
   }
 
@@ -39,6 +45,8 @@ export class Graph {
   nameArray: Array<string>;
 
   contextMenuArray: Array<GraphContextMenu>;
+
+  contextMenuCallback: any;
 
   private buildGraph(obj: any) {
     this.objectIterator(obj, 1, this);
@@ -84,8 +92,20 @@ export class Graph {
   private getGroupContextMenu(group) {
     if (!this.contextMenuArray) { return; };
 
+
+    if (this.contextMenuArray[group -1]) {
     const contextMenu = this.contextMenuArray[group - 1];
 
+    // TODO: Bind context menu callback to all menu items with action.
+    contextMenu.menuItems.forEach(mi => {
+      if (mi.emitEvent) {
+        mi.action = () => this.contextMenuCallback();
+      }
+    });
+
     return contextMenu;
+    }
+
+    return null;
   }
 }

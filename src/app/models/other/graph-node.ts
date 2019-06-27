@@ -11,4 +11,10 @@ export class GraphNode {
     name: string;
     group: number;
     contextMenu: GraphContextMenu;
+
+    getContextMenu() {
+        if (this.contextMenu) {
+            return this.contextMenu.getContextMenu();
+        }
+    }
 }
