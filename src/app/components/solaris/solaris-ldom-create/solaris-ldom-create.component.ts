@@ -47,6 +47,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   dirty: boolean;
   vnicModalUntaggedVlan: number;
   editLdom: boolean;
+  editCurrentVnic: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -117,6 +118,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.addVdsDev = new SolarisVdsDevs();
     this.modalVnic = new SolarisVnic();
     this.editLdom = false;
+    this.editCurrentVnic = false;
+    this.solarisService.currentVnic = null;
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
@@ -163,17 +166,18 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.LDOM.vds.splice(vdsIndex, 1);
   }
   editVnic(vnic: SolarisVnic){
+    this.editCurrentVnic = true;
     const vnicIndex = this.LDOM.vnic.indexOf(vnic);
     this.solarisService.currentVnic = vnic;
     this.openVnicModal();
     // check if modal canceled, don't remove if so
-    this.LDOM.vnic.splice(vnicIndex,1);
+    // this.LDOM.vnic.splice(vnicIndex, 1);
 
   }
 
   openVnicModal() {
     this.addVnicInherit = true;
-    if ( this.solarisService.currentVnic === null ){
+    if ( this.solarisService.currentVnic == null ){
       this.vnicModalTaggedVlans = new Array<number>();
       this.modalVnic = new SolarisVnic();
       this.vnicModalVswitch = new SolarisVswitch();
@@ -197,17 +201,26 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVnic() {
-    console.log('Here');
     if (this.addVnicInherit) {
       this.modalVnic.TaggedVlans = this.vnicModalVswitch.vlansTagged;
+      this.editCurrentVnic = false;
     } else {
       this.modalVnic.TaggedVlans = this.vnicModalTaggedVlans;
     }
 
     this.modalVnic.UntaggedVlan = this.vnicModalUntaggedVlan;
     this.modalVnic.VirtualSwitchName = this.vnicModalVswitch.vSwitchName;
+    // in the case of edit vNic, only add if not already array member
+    if (this.LDOM.vnic.indexOf(this.modalVnic) === -1){
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+    } else {
+      const vnicIndex = this.LDOM.vnic.indexOf(this.modalVnic);
+      this.LDOM.vnic.splice(vnicIndex, 1);
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
 
-    this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+    }
+    console.log(this.LDOM.vnic);
+    this.modalVnic = new SolarisVnic();
     this.ngxSm.getModal('vnicModalLdom').close();
   }
 
