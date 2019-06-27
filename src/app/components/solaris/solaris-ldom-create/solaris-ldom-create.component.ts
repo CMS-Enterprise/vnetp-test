@@ -154,7 +154,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVds() {
-    this.LDOM.vds.push(Object.assign({}, this.addVdsDev));
+    // check if object already on array
+    const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+    if ( vdsIndex !== -1) {
+        this.LDOM.vds.splice(vdsIndex, 1);
+        this.LDOM.vds.push(this.addVdsDev);
+    } else {
+      this.LDOM.vds.push(this.addVdsDev);
+    }
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
@@ -162,8 +169,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     this.solarisService.currentVds = vds;
     this.openVdsModal();
-    //check if modal canceled, don't remove if so
-    this.LDOM.vds.splice(vdsIndex, 1);
+    // check if modal canceled, don't remove if so
+    // this.LDOM.vds.splice(vdsIndex, 1);
   }
   editVnic(vnic: SolarisVnic){
     this.editCurrentVnic = true;
@@ -253,7 +260,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   insertVirtualDisks(vds) {
      if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
      vds.forEach(thisVds => {
-      this.LDOM.vds.push(Object.assign({}, thisVds));
+      if(this.LDOM.vds.indexOf(thisVds) !== -1){
+        this.LDOM.vds.push(Object.assign({}, thisVds));
+      } else {
+         const vdsIndex = this.LDOM.vds.indexOf(thisVds);
+         this.LDOM.vds.splice(vdsIndex, 1);
+        // this.LDOM.vds.push(Object.assign({}, thisVds));
+      }
       this.addVdsDev = new SolarisVdsDevs();
 
      });
