@@ -72,7 +72,7 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-5">
+      <div class="form-group col-md-12">
         <label>vNics</label>
         <table name="vnicTable" class="table">
           <thead>
@@ -100,6 +100,9 @@
                 
               </td>
             </tr>
+            <tr *ngIf="!LDOM.vnic?.length" class="text-center">
+                <td colspan="5">No vNets</td>
+              </tr>
           </tbody>
         </table>
 
@@ -113,45 +116,7 @@
           Add vNic
         </button>
       </div>
-
-
-      <table name="vnetTable" class="table table-striped">
-        <thead>
-          <tr>
-            <th>vNet Name</th>
-            <th>Virtual Switch</th>
-            <th>Untagged VLAN</th>
-            <th>Tagged VLANs</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let vnet of LDOM.vnet">
-            <td>{{ vnet?.Name }}</td>
-            <td>{{ vnet?.VirtualSwitchName }}</td>
-            <td>{{ vnet?.UntaggedVlan }}</td>
-            <td>{{ vnet?.TaggedVlans }}</td>
-            <td class="item-actions">
-              <fa
-                name="chevron-up"
-                (click)="moveObjectPosition(-1, vnet, LDOM.vnet)"
-              >
-              </fa>
-              <fa
-                name="chevron-down"
-                (click)="moveObjectPosition(1, vnet, LDOM.vnet)"
-              >
-              </fa>
-              <fa name="pencil" (click)="editVnet(vnet)"> </fa>
-              <fa name="trash" (click)="deleteVnet(vnet)"> </fa>
-            </td>
-          </tr>
-          <tr *ngIf="!LDOM.vnet?.length" class="text-center">
-            <td colspan="5">No vNets</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      </div>
 
     <hr />
 <!--TODO: Verify functionality of virtual disks and vars tables-->
@@ -412,7 +377,8 @@
 
     <!--TODO: Hide until vsw selected-->
     <div class="form-group">
-      <select name="" class="form-control" [(ngModel)]="vnicModalUntaggedVlan">
+      <label for="vnicUntaggedVlan">Untagged VLAN:</label>
+      <select name="vnicUntaggedVlan" class="form-control" [(ngModel)]="vnicModalUntaggedVlan">
         <option [ngValue]="vnicModalVswitch?.vlansUntagged">Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
         </option>
         <option *ngFor="let vlan of vnicModalVswitch?.vlansTagged" [ngValue]="vlan">
@@ -461,7 +427,7 @@
         type="button"
         class="btn btn-link"
         data-dismiss="modal"
-        (click)="insertVnic()"
+        (click)="vnicModalLdom.close()"
       >
         Cancel
       </button>
@@ -470,7 +436,7 @@
         type="button"
         class="btn btn-success"
         data-dismiss="modal"
-        (click)="vnicModalLdom.close()"
+        (click)="insertVnic()"
       >
         <fa name="save"></fa>
         Save

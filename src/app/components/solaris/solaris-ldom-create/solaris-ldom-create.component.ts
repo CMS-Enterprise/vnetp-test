@@ -197,6 +197,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVnic() {
+    console.log('Here');
     if (this.addVnicInherit) {
       this.modalVnic.TaggedVlans = this.vnicModalVswitch.vlansTagged;
     } else {
