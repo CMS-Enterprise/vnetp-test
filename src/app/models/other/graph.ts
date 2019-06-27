@@ -3,7 +3,7 @@ import { GraphNode } from './graph-node';
 import { GraphContextMenu } from './graph-context-menu';
 
 export class Graph {
-  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>) {
+  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>) {
     this.nodes = new Array<GraphNode>();
     this.links = new Array<GraphLink>();
 
@@ -17,6 +17,12 @@ export class Graph {
       this.nameArray = new Array<string>();
     } else {
       this.nameArray = nameArray;
+    }
+
+    if (!contextMenuArray) {
+      this.contextMenuArray = new Array<GraphContextMenu>();
+    } else {
+      this.contextMenuArray = contextMenuArray;
     }
 
     this.buildGraph(obj);
@@ -77,9 +83,9 @@ export class Graph {
   }
 
   private getGroupContextMenu(group) {
-    if (!this.contextMenuArray) { return; }
+    if (!this.contextMenuArray) { return; };
 
-    const contextMenu = this.contextMenuArray[group];
+    const contextMenu = this.contextMenuArray[group - 1];
 
     return contextMenu;
   }

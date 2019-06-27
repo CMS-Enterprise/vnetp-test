@@ -3,6 +3,10 @@ import { GraphContextMenuItem } from './graph-context-menu-item';
 export class GraphContextMenu {
   menuItems: Array<GraphContextMenuItem>;
 
+  constructor() {
+    this.menuItems = new Array<GraphContextMenuItem>();
+  }
+
   getContextMenu() {
     const contextMenu = new Array<any>();
 

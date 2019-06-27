@@ -4,6 +4,8 @@ import contextMenuFactory from 'd3-context-menu';
 import * as save_svg_as_png from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
+import { GraphNode } from 'src/app/models/other/graph-node';
+import { GraphContextMenu } from 'src/app/models/other/graph-context-menu';
 
 @Component({
   selector: 'app-d3-graph',
@@ -22,6 +24,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   @Input() height = 800;
   @Input() ignoreArray = ['custom_fields'];
   @Input() nameArray = ['name', 'title'];
+  @Input() contextMenuArray?: Array<GraphContextMenu>;
 
   @Output() rendered = new EventEmitter<any>();
   @Output() nodeClicked = new EventEmitter<any>();
@@ -34,8 +37,10 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   constructor() {}
 
   ngOnInit(): void {
+
+    console.log(this.contextMenuArray);
     if (this.graphObject) {
-      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray);
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray);
     } else if (!this.graph) {
       this.graph = new Graph({Name: 'No Data to Graph'}, [''], ['']);
     }
@@ -145,7 +150,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     });
 
     // Handle Right Click
-    node.on('contextmenu', contextMenuFactory(this.OnNodeRightClick(node)));
+    node.on('contextmenu', contextMenuFactory((data) => this.OnNodeRightClick(data)));
 
     // Drag Event Handlers
     if (!this.disableDrag) {
@@ -233,25 +238,11 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     this.nodeClicked.emit(node);
   }
 
-  OnNodeRightClick(node) {
 
-    // TODO: Get Menu from Node and Return.
+  OnNodeRightClick(node: GraphNode) {
 
-    return [
-      {
-          title: 'Header22',
-      },
-      {
-          title: 'Normal item',
-          action: function() {}
-      },
-      {
-          divider: true
-      },
-      {
-          title: 'Last item',
-          action: function() {}
-      }
-  ];
+console.log(node);
+
+    return node.contextMenu.getContextMenu();
   }
 }

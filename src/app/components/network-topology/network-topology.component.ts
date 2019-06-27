@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Customer } from 'src/app/models/d42/customer';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
+import { GraphContextMenu } from 'src/app/models/other/graph-context-menu';
+import { GraphContextMenuItem } from 'src/app/models/other/graph-context-menu-item';
 
 @Component({
   selector: 'app-network-topology',
@@ -13,11 +15,25 @@ export class NetworkTopologyComponent implements OnInit {
   selectedCustomer: Customer;
   subnets: Array<Subnet>;
   showGraph: boolean;
+  contextMenuArray: Array<GraphContextMenu>;
 
   constructor(private apiService: AutomationApiService) {}
 
   ngOnInit() {
+    this.buildContextMenu();
     this.getCustomer();
+  }
+
+  buildContextMenu() {
+    this.contextMenuArray = new Array<GraphContextMenu>();
+
+    const graphContextMenu = new GraphContextMenu();
+
+    graphContextMenu.menuItems.push(new GraphContextMenuItem('1'));
+    graphContextMenu.menuItems.push(new GraphContextMenuItem('2'));
+    graphContextMenu.menuItems.push(new GraphContextMenuItem('3'));
+
+    this.contextMenuArray.push(graphContextMenu);
   }
 
   nodeClickHandler(node: any) {
