@@ -56,9 +56,9 @@
             class="form-control"
           >
             <option></option>
-            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">{{
-              cpuCount
-            }}</option>
+            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ cpuCount }}</option
+            >
           </select>
         </div>
 
@@ -70,9 +70,9 @@
             class="form-control"
           >
             <option></option>
-            <option *ngFor="let ramCount of [1, 2, 4, 8, 16, 32]">{{
-              ramCount
-            }} GB</option>
+            <option *ngFor="let ramCount of [1, 2, 4, 8, 16, 32]">
+              {{ ramCount }} GB
+            </option>
           </select>
         </div>
 
@@ -84,9 +84,9 @@
             class="form-control"
           >
             <option></option>
-            <option *ngFor="let nicCount of [1, 2, 3, 4, 5, 6, 7, 8]">{{
-              nicCount
-            }}</option>
+            <option *ngFor="let nicCount of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ nicCount }}</option
+            >
           </select>
         </div>
       </div>
@@ -111,7 +111,7 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
           <label>OS</label>
           <select name="os" formControlName="os" class="form-control">
             <option></option>
@@ -124,21 +124,22 @@
             <option value="oracle">Oracle</option>
             <option value="xenserver">XenServer</option>
           </select>
-        </div>    
+        </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-link"
           data-dismiss="modal"
           (click)="cancel()"
         >
           Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
         </button>
       </div>
     </div>

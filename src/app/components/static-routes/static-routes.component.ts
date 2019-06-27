@@ -5,7 +5,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 @Component({
   selector: 'app-static-routes',
   templateUrl: './static-routes.component.html',
-  styleUrls: ['./static-routes.component.css']
+  styleUrls: ['./static-routes.component.scss']
 })
 export class StaticRoutesComponent implements OnInit {
 

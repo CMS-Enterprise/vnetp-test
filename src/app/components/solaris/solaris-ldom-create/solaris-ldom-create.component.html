@@ -1,42 +1,42 @@
 <div>
   <form name="LDOMCloneOrCreateForm" class="form" #form="ngForm" novalidate>
-    <div class="form-row">
-      <div class="form-group col-md-4 ">
-        <label for="inputLDOMName">LDOM Name</label>
-        <input
-          name="inputLDOMName"
-          aria-label="Input LDOM Name"
-          class="form-control"
-          placeholder="Name"
-          #inputLDOMName="ngModel"
-          [(ngModel)]="LDOM.name"
-        />
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputLDOMaddCDOM">CDOM</label>
-        <select
-          name="cdomSelect"
-          class="form-control"
-          id="inputLDOMaddCDOM"
-          #cdomInputName="ngModel"
-          [(ngModel)]="LDOM.associatedcdom"
+    <h1 class="mb-3">LDOM</h1>
+
+    <div class="form-group">
+      <label for="inputLDOMName">LDOM Name</label>
+      <input
+        name="inputLDOMName"
+        aria-label="Input LDOM Name"
+        class="form-control"
+        placeholder="Name"
+        #inputLDOMName="ngModel"
+        [(ngModel)]="LDOM.name"
+      />
+    </div>
+    <div class="form-group">
+      <label for="inputLDOMaddCDOM">CDOM</label>
+      <select
+        name="cdomSelect"
+        class="form-control"
+        id="inputLDOMaddCDOM"
+        #cdomInputName="ngModel"
+        [(ngModel)]="LDOM.associatedcdom"
+      >
+        <option></option>
+        <option
+          class="list-group-item"
+          *ngFor="let cdom of CDOMDeviceArray"
+          [ngValue]="cdom"
         >
-          <option></option>
-          <option
-            class="list-group-item"
-            *ngFor="let cdom of CDOMDeviceArray"
-            [ngValue]="cdom"
-          >
-            {{ cdom.name }}
-          </option>
-        </select>
-      </div>
+          {{ cdom.name }}
+        </option>
+      </select>
     </div>
 
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-6">
         <label for="inputCDOMvCPU">vCPU</label>
         <select
           name="inputCDOMvCPU"
@@ -52,7 +52,7 @@
         </select>
       </div>
 
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-6">
         <label for="inputCDOMMemory">RAM (GB)</label>
         <select
           name="inputCDOMMemory"
@@ -72,9 +72,19 @@
     <hr />
 
     <div class="form-row">
-      <div class="form-group col-md-5">
+      <div class="form-group col-md-12">
         <label>vNics</label>
-        <table name="vnicTable" class="table">
+        <button
+          type="button"
+          name="modalVnic"
+          class="btn btn-info btn-sm pull-right mb-2"
+          (click)="openVnicModal()"
+          [disabled]="!LDOM.associatedcdom"
+        >
+          Add vNic
+        </button>
+
+        <table name="vnicTable" class="table table-striped">
           <thead>
             <tr>
               <th>vNic Name</th>
@@ -90,165 +100,190 @@
               <td>{{ vnic?.VirtualSwitchName }}</td>
               <td>{{ vnic?.UntaggedVlan }}</td>
               <td>{{ vnic?.TaggedVlans }}</td>
-              <td>
-                <fa name="chevron-up" (click)="moveObjectPosition(-1, vnic, LDOM.vnic)">
-                </fa>
-                <fa name="chevron-down" (click)="moveObjectPosition(1, vnic, LDOM.vnic)">
-                </fa>
-                <fa name="pencil" (click)="editVnic(vnic)"> </fa>
-                <fa name="trash" (click)="deleteVnic(vnic)"> </fa>
-                
+              <td class="item-actions">
+                <fa
+                  name="chevron-up"
+                  (click)="moveObjectPosition(-1, vnic, LDOM.vnic)"
+                ></fa>
+                <fa
+                  name="chevron-down"
+                  (click)="moveObjectPosition(1, vnic, LDOM.vnic)"
+                ></fa>
+                <fa name="pencil" (click)="editVnic(vnic)"></fa>
+                <fa name="trash" (click)="deleteVnic(vnic)"></fa>
               </td>
+            </tr>
+            <tr *ngIf="!LDOM.vnic?.length" class="text-center">
+              <td colspan="5">No vNics</td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
 
+    <hr />
+    <!--TODO: Verify functionality of virtual disks and vars tables-->
+    <div class="form-group clearfix">
+      <label class="mb-2">Variables</label>
+      <table name="variableTable" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let variable of LDOM.variables">
+            <td>{{ variable.key }}</td>
+            <td>{{ variable.value }}</td>
+            <td class="item-actions">
+              <fa name="trash" (click)="deleteVariable(variable)"> </fa>
+            </td>
+          </tr>
+          <tr *ngIf="!LDOM.variables?.length" class="text-center">
+            <td colspan="3">No Variables</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="input-group align-items-center">
+        <input
+          name="addVariableKey"
+          type="text"
+          class="form-control"
+          placeholder="Key"
+          [(ngModel)]="newSolarisVariable.key"
+        />
+        <input
+          name="addVariableValue"
+          type="text"
+          class="form-control"
+          placeholder="Value"
+          [(ngModel)]="newSolarisVariable.value"
+        />
         <button
           type="button"
-          name="modalVnic"
-          class="btn btn-success"
-          (click)="openVnicModal()"
-          [disabled]="!LDOM.associatedcdom"
+          class="btn btn-sm btn-info"
+          (click)="addVariable()"
         >
-          Add vNic
+          <fa name="plus"></fa>
+          Add Variable
         </button>
       </div>
-
-      <div class="form-group offset-2 col-md-5">
-        <label for="inputLDOMvariable">Variables</label>
-        <table name="variableTable" class="table">
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let variable of LDOM.variables">
-              <td>{{ variable.key }}</td>
-              <td>{{ variable.value }}</td>
-              <td>
-                <fa name="trash" (click)="deleteVariable(variable)"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="input-group">
-          <input
-            name="addVariableKey"
-            type="text"
-            class="form-control"
-            placeholder="Key"
-            [(ngModel)]="newSolarisVariable.key"
-          />
-          <input
-            name="addVariableValue"
-            type="text"
-            class="form-control"
-            placeholder="Value"
-            [(ngModel)]="newSolarisVariable.value"
-          />
-          <button type="button" class="btn btn-success" (click)="addVariable()">
-            Add Variable
-          </button>
-        </div>
-      </div>
-
-      <div class="form-group col-md-2"></div>
     </div>
+
     <hr />
 
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label>Virtual Disks</label>
-        <table name="vdsTable" class="table">
-          <thead>
-            <tr>
-               <th>Disk Name</th>
-              <th>Size</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let vds of LDOM.vds">
-              <td>{{ vds.diskName }}</td>
-              <td>{{ vds.diskSize }}</td>
-              <td>
-                  <fa name="chevron-up" (click)="moveObjectPosition(-1, vds, LDOM.vds)">
-                  </fa>
-                  <fa name="chevron-down" (click)="moveObjectPosition(1, vds, LDOM.vds)">
-                  </fa>
-                  <fa name="pencil" (click)="editVds(vds)"> </fa>
-                  <fa name="trash" (click)="deleteVds(vds)"> </fa>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="form-group clearfix">
+      <label>Virtual Disks</label>
 
+      <div class="btn-group-sm pull-right mb-2">
         <button
           type="button"
           name="addVdsDev"
-          class="btn btn-success"
+          class="btn btn-sm btn-info"
           (click)="openVdsModal()"
         >
+          <fa name="plus"></fa>
           Add VDS Device
         </button>
+
         <app-import-export
-        [exportObject]="LDOM.vds"
-        exportFileName="LDOMVDS-{{ LDOM.name }}"
-        (import)="insertVirtualDisks($event)"
-      ></app-import-export>
+          disableExport="true"
+          (import)="insertVirtualDisks($event)"
+        ></app-import-export>
       </div>
 
-      <div class="form-group col-md-2"></div>
+      <table name="vdsTable" class="table table-striped">
+        <thead>
+          <tr>
+            <th>VDS</th>
+            <th>Disk Name</th>
+            <th>Size</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vds of LDOM.vds">
+            <td>{{ vds.vds }}</td>
+            <td>{{ vds.diskName }}</td>
+            <td>{{ vds.diskSize }}</td>
+            <td class="item-actions">
+              <fa
+                name="chevron-up"
+                (click)="moveObjectPosition(-1, vds, LDOM.vds)"
+              >
+              </fa>
+              <fa
+                name="chevron-down"
+                (click)="moveObjectPosition(1, vds, LDOM.vds)"
+              >
+              </fa>
+              <fa name="pencil" (click)="editVds(vds)"> </fa>
+              <fa name="trash" (click)="deleteVds(vds)"> </fa>
+            </td>
+          </tr>
+          <tr *ngIf="!LDOM.vds?.length" class="text-center">
+            <td colspan="4">No Virtual Disks</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn-group-sm pull-right">
+        <app-import-export
+          [exportObject]="LDOM.vds"
+          exportFileName="LDOMVDS-{{ LDOM.name }}"
+          disableImport="true"
+        ></app-import-export>
+      </div>
     </div>
 
     <hr />
 
-    <div class="form-row">
-      <div class="form-group col-md-2">
-        <div class="form-check form-check-inline">
-          <input
-            name="inputLDOMnetinstall"
-            aria-label="LDOM Net Install"
-            type="checkbox"
-            class="form-check-input"
-            #netInstall="ngModel"
-            [(ngModel)]="LDOM.net_install"
-          />
-          <label class="form-check-label" for="inputLDOMnetinstall"
-            >Net Install</label
-          >
-        </div>
-      </div>
-
-      <div class="form-group col-md-4" *ngIf="LDOM.net_install">
-        <select
-          name="imageSelect"
-          class="form-control"
-          [(ngModel)]="LDOM.image"
+    <div class="form-group">
+      <div class="form-check form-check-inline">
+        <input
+          name="inputLDOMnetinstall"
+          aria-label="LDOM Net Install"
+          type="checkbox"
+          class="form-check-input"
+          #netInstall="ngModel"
+          [(ngModel)]="LDOM.net_install"
+        />
+        <label class="form-check-label" for="inputLDOMnetinstall"
+          >Net Install</label
         >
-          <option></option>
-          <option value="solaris-image-1"
-            >Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option
-          >
-          <option value="solaris-image-2"
-            >Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option
-          >
-        </select>
       </div>
+    </div>
+
+    <div class="form-group" *ngIf="LDOM.net_install">
+      <select name="imageSelect" class="form-control" [(ngModel)]="LDOM.image">
+        <option></option>
+        <option value="solaris-image-1"
+          >Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option
+        >
+        <option value="solaris-image-2"
+          >Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option
+        >
+      </select>
     </div>
 
     <hr />
 
-    <div class="btn-group">
+    <div class="pull-right mb-3">
+      <a
+        class="btn btn-link"
+        aria-label="Cancel"
+        routerLink="/solaris/ldom/list"
+      >
+        Cancel
+      </a>
       <button
         class="btn btn-success"
         aria-label="Save"
         (click)="launchLDOMJobs()"
       >
+        <fa name="save"></fa>
         Save
       </button>
     </div>
@@ -260,9 +295,10 @@
   identifier="vdsDevModalLdom"
   customClass="'modal-content'"
   [dismissable]="false"
+  customClass="medium-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Add VDS Dev</h4>
+    <h4 class="modal-title">Add VDS Device</h4>
     <button
       type="button"
       class="close"
@@ -273,8 +309,6 @@
   </div>
 
   <div class="modal-body">
-
-
     <div class="form-row">
       <div class="form-group col-md-8">
         <label for="diskName">Disk Name</label>
@@ -295,20 +329,21 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-primary"
-      data-dismiss="modal"
-      (click)="insertVds()"
-    >
-      Add
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
+      class="btn btn-link"
       data-dismiss="modal"
       (click)="vdsDevModalLdom.close()"
     >
       Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-success"
+      data-dismiss="modal"
+      (click)="insertVds()"
+    >
+      <fa name="save"></fa>
+      Save
     </button>
   </div>
 </ngx-smart-modal>
@@ -318,6 +353,7 @@
   identifier="vnicModalLdom"
   customClass="'modal-content'"
   [dismissable]="false"
+  customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Add vNic</h4>
@@ -351,11 +387,20 @@
 
     <!--TODO: Hide until vsw selected-->
     <div class="form-group">
-      <select name="" class="form-control" [(ngModel)]="vnicModalUntaggedVlan">
-        <option [ngValue]="vnicModalVswitch?.vlansUntagged" [ngValue]="vnicModalVswitch?.vlansUntagged">Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
+      <label for="vnicUntaggedVlan">Untagged VLAN:</label>
+      <select
+        name="vnicUntaggedVlan"
+        class="form-control"
+        [(ngModel)]="vnicModalUntaggedVlan"
+      >
+        <option [ngValue]="vnicModalVswitch?.vlansUntagged"
+          >Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
         </option>
-        <option *ngFor="let vlan of vnicModalVswitch?.vlansTagged" [ngValue]="vlan">
-         VLAN {{ vlan }}
+        <option
+          *ngFor="let vlan of vnicModalVswitch?.vlansTagged"
+          [ngValue]="vlan"
+        >
+          VLAN {{ vlan }}
         </option>
       </select>
     </div>
@@ -398,20 +443,21 @@
     <div class="modal-footer">
       <button
         type="button"
-        class="btn btn-primary"
-        data-dismiss="modal"
-        (click)="insertVnic()"
-      >
-        Add
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-secondary"
+        class="btn btn-link"
         data-dismiss="modal"
         (click)="vnicModalLdom.close()"
       >
         Cancel
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-success"
+        data-dismiss="modal"
+        (click)="insertVnic()"
+      >
+        <fa name="save"></fa>
+        Save
       </button>
     </div>
   </div>

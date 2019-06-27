@@ -98,27 +98,28 @@
         </label>
 
         <input
-        class="form-control"
-        name="servicePort"
-        formControlName="servicePort"
-        [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-        mask="09999"
-        aria-label="Service Port"
+          class="form-control"
+          name="servicePort"
+          formControlName="servicePort"
+          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+          mask="09999"
+          aria-label="Service Port"
         />
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-link"
           data-dismiss="modal"
           (click)="cancel()"
         >
           Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
         </button>
       </div>
     </div>

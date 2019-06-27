@@ -3,6 +3,7 @@
   identifier="healthMonitorModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Health Monitor</h4>
@@ -54,14 +55,14 @@
         <div class="form-group col-md-6">
           <label for="servicePort">Service Port</label>
 
-        <input
-          class="form-control"
-          name="servicePort"
-          formControlName="servicePort"
-          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-          mask="09999"
-          aria-label="Service Port"
-        />
+          <input
+            class="form-control"
+            name="servicePort"
+            formControlName="servicePort"
+            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+            mask="09999"
+            aria-label="Service Port"
+          />
         </div>
       </div>
 
@@ -69,42 +70,43 @@
         <div class="form-group col-md-6">
           <label for="interval">Interval</label>
 
-        <input
-          class="form-control"
-          name="interval"
-          formControlName="interval"
-          [ngClass]="{ 'is-invalid': submitted && f.interval.errors }"
-          mask="099"
-          aria-label="Interval"
-        />
+          <input
+            class="form-control"
+            name="interval"
+            formControlName="interval"
+            [ngClass]="{ 'is-invalid': submitted && f.interval.errors }"
+            mask="099"
+            aria-label="Interval"
+          />
         </div>
 
         <div class="form-group col-md-6">
           <label for="timeout">Timeout</label>
 
-        <input
-          class="form-control"
-          name="timeout"
-          formControlName="timeout"
-          [ngClass]="{ 'is-invalid': submitted && f.timeout.errors }"
-          mask="099"
-          aria-label="Interval"
-        />
+          <input
+            class="form-control"
+            name="timeout"
+            formControlName="timeout"
+            [ngClass]="{ 'is-invalid': submitted && f.timeout.errors }"
+            mask="099"
+            aria-label="Interval"
+          />
         </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-link"
           data-dismiss="modal"
           (click)="cancel()"
         >
           Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
         </button>
       </div>
     </div>

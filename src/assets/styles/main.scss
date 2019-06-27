@@ -1,0 +1,63 @@
+// 3rd party imports
+@import "~ngx-toastr/toastr.css";
+@import "~ngx-smart-modal/ngx-smart-modal";
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.css";
+
+// custom imports
+@import "variables", "buttons", "tables", "forms";
+
+a {
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+fa {
+  margin-right: 5px;
+}
+
+hr {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.disabled,
+*:disabled {
+  cursor: not-allowed;
+}
+
+.pill-default {
+  background-color: #0d146d;
+  border-radius: 2px;
+  color: #ffffff;
+  display: inline;
+  font-size: smaller;
+  padding: 2px 5px 2px 5px;
+}
+
+.fg-danger {
+  color: $danger;
+}
+
+.fg-success {
+  color: $success;
+}
+
+.large-modal {
+  max-width: 1000px;
+  max-height: 1000px;
+}
+
+.medium-modal {
+  max-width: 800px;
+  max-height: 800px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.text-bold {
+  font-weight: bold;
+}

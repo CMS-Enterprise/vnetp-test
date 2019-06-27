@@ -3,7 +3,7 @@
   identifier="firewallRuleModal"
   [dismissable]="false"
   (onOpen)="getData()"
-  customClass="large-modal"
+  customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Firewall Rule</h4>
@@ -77,15 +77,15 @@
             [ngClass]="{ 'is-invalid': submitted && f.log.errors }"
             aria-label="Log"
           >
-            <option [ngValue]=false>False</option>
-            <option [ngValue]=true>True</option>
+            <option [ngValue]="false">False</option>
+            <option [ngValue]="true">True</option>
           </select>
           <div *ngIf="submitted && f.log.errors" class="invalid-feedback">
             <div *ngIf="f.log.errors.required">Protocol is required</div>
           </div>
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Network Type</label>
@@ -99,7 +99,9 @@
             <option value="object">Network Object</option>
             <option value="objectGroup">Network Object Group</option>
           </select>
+        </div>
 
+        <div class="form-group col-md-6">
           <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'ip'"
             >Source IP</label
           >
@@ -173,7 +175,9 @@
             </div>
           </div>
         </div>
+      </div>
 
+      <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Service Type</label>
           <select
@@ -186,7 +190,9 @@
             <option value="object">Service Object</option>
             <option value="objectGroup">Service Object Group</option>
           </select>
+        </div>
 
+        <div class="form-group col-md-6">
           <label for="name" *ngIf="f.sourceServiceType.value === 'port'"
             >Source Ports</label
           >
@@ -234,9 +240,7 @@
             </div>
           </div>
 
-          <label
-            for="name"
-            *ngIf="f.sourceServiceType.value === 'objectGroup'"
+          <label for="name" *ngIf="f.sourceServiceType.value === 'objectGroup'"
             >Source Service Object Group</label
           >
           <select
@@ -262,7 +266,6 @@
               Source Object Group is required
             </div>
           </div>
-
         </div>
       </div>
 
@@ -281,7 +284,9 @@
             <option value="object">Network Object</option>
             <option value="objectGroup">Network Object Group</option>
           </select>
+        </div>
 
+        <div class="form-group col-md-6">
           <label
             for="destinationIp"
             *ngIf="f.destinationNetworkType.value === 'ip'"
@@ -360,7 +365,9 @@
             </div>
           </div>
         </div>
+      </div>
 
+      <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Destination Service Type</label>
           <select
@@ -373,8 +380,12 @@
             <option value="object">Service Object</option>
             <option value="objectGroup">Service Object Group</option>
           </select>
+        </div>
 
-          <label for="destinationPorts" *ngIf="f.destinationServiceType.value === 'port'"
+        <div class="form-group col-md-6">
+          <label
+            for="destinationPorts"
+            *ngIf="f.destinationServiceType.value === 'port'"
             >Destination Ports</label
           >
           <input
@@ -453,17 +464,18 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-link"
           data-dismiss="modal"
           (click)="cancel()"
         >
           Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
         </button>
       </div>
     </div>

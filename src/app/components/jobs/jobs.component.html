@@ -1,34 +1,37 @@
 <div>
-  <div class="card">
-    <table class="table table-sm table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Status</th>
-          <th scope="col">Started</th>
-          <th scope="col">Finished</th>
-          <th scope="col">Duration</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let job of jobs.results"
-          [ngClass]="{
-            'text-info': job?.status === 'pending',
-            'text-warning': job?.status === 'running',
-            'text-success': job?.status === 'successful',
-            'text-danger': job?.status === 'failed'
-          }"
-        >
-          <td>{{ job.name }}</td>
-          <td>
-            <p>{{ job.status }}</p>
-          </td>
-          <td>{{ job.started | date: "medium" }}</td>
-          <td>{{ job.finished | date: "medium" }}</td>
-          <td>{{ job.elapsed }} seconds</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h1>Jobs</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Status</th>
+        <th scope="col">Started</th>
+        <th scope="col">Finished</th>
+        <th scope="col">Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let job of jobs.results"
+        [ngClass]="{
+          'text-info': job?.status === 'pending',
+          'text-warning': job?.status === 'running',
+          'text-success': job?.status === 'successful',
+          'text-danger': job?.status === 'failed'
+        }"
+      >
+        <td>{{ job.name }}</td>
+        <td>
+          <span>{{ job.status }}</span>
+        </td>
+        <td>{{ job.started | date: "medium" }}</td>
+        <td>{{ job.finished | date: "medium" }}</td>
+        <td>{{ job.elapsed }} seconds</td>
+      </tr>
+      <tr *ngIf="!jobs.results?.length" class="text-center">
+        <td colspan="5">No Jobs</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

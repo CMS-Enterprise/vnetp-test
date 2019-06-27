@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/assets/styles/main.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

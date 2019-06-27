@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div class="form-group" *ngIf='!f.nat.value'>
+      <div class="form-group" *ngIf="!f.nat.value">
         <label for="type">Type</label>
         <select
           name="type"
@@ -191,34 +191,37 @@
       <div class="form-group" *ngIf="f.nat.value">
         <label for="destinationSubnet">Destination Subnet</label>
         <select
-        name="destinationSubnet"
-        formControlName="destinationSubnet"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.destinationSubnet.errors }"
-        aria-label="Destination Subnet"
+          name="destinationSubnet"
+          formControlName="destinationSubnet"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.destinationSubnet.errors }"
+          aria-label="Destination Subnet"
         >
-        <option></option>
-        <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets">{{ subnet.name }} ({{ subnet.network }}/{{ subnet.mask_bits }})</option>
+          <option></option>
+          <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets"
+            >{{ subnet.name }} ({{ subnet.network }}/{{
+              subnet.mask_bits
+            }})</option
+          >
         </select>
       </div>
 
-      <div class="form-group"  *ngIf="f.nat.value">
+      <div class="form-group" *ngIf="f.nat.value">
         <label for="translatedIp">
           Translated IP
         </label>
 
         <input
-        type="text"
-        name="translatedIp"
-        class="form-control"
-        formControlName="translatedIp"
-        aria-label="Translated IP"
-        [ngClass]="{ 'is-invalid': submitted && f.translatedIp.errors }"
-        [dropSpecialCharacters]="false"
-        mask="099.099.099.099"
+          type="text"
+          name="translatedIp"
+          class="form-control"
+          formControlName="translatedIp"
+          aria-label="Translated IP"
+          [ngClass]="{ 'is-invalid': submitted && f.translatedIp.errors }"
+          [dropSpecialCharacters]="false"
+          mask="099.099.099.099"
         />
       </div>
-
 
       <div class="form-group" *ngIf="f.nat.value">
         <div class="form-check form-check-inline">
@@ -237,22 +240,24 @@
       </div>
 
       <div class="form-group" *ngIf="f.natService.value">
-          <label for="type">NAT Protocol</label>
-          <select
-            name="natProtocol"
-            formControlName="natProtocol"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.natProtocol.errors }"
-            aria-label="NAT Protocol Type"
-          >
-            <option></option>
-            <option value="tcp">TCP</option>
-            <option value="udp">UDP</option>
-          </select>
-          <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
-            <div *ngIf="f.natProtocol.errors.required">NAT Protocol is required</div>
+        <label for="type">NAT Protocol</label>
+        <select
+          name="natProtocol"
+          formControlName="natProtocol"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.natProtocol.errors }"
+          aria-label="NAT Protocol Type"
+        >
+          <option></option>
+          <option value="tcp">TCP</option>
+          <option value="udp">UDP</option>
+        </select>
+        <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
+          <div *ngIf="f.natProtocol.errors.required">
+            NAT Protocol is required
           </div>
         </div>
+      </div>
 
       <div class="form-row" *ngIf="f.natService.value">
         <div class="form-group col-md-6">
@@ -261,43 +266,44 @@
           </label>
 
           <input
-          type="text"
-          name="sourcePort"
-          class="form-control"
-          formControlName="sourcePort"
-          [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
-          mask="09999"
+            type="text"
+            name="sourcePort"
+            class="form-control"
+            formControlName="sourcePort"
+            [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
+            mask="09999"
           />
         </div>
 
         <div class="form-group col-md-6">
-            <label for="translatedPort">
-              Translated Port
-            </label>
-  
-            <input
+          <label for="translatedPort">
+            Translated Port
+          </label>
+
+          <input
             type="text"
             name="translatedPort"
             class="form-control"
             formControlName="translatedPort"
             [ngClass]="{ 'is-invalid': submitted && f.translatedPort.errors }"
             mask="09999"
-            />
-          </div>
+          />
+        </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">
-          Save
-        </button>
-
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-link"
           data-dismiss="modal"
           (click)="cancel()"
         >
           Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
         </button>
       </div>
     </div>
