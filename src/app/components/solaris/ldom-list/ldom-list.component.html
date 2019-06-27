@@ -20,6 +20,12 @@
         <a routerLink="/solaris/ldom/detail/{{ ldom.device_id }}">
           <fa name="server" style="color:black;"></fa> {{ ldom.name }}
         </a>
+        <button
+          class="btn btn-warning btn-sm mb-2 pull-right"
+          (click)="editLdom(ldom)"
+        >
+        Edit LDOM
+        </button>
       </td>
     </tr>
     <tr *ngIf="!Ldoms?.length" class="text-center">
