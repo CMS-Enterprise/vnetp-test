@@ -1,5 +1,6 @@
 import { GraphLink } from './graph-link';
 import { GraphNode } from './graph-node';
+import { GraphContextMenu } from './graph-context-menu';
 
 export class Graph {
   constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>) {
@@ -31,6 +32,8 @@ export class Graph {
 
   nameArray: Array<string>;
 
+  contextMenuArray: Array<GraphContextMenu>;
+
   private buildGraph(obj: any) {
     this.objectIterator(obj, 1, this);
   }
@@ -50,6 +53,8 @@ export class Graph {
       graph.links.push(new GraphLink(node.id, parentId));
     }
 
+
+
     Object.keys(obj).forEach(key => {
       // Recursively iterate child arrays.
       if (obj.hasOwnProperty(key) && Array.isArray(obj[key])
@@ -66,6 +71,16 @@ export class Graph {
                }
     });
 
+    node.contextMenu = this.getGroupContextMenu(group);
+
     graph.nodes.push(node);
+  }
+
+  private getGroupContextMenu(group) {
+    if (!this.contextMenuArray) { return; }
+
+    const contextMenu = this.contextMenuArray[group];
+
+    return contextMenu;
   }
 }

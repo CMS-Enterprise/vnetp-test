@@ -1,3 +1,5 @@
+import { GraphContextMenu } from './graph-context-menu';
+
 export class GraphNode {
     constructor(group: number) {
         // GraphNode ID is dynamically generated, this ensures that there is
@@ -8,4 +10,5 @@ export class GraphNode {
     id: string;
     name: string;
     group: number;
+    contextMenu: GraphContextMenu;
 }
