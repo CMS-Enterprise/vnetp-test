@@ -145,26 +145,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     });
 
     // Handle Right Click
-    const contextMenu  = contextMenuFactory(d3);
-
-    
-    var menu = [
-      {
-          title: 'Header',
-      },
-      {
-          title: 'Normal item',
-          action: function() {}
-      },
-      {
-          divider: true
-      },
-      {
-          title: 'Last item',
-          action: function() {}
-      }
-  ];
-    node.on('contextmenu', contextMenuFactory(menu));
+    node.on('contextmenu', contextMenuFactory(this.OnNodeRightClick(node)));
 
     // Drag Event Handlers
     if (!this.disableDrag) {
@@ -250,5 +231,27 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   OnNodeClick(node) {
     this.nodeClicked.emit(node);
+  }
+
+  OnNodeRightClick(node) {
+
+    // TODO: Get Menu from Node and Return.
+
+    return [
+      {
+          title: 'Header22',
+      },
+      {
+          title: 'Normal item',
+          action: function() {}
+      },
+      {
+          divider: true
+      },
+      {
+          title: 'Last item',
+          action: function() {}
+      }
+  ];
   }
 }
