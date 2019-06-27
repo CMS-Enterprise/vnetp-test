@@ -147,28 +147,24 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     // Handle Right Click
     const contextMenu  = contextMenuFactory(d3);
 
-    node.on('contextmenu', n => {
-
-
-      var menu = [
-        {
+    
+    var menu = [
+      {
           title: 'Header',
-        },
-        {
+      },
+      {
           title: 'Normal item',
           action: function() {}
-        },
-        {
+      },
+      {
           divider: true
-        },
-        {
+      },
+      {
           title: 'Last item',
           action: function() {}
-        }
-      ];
-      console.log('context menu');
-      contextMenu(menu);
-    });
+      }
+  ];
+    node.on('contextmenu', contextMenuFactory(menu));
 
     // Drag Event Handlers
     if (!this.disableDrag) {
