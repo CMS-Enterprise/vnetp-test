@@ -1,5 +1,6 @@
 <div>
   <h1 class="mb-3">Deploy</h1>
+
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a
@@ -10,14 +11,15 @@
       >
     </li>
     <li class="nav-item">
-        <a
-          class="nav-link"
-          [ngClass]="{ active: tabIndex === 1 }"
-          (click)="tabIndex = 1"
-          >Solaris</a
-        >
-      </li> 
+      <a
+        class="nav-link"
+        [ngClass]="{ active: tabIndex === 1 }"
+        (click)="tabIndex = 1"
+        >Solaris</a
+      >
+    </li>
   </ul>
+
   <div class="p-3" *ngIf="tabIndex == 0">
     <table class="table table-striped">
       <thead>
@@ -31,6 +33,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let subnet of subnets">
+          <td></td>
           <td>
             <a href="/networks/edit/{{ subnet.subnet_id }}">{{
               subnet.name
@@ -45,18 +48,18 @@
         </tr>
       </tbody>
     </table>
+
+    <button
+      class="btn btn-danger pull-right"
+      (click)="deployNetwork()"
+      *ngIf="subnets.length"
+    >
+      Deploy Networks
+    </button>
   </div>
 
-  <button
-    class="btn btn-danger"
-    (click)="deployNetwork()"
-    *ngIf="subnets.length"
-  >
-    Deploy Networks
-  </button>
-
   <div *ngIf="tabIndex == 1">
-    <div class="btn-group-sm m-2" role="group">
+    <div class="btn-group p-3" role="group">
       <button
         type="button"
         class="btn btn-danger"
@@ -66,7 +69,5 @@
         Deploy Solaris
       </button>
     </div>
-
-
   </div>
 </div>

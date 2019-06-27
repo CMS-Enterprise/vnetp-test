@@ -1,8 +1,17 @@
-<h1 class="mb-3">CDOM: {{ Cdom?.name }}</h1>
-<!--TODO: Fix Button Layout-->
-<button class="btn btn-danger" (click)="ngxSm.getModal('deleteCdomModal').open()">
-  Delete CDOM
-</button>
+<div class="clearfix">
+  <h1 class="">CDOM: {{ Cdom?.name }}</h1>
+
+  <div class="btn-toolbar pull-right" role="toolbar">
+    <button
+      class="btn btn-sm btn-danger"
+      (click)="ngxSm.getModal('deleteCdomModal').open()"
+    >
+      <fa name="trash"></fa>
+      Delete CDOM
+    </button>
+  </div>
+</div>
+
 <ul class="nav nav-tabs">
   <li class="nav-item" (click)="navIndex = 0">
     <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Summary</a>
@@ -104,21 +113,21 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-link"
+      data-dismiss="modal"
+      (click)="deleteCdomConfirm = ''; deleteCdomModal.close()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-danger"
       data-dismiss="modal"
       (click)="deleteCdom()"
       [disabled]="deleteCdomConfirm !== 'DELETE'"
     >
       Yes
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
-      data-dismiss="modal"
-      (click)="deleteCdomConfirm = ''; deleteCdomModal.close()"
-    >
-      No
     </button>
   </div>
 </ngx-smart-modal>
