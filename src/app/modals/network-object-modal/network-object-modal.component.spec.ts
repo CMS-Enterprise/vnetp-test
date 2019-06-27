@@ -5,6 +5,7 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxMaskModule } from 'ngx-mask';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
@@ -14,7 +15,7 @@ describe('NetworkObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule],
+      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule],
       declarations: [ NetworkObjectModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })

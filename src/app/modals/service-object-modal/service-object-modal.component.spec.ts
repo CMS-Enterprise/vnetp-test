@@ -5,6 +5,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
@@ -14,7 +15,7 @@ describe('ServiceObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
+      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
       declarations: [ ServiceObjectModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })

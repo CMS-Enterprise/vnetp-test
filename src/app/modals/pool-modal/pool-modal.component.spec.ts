@@ -13,7 +13,7 @@ describe('PoolModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
+      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
       declarations: [ PoolModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
