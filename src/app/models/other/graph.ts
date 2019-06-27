@@ -99,7 +99,7 @@ export class Graph {
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
       if (mi.emitEvent) {
-        mi.action = () => this.contextMenuCallback();
+        mi.action = () => this.contextMenuCallback('Test Data');
       }
     });
 

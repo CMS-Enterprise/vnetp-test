@@ -37,7 +37,7 @@ export class NetworkTopologyComponent implements OnInit {
 
     // VRF Level Menu
     const vrfMenu = new GraphContextMenu();
-    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet',true));
+    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet', true));
 
 
     // Network Level Menu
