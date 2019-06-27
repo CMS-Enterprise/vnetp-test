@@ -4,6 +4,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { GraphContextMenu } from 'src/app/models/other/graph-context-menu';
 import { GraphContextMenuItem } from 'src/app/models/other/graph-context-menu-item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-network-topology',
@@ -17,7 +18,7 @@ export class NetworkTopologyComponent implements OnInit {
   showGraph: boolean;
   contextMenuArray: Array<GraphContextMenu>;
 
-  constructor(private apiService: AutomationApiService) {}
+  constructor(private apiService: AutomationApiService, private router: Router) {}
 
   ngOnInit() {
     this.buildContextMenu();
@@ -27,17 +28,40 @@ export class NetworkTopologyComponent implements OnInit {
   buildContextMenu() {
     this.contextMenuArray = new Array<GraphContextMenu>();
 
-    const graphContextMenu = new GraphContextMenu();
+    // Customer Level Menu
+    const customerMenu = new GraphContextMenu();
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Networks',  () => {this.router.navigate(['/networks']); }));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Static Routes',  () => {this.router.navigate(['/static-routes']); }));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Firewall Rules',  () => {this.router.navigate(['/firewall-rules']); }));
 
-    graphContextMenu.menuItems.push(new GraphContextMenuItem('1'));
-    graphContextMenu.menuItems.push(new GraphContextMenuItem('2'));
-    graphContextMenu.menuItems.push(new GraphContextMenuItem('3'));
 
-    this.contextMenuArray.push(graphContextMenu);
+    // VRF Level Menu
+    const vrfMenu = new GraphContextMenu();
+    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet', () => {this.router.navigate(['/networks/create']); }));
+
+
+    // Network Level Menu
+
+    //TODO: Need to resolve ID.
+    const networkMenu = new GraphContextMenu();
+
+    let networkStaticRoutes = new GraphContextMenuItem('Edit Static Routes');
+
+
+    networkMenu.menuItems.push();
+
+
+    this.contextMenuArray.push(customerMenu);
+    this.contextMenuArray.push(vrfMenu);
+    this.contextMenuArray.push(networkMenu);
   }
 
   nodeClickHandler(node: any) {
     console.log(node);
+  }
+
+  nodeContextMenuActionHandler(value: string) {
+    console.log(value);
   }
 
   getCustomer() {

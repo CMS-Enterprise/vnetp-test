@@ -60,7 +60,6 @@ export class Graph {
     }
 
 
-
     Object.keys(obj).forEach(key => {
       // Recursively iterate child arrays.
       if (obj.hasOwnProperty(key) && Array.isArray(obj[key])
