@@ -102,10 +102,11 @@ export class NetworkTopologyComponent implements OnInit {
               this.router.navigate(['/networks']);
               break;
             case 'View Static Routes':
-              break;
+                this.router.navigate(['/static-routes']);
+                break;
             case 'View Firewall Rules':
-              break;
-
+                this.router.navigate(['/firewall-rules']);
+                break;
             default:
               break;
           }
@@ -113,6 +114,8 @@ export class NetworkTopologyComponent implements OnInit {
         case 'VRF':
           switch (actionData.ActionType) {
             case 'Add Subnet':
+                this.router.navigate(['/static-routes']);
+
               break;
 
             default:
