@@ -7,6 +7,7 @@ import { GraphContextMenuItem } from 'src/app/models/other/graph-context-menu-it
 import { Router } from '@angular/router';
 import { ActionData } from 'src/app/models/other/action-data';
 import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-result';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-network-topology',
@@ -22,7 +23,8 @@ export class NetworkTopologyComponent implements OnInit {
 
   constructor(
     private apiService: AutomationApiService,
-    private router: Router
+    private router: Router,
+    private ngxSm: NgxSmartModalService
   ) {}
 
   ngOnInit() {
@@ -77,6 +79,22 @@ export class NetworkTopologyComponent implements OnInit {
       )
     );
 
+    networkMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'Edit Firewall Rules',
+        true,
+        new ActionData('Subnet', 'Edit Firewall Rules')
+      )
+    );
+
+    networkMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'New Firewall Rule',
+        true,
+        new ActionData('Subnet', 'New Firewall Rule')
+      )
+    );
+
     this.contextMenuArray.push(customerMenu);
     this.contextMenuArray.push(vrfMenu);
     this.contextMenuArray.push(networkMenu);
@@ -115,9 +133,7 @@ export class NetworkTopologyComponent implements OnInit {
           switch (actionData.ActionType) {
             case 'Add Subnet':
                 this.router.navigate(['/static-routes']);
-
-              break;
-
+                break;
             default:
               break;
           }
@@ -125,9 +141,14 @@ export class NetworkTopologyComponent implements OnInit {
         case 'Subnet':
           switch (actionData.ActionType) {
             case 'Edit Static Routes':
-              this.router.navigate([`/static-routes/edit/${ctxMenuResult.object.subnet_id}`])
+              this.router.navigate([`/static-routes/edit/${ctxMenuResult.object.subnet_id}`]);
               break;
-
+            case 'Edit Firewall Rules':
+              this.router.navigate([`/firewall-rules/edit/${ctxMenuResult.object.subnet_id}`]);
+              break;
+            case 'New Firewall Rule':
+                this.ngxSm.getModal('firewallRuleModal').open();
+                break;
             default:
               break;
           }
