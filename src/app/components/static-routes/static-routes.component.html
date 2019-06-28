@@ -13,84 +13,92 @@
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group btn-group-sm m-2" role="group">
+    <h1>Static Routes</h1>
+
+    <div class="btn-toolbar mb-2 pull-right" role="toolbar">
       <button
         type="button"
-        class="btn btn-info"
+        class="btn btn-sm btn-info"
         (click)="getNetworks()"
-        aria-label="Refresh Networks"
-      >
+        aria-label="Refresh Static Routes table"
+        >
+        <fa name="refresh"></fa>
         Refresh
       </button>
     </div>
 
-    <div class="card">
-      <table class="table table-sm table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Interface Name</th>
-            <th scope="col">Static Routes</th>
-            <th scope="col">Tier (VRF)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let subnet of subnets.subnets">
-            <td>
-              <a routerLink="/static-routes/edit/{{ subnet.subnet_id }}">{{
-                subnet.name
-              }}</a>
-            </td>
-            <td>
-              {{ getStaticRoutesCount(subnet) }}
-            </td>
-            <td>
-              {{ subnet.vrf_group_name }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Interface Name</th>
+          <th scope="col">Static Routes</th>
+          <th scope="col">Tier (VRF)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subnet of subnets.subnets">
+          <td>
+            <a routerLink="/static-routes/edit/{{ subnet.subnet_id }}">{{
+              subnet.name
+            }}</a>
+          </td>
+          <td>
+            {{ getStaticRoutesCount(subnet) }}
+          </td>
+          <td>
+            {{ subnet.vrf_group_name }}
+          </td>
+        </tr>
+        <tr *ngIf="!subnets.subnets?.length" class="text-center">
+          <td colspan="4">No Subnets</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <div *ngIf="navIndex == 1">
-    <div class="btn-group btn-group-sm m-2" role="group">
+    <h1>Routing Table</h1>
+
+    <div class="btn-toolbar mb-2 pull-right" role="toolbar">
       <button
         type="button"
-        class="btn btn-info"
+        class="btn btn-sm btn-info"
         (click)="getNetworks()"
         aria-label="Refresh Routing Table"
       >
+        <fa name="refresh"></fa>
         Refresh
       </button>
     </div>
 
-    <div class="card">
-      <table class="table table-sm table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Interface Name</th>
-            <th scope="col">IP Address</th>
-            <th scope="col">Subnet Mask</th>
-            <th scope="col">Next Hop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let route of routingTable">
-            <td>
-              {{ route.InterfaceName }}
-            </td>
-            <td>
-              {{ route.IpAddress }}
-            </td>
-            <td>
-              {{ route.SubnetMask }}
-            </td>
-            <td>
-              {{ route.NextHop }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Interface Name</th>
+          <th scope="col">IP Address</th>
+          <th scope="col">Subnet Mask</th>
+          <th scope="col">Next Hop</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let route of routingTable">
+          <td>
+            {{ route.InterfaceName }}
+          </td>
+          <td>
+            {{ route.IpAddress }}
+          </td>
+          <td>
+            {{ route.SubnetMask }}
+          </td>
+          <td>
+            {{ route.NextHop }}
+          </td>
+        </tr>
+        <tr *ngIf="!routingTable?.length" class="text-center">
+          <td colspan="4">No Routes</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

@@ -21,7 +21,7 @@ export class SolarisCdom {
 
   // Networking
   /** Virtual Network */
-  vnet: string;
+  vnic: string;
   /** VLANs */
   vlans = new Array<number>();
   /** Virtual Switch */
@@ -48,6 +48,8 @@ export class SolarisCdom {
 
   /** Associated LDOMs */
   associatedldoms = new Array<string>();
+
+  ldomCount: number
 
   // TODO: Do we need these??
   // ilomname: string;

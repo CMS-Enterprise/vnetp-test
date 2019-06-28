@@ -1,39 +1,43 @@
 <div>
-  <div class="btn-group-sm mb-2" role="group">
+  <h1>Firewall Rules</h1>
+
+  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button
       type="button"
       class="btn btn-info btn-sm"
       (click)="getNetworks()"
       aria-label="Refresh Networks"
     >
+      <fa name="refresh"></fa>
       Refresh
     </button>
   </div>
 
-  <div class="card">
-    <table class="table table-sm table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Subnet</th>
-          <th scope="col">Firewall Rules</th>
-          <th scope="col">Tier (VRF)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let subnet of subnets.subnets">
-          <td>
-            <a routerLink="/firewall-rules/edit/{{ subnet.subnet_id }}">{{
-              subnet.name
-            }}</a>
-          </td>
-          <td>
-            {{ getFirewallRulesCount(subnet) }}
-          </td>
-          <td>
-            {{ subnet.vrf_group_name }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Subnet</th>
+        <th scope="col">Firewall Rules</th>
+        <th scope="col">Tier (VRF)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subnet of subnets.subnets">
+        <td>
+          <a routerLink="/firewall-rules/edit/{{ subnet.subnet_id }}">{{
+            subnet.name
+          }}</a>
+        </td>
+        <td>
+          {{ getFirewallRulesCount(subnet) }}
+        </td>
+        <td>
+          {{ subnet.vrf_group_name }}
+        </td>
+      </tr>
+      <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
+        <td colspan="4">No Subnets</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

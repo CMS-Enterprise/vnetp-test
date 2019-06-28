@@ -5,6 +5,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
@@ -14,7 +15,7 @@ describe('ServiceObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
+      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
       declarations: [ ServiceObjectModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
@@ -87,16 +88,8 @@ describe('ServiceObjectModalComponent', () => {
     expect(destinationPort.valid).toBeFalsy();
   });
 
-  it ('sourcePort should not be required', () =>  {
+  it ('sourcePort should be required', () =>  {
     const sourcePort = component.form.controls.sourcePort;
-    expect(sourcePort.valid).toBeTruthy();
-  });
-
-  // Source Port
-  it ('destination port should not be required when source port set', () => {
-    const sourcePort = component.form.controls.sourcePort;
-    sourcePort.setValue('80');
-    const destinationPort = component.form.controls.destinationPort;
-    expect(destinationPort.valid).toBeTruthy();
+    expect(sourcePort.valid).toBeFalsy();
   });
 });

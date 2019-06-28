@@ -44,17 +44,6 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   get f() { return this.form.controls; }
 
   private setFormValidators() {
-    const destinationPort = this.form.get('destinationPort');
-
-    this.destinationPortSubscription = this.form.get('sourcePort').valueChanges
-    .subscribe( value => {
-      if (value) {
-        destinationPort.setValidators(Validators.compose([ValidatePortRange]));
-      } else {
-        destinationPort.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
-      }
-      destinationPort.updateValueAndValidity();
-    });
   }
 
   getData() {
@@ -73,7 +62,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       type: ['', Validators.required],
       destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])],
-      sourcePort: ['', Validators.compose([ValidatePortRange])]
+      sourcePort: ['', Validators.compose([Validators.required , ValidatePortRange])]
     });
   }
 

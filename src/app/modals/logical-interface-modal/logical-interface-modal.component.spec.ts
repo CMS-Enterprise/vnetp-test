@@ -13,7 +13,7 @@ describe('LogicalInterfaceModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
+      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
       declarations: [ LogicalInterfaceModalComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
