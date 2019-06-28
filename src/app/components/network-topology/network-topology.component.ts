@@ -5,6 +5,8 @@ import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { GraphContextMenu } from 'src/app/models/other/graph-context-menu';
 import { GraphContextMenuItem } from 'src/app/models/other/graph-context-menu-item';
 import { Router } from '@angular/router';
+import { ActionData } from 'src/app/models/other/action-data';
+import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-result';
 
 @Component({
   selector: 'app-network-topology',
@@ -18,7 +20,10 @@ export class NetworkTopologyComponent implements OnInit {
   showGraph: boolean;
   contextMenuArray: Array<GraphContextMenu>;
 
-  constructor(private apiService: AutomationApiService, private router: Router) {}
+  constructor(
+    private apiService: AutomationApiService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.buildContextMenu();
@@ -30,26 +35,47 @@ export class NetworkTopologyComponent implements OnInit {
 
     // Customer Level Menu
     const customerMenu = new GraphContextMenu();
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Networks',  true));
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Static Routes',  true));
-    customerMenu.menuItems.push(new GraphContextMenuItem('View Firewall Rules',  true));
-
+    customerMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'View Networks',
+        true,
+        new ActionData('Customer', 'View Networks')
+      )
+    );
+    customerMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'View Static Routes',
+        true,
+        new ActionData('Customer', 'View Static Routes')
+      )
+    );
+    customerMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'View Firewall Rules',
+        true,
+        new ActionData('Customer', 'View Firewall Rules')
+      )
+    );
 
     // VRF Level Menu
     const vrfMenu = new GraphContextMenu();
-    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet', true));
-
+    vrfMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'Add Subnet',
+        true,
+        new ActionData('VRF', 'Add Subnet')
+      )
+    );
 
     // Network Level Menu
-
-    //TODO: Need to resolve ID.
     const networkMenu = new GraphContextMenu();
-
-    let networkStaticRoutes = new GraphContextMenuItem('Edit Static Routes');
-
-
-    networkMenu.menuItems.push();
-
+    networkMenu.menuItems.push(
+      new GraphContextMenuItem(
+        'Edit Static Routes',
+        true,
+        new ActionData('Subnet', 'Edit Static Routes')
+      )
+    );
 
     this.contextMenuArray.push(customerMenu);
     this.contextMenuArray.push(vrfMenu);
@@ -60,8 +86,52 @@ export class NetworkTopologyComponent implements OnInit {
     console.log(node);
   }
 
-  nodeContextMenuActionHandler(value: string) {
-    console.log(value);
+  nodeContextMenuActionHandler(event) {
+    if (!event) {
+      return;
+    }
+
+    const ctxMenuResult = event as GraphContextMenuResult;
+
+    if (ctxMenuResult) {
+      const actionData = ctxMenuResult.actionData;
+      switch (actionData.ActionParentType) {
+        case 'Customer':
+          switch (actionData.ActionType) {
+            case 'View Networks':
+              this.router.navigate(['/networks']);
+              break;
+            case 'View Static Routes':
+              break;
+            case 'View Firewall Rules':
+              break;
+
+            default:
+              break;
+          }
+          break;
+        case 'VRF':
+          switch (actionData.ActionType) {
+            case 'Add Subnet':
+              break;
+
+            default:
+              break;
+          }
+          break;
+        case 'Subnet':
+          switch (actionData.ActionType) {
+            case 'Edit Static Routes':
+              break;
+
+            default:
+              break;
+          }
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   getCustomer() {
