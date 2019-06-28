@@ -2,6 +2,7 @@ import { GraphLink } from './graph-link';
 import { GraphNode } from './graph-node';
 import { GraphContextMenu } from './graph-context-menu';
 import { GraphContextMenuResult } from './graph-context-menu-result';
+import { GraphContextMenuItem } from './graph-context-menu-item';
 
 export class Graph {
   constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
@@ -96,15 +97,20 @@ export class Graph {
 
     if (this.contextMenuArray[group - 1]) {
     const contextMenu = this.contextMenuArray[group - 1];
+    let nodeContextMenu = new GraphContextMenu();
 
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
+      let nodeContextMenuItem = new GraphContextMenuItem(mi.title, false, mi.actionData);
+
+
       if (mi.emitEvent) {
-        mi.action = () => this.contextMenuCallback.emit(new GraphContextMenuResult(node, mi.actionData, obj));
+        nodeContextMenuItem.action = () => this.contextMenuCallback.emit(new GraphContextMenuResult(node, mi.actionData, obj));
       }
+      nodeContextMenu.menuItems.push(nodeContextMenuItem);
     });
 
-    return contextMenu;
+    return nodeContextMenu;
     }
 
     return null;

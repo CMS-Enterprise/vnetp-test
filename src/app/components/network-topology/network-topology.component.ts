@@ -125,6 +125,7 @@ export class NetworkTopologyComponent implements OnInit {
         case 'Subnet':
           switch (actionData.ActionType) {
             case 'Edit Static Routes':
+              this.router.navigate([`/static-routes/edit/${ctxMenuResult.object.subnet_id}`])
               break;
 
             default:
