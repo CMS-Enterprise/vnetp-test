@@ -41,7 +41,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
     console.log(this.contextMenuArray);
     if (this.graphObject) {
-      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray, () => this.OnContextMenuClick(''));
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray, this.contextMenuItemClicked);
     } else if (!this.graph) {
       this.graph = new Graph({Name: 'No Data to Graph'}, [''], ['']);
     }
@@ -241,9 +241,5 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   OnNodeRightClick(node: GraphNode) {
     return node.getContextMenu();
-  }
-
-  OnContextMenuClick(value: string) {
-    this.contextMenuItemClicked.emit(value);
   }
 }

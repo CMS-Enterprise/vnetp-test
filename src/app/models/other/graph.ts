@@ -84,22 +84,22 @@ export class Graph {
                }
     });
 
-    node.contextMenu = this.getGroupContextMenu(group);
+    node.contextMenu = this.getGroupContextMenu(group, node);
 
     graph.nodes.push(node);
   }
 
-  private getGroupContextMenu(group) {
+  private getGroupContextMenu(group, node) {
     if (!this.contextMenuArray) { return; };
 
 
-    if (this.contextMenuArray[group -1]) {
+    if (this.contextMenuArray[group - 1]) {
     const contextMenu = this.contextMenuArray[group - 1];
 
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
       if (mi.emitEvent) {
-        mi.action = () => this.contextMenuCallback('Test Data');
+        mi.action = () => this.contextMenuCallback.emit(mi.title);
       }
     });
 
