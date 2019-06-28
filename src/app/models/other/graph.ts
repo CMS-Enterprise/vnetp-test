@@ -1,6 +1,7 @@
 import { GraphLink } from './graph-link';
 import { GraphNode } from './graph-node';
 import { GraphContextMenu } from './graph-context-menu';
+import { GraphContextMenuResult } from './graph-context-menu-result';
 
 export class Graph {
   constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
@@ -99,7 +100,7 @@ export class Graph {
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
       if (mi.emitEvent) {
-        mi.action = () => this.contextMenuCallback.emit(mi.title);
+        mi.action = () => this.contextMenuCallback.emit(new GraphContextMenuResult(node, mi));
       }
     });
 
