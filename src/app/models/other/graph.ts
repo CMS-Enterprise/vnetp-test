@@ -85,12 +85,12 @@ export class Graph {
                }
     });
 
-    node.contextMenu = this.getGroupContextMenu(group, node);
+    node.contextMenu = this.getGroupContextMenu(group, node, obj);
 
     graph.nodes.push(node);
   }
 
-  private getGroupContextMenu(group, node) {
+  private getGroupContextMenu(group, node, obj) {
     if (!this.contextMenuArray) { return; };
 
 
@@ -100,7 +100,7 @@ export class Graph {
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
       if (mi.emitEvent) {
-        mi.action = () => this.contextMenuCallback.emit(new GraphContextMenuResult(node, mi));
+        mi.action = () => this.contextMenuCallback.emit(new GraphContextMenuResult(node, mi.actionData, obj));
       }
     });
 

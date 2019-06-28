@@ -1,15 +1,21 @@
-import { GraphContextMenuItem } from './graph-context-menu-item';
 import { GraphNode } from './graph-node';
+import { ActionData } from './action-data';
 
 export class GraphContextMenuResult {
 
-    constructor(graphNode: GraphNode, graphContextMenuItem: GraphContextMenuItem) {
+    constructor(graphNode: GraphNode, actionData: ActionData, object?: any) {
         this.graphNode = graphNode;
-        this.graphContextMenuItem = graphContextMenuItem;
+        this.actionData = actionData;
+
+        if (object) {
+            this.object = object;
+        }
     }
 
     graphNode: GraphNode;
 
-    graphContextMenuItem: GraphContextMenuItem;
+    actionData: ActionData;
+
+    object: any;
 }
 
