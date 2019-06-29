@@ -20,6 +20,7 @@ export class NetworkTopologyComponent implements OnInit {
   subnets: Array<Subnet>;
   showGraph: boolean;
   contextMenuArray: Array<GraphContextMenu>;
+  clickActionArray: Array<ActionData>;
 
   constructor(
     private apiService: AutomationApiService,
@@ -29,6 +30,7 @@ export class NetworkTopologyComponent implements OnInit {
 
   ngOnInit() {
     this.buildContextMenu();
+    this.buildClickActionArray();
     this.getCustomer();
   }
 
@@ -100,8 +102,26 @@ export class NetworkTopologyComponent implements OnInit {
     this.contextMenuArray.push(networkMenu);
   }
 
-  nodeClickHandler(node: any) {
-    console.log(node);
+  buildClickActionArray() {
+    this.clickActionArray = new Array<ActionData>();
+
+    const customerClick = new ActionData('Customer', 'Click');
+    const vrfClick = new ActionData('VRF', 'Click');
+    const subnetClick = new ActionData('Subnet', 'Click');
+
+    this.clickActionArray.push(customerClick);
+    this.clickActionArray.push(vrfClick);
+    this.clickActionArray.push(subnetClick);
+  }
+
+  nodeClickHandler(event) {
+    if (!event) {
+      return;
+    }
+
+    const clickAction = event as ActionData;
+
+    console.log(clickAction);
   }
 
   nodeContextMenuActionHandler(event) {

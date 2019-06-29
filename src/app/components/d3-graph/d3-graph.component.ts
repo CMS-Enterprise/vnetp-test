@@ -6,6 +6,8 @@ import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';
 import { GraphNode } from 'src/app/models/other/graph-node';
 import { GraphContextMenu } from 'src/app/models/other/graph-context-menu';
+import { ActionData } from 'src/app/models/other/action-data';
+import { ClickResult } from 'src/app/models/other/click-result';
 
 @Component({
   selector: 'app-d3-graph',
@@ -25,6 +27,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   @Input() ignoreArray = ['custom_fields'];
   @Input() nameArray = ['name', 'title'];
   @Input() contextMenuArray?: Array<GraphContextMenu>;
+  @Input() clickActionArray?: Array<ActionData>;
 
   @Output() rendered = new EventEmitter<any>();
   @Output() nodeClicked = new EventEmitter<any>();
@@ -41,7 +44,8 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
     console.log(this.contextMenuArray);
     if (this.graphObject) {
-      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray, this.contextMenuItemClicked);
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray,
+         this.contextMenuArray, this.contextMenuItemClicked);
     } else if (!this.graph) {
       this.graph = new Graph({Name: 'No Data to Graph'}, [''], ['']);
     }
@@ -236,7 +240,10 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   OnNodeClick(node) {
-    this.nodeClicked.emit(node);
+    if (!this.clickActionArray || !this.clickActionArray[node.group - 1]) {
+      return;
+    }
+    this.nodeClicked.emit(new ClickResult(node, this.clickActionArray[node.group - 1]));
   }
 
   OnNodeRightClick(node: GraphNode) {
