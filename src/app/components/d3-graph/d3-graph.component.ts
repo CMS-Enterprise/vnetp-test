@@ -160,9 +160,9 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     // Drag Event Handlers
     if (!this.disableDrag) {
     node.call(d3.drag()
-          .on('start', d => { this.dragstarted(d); })
+          .on('start', d => { this.dragStarted(d); })
           .on('drag', d => {this.dragged(d); })
-          .on('end', d => {this.dragended(d); }));
+          .on('end', d => {this.dragEnded(d); }));
     }
 
     // Add Image to Node
@@ -222,7 +222,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     save_svg_as_png.saveSvgAsPng(document.getElementsByTagName('svg')[0], 'graph.png');
   }
 
-  dragstarted(d) {
+  dragStarted(d) {
     if (!d3.event.active) { this.forceDiagram.alphaTarget(0.3).restart(); }
     d.fx = d.x;
     d.fy = d.y;
@@ -233,7 +233,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     d.fy = d3.event.y;
   }
 
-  dragended(d) {
+  dragEnded(d) {
     if (!d3.event.active) { this.forceDiagram.alphaTarget(0); }
     d.fx = null;
     d.fy = null;

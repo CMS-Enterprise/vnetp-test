@@ -4,8 +4,10 @@ import { GraphContextMenu } from './graph-context-menu';
 import { GraphContextMenuResult } from './graph-context-menu-result';
 import { GraphContextMenuItem } from './graph-context-menu-item';
 
+/** Constructs a Graph by recursively iterating an object and its children. */
 export class Graph {
-  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>, contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
+  constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>,
+     contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
     this.nodes = new Array<GraphNode>();
     this.links = new Array<GraphLink>();
 

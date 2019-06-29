@@ -1,5 +1,6 @@
 import { GraphContextMenuItem } from './graph-context-menu-item';
 
+/** Contains a collection of Graph Menu Items. */
 export class GraphContextMenu {
   menuItems: Array<GraphContextMenuItem>;
 

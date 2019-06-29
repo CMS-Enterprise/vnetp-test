@@ -1,5 +1,7 @@
 import { GraphContextMenu } from './graph-context-menu';
 
+/** Represents a Node on a Graph. */
+
 export class GraphNode {
     constructor(group: number) {
         // GraphNode ID is dynamically generated, this ensures that there is
