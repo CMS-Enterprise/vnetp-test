@@ -41,8 +41,6 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   constructor() {}
 
   ngOnInit(): void {
-
-    console.log(this.contextMenuArray);
     if (this.graphObject) {
       this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray,
          this.contextMenuArray, this.contextMenuItemClicked);
