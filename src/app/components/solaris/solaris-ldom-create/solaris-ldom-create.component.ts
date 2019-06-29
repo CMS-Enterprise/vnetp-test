@@ -3,7 +3,6 @@ import { SolarisService } from '../solaris-services/solaris-service.service';
 import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Router } from '@angular/router';
-import { MessageService } from 'src/app/services/message.service';
 import { SolarisCdom} from 'src/app/models/solaris/solaris-cdom';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -11,10 +10,11 @@ import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-resp
 import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
-import { SolarisVnet } from 'src/app/models/solaris/solaris-vnet';
+import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -23,9 +23,9 @@ import { Observable } from 'rxjs';
 export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   LDOM: SolarisLdom;
   ldomFilter: string[];
-  vnets: Array<any>;
+  vnics: Array<any>;
   vdisks: string[];
-  inputLDOMvnet: string;
+  inputLDOMvnic: string;
   inputLDOMvds: string;
   inputLDOMvdswwn: string;
   inputLDOMvdiskname: string;
@@ -35,16 +35,19 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   currentCDOM: SolarisCdom;
   newSolarisVariable: SolarisVariable;
   addVdsDev: SolarisVdsDevs;
-  modalVnet: SolarisVnet;
+  modalVnic: SolarisVnic;
+  testCDOM: SolarisCdom;
   // modalSelectedVswitch: SolarisVswitch;
-  vnetModalVswitches: Array<SolarisVswitch>;
-  vnetModalVswitch: SolarisVswitch;
-  vnetModalTaggedVlans: Array<number>;
-  addVnetInherit: boolean;
+  vnicModalVswitches: Array<SolarisVswitch>;
+  vnicModalVswitch: SolarisVswitch;
+  vnicModalTaggedVlans: Array<number>;
+  addVnicInherit: boolean;
   cpuCountArray: number[];
   ramCountArray: number[];
   dirty: boolean;
-  vnetModalUntaggedVlan: number;
+  vnicModalUntaggedVlan: number;
+  editLdom: boolean;
+  editCurrentVnic: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -59,8 +62,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private hs: HelpersService,
     private ngxSm: NgxSmartModalService
     ) {
-    this.vnets = new Array<any>();
+    this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
+
 
   }
   addVariable() {
@@ -75,16 +79,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.LDOM.variables.splice(index, 1);
     }
   }
-  addvnetObject(obj: any, objArray: Array<any>) {
+  addvnicObject(obj: any, objArray: Array<any>) {
      objArray.push(obj);
-     this.inputLDOMvnet = '';
+     this.inputLDOMvnic = '';
   }
-  addvdsObject(objVDSwwn: string, objvDiskname: string, objVDS: string, objArray: Array<any>) {
-    objArray.push(`${objVDSwwn},${objvDiskname},${objVDS}`);
-    this.inputLDOMvds = '';
-    this.inputLDOMvdswwn = '';
-    this.inputLDOMvdiskname = '';
- }
   moveObjectPosition(value: number, obj, objArray) {
    this.solarisService.moveObjectPosition(value, obj, objArray);
   }
@@ -103,102 +101,176 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.LDOM = this.LDOM;
 
     const body = { extra_vars };
-
-    this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    if ( this.editLdom != true) {
+      this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+    } else {
+      this.automationApiService.launchTemplate('save-ldom', body, true).subscribe();
+    }
     this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
     // TODO: Tie to reactive form pristine.
+    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
+    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
     this.dirty = true;
     this.newSolarisVariable = new SolarisVariable();
+    this.LDOM.vds = new Array<any>();
+    this.addVdsDev = new SolarisVdsDevs();
+    this.modalVnic = new SolarisVnic();
+    this.editLdom = false;
+    this.editCurrentVnic = false;
+    this.solarisService.currentVnic = null;
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
         this.CDOMDeviceArray = cdomResponse.Devices;
     });
-
-    this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
-    this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
-
-    this.LDOM.vds = new Array<any>();
-    this.addVdsDev = new SolarisVdsDevs();
-    this.modalVnet = new SolarisVnet();
+    // first case is for new LDOM within a CDOM
+    if ( this.solarisService.parentCdom.device_id != null && this.solarisService.currentLdom.name == null) {
+      this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(data => {
+          const result = data as SolarisCdom;
+          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+      });
+      this.solarisService.parentCdom = new SolarisCdom();
+    }
+    // this case is for edit LDOM
+    if ( this.solarisService.currentLdom.name != null){
+      this.editLdom = true;
+      this.LDOM = this.solarisService.currentLdom;
+      this.automationApiService.getDevicesbyID(this.solarisService.currentLdom.associatedcdom.device_id).subscribe(data => {
+        const result = data as SolarisCdom;
+        this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+        this.solarisService.currentLdom = new SolarisLdom();
+    });
+    }
   }
 
   openVdsModal() {
+    if ( this.solarisService.currentVds != null){
+      this.addVdsDev = this.solarisService.currentVds;
+      this.solarisService.currentVds = null;
+    }
     this.ngxSm.getModal('vdsDevModalLdom').open();
   }
 
   insertVds() {
-    this.LDOM.vds.push(Object.assign({}, this.addVdsDev));
+    // check if object already on array
+    const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+    if ( vdsIndex !== -1) {
+        this.LDOM.vds.splice(vdsIndex, 1);
+        this.LDOM.vds.push(this.addVdsDev);
+    } else {
+      this.LDOM.vds.push(this.addVdsDev);
+    }
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
-  editVds() {
+  editVds(vds: SolarisVdsDevs) {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+    this.solarisService.currentVds = vds;
+    this.openVdsModal();
+    // check if modal canceled, don't remove if so
+    // this.LDOM.vds.splice(vdsIndex, 1);
+  }
+  editVnic(vnic: SolarisVnic){
+    this.editCurrentVnic = true;
+    const vnicIndex = this.LDOM.vnic.indexOf(vnic);
+    this.solarisService.currentVnic = vnic;
+    this.openVnicModal();
+    // check if modal canceled, don't remove if so
+    // this.LDOM.vnic.splice(vnicIndex, 1);
+
   }
 
-  openVnetModal() {
-    this.addVnetInherit = true;
-    this.vnetModalTaggedVlans = new Array<number>();
-    this.modalVnet = new SolarisVnet();
-    this.vnetModalVswitch = new SolarisVswitch();
-    this.vnetModalVswitches = new Array<SolarisVswitch>();
-
+  openVnicModal() {
+    this.addVnicInherit = true;
+    if ( this.solarisService.currentVnic == null ){
+      this.vnicModalTaggedVlans = new Array<number>();
+      this.modalVnic = new SolarisVnic();
+      this.vnicModalVswitch = new SolarisVswitch();
+      this.vnicModalVswitches = new Array<SolarisVswitch>();
+    } else {
+      this.addVnicInherit = false;
+      this.modalVnic = this.solarisService.currentVnic;
+      this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
+      this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
+      this.solarisService.currentVnic = null;
+    }
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
       // the selected CDOM with its custom fields.
     this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
       const result = data as SolarisCdom;
       const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
-      this.vnetModalVswitches = cdomFull.vsw;
-      this.ngxSm.getModal('vnetModalLdom').open();
+      this.vnicModalVswitches = cdomFull.vsw;
+      this.ngxSm.getModal('vnicModalLdom').open();
     });
   }
 
-  insertVnet() {
-    if (this.addVnetInherit) {
-      this.modalVnet.TaggedVlans = this.vnetModalVswitch.vlansTagged;
+  insertVnic() {
+    if (this.addVnicInherit) {
+      this.modalVnic.TaggedVlans = this.vnicModalVswitch.vlansTagged;
+      this.editCurrentVnic = false;
     } else {
-      this.modalVnet.TaggedVlans = this.vnetModalTaggedVlans;
+      this.modalVnic.TaggedVlans = this.vnicModalTaggedVlans;
     }
 
-    this.modalVnet.UntaggedVlan = this.vnetModalUntaggedVlan;
-    this.modalVnet.VirtualSwitchName = this.vnetModalVswitch.vSwitchName;
+    this.modalVnic.UntaggedVlan = this.vnicModalUntaggedVlan;
+    this.modalVnic.VirtualSwitchName = this.vnicModalVswitch.vSwitchName;
+    // in the case of edit vNic, only add if not already array member
+    if (this.LDOM.vnic.indexOf(this.modalVnic) === -1){
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+    } else {
+      const vnicIndex = this.LDOM.vnic.indexOf(this.modalVnic);
+      this.LDOM.vnic.splice(vnicIndex, 1);
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
 
-    this.LDOM.vnet.push(this.hs.deepCopy(this.modalVnet));
-    this.ngxSm.getModal('vnetModalLdom').close();
+    }
+    console.log(this.LDOM.vnic);
+    this.modalVnic = new SolarisVnic();
+    this.ngxSm.getModal('vnicModalLdom').close();
   }
 
-  deleteVdsDev(vdsDev: any) {
+  deleteVds(vdsDev: any) {
     const vdsIndex = this.LDOM.vds.indexOf(vdsDev);
     if (vdsIndex > -1 ) {
       this.LDOM.vds.splice(vdsIndex, 1);
     }
   }
-  deletevNet(vnetDev: any) {
-    const vnetIndex = this.LDOM.vnet.indexOf(vnetDev);
-    if (vnetIndex > -1 ) {
-      this.LDOM.vnet.splice(vnetIndex, 1);
+  deleteVnic(vnicDev: any) {
+    const vnicIndex = this.LDOM.vnic.indexOf(vnicDev);
+    if (vnicIndex > -1 ) {
+      this.LDOM.vnic.splice(vnicIndex, 1);
     }
   }
 
   selectUntaggedVlan(e, vlan: number) {
     if (e.target.checked) {
-      if (!this.vnetModalTaggedVlans.includes(vlan)) {
-        this.vnetModalTaggedVlans.push(vlan);
+      if (!this.vnicModalTaggedVlans.includes(vlan)) {
+        this.vnicModalTaggedVlans.push(vlan);
       }
     } else if (!e.target.checked) {
-      const vlanIndex = this.vnetModalTaggedVlans.indexOf(vlan);
+      const vlanIndex = this.vnicModalTaggedVlans.indexOf(vlan);
 
       if (vlanIndex > -1 ) {
-        this.vnetModalTaggedVlans.splice(vlanIndex, 1);
+        this.vnicModalTaggedVlans.splice(vlanIndex, 1);
       }
     }
   }
   insertVirtualDisks(vds) {
      if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
      vds.forEach(thisVds => {
+      if(this.LDOM.vds.indexOf(thisVds) !== -1){
+        this.LDOM.vds.push(Object.assign({}, thisVds));
+      } else {
+         const vdsIndex = this.LDOM.vds.indexOf(thisVds);
+         this.LDOM.vds.splice(vdsIndex, 1);
+        // this.LDOM.vds.push(Object.assign({}, thisVds));
+      }
+      this.addVdsDev = new SolarisVdsDevs();
+
      });
+     this.ngxSm.getModal('vdsDevModalLdom').close();
+     console.log(this.LDOM.vds);
    }
 }

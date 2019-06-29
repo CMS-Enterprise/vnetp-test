@@ -3,6 +3,7 @@
   (click)="uploader.click()"
   *ngIf="!disableImport"
 >
+  <fa name="upload"></fa>
   <span>Import </span>
   <span *ngIf="!disableJson">JSON</span>
   <span *ngIf="!disableJson && !disableCsv">/</span>
@@ -10,24 +11,28 @@
 </button>
 
 <a
-  class="btn btn-success btn-sm mr-1"
+  class="btn btn-info btn-sm mr-1"
   title="Download JSON"
   [href]="downloadHref"
   download="{{ exportFileName }}-{{ currentDate }}.json"
   (click)="getDate(); exportFile('json')"
   *ngIf="!disableJson && !disableExport"
-  >Export JSON</a
->
+  >
+  <fa name="download"></fa>
+  Export JSON
+</a>
 
 <a
-  class="btn btn-success btn-sm mr-1"
+  class="btn btn-info btn-sm mr-1"
   title="Download CSV"
   [href]="downloadHref"
   download="{{ exportFileName }}-{{ currentDate }}.csv"
   (click)="getDate(); exportFile('csv')"
   *ngIf="!disableCsv && !disableExport"
-  >Export CSV</a
->
+  >
+  <fa name="download"></fa>
+  Export CSV
+</a>
 
 <input
   hidden

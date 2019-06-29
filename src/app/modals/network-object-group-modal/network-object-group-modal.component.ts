@@ -6,6 +6,9 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
+import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
+import { Subnet } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-network-object-group-modal',
@@ -16,6 +19,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   networkObjects: Array<NetworkObject>;
+  Subnets: Array<Subnet>;
 
   editNetworkObjectIndex: number;
 
@@ -71,13 +75,23 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   createNetworkObject() {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
+
+    const dto = new NetworkObjectModalDto();
+    dto.Subnets = this.Subnets;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').toggle();
   }
 
   editNetworkObject(networkObject: NetworkObject) {
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(networkObject), 'networkObjectModal');
+
+    const dto = new NetworkObjectModalDto();
+    dto.Subnets = this.Subnets;
+    dto.NetworkObject = networkObject;
+
+    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
     this.ngx.getModal('networkObjectModal').toggle();
   }
@@ -85,10 +99,10 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription =
     this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObject;
+      let data = modal.getData() as NetworkObjectModalDto;
 
-      if (data !== undefined) {
-        this.saveNetworkObject(data);
+      if (data && data.NetworkObject) {
+        this.saveNetworkObject(data.NetworkObject);
       }
       this.ngx.resetModalData('networkObjectModal');
       this.networkObjectModalSubscription.unsubscribe();
@@ -96,7 +110,14 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const networkObjectGroup = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroup);
+    const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
+    
+    if (dto.Subnets) {
+      this.Subnets = dto.Subnets;
+    }
+
+    const networkObjectGroup = dto.NetworkObjectGroup;
+
     if (networkObjectGroup !== undefined) {
       this.form.controls.name.setValue(networkObjectGroup.Name);
       this.form.controls.description.setValue(networkObjectGroup.Description);
@@ -126,6 +147,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.networkObjects = new Array<NetworkObject>();
+    this.Subnets = new Array<Subnet>();
     this.buildForm();
   }
 
