@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-// import { path } from 'd3-path';
 import { arc, pie, DefaultArcObject, PieArcDatum } from 'd3-shape';
 
 export interface PieChartData {
