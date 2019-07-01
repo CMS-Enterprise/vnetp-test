@@ -69,6 +69,9 @@ export class DashboardComponent implements OnInit {
   }
 
   sortJobs() {
+
+    //TODO: Get cancelled and pending jobs.
+
     this.successfulJobs = this.jobs.results.filter(
       job => !job.failed && job.status === 'successful'
     ).length;
