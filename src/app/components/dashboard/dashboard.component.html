@@ -24,7 +24,7 @@
   <h2>Jobs Executed Today</h2>
   <div class="row p-3">
     <div class="chart-wrap col-md-8">
-      <app-d3-pie-chart [data]="pieChartData"></app-d3-pie-chart>
+      <app-d3-pie-chart [data]="pieChartData"  *ngIf="pieChartData"></app-d3-pie-chart>
       <div class="legend">
         <p>
           <span class="legend-color success"></span>
