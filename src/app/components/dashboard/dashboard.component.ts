@@ -142,7 +142,7 @@ export class DashboardComponent implements OnInit {
 
     // Default
     if (!this.pieChartData.length) {
-      this.pieChartData = [{ value: 1, color: '#7f8084' }];
+      this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     }
   }
 }
