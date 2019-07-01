@@ -50,7 +50,7 @@
             <li>
               <span>Networks</span>
               <span class="inline-block ml-auto">
-                {{ subnets.total_count }}
+                {{ subnets.total_count || 0 }}
               </span>
               <a routerLink="/networks">
                 <fa name="chevron-right"></fa>
@@ -60,7 +60,7 @@
             <li>
               <span>Devices</span>
               <span class="inline-block ml-auto">
-                {{ devices.total_count }}
+                {{ devices.total_count || 0 }}
               </span>
               <a routerLink="/solaris">
                 <fa name="chevron-right"></fa>
@@ -70,7 +70,7 @@
             <li>
               <span>IP Addresses</span>
               <span class="inline-block ml-auto">
-                {{ ips.ips.length }}
+                {{ ips.ips.length || 0 }}
               </span>
               <a routerLink="/ipaddresses">
                 <fa name="chevron-right"></fa>
