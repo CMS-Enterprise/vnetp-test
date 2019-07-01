@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBase: 'https://draas.cds-cloud-labs.net/'
+  apiBase: 'http://localhost:3000'
 };

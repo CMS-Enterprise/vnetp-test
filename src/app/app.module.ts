@@ -64,6 +64,7 @@ import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detai
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { GraphModule } from './modules/graph-module/graph-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
+import { D3PieChartComponent } from './components/d3-pie-chart/d3-pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
     CdomDetailComponent,
     LdomDetailComponent,
     LdomListComponent,
-    NetworkTopologyComponent
+    NetworkTopologyComponent,
+    D3PieChartComponent
   ],
   imports: [
     BrowserModule,
