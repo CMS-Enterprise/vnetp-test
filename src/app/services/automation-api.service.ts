@@ -108,4 +108,8 @@ export class AutomationApiService {
   getSubnetIps(id: number) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
   }
+
+  getSystemStatus() {
+    return this.http.get(environment.apiBase + '/status');
+  }
 }

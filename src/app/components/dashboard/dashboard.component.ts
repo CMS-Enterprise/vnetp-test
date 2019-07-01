@@ -79,6 +79,7 @@ export class DashboardComponent implements OnInit {
     this.getDevices()
     this.getNetworks()
     this.getIps()
+    this.getStatus();
     this.getJobs()
   }
 
@@ -116,5 +117,13 @@ export class DashboardComponent implements OnInit {
       job => !job.failed && job.status === "successful"
     ).length
     this.failedJobs = this.jobs.results.filter(job => job.failed).length
+  }
+
+  status: any;
+
+  getStatus() {
+    this.automationApiService.getSystemStatus().subscribe(data =>{
+      this.status = data;
+    });
   }
 }
