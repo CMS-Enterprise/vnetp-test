@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
-import { scaleOrdinal } from 'd3-scale';
+import { SubnetResponse } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,57 +22,10 @@ export class DashboardComponent implements OnInit {
   jobs: any;
   failedJobs = 0;
   successfulJobs = 0;
-
+  status: any;
   pieChartData: Array<PieChartData>;
-  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
-  // TODO: switch mock data for services endpoint
-  services: Array<Object> = [
-    {
-      title: 'Data',
-      status: 'green'
-    },
-    {
-      title: 'Mainframe',
-      status: 'green'
-    },
-    {
-      title: 'Z/Linux',
-      status: 'green'
-    },
-    {
-      title: 'VMware',
-      status: 'green'
-    },
-    {
-      title: 'AWS',
-      status: 'green'
-    },
-    {
-      title: 'VMware Cloud',
-      status: 'green'
-    },
-    {
-      title: 'Infrastructure',
-      status: 'green'
-    },
-    {
-      title: 'Network',
-      status: 'green'
-    },
-    {
-      title: 'Shard Servies',
-      status: 'green'
-    },
-    {
-      title: 'User Portal',
-      status: 'yellow'
-    },
-    {
-      title: 'Automation',
-      status: 'red'
-    }
-  ];
+  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
   ngOnInit() {
     this.loadDashboard();
@@ -82,13 +35,14 @@ export class DashboardComponent implements OnInit {
     this.getDevices();
     this.getNetworks();
     this.getIps();
+    this.getStatus();
     this.getJobs();
   }
 
   getNetworks() {
     this.automationApiService
       .getSubnets()
-      .subscribe(data => (this.subnets = data));
+      .subscribe(data => (this.subnets = data as SubnetResponse));
   }
 
   getIps() {
@@ -111,11 +65,7 @@ export class DashboardComponent implements OnInit {
       .getJobs(
         `?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`
       )
-      .subscribe(
-        data => (this.jobs = data),
-        error => {},
-        () => this.sortJobs()
-      );
+      .subscribe(data => (this.jobs = data), error => {}, () => this.sortJobs());
   }
 
   sortJobs() {
@@ -144,5 +94,11 @@ export class DashboardComponent implements OnInit {
     if (!this.pieChartData.length) {
       this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     }
+  }
+
+  getStatus() {
+    this.automationApiService.getSystemStatus().subscribe(data => {
+      this.status = data;
+    });
   }
 }

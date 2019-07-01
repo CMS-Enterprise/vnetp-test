@@ -11,6 +11,15 @@
   }
 }
 
+.customer-status-item {
+  justify-content: space-evenly;
+
+  span {
+    font-size: 24px;
+  }
+}
+
+
 .status-light {
   display: inline-block;
   height: 30px;
@@ -28,6 +37,11 @@
   &.red {
     background-image: url("../../../assets/img/status-red.svg");
   }
+}
+
+.customer-status-light {
+  height: 60px;
+  width: 100px;
 }
 
 .chart-wrap {
