@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { SubnetResponse } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,7 +40,7 @@ export class DashboardComponent implements OnInit {
   getNetworks() {
     this.automationApiService
       .getSubnets()
-      .subscribe(data => (this.subnets = data));
+      .subscribe(data => (this.subnets = data as SubnetResponse));
   }
 
   getIps() {
