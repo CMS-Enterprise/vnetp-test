@@ -9,16 +9,19 @@
   span {
     font-size: 18px;
   }
-}
 
-.customer-status-item {
-  justify-content: space-evenly;
+  &--large {
+    justify-content: space-evenly;
 
-  span {
-    font-size: 22px;
+    span {
+      font-size: 22px;
+    }
+    .status-light {
+      height: 45px;
+      width: 75px;
+    }
   }
 }
-
 
 .status-light {
   display: inline-block;
@@ -37,11 +40,6 @@
   &.red {
     background-image: url("../../../assets/img/status-red.svg");
   }
-}
-
-.customer-status-light {
-  height: 45px;
-  width: 75px;
 }
 
 .chart-wrap {
@@ -79,12 +77,11 @@
       background-color: $warning;
     }
     &.info {
-      background-color: $info
+      background-color: $info;
     }
     &.medium {
-      background-color: $gray-medium
+      background-color: $gray-medium;
     }
-
   }
 
   .legend-subtitle {
@@ -96,7 +93,7 @@
   }
 }
 
-.dash-info {
+.dash-card {
   margin: 0;
   padding: 0;
   list-style: none;
