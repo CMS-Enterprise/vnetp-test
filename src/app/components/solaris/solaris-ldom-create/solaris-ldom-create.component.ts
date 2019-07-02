@@ -218,6 +218,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.modalVnic.UntaggedVlan = this.vnicModalUntaggedVlan;
     this.modalVnic.VirtualSwitchName = this.vnicModalVswitch.vSwitchName;
     // in the case of edit vNic, only add if not already array member
+    if (!this.LDOM.vnic) {
+      this.LDOM.vnic = new Array<SolarisVnic>();
+    }
+
     if (this.LDOM.vnic.indexOf(this.modalVnic) === -1){
       this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
     } else {
