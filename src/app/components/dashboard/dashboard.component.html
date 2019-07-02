@@ -12,12 +12,16 @@
     </div>
   </div>
 
-  <div class="row p-3">
-    <div *ngFor="let service of status?.customer_status" class="col-md-4 status-item  customer-status-item">
-      <span>
-        {{ service.name }}
-      </span>
-      <div class="status-light customer-status-light" [ngClass]="service.status"></div>
+  <h2>Customer Status</h2>
+
+  <div class="card mt-3 mb-5">
+    <div class="row p-3">
+      <div *ngFor="let customer of status?.customer_status" class="col-md-4 status-item  customer-status-item">
+        <span>
+          {{ customer.name }}
+        </span>
+        <div class="status-light customer-status-light" [ngClass]="customer.status"></div>
+      </div>
     </div>
   </div>
 
