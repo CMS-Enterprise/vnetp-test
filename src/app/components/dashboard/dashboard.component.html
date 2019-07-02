@@ -21,21 +21,40 @@
     </div>
   </div>
 
-  <h2>Jobs Executed Today</h2>
+  <h2>Job Status Today</h2>
   <div class="row p-3">
     <div class="chart-wrap col-md-8">
       <app-d3-pie-chart [data]="pieChartData"  *ngIf="pieChartData"></app-d3-pie-chart>
       <div class="legend">
-        <p>
+        <p *ngIf="successfulJobs">
           <span class="legend-color success"></span>
           <span class="legend-label">Successful Jobs</span>
         </p>
-        <span class="legend-subtitle">Total: {{ successfulJobs }}</span>
-        <p>
+        <span class="legend-subtitle" *ngIf="successfulJobs">Total: {{ successfulJobs }}</span>
+
+        <p *ngIf="runningJobs">
+          <span class="legend-color warning"></span>
+          <span class="legend-label">Running Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="runningJobs">Total: {{ runningJobs }}</span>
+
+        <p *ngIf="failedJobs">
           <span class="legend-color danger"></span>
           <span class="legend-label">Failed Jobs</span>
         </p>
-        <span class="legend-subtitle">Total: {{ failedJobs }}</span>
+        <span class="legend-subtitle" *ngIf="failedJobs">Total: {{ failedJobs }}</span>
+
+        <p *ngIf="pendingJobs">
+          <span class="legend-color info"></span>
+          <span class="legend-label">Pending Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="pendingJobs">Total: {{ pendingJobs }}</span>
+
+        <p *ngIf="cancelledJobs">
+          <span class="legend-color medium"></span>
+          <span class="legend-label">Cancelled Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="cancelledJobs">Total: {{ cancelledJobs }}</span>
       </div>
     </div>
 

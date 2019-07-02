@@ -22,6 +22,9 @@ export class DashboardComponent implements OnInit {
   jobs: any;
   failedJobs = 0;
   successfulJobs = 0;
+  pendingJobs = 0;
+  cancelledJobs = 0;
+  runningJobs = 0;
   status: any;
   pieChartData: Array<PieChartData>;
 
@@ -70,26 +73,50 @@ export class DashboardComponent implements OnInit {
 
   sortJobs() {
 
-    //TODO: Get cancelled and pending jobs.
+    // TODO: Get cancelled and pending jobs.
 
-    this.successfulJobs = this.jobs.results.filter(
-      job => !job.failed && job.status === 'successful'
-    ).length;
+    const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
     this.failedJobs = this.jobs.results.filter(job => job.failed).length;
+    this.cancelledJobs = this.jobs.results.filter( job =>job.failed && job.status === 'canceled').length;
+
+    this.successfulJobs = nonFailedJobs.filter( job => job.status === 'successful').length;
+    this.runningJobs = nonFailedJobs.filter( job => job.status === 'running').length;
+    this.pendingJobs = nonFailedJobs.filter( job => job.status === 'pending').length;
 
     this.pieChartData = new Array<PieChartData>();
 
-    // Success
+    // Successful
     if (this.successfulJobs) {
       this.pieChartData.push(
-        { value: this.successfulJobs, color: '#4eb796' } 
+        { value: this.successfulJobs, color: '#4eb796' }
       );
     }
 
-    // Fail
+    // Running
+    if (this.runningJobs) {
+      this.pieChartData.push(
+        { value: this.runningJobs, color: '#ffdf5a'}
+      );
+    }
+
+    // Failed
     if (this.failedJobs) {
       this.pieChartData.push(
-        { value: this.failedJobs, color: '#e84d4d' } 
+        { value: this.failedJobs, color: '#e84d4d' }
+      );
+    }
+
+    // Pending
+    if (this.pendingJobs) {
+        this.pieChartData.push(
+          { value: this.pendingJobs, color: '#5ac4f9'}
+        );
+      }
+
+    // Cancelled Jobs
+    if (this.cancelledJobs) {
+      this.pieChartData.push(
+        { value: this.cancelledJobs, color: '#c2c2c6'}
       );
     }
 

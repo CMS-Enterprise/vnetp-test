@@ -75,6 +75,16 @@
     &.danger {
       background-color: $danger;
     }
+    &.warning {
+      background-color: $warning;
+    }
+    &.info {
+      background-color: $info
+    }
+    &.medium {
+      background-color: $gray-medium
+    }
+
   }
 
   .legend-subtitle {
