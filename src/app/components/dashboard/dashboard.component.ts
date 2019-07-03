@@ -77,8 +77,8 @@ export class DashboardComponent implements OnInit {
     // TODO: Get cancelled and pending jobs.
 
     const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
-    this.failedJobs = this.jobs.results.filter(job => job.failed).length;
-    this.cancelledJobs = this.jobs.results.filter( job =>job.failed && job.status === 'canceled').length;
+    this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
+    this.cancelledJobs = this.jobs.results.filter( job => job.failed && job.status === 'canceled').length;
 
     this.successfulJobs = nonFailedJobs.filter( job => job.status === 'successful').length;
     this.runningJobs = nonFailedJobs.filter( job => job.status === 'running').length;
