@@ -51,7 +51,7 @@
     <li class="nav-item" (click)="navIndex = 2">
 
       <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">iRules</a>
-      <span tooltip="F5 LoadBalancer language" placement="center" container="body"><fa name="question-circle-o"></fa></span>
+      <span tooltip="F5 LoadBalancer language {{ environment.wikiBase }} /load-balancers#irules" placement="center" container="body"><fa name="question-circle-o"></fa></span>
     </li>
     <li class="nav-item" (click)="navIndex = 3">
       <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"
