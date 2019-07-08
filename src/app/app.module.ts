@@ -63,6 +63,7 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.comp
     PhysicalServerModalComponent,
     CdomDetailComponent,
     LdomDetailComponent,
-    LdomListComponent
+    LdomListComponent,
+    TooltipComponent
   ],
   imports: [
     BrowserModule,

@@ -17,7 +17,8 @@
 
     <div class="form-group">
       <label for="cdomClone">Clone Host Resources</label>
-      <span [tooltip]="ToolTipCloneCDOM" content-type="template">  <fa name="question-circle-o" class="pl-2"></fa></span>
+      <!-- <span [tooltip]="ToolTipCloneCDOM" content-type="template">  <fa name="question-circle-o" class="pl-2"></fa></span> -->
+      <tooltip [message]="CDOMCloneTooltip"></tooltip>
       <div class="input-group align-items-center">
         <select
           name="cdomClone"
@@ -294,3 +295,5 @@
 <ng-template #ToolTipCloneCDOM>
     <p>{{CDOMCloneTooltip}}</p>
 </ng-template>
+
+
