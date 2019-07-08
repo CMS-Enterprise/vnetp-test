@@ -1,20 +1,17 @@
 <div>
-  <h5>Subnet: {{ subnet.name }}</h5>
+  <h1>Subnet: {{ subnet.name }}</h1>
 
-  <div class="btn-toolbar mb-2" role="toolbar">
+  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm">
       <button
         type="button"
-        class="btn btn-warning mr-1"
+        class="btn btn-success mr-1"
         aria-label="Save Changes"
         (click)="updateStaticRoutes()"
         *ngIf="dirty"
       >
+        <fa name="save"></fa>
         Save Changes
-      </button>
-
-      <button type="button" class="btn btn-info mr-1" (click)="getNetwork()" *ngIf="!dirty">
-        Refresh
       </button>
 
       <button
@@ -22,6 +19,7 @@
         class="btn btn-success mr-1"
         (click)="addStaticRoute()"
       >
+        <fa name="plus"></fa>
         Add Static Route
       </button>
 
@@ -31,53 +29,82 @@
           subnet.vrf_group_name
         }}"
         (import)="insertStaticRoutes($event)"
+        disableExport="true"
       ></app-import-export>
+
+      <button
+        type="button"
+        class="btn btn-info mr-1"
+        (click)="getNetwork()"
+        *ngIf="!dirty"
+      >
+        <fa name="refresh"></fa>
+        Refresh
+      </button>
     </div>
   </div>
 
-  <div class="card">
-    <table class="table table-sm table-striped">
-      <thead>
-        <tr>
-          <th scope="col">CIDR Address</th>
-          <th scope="col">Next Hop</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let route of staticRoutes">
-          <td>
-            <p [hidden]="route.Edit">{{ route.CidrAddress }}</p>
-            <input
-              class="form-control"
-              placeholder="any"
-              [(ngModel)]="route.CidrAddress"
-              [hidden]="!route.Edit"
-              [dropSpecialCharacters]="false"
-              mask="099.099.099.099/09"
-            />
-          </td>
-          <td>
-            <p [hidden]="route.Edit">{{ route.NextHop }}</p>
-            <input
-              class="form-control"
-              placeholder="any"
-              [(ngModel)]="route.NextHop"
-              [hidden]="!route.Edit"
-              [dropSpecialCharacters]="false"
-              mask="099.099.099.099"
-            />
-          </td>
-          <td>
-            <fa
-              name="floppy-o"
-              (click)="route.Edit = !route.Edit"
-              [hidden]="!route.Edit"
-            ></fa>
-            <fa name="trash" (click)="deleteStaticRoute(route)"></fa>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">CIDR Address</th>
+        <th scope="col">Next Hop</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let route of staticRoutes">
+        <td>
+          <p [hidden]="route.Edit">{{ route.CidrAddress }}</p>
+          <input
+            class="form-control"
+            placeholder="any"
+            [(ngModel)]="route.CidrAddress"
+            [hidden]="!route.Edit"
+            [dropSpecialCharacters]="false"
+            mask="099.099.099.099/09"
+          />
+        </td>
+        <td>
+          <p [hidden]="route.Edit">{{ route.NextHop }}</p>
+          <input
+            class="form-control"
+            placeholder="any"
+            [(ngModel)]="route.NextHop"
+            [hidden]="!route.Edit"
+            [dropSpecialCharacters]="false"
+            mask="099.099.099.099"
+          />
+        </td>
+        <td class="item-actions">
+          <fa
+            name="floppy-o"
+            (click)="route.Edit = !route.Edit"
+            [hidden]="!route.Edit"
+          ></fa>
+          <fa name="trash" (click)="deleteStaticRoute(route)"></fa>
+        </td>
+      </tr>
+      <tr *ngIf="!staticRoutes?.length" class="text-center">
+        <td colspan="3">No Static Routes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div
+    *ngIf="staticRoutes?.length"
+    class="btn-toolbar mb-2 pull-right"
+    role="toolbar"
+  >
+    <div class="btn-group-sm">
+      <app-import-export
+        [exportObject]="staticRoutes"
+        exportFileName="staticRoutes-{{ subnet.name }}-{{
+          subnet.vrf_group_name
+        }}"
+        (import)="insertStaticRoutes($event)"
+        disableImport="true"
+      ></app-import-export>
+    </div>
   </div>
 </div>

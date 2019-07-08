@@ -1,5 +1,5 @@
 // FIXME: Standardize Naming
-export class SolarisVnet {
+export class SolarisVnic {
   Name: string;
   VirtualSwitchName: string;
   UntaggedVlan: number;
