@@ -36,7 +36,6 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalAddTaggedVlan: number;
   dirty: boolean;
   editCDOM: boolean;
-  helpText: HelpText;
   CDOMCloneTooltip: string;
 
 
@@ -53,8 +52,10 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     private hs: HelpersService,
     private authService: AuthService,
     private toastr: ToastrService,
+    private helpText: HelpText
   ) {
-    this.CDOMCloneTooltip = this.helpText.solaris_cdom_clone_text;
+    this.CDOMCloneTooltip = this.helpText.solarisCdomCloneText;
+    console.log(this.CDOMCloneTooltip);
   }
 
   cloneCdom() {
