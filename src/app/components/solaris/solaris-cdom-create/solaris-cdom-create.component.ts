@@ -14,8 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -37,6 +36,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalAddTaggedVlan: number;
   dirty: boolean;
   editCDOM: boolean;
+  helpText: HelpText;
+  CDOMCloneTooltip: string;
+
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -50,8 +52,10 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private hs: HelpersService,
     private authService: AuthService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+  ) {
+    this.CDOMCloneTooltip = this.helpText.solaris_cdom_clone_text;
+  }
 
   cloneCdom() {
     this.automationApiService.getDevicesbyID(this.cdomInput.device_id).subscribe(data => {
