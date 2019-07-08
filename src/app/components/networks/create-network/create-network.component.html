@@ -28,43 +28,6 @@
           <div>Name already in use. Subnet names are case-insensitive.</div>
         </div>
       </div>
-<<<<<<< HEAD
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <label for="inputAddress">CIDR Address
-            <span tooltip="Network Address in CIDR format." placement="top"><fa name="question-circle-o"></fa></span>
-          </label>
-          <input
-            name="networkAddress"
-            type="text"
-            class="form-control"
-            aria-label="CIDR Address"
-            #networkAddress="ngModel"
-            [(ngModel)]="cidrAddress"
-            (ngModelChange)="calculateNetwork()"
-            [ngClass]="{
-              'is-invalid':
-                (form.submitted && networkAddress.invalid) ||
-                networkExists ||
-                networkOverlaps ||
-                invalidGateway
-            }"
-            [dropSpecialCharacters]="false"
-            mask="099.099.099.099/09"
-            required
-          />
-          <div
-            *ngIf="networkExists || networkOverlaps || invalidGateway"
-            class="invalid-feedback"
-          >
-            <p *ngIf="networkExists">Subnet already in use.</p>
-            <p *ngIf="networkOverlaps">
-              Subnet overlaps with at least one existing subnet:
-              {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }}
-            </p>
-            <p *ngIf="invalidGateway">Invalid gateway.</p>
-          </div>
-=======
 
       <div class="form-group ">
         <label for="protocol">Protocol</label>
@@ -105,7 +68,6 @@
             {{ existingSubnet.network }}/{{ existingSubnet.mask_bits }}
           </p>
           <p *ngIf="invalidGateway">Invalid gateway.</p>
->>>>>>> dev
         </div>
       </div>
 
