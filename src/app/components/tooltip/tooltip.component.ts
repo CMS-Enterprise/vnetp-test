@@ -4,7 +4,7 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 @Component({
   selector : 'tooltip',
   templateUrl : 'tooltip.component.html',
-  styleUrls : [ 'tooltip.component.css' ],
+  styleUrls : [ 'tooltip.component.scss' ],
 })
 export class TooltipComponent {
   @Input('message') message: string;
