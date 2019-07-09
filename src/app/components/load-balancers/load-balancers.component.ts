@@ -15,7 +15,7 @@ import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
@@ -54,15 +54,24 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
 
+  LoadBalancerIRulesText: string;
+
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
-              private toastr: ToastrService) {
+  constructor(
+     private ngx: NgxSmartModalService,
+     private api: AutomationApiService,
+     private papa: Papa, 
+     private hs: HelpersService,
+     private toastr: ToastrService,
+     private helpText: HelpText
+     ) {
     this.virtualServers = new Array<VirtualServer>();
     this.pools = new Array<Pool>();
+    this.LoadBalancerIRulesText = this.helpText.loadBalancerIRuleText;
   }
 
   getVrfs() {

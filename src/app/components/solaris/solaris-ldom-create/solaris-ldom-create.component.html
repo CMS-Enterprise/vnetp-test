@@ -74,7 +74,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>vNics</label>
-        <span tooltip="LDOMAddVnicTooltip" placement="side"><fa name="question-circle-o" class="pl-2"></fa></span>
+        <span [tooltip]="LDOMVnicTooltip" hide-delay="5000"> <fa name="question-circle-o" class="pl-2"></fa></span>
         <button
           type="button"
           name="modalVnic"
@@ -126,7 +126,7 @@
     <!--TODO: Verify functionality of virtual disks and vars tables-->
     <div class="form-group clearfix">
       <label class="mb-2">Variables</label>
-      <span tooltip="LDOMVariableTooltip" placement="side"><fa name="question-circle-o" class="pl-2"></fa></span>
+      <span [tooltip]="LDOMVariableTooltip" hide-delay="5000"><fa name="question-circle-o" class="pl-2"></fa></span>
       <table name="variableTable" class="table table-striped">
         <thead>
           <tr>
@@ -255,7 +255,7 @@
         <label class="form-check-label" for="inputLDOMnetinstall"
           >Net Install</label
         >
-        <span tooltip="LDOMNetInstallTooltip" placement="side"><fa name="question-circle-o" class="pl-2"></fa></span>
+        <span [tooltip]="LDOMNetInstallTooltip" hide-delay="5000"><fa name="question-circle-o" class="pl-2"></fa></span>
       </div>
     </div>
 
@@ -465,13 +465,5 @@
     </div>
   </div>
 </ngx-smart-modal>
-<ng-template #LDOMAddVnicTooltip>
-  <p>{{LDOMVnicTooltip}}</p>
-</ng-template>
-<ng-template #LDOMVariableTooltip>
-  <p>{{LDOMVariableTooltip}}</p>
-</ng-template>
-<ng-template #LDOMNetInstallTooltip>
-  <p>{{LDOMNetInstallTooltip}}</p>
-</ng-template>
+
 
