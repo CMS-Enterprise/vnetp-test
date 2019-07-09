@@ -13,7 +13,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
-import {TooltipModule} from 'ng2-tooltip-directive';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -130,8 +129,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
       closeButton: true,
       preventDuplicates: true
     }),
-    NgxSmartModalModule.forRoot(),
-    TooltipModule
+    NgxSmartModalModule.forRoot()
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
     NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
