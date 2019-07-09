@@ -360,7 +360,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       action: ['', Validators.required],
       protocol: ['', Validators.required], // TODO: Only required when using source ports, otherwise inherited from
                                            // service object/service object group.
-      direction: [''],
+      direction: ['', Validators.required],
 
       // Source Network Info
       sourceNetworkType: ['ip'],
