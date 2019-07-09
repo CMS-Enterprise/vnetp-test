@@ -17,7 +17,7 @@
 
     <div class="form-group">
       <label for="cdomClone">Clone Host Resources</label>
-      <span [tooltip]="CDOMCloneTooltip" hide-delay="5000">  <fa name="question-circle-o" class="pl-2"></fa></span>
+      <tooltip [message]="CDOMCloneTooltip"></tooltip>
       <div class="input-group align-items-center">
         <select
           name="cdomClone"
@@ -291,3 +291,5 @@
     </button>
   </div>
 </ngx-smart-modal>
+
+

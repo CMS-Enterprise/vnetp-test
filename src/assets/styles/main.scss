@@ -13,6 +13,14 @@ a {
   }
 }
 
+// wasn't working inside tooltip component styles for some reason
+.tooltiptext a {
+  color: $secondary-medium;
+  &:hover {
+    color: $secondary-dark;
+  }
+}
+
 fa {
   margin-right: 5px;
 }
