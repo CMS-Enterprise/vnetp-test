@@ -55,7 +55,6 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     private helpText: HelpText
   ) {
     this.CDOMCloneTooltip = this.helpText.solarisCdomCloneText;
-    console.log(this.CDOMCloneTooltip);
   }
 
   cloneCdom() {

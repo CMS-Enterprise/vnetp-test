@@ -14,7 +14,7 @@ import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -48,6 +48,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   vnicModalUntaggedVlan: number;
   editLdom: boolean;
   editCurrentVnic: boolean;
+  LDOMVnicTooltip: string;
+  LDOMVariableTooltip: string;
+  LDOMNetInstallTooltip: string;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -60,12 +63,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private authService: AuthService,
     private hs: HelpersService,
-    private ngxSm: NgxSmartModalService
+    private ngxSm: NgxSmartModalService,
+    private helpText: HelpText
     ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
-
-
+    this.LDOMVnicTooltip = this.helpText.solarisLdomVnicText;
+    this.LDOMVariableTooltip = this.helpText.solarisLdomVariableText;
+    this.LDOMNetInstallTooltip = this.helpText.solarisLdomNetInstallText;
   }
   addVariable() {
     if (!this.newSolarisVariable) { return; }
