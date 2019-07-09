@@ -51,7 +51,7 @@
     <li class="nav-item" (click)="navIndex = 2">
 
       <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">iRules</a>
-      <span [tooltip]="LoadBalancerIRulesText" hide-delay="5000"> <fa name="question-circle-o" class="pl-2"></fa></span>
+      <tooltip [message]="LoadBalancerIRulesText"></tooltip>
     </li>
     <li class="nav-item" (click)="navIndex = 3">
       <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"
