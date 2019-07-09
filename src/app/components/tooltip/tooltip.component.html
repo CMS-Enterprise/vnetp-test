@@ -1,11 +1,24 @@
-<div #tooltip class="tooltip" (mouseenter)="showTooltip(true)" (mouseleave)="showTooltip(false)">
+<div
+  #tooltip
+  class="tooltip"
+  (mouseenter)="showTooltip(true)"
+  (mouseleave)="showTooltip(false)"
+>
   <fa name="question-circle-o" class="pl-2"></fa>
-  <div class="tooltiptext" [class.show]="isShowTooltip" [class.lock]="isLockTooltip" [ngStyle]="tooltipMsgStyle">
+  <div
+    class="tooltiptext"
+    [class.show]="isShowTooltip"
+    [class.lock]="isLockTooltip"
+    [ngStyle]="tooltipMsgStyle"
+  >
     <div [innerHTML]="message"></div>
-    <div class="pin" 
-      (click)="toggleVis()" 
-      matTooltip="Pin or unpin this tooltip.">
-      <img *ngIf="!isLockTooltip" class="pin-icon" alt="+">
-      <img *ngIf="isLockTooltip" class="pin-icon" alt="-">
+    <div
+      class="pin"
+      (click)="toggleVis()"
+      matTooltip="Pin or unpin this tooltip."
+    >
+      <span *ngIf="!isLockTooltip" class="pin-icon" alt="+">+</span>
+      <span *ngIf="isLockTooltip" class="pin-icon" alt="-">-</span>
     </div>
+  </div>
 </div>
