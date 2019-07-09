@@ -181,7 +181,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Service Type</label>
-          <span [tooltip]="networkPortGroupTooltip" hide-delay="5000"><fa name="question-circle-o" class="pl-2"></fa></span>
+          <tooltip [message]="networkPortGroupTooltip"></tooltip>
           <select
             name="sourceServiceType"
             formControlName="sourceServiceType"
