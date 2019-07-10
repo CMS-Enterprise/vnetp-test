@@ -15,10 +15,9 @@
     <div
       class="pin"
       (click)="toggleVis()"
-      matTooltip="Pin or unpin this tooltip."
     >
-      <span *ngIf="!isLockTooltip" class="pin-icon" alt="+">+</span>
-      <span *ngIf="isLockTooltip" class="pin-icon" alt="-">-</span>
+      <span *ngIf="!isLockTooltip" class="pin-icon">+</span>
+      <span *ngIf="isLockTooltip" class="pin-icon">-</span>
     </div>
   </div>
 </div>
