@@ -5,6 +5,7 @@
   display: inline-block;
   position: relative;
   opacity: 1;
+  z-index: 1;
 
   &:hover {
     cursor: pointer;
