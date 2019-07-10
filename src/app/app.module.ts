@@ -64,6 +64,7 @@ import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detai
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { D3Module } from './modules/d3-module/d3-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
     LdomDetailComponent,
     LdomListComponent,
     NetworkTopologyComponent,
-   ],
+    TooltipComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

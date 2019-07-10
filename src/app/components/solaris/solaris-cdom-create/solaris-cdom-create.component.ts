@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-solaris-cdom-create',
   templateUrl: './solaris-cdom-create.component.html',
@@ -37,6 +37,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   dirty: boolean;
   editCDOM: boolean;
 
+
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
@@ -49,8 +50,10 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private hs: HelpersService,
     private authService: AuthService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    public helpText: HelpText
+  ) {
+  }
 
   cloneCdom() {
     this.automationApiService.getDevicesbyID(this.cdomInput.device_id).subscribe(data => {

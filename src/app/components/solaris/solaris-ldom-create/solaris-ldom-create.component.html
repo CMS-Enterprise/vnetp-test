@@ -74,6 +74,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>vNics</label>
+        <tooltip [message]="helpText.solarisLdomVnicText"></tooltip>
         <button
           type="button"
           name="modalVnic"
@@ -125,6 +126,7 @@
     <!--TODO: Verify functionality of virtual disks and vars tables-->
     <div class="form-group clearfix">
       <label class="mb-2">Variables</label>
+      <tooltip [message]="helpText.solarisLdomVariableText"></tooltip>
       <table name="variableTable" class="table table-striped">
         <thead>
           <tr>
@@ -253,6 +255,7 @@
         <label class="form-check-label" for="inputLDOMnetinstall"
           >Net Install</label
         >
+        <tooltip [message]="helpText.solarisLdomNetInstallText"></tooltip>
       </div>
     </div>
 
@@ -462,3 +465,5 @@
     </div>
   </div>
 </ngx-smart-modal>
+
+

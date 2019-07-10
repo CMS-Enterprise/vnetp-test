@@ -14,7 +14,7 @@ import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -60,13 +60,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private authService: AuthService,
     private hs: HelpersService,
-    private ngxSm: NgxSmartModalService
+    private ngxSm: NgxSmartModalService,
+    public helpText: HelpText
     ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
-
-
   }
+  
   addVariable() {
     if (!this.newSolarisVariable) { return; }
     if (!this.LDOM.variables) { this.LDOM.variables = new Array<SolarisVariable>(); }
