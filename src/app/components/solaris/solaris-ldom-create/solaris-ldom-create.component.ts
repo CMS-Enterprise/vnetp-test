@@ -48,9 +48,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   vnicModalUntaggedVlan: number;
   editLdom: boolean;
   editCurrentVnic: boolean;
-  LDOMVnicTooltip: string;
-  LDOMVariableTooltip: string;
-  LDOMNetInstallTooltip: string;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -64,14 +61,12 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private authService: AuthService,
     private hs: HelpersService,
     private ngxSm: NgxSmartModalService,
-    private helpText: HelpText
+    public helpText: HelpText
     ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
-    this.LDOMVnicTooltip = this.helpText.solarisLdomVnicText;
-    this.LDOMVariableTooltip = this.helpText.solarisLdomVariableText;
-    this.LDOMNetInstallTooltip = this.helpText.solarisLdomNetInstallText;
   }
+  
   addVariable() {
     if (!this.newSolarisVariable) { return; }
     if (!this.LDOM.variables) { this.LDOM.variables = new Array<SolarisVariable>(); }

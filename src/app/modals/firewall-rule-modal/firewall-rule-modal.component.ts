@@ -38,17 +38,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
-  networkGroupTooltip: string;
-  networkPortGroupTooltip: string;
   
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private automationApiService: AutomationApiService,
-    private helpText: HelpText
+    public helpText: HelpText
     ) {
-    this.networkGroupTooltip = this.helpText.networkGroupText;
-    this.networkPortGroupTooltip = this.helpText.networkPortGroupText;
   }
 
   save() {

@@ -54,8 +54,6 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
 
-  LoadBalancerIRulesText: string;
-
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
@@ -67,11 +65,10 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
      private papa: Papa, 
      private hs: HelpersService,
      private toastr: ToastrService,
-     private helpText: HelpText
+     public helpText: HelpText
      ) {
     this.virtualServers = new Array<VirtualServer>();
     this.pools = new Array<Pool>();
-    this.LoadBalancerIRulesText = this.helpText.loadBalancerIRuleText;
   }
 
   getVrfs() {
