@@ -50,8 +50,8 @@
     </li>
     <li class="nav-item" (click)="navIndex = 2">
 
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">iRules</a>
-      <tooltip [message]="helpText.loadBalancerIRuleText"></tooltip>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">iRules <tooltip [message]="helpText.loadBalancerIRuleText"></tooltip>
+      </a>
     </li>
     <li class="nav-item" (click)="navIndex = 3">
       <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"
