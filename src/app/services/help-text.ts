@@ -6,11 +6,11 @@ import { environment } from 'src/environments/environment';
 export class HelpText {
     wikiBase = environment.wikiBase;
     //Networking tool tip messages
-    networkGroupText = `Group of network objects (IPs, DNS names, etc..).  More info: <a href="${this.wikiBase}/ipam#NetworkGroups">wiki</a>`;
-    networkPortGroupText = `Group of ports. More info: <a href="${this.wikiBase}/IPAM#NetworkGroups">wiki</a>`;
+    networkGroupText = `Group of network objects (IPs, DNS names, etc..).  More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
+    networkPortGroupText = `Group of ports. More info: <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
     
     //Load balancer tool tip messages
-    loadBalancerIRuleText = `F5 LoadBalancer language to create rich rules.  More info: <a href=${this.wikiBase}/loadbalancer#irules">wiki</a>`;
+    loadBalancerIRuleText = `F5 LoadBalancer language to create rich rules.  More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
     
     // Solaris tool tip messages
     solarisCdomCloneText = `Clone resources from previously configured host.  More info: <a href="${this.wikiBase}/solaris#CDOM_Create">Wiki</a>`;
