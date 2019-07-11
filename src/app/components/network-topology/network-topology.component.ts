@@ -7,7 +7,6 @@ import { GraphContextMenuItem } from 'src/app/models/other/graph-context-menu-it
 import { Router } from '@angular/router';
 import { ActionData } from 'src/app/models/other/action-data';
 import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-result';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-network-topology',
@@ -25,7 +24,6 @@ export class NetworkTopologyComponent implements OnInit {
   constructor(
     private apiService: AutomationApiService,
     private router: Router,
-    private ngxSm: NgxSmartModalService
   ) {}
 
   ngOnInit() {
@@ -167,7 +165,6 @@ export class NetworkTopologyComponent implements OnInit {
               this.router.navigate([`/firewall-rules/edit/${ctxMenuResult.object.subnet_id}`]);
               break;
             case 'New Firewall Rule':
-                this.ngxSm.getModal('firewallRuleModal').open();
                 break;
             default:
               break;
