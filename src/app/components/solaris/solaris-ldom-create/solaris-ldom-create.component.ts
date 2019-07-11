@@ -188,8 +188,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     // check if object already on array
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     if ( vdsIndex !== -1) {
-        this.LDOM.vds.splice(vdsIndex, 1);
-        this.LDOM.vds.push(this.addVdsDev);
+        this.LDOM.vds[vdsIndex] = this.addVdsDev;
     } else {
       this.LDOM.vds.push(this.addVdsDev);
     }
@@ -216,7 +215,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   openVnicModal() {
-    if(this.editCurrentVnic){
+    if(this.editCurrentVnic) {
       this.modalVnic = this.solarisService.currentVnic;
       this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
       this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
