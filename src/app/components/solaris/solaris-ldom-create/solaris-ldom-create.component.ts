@@ -176,7 +176,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   });
 }
 
-
   openVdsModal() {
     if ( this.solarisService.currentVds != null){
       this.addVdsDev = this.solarisService.currentVds;
@@ -197,12 +196,37 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
+
+  insertVirtualDisks(vds) {
+    if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
+    vds.forEach(thisVds => {
+     if(this.LDOM.vds.indexOf(thisVds) !== -1){
+       this.LDOM.vds.push(Object.assign({}, thisVds));
+     } else {
+        const vdsIndex = this.LDOM.vds.indexOf(thisVds);
+        this.LDOM.vds.splice(vdsIndex, 1);
+       // this.LDOM.vds.push(Object.assign({}, thisVds));
+     }
+     this.addVdsDev = new SolarisVdsDevs();
+
+    });
+    this.ngxSm.getModal('vdsDevModalLdom').close();
+    console.log(this.LDOM.vds);
+  }
+
   editVds(vds: SolarisVdsDevs) {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     this.solarisService.currentVds = vds;
     this.openVdsModal();
     // check if modal canceled, don't remove if so
     // this.LDOM.vds.splice(vdsIndex, 1);
+  }
+
+  deleteVds(vdsDev: any) {
+    const vdsIndex = this.LDOM.vds.indexOf(vdsDev);
+    if (vdsIndex > -1 ) {
+      this.LDOM.vds.splice(vdsIndex, 1);
+    }
   }
   editVnic(vnic: SolarisVnic){
     this.editCurrentVnic = true;
@@ -223,10 +247,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.vnicModalTaggedVlans = new Array<number>();
       this.modalVnic = new SolarisVnic();
       this.vnicModalVswitch = new SolarisVswitch();
-      // this.vnicModalVswitches = new Array<SolarisVswitch>();
     }
     this.ngxSm.getModal('vnicModalLdom').open();
-
   }
 
   insertVnic() {
@@ -248,12 +270,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.ngxSm.getModal('vnicModalLdom').close();
   }
 
-  deleteVds(vdsDev: any) {
-    const vdsIndex = this.LDOM.vds.indexOf(vdsDev);
-    if (vdsIndex > -1 ) {
-      this.LDOM.vds.splice(vdsIndex, 1);
-    }
-  }
+
   deleteVnic(vnicDev: any) {
     const vnicIndex = this.LDOM.vnic.indexOf(vnicDev);
     if (vnicIndex > -1 ) {
@@ -261,35 +278,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     }
   }
 
-  selectUntaggedVlan(e, vlan: number) {
-    if (e.target.checked) {
-      if (!this.vnicModalTaggedVlans.includes(vlan)) {
-        this.vnicModalTaggedVlans.push(vlan);
-      }
-    } else if (!e.target.checked) {
-      const vlanIndex = this.vnicModalTaggedVlans.indexOf(vlan);
-
-      if (vlanIndex > -1 ) {
-        this.vnicModalTaggedVlans.splice(vlanIndex, 1);
-      }
-    }
-  }
-  insertVirtualDisks(vds) {
-     if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
-     vds.forEach(thisVds => {
-      if(this.LDOM.vds.indexOf(thisVds) !== -1){
-        this.LDOM.vds.push(Object.assign({}, thisVds));
-      } else {
-         const vdsIndex = this.LDOM.vds.indexOf(thisVds);
-         this.LDOM.vds.splice(vdsIndex, 1);
-        // this.LDOM.vds.push(Object.assign({}, thisVds));
-      }
-      this.addVdsDev = new SolarisVdsDevs();
-
-     });
-     this.ngxSm.getModal('vdsDevModalLdom').close();
-     console.log(this.LDOM.vds);
-   }
    vNicModalRemoveTaggedVlan(vlan: number){
      const vlanIndex = this.vnicModalTaggedVlans.indexOf(vlan);
      this.vnicModalTaggedVlans.splice(vlanIndex,1);
