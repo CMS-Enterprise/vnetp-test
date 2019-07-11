@@ -192,21 +192,21 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   editVnic(vnic: SolarisVnic){
     this.editCurrentVnic = true;
-    const vnicIndex = this.LDOM.vnic.indexOf(vnic);
     this.solarisService.currentVnic = vnic;
     this.openVnicModal();
-    // check if modal canceled, don't remove if so
-    // this.LDOM.vnic.splice(vnicIndex, 1);
-
   }
 
   openVnicModal() {
-    this.addVnicInherit = true;
-    this.vnicModalTaggedVlans = new Array<number>();
-    this.modalVnic = new SolarisVnic();
-    this.vnicModalVswitch = new SolarisVswitch();
-    this.vnicModalVswitches = new Array<SolarisVswitch>();
-
+    if(this.editCurrentVnic){
+      this.modalVnic = this.solarisService.currentVnic;
+      this.solarisService.currentVnic = null;
+      this.editCurrentVnic = false;
+    } else{
+      this.vnicModalTaggedVlans = new Array<number>();
+      this.modalVnic = new SolarisVnic();
+      this.vnicModalVswitch = new SolarisVswitch();
+      this.vnicModalVswitches = new Array<SolarisVswitch>();
+    }
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
       // the selected CDOM with its custom fields.
