@@ -188,9 +188,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     // check if object already on array
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     if ( vdsIndex !== -1) {
-        this.LDOM.vds[vdsIndex] = this.addVdsDev;
+        this.LDOM.vds[vdsIndex] = this.hs.deepCopy(this.addVdsDev);
     } else {
-      this.LDOM.vds.push(this.addVdsDev);
+      this.LDOM.vds.push(this.hs.deepCopy(this.addVdsDev));
     }
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
@@ -260,6 +260,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
    vNicModalRemoveTaggedVlan(vlan: number){
      const vlanIndex = this.vnicModalTaggedVlans.indexOf(vlan);
-     this.vnicModalTaggedVlans.splice(vlanIndex,1);
+     this.vnicModalTaggedVlans.splice(vlanIndex, 1);
    }
 }
