@@ -15,6 +15,7 @@ import { PapaParseModule } from 'ngx-papaparse';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -38,7 +39,8 @@ describe('LoadBalancersComponent', () => {
         IRuleModalComponent,
         PoolMemberModalComponent,
         HealthMonitorModalComponent,
-        ImportExportComponent
+        ImportExportComponent,
+        TooltipComponent
       ],
       providers: [
         NgxSmartModalService,

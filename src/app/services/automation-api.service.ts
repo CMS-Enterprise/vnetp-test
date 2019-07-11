@@ -88,9 +88,9 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
 
-  getCustomers() {
-    return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
-  }
+  // getCustomers() {
+  //   return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
+  // }
 
   getVrfs() {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
