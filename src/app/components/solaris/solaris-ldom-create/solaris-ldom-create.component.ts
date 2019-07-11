@@ -197,29 +197,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
 
-  insertVirtualDisks(vds) {
-    if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
-    vds.forEach(thisVds => {
-     if(this.LDOM.vds.indexOf(thisVds) !== -1){
-       this.LDOM.vds.push(Object.assign({}, thisVds));
-     } else {
-        const vdsIndex = this.LDOM.vds.indexOf(thisVds);
-        this.LDOM.vds.splice(vdsIndex, 1);
-       // this.LDOM.vds.push(Object.assign({}, thisVds));
-     }
-     this.addVdsDev = new SolarisVdsDevs();
-
-    });
-    this.ngxSm.getModal('vdsDevModalLdom').close();
-    console.log(this.LDOM.vds);
-  }
-
   editVds(vds: SolarisVdsDevs) {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     this.solarisService.currentVds = vds;
     this.openVdsModal();
-    // check if modal canceled, don't remove if so
-    // this.LDOM.vds.splice(vdsIndex, 1);
   }
 
   deleteVds(vdsDev: any) {
