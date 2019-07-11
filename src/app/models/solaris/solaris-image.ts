@@ -3,7 +3,7 @@ export class SolarisImage  {
 
     Size: number;
 
-    Type: string;
+    Protocol: string;
 
     Version: string;
 
