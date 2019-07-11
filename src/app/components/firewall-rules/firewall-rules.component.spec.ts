@@ -10,6 +10,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PapaParseModule } from 'ngx-papaparse';
 import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -28,7 +29,7 @@ describe('FirewallRulesComponent', () => {
       RouterTestingModule],
       declarations: [ 
         FirewallRulesComponent,
-        FirewallRuleModalComponent ],
+        FirewallRuleModalComponent, TooltipComponent ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder]
     })
     .compileComponents();

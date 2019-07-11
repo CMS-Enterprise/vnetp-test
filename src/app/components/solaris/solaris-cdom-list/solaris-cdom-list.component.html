@@ -1,39 +1,48 @@
-<button class="btn btn-success btn-sm mb-2" routerLink="/solaris/cdom/create">New CDOM</button>
+<h1>CDOM List</h1>
 
-<div>
-  <div class="card">
-    <table class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th>CDOM Name</th>
-          <th>Number of LDOMs</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let device of CDOMDeviceArray">
-          <td>
-            <a routerLink="/solaris/cdom/detail/{{ device.device_id }}"
-              ><fa name="server" style="color:black;"></fa> {{ device.name }}</a
-            >
-          </td>
-          <td>
-            {{ getLdomCount(device.name) }}
-          </td>
-          <td>
-            <div class="btn-toolbar" role="toolbar">
-              <div class="btn-group-sm mr-2">
-                <button class="btn btn-success" (click)="addLdom(device)">
-                  Create new LDOM
-                </button>
-                <button class="btn btn-warning " (click)="editCdom(device)">
-                  Edit CDOM
-                </button>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<button
+  class="btn btn-success btn-sm mb-2 pull-right"
+  routerLink="/solaris/cdom/create"
+>
+  <fa name="plus"></fa>
+  New CDOM
+</button>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>CDOM Name</th>
+      <th>Number of LDOMs</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let device of CDOMDeviceArray">
+      <td>
+        <a routerLink="/solaris/cdom/detail/{{ device.device_id }}"
+          ><fa name="server" style="color:black;"></fa> {{ device.name }}</a
+        >
+      </td>
+      <td>
+        {{ getLdomCount(device.name) }}
+      </td>
+      <td>
+        <div class="btn-toolbar justify-content-end" role="toolbar">
+          <div class="btn-group-sm mr-2">
+            <button class="btn btn-success" (click)="addLdom(device)">
+              <fa name="plus"></fa>
+              Create New LDOM
+            </button>
+            <button class="btn btn-warning" (click)="editCdom(device)">
+              <fa name="edit"></fa>
+              Edit CDOM
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="!CDOMDeviceArray?.length" class="text-center">
+      <td colspan="3">No CDOMs</td>
+    </tr>
+  </tbody>
+</table>

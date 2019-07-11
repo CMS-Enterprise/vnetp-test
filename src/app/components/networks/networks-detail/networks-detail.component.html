@@ -1,41 +1,30 @@
-<div class="text-center">
-  <h3>Network: {{ subnet?.name }}</h3>
-  <button
-    class="btn btn-danger"
-    (click)="ngx.getModal('deleteSubnetModal').open()"
-  >
-    Delete
-  </button>
-</div>
+<div class="clearfix">
+  <h1>Network: {{ subnet?.name }}</h1>
 
-<div class="card mt-3">
-  <div class="form-row text-center text-bold">
-    <div class="form-group col-md-2">
-      Network: {{ subnet?.network }}/{{ subnet.mask_bits }}
-    </div>
-
-    <div class="form-group col-md-2">
-      Gateway: {{ subnet?.gateway }}
-    </div>
-
-    <div class="form-group col-md-2">
-      Range: {{ subnet.range_begin }} - {{ subnet.range_end }}
-    </div>
-    <div class="form-group col-md-2">
-      Tier (VRF): {{ subnet?.vrf_group_name }}
-    </div>
-
-    <div class="form-group col-md-2">
-      Deployed: {{ getDeployedState(subnet) }}
-    </div>
-
-    <div class="form-group col-md-2">
-      VLAN: {{ getVlan(subnet) }}
-    </div>
+  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
+    <button
+      class="btn btn-sm btn-danger"
+      (click)="ngx.getModal('deleteSubnetModal').open()"
+    >
+      <fa name="trash"></fa>
+      Delete Subnet
+    </button>
   </div>
 </div>
 
-<h3>IP Addresses</h3>
+<div *ngIf="subnet">
+  <p><strong>Network:</strong> {{ subnet?.network }}/{{ subnet?.mask_bits }}</p>
+  <p><strong>Gateway:</strong> {{ subnet?.gateway }}</p>
+  <p>
+    <strong>Range:</strong> {{ subnet?.range_begin }} - {{ subnet?.range_end }}
+  </p>
+  <p><strong>Tier (VRF):</strong> {{ subnet?.vrf_group_name }}</p>
+  <p><strong>Deployed:</strong> {{ getDeployedState(subnet) }}</p>
+  <p><strong>VLAN:</strong> {{ getVlan(subnet) }}</p>
+</div>
+
+<hr />
+<!-- <h3 class="mt-5">IP Addresses</h3> -->
 
 <app-ipaddresses
   *ngIf="subnet"
@@ -72,21 +61,21 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-link"
+      data-dismiss="modal"
+      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-danger"
       data-dismiss="modal"
       (click)="deleteSubnet()"
       [disabled]="deleteSubnetConfirm !== 'DELETE'"
     >
       Yes
-    </button>
-
-    <button
-      type="button"
-      class="btn btn-secondary"
-      data-dismiss="modal"
-      (click)="deleteSubnetConfirm = ''; deleteSubnetModal.close()"
-    >
-      No
     </button>
   </div>
 </ngx-smart-modal>

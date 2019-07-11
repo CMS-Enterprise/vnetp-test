@@ -14,7 +14,7 @@ import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-
+import { HelpText } from 'src/app/services/help-text';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -47,6 +47,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   dirty: boolean;
   vnicModalUntaggedVlan: number;
   editLdom: boolean;
+  editCurrentVnic: boolean;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -59,13 +60,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private authService: AuthService,
     private hs: HelpersService,
-    private ngxSm: NgxSmartModalService
+    private ngxSm: NgxSmartModalService,
+    public helpText: HelpText
     ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
-
-
   }
+  
   addVariable() {
     if (!this.newSolarisVariable) { return; }
     if (!this.LDOM.variables) { this.LDOM.variables = new Array<SolarisVariable>(); }
@@ -117,6 +118,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.addVdsDev = new SolarisVdsDevs();
     this.modalVnic = new SolarisVnic();
     this.editLdom = false;
+    this.editCurrentVnic = false;
+    this.solarisService.currentVnic = null;
     this.automationApiService.getCDoms()
       .subscribe(data => {
         const cdomResponse = data as SolarisCdomResponse;
@@ -151,7 +154,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVds() {
-    this.LDOM.vds.push(Object.assign({}, this.addVdsDev));
+    // check if object already on array
+    const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
+    if ( vdsIndex !== -1) {
+        this.LDOM.vds.splice(vdsIndex, 1);
+        this.LDOM.vds.push(this.addVdsDev);
+    } else {
+      this.LDOM.vds.push(this.addVdsDev);
+    }
     this.addVdsDev = new SolarisVdsDevs();
     this.ngxSm.getModal('vdsDevModalLdom').close();
   }
@@ -159,21 +169,22 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     const vdsIndex = this.LDOM.vds.indexOf(this.addVdsDev);
     this.solarisService.currentVds = vds;
     this.openVdsModal();
-    //check if modal canceled, don't remove if so
-    this.LDOM.vds.splice(vdsIndex, 1);
+    // check if modal canceled, don't remove if so
+    // this.LDOM.vds.splice(vdsIndex, 1);
   }
   editVnic(vnic: SolarisVnic){
+    this.editCurrentVnic = true;
     const vnicIndex = this.LDOM.vnic.indexOf(vnic);
     this.solarisService.currentVnic = vnic;
     this.openVnicModal();
     // check if modal canceled, don't remove if so
-    this.LDOM.vnic.splice(vnicIndex,1);
+    // this.LDOM.vnic.splice(vnicIndex, 1);
 
   }
 
   openVnicModal() {
     this.addVnicInherit = true;
-    if ( this.solarisService.currentVnic === null ){
+    if ( this.solarisService.currentVnic == null ){
       this.vnicModalTaggedVlans = new Array<number>();
       this.modalVnic = new SolarisVnic();
       this.vnicModalVswitch = new SolarisVswitch();
@@ -199,14 +210,28 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   insertVnic() {
     if (this.addVnicInherit) {
       this.modalVnic.TaggedVlans = this.vnicModalVswitch.vlansTagged;
+      this.editCurrentVnic = false;
     } else {
       this.modalVnic.TaggedVlans = this.vnicModalTaggedVlans;
     }
 
     this.modalVnic.UntaggedVlan = this.vnicModalUntaggedVlan;
     this.modalVnic.VirtualSwitchName = this.vnicModalVswitch.vSwitchName;
+    // in the case of edit vNic, only add if not already array member
+    if (!this.LDOM.vnic) {
+      this.LDOM.vnic = new Array<SolarisVnic>();
+    }
 
-    this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+    if (this.LDOM.vnic.indexOf(this.modalVnic) === -1){
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+    } else {
+      const vnicIndex = this.LDOM.vnic.indexOf(this.modalVnic);
+      this.LDOM.vnic.splice(vnicIndex, 1);
+      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
+
+    }
+    console.log(this.LDOM.vnic);
+    this.modalVnic = new SolarisVnic();
     this.ngxSm.getModal('vnicModalLdom').close();
   }
 
@@ -239,7 +264,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   insertVirtualDisks(vds) {
      if (this.LDOM.vds == null) { this.LDOM.vds = new Array<SolarisVdsDevs>(); }
      vds.forEach(thisVds => {
-      this.LDOM.vds.push(Object.assign({}, thisVds));
+      if(this.LDOM.vds.indexOf(thisVds) !== -1){
+        this.LDOM.vds.push(Object.assign({}, thisVds));
+      } else {
+         const vdsIndex = this.LDOM.vds.indexOf(thisVds);
+         this.LDOM.vds.splice(vdsIndex, 1);
+        // this.LDOM.vds.push(Object.assign({}, thisVds));
+      }
       this.addVdsDev = new SolarisVdsDevs();
 
      });
