@@ -392,7 +392,10 @@
     <div class="form-row">
       <div class="form-group col-md-8">
         <label for="vNicUntaggedVlan">UnTagged VLAN</label>
-        <input class="form-control" [(ngModel)]="vnicModalUntaggedVlan" />
+        <input class="form-control"
+        type="text"
+        mask="0999"
+        [(ngModel)]="vnicModalUntaggedVlan" />
       </div>
     </div>
 
@@ -402,7 +405,8 @@
         <div class="input-group align-items-center">
           <input
             class="form-control"
-            type="number"
+            type="text"
+            mask="0999"
             [(ngModel)]="vnicModalAddTaggedVlan"
           />
           <button
