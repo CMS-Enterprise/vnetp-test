@@ -36,6 +36,8 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalAddTaggedVlan: number;
   dirty: boolean;
   editCDOM: boolean;
+  editCurrentVswitch: boolean;
+  editVswitchIndex: number;
 
 
   @HostListener('window:beforeunload')
@@ -132,12 +134,13 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   openVswitchModal() {
-    if (this.solarisService.currentVswitch === null) {
-       this.modalVswitch = new SolarisVswitch();
-       this.modalVswitch.vlansTagged = new Array<number>();
-    } else {
+    if (this.editCurrentVswitch) {
       this.modalVswitch = this.solarisService.currentVswitch;
+      this.modalVswitch.vlansUntagged = this.solarisService.currentVswitch.vlansUntagged;
+      this.modalVswitch.vlansTagged = this.solarisService.currentVswitch.vlansTagged;
       this.solarisService.currentVswitch = new SolarisVswitch();
+    } else {
+      this.modalVswitch = new SolarisVswitch();
       this.modalVswitch.vlansTagged = new Array<number>();
     }
     this.ngxSm.getModal('vswitchModalCdom').open();
@@ -148,8 +151,16 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
       this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
-
-    this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    if (!this.CDOM.vsw) {
+      this.CDOM.vsw = new Array<SolarisVswitch>();
+    }
+    if (this.editCurrentVswitch){
+      this.CDOM.vsw[this.editVswitchIndex] = this.hs.deepCopy(this.modalVswitch);
+      this.editCurrentVswitch = false;
+      this.editVswitchIndex = null;
+    } else {
+      this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    }
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
 
@@ -184,11 +195,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     }
   }
   editVswitch(vsw: any) {
-    const vswIndex = this.CDOM.vsw.indexOf(vsw);
-    this.solarisService.currentVswitch = vsw;
+    this.editVswitchIndex = this.CDOM.vsw.indexOf(vsw);
+    this.editCurrentVswitch = true;
+    this.solarisService.currentVswitch = this.hs.deepCopy(vsw);
     this.openVswitchModal();
-    // check if modal canceled, and don't remove if so
-    this.CDOM.vsw.splice(vswIndex, 1);
-
   }
 }
