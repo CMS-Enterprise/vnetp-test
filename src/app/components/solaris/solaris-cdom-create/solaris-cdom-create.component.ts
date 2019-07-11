@@ -36,6 +36,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   modalAddTaggedVlan: number;
   dirty: boolean;
   editCDOM: boolean;
+  editCurrentVswitch: boolean;
 
 
   @HostListener('window:beforeunload')
@@ -132,12 +133,12 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   openVswitchModal() {
-    if (this.solarisService.currentVswitch === null) {
-       this.modalVswitch = new SolarisVswitch();
-       this.modalVswitch.vlansTagged = new Array<number>();
-    } else {
+    if (this.editCurrentVswitch) {
       this.modalVswitch = this.solarisService.currentVswitch;
       this.solarisService.currentVswitch = new SolarisVswitch();
+      this.editCurrentVswitch = false;
+    } else {
+      this.modalVswitch = new SolarisVswitch();
       this.modalVswitch.vlansTagged = new Array<number>();
     }
     this.ngxSm.getModal('vswitchModalCdom').open();
@@ -148,8 +149,15 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
       this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
-
-    this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    if(!this.CDOM.vsw) {
+      this.CDOM.vsw = new Array<SolarisVswitch>();
+    }
+    const vSwitchIndex = this.CDOM.vsw.indexOf(this.modalVswitch);
+    if (vSwitchIndex === -1){
+      this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    } else {
+      this.CDOM.vsw[vSwitchIndex] = this.hs.deepCopy(this.modalVswitch);
+    }
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
 
@@ -184,11 +192,8 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     }
   }
   editVswitch(vsw: any) {
-    const vswIndex = this.CDOM.vsw.indexOf(vsw);
+    this.editCurrentVswitch = true;
     this.solarisService.currentVswitch = vsw;
     this.openVswitchModal();
-    // check if modal canceled, and don't remove if so
-    this.CDOM.vsw.splice(vswIndex, 1);
-
   }
 }
