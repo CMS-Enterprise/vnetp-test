@@ -31,7 +31,7 @@ export class NetworkTopologyComponent implements OnInit {
   ngOnInit() {
     this.buildContextMenu();
     this.buildClickActionArray();
-    this.getCustomer();
+    // this.getCustomer();
   }
 
   buildContextMenu() {
@@ -179,13 +179,13 @@ export class NetworkTopologyComponent implements OnInit {
     }
   }
 
-  getCustomer() {
-    this.apiService.getCustomers().subscribe(data => {
-      this.customers = data.Customers;
-      this.selectedCustomer = this.customers[0];
-      this.getVrfs();
-    });
-  }
+  // getCustomer() {
+  //   this.apiService.getCustomers().subscribe(data => {
+  //     this.customers = data.Customers;
+  //     this.selectedCustomer = this.customers[0];
+  //     this.getVrfs();
+  //   });
+  // }
 
   getVrfs() {
     this.apiService.getVrfs().subscribe(data => {
