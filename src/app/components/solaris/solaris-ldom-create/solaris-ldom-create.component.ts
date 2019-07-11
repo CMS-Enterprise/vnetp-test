@@ -37,13 +37,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   newSolarisVariable: SolarisVariable;
   addVdsDev: SolarisVdsDevs;
   modalVnic: SolarisVnic;
-  testCDOM: SolarisCdom;
-  // modalSelectedVswitch: SolarisVswitch;
   vnicModalVswitches: Array<SolarisVswitch>;
   vnicModalVswitch: SolarisVswitch;
   vnicModalTaggedVlans: Array<number>;
   vnicModalAddTaggedVlan: number;
-  addVnicInherit: boolean;
   cpuCountArray: number[];
   ramCountArray: number[];
   dirty: boolean;
