@@ -41,6 +41,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   vnicModalVswitches: Array<SolarisVswitch>;
   vnicModalVswitch: SolarisVswitch;
   vnicModalTaggedVlans: Array<number>;
+  vnicModalAddTaggedVlan: number;
   addVnicInherit: boolean;
   cpuCountArray: number[];
   ramCountArray: number[];
@@ -82,6 +83,20 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   addvnicObject(obj: any, objArray: Array<any>) {
      objArray.push(obj);
      this.inputLDOMvnic = '';
+  }
+  addTaggedVlan(){
+    //TODO: Display message if duplicate 
+    //verify duplicate of untagged vlan is not entered
+    if(this.vnicModalAddTaggedVlan == this.vnicModalUntaggedVlan){
+       this.vnicModalAddTaggedVlan = null;
+    } else if (this.vnicModalTaggedVlans.indexOf(this.vnicModalAddTaggedVlan) === -1) {
+      //verify duplicate tagged vlan is not entered
+      this.vnicModalTaggedVlans.push(this.vnicModalAddTaggedVlan);
+      this.vnicModalAddTaggedVlan = null;
+    } else {
+      //duplicate tagged vlan entered
+      this.vnicModalAddTaggedVlan = null;
+    }
   }
   moveObjectPosition(value: number, obj, objArray) {
    this.solarisService.moveObjectPosition(value, obj, objArray);
@@ -184,18 +199,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
   openVnicModal() {
     this.addVnicInherit = true;
-    if ( this.solarisService.currentVnic == null ){
-      this.vnicModalTaggedVlans = new Array<number>();
-      this.modalVnic = new SolarisVnic();
-      this.vnicModalVswitch = new SolarisVswitch();
-      this.vnicModalVswitches = new Array<SolarisVswitch>();
-    } else {
-      this.addVnicInherit = false;
-      this.modalVnic = this.solarisService.currentVnic;
-      this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
-      this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
-      this.solarisService.currentVnic = null;
-    }
+    this.vnicModalTaggedVlans = new Array<number>();
+    this.modalVnic = new SolarisVnic();
+    this.vnicModalVswitch = new SolarisVswitch();
+    this.vnicModalVswitches = new Array<SolarisVswitch>();
+
       // Since Devices returned from Device42 don't include custom fields, get the id
       // of the device representing the CDOM and then get it from the API and hydrate
       // the selected CDOM with its custom fields.
@@ -208,20 +216,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVnic() {
-    if (this.addVnicInherit) {
-      this.modalVnic.TaggedVlans = this.vnicModalVswitch.vlansTagged;
-      this.editCurrentVnic = false;
-    } else {
-      this.modalVnic.TaggedVlans = this.vnicModalTaggedVlans;
-    }
-
+    this.modalVnic.TaggedVlans = this.vnicModalTaggedVlans;
     this.modalVnic.UntaggedVlan = this.vnicModalUntaggedVlan;
     this.modalVnic.VirtualSwitchName = this.vnicModalVswitch.vSwitchName;
     // in the case of edit vNic, only add if not already array member
     if (!this.LDOM.vnic) {
       this.LDOM.vnic = new Array<SolarisVnic>();
     }
-
+    // in the case of edit, remove previous entry
     if (this.LDOM.vnic.indexOf(this.modalVnic) === -1){
       this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
     } else {
@@ -230,7 +232,6 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
 
     }
-    console.log(this.LDOM.vnic);
     this.modalVnic = new SolarisVnic();
     this.ngxSm.getModal('vnicModalLdom').close();
   }
@@ -276,5 +277,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
      });
      this.ngxSm.getModal('vdsDevModalLdom').close();
      console.log(this.LDOM.vds);
+   }
+   vNicModalRemoveTaggedVlan(vlan: number){
+     const vlanIndex = this.vnicModalTaggedVlans.indexOf(vlan);
+     this.vnicModalTaggedVlans.splice(vlanIndex,1);
    }
 }
