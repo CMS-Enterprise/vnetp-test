@@ -30,19 +30,20 @@ export class AuthService {
       })
     };
 
-    return this.http.get<any>(environment.apiBase + '/api/1.0/customers/', httpOptions)
+    return this.http.get<any>(environment.apiBase + '/api/1.0/admingroups/', httpOptions)
         .pipe(map(result => {
           const user = new User(userpass);
 
-          if (!result.Customers || result.Customers.length === 0){
-            throw Error('No Permissions to any Customer.');
+          if (!result.admingroups || result.total_count === 0) {
+            throw Error('No Permissons to any Admin Group.');
           }
 
-          const customer = result.Customers[0];
+          const adminGroup = result.admingroups[0];
 
-          if (customer) {
-                user.CustomerName = customer.name;
-                user.CustomerIdentifier = customer.name.toLowerCase();
+          if (adminGroup) {
+                user.CustomerName = adminGroup.name;
+                user.CustomerIdentifier = adminGroup.name.toLowerCase();
+
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
             }
