@@ -37,6 +37,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   dirty: boolean;
   editCDOM: boolean;
   editCurrentVswitch: boolean;
+  editVswitchIndex: number;
 
 
   @HostListener('window:beforeunload')
@@ -135,8 +136,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   openVswitchModal() {
     if (this.editCurrentVswitch) {
       this.modalVswitch = this.solarisService.currentVswitch;
+      this.modalVswitch.vlansUntagged = this.solarisService.currentVswitch.vlansUntagged;
+      this.modalVswitch.vlansTagged = this.solarisService.currentVswitch.vlansTagged;
       this.solarisService.currentVswitch = new SolarisVswitch();
-      this.editCurrentVswitch = false;
     } else {
       this.modalVswitch = new SolarisVswitch();
       this.modalVswitch.vlansTagged = new Array<number>();
@@ -149,14 +151,15 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
       this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
-    if(!this.CDOM.vsw) {
+    if (!this.CDOM.vsw) {
       this.CDOM.vsw = new Array<SolarisVswitch>();
     }
-    const vSwitchIndex = this.CDOM.vsw.indexOf(this.modalVswitch);
-    if (vSwitchIndex === -1){
-      this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
+    if (this.editCurrentVswitch){
+      this.CDOM.vsw[this.editVswitchIndex] = this.hs.deepCopy(this.modalVswitch);
+      this.editCurrentVswitch = false;
+      this.editVswitchIndex = null;
     } else {
-      this.CDOM.vsw[vSwitchIndex] = this.hs.deepCopy(this.modalVswitch);
+      this.CDOM.vsw.push(this.hs.deepCopy(this.modalVswitch));
     }
     this.ngxSm.getModal('vswitchModalCdom').close();
   }
@@ -192,8 +195,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     }
   }
   editVswitch(vsw: any) {
+    this.editVswitchIndex = this.CDOM.vsw.indexOf(vsw);
     this.editCurrentVswitch = true;
-    this.solarisService.currentVswitch = vsw;
+    this.solarisService.currentVswitch = this.hs.deepCopy(vsw);
     this.openVswitchModal();
   }
 }
