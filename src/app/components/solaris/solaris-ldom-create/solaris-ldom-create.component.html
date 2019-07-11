@@ -21,6 +21,7 @@
         id="inputLDOMaddCDOM"
         #cdomInputName="ngModel"
         [(ngModel)]="LDOM.associatedcdom"
+        (ngModelChange)="getCdomVswitches()"
       >
         <option></option>
         <option

@@ -159,9 +159,23 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const result = data as SolarisCdom;
         this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
         this.solarisService.currentLdom = new SolarisLdom();
+        this.getCdomVswitches();
     });
     }
   }
+
+  getCdomVswitches() {
+    // Since Devices returned from Device42 don't include custom fields, get the id
+    // of the device representing the CDOM and then get it from the API and hydrate
+    // the selected CDOM with its custom fields.
+  this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
+    const result = data as SolarisCdom;
+    const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
+    this.vnicModalVswitches = cdomFull.vsw;
+    console.log(this.vnicModalVswitches);
+  });
+}
+
 
   openVdsModal() {
     if ( this.solarisService.currentVds != null){
@@ -201,6 +215,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.modalVnic = this.solarisService.currentVnic;
       this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
       this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
+      this.vnicModalVswitch = this.vnicModalVswitches.filter(v => v.vSwitchName === this.solarisService.currentVnic.VirtualSwitchName)[0];
       this.solarisService.currentVnic = null;
       this.editCurrentVnic = false;
     } else{
@@ -208,17 +223,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.vnicModalTaggedVlans = new Array<number>();
       this.modalVnic = new SolarisVnic();
       this.vnicModalVswitch = new SolarisVswitch();
-      this.vnicModalVswitches = new Array<SolarisVswitch>();
+      // this.vnicModalVswitches = new Array<SolarisVswitch>();
     }
-      // Since Devices returned from Device42 don't include custom fields, get the id
-      // of the device representing the CDOM and then get it from the API and hydrate
-      // the selected CDOM with its custom fields.
-    this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
-      const result = data as SolarisCdom;
-      const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
-      this.vnicModalVswitches = cdomFull.vsw;
-      this.ngxSm.getModal('vnicModalLdom').open();
-    });
+    this.ngxSm.getModal('vnicModalLdom').open();
+
   }
 
   insertVnic() {
