@@ -231,9 +231,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
     } else {
       const vnicIndex = this.LDOM.vnic.indexOf(this.modalVnic);
-      this.LDOM.vnic.splice(vnicIndex, 1);
-      this.LDOM.vnic.push(this.hs.deepCopy(this.modalVnic));
-
+      this.LDOM.vnic[vnicIndex] = this.hs.deepCopy(this.modalVnic);
     }
     this.modalVnic = new SolarisVnic();
     this.ngxSm.getModal('vnicModalLdom').close();
