@@ -1,10 +1,15 @@
-<div class="offset-3 col-md-6">
-  <div class="text-center" style="display:block; margin:auto;">
-    <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
-      <img src="/assets/img/logo-large.png" style="max-width: 268px;" />
+<div class="offset-3 col-md-6 mt-5">
+  <div class="text-center">
+    <form
+      name="loginForm"
+      (ngSubmit)="form.form.valid && login()"
+      #form="ngForm"
+      novalidate
+    >
+      <img src="/assets/img/logo-alt.png" class="logo" />
 
-      <div class="offset-3 form-group col-md-6">
-        <label for="username">Username:</label>
+      <div class="form-group">
+        <label for="username">Username</label>
         <input
           type="text"
           name="username"
@@ -15,11 +20,16 @@
           [ngClass]="{ 'is-invalid': form.submitted && username.invalid }"
           required
         />
-        <div *ngIf="form.submitted && username.invalid" class="invalid-feedback">
+        <div
+          *ngIf="form.submitted && username.invalid"
+          class="invalid-feedback"
+        >
           <div *ngIf="username.errors.required">Username is required</div>
         </div>
+      </div>
 
-        <label for="password">Password:</label>
+      <div class="form-group">
+        <label for="password">Password</label>
         <input
           type="password"
           name="password"
@@ -31,16 +41,19 @@
           required
         />
 
-        <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
-            <div *ngIf="password.errors.required">Password is required</div>
-          </div>
+        <div
+          *ngIf="form.submitted && password.invalid"
+          class="invalid-feedback"
+        >
+          <div *ngIf="password.errors.required">Password is required</div>
+        </div>
       </div>
 
       <div>
         <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
       </div>
 
-      <button class="btn btn-success" type="submit" (click)="login()">
+      <button class="btn btn-success btn-lg" type="submit" (click)="login()">
         Login
       </button>
 

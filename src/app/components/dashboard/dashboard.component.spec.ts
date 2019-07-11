@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { D3PieChartComponent } from '../d3-pie-chart/d3-pie-chart.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -10,7 +12,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ],
+      imports: [AngularFontAwesomeModule],
+      declarations: [ DashboardComponent, D3PieChartComponent ],
       providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();

@@ -21,6 +21,7 @@
         id="inputLDOMaddCDOM"
         #cdomInputName="ngModel"
         [(ngModel)]="LDOM.associatedcdom"
+        (ngModelChange)="getCdomVswitches()"
       >
         <option></option>
         <option
@@ -74,6 +75,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>vNics</label>
+        <tooltip [message]="helpText.solarisLdomVnicText"></tooltip>
         <button
           type="button"
           name="modalVnic"
@@ -125,6 +127,7 @@
     <!--TODO: Verify functionality of virtual disks and vars tables-->
     <div class="form-group clearfix">
       <label class="mb-2">Variables</label>
+      <tooltip [message]="helpText.solarisLdomVariableText"></tooltip>
       <table name="variableTable" class="table table-striped">
         <thead>
           <tr>
@@ -208,7 +211,7 @@
           <tr *ngFor="let vds of LDOM.vds">
             <td>{{ vds.vds }}</td>
             <td>{{ vds.diskName }}</td>
-            <td>{{ vds.diskSize }}</td>
+            <td>{{ vds.diskSize }} GB</td>
             <td class="item-actions">
               <fa
                 name="chevron-up"
@@ -253,6 +256,7 @@
         <label class="form-check-label" for="inputLDOMnetinstall"
           >Net Install</label
         >
+        <tooltip [message]="helpText.solarisLdomNetInstallText"></tooltip>
       </div>
     </div>
 
@@ -316,7 +320,7 @@
       </div>
 
       <div class="form-group col-md-4">
-        <label for="diskName">Disk Size</label>
+        <label for="diskName">Disk Size (GB)</label>
         <input
           class="form-control"
           type="number"
@@ -385,52 +389,62 @@
       </div>
     </div>
 
-    <!--TODO: Hide until vsw selected-->
-    <div class="form-group">
-      <label for="vnicUntaggedVlan">Untagged VLAN:</label>
-      <select
-        name="vnicUntaggedVlan"
-        class="form-control"
-        [(ngModel)]="vnicModalUntaggedVlan"
-      >
-        <option [ngValue]="vnicModalVswitch?.vlansUntagged"
-          >Default Native VLAN {{ vnicModalVswitch?.vlansUntagged }}
-        </option>
-        <option
-          *ngFor="let vlan of vnicModalVswitch?.vlansTagged"
-          [ngValue]="vlan"
-        >
-          VLAN {{ vlan }}
-        </option>
-      </select>
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <label for="vNicUntaggedVlan">UnTagged VLAN</label>
+        <input class="form-control"
+        type="text"
+        mask="0999"
+        [(ngModel)]="vnicModalUntaggedVlan" />
+      </div>
     </div>
 
-    <div class="form-group">
-      Tagged VLANs:
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="addVnicInherit"
-        />
-        <label class="form-check-label text-info">Inherit Tagged VLANs</label>
-      </div>
-
-      <ng-template
-        *ngIf="!addVnicInherit"
-        ngFor
-        let-vlan
-        [ngForOf]="vnicModalVswitch?.vlansTagged"
-      >
-        <div class="form-check form-check-inline">
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label>Tagged VLANs</label>
+        <div class="input-group align-items-center">
           <input
-            class="form-check-input"
-            type="checkbox"
-            (change)="selectUntaggedVlan($event, vlan)"
+            class="form-control"
+            type="text"
+            mask="0999"
+            [(ngModel)]="vnicModalAddTaggedVlan"
           />
-          <label class="form-check-label mr-1">Vlan {{ vlan }} </label>
+          <button
+            type="button"
+            class="btn btn-sm btn-info"
+            [disabled]="!vnicModalAddTaggedVlan"
+            (click)="addTaggedVlan()"
+            aria-label="Add VLAN"
+          >
+            <fa name="plus"></fa>
+            Add VLAN
+          </button>
         </div>
-      </ng-template>
+      </div>
+    </div>
+    <div class="form-row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>VLAN ID</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let taggedVlan of vnicModalTaggedVlans">
+            <td>{{ taggedVlan }}</td>
+            <td class="item-actions">
+              <fa
+                name="trash"
+                (click)="vNicModalRemoveTaggedVlan(taggedVlan)"
+              ></fa>
+            </td>
+          </tr>
+          <tr *ngIf="!vnicModalTaggedVlans?.length" class="text-center">
+            <td colspan="2">No Tagged VLANs</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="form-row">
@@ -462,3 +476,5 @@
     </div>
   </div>
 </ngx-smart-modal>
+
+

@@ -89,6 +89,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Network Type</label>
+          <tooltip [message]="helpText.networkGroupText"></tooltip>
           <select
             name="sourceNetworkType"
             formControlName="sourceNetworkType"
@@ -180,6 +181,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Service Type</label>
+          <tooltip [message]="helpText.networkPortGroupText"></tooltip>
           <select
             name="sourceServiceType"
             formControlName="sourceServiceType"

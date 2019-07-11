@@ -3,13 +3,24 @@
 @import "~ngx-smart-modal/ngx-smart-modal";
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.css";
+@import '~d3-context-menu/css/d3-context-menu.css';
+
 
 // custom imports
 @import "variables", "buttons", "tables", "forms";
 
 a {
   &:hover {
-    color: $primary-dark;
+    // color: $primary-dark;
+    color: $secondary-main;
+  }
+}
+
+// wasn't working inside tooltip component styles for some reason
+.tooltiptext a {
+  color: $secondary-medium;
+  &:hover {
+    color: $secondary-dark;
   }
 }
 

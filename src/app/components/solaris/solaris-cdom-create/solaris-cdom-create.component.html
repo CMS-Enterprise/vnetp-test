@@ -17,6 +17,7 @@
 
     <div class="form-group">
       <label for="cdomClone">Clone Host Resources</label>
+      <tooltip [message]="helpText.solarisCdomCloneText"></tooltip>
       <div class="input-group align-items-center">
         <select
           name="cdomClone"
@@ -198,7 +199,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="unTaggedVlans">Untagged VLANS</label>
+      <label for="unTaggedVlan">Untagged VLAN</label>
       <input
         class="form-control"
         type="number"
@@ -290,3 +291,5 @@
     </button>
   </div>
 </ngx-smart-modal>
+
+

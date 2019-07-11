@@ -1,93 +1,126 @@
-<div class="text-center">
-  <h1>Dashboard</h1>
-</div>
+<div class="container mt-4 mb-5">
+  <h2>Service Status</h2>
 
-<div class="container text-center">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Networks
-        </div>
-        <div class="card-body">
-          <h6>{{ subnets.subnets.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/networks">View</button>
-        </div>
+  <div class="card mt-3 mb-5">
+    <div class="row p-3">
+      <div
+        *ngFor="let service of status?.service_status"
+        class="col-md-4 status-item"
+      >
+        <span>
+          {{ service.name }}
+        </span>
+        <div class="status-light" [ngClass]="service.status"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Customer Status</h2>
+
+  <div class="card mt-3 mb-5">
+    <div class="row p-3">
+      <div
+        *ngFor="let customer of status?.customer_status"
+        class="col-md-4 status-item status-item--large"
+      >
+        <span>
+          {{ customer.name }}
+        </span>
+        <div class="status-light" [ngClass]="customer.status"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Job Status Today</h2>
+  <div class="row p-3">
+    <div class="chart-wrap col-md-8">
+      <app-d3-pie-chart
+        [data]="pieChartData"
+        *ngIf="pieChartData"
+      ></app-d3-pie-chart>
+      <div class="legend">
+        <p *ngIf="successfulJobs">
+          <span class="legend-color success"></span>
+          <span class="legend-label">Successful Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="successfulJobs"
+          >Total: {{ successfulJobs }}</span
+        >
+
+        <p *ngIf="runningJobs">
+          <span class="legend-color warning"></span>
+          <span class="legend-label">Running Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="runningJobs"
+          >Total: {{ runningJobs }}</span
+        >
+
+        <p *ngIf="failedJobs">
+          <span class="legend-color danger"></span>
+          <span class="legend-label">Failed Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="failedJobs"
+          >Total: {{ failedJobs }}</span
+        >
+
+        <p *ngIf="pendingJobs">
+          <span class="legend-color info"></span>
+          <span class="legend-label">Pending Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="pendingJobs"
+          >Total: {{ pendingJobs }}</span
+        >
+
+        <p *ngIf="cancelledJobs">
+          <span class="legend-color medium"></span>
+          <span class="legend-label">Cancelled Jobs</span>
+        </p>
+        <span class="legend-subtitle" *ngIf="cancelledJobs"
+          >Total: {{ cancelledJobs }}</span
+        >
       </div>
     </div>
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          Devices
+        <div class="card-header text-center">
+          <h4 class="mb-0">Environment</h4>
         </div>
-        <div class="card-body">
-          <h6>{{ devices.Devices.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/solaris">View</button>
-        </div>
-      </div>
-    </div>
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          IP Addresses
-        </div>
-        <div class="card-body">
-          <h6>{{ ips.ips.length }}</h6>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary" routerLink="/ipaddresses">View</button>
+        <div class="p-3">
+          <ul class="dash-card">
+            <li>
+              <span>Networks</span>
+              <span class="inline-block ml-auto">
+                {{ subnets.total_count || 0 }}
+              </span>
+              <a routerLink="/networks">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+
+            <li>
+              <span>Devices</span>
+              <span class="inline-block ml-auto">
+                {{ devices.total_count || 0 }}
+              </span>
+              <a routerLink="/solaris">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+
+            <li>
+              <span>IP Addresses</span>
+              <span class="inline-block ml-auto">
+                {{ ips.ips.length || 0 }}
+              </span>
+              <a routerLink="/ipaddresses">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-  
-  <hr>
-
-  <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Jobs executed Today
-          </div>
-          <div class="card-body">
-            <h6>{{ jobs.results.length }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Successful Jobs Today
-          </div>
-          <div class="card-body">
-            <h6 [ngClass]="{'text-success': successfulJobs > 0}">{{ successfulJobs }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Failed Jobs Today
-          </div>
-          <div class="card-body">
-            <h6 [ngClass]="{'text-danger': failedJobs > 0}">{{ failedJobs }}</h6>
-          </div>
-          <div class="card-footer">
-          </div>
-        </div>
-      </div>
-    </div>
-
 </div>
