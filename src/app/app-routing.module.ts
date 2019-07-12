@@ -29,6 +29,7 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
+import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 
 // tslint:disable: max-line-length
 
@@ -38,6 +39,7 @@ const routes: Routes = [
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Create Subnet'}},
   {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
   {path: 'network-interfaces', component: NetworkInterfacesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Interfaces'}},
+  // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},
   {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
   {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},

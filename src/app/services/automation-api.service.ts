@@ -8,6 +8,7 @@ import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { CustomerResponse } from '../models/d42/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -87,6 +88,10 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
 
+  // getCustomers() {
+  //   return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
+  // }
+
   getVrfs() {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
   }
@@ -107,5 +112,9 @@ export class AutomationApiService {
 
   getSubnetIps(id: number) {
     return this.http.get(environment.apiBase + `/api/1.0/ips/subnet_id/${id}`);
+  }
+
+  getSystemStatus() {
+    return this.http.get(environment.apiBase + '/api/status');
   }
 }

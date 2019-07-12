@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Userpass } from 'src/app/models/user/userpass';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-import { first } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit } from "@angular/core"
+import { Userpass } from "src/app/models/user/userpass"
+import { Router, ActivatedRoute } from "@angular/router"
+import { AuthService } from "src/app/services/auth.service"
+import { first } from "rxjs/operators"
+import { ToastrService } from "ngx-toastr"
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-  userpass = new Userpass();
-  errorMessage: string;
-  returnUrl: string;
-  loading: boolean;
+  userpass = new Userpass()
+  errorMessage: string
+  returnUrl: string
+  loading: boolean
 
   constructor(
     private auth: AuthService,
@@ -24,36 +24,36 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || "/dashboard"
 
     if (!this.auth.currentUser) {
-      this.auth.logout();
+      this.auth.logout()
     } else {
-      this.router.navigate([this.returnUrl]);
+      this.router.navigate([this.returnUrl])
     }
   }
 
   login() {
     if (!this.userpass.Username || !this.userpass.Password) {
-      return;
+      return
     }
 
-    this.errorMessage = null;
-    this.loading = true;
+    this.errorMessage = null
+    this.loading = true
 
     this.auth
       .login(this.userpass)
       .pipe(first())
       .subscribe(
         data => {
-          this.toastr.success(`Welcome ${this.userpass.Username}!`);
-          this.router.navigate([this.returnUrl]);
+          this.toastr.success(`Welcome ${this.userpass.Username}!`)
+          this.router.navigate([this.returnUrl])
         },
         error => {
-          this.toastr.error('Invalid Username/Password');
-          this.errorMessage = 'Invalid Username/Password';
-          this.loading = false;
+          this.toastr.error("Invalid Username/Password")
+          this.errorMessage = "Invalid Username/Password"
+          this.loading = false
         }
-      );
+      )
   }
 }

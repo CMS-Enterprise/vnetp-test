@@ -62,6 +62,8 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
+import { D3Module } from './modules/d3-module/d3-module.module';
+import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
@@ -110,6 +112,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
     CdomDetailComponent,
     LdomDetailComponent,
     LdomListComponent,
+    NetworkTopologyComponent,
     TooltipComponent
   ],
   imports: [
@@ -129,7 +132,8 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
       closeButton: true,
       preventDuplicates: true
     }),
-    NgxSmartModalModule.forRoot()
+    NgxSmartModalModule.forRoot(),
+    D3Module
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
     NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
