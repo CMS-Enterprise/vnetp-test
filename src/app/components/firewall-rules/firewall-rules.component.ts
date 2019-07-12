@@ -35,11 +35,13 @@ export class FirewallRulesComponent implements OnInit {
     );
   }
 
-  getFirewallRulesCount(object) {
-    const jsonFirewallRules = object.custom_fields.find(c => c.key === 'firewall_rules');
-
-    const firewallRules = JSON.parse(jsonFirewallRules.value);
-
-    return firewallRules ? firewallRules.length : 0;
+  getFirewallRulesCount(object, type) {
+    if (type === 'external') {
+      return 0;
+    } else if (type === 'intervrf') {
+      const jsonFirewallRules = object.custom_fields.find(c => c.key === 'firewall_rules');
+      const firewallRules = JSON.parse(jsonFirewallRules.value);
+      return firewallRules ? firewallRules.length : 0;
+    }
   }
 }
