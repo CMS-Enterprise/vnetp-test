@@ -1,5 +1,5 @@
 export enum FirewallRuleScope {
-    subnet,
-    vrf
-  }
-  
+  external,
+  vrf,
+  subnet
+}

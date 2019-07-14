@@ -26,7 +26,7 @@ import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-obje
 })
 export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';
-  
+
   subnet: Subnet;
   vrf: Vrf;
 
@@ -58,9 +58,11 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
-    let scopeUrlElement = this.route.snapshot.url[1].path;
+    const scopeUrlElement = this.route.snapshot.url[1].path;
 
-    if (scopeUrlElement === 'vrf') {
+    if (scopeUrlElement === 'external') {
+      this.scope = FirewallRuleScope.external;
+    } else if (scopeUrlElement === 'vrf') {
       this.scope = FirewallRuleScope.vrf;
     } else if (scopeUrlElement === 'subnet') {
       this.scope = FirewallRuleScope.subnet;
@@ -96,7 +98,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       data => {
         this.subnet = data as Subnet;
         this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
-        this.getEntityCustomFields(this.subnet);
+        this.getEntityCustomFields(this.subnet, 'firewall_rules');
         // this.getVrfCustomFields();
       }
     );
@@ -106,14 +108,23 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       this.automationApiService.getVrf(this.Id).subscribe(
         data => {
           this.vrf = data as Vrf;
-          this.getEntityCustomFields(this.vrf);
+          this.getEntityCustomFields(this.vrf, 'firewall_rules');
         }
       );
     }
+
+    if (this.scope === FirewallRuleScope.external) {
+      this.automationApiService.getVrf(this.Id).subscribe(
+        data => {
+          this.vrf = data as Vrf;
+          this.getEntityCustomFields(this.vrf, 'external_firewall_rules');
+        }
+      )
+    }
   }
 
-  getEntityCustomFields(entity: CustomFieldsObject) {
-    const firewallrules = entity.custom_fields.find(c => c.key === 'firewall_rules');
+  getEntityCustomFields(entity: CustomFieldsObject, fieldName: string) {
+    const firewallrules = entity.custom_fields.find(c => c.key === fieldName);
 
     if (firewallrules) {
     this.firewallRules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
@@ -221,13 +232,18 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       extra_vars.scope = 'subnet';
       extra_vars.subnet = this.subnet;
       extra_vars.vrf_group_name = this.subnet.vrf_group_name;
+      extra_vars.firewall_rules = firewallRules;
     } else if (this.scope === FirewallRuleScope.vrf) {
       extra_vars.scope = 'vrf';
       extra_vars.vrf = this.vrf;
       extra_vars.vrf_group_name = this.vrf.name;
+      extra_vars.firewall_rules = firewallRules;
+    } else if (this.scope === FirewallRuleScope.external) {
+      extra_vars.scope = 'external';
+      extra_vars.vrf = this.vrf;
+      extra_vars.vrf_group_name = this.vrf.name;
+      extra_vars.external_firewall_rules = firewallRules;
     }
-
-    extra_vars.firewall_rules = firewallRules;
 
     const body = { extra_vars };
 
@@ -237,7 +253,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     } else {
       this.automationApiService.launchTemplate('save-acl', body, true).subscribe();
     }
-  } else if (this.scope === FirewallRuleScope.vrf) {
+  } else if (this.scope === FirewallRuleScope.vrf || FirewallRuleScope.external) {
     this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
   }
 }
