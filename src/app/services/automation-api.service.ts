@@ -124,6 +124,6 @@ export class AutomationApiService {
   }
 
   getSystemStatus() {
-    return this.http.get(environment.apiBase + '/status');
+    return this.http.get(environment.apiBase + '/api/status');
   }
 }
