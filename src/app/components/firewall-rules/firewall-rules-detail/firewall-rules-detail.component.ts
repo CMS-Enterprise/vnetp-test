@@ -99,9 +99,9 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
         this.subnet = data as Subnet;
         this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
         this.getEntityCustomFields(this.subnet, 'firewall_rules');
-        // this.getVrfCustomFields();
+        this.getSubnetVrf();
       }
-    );
+      );
     }
 
     if (this.scope === FirewallRuleScope.vrf) {
@@ -109,6 +109,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
         data => {
           this.vrf = data as Vrf;
           this.getEntityCustomFields(this.vrf, 'firewall_rules');
+          this.getVrfCustomFields(this.vrf);
         }
       );
     }
@@ -118,8 +119,9 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
         data => {
           this.vrf = data as Vrf;
           this.getEntityCustomFields(this.vrf, 'external_firewall_rules');
+          this.getVrfCustomFields(this.vrf);
         }
-      )
+      );
     }
   }
 
@@ -131,26 +133,28 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     }
   }
 
-  getVrfCustomFields() {
+  getSubnetVrf() {
     this.automationApiService.getVrfs().subscribe(data => {
       const result = data;
       const vrf = result.find(v => v.id === this.subnet.vrf_group_id);
-
-      const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
-
-      if (networkObjectDto) {
-        this.networkObjects = networkObjectDto.NetworkObjects;
-        this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-      }
-
-      const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
-
-      if (serviceObjectDto) {
-        this.serviceObjects = serviceObjectDto.ServiceObjects;
-        this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-      }
-
+      this.getVrfCustomFields(vrf);
     }, error => { console.log(error); });
+  }
+
+  getVrfCustomFields(vrf) {
+    const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+
+    if (networkObjectDto) {
+      this.networkObjects = networkObjectDto.NetworkObjects;
+      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
+    }
+
+    const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+
+    if (serviceObjectDto) {
+      this.serviceObjects = serviceObjectDto.ServiceObjects;
+      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+    }
   }
 
 
@@ -174,7 +178,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     if (this.scope === FirewallRuleScope.subnet) {
     dto.VrfId = this.subnet.vrf_group_id;
-    } else if (this.scope === FirewallRuleScope.vrf) {
+    } else {
       dto.VrfId = this.vrf.id;
     }
 
@@ -189,7 +193,12 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     const dto = new FirewallRuleModalDto();
     dto.FirewallRule = firewallRule;
+
+    if (this.scope === FirewallRuleScope.subnet) {
     dto.VrfId = this.subnet.vrf_group_id;
+    } else {
+      dto.VrfId = this.vrf.id;
+    }
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
     this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
