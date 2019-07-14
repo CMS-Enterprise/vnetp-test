@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Vrf } from 'src/app/models/d42/vrf';
+import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -13,7 +14,7 @@ export class FirewallRulesComponent implements OnInit {
   subnets: any;
   vrfs: Array<Vrf>;
 
-  constructor(private automationApiService: AutomationApiService) {
+  constructor(private automationApiService: AutomationApiService, private hs: HelpersService) {
     this.subnets = [];
   }
 
@@ -37,10 +38,10 @@ export class FirewallRulesComponent implements OnInit {
 
   getFirewallRulesCount(object, type) {
     if (type === 'external') {
-      return 0;
+     const firewallRules =  this.hs.getJsonCustomField(object, 'external_firewall_rules');
+     return firewallRules ? firewallRules.length : 0;
     } else if (type === 'intervrf') {
-      const jsonFirewallRules = object.custom_fields.find(c => c.key === 'firewall_rules');
-      const firewallRules = JSON.parse(jsonFirewallRules.value);
+      const firewallRules =  this.hs.getJsonCustomField(object, 'firewall_rules');
       return firewallRules ? firewallRules.length : 0;
     }
   }

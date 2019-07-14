@@ -253,7 +253,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     } else {
       this.automationApiService.launchTemplate('save-acl', body, true).subscribe();
     }
-  } else if (this.scope === FirewallRuleScope.vrf || FirewallRuleScope.external) {
+  } else if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
     this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
   }
 }
