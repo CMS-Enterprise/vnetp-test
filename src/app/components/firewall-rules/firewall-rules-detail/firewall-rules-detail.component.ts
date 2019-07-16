@@ -74,7 +74,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     this.getEntity();
   }
 
-  moveFirewallRule(value: number, rule) {
+  moveFirewallRule(value: number, rule : FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
 
     // If the rule isn't in the array, is at the start of the array and requested to move up
@@ -144,7 +144,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     }, error => { console.log(error); });
   }
 
-  getVrfCustomFields(vrf) {
+  getVrfCustomFields(vrf: Vrf) {
     const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
 
     if (networkObjectDto) {
@@ -161,13 +161,13 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
 
-  duplicateFirewallRule(rule) {
+  duplicateFirewallRule(rule: FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
 
     if (ruleIndex === -1) { return; }
 
-    const dupRule = this.hs.deepCopy(rule);
-    dupRule.Deleted = false;
+    const dupRule = this.hs.deepCopy(rule) as FirewallRule;
+    dupRule.Name = `${dupRule.Name}-Copy`;
 
     this.firewallRules.splice(ruleIndex, 0, dupRule);
     this.dirty = true;
