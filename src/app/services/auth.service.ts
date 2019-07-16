@@ -57,6 +57,6 @@ export class AuthService {
     this.cs.deleteAll( '/ ',  '/' );
     this.cs.delete('d42sessnid', '../', window.location.hostname);
     this.currentUserSubject.next(null);
-    location.reload();
+    // location.reload();
   }
 }
