@@ -54,7 +54,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this.cs.deleteAll();
+    this.cs.deleteAll( '/ ',  '/' );
     this.currentUserSubject.next(null);
     location.reload();
   }
