@@ -38,10 +38,4 @@ export class FirewallRule implements UniqueNameObject {
     DestinationServiceObjectGroup: string;
 
     Log: boolean;
-
-    Edit?: boolean;
-
-    Deleted?: boolean;
-
-    Updated?: boolean;
 }

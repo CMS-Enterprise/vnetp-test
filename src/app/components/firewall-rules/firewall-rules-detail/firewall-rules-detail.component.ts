@@ -235,7 +235,6 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   updateFirewallRules() {
-    const firewallRules = this.firewallRules.filter(r => !r.Deleted);
     this.dirty = false;
 
     let extra_vars: {[k: string]: any} = {};
@@ -244,17 +243,17 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       extra_vars.scope = 'subnet';
       extra_vars.subnet = this.subnet;
       extra_vars.vrf_group_name = this.subnet.vrf_group_name;
-      extra_vars.firewall_rules = firewallRules;
+      extra_vars.firewall_rules = this.firewallRules;
     } else if (this.scope === FirewallRuleScope.vrf) {
       extra_vars.scope = 'vrf';
       extra_vars.vrf = this.vrf;
       extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.firewall_rules = firewallRules;
+      extra_vars.firewall_rules = this.firewallRules;
     } else if (this.scope === FirewallRuleScope.external) {
       extra_vars.scope = 'external';
       extra_vars.vrf = this.vrf;
       extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.external_firewall_rules = firewallRules;
+      extra_vars.external_firewall_rules = this.firewallRules;
     }
 
     extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
