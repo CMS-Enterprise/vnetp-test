@@ -33,6 +33,8 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   dirty: boolean;
   deployedState: boolean;
   firewallRules: Array<FirewallRule>;
+  deletedFirewallRules: Array<FirewallRule>;
+
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
@@ -51,12 +53,13 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService, private ngx: NgxSmartModalService) {
-    this.subnet = new Subnet();
-    this.firewallRules = [];
-   }
+              private hs: HelpersService, private ngx: NgxSmartModalService) {}
 
   ngOnInit() {
+    this.subnet = new Subnet();
+    this.firewallRules = new Array<FirewallRule>();
+    this.deletedFirewallRules = new Array<FirewallRule>();
+
     this.Id += this.route.snapshot.paramMap.get('id');
     const scopeUrlElement = this.route.snapshot.url[1].path;
 
@@ -254,6 +257,8 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       extra_vars.external_firewall_rules = firewallRules;
     }
 
+    extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
+
     const body = { extra_vars };
 
     if (this.scope === FirewallRuleScope.subnet) {
@@ -265,6 +270,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   } else if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
     this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
   }
+    this.deletedFirewallRules = new Array<FirewallRule>();
 }
 
   deleteFirewallRule(firewallRule: FirewallRule) {
@@ -272,6 +278,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     if ( index > -1) {
       this.firewallRules.splice(index, 1);
       this.dirty = true;
+      this.deletedFirewallRules.push(this.hs.deepCopy(firewallRule));
     }
   }
 
