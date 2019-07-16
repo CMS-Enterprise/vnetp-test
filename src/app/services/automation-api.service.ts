@@ -96,6 +96,15 @@ export class AutomationApiService {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
   }
 
+  getVrf(id: any) {
+       return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/')
+        // Getting a single VRF doesn't return custom properties.
+       .pipe(map(response => {
+            // Extract a single VRF from the full response.
+            return response.find(v => v.id === Number(id));
+        }));
+    }
+
   getSubnets(vrfId?: number) {
     let uri = '/api/1.0/subnets';
 
