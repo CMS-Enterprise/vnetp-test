@@ -167,7 +167,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     if (ruleIndex === -1) { return; }
 
     const dupRule = this.hs.deepCopy(rule) as FirewallRule;
-    dupRule.Name = `${dupRule.Name}-Copy`;
+    dupRule.Name = `${dupRule.Name}_copy`;
 
     this.firewallRules.splice(ruleIndex, 0, dupRule);
     this.dirty = true;
