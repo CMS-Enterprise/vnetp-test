@@ -46,7 +46,7 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
     if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
 
     const staticRoute = new StaticRoute();
-    staticRoute.InterfaceName = this.vrf.name;
+    staticRoute.Interface = this.vrf.name;
     staticRoute.Edit = true;
 
     this.staticRoutes.push(staticRoute);

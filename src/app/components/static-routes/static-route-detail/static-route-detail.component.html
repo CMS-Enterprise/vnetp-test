@@ -25,9 +25,7 @@
 
       <app-import-export
         [exportObject]="staticRoutes"
-        exportFileName="staticRoutes-{{ subnet.name }}-{{
-          subnet.vrf_group_name
-        }}"
+        exportFileName="staticRoutes-{{ vrf.name }}"
         (import)="insertStaticRoutes($event)"
         disableExport="true"
       ></app-import-export>
@@ -47,6 +45,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th scope="col">Interface Name</th>
         <th scope="col">CIDR Address</th>
         <th scope="col">Next Hop</th>
         <th></th>
@@ -54,6 +53,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let route of staticRoutes">
+        <td>
+          <p [hidden]="route.Edit">{{ route.Interface }}</p>
+          <select
+          name="interface"
+          class="form-control"
+          [(ngModel)]="route.Interface"
+          [hidden]="!route.Edit">
+          <option value="inside">Intra-VRF</option>
+          <option value="outside">Inter-VRF</option>
+          <option value="extranet">External</option>
+          </select>
+        </td>
         <td>
           <p [hidden]="route.Edit">{{ route.CidrAddress }}</p>
           <input
@@ -86,7 +97,7 @@
         </td>
       </tr>
       <tr *ngIf="!staticRoutes?.length" class="text-center">
-        <td colspan="3">No Static Routes</td>
+        <td colspan="4">No Static Routes</td>
       </tr>
     </tbody>
   </table>
@@ -99,9 +110,7 @@
     <div class="btn-group-sm">
       <app-import-export
         [exportObject]="staticRoutes"
-        exportFileName="staticRoutes-{{ subnet.name }}-{{
-          subnet.vrf_group_name
-        }}"
+        exportFileName="staticRoutes-{{ vrf.name }}"
         (import)="insertStaticRoutes($event)"
         disableImport="true"
       ></app-import-export>
