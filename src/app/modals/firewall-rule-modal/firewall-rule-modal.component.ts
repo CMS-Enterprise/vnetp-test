@@ -361,7 +361,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(28)])],
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required], // TODO: Only required when using source ports, otherwise inherited from
