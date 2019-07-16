@@ -12,7 +12,6 @@ export class StaticRoutesComponent implements OnInit {
 
   vrfs: Array<Vrf>;
   routingTable: any;
-  navIndex = 0;
 
   constructor(private automationApiService: AutomationApiService) {
     this.vrfs = [];
