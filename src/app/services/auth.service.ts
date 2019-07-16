@@ -55,7 +55,7 @@ export class AuthService {
   logout() {
     localStorage.clear();
     this.cs.deleteAll( '/ ',  '/' );
-    this.cs.deleteAll('../');
+    this.cs.delete('d42sessnid', '../', window.location.hostname);
     this.currentUserSubject.next(null);
     location.reload();
   }
