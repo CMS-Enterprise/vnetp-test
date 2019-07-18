@@ -1,6 +1,7 @@
 // FIXME
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-static-routes',
@@ -9,23 +10,21 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 })
 export class StaticRoutesComponent implements OnInit {
 
-  subnets: any;
+  vrfs: Array<Vrf>;
   routingTable: any;
-  navIndex = 0;
 
   constructor(private automationApiService: AutomationApiService) {
-    this.subnets = [];
+    this.vrfs = [];
     this.routingTable = [];
    }
 
   ngOnInit() {
-    this.getNetworks();
+    this.getVrfs();
   }
 
-
-  getNetworks() {
-    this.automationApiService.getSubnets().subscribe(
-      data => this.subnets = data
+  getVrfs() {
+    this.automationApiService.getVrfs().subscribe(
+      data => this.vrfs = data
       );
   }
 
@@ -43,21 +42,5 @@ export class StaticRoutesComponent implements OnInit {
     const staticRoutes = JSON.parse(jsonStaticRoutes.value);
 
     return staticRoutes;
-  }
-
-  // FIXME
-  getRoutingTable() {
-
-    this.routingTable = [];
-
-    this.subnets.subnets.forEach((subnet: any) => {
-      const subnetRoutes = this.getStaticRoutes(subnet);
-
-      if (subnetRoutes && subnetRoutes.length) {
-        subnetRoutes.forEach((subnetRoute: any) => {
-          this.routingTable.push(subnetRoute);
-        });
-      }
-    });
   }
 }
