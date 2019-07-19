@@ -74,6 +74,11 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     this.getEntity();
   }
 
+  refresh() {
+    this.deletedFirewallRules = new Array<FirewallRule>();
+    this.getEntity();
+  }
+
   moveFirewallRule(value: number, rule : FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
 
