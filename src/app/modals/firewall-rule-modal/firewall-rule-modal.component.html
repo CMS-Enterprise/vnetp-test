@@ -276,6 +276,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Destination Network Type</label>
+          <tooltip [message]="helpText.fwModalDestinationNetworkType"></tooltip>
           <select
             name="destinationNetworkType"
             formControlName="destinationNetworkType"
@@ -372,6 +373,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Destination Service Type</label>
+          <tooltip [message]="helpText.fwModalDestinationServiceType"></tooltip>
           <select
             name="destinationServiceType"
             formControlName="destinationServiceType"
