@@ -1,7 +1,3 @@
-import { NetworkObjectGroup } from '../network-objects/network-object-group';
-import { ServiceObject } from '../service-objects/service-object';
-import { NetworkObject } from '../network-objects/network-object';
-import { ServiceObjectGroup } from '../service-objects/service-object-group';
 import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
 export class FirewallRule implements UniqueNameObject {
@@ -15,7 +11,7 @@ export class FirewallRule implements UniqueNameObject {
 
     Protocol: number;
 
-    Direction: number;
+    Direction: string;
 
     SourceIP: string;
 
@@ -42,10 +38,4 @@ export class FirewallRule implements UniqueNameObject {
     DestinationServiceObjectGroup: string;
 
     Log: boolean;
-
-    Edit?: boolean;
-
-    Deleted?: boolean;
-
-    Updated?: boolean;
 }

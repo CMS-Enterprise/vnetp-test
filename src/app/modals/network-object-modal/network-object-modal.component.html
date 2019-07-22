@@ -183,8 +183,10 @@
         [ngClass]="{ 'is-invalid': submitted && f.sourceSubnet.errors }"
         aria-label="Source Subnet"
         >
-        <option></option>
-        <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets">{{ subnet.name }} ({{ subnet.network }}/{{ subnet.mask_bits }})</option>
+        <option></option> 
+        <option value="inside">Inside</option>
+        <option value="outside">Outside</option>
+        <option value="extranet">External</option>
         </select>
       </div>
 
@@ -198,11 +200,9 @@
           aria-label="Destination Subnet"
         >
           <option></option>
-          <option [ngValue]="subnet.name" *ngFor="let subnet of Subnets"
-            >{{ subnet.name }} ({{ subnet.network }}/{{
-              subnet.mask_bits
-            }})</option
-          >
+          <option value="inside">Inside</option>
+          <option value="outside">Outside</option>
+          <option value="extranet">External</option>
         </select>
       </div>
 

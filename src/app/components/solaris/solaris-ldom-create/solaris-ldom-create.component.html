@@ -15,6 +15,7 @@
     </div>
     <div class="form-group">
       <label for="inputLDOMaddCDOM">CDOM</label>
+      <tooltip [message]="helpText.solarisLdomAssociatedCdomText"></tooltip>
       <select
         name="cdomSelect"
         class="form-control"
@@ -392,6 +393,7 @@
     <div class="form-row">
       <div class="form-group col-md-8">
         <label for="vNicUntaggedVlan">UnTagged VLAN</label>
+        <tooltip [message]="helpText.solarisLdomVnicUnTaggedVlanText"></tooltip>
         <input class="form-control"
         type="text"
         mask="0999"
@@ -402,6 +404,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>Tagged VLANs</label>
+        <tooltip [message]="helpText.solarisLdomVnicTaggedVlanText"></tooltip>        
         <div class="input-group align-items-center">
           <input
             class="form-control"

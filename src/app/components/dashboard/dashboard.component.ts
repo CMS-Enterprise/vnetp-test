@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   status: any;
   pieChartData: Array<PieChartData>;
 
-  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
+  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 60);
 
   ngOnInit() {
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];

@@ -1,5 +1,5 @@
 export class StaticRoute {
-    InterfaceName: string;
+    Interface: string;
 
     CidrAddress: string;
 
