@@ -15,7 +15,7 @@ import { ObjectService } from 'src/app/services/object.service';
 import { RuleLocation } from 'src/app/models/firewall/rule-location';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
-import { HelpText } from 'src/app/services/help-text';
+import { HelpTextNetworking } from 'src/app/services/help-text-networking';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -43,7 +43,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private automationApiService: AutomationApiService,
-    public helpText: HelpText
+    public helpText: HelpTextNetworking
     ) {
   }
 

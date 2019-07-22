@@ -14,7 +14,7 @@ import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
 import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-import { HelpText } from 'src/app/services/help-text';
+import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-solaris-ldom-create',
@@ -65,7 +65,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private authService: AuthService,
     private hs: HelpersService,
     private ngxSm: NgxSmartModalService,
-    public helpText: HelpText,
+    public helpText: HelpTextSolaris,
     private toastr: ToastrService
   ) {
     this.vnics = new Array<any>();
