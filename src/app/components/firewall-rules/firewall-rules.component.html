@@ -1,11 +1,70 @@
-<div>
-  <h1>Firewall Rules</h1>
+
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
+      External
+    </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 1">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
+        Inter-VRF</a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Intra-VRF</a>
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+    <h1>External Firewall Rules</h1>
+    <!--TOOLTOIP: These rules are applied to traffic between VRF and External.-->
+
+    <div class="btn-toolbar mb-2 pull-right" role="toolbar">
+        <button
+          type="button"
+          class="btn btn-info btn-sm"
+          (click)="getVrfs()"
+          aria-label="Refresh Networks"
+        >
+          <fa name="refresh"></fa>
+          Refresh
+        </button>
+      </div>
+    
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Tier</th>
+            <th scope="col">Firewall Rules</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vrf of vrfs">
+            <td>
+              <a routerLink="/firewall-rules/external/edit/{{ vrf.id}}">{{
+                vrf.name
+              }}</a>
+            </td>
+            <td>
+              {{ getFirewallRulesCount(vrf, 'external') }}
+            </td>
+          </tr>
+          <tr *ngIf="vrfs?.length === 0" class="text-center">
+            <td colspan="2">No VRFs</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div *ngIf="navIndex == 1">
+    <h1>Inter-VRF Firewall Rules</h1>
+    <!--TOOLTIP: These rules are applied to traffic between VRFs-->
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button
       type="button"
       class="btn btn-info btn-sm"
-      (click)="getNetworks()"
+      (click)="getVrfs()"
       aria-label="Refresh Networks"
     >
       <fa name="refresh"></fa>
@@ -16,28 +75,69 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Subnet</th>
+        <th scope="col">Tier</th>
         <th scope="col">Firewall Rules</th>
-        <th scope="col">Tier (VRF)</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let subnet of subnets.subnets">
+      <tr *ngFor="let vrf of vrfs">
         <td>
-          <a routerLink="/firewall-rules/edit/{{ subnet.subnet_id }}">{{
-            subnet.name
+          <a routerLink="/firewall-rules/vrf/edit/{{ vrf.id}}">{{
+            vrf.name
           }}</a>
         </td>
         <td>
-          {{ getFirewallRulesCount(subnet) }}
-        </td>
-        <td>
-          {{ subnet.vrf_group_name }}
+          {{ getFirewallRulesCount(vrf, 'intervrf') }}
         </td>
       </tr>
-      <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
-        <td colspan="4">No Subnets</td>
+      <tr *ngIf="vrfs?.length === 0" class="text-center">
+        <td colspan="2">No VRFs</td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<div *ngIf="navIndex == 2">
+  <h1>Intra-VRF Firewall Rules</h1>
+  <!--These rules are applied to individual subnets within the VRF-->
+
+<div class="btn-toolbar mb-2 pull-right" role="toolbar">
+  <button
+    type="button"
+    class="btn btn-info btn-sm"
+    (click)="getNetworks()"
+    aria-label="Refresh Networks"
+  >
+    <fa name="refresh"></fa>
+    Refresh
+  </button>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Subnet</th>
+      <th scope="col">Firewall Rules</th>
+      <th scope="col">Tier (VRF)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let subnet of subnets.subnets">
+      <td>
+        <a routerLink="/firewall-rules/subnet/edit/{{ subnet.subnet_id }}">{{
+          subnet.name
+        }}</a>
+      </td>
+      <td>
+        {{ getFirewallRulesCount(subnet) }}
+      </td>
+      <td>
+        {{ subnet.vrf_group_name }}
+      </td>
+    </tr>
+    <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
+      <td colspan="4">No Subnets</td>
+    </tr>
+  </tbody>
+</table>
 </div>

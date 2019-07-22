@@ -2,10 +2,10 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { StaticRoute } from 'src/app/models/network/static-route';
-import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Observable } from 'rxjs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -15,13 +15,10 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
   constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService) {
-                this.subnet = new Subnet();
-   }
+              private hs: HelpersService) {}
 
   Id = '';
-  subnet: Subnet;
-  deployedState: boolean;
+  vrf: Vrf;
   staticRoutes: Array<StaticRoute>;
   deletedStaticRoutes: Array<StaticRoute>;
   dirty: boolean;
@@ -37,10 +34,9 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   }
 
   getNetwork() {
-    this.automationApiService.getSubnet(this.Id).subscribe(
+    this.automationApiService.getVrf(this.Id).subscribe(
       data => {
-        this.subnet = data as Subnet;
-        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
+        this.vrf = data;
         this.getStaticRoutes();
       }
     );
@@ -50,7 +46,7 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
     if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
 
     const staticRoute = new StaticRoute();
-    staticRoute.InterfaceName = this.subnet.name;
+    staticRoute.Interface = this.vrf.name;
     staticRoute.Edit = true;
 
     this.staticRoutes.push(staticRoute);
@@ -70,24 +66,20 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
   updateStaticRoutes() {
     let extra_vars: {[k: string]: any} = {};
-    extra_vars.subnet = this.subnet;
+    extra_vars.vrf = this.vrf;
     extra_vars.static_routes = this.staticRoutes;
 
     var body = { extra_vars };
 
-    if (this.deployedState) {
-      extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-      this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
-    } else {
-      this.automationApiService.launchTemplate('save-static-route', body, true).subscribe();
-    }
+    extra_vars.deleted_static_routes = this.deletedStaticRoutes;
+    this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
 
     this.dirty = false;
     this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
   getStaticRoutes() {
-    const staticRoutes = this.subnet.custom_fields.find(c => c.key === 'static_routes');
+    const staticRoutes = this.vrf.custom_fields.find(c => c.key === 'static_routes');
 
     if (staticRoutes) {
       this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
