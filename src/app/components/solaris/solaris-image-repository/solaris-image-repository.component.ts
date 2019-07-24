@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-
+import { AuthService } from 'src/app/services/auth.service';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
 @Component({
   selector: 'app-solaris-image-repository',
   templateUrl: './solaris-image-repository.component.html',
@@ -15,7 +16,11 @@ export class SolarisImageRepositoryComponent implements OnInit {
 
   newSolarisImage: SolarisImage;
 
-  constructor(private ngxSm: NgxSmartModalService) { }
+  constructor(
+    private ngxSm: NgxSmartModalService,
+    private authService: AuthService,
+    private automationApiService: AutomationApiService
+    ) { }
 
   ngOnInit() {
     this.SolarisImages = new Array<SolarisImage>();
@@ -42,6 +47,16 @@ export class SolarisImageRepositoryComponent implements OnInit {
     if (index > -1) {
       this.SolarisImages.splice(index, 1);
     }
+  }
+  launchSolarisImageJobs(){
+    //create extra_vars to pass into Ansible
+    const extra_vars: { [k: string]: any } = {};
+    extra_vars.SolarisImages = this.SolarisImages;
+    extra_vars.customer_name = this.authService.currentUserValue.CustomerName;
+    const body = { extra_vars };
+    
+    // Launch playbook
+    this.automationApiService.launchTemplate('save-solaris-image', body, true).subscribe();
   }
 
 }
