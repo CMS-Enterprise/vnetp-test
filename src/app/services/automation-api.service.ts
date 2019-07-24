@@ -66,7 +66,9 @@ export class AutomationApiService {
   getDevices(){
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
-
+  getDevicesbyName(name: string){
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?name=${name}`);
+  }
   getCDoms() {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`);
   }

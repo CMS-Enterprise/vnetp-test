@@ -8,4 +8,6 @@ export class SolarisImage  {
     Version: string;
 
     Source: string;
+
+    ParentDevice: string;
 }
