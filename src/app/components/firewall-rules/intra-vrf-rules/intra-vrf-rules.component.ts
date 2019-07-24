@@ -116,6 +116,21 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
       });
   }
 
+ saveAll() {
+    this.dirty = false;
+
+    let extra_vars: {[k: string]: any} = {};
+
+    extra_vars.vrf_id = this.vrf.id;
+    extra_vars.contracts = this.contracts;
+
+    const body = { extra_vars };
+
+    this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(data => {
+      this.deletedContracts = new Array<Contract>();
+    }, error => { this.dirty = true; });
+  }
+
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
     this.getVrf();

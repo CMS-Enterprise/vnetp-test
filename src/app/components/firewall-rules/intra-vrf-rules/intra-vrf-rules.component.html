@@ -1,4 +1,15 @@
 <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+    <button
+    type="button"
+    class="btn btn-warning mr-1"
+    (click)="saveAll()"
+    aria-label="Update Contracts"
+    *ngIf="dirty"
+  >
+    <fa name="save"></fa>
+    Save Changes
+  </button>
+  
   <button
     type="button"
     class="btn btn-success"

@@ -28,6 +28,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
     const contract = new Contract();
     contract.Name = this.form.value.name;
+    contract.Description = this.form.value.description;
 
     contract.FilterEntries = this.filterEntries;
 
