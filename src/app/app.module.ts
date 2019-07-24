@@ -65,6 +65,7 @@ import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.comp
 import { D3Module } from './modules/d3-module/d3-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 
 @NgModule({
   declarations: [
@@ -113,7 +114,8 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
     LdomDetailComponent,
     LdomListComponent,
     NetworkTopologyComponent,
-    TooltipComponent
+    TooltipComponent,
+    IntraVrfRulesComponent
   ],
   imports: [
     BrowserModule,
