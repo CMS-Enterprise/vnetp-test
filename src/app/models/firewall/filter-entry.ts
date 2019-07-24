@@ -9,5 +9,5 @@ export class FilterEntry {
 
     SourcePorts: string;
 
-    DestPorts: string;
+    DestinationPorts: string;
 }

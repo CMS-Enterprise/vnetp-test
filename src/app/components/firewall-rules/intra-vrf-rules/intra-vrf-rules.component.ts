@@ -62,7 +62,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
     this.contractModalMode = ModalMode.Edit;
     this.ngxSm.setModalData(this.hs.deepCopy(contract), 'contractModal');
     this.editContractIndex = this.contracts.indexOf(contract);
-    this.ngxSm.getModal('healthMonitorModal').open();
+    this.ngxSm.getModal('contractModal').open();
   }
 
   deleteContract(contract: Contract) {

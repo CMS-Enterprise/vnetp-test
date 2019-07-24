@@ -24,7 +24,7 @@
         <span>{{ contract?.Name }}</span>
       </td>
       <td>
-        <span>{{ contract?.FilterEntries.length }}</span>
+        <span>{{ contract?.FilterEntries?.length }}</span>
       </td>
       <td class="item-actions">
         <fa
@@ -41,3 +41,5 @@
     </tr>
   </tbody>
 </table>
+
+<app-contract-modal></app-contract-modal>
