@@ -67,7 +67,7 @@
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="deleteFilterEntry(filterEntry)"> </fa>
+                  <fa name="trash" (click)="removeFilterEntry(filterEntry)"> </fa>
                 </td>
               </tr>
               <tr *ngIf="filterEntries?.length === 0" class="text-center">

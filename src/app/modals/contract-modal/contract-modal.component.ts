@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { Filter } from 'ldapjs';
 
 @Component({
   selector: 'app-contract-modal',
@@ -73,6 +74,14 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   addFilterEntry() {
     this.filterEntries.push(this.hs.deepCopy(this.newFilterEntry));
     this.newFilterEntry = new FilterEntry();
+  }
+
+  removeFilterEntry(filterEntry: FilterEntry) {
+    const index = this.filterEntries.indexOf(filterEntry);
+
+    if (index > -1) {
+      this.filterEntries.splice(index, 1);
+    }
   }
 
   private unsubAll() {
