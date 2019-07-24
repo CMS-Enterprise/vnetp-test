@@ -43,6 +43,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   getVrf() {
     this.api.getVrf(this.Id).subscribe(data => {
       this.vrf = data;
+      this.getVrfCustomFields();
     });
   }
 
@@ -116,7 +117,8 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   ngOnInit() {
-    this.Id += this.route.snapshot.paramMap.get('id');
+    this.Id = this.route.snapshot.paramMap.get('id');
+    this.getVrf();
   }
 
   ngOnDestroy() {
