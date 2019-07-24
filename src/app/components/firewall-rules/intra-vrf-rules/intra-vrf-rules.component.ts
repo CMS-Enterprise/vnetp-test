@@ -1,15 +1,125 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Vrf } from 'src/app/models/d42/vrf';
+import { Contract } from 'src/app/models/firewall/contract';
+import { FilterEntry } from 'src/app/models/firewall/filter-entry';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { Subscription, Observable } from 'rxjs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-intra-vrf-rules',
   templateUrl: './intra-vrf-rules.component.html',
   styleUrls: ['./intra-vrf-rules.component.css']
 })
-export class IntraVrfRulesComponent implements OnInit {
+export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private ngxSm: NgxSmartModalService,
+    private api: AutomationApiService,
+    private hs: HelpersService) { }
 
-  ngOnInit() {
+  Id: string;
+  vrf: Vrf;
+
+  contracts: Array<Contract>;
+
+  deletedContracts: Array<Contract>;
+  deletedFilterEntries: Array<FilterEntry>;
+
+  editContractIndex: number;
+
+  contractModalMode: ModalMode;
+
+  contractModalSubscription: Subscription;
+
+  dirty: boolean;
+
+
+  getVrf() {
+    this.api.getVrf(this.Id).subscribe(data => {
+      this.vrf = data;
+    });
   }
 
+  getVrfCustomFields() {
+    this.contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
+  }
+
+  createContract() {
+    this.subscribeToContractModal();
+    this.contractModalMode = ModalMode.Create;
+    this.ngxSm.getModal('contractModal').open();
+  }
+
+  editContract(contract: Contract) {
+    this.subscribeToContractModal();
+    this.contractModalMode = ModalMode.Edit;
+    this.ngxSm.setModalData(this.hs.deepCopy(contract), 'contractModal');
+    this.editContractIndex = this.contracts.indexOf(contract);
+    this.ngxSm.getModal('healthMonitorModal').open();
+  }
+
+  deleteContract(contract: Contract) {
+    const index = this.contracts.indexOf(contract);
+    if ( index > -1) {
+      this.contracts.splice(index, 1);
+
+      this.deletedContracts.push(contract);
+      this.dirty = true;
+    }
+  }
+
+  saveContract(contract: Contract) {
+    if (this.contractModalMode === ModalMode.Create) {
+      this.contracts.push(contract);
+    } else {
+      this.contracts[this.editContractIndex] = contract;
+    }
+    this.dirty = true;
+  }
+
+
+  subscribeToContractModal() {
+    this.contractModalSubscription =
+    this.ngxSm.getModal('contractModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      let data = modal.getData() as Contract;
+
+      if (data !== undefined) {
+        this.saveContract(data);
+      }
+      this.ngxSm.resetModalData('contractModal');
+      this.contractModalSubscription.unsubscribe();
+    });
+  }
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
+
+  private unsubAll() {
+    [this.contractModalSubscription]
+      .forEach(sub => {
+        try {
+          if (sub) {
+          sub.unsubscribe();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+  }
+
+  ngOnInit() {
+    this.Id += this.route.snapshot.paramMap.get('id');
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
+  }
 }
