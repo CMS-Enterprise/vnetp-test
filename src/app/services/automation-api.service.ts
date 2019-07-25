@@ -9,7 +9,7 @@ import { MessageService } from './message.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { CustomerResponse } from '../models/d42/customer';
-
+import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 @Injectable({
   providedIn: 'root'
 })
@@ -90,7 +90,10 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
   getSolarisImages(name: string){
-    return this.http.get(environment.apiBase + `/api/1.0/software_details/?custom_fields_and=device=${name}`);
+    return this.http.get(environment.apiBase + `/api/1.0/software/?custom_fields_and=device=${name}`);
+  }
+  getSolarisImageDetail(id: any){
+    return this.http.get<SolarisImage[]>(environment.apiBase + `/api/1.0/software_details/?device_id=${id}`);
   }
   // getCustomers() {
   //   return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);

@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthService } from 'src/app/services/auth.service';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { SolarisService } from '../solaris-services/solaris-service.service';
+import { HelpersService } from 'src/app/services/helpers.service';
 @Component({
   selector: 'app-solaris-image-repository',
   templateUrl: './solaris-image-repository.component.html',
@@ -22,12 +23,28 @@ export class SolarisImageRepositoryComponent implements OnInit {
     private ngxSm: NgxSmartModalService,
     private authService: AuthService,
     private automationApiService: AutomationApiService,
-    private solarisService: SolarisService
-    ) { }
+    private solarisService: SolarisService,
+    private hs: HelpersService
+    ) {
+     this.SolarisImages = new Array<SolarisImage>();
+     }
 
   ngOnInit() {
-    // populate ID of Solaris Image report
-
+     // Enumerate previously created Images tied to customer
+    this.automationApiService.getSolarisImages(this.solarisService.SolarisImageDeviceName).subscribe(data => {
+      const response: { [k: string]: any } = {};
+      response.data = data;
+      response.data.software.forEach(element => {
+        this.automationApiService.getSolarisImageDetail(element.id).subscribe(data => {
+          const imgResponse = this.hs.getJsonCustomField(
+            element, 'Metadata' ) as SolarisImage;
+          if(imgResponse !== null){
+              this.SolarisImages.push(imgResponse);
+          }
+        });
+       });
+      console.log(this.SolarisImages);
+    });
     this.automationApiService.getDevicesbyName(this.solarisService.SolarisImageDeviceName).subscribe(data => {
       // const SolarisImageDeviceName = `__${this.authService.currentUserValue.CustomerName}_solaris_images__`;
       const response: { [k: string]: any } = {};
@@ -38,10 +55,10 @@ export class SolarisImageRepositoryComponent implements OnInit {
       this.SolarisImageParentDeviceID = SolarisImageParentDevice.device_id;
       console.log(this.SolarisImageParentDeviceID);
     });
-    this.SolarisImages = new Array<SolarisImage>();
+    /* this.SolarisImages = new Array<SolarisImage>();
     this.SolarisImages.push({Name: 'Solaris Image 1', Size: 4200, Version: '11', Protocol: 'HTTPS', Source: '', ParentDevice: this.solarisService.SolarisImageDeviceName},
     {Name: 'Solaris Image 2', Size: 3700, Version: '10', Protocol: 'NFS', Source: '',ParentDevice: this.solarisService.SolarisImageDeviceName});
-
+    */
     this.newSolarisImage = new SolarisImage();
   }
 
@@ -50,7 +67,6 @@ export class SolarisImageRepositoryComponent implements OnInit {
   }
 
   insertImage() {
-    this.newSolarisImage.Size = Math.floor(Math.random() * 5000) + 1;
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
     this.SolarisImages.push(Object.assign({}, this.newSolarisImage));
     this.ngxSm.getModal('imageModal').close();

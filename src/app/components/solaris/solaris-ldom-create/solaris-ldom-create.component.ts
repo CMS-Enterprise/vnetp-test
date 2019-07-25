@@ -1,26 +1,26 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { SolarisService } from '../solaris-services/solaris-service.service';
-import { SolarisLdom } from 'src/app/models/solaris/solaris-ldom';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Router } from '@angular/router';
-import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
-import { AuthService } from 'src/app/services/auth.service';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { SolarisCdomResponse } from 'src/app/models/interfaces/solaris-cdom-response.interface';
-import { SolarisVariable } from 'src/app/models/solaris/solaris-variable';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { SolarisVswitch } from 'src/app/models/solaris/solaris-vswitch';
-import { SolarisVnic } from 'src/app/models/solaris/solaris-vnic';
-import { SolarisVdsDevs } from 'src/app/models/solaris/solaris-vds-devs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-import { Observable } from 'rxjs';
-import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
-import { ToastrService } from 'ngx-toastr';
-import { SolarisImage } from 'src/app/models/solaris/solaris-image';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { SolarisService } from "../solaris-services/solaris-service.service";
+import { SolarisLdom } from "src/app/models/solaris/solaris-ldom";
+import { AutomationApiService } from "src/app/services/automation-api.service";
+import { Router } from "@angular/router";
+import { SolarisCdom } from "src/app/models/solaris/solaris-cdom";
+import { AuthService } from "src/app/services/auth.service";
+import { NgxSmartModalService } from "ngx-smart-modal";
+import { SolarisCdomResponse } from "src/app/models/interfaces/solaris-cdom-response.interface";
+import { SolarisVariable } from "src/app/models/solaris/solaris-variable";
+import { HelpersService } from "src/app/services/helpers.service";
+import { SolarisVswitch } from "src/app/models/solaris/solaris-vswitch";
+import { SolarisVnic } from "src/app/models/solaris/solaris-vnic";
+import { SolarisVdsDevs } from "src/app/models/solaris/solaris-vds-devs";
+import { PendingChangesGuard } from "src/app/guards/pending-changes.guard";
+import { Observable } from "rxjs";
+import { HelpTextSolaris } from "src/app/services/help-text-solaris";
+import { ToastrService } from "ngx-toastr";
+import { SolarisImage } from "src/app/models/solaris/solaris-image";
 @Component({
-  selector: 'app-solaris-ldom-create',
-  templateUrl: './solaris-ldom-create.component.html',
-  styleUrls: ['./solaris-ldom-create.component.css']
+  selector: "app-solaris-ldom-create",
+  templateUrl: "./solaris-ldom-create.component.html",
+  styleUrls: ["./solaris-ldom-create.component.css"]
 })
 export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   LDOM: SolarisLdom;
@@ -56,7 +56,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
   SolarisImages: Array<SolarisImage>;
 
-  @HostListener('window:beforeunload')
+  @HostListener("window:beforeunload")
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
@@ -73,6 +73,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
+    this.SolarisImages = new Array<SolarisImage>();
   }
 
   addVariable() {
@@ -93,13 +94,13 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   addvnicObject(obj: any, objArray: Array<any>) {
     objArray.push(obj);
-    this.inputLDOMvnic = '';
+    this.inputLDOMvnic = "";
   }
   addTaggedVlan() {
     // verify duplicate of untagged vlan is not entered
     if (this.vnicModalAddTaggedVlan == this.vnicModalUntaggedVlan) {
       this.vnicModalAddTaggedVlan = null;
-      this.toastr.error('Duplicate VLAN Entered');
+      this.toastr.error("Duplicate VLAN Entered");
     } else if (
       this.vnicModalTaggedVlans.indexOf(this.vnicModalAddTaggedVlan) === -1
     ) {
@@ -109,7 +110,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     } else {
       // duplicate tagged vlan entered
       this.vnicModalAddTaggedVlan = null;
-      this.toastr.error('Duplicate VLAN Entered');
+      this.toastr.error("Duplicate VLAN Entered");
     }
   }
   moveObjectPosition(value: number, obj, objArray) {
@@ -123,7 +124,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
     this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
-    this.LDOM.devicetype = 'solaris_ldom';
+    this.LDOM.devicetype = "solaris_ldom";
     // FIXME: [jvf] if it's hard coded in the UI, it's better for it to be hardcoded
     // in userland rather than running it across the wire and through the DB.
     // static listing of commands to be ran, needed for Solaris automation
@@ -136,20 +137,34 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         .subscribe();
     } else {
       this.automationApiService
-        .launchTemplate('save-ldom', body, true)
+        .launchTemplate("save-ldom", body, true)
         .subscribe();
     }
-    this.router.navigate(['/solaris/ldom/list']);
+    this.router.navigate(["/solaris/ldom/list"]);
   }
   ngOnInit() {
     // Enumerate previously created Images tied to customer
+    this.automationApiService
+      .getSolarisImages(this.solarisService.SolarisImageDeviceName)
+      .subscribe(data => {
+        const response: { [k: string]: any } = {};
+        response.data = data;
+        response.data.software.forEach(element => {
+          this.automationApiService
+            .getSolarisImageDetail(element.id)
+            .subscribe(data => {
+              const imgResponse = this.hs.getJsonCustomField(
+                element,
+                "Metadata"
+              ) as SolarisImage;
+              if (imgResponse !== null) {
+                this.SolarisImages.push(imgResponse);
+              }
+            });
+        });
+        console.log(this.SolarisImages);
+      });
 
-    this.automationApiService.getSolarisImages(this.solarisService.SolarisImageDeviceName).subscribe(data => {
-      const response: { [k: string]: any } = {};
-      response.data = data;
-      this.SolarisImages = response.data.software_details;
-      console.log(this.SolarisImages);
-    });
     // TODO: Tie to reactive form pristine.
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
     this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
@@ -212,7 +227,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const result = data as SolarisCdom;
         const cdomFull = this.hs.getJsonCustomField(
           result,
-          'Metadata'
+          "Metadata"
         ) as SolarisCdom;
         this.vnicModalVswitches = cdomFull.vsw;
         console.log(this.vnicModalVswitches);
@@ -224,7 +239,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.addVdsDev = this.solarisService.currentVds;
       this.solarisService.currentVds = null;
     }
-    this.ngxSm.getModal('vdsDevModalLdom').open();
+    this.ngxSm.getModal("vdsDevModalLdom").open();
   }
 
   insertVds() {
@@ -236,7 +251,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     }
     this.addVdsDev = new SolarisVdsDevs();
     this.editCurrentVds = false;
-    this.ngxSm.getModal('vdsDevModalLdom').close();
+    this.ngxSm.getModal("vdsDevModalLdom").close();
   }
 
   insertVirtualDisks(vds) {
@@ -254,7 +269,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.addVdsDev = new SolarisVdsDevs();
       this.editCurrentVds = false;
     });
-    this.ngxSm.getModal('vdsDevModalLdom').close();
+    this.ngxSm.getModal("vdsDevModalLdom").close();
   }
 
   editVds(vds: SolarisVdsDevs) {
@@ -292,7 +307,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.modalVnic = new SolarisVnic();
       this.vnicModalVswitch = new SolarisVswitch();
     }
-    this.ngxSm.getModal('vnicModalLdom').open();
+    this.ngxSm.getModal("vnicModalLdom").open();
   }
 
   insertVnic() {
@@ -311,7 +326,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     }
     this.modalVnic = new SolarisVnic();
     this.editCurrentVnic = false;
-    this.ngxSm.getModal('vnicModalLdom').close();
+    this.ngxSm.getModal("vnicModalLdom").close();
   }
 
   deleteVnic(vnicDev: any) {
