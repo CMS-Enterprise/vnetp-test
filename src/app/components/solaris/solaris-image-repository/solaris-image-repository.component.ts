@@ -67,8 +67,11 @@ export class SolarisImageRepositoryComponent implements OnInit {
   launchSolarisImageJobs(){
     //create extra_vars to pass into Ansible
     const extra_vars: { [k: string]: any } = {};
-    extra_vars.SolarisImages = this.SolarisImages;
+    this.newSolarisImage.Size = Math.floor(Math.random() * 5000) + 1;
+    this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
+    extra_vars.SolarisImages = this.newSolarisImage;
     const body = { extra_vars };
+    this.ngxSm.getModal('imageModal').close();
     
     // Launch playbook
     this.automationApiService.launchTemplate('save-solaris-image', body, true).subscribe();
