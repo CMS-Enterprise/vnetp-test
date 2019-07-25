@@ -53,6 +53,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.Name);
+      this.form.controls.description.setValue(contract.Description);
     }
 
     if (contract.FilterEntries) {
