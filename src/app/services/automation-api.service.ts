@@ -89,7 +89,9 @@ export class AutomationApiService {
   getCDomByID(id: any){
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
-
+  getSolarisImages(name: string){
+    return this.http.get(environment.apiBase + `/api/1.0/software_details/?custom_fields_and=device=${name}`);
+  }
   // getCustomers() {
   //   return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
   // }

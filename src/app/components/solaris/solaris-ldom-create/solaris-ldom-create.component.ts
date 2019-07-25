@@ -16,6 +16,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 import { ToastrService } from 'ngx-toastr';
+import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 @Component({
   selector: 'app-solaris-ldom-create',
   templateUrl: './solaris-ldom-create.component.html',
@@ -52,6 +53,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
   editVdsIndex: number;
   editVnicIndex: number;
+
+  SolarisImages: Array<SolarisImage>;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -139,6 +142,14 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
+    // Enumerate previously created Images tied to customer
+
+    this.automationApiService.getSolarisImages(this.solarisService.SolarisImageDeviceName).subscribe(data => {
+      const response: { [k: string]: any } = {};
+      response.data = data;
+      this.SolarisImages = response.data.software_details;
+      console.log(this.SolarisImages);
+    });
     // TODO: Tie to reactive form pristine.
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
     this.ramCountArray = this.solarisService.buildNumberArray(2, 640, 2);
