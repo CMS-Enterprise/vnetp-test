@@ -52,7 +52,6 @@
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Action</th>
                 <th>Protocol</th>
                 <th>Source Ports</th>
                 <th>Destination Ports</th>
@@ -62,7 +61,6 @@
             <tbody>
               <tr *ngFor="let filterEntry of filterEntries">
                 <td>{{ filterEntry.Name }}</td>
-                <td>{{ filterEntry.Action }}</td>
                 <td>{{ filterEntry.Protocol }}</td>
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
