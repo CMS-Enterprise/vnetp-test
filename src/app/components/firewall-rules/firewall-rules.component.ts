@@ -43,6 +43,9 @@ export class FirewallRulesComponent implements OnInit {
     } else if (type === 'intervrf') {
       const firewallRules =  this.hs.getJsonCustomField(object, 'firewall_rules');
       return firewallRules ? firewallRules.length : 0;
+    } else if (type === 'intravrf') {
+      const contracts = this.hs.getJsonCustomField(object, 'intravrf_contracts');
+      return contracts ? contracts.length : 0;
     }
   }
 }

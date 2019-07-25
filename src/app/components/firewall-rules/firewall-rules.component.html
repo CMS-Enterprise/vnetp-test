@@ -117,6 +117,7 @@
   <thead>
     <tr>
       <th scope="col">Tier</th>
+      <th scope="col">Contracts</th>
     </tr>
   </thead>
   <tbody>
@@ -125,6 +126,9 @@
         <a routerLink="/firewall-rules/intravrf/edit/{{ vrf.id}}">{{
           vrf.name
         }}</a>
+      </td>
+      <td>
+        {{ getFirewallRulesCount(vrf, 'intravrf') }}
       </td>
     </tr>
     <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
