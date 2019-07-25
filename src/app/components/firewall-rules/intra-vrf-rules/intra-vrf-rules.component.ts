@@ -70,6 +70,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
     if ( index > -1) {
       this.contracts.splice(index, 1);
 
+      if (!this.deletedContracts) { this.deletedContracts = new Array<Contract>(); }
       this.deletedContracts.push(contract);
       this.dirty = true;
     }
