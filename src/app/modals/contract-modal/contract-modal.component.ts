@@ -111,6 +111,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
     this.filterEntries.push(newFilterEntry);
     this.filterEntryFormSubmitted = false;
+    this.buildFilterEntryForm();
   }
 
   removeFilterEntry(filterEntry: FilterEntry) {
