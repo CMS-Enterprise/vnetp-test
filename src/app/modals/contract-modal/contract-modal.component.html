@@ -45,6 +45,43 @@
         ></textarea>
       </div>
 
+      
+  <form [formGroup]="filterEntryForm">
+    <div class="input-group align-items-center">
+        <input type="text" class="form-control" name="name" formControlName="name"
+        placeholder="Name"
+        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.name.errors }"
+        />
+  
+        <select class="form-control" name="protocol" formControlName="protocol"
+        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.protocol.errors }"
+        >
+          <option value="">Protocol</option>
+          <option value="tcp">TCP</option>
+          <option value="udp">UDP</option>
+        </select>
+  
+        <input type="text" class="form-control" name="sourcePorts" formControlName="sourcePorts"
+        placeholder="Source Ports"
+        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.sourcePorts.errors }"
+        />
+  
+        <input type="text" class="form-control" name="destinationPorts" formControlName="destinationPorts"
+        placeholder="Destination Ports"
+        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.destinationPorts.errors }"
+        />
+  
+        <button
+          type="button"
+          class="btn btn-sm btn-info"
+          (click)="addFilterEntry()"
+        >
+          <fa name="plus"></fa>
+          Add Filter Entry
+        </button>
+      </div>
+    </form>
+
       <div class="form-row">
         <div class="form-group col-md-12 clearfix">
           <label class="mb-2">Filter Entries</label>
@@ -93,28 +130,5 @@
     </div>
   </form>
 
-  <!--TODO: Add as nested form within parent form above.-->
-  <div class="input-group align-items-center">
-      <input type="text" class="form-control" [(ngModel)]="newFilterEntry.Name" />
-
-      <select class="form-control" [(ngModel)]="newFilterEntry.Protocol">
-        <option></option>
-        <option value="tcp">TCP</option>
-        <option value="udp">UDP</option>
-      </select>
-
-      <input type="text" class="form-control" [(ngModel)]="newFilterEntry.SourcePorts" />
-
-      <input type="text" class="form-control" [(ngModel)]="newFilterEntry.DestinationPorts" />
-
-      <button
-        type="button"
-        class="btn btn-sm btn-info"
-        (click)="addFilterEntry()"
-      >
-        <fa name="plus"></fa>
-        Add Filter Entry
-      </button>
-    </div>
   
 </ngx-smart-modal>
