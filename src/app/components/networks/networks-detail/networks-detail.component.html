@@ -47,7 +47,7 @@
 <div *ngIf="navIndex === 1">
   <h1>Contracts</h1>
 
-  <div class="input-group align-items-center col-md-6">
+  <div class="input-group align-items-center col-md-6 pb-3">
     <select class="form-control" [(ngModel)]="newContractAssignment.ContractName">
       <option></option>
       <option *ngFor="let contract of contracts" [ngValue]="contract?.Name">{{

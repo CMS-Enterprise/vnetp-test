@@ -66,7 +66,10 @@ export class NetworksDetailComponent implements OnInit {
   }
 
   getAssignedContracts(subnet: Subnet) {
-    this.contractAssignments= this.hs.getJsonCustomField(subnet, 'contract_assignments') as Array<ContractAssignment>;
+    this.contractAssignments = this.hs.getJsonCustomField(
+      subnet,
+      'contract_assignments'
+    ) as Array<ContractAssignment>;
   }
 
   getDeployedState(subnet: Subnet) {
@@ -81,6 +84,17 @@ export class NetworksDetailComponent implements OnInit {
     if (!this.contractAssignments) {
       this.contractAssignments = new Array<ContractAssignment>();
     }
+
+    const duplicate = this.contractAssignments.filter(
+      c =>
+        c.ContractName === this.newContractAssignment.ContractName &&
+        c.Type === this.newContractAssignment.Type
+    );
+
+    if (duplicate[0]) {
+      return;
+    }
+
     this.contractAssignments.push(this.newContractAssignment);
     this.newContractAssignment = new ContractAssignment();
   }
@@ -109,8 +123,8 @@ export class NetworksDetailComponent implements OnInit {
     const body = { extra_vars };
 
     this.automationApiService
-    .launchTemplate('save-contract-assignment', body, true)
-    .subscribe();
+      .launchTemplate('save-contract-assignment', body, true)
+      .subscribe();
   }
 
   deleteSubnet() {
