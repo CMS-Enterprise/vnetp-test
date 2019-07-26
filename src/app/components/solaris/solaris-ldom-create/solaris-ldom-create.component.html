@@ -252,7 +252,7 @@
           type="checkbox"
           class="form-check-input"
           #netInstall="ngModel"
-          [(ngModel)]="LDOM.net_install"
+          [(ngModel)]="LDOM.Image"
         />
         <label class="form-check-label" for="inputLDOMnetinstall"
           >Net Install</label
@@ -261,15 +261,12 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="LDOM.net_install">
-      <select name="imageSelect" class="form-control" [(ngModel)]="LDOM.image">
+    <div class="form-group" *ngIf="SolarisImages">
+      <select name="imageSelect" class="form-control" [(ngModel)]="LDOM.solarisImage">
         <option></option>
-        <option value="solaris-image-1"
-          >Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option
-        >
-        <option value="solaris-image-2"
-          >Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option
-        >
+        <option *ngFor="let image of SolarisImages" [ngValue]="image">
+          {{ image.Name }}
+        </option>
       </select>
     </div>
 
