@@ -91,7 +91,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
             const extra_vars: {[k: string]: any} = {};
             extra_vars.id = element.id;
             const body = { extra_vars };
-            this.automationApiService.launchTemplate(`delete-solaris-image`, body, true).subscribe();
+            this.automationApiService.launchTemplate(`delete-solaris-image`, body, false).subscribe();
           }
         });
       });
@@ -100,8 +100,6 @@ export class SolarisImageRepositoryComponent implements OnInit {
     if (index > -1) {
       this.SolarisImages.splice(index, 1);
     }
-    // clear out toDeleteSolarisImageName variable
-    this.toDeleteSolarisImageName = null;
   }
   launchSolarisImageJobs() {
     //create extra_vars to pass into Ansible
