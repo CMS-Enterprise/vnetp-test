@@ -82,7 +82,7 @@
     <tbody>
       <tr *ngFor="let vrf of vrfs">
         <td>
-          <a routerLink="/firewall-rules/vrf/edit/{{ vrf.id}}">{{
+          <a routerLink="/firewall-rules/intervrf/edit/{{ vrf.id}}">{{
             vrf.name
           }}</a>
         </td>
@@ -105,7 +105,7 @@
   <button
     type="button"
     class="btn btn-info btn-sm"
-    (click)="getNetworks()"
+    (click)="getVrfs()"
     aria-label="Refresh Networks"
   >
     <fa name="refresh"></fa>
@@ -116,27 +116,23 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Subnet</th>
-      <th scope="col">Firewall Rules</th>
-      <th scope="col">Tier (VRF)</th>
+      <th scope="col">Tier</th>
+      <th scope="col">Contracts</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let subnet of subnets.subnets">
+    <tr *ngFor="let vrf of vrfs">
       <td>
-        <a routerLink="/firewall-rules/subnet/edit/{{ subnet.subnet_id }}">{{
-          subnet.name
+        <a routerLink="/firewall-rules/intravrf/edit/{{ vrf.id}}">{{
+          vrf.name
         }}</a>
       </td>
       <td>
-        {{ getFirewallRulesCount(subnet) }}
-      </td>
-      <td>
-        {{ subnet.vrf_group_name }}
+        {{ getFirewallRulesCount(vrf, 'intravrf') }}
       </td>
     </tr>
     <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
-      <td colspan="4">No Subnets</td>
+      <td colspan="4">No VRFs</td>
     </tr>
   </tbody>
 </table>

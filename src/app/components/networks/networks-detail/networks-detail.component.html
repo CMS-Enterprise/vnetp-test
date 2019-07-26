@@ -24,12 +24,88 @@
 </div>
 
 <hr />
-<!-- <h3 class="mt-5">IP Addresses</h3> -->
+<ul class="nav nav-tabs">
+  <li class="nav-item" (click)="navIndex = 0">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
+      IP Addresses
+    </a>
+  </li>
+  <li class="nav-item" (click)="navIndex = 1">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
+      Contracts
+    </a>
+  </li>
+</ul>
+<div *ngIf="navIndex === 0">
+  <app-ipaddresses
+    *ngIf="subnet"
+    [subnetId]="subnet?.subnet_id"
+  ></app-ipaddresses>
+</div>
 
-<app-ipaddresses
-  *ngIf="subnet"
-  [subnetId]="subnet?.subnet_id"
-></app-ipaddresses>
+<!--TODO: Refactor-->
+<div *ngIf="navIndex === 1">
+  <h1>Contracts</h1>
+
+  <div class="input-group align-items-center col-md-6 pb-3">
+    <select class="form-control" [(ngModel)]="newContractAssignment.ContractName">
+      <option></option>
+      <option *ngFor="let contract of contracts" [ngValue]="contract?.Name">{{
+        contract?.Name
+      }}</option>
+    </select>
+
+    <select class="form-control" [(ngModel)]="newContractAssignment.Type">
+      <option></option>
+      <option value="consumer">Consumer</option>
+      <option value="provider">Provider</option>
+    </select>
+
+    <button
+      type="button"
+      class="btn btn-sm btn-info"
+      (click)="assignContract()"
+    >
+      <fa name="plus"></fa>
+      Assign Contract
+    </button>
+
+    <button
+    type="button"
+    class="btn btn-sm btn-warning"
+    (click)="saveContractAssignments()"
+  >
+    <fa name="save"></fa>
+    Save Contract Assignments
+  </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contract of contractAssignments">
+        <td>
+          <span>{{ contract?.ContractName }}</span>
+        </td>
+        <td>
+          <span>{{ contract?.Type }}</span>
+        </td>
+        <td class="item-actions">
+          <fa name="trash" (click)="deleteContract(contract)"> </fa>
+        </td>
+      </tr>
+      <tr *ngIf="contracts?.length === 0" class="text-center">
+        <td colspan="3">No Contracts in this VRF.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <ngx-smart-modal
   #deleteSubnetModal
