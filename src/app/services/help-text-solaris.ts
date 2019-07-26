@@ -24,7 +24,7 @@ export class HelpTextSolaris {
     solarisLdomVariableText = `Used to pass in variables to the LDOM automation scripts. More info: <a href="${this.wikiBase}/solaris#LDOM_Create">Wiki</a>`;
     solarisLdomNetInstallText = `Used to choose a image to apply to boot disk.  More info: <a href="${this.wikiBase}/solaris#LDOM_Create">wiki</a>`;
     // tslint:disable-next-line: max-line-length
-    solarisAssociatedCdomText = `Specifies the name of the CDOM that provides managment to this LDOM.  More info: <a href="${this.wikiBase}/solaris#LDOM_Create">Wiki</a>`;
+    solarisLdomAssociatedCdomText = `Specifies the name of the CDOM that provides managment to this LDOM.  More info: <a href="${this.wikiBase}/solaris#LDOM_Create">Wiki</a>`;
     solarisLdomVnicTaggedVlanText = `Enter all VLAN ID which will be allowed through this vNic. More info: <a href="${this.wikiBase}/solaris#LDOM_Create">Wiki"</a>`;
     solarisLdomVnicUnTaggedVlanText = `Untagged traffic to this vNic will be tagged with this VLAN ID. More info: <a href="${this.wikiBase}/solaris#LDOM_Create">Wiki</a>`;
 
