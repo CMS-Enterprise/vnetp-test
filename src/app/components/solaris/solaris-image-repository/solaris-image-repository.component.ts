@@ -17,6 +17,11 @@ export class SolarisImageRepositoryComponent implements OnInit {
 
   newSolarisImage: SolarisImage;
   toDeleteSolarisImageName: string;
+  
+  // Used for edit Solaris Image
+  editCurrentImage: boolean;
+  editImageIndex: number;
+  currentImage: SolarisImage;
 
   constructor(
     private ngxSm: NgxSmartModalService,
@@ -65,16 +70,34 @@ export class SolarisImageRepositoryComponent implements OnInit {
   }
 
   openImageModal() {
+    if ( this.editCurrentImage ) {
+      this.newSolarisImage = this.currentImage;
+      this.currentImage = new SolarisImage();
+    }
     this.ngxSm.getModal("imageModal").open();
   }
 
   insertImage() {
+    // Set parent device property to image name stored in solarisService
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
-    this.SolarisImages.push(Object.assign({}, this.newSolarisImage));
+    if ( this.editCurrentImage ){
+      this.SolarisImages[this.editImageIndex] = this.hs.deepCopy(this.newSolarisImage);
+      // Reset edit flag and index
+      this.editCurrentImage = false;
+      this.editImageIndex = null;
+    } else {
+      this.SolarisImages.push(Object.assign({}, this.newSolarisImage));
+    }
     this.ngxSm.getModal("imageModal").close();
     this.newSolarisImage = new SolarisImage();
+   }
+  editImage(image) {
+    this.editCurrentImage = true;
+    this.editImageIndex = this.SolarisImages.indexOf(image);
+    this.currentImage = this.hs.deepCopy(image);
+    this.openImageModal();
+    
   }
-
   deleteImage(image) {
     // Set name to delete so it is accessible inside of async call
     this.toDeleteSolarisImageName = image.Name;
