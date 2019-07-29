@@ -131,8 +131,8 @@
         {{ getFirewallRulesCount(vrf, 'intravrf') }}
       </td>
     </tr>
-    <tr *ngIf="subnets.subnets?.length === 0" class="text-center">
-      <td colspan="4">No VRFs</td>
+    <tr *ngIf="vrfs?.length === 0" class="text-center">
+      <td colspan="2">No VRFs</td>
     </tr>
   </tbody>
 </table>
