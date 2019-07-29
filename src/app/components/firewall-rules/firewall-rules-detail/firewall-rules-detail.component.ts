@@ -65,10 +65,8 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     if (scopeUrlElement === 'external') {
       this.scope = FirewallRuleScope.external;
-    } else if (scopeUrlElement === 'vrf') {
+    } else if (scopeUrlElement === 'intervrf') {
       this.scope = FirewallRuleScope.vrf;
-    } else if (scopeUrlElement === 'subnet') {
-      this.scope = FirewallRuleScope.subnet;
     }
 
     this.getEntity();
