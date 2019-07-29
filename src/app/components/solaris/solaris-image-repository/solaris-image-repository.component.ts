@@ -5,6 +5,7 @@ import { AuthService } from "src/app/services/auth.service";
 import { AutomationApiService } from "src/app/services/automation-api.service";
 import { SolarisService } from "../solaris-services/solaris-service.service";
 import { HelpersService } from "src/app/services/helpers.service";
+import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: "app-solaris-image-repository",
   templateUrl: "./solaris-image-repository.component.html",
@@ -28,7 +29,8 @@ export class SolarisImageRepositoryComponent implements OnInit {
     private authService: AuthService,
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
-    private hs: HelpersService
+    private hs: HelpersService,
+    public helpText: HelpTextSolaris
   ) {
     this.SolarisImages = new Array<SolarisImage>();
   }
