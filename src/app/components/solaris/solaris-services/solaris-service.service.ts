@@ -25,6 +25,8 @@ export class SolarisService {
   currentVswitch = new SolarisVswitch();
   currentVnic = new SolarisVnic();
   currentVds = new SolarisVdsDevs();
+  SolarisImageDeviceName: string;
+  
   constructor(
     private auth: AuthService
   ) {
@@ -33,6 +35,7 @@ export class SolarisService {
       this.LDOMArray = new Array<any>();
       this.auth.currentUser.subscribe(u => this.currentUser = u);
       this.AllSolaris = new Array<any>();
+      this.SolarisImageDeviceName = `__${this.auth.currentUserValue.CustomerName}_solaris_images__`.toLowerCase();
 
    }
   getLDOMDevice(device: any) {

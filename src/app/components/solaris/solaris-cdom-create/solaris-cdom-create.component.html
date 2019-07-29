@@ -76,6 +76,7 @@
       </div>
       <div class="form-group col-md-4">
         <label for="inputCDOMVccports"># VCC Ports</label>
+        <tooltip [message]="helpText.solarisCdomVccPortsText"></tooltip>
         <input
           name="inputCDOMVccports"
           aria-label="Number VCC Ports"
@@ -188,6 +189,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label for="inputCDOMvswitch">vSwitch</label>
+        <tooltip [message]="helpText.solarisCdomVswitchNameText"></tooltip>
         <input
           name="inputCDOMvswitch"
           aria-label="CDOM vSwitch name"
@@ -200,6 +202,7 @@
     </div>
     <div class="form-group">
       <label for="unTaggedVlan">Untagged VLAN</label>
+      <tooltip [message]="helpText.solarisCdomVswitchUnTaggedVlanText"></tooltip>
       <input
         class="form-control"
         type="number"
@@ -210,6 +213,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>Tagged VLANs</label>
+        <tooltip [message]="helpText.solarisCdomVswitchTaggedVlanText"></tooltip>
         <div class="input-group align-items-center">
           <input
             class="form-control"
@@ -257,6 +261,7 @@
 
     <div class="form-group">
       <label>Logical Interface</label>
+      <tooltip [message]="helpText.solarisCdomVswitchLogicalInterfaceText"></tooltip>
       <select
         name="vnicDevice"
         class="form-control"

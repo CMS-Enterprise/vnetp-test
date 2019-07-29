@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:3000',
+  apiBase: 'https://draas.cds-cloud-labs.net',
   wikiBase: 'http://wiki.draas.cdsvdc.lcl/index.php/UI'
 };

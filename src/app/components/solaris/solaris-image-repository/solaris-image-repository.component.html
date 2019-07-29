@@ -14,6 +14,7 @@
       <th scope="col">Name</th>
       <th scope="col">Size</th>
       <th scope="col">Solaris Version</th>
+      <th scope="col">Protocol</th>
       <th scope="col">Source</th>
       <th></th>
     </tr>
@@ -28,6 +29,9 @@
       </td>
       <td>
         <span>{{ solarisImage.Version }}</span>
+      </td>
+      <td>
+        <span>{{ solarisImage.Protocol }}</span>
       </td>
       <td>
         <span>{{ solarisImage.Source }}</span>
@@ -46,6 +50,7 @@
   #imageModal
   identifier="imageModal"
   customClass="'modal-content'"
+  [dismissable]="false"
 >
   <div class="modal-header">
     <h4 class="modal-title">Image</h4>
@@ -61,17 +66,17 @@
   <div class="modal-body">
     <div class="form-row">
       <div class="form-group col-md-12">
-        <label for="inputCDOMVDS">VDS</label>
+        <label for="inputImageProtocol">Protocol</label>
         <select
-          name="inputCDOMVDS"
-          aria-label="CDOM vDisk name"
+          name="inputImageProtocol"
+          aria-label="Protocol"
           class="form-control"
-          id="inputCDOMVDS"
-          #formVds="ngModel"
-          [(ngModel)]="newSolarisImage.Type"
+          id="inputImageProtocol"
+          [(ngModel)]="newSolarisImage.Protocol"
         >
-          <option value="solaris">Solaris</option>
-          <option value="other">Other</option>
+          <option value="http">HTTP</option>
+          <option value="https">HTTPS</option>
+          <option value="nfs">NFS</option>
         </select>
       </div>
     </div>
@@ -81,11 +86,24 @@
         <label>Image Name</label>
         <input class="form-control" [(ngModel)]="newSolarisImage.Name" />
       </div>
+    </div>
 
+    <div class="form-row">
       <div class="form-group col-md-12">
-        <label>Version</label>
-        <input class="form-control" [(ngModel)]="newSolarisImage.Version" />
+        <label for="inputCDOMVDS">Version</label>
+        <select
+          name="inputCDOMVDS"
+          aria-label="Version"
+          class="form-control"
+          id="inputCDOMVDS"
+          [(ngModel)]="newSolarisImage.Version"
+        >
+          <option value="10">Solaris 10</option>
+          <option value="11">Solaris 11</option>
+        </select>
       </div>
+    </div>
+    <div class="form-row">
 
       <div class="form-group col-md-12">
         <label>Source</label>
@@ -108,7 +126,7 @@
       type="button"
       class="btn btn-success"
       data-dismiss="modal"
-      (click)="insertImage()"
+      (click)="launchSolarisImageJobs()"
     >
       <fa name="save"></fa>
       Save

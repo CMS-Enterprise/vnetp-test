@@ -2,7 +2,7 @@ import { SolarisVariable } from './solaris-variable';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 import { SolarisCdom } from './solaris-cdom';
 import { SolarisVnic } from './solaris-vnic';
-import { SolarisVdsDevs } from './solaris-vds-devs';
+import { SolarisImage } from './solaris-image';
 export class SolarisLdom {
   public custom_fields: Array<CustomField>;
   name: string;
@@ -41,6 +41,9 @@ export class SolarisLdom {
 
   /** D42 Property for Parent */
   virtual_host_name: string;
+
+  //** Boot image information */
+  solarisImage = new SolarisImage();
 }
 
 

@@ -15,6 +15,7 @@
     </div>
     <div class="form-group">
       <label for="inputLDOMaddCDOM">CDOM</label>
+      <tooltip [message]="helpText.solarisLdomAssociatedCdomText"></tooltip>
       <select
         name="cdomSelect"
         class="form-control"
@@ -260,15 +261,12 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="LDOM.net_install">
-      <select name="imageSelect" class="form-control" [(ngModel)]="LDOM.image">
+    <div class="form-group" *ngIf="SolarisImages">
+      <select name="imageSelect" class="form-control" [(ngModel)]="LDOM.solarisImage">
         <option></option>
-        <option value="solaris-image-1"
-          >Solaris Image 1 (Size: 4.2GB, Solaris Version 10)</option
-        >
-        <option value="solaris-image-2"
-          >Solaris Image 2 (Size: 3.7GB, Solaris Version 9)</option
-        >
+        <option *ngFor="let image of SolarisImages" [ngValue]="image">
+          {{ image.Name }}
+        </option>
       </select>
     </div>
 
@@ -392,6 +390,7 @@
     <div class="form-row">
       <div class="form-group col-md-8">
         <label for="vNicUntaggedVlan">UnTagged VLAN</label>
+        <tooltip [message]="helpText.solarisLdomVnicUnTaggedVlanText"></tooltip>
         <input class="form-control"
         type="text"
         mask="0999"
@@ -402,6 +401,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>Tagged VLANs</label>
+        <tooltip [message]="helpText.solarisLdomVnicTaggedVlanText"></tooltip>        
         <div class="input-group align-items-center">
           <input
             class="form-control"
