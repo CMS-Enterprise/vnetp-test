@@ -46,8 +46,38 @@
       </div>
 
       <label class="mb-2">Filter Entries</label>
+      <div class="form-row">
+        <div class="form-group col-md-12 clearfix">
+          <table name="filterEntryTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Protocol</th>
+                <th>Source Ports</th>
+                <th>Destination Ports</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let filterEntry of filterEntries">
+                <td>{{ filterEntry.Name }}</td>
+                <td>{{ filterEntry.Protocol }}</td>
+                <td>{{ filterEntry.SourcePorts }}</td>
+                <td>{{ filterEntry.DestinationPorts }}</td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="removeFilterEntry(filterEntry)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="filterEntries?.length === 0" class="text-center">
+                <td colspan="6">No Filter Entries</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <form [formGroup]="filterEntryForm">
+      <form [formGroup]="filterEntryForm" class="mb-3">
         <div class="input-group align-items-center">
           <input
             type="text"
@@ -107,37 +137,6 @@
         </div>
       </form>
 
-      <div class="form-row">
-        <div class="form-group col-md-12 clearfix">
-          <table name="filterEntryTable" class="table table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Protocol</th>
-                <th>Source Ports</th>
-                <th>Destination Ports</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let filterEntry of filterEntries">
-                <td>{{ filterEntry.Name }}</td>
-                <td>{{ filterEntry.Protocol }}</td>
-                <td>{{ filterEntry.SourcePorts }}</td>
-                <td>{{ filterEntry.DestinationPorts }}</td>
-                <td class="item-actions">
-                  <fa name="trash" (click)="removeFilterEntry(filterEntry)">
-                  </fa>
-                </td>
-              </tr>
-              <tr *ngIf="filterEntries?.length === 0" class="text-center">
-                <td colspan="6">No Filter Entries</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       <div class="modal-footer">
         <button
           type="button"
@@ -154,42 +153,4 @@
       </div>
     </div>
   </form>
-
-  <!--TODO: Add as nested form within parent form above.-->
-  <div class="input-group align-items-center">
-    <input
-      type="text"
-      class="form-control"
-      [(ngModel)]="newFilterEntry.Name"
-      placeholder="Name"
-    />
-
-    <select class="form-control" [(ngModel)]="newFilterEntry.Protocol">
-      <option value="tcp">TCP</option>
-      <option value="udp">UDP</option>
-    </select>
-
-    <input
-      type="text"
-      class="form-control"
-      [(ngModel)]="newFilterEntry.SourcePorts"
-      placeholder="Source Ports"
-    />
-
-    <input
-      type="text"
-      class="form-control"
-      [(ngModel)]="newFilterEntry.DestinationPorts"
-      placeholder="Destination Ports"
-    />
-
-    <button
-      type="button"
-      class="btn btn-sm btn-info"
-      (click)="addFilterEntry()"
-    >
-      <fa name="plus"></fa>
-      Add Filter Entry
-    </button>
-  </div>
 </ngx-smart-modal>
