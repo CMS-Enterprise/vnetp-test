@@ -1,4 +1,6 @@
 export class SolarisImage  {
+    Id?: number;
+
     Name: string;
 
     Size: number;
