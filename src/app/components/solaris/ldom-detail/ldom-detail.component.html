@@ -36,6 +36,16 @@
       <strong>Memory: </strong>
       {{ LdomMetadata?.memory }}
     </p>
+    <p>
+      <strong>Net Install:</strong>
+      {{ LdomMetadata?.net_install}}
+    </p>
+    <p *ngIf="LdomMetadata?.net_install">
+      <strong>Image:</strong>
+    </p>
+    <p class="pl-3" *ngIf="LdomMetadata?.net_install">
+      <strong>Name:</strong> {{ LdomMetadata?.solarisImage?.Name }} <strong>Source:</strong> {{ LdomMetadata?.solarisImage?.Source }} <strong>Protocol:</strong>> {{ LdomMetadata?.solarisImage?.Protocol }} <strong>Version:</strong> {{ LdomMetadata?.solarisImage?.Version }} 
+    </p>
   </div>
 </div>
 
