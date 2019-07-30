@@ -1,9 +1,9 @@
-@import '../../../assets/styles/variables';
+@import "../../../assets/styles/variables";
 
 .navbar {
   background: linear-gradient(170deg, $primary-dark, $primary-main);
   background-color: $primary-main;
-  box-shadow: 0 5px 8px rgba($primary-dark, .15);
+  box-shadow: 0 5px 8px rgba($primary-dark, 0.15);
 
   color: $primary-light;
   a {
@@ -13,6 +13,9 @@
 
   .navbar-brand {
     margin: 0 15px;
+  }
+  .navbar-toggler {
+    color: $primary-light;
   }
 }
 
@@ -24,17 +27,17 @@
 }
 
 .dropdown-item {
-  padding: .75rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   &:focus,
   &:hover {
     background-color: $primary-light;
   }
 
   &:first-of-type {
-    border-radius: .25rem .25rem 0 0;
+    border-radius: 0.25rem 0.25rem 0 0;
   }
   &:last-of-type {
-    border-radius: 0 0 .25rem .25rem;
+    border-radius: 0 0 0.25rem 0.25rem;
   }
 }
 
@@ -44,4 +47,7 @@
 
 .customer-name {
   margin-left: 15px;
+  @media (max-width: 991.98px) {
+    display: none;
+  }
 }
