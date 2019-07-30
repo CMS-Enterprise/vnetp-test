@@ -48,7 +48,11 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getVrfCustomFields() {
-    this.contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
+    const contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
+
+    if (contracts) {
+      this.contracts = contracts;
+    }
   }
 
   createContract() {
