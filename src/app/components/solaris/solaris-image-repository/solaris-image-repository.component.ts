@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { SolarisImage } from "src/app/models/solaris/solaris-image";
-import { NgxSmartModalService } from "ngx-smart-modal";
-import { AuthService } from "src/app/services/auth.service";
-import { AutomationApiService } from "src/app/services/automation-api.service";
-import { SolarisService } from "../solaris-services/solaris-service.service";
-import { HelpersService } from "src/app/services/helpers.service";
-import { HelpTextSolaris } from "src/app/services/help-text-solaris";
+import { Component, OnInit } from '@angular/core';
+import { SolarisImage } from 'src/app/models/solaris/solaris-image';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AuthService } from 'src/app/services/auth.service';
+import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { SolarisService } from '../solaris-services/solaris-service.service';
+import { HelpersService } from 'src/app/services/helpers.service';
+import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
-  selector: "app-solaris-image-repository",
-  templateUrl: "./solaris-image-repository.component.html",
-  styleUrls: ["./solaris-image-repository.component.css"]
+  selector: 'app-solaris-image-repository',
+  templateUrl: './solaris-image-repository.component.html',
+  styleUrls: ['./solaris-image-repository.component.css']
 })
 export class SolarisImageRepositoryComponent implements OnInit {
   SolarisImages: Array<SolarisImage>;
@@ -45,7 +45,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
         response.data.parts.forEach(element => {
           const imgResponse = this.hs.getJsonCustomField(
             element,
-            "Metadata"
+            'Metadata'
           ) as SolarisImage;
           if (imgResponse !== null) {
             imgResponse.Id = element.part_id;
@@ -61,7 +61,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
       this.newSolarisImage = this.currentImage;
       this.currentImage = new SolarisImage();
     }
-    this.ngxSm.getModal("imageModal").open();
+    this.ngxSm.getModal('imageModal').open();
   }
 
   insertImage() {
@@ -77,7 +77,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     } else {
       this.SolarisImages.push(Object.assign({}, this.newSolarisImage));
     }
-    this.ngxSm.getModal("imageModal").close();
+    this.ngxSm.getModal('imageModal').close();
     this.newSolarisImage = new SolarisImage();
   }
   editImage(image) {
@@ -107,11 +107,11 @@ export class SolarisImageRepositoryComponent implements OnInit {
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
     extra_vars.SolarisImages = this.newSolarisImage;
     const body = { extra_vars };
-    this.ngxSm.getModal("imageModal").close();
+    this.ngxSm.getModal('imageModal').close();
 
     // Launch playbook
     this.automationApiService
-      .launchTemplate("save-solaris-image", body, true)
+      .launchTemplate('save-solaris-image', body, true)
       .subscribe();
     this.newSolarisImage = new SolarisImage();
   }
