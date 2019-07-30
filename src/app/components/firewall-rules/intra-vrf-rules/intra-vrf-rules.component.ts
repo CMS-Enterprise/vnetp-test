@@ -140,6 +140,8 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
+    this.contracts = new Array<Contract>();
+    this.deletedContracts = new Array<Contract>();
     this.getVrf();
   }
 
