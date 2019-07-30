@@ -123,6 +123,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
     let extra_vars: {[k: string]: any} = {};
 
     extra_vars.vrf_id = this.vrf.id;
+    extra_vars.vrf_name = this.vrf.name;
     extra_vars.contracts = this.contracts;
     extra_vars.deleted_contracts = this.deletedContracts;
 
