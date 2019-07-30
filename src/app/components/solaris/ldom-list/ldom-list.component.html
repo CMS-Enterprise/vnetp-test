@@ -1,5 +1,13 @@
 <h1>LDOM List</h1>
 
+<div class="btn-toolbar pull-left">
+  <app-import-export
+  [exportObject]="Ldoms"
+  exportFileName="Ldoms"
+  disableImport="true"
+></app-import-export>  
+</div>
+
 <button
   class="btn btn-success btn-sm mb-2 pull-right"
   routerLink="/solaris/ldom/create"

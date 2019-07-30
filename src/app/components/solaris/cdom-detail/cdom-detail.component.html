@@ -1,6 +1,15 @@
 <div class="clearfix">
   <h1 class="">CDOM: {{ Cdom?.name }}</h1>
 
+  <div class="btn-toolbar pb-1 pull-left">
+    <app-import-export
+    [exportObject]="CdomMetadata"
+    exportFileName="CDOM_{{ Cdom?.name }}"
+    disableImport="true"
+    disableCsv="true"
+  ></app-import-export>  
+  </div>
+
   <div class="btn-toolbar pull-right" role="toolbar">
     <button
       class="btn btn-sm btn-danger"

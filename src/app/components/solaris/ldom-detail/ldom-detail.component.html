@@ -1,6 +1,16 @@
 <div class="clearfix">
   <h1 class="mb-3">LDOM: {{ Ldom?.name }}</h1>
 
+  <div class="btn-toolbar pb-1 pull-left">
+    <app-import-export
+    [exportObject]="LdomMetadata"
+    exportFileName="LDOM_{{ Ldom?.name }}"
+    disableImport="true"
+    disableCsv="true"
+  ></app-import-export>  
+  </div>
+
+
   <div class="btn-toolbar pull-right" role="toolbar">
     <button
       class="btn btn-sm btn-danger"

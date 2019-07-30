@@ -1,5 +1,14 @@
 <h1>CDOM List</h1>
 
+<div class="btn-toolbar pull-left">
+  <app-import-export
+  [exportObject]="CDOMDeviceArray"
+  exportFileName="Cdoms"
+  disableImport="true"
+></app-import-export>  
+</div>
+
+
 <button
   class="btn btn-success btn-sm mb-2 pull-right"
   routerLink="/solaris/cdom/create"
