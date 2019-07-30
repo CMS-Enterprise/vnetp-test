@@ -46,43 +46,6 @@
       </div>
 
       <label class="mb-2">Filter Entries</label>
-      
-  <form [formGroup]="filterEntryForm">
-    <div class="input-group align-items-center">
-        <input type="text" class="form-control" name="name" formControlName="name"
-        placeholder="Name"
-        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.name.errors }"
-        />
-  
-        <select class="form-control" name="protocol" formControlName="protocol"
-        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.protocol.errors }"
-        >
-          <option value="">Protocol</option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
-        </select>
-  
-        <input type="text" class="form-control" name="sourcePorts" formControlName="sourcePorts"
-        placeholder="Source Ports"
-        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.sourcePorts.errors }"
-        />
-  
-        <input type="text" class="form-control" name="destinationPorts" formControlName="destinationPorts"
-        placeholder="Destination Ports"
-        [ngClass]="{ 'is-invalid': filterEntryFormSubmitted && fe.destinationPorts.errors }"
-        />
-  
-        <button
-          type="button"
-          class="btn btn-sm btn-info"
-          (click)="addFilterEntry()"
-        >
-          <fa name="plus"></fa>
-          Add Filter Entry
-        </button>
-      </div>
-    </form>
-
       <div class="form-row">
         <div class="form-group col-md-12 clearfix">
           <table name="filterEntryTable" class="table table-striped">
@@ -102,7 +65,8 @@
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeFilterEntry(filterEntry)"> </fa>
+                  <fa name="trash" (click)="removeFilterEntry(filterEntry)">
+                  </fa>
                 </td>
               </tr>
               <tr *ngIf="filterEntries?.length === 0" class="text-center">
@@ -110,8 +74,68 @@
               </tr>
             </tbody>
           </table>
-          </div>
+        </div>
       </div>
+
+      <form [formGroup]="filterEntryForm" class="mb-3">
+        <div class="input-group align-items-center">
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            formControlName="name"
+            placeholder="Name"
+            [ngClass]="{
+              'is-invalid': filterEntryFormSubmitted && fe.name.errors
+            }"
+          />
+
+          <select
+            class="form-control"
+            name="protocol"
+            formControlName="protocol"
+            [ngClass]="{
+              'is-invalid': filterEntryFormSubmitted && fe.protocol.errors
+            }"
+          >
+            <option value="">Protocol</option>
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+          </select>
+
+          <input
+            type="text"
+            class="form-control"
+            name="sourcePorts"
+            formControlName="sourcePorts"
+            placeholder="Source Ports"
+            [ngClass]="{
+              'is-invalid': filterEntryFormSubmitted && fe.sourcePorts.errors
+            }"
+          />
+
+          <input
+            type="text"
+            class="form-control"
+            name="destinationPorts"
+            formControlName="destinationPorts"
+            placeholder="Destination Ports"
+            [ngClass]="{
+              'is-invalid':
+                filterEntryFormSubmitted && fe.destinationPorts.errors
+            }"
+          />
+
+          <button
+            type="button"
+            class="btn btn-sm btn-info"
+            (click)="addFilterEntry()"
+          >
+            <fa name="plus"></fa>
+            Add Filter Entry
+          </button>
+        </div>
+      </form>
 
       <div class="modal-footer">
         <button
@@ -129,6 +153,4 @@
       </div>
     </div>
   </form>
-
-  
 </ngx-smart-modal>
