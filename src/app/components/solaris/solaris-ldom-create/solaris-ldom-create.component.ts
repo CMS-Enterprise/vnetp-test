@@ -149,20 +149,15 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       .subscribe(data => {
         const response: { [k: string]: any } = {};
         response.data = data;
-        response.data.software.forEach(element => {
-          this.automationApiService
-            .getSolarisImageDetail(element.id)
-            .subscribe(data => {
-              const imgResponse = this.hs.getJsonCustomField(
-                element,
-                "Metadata"
-              ) as SolarisImage;
-              if (imgResponse !== null) {
-                this.SolarisImages.push(imgResponse);
-              }
-            });
+        response.data.parts.forEach(element => {
+        const imgResponse = this.hs.getJsonCustomField(
+          element,
+          "Metadata"
+          ) as SolarisImage;
+        if (imgResponse !== null) {
+            this.SolarisImages.push(imgResponse);
+          }
         });
-        console.log(this.SolarisImages);
       });
 
     // TODO: Tie to reactive form pristine.
