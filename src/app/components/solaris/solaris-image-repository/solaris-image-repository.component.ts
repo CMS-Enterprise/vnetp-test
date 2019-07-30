@@ -42,33 +42,17 @@ export class SolarisImageRepositoryComponent implements OnInit {
       .subscribe(data => {
         const response: { [k: string]: any } = {};
         response.data = data;
-        response.data.software.forEach(element => {
-          this.automationApiService
-            .getSolarisImageDetail(element.id)
-            .subscribe(data => {
-              const imgResponse = this.hs.getJsonCustomField(
-                element,
-                "Metadata"
-              ) as SolarisImage;
-              if (imgResponse !== null) {
-                this.SolarisImages.push(imgResponse);
-              }
-            });
+        response.data.parts.forEach(element => {
+        const imgResponse = this.hs.getJsonCustomField(
+          element,
+          "Metadata"
+          ) as SolarisImage;
+        if (imgResponse !== null) {
+            this.SolarisImages.push(imgResponse);
+          }
         });
       });
-    this.automationApiService
-      .getDevicesbyName(this.solarisService.SolarisImageDeviceName)
-      .subscribe(data => {
-        // const SolarisImageDeviceName = `__${this.authService.currentUserValue.CustomerName}_solaris_images__`;
-        const response: { [k: string]: any } = {};
-        response.data = data;
-        const SolarisImageParentDevice = response.data.Devices.filter(
-          device => device.name === this.solarisService.SolarisImageDeviceName
-        )[0];
-        this.SolarisImageParentDeviceID = SolarisImageParentDevice.device_id;
-        console.log(this.SolarisImageParentDeviceID);
-      });
-    this.newSolarisImage = new SolarisImage();
+     this.newSolarisImage = new SolarisImage();
   }
 
   openImageModal() {
@@ -111,10 +95,11 @@ export class SolarisImageRepositoryComponent implements OnInit {
           [k: string]: any;
         } = {};
         response.data = data;
-        response.data.software.forEach(element => {
-          if (element.name === this.toDeleteSolarisImageName) {
+        response.data.parts.forEach(element => {
+          const imgResponse = this.hs.getJsonCustomField(element, 'Metadata') as SolarisImage; 
+          if (imgResponse.Name === this.toDeleteSolarisImageName) {
             const extra_vars: {[k: string]: any} = {};
-            extra_vars.id = element.id;
+            extra_vars.id = element.device_id;
             const body = { extra_vars };
             this.automationApiService.launchTemplate(`delete-solaris-image`, body, false).subscribe();
           }
@@ -139,5 +124,6 @@ export class SolarisImageRepositoryComponent implements OnInit {
     this.automationApiService
       .launchTemplate("save-solaris-image", body, true)
       .subscribe();
-  }
+    this.newSolarisImage = new SolarisImage();
+    }
 }
