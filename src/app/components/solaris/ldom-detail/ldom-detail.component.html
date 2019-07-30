@@ -109,10 +109,10 @@
             <span>{{ vnet?.VirtualSwitchName }}</span>
           </td>
           <td>
-            <span>{{ vnet?.TaggedVlans }}</span>
+            <span>{{ vnet?.UntaggedVlans }}</span>
           </td>
           <td>
-            <span>{{ vnet?.UntaggedVlans }}</span>
+            <span>{{ vnet?.TaggedVlans }}</span>
           </td>
         </tr>
         <tr colspan="4" *ngIf="!LdomMetadata.vnic?.length" class="text-center">
