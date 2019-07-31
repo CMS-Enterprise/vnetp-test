@@ -1,6 +1,16 @@
 <div class="clearfix">
   <h1 class="mb-3">LDOM: {{ Ldom?.name }}</h1>
 
+  <div class="btn-toolbar pb-1 pull-left">
+    <app-import-export
+    [exportObject]="LdomMetadata"
+    exportFileName="LDOM_{{ Ldom?.name }}"
+    disableImport="true"
+    disableCsv="true"
+  ></app-import-export>  
+  </div>
+
+
   <div class="btn-toolbar pull-right" role="toolbar">
     <button
       class="btn btn-sm btn-danger"
@@ -35,6 +45,16 @@
     <p>
       <strong>Memory: </strong>
       {{ LdomMetadata?.memory }}
+    </p>
+    <p>
+      <strong>Net Install:</strong>
+      {{ LdomMetadata?.net_install}}
+    </p>
+    <p *ngIf="LdomMetadata?.net_install">
+      <strong>Image:</strong>
+    </p>
+    <p class="pl-3" *ngIf="LdomMetadata?.net_install">
+      <strong>Name:</strong> {{ LdomMetadata?.solarisImage?.Name }} <strong>Source:</strong> {{ LdomMetadata?.solarisImage?.Source }} <strong>Protocol:</strong>> {{ LdomMetadata?.solarisImage?.Protocol }} <strong>Version:</strong> {{ LdomMetadata?.solarisImage?.Version }} 
     </p>
   </div>
 </div>
@@ -81,7 +101,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vnet of LdomMetadata.vnet">
+        <tr *ngFor="let vnet of LdomMetadata.vnic">
           <td>
             <span>{{ vnet?.Name }}</span>
           </td>
@@ -95,7 +115,7 @@
             <span>{{ vnet?.UntaggedVlans }}</span>
           </td>
         </tr>
-        <tr *ngIf="!LdomMetadata.vnet?.length" class="text-center">
+        <tr colspan="4" *ngIf="!LdomMetadata.vnic?.length" class="text-center">
           <td>No Virtual Networks</td>
         </tr>
       </tbody>

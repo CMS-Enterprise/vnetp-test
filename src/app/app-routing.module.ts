@@ -30,6 +30,7 @@ import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.comp
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
+import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 
 // tslint:disable: max-line-length
 
@@ -46,7 +47,9 @@ const routes: Routes = [
   {path: 'network-objects-groups', component: NetworkObjectsGroupsComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Objects'}},
   {path: 'service-objects-groups', component: ServiceObjectsGroupsComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Service Objects'}},
   {path: 'firewall-rules', component: FirewallRulesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules'}},
-  {path: 'firewall-rules/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Firewall Rules Detail'}},
+  {path: 'firewall-rules/intravrf/edit/:id', component: IntraVrfRulesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Intra-VRF Rules'}},
+  {path: 'firewall-rules/intervrf/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Inter-VRF Firewall Rules'}},
+  {path: 'firewall-rules/external/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'External Firewall Rules'}},
   {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
   {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Edit Static Route'}},

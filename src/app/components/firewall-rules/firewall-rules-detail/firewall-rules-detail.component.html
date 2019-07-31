@@ -1,5 +1,6 @@
 <div>
-  <h1 aria-label="Subnet Name">Subnet: {{ subnet.name }}</h1>
+    <h1 *ngIf="scope == 0 || scope == 1" aria-label="VRF Name">VRF: {{ vrf?.name }}</h1>
+    <h1 *ngIf="scope == 2" aria-label="Subnet Name">Subnet: {{ subnet?.name }}</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm" role="group">
@@ -36,7 +37,7 @@
       <button
         type="button"
         class="btn btn-info mr-1"
-        (click)="getSubnet()"
+        (click)="refresh()"
         aria-label="Refresh Firewall Rules"
         *ngIf="!dirty"
       >
