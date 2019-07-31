@@ -12,7 +12,6 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
-      <th scope="col">Size</th>
       <th scope="col">Solaris Version</th>
       <th scope="col">Protocol</th>
       <th scope="col">Source</th>
@@ -23,9 +22,6 @@
     <tr *ngFor="let solarisImage of SolarisImages">
       <td>
         <span>{{ solarisImage.Name }}</span>
-      </td>
-      <td>
-        <span>{{ solarisImage.Size }} MB</span>
       </td>
       <td>
         <span>{{ solarisImage.Version }}</span>

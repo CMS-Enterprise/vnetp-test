@@ -103,7 +103,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
   launchSolarisImageJobs() {
     //create extra_vars to pass into Ansible
     const extra_vars: { [k: string]: any } = {};
-    this.newSolarisImage.Size = Math.floor(Math.random() * 5000) + 1;
+    this.newSolarisImage.Size = 0;
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
     extra_vars.SolarisImages = this.newSolarisImage;
     const body = { extra_vars };
