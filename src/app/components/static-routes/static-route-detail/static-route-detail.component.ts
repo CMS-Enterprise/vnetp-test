@@ -72,6 +72,8 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
     var body = { extra_vars };
 
     extra_vars.deleted_static_routes = this.deletedStaticRoutes;
+    extra_vars.vrf_name =  this.vrf.name.split('-')[1];
+
     this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe();
 
     this.dirty = false;

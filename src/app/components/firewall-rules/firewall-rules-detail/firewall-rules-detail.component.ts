@@ -251,11 +251,13 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       extra_vars.scope = 'vrf';
       extra_vars.vrf = this.vrf;
       extra_vars.vrf_group_name = this.vrf.name;
+      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
       extra_vars.firewall_rules = this.firewallRules;
     } else if (this.scope === FirewallRuleScope.external) {
       extra_vars.scope = 'external';
       extra_vars.vrf = this.vrf;
       extra_vars.vrf_group_name = this.vrf.name;
+      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
       extra_vars.external_firewall_rules = this.firewallRules;
     }
 
