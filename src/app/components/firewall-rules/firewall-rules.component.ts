@@ -11,23 +11,13 @@ import { HelpersService } from 'src/app/services/helpers.service';
 export class FirewallRulesComponent implements OnInit {
   navIndex = 0;
 
-  subnets: any;
   vrfs: Array<Vrf>;
 
   constructor(private automationApiService: AutomationApiService, private hs: HelpersService) {
-    this.subnets = [];
   }
 
   ngOnInit() {
     this.getVrfs();
-    this.getNetworks();
-  }
-
-  getNetworks() {
-    this.automationApiService.getSubnets().subscribe(
-      data => this.subnets = data,
-      error => {}
-      );
   }
 
   getVrfs() {

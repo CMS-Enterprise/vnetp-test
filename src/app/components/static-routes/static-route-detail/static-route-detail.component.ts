@@ -42,6 +42,20 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
     );
   }
 
+  getInterfaceUiName(interfaceName: string) {
+    if (interfaceName === 'inside') {
+      return 'Intra-VRF';
+    }
+
+    if (interfaceName === 'outside') {
+      return 'Inter-VRF';
+    }
+
+    if (interfaceName === 'extranet') {
+      return 'External';
+    }
+  }
+
   addStaticRoute() {
     if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
 
@@ -67,6 +81,11 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   updateStaticRoutes() {
     let extra_vars: {[k: string]: any} = {};
     extra_vars.vrf = this.vrf;
+
+    this.staticRoutes.forEach(sr => {
+      sr.Edit = false;
+    });
+
     extra_vars.static_routes = this.staticRoutes;
 
     var body = { extra_vars };
