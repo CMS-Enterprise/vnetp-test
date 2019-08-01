@@ -36,6 +36,7 @@
       <div class="form-row">
         <div class="form-group col-md-3">
           <label for="type">Action</label>
+          <tooltip [message]="helpText.fwModalAction"></tooltip>
           <select
             name="action"
             formControlName="action"
@@ -53,6 +54,7 @@
 
         <div class="form-group col-md-3">
           <label for="type">Direction</label>
+          <tooltip [message]="helpText.fwModalDirection"></tooltip>
           <select
             name="direction"
             formControlName="direction"
@@ -70,6 +72,7 @@
 
         <div class="form-group col-md-3">
           <label for="type">Protocol</label>
+          <tooltip [message]="helpText.fwModalProtocol"></tooltip>
           <select
             name="protocol"
             formControlName="protocol"
@@ -87,6 +90,7 @@
 
         <div class="form-group col-md-3">
           <label for="type">Log</label>
+          <tooltip [message]="helpText.fwModalLog"></tooltip>
           <select
             name="log"
             formControlName="log"
