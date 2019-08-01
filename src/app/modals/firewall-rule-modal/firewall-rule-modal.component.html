@@ -121,8 +121,8 @@
 
         <div class="form-group col-md-6">
           <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'ip'"
-            >Source IP</label
-          >
+            >Source IP</label>
+            <tooltip *ngIf="f.sourceNetworkType.value === 'ip'" [message]="helpText.fwModalIpNetworkType"></tooltip>
           <input
             type="text"
             formControlName="sourceIp"
@@ -140,6 +140,7 @@
           <label for="name" *ngIf="f.sourceNetworkType.value === 'object'"
             >Source Object</label
           >
+          <tooltip *ngIf="f.sourceNetworkType.value === 'object'" [message]="helpText.fwModalNetworkObjectType"></tooltip>
           <select
             formControlName="sourceNetworkObject"
             class="form-control"
@@ -169,6 +170,7 @@
             *ngIf="f.sourceNetworkType.value === 'objectGroup'"
             >Source Object Group</label
           >
+          <tooltip *ngIf="f.sourceNetworkType.value === 'objectGroup'" [message]="helpText.fwModalNetworkObjectGroupType"></tooltip>
           <select
             formControlName="sourceNetworkObjectGroup"
             class="form-control"
@@ -215,6 +217,7 @@
           <label for="name" *ngIf="f.sourceServiceType.value === 'port'"
             >Source Ports</label
           >
+          <tooltip *ngIf="f.sourceServiceType.value === 'port'" [message]="helpText.fwModalPortServiceType"></tooltip>
           <input
             type="text"
             formControlName="sourcePorts"
@@ -235,6 +238,7 @@
           <label for="name" *ngIf="f.sourceServiceType.value === 'object'"
             >Source Service Object
           </label>
+          <tooltip *ngIf="f.sourceServiceType.value === 'object'" [message]="helpText.fwModalServiceObjectType"></tooltip>
           <select
             formControlName="sourceServiceObject"
             class="form-control"
@@ -262,6 +266,7 @@
           <label for="name" *ngIf="f.sourceServiceType.value === 'objectGroup'"
             >Source Service Object Group</label
           >
+          <tooltip *ngIf="f.sourceServiceType.value === 'objectGroup'" [message]="helpText.fwModalServiceObjectGroupType"></tooltip>
           <select
             formControlName="sourceServiceObjectGroup"
             class="form-control"
@@ -310,8 +315,8 @@
           <label
             for="destinationIp"
             *ngIf="f.destinationNetworkType.value === 'ip'"
-            >Destination IP</label
-          >
+            >Destination IP</label>
+            <tooltip *ngIf="f.destinationNetworkType.value === 'ip'" [message]="helpText.fwModalIpNetworkType"></tooltip>
           <input
             type="text"
             formControlName="destinationIp"
@@ -332,6 +337,7 @@
           <label for="name" *ngIf="f.destinationNetworkType.value === 'object'"
             >Destination Object</label
           >
+          <tooltip *ngIf="f.destinationNetworkType.value === 'object'" [message]="helpText.fwModalNetworkObjectType"></tooltip>
           <select
             formControlName="destinationNetworkObject"
             class="form-control"
@@ -361,6 +367,7 @@
             *ngIf="f.destinationNetworkType.value === 'objectGroup'"
             >Destination Object Group</label
           >
+          <tooltip *ngIf="f.destinationNetworkType.value === 'objectGroup'" [message]="helpText.fwModalNetworkObjectGroupType"></tooltip>
           <select
             formControlName="destinationNetworkObjectGroup"
             class="form-control"
@@ -409,6 +416,7 @@
             *ngIf="f.destinationServiceType.value === 'port'"
             >Destination Ports</label
           >
+          <tooltip *ngIf="f.destinationServiceType.value === 'port'" [message]="helpText.fwModalPortServiceType"></tooltip>
           <input
             type="text"
             formControlName="destinationPorts"
@@ -429,6 +437,7 @@
           <label for="name" *ngIf="f.destinationServiceType.value === 'object'"
             >Destination Service Object
           </label>
+          <tooltip *ngIf="f.destinationServiceType.value === 'object'" [message]="helpText.fwModalServiceObjectType"></tooltip>
           <select
             formControlName="destinationServiceObject"
             class="form-control"
@@ -458,6 +467,7 @@
             *ngIf="f.destinationServiceType.value === 'objectGroup'"
             >Destination Service Object Group</label
           >
+          <tooltip *ngIf="f.destinationServiceType.value === 'objectGroup'" [message]="helpText.fwModalServiceObjectGroupType"></tooltip>
           <select
             formControlName="destinationServiceObjectGroup"
             class="form-control"

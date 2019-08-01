@@ -9,18 +9,21 @@ import { environment } from 'src/environments/environment';
 export class HelpTextNetworking {
     wikiBase = environment.wikiBase;
 
-
-
     fwModalSourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
     fwModalSourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
 
     fwModalDestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
     fwModalDestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
 
+    fwModalIpNetworkType = `IP address of a single host (X.X.X.X), subnet (X.X.X.X/YY), or 'any' to match any IP Address.`;
+    fwModalNetworkObjectType = `Network Object created under IPAM.`;
+    fwModalNetworkObjectGroupType = `Network Object Group created under IPAM.`;
 
+    fwModalPortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
+    fwModalServiceObjectType = `Service Object created under IPAM.`;
+    fwModalServiceObjectGroupType = `Service Object Group created under IPAM.`;
 
     // Networking tool tip messages
-
     networkPortGroupText = `Group of ports. More info: <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
 
       // Load balancer tool tip messages
