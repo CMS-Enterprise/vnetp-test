@@ -67,6 +67,9 @@ describe('Network Form Validators', () => {
     formControl.setValue('1.1.1.');
     expect(ValidateIpv4Address(formControl)).toBeTruthy();
 
+    formControl.setValue('1.1.1.1.1');
+    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+
     formControl.setValue('-1.1.1.1');
     expect(ValidateIpv4Address(formControl)).toBeTruthy();
 

@@ -117,7 +117,7 @@ function isValidPortNumber(portNumber: number): boolean {
 function isValidIpAddress(ipAddress: string): boolean {
     const ipAddressArray = ipAddress.split('.');
 
-    if (ipAddressArray.length < 4) {
+    if (ipAddressArray.length !== 4) {
         return false;
     }
 
