@@ -42,8 +42,6 @@ export class FirewallRuleModalHelpText {
     providedIn: 'root'
 })
 export class NetworkObjectModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = 'Name of the Network Object.';
     Type = `Type of Network Object (Host, Range, Subnet).`;
     HostAddress = `Host Address (X.X.X.X) of Host Network Object.`;
@@ -64,8 +62,6 @@ export class NetworkObjectModalHelpText {
     providedIn: 'root'
 })
 export class NetworkObjectGroupModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = `Name of Network Object Group.`;
     Description = `Description of Network Object Group.`;
     NetworkObjects = 'Network Objects in the Network Object Group.';
@@ -75,8 +71,6 @@ export class NetworkObjectGroupModalHelpText {
     providedIn: 'root'
 })
 export class ServiceObjectModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = `Name of Service Object.`;
     Type = `Type of Service Object (TCP, UDP).`;
     Port = `Single Port (80) or Port Range (22-23) or 'any' to match any Port.`;
@@ -86,8 +80,6 @@ export class ServiceObjectModalHelpText {
     providedIn: 'root'
 })
 export class ServiceObjectGroupModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = `Name of Service Object Group.`;
     Type = `Type of the Service Object Group (TCP, UDP). Overrides Type set on any Child Service Objects.`;
     Description = `Description of the Service Object Group.`;
@@ -99,8 +91,6 @@ export class ServiceObjectGroupModalHelpText {
     providedIn: 'root'
 })
 export class VirtualServerModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = `Name of Virtual Server.`;
     Type = `Type of Virtual Server.`;
     SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
@@ -114,8 +104,6 @@ export class VirtualServerModalHelpText {
     providedIn: 'root'
 })
 export class PoolModalHelpText {
-    wikiBase: string = environment.wikiBase;
-
     Name = `Name of Pool.`;
     LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
     PoolMembers = `Members of the Pool.`;
@@ -128,12 +116,34 @@ export class PoolModalHelpText {
     providedIn: 'root'
 })
 export class PoolMemberModalHelpText {
-   wikiBase: string = environment.wikiBase;
-
    Name = `Name of Pool Member.`;
    Type = `Pool Member Type (FQDN, IP Address).`;
    IpAddress = `IP Address of Pool Member.`;
    Fqdn = `FQDN of Pool Member.`;
    ServicePort = `Port that the Pool Member is listening for requests on.`;
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class IRuleModalHelpText {
+   wikiBase: string = environment.wikiBase;
+
+   Name = `Name of iRule.`;
+   Content = `iRule content in valid F5 format.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class HealthMonitorModalHelpText {
+   wikiBase: string = environment.wikiBase;
+
+   Name = `Name of Health Monitor.`;
+   Type = 'Health Monitor Type (TCP, HTTP, HTTPS).';
+   ServicePort = 'Port that Health Monitor attempts to connect to.';
+   Interval = 'Interval (seconds) that Health Monitor performs checks.';
+   Timeout = 'Timeout (seconds) for checks before considering them failed.';
 }
 

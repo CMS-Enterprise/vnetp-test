@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { NgxSmartModalService} from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
+import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -13,8 +14,7 @@ export class HealthMonitorModalComponent implements OnInit {
   submitted: boolean;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-    ) {
-  }
+              public helpText: HealthMonitorModalHelpText) { }
 
   save() {
     this.submitted = true;
