@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root'
 })
 export class HelpTextNetworking {
-    wikiBase = environment.wikiBase;
+    wikiBase: string = environment.wikiBase;
 
     // Firewall Rule Modal
 
@@ -30,7 +30,29 @@ export class HelpTextNetworking {
     fwModalServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
     fwModalServiceObjectGroupType = `Service Object Group created under IPAM.`;
 
-
-    // Load balancer tool tip messages  
+    // Load balancer tool tip messages
     loadBalancerIRuleText = `F5 LoadBalancer language to create rich rules.  More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NetworkObjectModalHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Type = `Type of Network Object (Host, Range, Subnet).`;
+    HostAddress = `Host Address (X.X.X.X) of Host Network Object.`;
+    StartAddress = `Start Address (X.X.X.X) of Range Network Object.`;
+    EndAddress = `End Address (X.X.X.X) of Range Network Object.`;
+    CidrAddress = `Subnet (X.X.X.X/YY) of Subnet Network Object.`;
+    Nat = `Sets whether Network Object should be NATed when traversing between the Source/Destination.`;
+    Source = 'Traffic Source for a Network Object with NAT enabled.';
+    Destination = 'ITraffic Destination for a Network Object with NAT enabled.';
+    TranslatedIp = 'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
+
+    NatService = 'Sets whether Network Object should be PATed when traversing between the Source/Destination.';
+    NatProtocol = 'Protocol (TCP/UDP) that traffic must match in order to NAT.';
+    SourcePort = 'Source Port that traffic must match in order to PAT.';
+    TranslatedPort = 'Port that traffic is PATed to.';
 }

@@ -6,6 +6,7 @@ import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange} from '
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { NetworkObjectModalHelpText } from 'src/app/services/help-text-networking';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -20,8 +21,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   natServiceSubscription: Subscription;
   Subnets: Array<Subnet>;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
-  }
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+              public helpText: NetworkObjectModalHelpText) {}
 
   save() {
     this.submitted = true;
@@ -210,7 +211,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         if (sub) {
         sub.unsubscribe();
         }
-      } catch(e) {
+      } catch (e) {
         console.error(e);
       }
     });
