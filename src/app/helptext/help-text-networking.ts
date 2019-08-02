@@ -5,11 +5,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root'
 })
-export class HelpTextNetworking {
+export class LoadBalancersHelpText {
     wikiBase: string = environment.wikiBase;
 
-    // Load balancer tool tip messages
-    loadBalancerIRuleText = `F5 LoadBalancer language to create rich rules.  More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
+    Vrf = `Tier (VRF) that Load Balancer configurations are created within.`;
+    VirtualServers = `Manage Virtual Servers.`;
+    Pools = `Manage Pools and Pool Members.`;
+    IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
+    HealthMonitors = `Manage Health Monitors.`;
 }
 
 @Injectable({
@@ -90,3 +93,47 @@ export class ServiceObjectGroupModalHelpText {
     Description = `Description of the Service Object Group.`;
     ServiceObjects = `Service Objects in the Service Object Group.`;
 }
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class VirtualServerModalHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Name = `Name of Virtual Server.`;
+    Type = `Type of Virtual Server.`;
+    SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
+    DestinationAddress = `Address that the Virtual Server accepts traffic at.`;
+    ServicePort = `Port that the Virtual Server listens on.`;
+    Pool = `Pool that the Virtual Server forwards the request to.`;
+    IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PoolModalHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Name = `Name of Pool.`;
+    LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
+    PoolMembers = `Members of the Pool.`;
+    AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
+    SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PoolMemberModalHelpText {
+   wikiBase: string = environment.wikiBase;
+
+   Name = `Name of Pool Member.`;
+   Type = `Pool Member Type (FQDN, IP Address).`;
+   IpAddress = `IP Address of Pool Member.`;
+   Fqdn = `FQDN of Pool Member.`;
+   ServicePort = `Port that the Pool Member is listening for requests on.`;
+}
+

@@ -12,7 +12,8 @@ export class HealthMonitorModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+    ) {
   }
 
   save() {

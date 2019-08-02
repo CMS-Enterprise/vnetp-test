@@ -1,7 +1,7 @@
-import { HelpTextNetworking } from './help-text-networking';
+import { LoadBalancersHelpText } from './help-text-networking';
 
 describe('HelpTextNetworking', () => {
   it('should create an instance', () => {
-    expect(new HelpTextNetworking()).toBeTruthy();
+    expect(new LoadBalancersHelpText()).toBeTruthy();
   });
 });

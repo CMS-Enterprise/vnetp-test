@@ -6,6 +6,7 @@ import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
+import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-modal',
@@ -23,7 +24,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   selectedHealthMonitors: string[];
   availableHealthMonitors: string[];
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+    public helpText: PoolModalHelpText) {
   }
 
   save() {

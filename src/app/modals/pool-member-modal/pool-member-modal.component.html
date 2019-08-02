@@ -19,6 +19,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -34,6 +35,7 @@
 
       <div class="form-group">
         <label for="type">Type</label>
+        <tooltip [message]="helpText.Type"></tooltip>
         <select
           name="type"
           formControlName="type"
@@ -52,7 +54,7 @@
 
       <div class="form-group" *ngIf="f.type.value == 'ipaddress'">
         <label for="ipAddress">IP Address</label>
-
+        <tooltip  *ngIf="f.type.value == 'ipaddress'" [message]="helpText.IpAddress"></tooltip>
         <input
           name="ipAddress"
           formControlName="ipAddress"
@@ -66,7 +68,7 @@
 
       <div class="form-group" *ngIf="f.type.value == 'fqdn'">
         <label for="fqdn">FQDN</label>
-
+        <tooltip  *ngIf="f.type.value == 'fqdn'" [message]="helpText.Fqdn"></tooltip>
         <input
           name="fqdn"
           formControlName="fqdn"
@@ -89,6 +91,8 @@
           <label class="form-check-label" for="autoPopulate">
             Auto Populate
           </label>
+          <tooltip  *ngIf="f.type.value == 'fqdn'" [message]="helpText.AutoPopulate"></tooltip>
+
         </div>
       </div>
 
@@ -96,7 +100,7 @@
         <label for="servicePort">
           Service Port
         </label>
-
+        <tooltip [message]="helpText.ServicePort"></tooltip>
         <input
           class="form-control"
           name="servicePort"
