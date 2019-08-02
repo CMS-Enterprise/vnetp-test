@@ -27,6 +27,17 @@ export class FirewallRulesHelpText {
     IntraVrf = `Contracts between Subnets in the same Tier.`;
 }
 
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NetworkInterfacesHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Vrf = `Tier (VRF) that Network Objects & Groups are created within.`;
+    Interfaces = `Define Logical Interfaces and subnets allowed across them.`;
+}
+
 @Injectable({
     providedIn: 'root'
 })
