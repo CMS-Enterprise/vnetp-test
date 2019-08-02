@@ -150,9 +150,8 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-interfaces-dto', body, true).subscribe(data => {
-      // TODO: Provide to message service
-     });
+    this.api.launchTemplate('save-network-interfaces-dto', body, true).subscribe(data => { },
+      error => { this.dirty = true; });
   }
 
   ngOnInit() {

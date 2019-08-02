@@ -160,7 +160,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('save-network', body, true).subscribe();
-    this.router.navigate(['/networks']);
+    this.automationApiService.launchTemplate('save-network', body, true).subscribe(data => { this.router.navigate(['/networks']);
+  }, error => { this.dirty = true; });
   }
 }

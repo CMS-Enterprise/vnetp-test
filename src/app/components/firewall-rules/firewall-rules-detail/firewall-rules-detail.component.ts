@@ -267,12 +267,15 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     if (this.scope === FirewallRuleScope.subnet) {
     if (this.deployedState) {
-      this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
+      this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
+        error => { this.dirty = true; });
     } else {
-      this.automationApiService.launchTemplate('save-acl', body, true).subscribe();
+      this.automationApiService.launchTemplate('save-acl', body, true).subscribe(data => { },
+        error => { this.dirty = true; });
     }
   } else if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
-    this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe();
+    this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
+      error => { this.dirty = true; });
   }
     this.deletedFirewallRules = new Array<FirewallRule>();
 }
