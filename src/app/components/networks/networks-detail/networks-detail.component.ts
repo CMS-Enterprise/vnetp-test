@@ -124,7 +124,7 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService
       .launchTemplate('save-contract-assignment', body, true)
-      .subscribe();
+      .subscribe(data => {}, error => {});
   }
 
   deleteSubnet() {
@@ -138,8 +138,8 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService
       .launchTemplate('delete-network', body, true)
-      .subscribe();
+      .subscribe(data => {    this.router.navigate(['/networks']);
+      }, error => {});
 
-    this.router.navigate(['/networks']);
   }
 }
