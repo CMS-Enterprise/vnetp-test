@@ -124,7 +124,7 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService
       .launchTemplate('save-contract-assignment', body, true)
-      .subscribe();
+      .subscribe(data => {}, error => {});
   }
 
   deleteSubnet() {
