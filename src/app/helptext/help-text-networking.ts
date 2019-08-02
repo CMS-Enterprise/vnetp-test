@@ -8,9 +8,21 @@ import { environment } from 'src/environments/environment';
 export class NetworkDetailHelpText {
     Vrf = `Tier (VRF) that the subnet is in.`;
     Deployed = `Deployment state of the subnet.`;
-    VlanId = `VLAN Id associated with the Subnet.`;
+    VlanId = `VLAN ID associated with the Subnet.`;
     IpAddresses = `IP Addresses within the Subnet.`;
     Contracts = `Contracts assigned to the Subnet as Consumer and/or Provider.`;
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NetworkCreateHelpText {
+    Name = `Name of the Subnet.`;
+    Vrf = `Tier (VRF) that the subnet will be created within.`;
+    Protocol = `IP Protocol of the Subnet.`;
+    CidrAddress = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
+    VlanId = `VLAN ID associated with the Subnet.`;
 }
 
 @Injectable({

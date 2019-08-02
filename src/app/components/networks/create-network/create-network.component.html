@@ -10,6 +10,7 @@
       <h1 class="mb-3">Subnet</h1>
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           name="name"
           appIsAlphanumeric
@@ -31,6 +32,7 @@
 
       <div class="form-group ">
         <label for="protocol">Protocol</label>
+        <tooltip [message]="helpText.Protocol"></tooltip>
         <select class="form-control" id="protocol">
           <option selected>IPv4</option>
           <option disabled>IPv6</option>
@@ -39,6 +41,7 @@
 
       <div class="form-group">
         <label for="inputAddress">CIDR Address</label>
+        <tooltip [message]="helpText.CidrAddress"></tooltip>
         <input
           name="networkAddress"
           type="text"
@@ -120,6 +123,7 @@
 
       <div class="form-group">
         <label for="formVlanId">VLAN ID</label>
+        <tooltip [message]="helpText.VlanId"></tooltip>
         <input
           name="formVlanId"
           type="text"
@@ -139,6 +143,7 @@
 
       <div class="form-group">
         <label for="vrf">Tier (VRF)</label>
+        <tooltip [message]="helpText.Vrf"></tooltip>
         <select
           name="vrf"
           class="form-control"
