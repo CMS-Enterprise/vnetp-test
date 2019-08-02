@@ -18,6 +18,18 @@ export class LoadBalancersHelpText {
 @Injectable({
     providedIn: 'root'
 })
+export class FirewallRulesHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Vrf = `Tier (VRF) that Network Objects & Groups are created within.`;
+    External = `Firewall Rules between a Tier and CMSnet/Internet.`;
+    InterVrf = `Firewall Rules between 2 Tiers.`;
+    IntraVrf = `Contracts between Subnets in the same Tier.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class FirewallRuleModalHelpText {
     wikiBase: string = environment.wikiBase;
 
@@ -36,6 +48,17 @@ export class FirewallRuleModalHelpText {
     PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
     ServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
     ServiceObjectGroupType = `Service Object Group created under IPAM.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NetworkObjectsGroupsHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Vrf = `Tier (VRF) that Network Objects & Groups are created within.`;
+    NetworkObjects = `Network Objects can consist of a single host (with NAT/PAT), range or subnet.`;
+    NetworkObjectGroups = `Network Object Groups are a collection of Network Objects.`;
 }
 
 @Injectable({
@@ -67,6 +90,18 @@ export class NetworkObjectGroupModalHelpText {
     NetworkObjects = 'Network Objects in the Network Object Group.';
 }
 
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ServiceObjectsGroupsHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Vrf = `Tier (VRF) that Service Objects & Groups are created within.`;
+    ServiceObjects = `Service Objects consist of a source and destination ports.`;
+    ServiceObjectGroups = `Service Object Groups are a collection of Service Objects.`;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -85,7 +120,6 @@ export class ServiceObjectGroupModalHelpText {
     Description = `Description of the Service Object Group.`;
     ServiceObjects = `Service Objects in the Service Object Group.`;
 }
-
 
 @Injectable({
     providedIn: 'root'
@@ -111,7 +145,6 @@ export class PoolModalHelpText {
     SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
 }
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -122,7 +155,6 @@ export class PoolMemberModalHelpText {
    Fqdn = `FQDN of Pool Member.`;
    ServicePort = `Port that the Pool Member is listening for requests on.`;
 }
-
 
 @Injectable({
     providedIn: 'root'
@@ -147,3 +179,13 @@ export class HealthMonitorModalHelpText {
    Timeout = 'Timeout (seconds) for checks before considering them failed.';
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class ContractModalHelpText {
+   wikiBase: string = environment.wikiBase;
+
+   Name = `Contract Name.`;
+   Description = 'Contract Description.';
+   FilterEntries = 'Filter Entries to allow specific traffic.';
+}

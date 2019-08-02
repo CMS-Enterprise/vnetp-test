@@ -20,6 +20,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -35,7 +36,7 @@
 
       <div class="form-group">
         <label for="description">Description</label>
-
+        <tooltip [message]="helpText.Description"></tooltip>
         <textarea
           name="description"
           formControlName="description"
@@ -46,6 +47,7 @@
       </div>
 
       <label class="mb-2">Filter Entries</label>
+      <tooltip [message]="helpText.FilterEntries"></tooltip>
       <div class="form-row">
         <div class="form-group col-md-12 clearfix">
           <table name="filterEntryTable" class="table table-striped">

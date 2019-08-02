@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { FirewallRulesHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -13,7 +14,8 @@ export class FirewallRulesComponent implements OnInit {
 
   vrfs: Array<Vrf>;
 
-  constructor(private automationApiService: AutomationApiService, private hs: HelpersService) {
+  constructor(private automationApiService: AutomationApiService, private hs: HelpersService,
+              public helpText: FirewallRulesHelpText) {
   }
 
   ngOnInit() {
