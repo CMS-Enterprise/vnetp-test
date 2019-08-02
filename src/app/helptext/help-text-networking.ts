@@ -5,6 +5,17 @@ import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root'
 })
+export class NetworkDetailHelpText {
+    Vrf = `Tier (VRF) that the subnet is in.`;
+    Deployed = `Deployment state of the subnet.`;
+    VlanId = `VLAN Id associated with the Subnet.`;
+    IpAddresses = `IP Addresses within the Subnet.`;
+    Contracts = `Contracts assigned to the Subnet as Consumer and/or Provider.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class LoadBalancersHelpText {
     wikiBase: string = environment.wikiBase;
 
@@ -26,7 +37,6 @@ export class FirewallRulesHelpText {
     InterVrf = `Firewall Rules between 2 Tiers.`;
     IntraVrf = `Contracts between Subnets in the same Tier.`;
 }
-
 
 @Injectable({
     providedIn: 'root'
