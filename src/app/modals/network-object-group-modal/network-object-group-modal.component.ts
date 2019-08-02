@@ -9,6 +9,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
+import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-network-object-group-modal',
@@ -27,8 +28,8 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   networkObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
-    this.networkObjects = new Array<NetworkObject>();
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService,
+              public helpText: NetworkObjectGroupModalHelpText) { this.networkObjects = new Array<NetworkObject>();
    }
 
    save() {
@@ -99,7 +100,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription =
     this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObjectModalDto;
+      const data = modal.getData() as NetworkObjectModalDto;
 
       if (data && data.NetworkObject) {
         this.saveNetworkObject(data.NetworkObject);
@@ -111,7 +112,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
-    
+
     if (dto.Subnets) {
       this.Subnets = dto.Subnets;
     }

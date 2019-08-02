@@ -19,6 +19,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -176,7 +177,6 @@
           <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.Nat"></tooltip>
         </div>
       </div>
-
       
       <div class="form-group" *ngIf="f.nat.value">
         <label for="sourceSubnet">Source Subnet</label>

@@ -6,7 +6,7 @@ import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange} from '
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectModalHelpText } from 'src/app/services/help-text-networking';
+import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-network-object-modal',
