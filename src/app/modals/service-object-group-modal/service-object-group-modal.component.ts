@@ -6,6 +6,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HelpersService } from 'src/app/services/helpers.service';
+import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -23,9 +24,8 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   serviceObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
-    this.serviceObjects = new Array<ServiceObject>();
-   }
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService,
+              public helpText: ServiceObjectGroupModalHelpText) { this.serviceObjects = new Array<ServiceObject>(); }
 
    save() {
     this.submitted = true;
@@ -86,7 +86,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   subscribeToServiceObjectModal() {
     this.serviceObjectModalSubscription =
     this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as ServiceObject;
+      const data = modal.getData() as ServiceObject;
       if (data !== undefined) {
         this.saveServiceObject(data);
       }

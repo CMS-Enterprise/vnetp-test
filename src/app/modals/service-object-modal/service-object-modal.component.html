@@ -19,6 +19,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -34,6 +35,7 @@
 
       <div class="form-group">
         <label for="type">Type</label>
+        <tooltip [message]="helpText.Type"></tooltip>
         <select
           name="type"
           formControlName="type"
@@ -52,6 +54,7 @@
 
       <div class="form-group">
           <label for="name">Destination Port/Range</label>
+          <tooltip [message]="helpText.Port"></tooltip>
           <input
             type="text"
             name="name"
@@ -76,6 +79,7 @@
 
       <div class="form-group">
         <label for="name">Source Port/Range</label>
+        <tooltip [message]="helpText.Port"></tooltip>
         <input
           type="text"
           name="name"

@@ -1,5 +1,4 @@
 // tslint:disable: max-line-length
-
 import { Injectable, Inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
@@ -67,4 +66,27 @@ export class NetworkObjectGroupModalHelpText {
     Name = `Name of Network Object Group.`;
     Description = `Description of Network Object Group.`;
     NetworkObjects = 'Network Objects in the Network Object Group.';
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ServiceObjectModalHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Name = `Name of Service Object.`;
+    Type = `Type of Service Object (TCP, UDP).`;
+    Port = `Single Port (80) or Port Range (22-23) or 'any' to match any Port.`;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ServiceObjectGroupModalHelpText {
+    wikiBase: string = environment.wikiBase;
+
+    Name = `Name of Service Object Group.`;
+    Type = `Type of the Service Object Group (TCP, UDP). Overrides Type set on any Child Service Objects.`;
+    Description = `Description of the Service Object Group.`;
+    ServiceObjects = `Service Objects in the Service Object Group.`;
 }
