@@ -1,14 +1,14 @@
 <ul class="nav nav-tabs">
   <li class="nav-item" (click)="navIndex = 0">
     <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
-      External
+      External <tooltip [message]="helpText.External"></tooltip>
     </a>
   </li>
   <li class="nav-item" (click)="navIndex = 1">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Inter-VRF</a>
+    <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Inter-VRF <tooltip [message]="helpText.InterVrf"></tooltip></a>
   </li>
   <li class="nav-item" (click)="navIndex = 2">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Intra-VRF</a>
+    <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Intra-VRF <tooltip [message]="helpText.IntraVrf"></tooltip></a>
   </li>
 </ul>
 

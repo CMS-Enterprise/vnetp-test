@@ -13,6 +13,7 @@ import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
+import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -45,7 +46,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     return !this.dirty;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
+              public helpText: NetworkObjectsGroupsHelpText) {
     this.networkObjects = new Array<NetworkObject>();
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
@@ -146,7 +148,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription =
     this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObjectModalDto;
+      const data = modal.getData() as NetworkObjectModalDto;
 
       if (data && data.NetworkObject) {
         this.saveNetworkObject(data.NetworkObject);
@@ -159,7 +161,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   subscribeToNetworkObjectGroupModal() {
     this.networkObjectGroupModalSubscription =
     this.ngx.getModal('networkObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as NetworkObjectGroup;
+      const data = modal.getData() as NetworkObjectGroup;
 
       if (data !== undefined) {
         this.saveNetworkObjectGroup(data);
@@ -259,7 +261,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.dirty = true;
   }
 
-  exportNetworkObjectConfig(){
+  exportNetworkObjectConfig() {
     const dto = new NetworkObjectDto();
 
     dto.NetworkObjects = this.networkObjects;

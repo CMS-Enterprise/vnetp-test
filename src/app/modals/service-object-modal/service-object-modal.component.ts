@@ -4,6 +4,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
+import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-service-object-modal',
@@ -15,8 +16,8 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   submitted: boolean;
   destinationPortSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
-  }
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+              public helpText: ServiceObjectModalHelpText) {}
 
   save() {
     this.submitted = true;

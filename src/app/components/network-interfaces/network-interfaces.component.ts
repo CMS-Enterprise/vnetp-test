@@ -10,6 +10,7 @@ import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-interface-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { NetworkInterfacesHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-network-interfaces',
@@ -19,7 +20,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 
   constructor(private hs: HelpersService, private api: AutomationApiService,
-              private ngx: NgxSmartModalService) { }
+              private ngx: NgxSmartModalService, public helpText: NetworkInterfacesHelpText) { }
 
   LogicalInterfaces: Array<LogicalInterface>;
   Subnets: Array<Subnet>;

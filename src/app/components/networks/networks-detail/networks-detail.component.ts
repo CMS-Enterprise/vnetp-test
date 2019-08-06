@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { IpAddressService } from 'src/app/services/ip-address.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { Contract } from 'src/app/models/firewall/contract';
 import { ContractAssignment } from 'src/app/models/firewall/contract-assignment';
+import { NetworkDetailHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-networks-detail',
@@ -19,8 +19,8 @@ export class NetworksDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private hs: HelpersService,
-    private ips: IpAddressService,
-    public ngx: NgxSmartModalService
+    public ngx: NgxSmartModalService,
+    public helpText: NetworkDetailHelpText
   ) {
     this.subnetIps = {};
   }

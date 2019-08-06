@@ -20,6 +20,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -36,7 +37,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="type">Type</label>
-
+          <tooltip [message]="helpText.Type"></tooltip>
           <select
             formControlName="type"
             class="form-control"
@@ -54,7 +55,7 @@
 
         <div class="form-group col-md-6">
           <label for="servicePort">Service Port</label>
-
+          <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
             class="form-control"
             name="servicePort"
@@ -69,7 +70,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="interval">Interval</label>
-
+          <tooltip [message]="helpText.Interval"></tooltip>
           <input
             class="form-control"
             name="interval"
@@ -82,7 +83,7 @@
 
         <div class="form-group col-md-6">
           <label for="timeout">Timeout</label>
-
+          <tooltip [message]="helpText.Timeout"></tooltip>
           <input
             class="form-control"
             name="timeout"

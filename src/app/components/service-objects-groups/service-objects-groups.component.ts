@@ -10,6 +10,7 @@ import { ServiceObjectGroup } from 'src/app/models/service-objects/service-objec
 import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -41,7 +42,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     return !this.dirty;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService) {
+  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
+              public helpText: ServiceObjectsGroupsHelpText) {
     this.serviceObjects = new Array<ServiceObject>();
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
   }
@@ -114,7 +116,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   subscribeToServiceObjectModal() {
     this.serviceObjectModalSubscription =
     this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as ServiceObject;
+      const data = modal.getData() as ServiceObject;
 
       if (data !== undefined) {
         this.saveServiceObject(data);
@@ -127,7 +129,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   subscribeToServiceObjectGroupModal() {
     this.serviceObjectGroupModalSubscription =
     this.ngx.getModal('serviceObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as ServiceObjectGroup;
+      const data = modal.getData() as ServiceObjectGroup;
 
       if (data !== undefined) {
         this.saveServiceObjectGroup(data);

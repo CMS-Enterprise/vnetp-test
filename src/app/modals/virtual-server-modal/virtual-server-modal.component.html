@@ -20,6 +20,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip> 
         <input
           type="text"
           appIsAlphanumeric
@@ -35,6 +36,7 @@
 
       <div class="form-group">
         <label for="type">Type</label>
+        <tooltip [message]="helpText.Type"></tooltip> 
         <select
           name="type"
           formControlName="type"
@@ -53,7 +55,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="sourceAddress">Source Address</label>
-
+          <tooltip [message]="helpText.SourceAddress"></tooltip> 
           <input
             name="sourceAddress"
             formControlName="sourceAddress"
@@ -65,7 +67,7 @@
 
         <div class="form-group col-md-6">
           <label for="destinationAddress">Destination Address</label>
-
+          <tooltip [message]="helpText.DestinationAddress"></tooltip> 
           <input
             name="destinationAddress"
             formControlName="destinationAddress"
@@ -85,7 +87,7 @@
           <label for="servicePort">
             Service Port
           </label>
-
+          <tooltip [message]="helpText.ServicePort"></tooltip> 
           <input
             class="form-control"
             name="servicePort"
@@ -100,7 +102,7 @@
           <label for="pool">
             Pool
           </label>
-
+          <tooltip [message]="helpText.Pool"></tooltip> 
           <select
             class="form-control"
             name="pool"
@@ -119,6 +121,7 @@
       <div class="form-row">
         <div class="form-group col-md-12">
           <label>iRules</label>
+          <tooltip [message]="helpText.IRules"></tooltip> 
           <div class="input-group align-items-center">
             <select
               class="form-control"
