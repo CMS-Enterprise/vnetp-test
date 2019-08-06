@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { NgxSmartModalService} from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRule } from 'src/app/models/loadbalancer/irule';
+import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-irule-modal',
@@ -12,8 +13,8 @@ export class IRuleModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
-  }
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+              public helpText: IRuleModalHelpText) {}
 
   save() {
     this.submitted = true;

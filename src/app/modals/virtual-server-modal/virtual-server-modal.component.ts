@@ -5,6 +5,7 @@ import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
+import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -18,7 +19,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   availableIRules: Array<string>;
   selectedIRules: Array<string>;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
+    public helpText: VirtualServerModalHelpText) {
   }
 
   save() {

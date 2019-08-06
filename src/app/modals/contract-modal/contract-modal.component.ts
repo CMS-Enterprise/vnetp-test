@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { ContractModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-contract-modal',
@@ -20,6 +21,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    public helpText: ContractModalHelpText
   ) {}
 
   save() {

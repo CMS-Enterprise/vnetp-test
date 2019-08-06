@@ -15,7 +15,7 @@ import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-import { HelpTextNetworking } from 'src/app/services/help-text-networking';
+import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-load-balancers',
@@ -66,7 +66,7 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
      private papa: Papa, 
      private hs: HelpersService,
      private toastr: ToastrService,
-     public helpText: HelpTextNetworking
+     public helpText: LoadBalancersHelpText
      ) {
     this.virtualServers = new Array<VirtualServer>();
     this.pools = new Array<Pool>();

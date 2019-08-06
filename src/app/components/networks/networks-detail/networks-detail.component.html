@@ -1,5 +1,5 @@
 <div class="clearfix">
-  <h1>Network: {{ subnet?.name }}</h1>
+  <h1>Subnet: {{ subnet?.name }}</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button
@@ -18,21 +18,21 @@
   <p>
     <strong>Range:</strong> {{ subnet?.range_begin }} - {{ subnet?.range_end }}
   </p>
-  <p><strong>Tier (VRF):</strong> {{ subnet?.vrf_group_name }}</p>
-  <p><strong>Deployed:</strong> {{ getDeployedState(subnet) }}</p>
-  <p><strong>VLAN:</strong> {{ getVlan(subnet) }}</p>
+  <p><strong>Tier (VRF):</strong> {{ subnet?.vrf_group_name }} <tooltip [message]="helpText.Vrf"></tooltip></p>
+  <p><strong>Deployed:</strong> {{ getDeployedState(subnet) }}  <tooltip [message]="helpText.Deployed"></tooltip></p>
+  <p><strong>VLAN:</strong> {{ getVlan(subnet) }}  <tooltip [message]="helpText.VlanId"></tooltip></p>
 </div>
 
 <hr />
 <ul class="nav nav-tabs">
   <li class="nav-item" (click)="navIndex = 0">
     <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
-      IP Addresses
+      IP Addresses <tooltip [message]="helpText.IpAddresses"></tooltip>
     </a>
   </li>
   <li class="nav-item" (click)="navIndex = 1">
     <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
-      Contracts
+      Contracts <tooltip [message]="helpText.Contracts"></tooltip>
     </a>
   </li>
 </ul>
@@ -43,7 +43,6 @@
   ></app-ipaddresses>
 </div>
 
-<!--TODO: Refactor-->
 <div *ngIf="navIndex === 1">
   <h1>Contracts</h1>
 

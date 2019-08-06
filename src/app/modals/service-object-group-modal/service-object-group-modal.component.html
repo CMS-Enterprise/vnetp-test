@@ -20,6 +20,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -36,6 +37,7 @@
       <div class="form-row">
         <div class="form-group col-md-12">
           <label for="type">Type</label>
+          <tooltip [message]="helpText.Type"></tooltip>
           <select
             name="type"
             formControlName="type"
@@ -56,6 +58,7 @@
 
       <div class="form-group">
         <label for="name">Description</label>
+        <tooltip [message]="helpText.Description"></tooltip>
         <input
           type="text"
           formControlName="description"
@@ -67,6 +70,9 @@
           <div *ngIf="f.description.errors.required">Name is required</div>
         </div>
       </div>
+
+      Service Objects
+      <tooltip [message]="helpText.ServiceObjects"></tooltip>
 
       <div class="btn-group-sm pull-right mb-2" role="group">
         <button

@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ValidateIpv4Any, ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
+import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-member-modal',
@@ -15,7 +16,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
   submitted: boolean;
   typeSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, public helpText: PoolMemberModalHelpText) {
   }
 
   save() {
