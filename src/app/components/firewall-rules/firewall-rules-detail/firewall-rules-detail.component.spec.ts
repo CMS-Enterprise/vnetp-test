@@ -33,11 +33,7 @@ describe('FirewallRulesDetailComponent', () => {
       FirewallRuleModalComponent, ImportExportComponent, TooltipComponent ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder,
       { provide: ActivatedRoute, useValue: {
-        snapshot: {
-          paramMap: convertToParamMap({
-            id: '1'
-          })
-        }
+        snapshot: { paramMap: convertToParamMap({ id: '1' }), url: [{path: 'firewall-rules'}, {path: 'external'}]}
     }}]
     })
     .compileComponents();
