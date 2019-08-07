@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -7,13 +7,15 @@ import { Subnet } from 'src/app/models/d42/subnet';
 import { Contract } from 'src/app/models/firewall/contract';
 import { ContractAssignment } from 'src/app/models/firewall/contract-assignment';
 import { NetworkDetailHelpText } from 'src/app/helptext/help-text-networking';
+import { Observable } from 'rxjs';
+import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-networks-detail',
   templateUrl: './networks-detail.component.html',
   styleUrls: ['./networks-detail.component.css']
 })
-export class NetworksDetailComponent implements OnInit {
+export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
   constructor(
     private automationApiService: AutomationApiService,
     private route: ActivatedRoute,
@@ -21,23 +23,25 @@ export class NetworksDetailComponent implements OnInit {
     private hs: HelpersService,
     public ngx: NgxSmartModalService,
     public helpText: NetworkDetailHelpText
-  ) {
-    this.subnetIps = {};
-  }
+  ) {}
 
   navIndex = 0;
   Id = '';
   subnet: Subnet;
-  subnetIps: any;
   deployedState = false;
   deleteSubnetConfirm = '';
+  dirty = false;
 
   newContractAssignment: ContractAssignment;
-
   contractAssignments: Array<ContractAssignment>;
   deletedContractAssignments: Array<ContractAssignment>;
 
   contracts: Array<Contract>;
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
+  }
 
   ngOnInit() {
     this.Id += this.route.snapshot.paramMap.get('id');
@@ -95,8 +99,13 @@ export class NetworksDetailComponent implements OnInit {
       return;
     }
 
+    if (!this.newContractAssignment.ContractName || !this.newContractAssignment.Type) {
+      return;
+    }
+
     this.contractAssignments.push(this.newContractAssignment);
     this.newContractAssignment = new ContractAssignment();
+    this.dirty = true;
   }
 
   deleteContract(contractAssignment: ContractAssignment) {
@@ -109,10 +118,13 @@ export class NetworksDetailComponent implements OnInit {
         this.deletedContractAssignments = new Array<ContractAssignment>();
       }
       this.deletedContractAssignments.push(contractAssignment);
+      this.dirty = true;
     }
   }
 
   saveContractAssignments() {
+    this.dirty = false;
+
     let extra_vars: { [k: string]: any } = {};
 
     extra_vars.subnet = this.subnet;
@@ -124,7 +136,7 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService
       .launchTemplate('save-contract-assignment', body, true)
-      .subscribe(data => {}, error => {});
+      .subscribe(data => {}, error => {this.dirty = true; });
   }
 
   deleteSubnet() {
@@ -138,7 +150,9 @@ export class NetworksDetailComponent implements OnInit {
 
     this.automationApiService
       .launchTemplate('delete-network', body, true)
-      .subscribe(data => {    this.router.navigate(['/networks']);
+      .subscribe(data => {
+        this.dirty = false;
+        this.router.navigate(['/networks']);
       }, error => {});
 
   }

@@ -40,18 +40,18 @@
   <app-ipaddresses
     *ngIf="subnet"
     [subnetId]="subnet?.subnet_id"
+    [showTitle]="false"
   ></app-ipaddresses>
 </div>
 
 <div *ngIf="navIndex === 1">
-  <h1>Contracts</h1>
-
-  <div class="input-group align-items-center col-md-6 pb-3">
+  <div class="input-group align-items-center col-md-6 pt-3 pb-3">
+    <p class="pr-3">Assign Contract:</p>
     <select class="form-control" [(ngModel)]="newContractAssignment.ContractName">
       <option></option>
-      <option *ngFor="let contract of contracts" [ngValue]="contract?.Name">{{
-        contract?.Name
-      }}</option>
+      <option *ngFor="let contract of contracts" [ngValue]="contract?.Name">
+        {{ contract?.Name }}
+      </option>
     </select>
 
     <select class="form-control" [(ngModel)]="newContractAssignment.Type">
@@ -61,6 +61,7 @@
     </select>
 
     <button
+      *ngIf="this.newContractAssignment.ContractName && this.newContractAssignment.Type"
       type="button"
       class="btn btn-sm btn-info"
       (click)="assignContract()"
@@ -70,6 +71,7 @@
     </button>
 
     <button
+    *ngIf="dirty"
     type="button"
     class="btn btn-sm btn-warning"
     (click)="saveContractAssignments()"
