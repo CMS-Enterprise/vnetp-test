@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
@@ -16,6 +16,7 @@ import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-moda
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
+import { Observable, of } from 'rxjs';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -30,7 +31,14 @@ describe('FirewallRulesDetailComponent', () => {
       NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
       declarations: [ FirewallRulesDetailComponent,
       FirewallRuleModalComponent, ImportExportComponent, TooltipComponent ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder]
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder,
+      { provide: ActivatedRoute, useValue: {
+        snapshot: {
+          paramMap: convertToParamMap({
+            id: '1'
+          })
+        }
+    }}]
     })
     .compileComponents();
   }));
