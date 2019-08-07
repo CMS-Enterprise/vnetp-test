@@ -11,12 +11,11 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
-import { Subnet } from 'src/app/models/d42/subnet';
-import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
 import { Observable, of } from 'rxjs';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -51,7 +50,7 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set set subscription and modal mode on create', () => {
-    component.subnet = {name: 'Test', vrf_group_id: 101} as Subnet;
+    component.vrf = {name: 'Test', id: 101} as Vrf;
 
     component.createFirewallRule();
 
@@ -60,7 +59,7 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set subscription, modal mode and index on edit', () => {
-    component.subnet = {name: 'Test', vrf_group_id: 102} as Subnet;
+    component.vrf = {name: 'Test', id: 102} as Vrf;
     component.firewallRules = [{Name: 'TestRule'}] as Array<FirewallRule>;
 
     component.editFirewallRule(component.firewallRules[0]);
