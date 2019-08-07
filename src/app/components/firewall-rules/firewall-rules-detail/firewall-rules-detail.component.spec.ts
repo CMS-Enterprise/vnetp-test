@@ -114,7 +114,7 @@ describe('FirewallRulesDetailComponent', () => {
     component.duplicateFirewallRule(component.firewallRules[2]);
 
     expect(component.firewallRules.length === 4).toBeTruthy();
-    expect(component.firewallRules[2].Name === component.firewallRules[3].Name).toBeTruthy();
+    expect(component.firewallRules[2].Name === component.firewallRules[3].Name + '_copy').toBeTruthy();
   });
 
   it('should delete firewall rule', () => {
