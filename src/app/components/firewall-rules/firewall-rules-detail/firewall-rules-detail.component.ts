@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subnet } from 'src/app/models/d42/subnet';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -27,7 +26,6 @@ import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-obje
 export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';
 
-  subnet: Subnet;
   vrf: Vrf;
 
   dirty: boolean;
@@ -56,7 +54,6 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
               private hs: HelpersService, private ngx: NgxSmartModalService) {}
 
   ngOnInit() {
-    this.subnet = new Subnet();
     this.firewallRules = new Array<FirewallRule>();
     this.deletedFirewallRules = new Array<FirewallRule>();
 
@@ -98,18 +95,6 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   getEntity() {
-
-    if (this.scope === FirewallRuleScope.subnet) {
-    this.automationApiService.getSubnet(this.Id).subscribe(
-      data => {
-        this.subnet = data as Subnet;
-        this.deployedState = this.hs.getBooleanCustomField(this.subnet, 'deployed');
-        this.getEntityCustomFields(this.subnet, 'firewall_rules');
-        this.getSubnetVrf();
-      }
-      );
-    }
-
     if (this.scope === FirewallRuleScope.vrf) {
       this.automationApiService.getVrf(this.Id).subscribe(
         data => {
@@ -118,9 +103,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
           this.getVrfCustomFields(this.vrf);
         }
       );
-    }
-
-    if (this.scope === FirewallRuleScope.external) {
+    } else if (this.scope === FirewallRuleScope.external) {
       this.automationApiService.getVrf(this.Id).subscribe(
         data => {
           this.vrf = data as Vrf;
@@ -139,14 +122,6 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     }
   }
 
-  getSubnetVrf() {
-    this.automationApiService.getVrfs().subscribe(data => {
-      const result = data;
-      const vrf = result.find(v => v.id === this.subnet.vrf_group_id);
-      this.getVrfCustomFields(vrf);
-    }, error => { console.log(error); });
-  }
-
   getVrfCustomFields(vrf: Vrf) {
     const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
 
@@ -162,7 +137,6 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
     }
   }
-
 
   duplicateFirewallRule(rule: FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
@@ -181,12 +155,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     this.firewallRuleModalMode = ModalMode.Create;
 
     const dto = new FirewallRuleModalDto();
-
-    if (this.scope === FirewallRuleScope.subnet) {
-    dto.VrfId = this.subnet.vrf_group_id;
-    } else {
-      dto.VrfId = this.vrf.id;
-    }
+    dto.VrfId = this.vrf.id;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
     this.firewallRuleModalMode = ModalMode.Create;
@@ -199,12 +168,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     const dto = new FirewallRuleModalDto();
     dto.FirewallRule = firewallRule;
-
-    if (this.scope === FirewallRuleScope.subnet) {
-    dto.VrfId = this.subnet.vrf_group_id;
-    } else {
-      dto.VrfId = this.vrf.id;
-    }
+    dto.VrfId = this.vrf.id;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
     this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
@@ -242,12 +206,7 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
     let extra_vars: {[k: string]: any} = {};
 
-    if (this.scope === FirewallRuleScope.subnet) {
-      extra_vars.scope = 'subnet';
-      extra_vars.subnet = this.subnet;
-      extra_vars.vrf_group_name = this.subnet.vrf_group_name;
-      extra_vars.firewall_rules = this.firewallRules;
-    } else if (this.scope === FirewallRuleScope.vrf) {
+    if (this.scope === FirewallRuleScope.vrf) {
       extra_vars.scope = 'vrf';
       extra_vars.vrf = new Vrf();
       extra_vars.vrf.id = this.vrf.id;
@@ -266,19 +225,10 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
 
     const body = { extra_vars };
-
-    if (this.scope === FirewallRuleScope.subnet) {
-    if (this.deployedState) {
-      this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
-        error => { this.dirty = true; });
-    } else {
-      this.automationApiService.launchTemplate('save-acl', body, true).subscribe(data => { },
-        error => { this.dirty = true; });
-    }
-  } else if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
+    if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
     this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
       error => { this.dirty = true; });
-  }
+   }
     this.deletedFirewallRules = new Array<FirewallRule>();
 }
 
