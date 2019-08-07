@@ -63,9 +63,9 @@ describe('FirewallRuleModalComponent', () => {
     expect(log.valid).toBeTruthy();
   });
 
-  it('direction should not be required', () => {
+  it('direction should be required', () => {
     const direction = component.form.controls.direction;
-    expect(direction.valid).toBeTruthy();
+    expect(direction.valid).toBeFalsy();
   });
 
   it('sourceNetworkType should not be required and should have default value ip', () => {
