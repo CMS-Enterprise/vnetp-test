@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('HealthMonitorModalComponent', () => {
   let component: HealthMonitorModalComponent;
@@ -14,7 +15,7 @@ describe('HealthMonitorModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ HealthMonitorModalComponent ],
+      declarations: [ HealthMonitorModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

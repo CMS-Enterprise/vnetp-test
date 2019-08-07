@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { FormsModule } from '@angular/forms';
 import { PapaParseModule } from 'ngx-papaparse';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('NetworksComponent', () => {
   let component: NetworksComponent;
@@ -15,7 +16,7 @@ describe('NetworksComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]), FormsModule, PapaParseModule ],
-      declarations: [ NetworksComponent, ImportExportComponent ],
+      declarations: [ NetworksComponent, ImportExportComponent, TooltipComponent],
       providers: [HttpClientModule, HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();

@@ -5,6 +5,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { PoolMemberModalComponent } from './pool-member-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('PoolMemberModalComponent', () => {
   let component: PoolMemberModalComponent;
@@ -15,7 +16,7 @@ describe('PoolMemberModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ PoolMemberModalComponent ],
+      declarations: [ PoolMemberModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

@@ -6,6 +6,7 @@ import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
@@ -16,7 +17,7 @@ describe('ServiceObjectModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ ServiceObjectModalComponent ],
+      declarations: [ ServiceObjectModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

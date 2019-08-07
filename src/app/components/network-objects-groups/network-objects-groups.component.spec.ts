@@ -13,6 +13,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { ImportExportComponent } from '../import-export/import-export.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -33,7 +34,8 @@ describe('NetworkObjectsGroupsComponent', () => {
         NetworkObjectsGroupsComponent,
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent,
-      ImportExportComponent],
+        TooltipComponent,
+        ImportExportComponent],
       providers: [{provide: NgxSmartModalService, useValue: ngx }, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
     .compileComponents();

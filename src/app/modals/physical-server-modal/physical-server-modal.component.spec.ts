@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { PhysicalServerModalComponent } from './physical-server-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('PhysicalServerModalComponent', () => {
   let component: PhysicalServerModalComponent;
@@ -14,7 +15,7 @@ describe('PhysicalServerModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ PhysicalServerModalComponent ],
+      declarations: [ PhysicalServerModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

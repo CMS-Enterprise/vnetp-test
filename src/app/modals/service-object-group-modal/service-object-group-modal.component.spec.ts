@@ -5,6 +5,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -15,7 +16,7 @@ describe('ServiceObjectGroupModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ ServiceObjectGroupModalComponent ],
+      declarations: [ ServiceObjectGroupModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents();

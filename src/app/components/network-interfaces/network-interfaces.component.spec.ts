@@ -11,6 +11,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { HttpClientModule, HttpHandler, HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { ImportExportComponent } from '../import-export/import-export.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('NetworkInterfacesComponent', () => {
   let component: NetworkInterfacesComponent;
@@ -30,7 +31,8 @@ describe('NetworkInterfacesComponent', () => {
       declarations: [
 NetworkInterfacesComponent,
 LogicalInterfaceModalComponent,
-ImportExportComponent
+ImportExportComponent,
+TooltipComponent
       ],
       providers: [
         NgxSmartModalService,

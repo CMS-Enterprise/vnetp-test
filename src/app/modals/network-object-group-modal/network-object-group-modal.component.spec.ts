@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
@@ -16,7 +17,7 @@ describe('NetworkObjectGroupModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ NetworkObjectGroupModalComponent ],
+      declarations: [ NetworkObjectGroupModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents();

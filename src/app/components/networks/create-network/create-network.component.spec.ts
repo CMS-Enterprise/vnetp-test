@@ -9,6 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from '../../tooltip/tooltip.component';
 
 describe('CreateNetworkComponent', () => {
   let component: CreateNetworkComponent;
@@ -18,7 +19,7 @@ describe('CreateNetworkComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxMaskModule, RouterTestingModule.withRoutes([]), ToastrModule.forRoot(), NgxMaskModule.forRoot()],
-      declarations: [ CreateNetworkComponent ],
+      declarations: [ CreateNetworkComponent, TooltipComponent],
       providers: [HttpClient, HttpHandler, CookieService]
     })
     .compileComponents();

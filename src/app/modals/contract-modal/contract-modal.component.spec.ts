@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ContractModalComponent } from './contract-modal.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
@@ -14,7 +15,7 @@ describe('ContractModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
-      declarations: [ ContractModalComponent ],
+      declarations: [ ContractModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

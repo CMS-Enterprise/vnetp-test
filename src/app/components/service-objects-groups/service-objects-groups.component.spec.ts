@@ -14,6 +14,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ImportExportComponent } from '../import-export/import-export.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -34,7 +35,8 @@ describe('ServicesObjectsGroupsComponent', () => {
       ServiceObjectsGroupsComponent,
       ServiceObjectModalComponent,
       ServiceObjectGroupModalComponent,
-      ImportExportComponent
+      ImportExportComponent,
+      TooltipComponent
     ],
      providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
     })
