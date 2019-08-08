@@ -8,7 +8,7 @@ import { ServiceObject } from '../models/service-objects/service-object';
 import { ServiceObjectGroup } from '../models/service-objects/service-object-group';
 import { UniqueNameObject } from '../models/interfaces/unique-name-object.interface';
 
-describe('FirewallRuleService', () => {
+describe('ObjectService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
