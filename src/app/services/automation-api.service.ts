@@ -8,8 +8,8 @@ import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { CustomerResponse } from '../models/d42/customer';
 import { SolarisImage } from 'src/app/models/solaris/solaris-image';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -95,9 +95,6 @@ export class AutomationApiService {
   getSolarisImageDetail(id: any){
     return this.http.get<SolarisImage[]>(environment.apiBase + `/api/1.0/parts/?device_id=${id}`);
   }
-  // getCustomers() {
-  //   return this.http.get<CustomerResponse>(environment.apiBase + `/api/1.0/customers/`);
-  // }
 
   getVrfs() {
     return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/');
