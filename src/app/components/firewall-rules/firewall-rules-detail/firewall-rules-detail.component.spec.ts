@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -14,7 +14,6 @@ import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
-import { Observable, of } from 'rxjs';
 import { Vrf } from 'src/app/models/d42/vrf';
 
 describe('FirewallRulesDetailComponent', () => {
@@ -27,10 +26,10 @@ describe('FirewallRulesDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
-      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
+      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [ FirewallRulesDetailComponent,
       FirewallRuleModalComponent, ImportExportComponent, TooltipComponent ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder,
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder,
       { provide: ActivatedRoute, useValue: {
         snapshot: { paramMap: convertToParamMap({ id: '1' }), url: [{path: 'firewall-rules'}, {path: 'external'}]}
     }}]

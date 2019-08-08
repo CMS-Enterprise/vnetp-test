@@ -6,6 +6,9 @@ import { ContractModalComponent } from 'src/app/modals/contract-modal/contract-m
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('IntraVrfRulesComponent', () => {
   let component: IntraVrfRulesComponent;
@@ -15,13 +18,32 @@ describe('IntraVrfRulesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, NgxSmartModalModule,      FormsModule,
+      imports: [
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        FormsModule,
         ReactiveFormsModule,
+        HttpClientTestingModule
       ],
-      declarations: [ IntraVrfRulesComponent, ContractModalComponent, TooltipComponent ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx}]
-    })
-    .compileComponents();
+      declarations: [
+        IntraVrfRulesComponent,
+        ContractModalComponent,
+        TooltipComponent
+      ],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({ id: '1' }),
+              url: [{ path: 'firewall-rules' }, { path: 'intravrf' }]
+            }
+          }
+        },
+        CookieService
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
