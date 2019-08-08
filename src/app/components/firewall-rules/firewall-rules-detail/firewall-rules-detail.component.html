@@ -26,9 +26,7 @@
 
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ subnet.name }}-{{
-          subnet.vrf_group_name
-        }}"
+        exportFileName="firewallRules-{{ vrf?.name }}-{{ scope == 0 ? 'external' : 'intervrf' }}"
         (import)="insertFirewallRules($event)"
         disableExport="true"
       ></app-import-export>
@@ -169,9 +167,7 @@
     <div class="btn-group-sm" role="group">
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ subnet.name }}-{{
-          subnet.vrf_group_name
-        }}"
+        exportFileName="firewallRules-{{ vrf?.name }}-{{ scope == 0 ? 'external' : 'intervrf' }}"
         (import)="insertFirewallRules($event)"
         disableImport="true"
       ></app-import-export>
