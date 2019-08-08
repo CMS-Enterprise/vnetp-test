@@ -6,7 +6,6 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { PapaParseModule } from 'ngx-papaparse';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { HttpClientModule, HttpHandler, HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
@@ -15,6 +14,7 @@ import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -29,7 +29,8 @@ describe('ServicesObjectsGroupsComponent', () => {
         NgxMaskModule.forRoot(),
         PapaParseModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientTestingModule
       ],
      declarations: [
       ServiceObjectsGroupsComponent,
@@ -38,7 +39,7 @@ describe('ServicesObjectsGroupsComponent', () => {
       ImportExportComponent,
       TooltipComponent
     ],
-     providers: [{ provide: NgxSmartModalService, useValue: ngx}, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
+     providers: [{ provide: NgxSmartModalService, useValue: ngx}, CookieService, FormBuilder],
     })
     .compileComponents();
   }));
@@ -47,6 +48,10 @@ describe('ServicesObjectsGroupsComponent', () => {
     fixture = TestBed.createComponent(ServiceObjectsGroupsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

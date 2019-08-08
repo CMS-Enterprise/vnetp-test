@@ -6,9 +6,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClient } from 'selenium-webdriver/http';
-import { HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CdomDetailComponent', () => {
   let component: CdomDetailComponent;
@@ -16,17 +15,26 @@ describe('CdomDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxSmartModalModule],
-      declarations: [ CdomDetailComponent, LdomListComponent ],
-      providers: [HttpClient, HttpHandler, CookieService, NgxSmartModalService]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        RouterTestingModule.withRoutes([]),
+        NgxSmartModalModule,
+        HttpClientTestingModule
+      ],
+      declarations: [CdomDetailComponent, LdomListComponent],
+      providers: [CookieService, NgxSmartModalService]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CdomDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   // it('should create', () => {

@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BreadcrumbComponent } from './breadcrumb.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
@@ -12,11 +12,10 @@ describe('BreadcrumbComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule.withRoutes([]) ],
-      declarations: [ BreadcrumbComponent ],
-      providers: [HttpClient, HttpHandler, CookieService]
-    })
-    .compileComponents();
+      imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule],
+      declarations: [BreadcrumbComponent],
+      providers: [CookieService]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -24,6 +23,10 @@ describe('BreadcrumbComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

@@ -1,13 +1,18 @@
 // FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
-import { HttpHandler, HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -17,14 +22,27 @@ describe('FirewallRuleModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ FirewallRuleModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, HttpClient, HttpHandler, CookieService]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule.forRoot(),
+        HttpClientTestingModule
+      ],
+      declarations: [FirewallRuleModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+        CookieService
+      ]
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(FirewallRuleModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(FirewallRuleModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -33,27 +51,31 @@ describe('FirewallRuleModalComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
+
   // Initial Form State
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it ('name should be required', () =>  {
+  it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
   });
 
-  it ('description should not be required', () =>  {
+  it('description should not be required', () => {
     const description = component.form.controls.description;
     expect(description.valid).toBeTruthy();
   });
 
-  it ('action should be required', () =>  {
+  it('action should be required', () => {
     const action = component.form.controls.action;
     expect(action.valid).toBeFalsy();
   });
 
-  it ('protocol should be required', () =>  {
+  it('protocol should be required', () => {
     const protocol = component.form.controls.protocol;
     expect(protocol.valid).toBeFalsy();
   });
@@ -74,7 +96,7 @@ describe('FirewallRuleModalComponent', () => {
     expect(sourceNetworkType.value === 'ip').toBeTruthy();
   });
 
-  it ('sourceIp should be required', () =>  {
+  it('sourceIp should be required', () => {
     const sourceIp = component.form.controls.sourceIp;
     expect(sourceIp.valid).toBeFalsy();
   });
@@ -85,7 +107,8 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('sourceNetworkObjectGroup should not be required', () => {
-    const sourceNetworkObjectGroup = component.form.controls.sourceNetworkObjectGroup;
+    const sourceNetworkObjectGroup =
+      component.form.controls.sourceNetworkObjectGroup;
     expect(sourceNetworkObjectGroup.valid).toBeTruthy();
   });
 
@@ -95,23 +118,25 @@ describe('FirewallRuleModalComponent', () => {
     expect(sourceServiceType.value === 'port').toBeTruthy();
   });
 
-  it ('sourcePorts should be required', () =>  {
+  it('sourcePorts should be required', () => {
     const sourcePorts = component.form.controls.sourcePorts;
     expect(sourcePorts.valid).toBeFalsy();
   });
 
-  it ('sourceServiceObject should not required', () =>  {
+  it('sourceServiceObject should not required', () => {
     const sourceServiceObject = component.form.controls.sourceServiceObject;
     expect(sourceServiceObject.valid).toBeTruthy();
   });
 
-  it ('sourceServiceObjectGroup should not be required', () =>  {
-    const sourceServiceObjectGroup = component.form.controls.sourceServiceObjectGroup;
+  it('sourceServiceObjectGroup should not be required', () => {
+    const sourceServiceObjectGroup =
+      component.form.controls.sourceServiceObjectGroup;
     expect(sourceServiceObjectGroup.valid).toBeTruthy();
   });
 
   it('destinationNetworkType should not be required and should have default value ip', () => {
-    const destinationNetworkType = component.form.controls.destinationNetworkType;
+    const destinationNetworkType =
+      component.form.controls.destinationNetworkType;
     expect(destinationNetworkType.valid).toBeTruthy();
     expect(destinationNetworkType.value === 'ip').toBeTruthy();
   });
@@ -122,33 +147,38 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('destinationNetworkObject should not be required', () => {
-    const destinationNetworkObject = component.form.controls.destinationNetworkObject;
+    const destinationNetworkObject =
+      component.form.controls.destinationNetworkObject;
     expect(destinationNetworkObject.valid).toBeTruthy();
   });
 
   it('destinationNetworkObjectGroup should not be required', () => {
-    const destinationNetworkObjectGroup = component.form.controls.destinationNetworkObjectGroup;
+    const destinationNetworkObjectGroup =
+      component.form.controls.destinationNetworkObjectGroup;
     expect(destinationNetworkObjectGroup.valid).toBeTruthy();
   });
 
   it('destinationServiceType should not be required and should have default value port', () => {
-    const destinationServiceType = component.form.controls.destinationServiceType;
+    const destinationServiceType =
+      component.form.controls.destinationServiceType;
     expect(destinationServiceType.valid).toBeTruthy();
     expect(destinationServiceType.value === 'port').toBeTruthy();
   });
 
-  it ('destinationPorts should be required', () =>  {
+  it('destinationPorts should be required', () => {
     const destinationPorts = component.form.controls.destinationPorts;
     expect(destinationPorts.valid).toBeFalsy();
   });
 
-  it ('destinationServiceObject should not required', () =>  {
-    const destinationServiceObject = component.form.controls.destinationServiceObject;
+  it('destinationServiceObject should not required', () => {
+    const destinationServiceObject =
+      component.form.controls.destinationServiceObject;
     expect(destinationServiceObject.valid).toBeTruthy();
   });
 
-  it ('destinationServiceObjectGroup should not be required', () =>  {
-    const destinationServiceObjectGroup = component.form.controls.destinationServiceObjectGroup;
+  it('destinationServiceObjectGroup should not be required', () => {
+    const destinationServiceObjectGroup =
+      component.form.controls.destinationServiceObjectGroup;
     expect(destinationServiceObjectGroup.valid).toBeTruthy();
   });
 
@@ -175,74 +205,85 @@ describe('FirewallRuleModalComponent', () => {
   it('sourceNetworkObject should be required if source network type is objectGroup', () => {
     const sourceNetworkType = component.form.controls.sourceNetworkType;
     sourceNetworkType.setValue('objectGroup');
-    const sourceServiceObjectGroup = component.form.controls.sourceNetworkObjectGroup;
+    const sourceServiceObjectGroup =
+      component.form.controls.sourceNetworkObjectGroup;
     expect(sourceServiceObjectGroup.valid).toBeFalsy();
   });
 
-    // Source Service Type
+  // Source Service Type
   it('sourcePort should be required if source service type is port', () => {
-      const sourceServiceType = component.form.controls.sourceServiceType;
-      sourceServiceType.setValue('port');
-      const sourcePorts = component.form.controls.sourcePorts;
-      expect(sourcePorts.valid).toBeFalsy();
-    });
+    const sourceServiceType = component.form.controls.sourceServiceType;
+    sourceServiceType.setValue('port');
+    const sourcePorts = component.form.controls.sourcePorts;
+    expect(sourcePorts.valid).toBeFalsy();
+  });
 
   it('sourceServiceObject should be required if source service type is object', () => {
-      const sourceServiceType = component.form.controls.sourceServiceType;
-      sourceServiceType.setValue('object');
-      const sourceServiceObject = component.form.controls.sourceServiceObject;
-      expect(sourceServiceObject.valid).toBeFalsy();
-    });
+    const sourceServiceType = component.form.controls.sourceServiceType;
+    sourceServiceType.setValue('object');
+    const sourceServiceObject = component.form.controls.sourceServiceObject;
+    expect(sourceServiceObject.valid).toBeFalsy();
+  });
 
   it('sourceServiceObjectGroup should be required if source service type is objectGroup', () => {
-      const sourceServiceType = component.form.controls.sourceServiceType;
-      sourceServiceType.setValue('objectGroup');
-      const sourceServiceObjectGroup = component.form.controls.sourceServiceObjectGroup;
-      expect(sourceServiceObjectGroup.valid).toBeFalsy();
-    });
+    const sourceServiceType = component.form.controls.sourceServiceType;
+    sourceServiceType.setValue('objectGroup');
+    const sourceServiceObjectGroup =
+      component.form.controls.sourceServiceObjectGroup;
+    expect(sourceServiceObjectGroup.valid).toBeFalsy();
+  });
 
-      // Destination Network Type
+  // Destination Network Type
   it('destinationIp should be required if destination network type is ip', () => {
-    const destinationNetworkType = component.form.controls.destinationNetworkType;
+    const destinationNetworkType =
+      component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('ip');
     const destinationIp = component.form.controls.destinationIp;
     expect(destinationIp.valid).toBeFalsy();
   });
 
   it('destinationNetworkObject should be required if destination network type is object', () => {
-    const destinationNetworkType = component.form.controls.destinationNetworkType;
+    const destinationNetworkType =
+      component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('object');
-    const destinationServiceObject = component.form.controls.destinationNetworkObject;
+    const destinationServiceObject =
+      component.form.controls.destinationNetworkObject;
     expect(destinationServiceObject.valid).toBeFalsy();
   });
 
   it('destinationNetworkObject should be required if destination network type is objectGroup', () => {
-    const destinationNetworkType = component.form.controls.destinationNetworkType;
+    const destinationNetworkType =
+      component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('objectGroup');
-    const destinationServiceObjectGroup = component.form.controls.destinationNetworkObjectGroup;
+    const destinationServiceObjectGroup =
+      component.form.controls.destinationNetworkObjectGroup;
     expect(destinationServiceObjectGroup.valid).toBeFalsy();
   });
 
-    // Destination Service Type
+  // Destination Service Type
   it('destinationPort should be required if destination service type is port', () => {
-      const destinationServiceType = component.form.controls.destinationServiceType;
-      destinationServiceType.setValue('port');
-      const destinationPorts = component.form.controls.destinationPorts;
-      expect(destinationPorts.valid).toBeFalsy();
-    });
+    const destinationServiceType =
+      component.form.controls.destinationServiceType;
+    destinationServiceType.setValue('port');
+    const destinationPorts = component.form.controls.destinationPorts;
+    expect(destinationPorts.valid).toBeFalsy();
+  });
 
   it('destinationServiceObject should be required if destination service type is object', () => {
-      const destinationServiceType = component.form.controls.destinationServiceType;
-      destinationServiceType.setValue('object');
-      const destinationServiceObject = component.form.controls.destinationServiceObject;
-      expect(destinationServiceObject.valid).toBeFalsy();
-    });
+    const destinationServiceType =
+      component.form.controls.destinationServiceType;
+    destinationServiceType.setValue('object');
+    const destinationServiceObject =
+      component.form.controls.destinationServiceObject;
+    expect(destinationServiceObject.valid).toBeFalsy();
+  });
 
   it('destinationServiceObjectGroup should be required if destination service type is objectGroup', () => {
-      const destinationServiceType = component.form.controls.destinationServiceType;
-      destinationServiceType.setValue('objectGroup');
-      const destinationServiceObjectGroup = component.form.controls.destinationServiceObjectGroup;
-      expect(destinationServiceObjectGroup.valid).toBeFalsy();
-    });
-
+    const destinationServiceType =
+      component.form.controls.destinationServiceType;
+    destinationServiceType.setValue('objectGroup');
+    const destinationServiceObjectGroup =
+      component.form.controls.destinationServiceObjectGroup;
+    expect(destinationServiceObjectGroup.valid).toBeFalsy();
+  });
 });
