@@ -25,20 +25,13 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
   Id: string;
   vrf: Vrf;
-
   contracts: Array<Contract>;
-
   deletedContracts: Array<Contract>;
   deletedFilterEntries: Array<FilterEntry>;
-
   editContractIndex: number;
-
   contractModalMode: ModalMode;
-
   contractModalSubscription: Subscription;
-
   dirty: boolean;
-
 
   getVrf() {
     this.api.getVrf(this.Id).subscribe(data => {
@@ -89,7 +82,6 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
     this.dirty = true;
   }
 
-
   subscribeToContractModal() {
     this.contractModalSubscription =
     this.ngxSm.getModal('contractModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
@@ -101,11 +93,6 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
       this.ngxSm.resetModalData('contractModal');
       this.contractModalSubscription.unsubscribe();
     });
-  }
-
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
   }
 
   private unsubAll() {
@@ -123,7 +110,6 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
  saveAll() {
     this.dirty = false;
-
     let extra_vars: {[k: string]: any} = {};
 
     extra_vars.vrf_id = this.vrf.id;
@@ -140,6 +126,11 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
   refresh() {
     this.getVrf();
+  }
+
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !this.dirty;
   }
 
   ngOnInit() {

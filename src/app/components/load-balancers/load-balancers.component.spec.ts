@@ -9,13 +9,13 @@ import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { PapaParseModule } from 'ngx-papaparse';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -30,7 +30,8 @@ describe('LoadBalancersComponent', () => {
         PapaParseModule,
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
-        AngularFontAwesomeModule
+        AngularFontAwesomeModule,
+        HttpClientTestingModule
       ],
       declarations: [
         LoadBalancersComponent,
@@ -44,9 +45,6 @@ describe('LoadBalancersComponent', () => {
       ],
       providers: [
         NgxSmartModalService,
-        HttpClientModule,
-        HttpClient,
-        HttpHandler,
         CookieService,
         FormBuilder
       ]

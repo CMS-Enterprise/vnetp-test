@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-
 import { SolarisService } from './solaris-service.service';
-import { HttpHandler, HttpClient } from '@angular/common/http';
 
-describe('SolarisServiceService', () => {
+describe('SolarisService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    providers: [HttpClient, HttpHandler]
+    providers: [ SolarisService ]
   }));
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
 
   // it('should be created', () => {
   //   const service: SolarisService = TestBed.get(SolarisService);

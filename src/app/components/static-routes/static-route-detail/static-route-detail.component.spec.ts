@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -9,6 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaskModule } from 'ngx-mask';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { PapaParseModule } from 'ngx-papaparse';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
@@ -17,11 +17,17 @@ describe('StaticRouteDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxMaskModule.forRoot(), PapaParseModule ],
-      declarations: [ StaticRouteDetailComponent, ImportExportComponent ],
-      providers: [HttpClient, HttpHandler, CookieService]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        RouterTestingModule.withRoutes([]),
+        NgxMaskModule.forRoot(),
+        PapaParseModule,
+        HttpClientTestingModule
+      ],
+      declarations: [StaticRouteDetailComponent, ImportExportComponent],
+      providers: [CookieService]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -29,6 +35,10 @@ describe('StaticRouteDetailComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

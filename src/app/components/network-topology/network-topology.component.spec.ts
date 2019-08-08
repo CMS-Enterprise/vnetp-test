@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NetworkTopologyComponent } from './network-topology.component';
 import { D3GraphComponent } from '../d3-graph/d3-graph.component';
-import { HttpClient } from 'selenium-webdriver/http';
-import { HttpHandler } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
+import { RouterTestingModule } from '@angular/router/testing';
+
 
 describe('NetworkTopologyComponent', () => {
   let component: NetworkTopologyComponent;
@@ -12,8 +12,9 @@ describe('NetworkTopologyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       declarations: [ NetworkTopologyComponent, D3GraphComponent],
-      providers: [HttpClient, HttpHandler, CookieService]
+      providers: [ CookieService ]
     })
     .compileComponents();
   }));

@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
@@ -14,7 +15,7 @@ describe('VirtualServerModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
-      declarations: [ VirtualServerModalComponent ],
+      declarations: [ VirtualServerModalComponent, TooltipComponent],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

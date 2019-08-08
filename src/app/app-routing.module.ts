@@ -38,7 +38,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
   {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Create Subnet'}},
-  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnet'}},
+  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Subnet'}},
   {path: 'network-interfaces', component: NetworkInterfacesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Interfaces'}},
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},

@@ -18,7 +18,7 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
               private hs: HelpersService) {}
 
   Id = '';
-  vrf: Vrf;
+  vrf = new Vrf();
   staticRoutes: Array<StaticRoute>;
   deletedStaticRoutes: Array<StaticRoute>;
   dirty: boolean;

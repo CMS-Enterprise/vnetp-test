@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LogicalInterfaceModalComponent } from './logical-interface-modal.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('LogicalInterfaceModalComponent', () => {
   let component: LogicalInterfaceModalComponent;
@@ -14,7 +15,7 @@ describe('LogicalInterfaceModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
-      declarations: [ LogicalInterfaceModalComponent ],
+      declarations: [ LogicalInterfaceModalComponent, TooltipComponent ],
       providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
     })
     .compileComponents().then(() => {

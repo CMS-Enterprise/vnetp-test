@@ -10,6 +10,9 @@ export class IpaddressesComponent implements OnInit {
   @Input()
   subnetId: number;
 
+  @Input()
+  showTitle: boolean = true;
+
   // TODO: Create datatype for IP.
   ipResult: any;
 

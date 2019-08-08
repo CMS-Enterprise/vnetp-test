@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
@@ -13,6 +12,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { ImportExportComponent } from '../import-export/import-export.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -27,14 +28,16 @@ describe('NetworkObjectsGroupsComponent', () => {
          NgxMaskModule,
          PapaParseModule,
          FormsModule,
-         ReactiveFormsModule
+         ReactiveFormsModule,
+         HttpClientTestingModule
        ],
       declarations: [
         NetworkObjectsGroupsComponent,
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent,
-      ImportExportComponent],
-      providers: [{provide: NgxSmartModalService, useValue: ngx }, HttpClientModule, HttpClient, HttpHandler, CookieService, FormBuilder],
+        TooltipComponent,
+        ImportExportComponent],
+      providers: [{provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     })
     .compileComponents();
   }));
@@ -43,6 +46,10 @@ describe('NetworkObjectsGroupsComponent', () => {
     fixture = TestBed.createComponent(NetworkObjectsGroupsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

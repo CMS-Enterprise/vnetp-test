@@ -1,21 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
-import { Subnet } from 'src/app/models/d42/subnet';
-import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
+import { Vrf } from 'src/app/models/d42/vrf';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -27,10 +26,13 @@ describe('FirewallRulesDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
-      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule],
+      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [ FirewallRulesDetailComponent,
       FirewallRuleModalComponent, ImportExportComponent, TooltipComponent ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, HttpClient, HttpHandler, CookieService, FormBuilder]
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder,
+      { provide: ActivatedRoute, useValue: {
+        snapshot: { paramMap: convertToParamMap({ id: '1' }), url: [{path: 'firewall-rules'}, {path: 'external'}]}
+    }}]
     })
     .compileComponents();
   }));
@@ -47,7 +49,7 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set set subscription and modal mode on create', () => {
-    component.subnet = {name: 'Test', vrf_group_id: 101} as Subnet;
+    component.vrf = {name: 'Test', id: 101} as Vrf;
 
     component.createFirewallRule();
 
@@ -56,7 +58,7 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set subscription, modal mode and index on edit', () => {
-    component.subnet = {name: 'Test', vrf_group_id: 102} as Subnet;
+    component.vrf = {name: 'Test', id: 102} as Vrf;
     component.firewallRules = [{Name: 'TestRule'}] as Array<FirewallRule>;
 
     component.editFirewallRule(component.firewallRules[0]);
@@ -114,7 +116,7 @@ describe('FirewallRulesDetailComponent', () => {
     component.duplicateFirewallRule(component.firewallRules[2]);
 
     expect(component.firewallRules.length === 4).toBeTruthy();
-    expect(component.firewallRules[2].Name === component.firewallRules[3].Name).toBeTruthy();
+    expect(component.firewallRules[2].Name === component.firewallRules[3].Name + '_copy').toBeTruthy();
   });
 
   it('should delete firewall rule', () => {

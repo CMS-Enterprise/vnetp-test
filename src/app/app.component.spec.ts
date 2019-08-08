@@ -13,6 +13,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -33,7 +34,8 @@ describe('AppComponent', () => {
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent,
         ServiceObjectModalComponent,
-        ServiceObjectGroupModalComponent
+        ServiceObjectGroupModalComponent,
+        TooltipComponent
       ],
       providers: [CookieService, NgxSmartModalService, FormBuilder]
     }).compileComponents();

@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { StaticRoutesComponent } from './static-routes.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('StaticRoutesComponent', () => {
   let component: StaticRoutesComponent;
@@ -11,9 +11,9 @@ describe('StaticRoutesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports : [RouterTestingModule, AngularFontAwesomeModule],
+      imports : [RouterTestingModule, HttpClientTestingModule, AngularFontAwesomeModule],
       declarations: [ StaticRoutesComponent ],
-      providers: [HttpClient, HttpHandler, CookieService]
+      providers: [CookieService]
     })
     .compileComponents();
   }));
@@ -22,6 +22,10 @@ describe('StaticRoutesComponent', () => {
     fixture = TestBed.createComponent(StaticRoutesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

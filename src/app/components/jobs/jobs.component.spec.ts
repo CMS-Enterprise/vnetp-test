@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { JobsComponent } from './jobs.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('JobsComponent', () => {
   let component: JobsComponent;
@@ -10,8 +9,9 @@ describe('JobsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [ JobsComponent ],
-      providers: [HttpClient, HttpHandler, CookieService]
+      providers: [CookieService]
     })
     .compileComponents();
   }));
