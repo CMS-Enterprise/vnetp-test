@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { D3PieChartComponent } from '../d3-pie-chart/d3-pie-chart.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -18,11 +20,11 @@ describe('LoginComponent', () => {
       imports: [
         AngularFontAwesomeModule,
         FormsModule,
-        RouterTestingModule.withRoutes([]),
+        RouterTestingModule.withRoutes([ {path: 'dashboard', component: DashboardComponent}]),
         ToastrModule.forRoot(),
         HttpClientTestingModule
       ],
-      declarations: [LoginComponent],
+      declarations: [LoginComponent, DashboardComponent, D3PieChartComponent],
       providers: [CookieService]
     }).compileComponents();
   }));
