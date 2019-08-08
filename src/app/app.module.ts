@@ -30,7 +30,6 @@ import { NetworksDetailComponent } from './components/networks/networks-detail/n
 import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
@@ -83,7 +82,6 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
     IpaddressesComponent,
     NotfoundComponent,
     BreadcrumbComponent,
-    DevicesComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
     SpecialCharacterDirective,

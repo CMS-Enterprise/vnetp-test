@@ -11,7 +11,6 @@ import { NetworksDetailComponent } from './components/networks/networks-detail/n
 import { AuthGuard } from './guards/auth.guard';
 import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
-import { DevicesComponent } from './components/devices/devices.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { SolarisComponent } from './components/solaris/solaris.component';
@@ -53,7 +52,6 @@ const routes: Routes = [
   {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Load Balancers'}},
   {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
   {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Edit Static Route'}},
-  {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Devices'}},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
   {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
