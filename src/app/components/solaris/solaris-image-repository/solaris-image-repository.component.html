@@ -34,7 +34,7 @@
       </td>
       <td class="item-actions">
         <fa name="pencil" (click)="editImage(solarisImage)"></fa>
-        <fa name="trash" (click)="deleteImage(solarisImage)"></fa>
+        <fa name="trash" (dblclick)="deleteImage(solarisImage)"></fa>
       </td>
     </tr>
     <tr *ngIf="!SolarisImages?.length" class="text-center">
