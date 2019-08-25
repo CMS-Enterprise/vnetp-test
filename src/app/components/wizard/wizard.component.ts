@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { WizardSection, WizardStatus } from 'src/app/models/wizard/wizard-data';
 
 @Component({
   selector: 'app-wizard',
@@ -6,12 +7,56 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./wizard.component.css']
 })
 export class WizardComponent implements OnInit {
-
   @Input() showWizard: boolean;
 
-  constructor() { }
+  WizardSections = new Array<WizardSection>();
 
-  ngOnInit() {
+  constructor() {}
+
+  getFaName(status: WizardStatus){
+    switch (status) {
+      case WizardStatus.Down:
+        return 'times';
+      default:
+        return 'check';
+    }
   }
 
+  ngOnInit() {
+    this.WizardSections = [
+      {
+        Name: 'Prepare',
+        Status: WizardStatus.Down,
+        Categories: [
+          {
+            Name: 'Networking',
+            Status: WizardStatus.Warning,
+            Subcategories: [
+              {
+                Name: 'Subnets',
+                Status: WizardStatus.Warning,
+                Items: [
+                  {
+                    Name: 'Subnet 1',
+                    Status: WizardStatus.Warning
+                  }
+                ]
+              },
+            ]
+          }
+        ]
+      },
+      {
+      Name: 'Test',
+      Status: WizardStatus.Down,
+      Categories: []
+      },
+      {
+        Name: 'Deploy',
+        Status: WizardStatus.Down,
+        Categories: []
+      }
+    ];
+    console.log(this.WizardSections);
+  }
 }

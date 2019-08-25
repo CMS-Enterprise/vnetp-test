@@ -1,68 +1,87 @@
 <div *ngIf="showWizard" class="form-row p-3">
+  <div class="form-group col-md-12">
+    <div class="pull-right">
+      <fa name="times" size="2x"></fa>
+    </div>
+  </div>
+
+  <div class="form-group col-md-12">
+    <label>Wizard Progress</label>
+    <div class="progress">
+      <div
+        class="progress-bar bg-danger"
+        role="progressbar"
+        style="width: 30%"
+        aria-valuenow="30"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+    </div>
+  </div>
+
   <div class="form-group col-md-4">
-    <h2>Prepare <fa name="circle" style="color:darkorange"></fa></h2>
-
+    <h2 style="color:darkorange">Prepare <fa name="exclamation"></fa></h2>
     <div>
-      <h4 class="p1-1">
+      <h4 style="color:darkorange" class="p1-1">
         <fa name="angle-down"></fa>Networking
-        <fa name="circle" style="color:darkorange"></fa>
+        <fa name="exclamation" style="color:darkorange"></fa>
       </h4>
       <div>
-        <h5 class="pl-2">
+        <h5 style="color:green" class="pl-2">
           <fa name="angle-down"></fa>Subnets
-          <fa name="circle" style="color:green"></fa>
+          <fa name="check"></fa>
         </h5>
-        <h6 class="pl-3">
+        <h6 style="color:green" class="pl-3">
           <fa name="angle-right"></fa>Example 1
-          <fa name="circle" style="color:green"></fa>
+          <fa name="check"></fa>
         </h6>
-        <h6 class="pl-3">
+        <h6 style="color:green" class="pl-3">
           <fa name="angle-right"></fa>Example 2
-          <fa name="circle" style="color:green"></fa>
+          <fa name="check"></fa>
         </h6>
-        <h6 class="pl-3">
+        <h6 style="color:green" class="pl-3">
           <fa name="angle-right"></fa>Example 3
-          <fa name="circle" style="color:green"></fa>
+          <fa name="check"></fa>
         </h6>
       </div>
       <div>
-        <h5 class="pl-2">
+        <h5 style="color:green" class="pl-2">
           <fa name="angle-right"></fa>Load Balancers
-          <fa name="circle" style="color:green"></fa>
+          <fa name="check"></fa>
         </h5>
       </div>
       <div>
-        <h5 class="pl-2">
+        <h5 class="pl-2" style="color:darkorange">
           <fa name="angle-right"></fa>Firewall Rules
-          <fa name="circle" style="color:darkorange"></fa>
+          <fa name="exclamation"></fa>
         </h5>
       </div>
     </div>
     <div>
-        <h4 class="pl-1">
-          <fa name="angle-right"></fa> Data
-          <fa name="circle" style="color:red"></fa>
-        </h4>
-      </div>
-  </div>
-
-  <div class="form-group col-md-4 text-center">
-    <h2>Test <fa name="circle" style="color:red"></fa></h2>
-    <div>
-      <h4 class="p1-1">
-        <fa name="angle-right"></fa>Automated Tests
-        <fa name="circle" style="color:red"></fa>
+      <h4 class="pl-1" style="color:red">
+        <fa name="angle-right"></fa> Data
+        <fa name="times"></fa>
       </h4>
     </div>
   </div>
 
   <div class="form-group col-md-4 text-center">
-    <h2>Deploy <fa name="circle" style="color:red"></fa></h2>
+    <h2 style="color:red">Test <fa name="times"></fa></h2>
     <div>
-        <h4 class="p1-1">
-          <fa name="angle-right"></fa>Deployment Readiness
-          <fa name="circle" style="color:red"></fa>
-        </h4>
-      </div>
+      <h4 class="p1-1" style="color:red">
+        <fa name="angle-right"></fa>Automated Tests
+        <fa name="times"></fa>
+      </h4>
+    </div>
+  </div>
+
+  <div class="form-group col-md-4 text-center">
+    <h2 style="color:red">Deploy <fa name="times" style="color:red"></fa></h2>
+    <div>
+      <h4 style="color:red" class="p1-1">
+        <fa name="angle-right"></fa>Deployment Readiness
+        <fa name="times"></fa>
+      </h4>
+    </div>
   </div>
 </div>
