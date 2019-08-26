@@ -10,7 +10,7 @@ export class WizardSection {
 
     Status: WizardStatus;
 
-    Expanded ? = false;
+    Expanded?: boolean;
 }
 
 @Injectable({
@@ -23,7 +23,7 @@ export class Category {
 
     Status: WizardStatus;
 
-    Expanded ? = false;
+    Expanded?: boolean;
 }
 
 export class Subcategory {
@@ -33,8 +33,7 @@ export class Subcategory {
 
     Status: WizardStatus;
 
-    Expanded ? = false;
-
+    Expanded?: boolean;
 }
 
 @Injectable({
@@ -45,7 +44,7 @@ export class Item {
 
     Status: WizardStatus;
 
-    Expanded ? = false;
+    Expanded?: boolean;
 }
 
 export enum WizardStatus {
