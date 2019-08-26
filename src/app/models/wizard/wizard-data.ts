@@ -9,6 +9,8 @@ export class WizardSection {
     Categories: Array<Category>;
 
     Status: WizardStatus;
+
+    Expanded ? = false;
 }
 
 @Injectable({
@@ -20,6 +22,8 @@ export class Category {
     Subcategories: Array<Subcategory>;
 
     Status: WizardStatus;
+
+    Expanded ? = false;
 }
 
 export class Subcategory {
@@ -28,6 +32,9 @@ export class Subcategory {
     Items: Array<Item>;
 
     Status: WizardStatus;
+
+    Expanded ? = false;
+
 }
 
 @Injectable({
@@ -37,6 +44,8 @@ export class Item {
     Name: string;
 
     Status: WizardStatus;
+
+    Expanded ? = false;
 }
 
 export enum WizardStatus {

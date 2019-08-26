@@ -19,69 +19,72 @@
     </div>
   </div>
 
-  <div class="form-group col-md-4">
-    <h2 style="color:darkorange">Prepare <fa name="exclamation"></fa></h2>
-    <div>
-      <h4 style="color:darkorange" class="p1-1">
-        <fa name="angle-down"></fa>Networking
-        <fa name="exclamation" style="color:darkorange"></fa>
-      </h4>
-      <div>
-        <h5 style="color:green" class="pl-2">
-          <fa name="angle-down"></fa>Subnets
-          <fa name="check"></fa>
-        </h5>
-        <h6 style="color:green" class="pl-3">
-          <fa name="angle-right"></fa>Example 1
-          <fa name="check"></fa>
-        </h6>
-        <h6 style="color:green" class="pl-3">
-          <fa name="angle-right"></fa>Example 2
-          <fa name="check"></fa>
-        </h6>
-        <h6 style="color:green" class="pl-3">
-          <fa name="angle-right"></fa>Example 3
-          <fa name="check"></fa>
-        </h6>
-      </div>
-      <div>
-        <h5 style="color:green" class="pl-2">
-          <fa name="angle-right"></fa>Load Balancers
-          <fa name="check"></fa>
-        </h5>
-      </div>
-      <div>
-        <h5 class="pl-2" style="color:darkorange">
-          <fa name="angle-right"></fa>Firewall Rules
-          <fa name="exclamation"></fa>
-        </h5>
-      </div>
-    </div>
-    <div>
-      <h4 class="pl-1" style="color:red">
-        <fa name="angle-right"></fa> Data
-        <fa name="times"></fa>
-      </h4>
-    </div>
-  </div>
+  <div *ngFor="let wizardSection of WizardSections" class="form-group col-md-4">
+    <label
+      [ngClass]="{
+        'fg-danger': wizardSection.Status === 0,
+        'fg-warning': wizardSection.Status === 1,
+        'fg-success': wizardSection.Status === 2
+      }"
+      ><h2>
+        <fa
+          name="{{
+            wizardSection?.Expanded ? 'chevron-down' : 'chevron-right'
+          }}"
+          (click)="wizardSection.Expanded = !wizardSection.Expanded"
+        ></fa>
+        {{ wizardSection.Name }}
+        <fa name="{{ getFaName(wizardSection.Status) }}"></fa></h2
+    ></label>
+    <div *ngIf="wizardSection?.Expanded">
+      <div class="pl-1" *ngFor="let category of wizardSection.Categories">
+        <label
+          [ngClass]="{
+            'fg-danger': category.Status === 0,
+            'fg-warning': category.Status === 1,
+            'fg-success': category.Status === 2
+          }"
+        >
+          <fa
+            name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
+            (click)="category.Expanded = !category.Expanded"
+          ></fa>
+          {{ category.Name }} <fa name="{{ getFaName(category.Status) }}"></fa
+        ></label>
+        <div *ngIf="category?.Expanded">
+          <div class="pl-2" *ngFor="let subcategory of category.Subcategories">
+            <label
+              [ngClass]="{
+                'fg-danger': subcategory.Status === 0,
+                'fg-warning': subcategory.Status === 1,
+                'fg-success': subcategory.Status === 2
+              }"
+            >
+              <fa
+                name="{{
+                  subcategory?.Expanded ? 'chevron-down' : 'chevron-right'
+                }}"
+                (click)="subcategory.Expanded = !subcategory.Expanded"
+              ></fa>
 
-  <div class="form-group col-md-4 text-center">
-    <h2 style="color:red">Test <fa name="times"></fa></h2>
-    <div>
-      <h4 class="p1-1" style="color:red">
-        <fa name="angle-right"></fa>Automated Tests
-        <fa name="times"></fa>
-      </h4>
-    </div>
-  </div>
-
-  <div class="form-group col-md-4 text-center">
-    <h2 style="color:red">Deploy <fa name="times" style="color:red"></fa></h2>
-    <div>
-      <h4 style="color:red" class="p1-1">
-        <fa name="angle-right"></fa>Deployment Readiness
-        <fa name="times"></fa>
-      </h4>
+              {{ subcategory.Name }}
+              <fa name="{{ getFaName(subcategory.Status) }}"></fa
+            ></label>
+            <div *ngIf="subcategory?.Expanded">
+              <div class="pl-3" *ngFor="let item of subcategory.Items">
+                <label
+                  [ngClass]="{
+                    'fg-danger': item.Status === 0,
+                    'fg-warning': item.Status === 1,
+                    'fg-success': item.Status === 2
+                  }"
+                  >{{ item.Name }} <fa name="{{ getFaName(item.Status) }}"></fa
+                ></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
