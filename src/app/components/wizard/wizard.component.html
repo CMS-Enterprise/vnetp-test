@@ -33,7 +33,8 @@
     </div>
   </div>
 
-  <div *ngFor="let wizardSection of WizardSections" class="form-group col-md-4">
+  <div *ngFor="let wizardSection of WizardSections" class="form-group col-md-4 card">
+      <div class="card-header">
     <label
       [ngClass]="{
         'fg-danger': wizardSection.Status === 0,
@@ -50,8 +51,12 @@
         {{ wizardSection.Name }}
         <fa name="{{ getFaName(wizardSection.Status) }}"></fa></h2
     ></label>
+    </div>
+
     <div *ngIf="wizardSection?.Expanded">
-      <div class="pl-1" *ngFor="let category of wizardSection.Categories">
+      <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
+
+        <div class="card-header">
         <label
           [ngClass]="{
             'fg-danger': category.Status === 0,
@@ -65,8 +70,10 @@
           ></fa>
           {{ category.Name }} <fa name="{{ getFaName(category.Status) }}"></fa
         ></label>
+      </div>
+
         <div *ngIf="category?.Expanded">
-          <div class="pl-2" *ngFor="let subcategory of category.Subcategories">
+          <div class="pl-2 card" *ngFor="let subcategory of category.Subcategories">
             <label
               [ngClass]="{
                 'fg-danger': subcategory.Status === 0,
@@ -84,8 +91,10 @@
               {{ subcategory.Name }}
               <fa name="{{ getFaName(subcategory.Status) }}"></fa
             ></label>
+
+
             <div *ngIf="subcategory?.Expanded">
-              <div class="pl-3" *ngFor="let item of subcategory.Items">
+              <div class="pl-3 card" *ngFor="let item of subcategory.Items">
                 <label
                   [ngClass]="{
                     'fg-danger': item.Status === 0,
