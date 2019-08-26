@@ -10,6 +10,7 @@ export class WizardComponent implements OnInit {
   @Input() showWizard: boolean;
 
   WizardSections = new Array<WizardSection>();
+  WizardProgress = 50;
 
   constructor() {}
 
@@ -24,6 +25,10 @@ export class WizardComponent implements OnInit {
       default:
         return 'check';
     }
+  }
+
+  getProgressBarPercentage() {
+    return `${this.WizardProgress}%`;
   }
 
   ngOnInit() {
@@ -50,10 +55,11 @@ export class WizardComponent implements OnInit {
                   },
                   {
                     Name: 'Subnet 3',
-                    Status: WizardStatus.Warning
+                    Status: WizardStatus.Warning,
+                    Description: 'Subnet 3 only has 2 available IP addresses.'
                   }
                 ]
-              },
+              }
             ]
           },
           {
@@ -64,25 +70,99 @@ export class WizardComponent implements OnInit {
           {
             Name: 'Firewall Rules',
             Status: WizardStatus.Warning,
-            Subcategories: []
+            Subcategories: [
+              {
+                Name: 'Presentation',
+                Status: WizardStatus.Warning,
+                Items: [
+                  {
+                    Name: 'Intra-VRF Rules',
+                    Status: WizardStatus.Warning,
+                    Description:
+                      `No contracts have been created between subnets in this VRF,
+                       this will prevent Intra-VRF communication between Subnets`
+                  },
+                  {
+                    Name: 'Inter-VRF Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'External Rules',
+                    Status: WizardStatus.Up
+                  }
+                ]
+              },
+              {
+                Name: 'Application',
+                Status: WizardStatus.Up,
+                Items: [
+                  {
+                    Name: 'Intra-VRF Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Inter-VRF Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'External Rules',
+                    Status: WizardStatus.Up
+                  }
+                ]
+              },
+              {
+                Name: 'Database',
+                Status: WizardStatus.Up,
+                Items: [
+                  {
+                    Name: 'Intra-VRF Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Inter-VRF Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'External Rules',
+                    Status: WizardStatus.Up
+                  }
+                ]
+              }
+            ]
           },
           {
             Name: 'Data',
             Status: WizardStatus.Down,
-            Subcategories: []
+            Subcategories: [
+              {
+                Name: 'TSM Replication',
+                Status: WizardStatus.Down,
+                Items: [
+                  {
+                    Name: 'Configuration',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Replication State',
+                    Status: WizardStatus.Down,
+                    Description: 'Replication in failing state for 2h35m.'
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
       {
-      Name: 'Test',
-      Status: WizardStatus.Down,
-      Categories: [
-        {
-          Name: 'Automated Tests',
+        Name: 'Test',
+        Status: WizardStatus.Down,
+        Categories: [
+          {
+            Name: 'Tests',
             Status: WizardStatus.Down,
             Subcategories: []
-        }
-      ]
+          }
+        ]
       },
       {
         Name: 'Deploy',
@@ -90,12 +170,11 @@ export class WizardComponent implements OnInit {
         Categories: [
           {
             Name: 'Deployment Readiness',
-              Status: WizardStatus.Down,
-              Subcategories: []
+            Status: WizardStatus.Down,
+            Subcategories: []
           }
         ]
       }
     ];
-    console.log(this.WizardSections);
   }
 }

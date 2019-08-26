@@ -42,6 +42,8 @@ export class Subcategory {
 export class Item {
     Name: string;
 
+    Description?: string;
+
     Status: WizardStatus;
 
     Expanded?: boolean;
