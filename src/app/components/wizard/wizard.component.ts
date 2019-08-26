@@ -46,85 +46,26 @@ export class WizardComponent implements OnInit {
                 Status: WizardStatus.Warning,
                 Items: [
                   {
-                    Name: 'Subnet 1',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'Subnet 2',
-                    Status: WizardStatus.Up
-                  },
-                  {
                     Name: 'Subnet 3',
                     Status: WizardStatus.Warning,
                     Description: 'Subnet 3 only has 2 available IP addresses.'
                   }
                 ]
-              }
-            ]
-          },
-          {
-            Name: 'Load Balancers',
-            Status: WizardStatus.Up,
-            Subcategories: []
-          },
-          {
-            Name: 'Firewall Rules',
-            Status: WizardStatus.Warning,
-            Subcategories: [
+              },
               {
-                Name: 'Presentation',
+                Name: 'Load Balancers',
+                Status: WizardStatus.Up,
+                Items: []
+              },
+              {
+                Name: 'Firewall Rules',
                 Status: WizardStatus.Warning,
                 Items: [
                   {
                     Name: 'Intra-VRF Rules',
                     Status: WizardStatus.Warning,
-                    Description:
-                      `No contracts have been created between subnets in this VRF,
-                       this will prevent Intra-VRF communication between Subnets`
-                  },
-                  {
-                    Name: 'Inter-VRF Rules',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'External Rules',
-                    Status: WizardStatus.Up
-                  }
-                ]
-              },
-              {
-                Name: 'Application',
-                Status: WizardStatus.Up,
-                Items: [
-                  {
-                    Name: 'Intra-VRF Rules',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'Inter-VRF Rules',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'External Rules',
-                    Status: WizardStatus.Up
-                  }
-                ]
-              },
-              {
-                Name: 'Database',
-                Status: WizardStatus.Up,
-                Items: [
-                  {
-                    Name: 'Intra-VRF Rules',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'Inter-VRF Rules',
-                    Status: WizardStatus.Up
-                  },
-                  {
-                    Name: 'External Rules',
-                    Status: WizardStatus.Up
+                    Description: `No contracts have been created between subnets in this VRF,
+                           this will prevent Intra-VRF communication between Subnets`
                   }
                 ]
               }
@@ -138,10 +79,6 @@ export class WizardComponent implements OnInit {
                 Name: 'TSM Replication',
                 Status: WizardStatus.Down,
                 Items: [
-                  {
-                    Name: 'Configuration',
-                    Status: WizardStatus.Up
-                  },
                   {
                     Name: 'Replication State',
                     Status: WizardStatus.Down,

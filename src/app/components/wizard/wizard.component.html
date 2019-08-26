@@ -33,53 +33,58 @@
     </div>
   </div>
 
-  <div *ngFor="let wizardSection of WizardSections" class="form-group col-md-4 card">
-      <div class="card-header">
-    <label
-      [ngClass]="{
-        'fg-danger': wizardSection.Status === 0,
-        'fg-warning': wizardSection.Status === 1,
-        'fg-success': wizardSection.Status === 2
-      }"
-      ><h2>
-        <fa
-          name="{{
-            wizardSection?.Expanded ? 'chevron-down' : 'chevron-right'
-          }}"
-          (click)="wizardSection.Expanded = !wizardSection.Expanded"
-        ></fa>
-        {{ wizardSection.Name }}
-        <fa name="{{ getFaName(wizardSection.Status) }}"></fa></h2
-    ></label>
+  <div
+    *ngFor="let wizardSection of WizardSections"
+    class="form-group col-md-4 card"
+  >
+    <div class="card-header">
+      <label
+        [ngClass]="{
+          'fg-danger': wizardSection.Status === 0,
+          'fg-warning': wizardSection.Status === 1,
+          'fg-success': wizardSection.Status === 2
+        }"
+        ><h2>
+          <fa
+            name="{{
+              wizardSection?.Expanded ? 'chevron-down' : 'chevron-right'
+            }}"
+            (click)="wizardSection.Expanded = !wizardSection.Expanded"
+          ></fa>
+          {{ wizardSection.Name }}
+          <fa name="{{ getFaName(wizardSection.Status) }}"></fa></h2
+      ></label>
     </div>
 
     <div *ngIf="wizardSection?.Expanded">
       <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
-
         <div class="card-header">
-        <label
-          [ngClass]="{
-            'fg-danger': category.Status === 0,
-            'fg-warning': category.Status === 1,
-            'fg-success': category.Status === 2
-          }"
-        >
-          <fa
-            name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
-            (click)="category.Expanded = !category.Expanded"
-          ></fa>
-          {{ category.Name }} <fa name="{{ getFaName(category.Status) }}"></fa
-        ></label>
-      </div>
+          <label
+            [ngClass]="{
+              'fg-danger': category.Status === 0,
+              'fg-warning': category.Status === 1,
+              'fg-success': category.Status === 2
+            }"
+          >
+            <fa
+              name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
+              (click)="category.Expanded = !category.Expanded"
+            ></fa>
+            {{ category.Name }} <fa name="{{ getFaName(category.Status) }}"></fa
+          ></label>
+        </div>
 
         <div *ngIf="category?.Expanded">
-          <div class="pl-2 card" *ngFor="let subcategory of category.Subcategories">
+          <div
+            class="card"
+            *ngFor="let subcategory of category.Subcategories"
+            [ngClass]="{
+              'bg-danger': subcategory.Status === 0,
+              'bg-warning': subcategory.Status === 1,
+              'bg-success': subcategory.Status === 2
+            }"
+          >
             <label
-              [ngClass]="{
-                'fg-danger': subcategory.Status === 0,
-                'fg-warning': subcategory.Status === 1,
-                'fg-success': subcategory.Status === 2
-              }"
             >
               <fa
                 name="{{
@@ -92,18 +97,20 @@
               <fa name="{{ getFaName(subcategory.Status) }}"></fa
             ></label>
 
-
             <div *ngIf="subcategory?.Expanded">
-              <div class="pl-3 card" *ngFor="let item of subcategory.Items">
-                <label
-                  [ngClass]="{
-                    'fg-danger': item.Status === 0,
-                    'fg-warning': item.Status === 1,
-                    'fg-success': item.Status === 2
-                  }"
-                  >{{ item.Name }} <fa name="{{ getFaName(item.Status) }}"></fa
-                ></label>
-                <p class="pl-4" *ngIf="item.Description">{{ item.Description }}</p>
+              <div
+                class="pl-3 card"
+                *ngFor="let item of subcategory.Items"
+                [ngClass]="{
+                  'bg-danger': item.Status === 0,
+                  'bg-warning': item.Status === 1,
+                  'bg-success': item.Status === 2
+                }"
+              >
+                <label>{{ item.Name }}</label>
+                <p class="pl-4" *ngIf="item.Description">
+                 - {{ item.Description }}
+                </p>
               </div>
             </div>
           </div>
@@ -113,6 +120,4 @@
   </div>
 
   <hr />
-
 </div>
-
