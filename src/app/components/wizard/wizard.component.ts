@@ -1,5 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { WizardSection, WizardStatus } from 'src/app/models/wizard/wizard-data';
+import { AppMessage } from 'src/app/models/app-message';
+import { MessageService } from 'src/app/services/message.service';
+import { Subscription } from 'rxjs';
+import { AppMessageType } from 'src/app/models/app-message-type';
 
 @Component({
   selector: 'app-wizard',
@@ -7,10 +11,12 @@ import { WizardSection, WizardStatus } from 'src/app/models/wizard/wizard-data';
   styleUrls: ['./wizard.component.css']
 })
 export class WizardComponent implements OnInit {
-  @Input() showWizard: boolean;
 
+  showWizard = true;
   WizardSections = new Array<WizardSection>();
   WizardProgress = 50;
+  messageServiceSubscription: Subscription;
+  messageService: MessageService;
 
   constructor() {}
 
@@ -31,87 +37,107 @@ export class WizardComponent implements OnInit {
     return `${this.WizardProgress}%`;
   }
 
+  getMessageServiceSubscription() {
+    this.messageServiceSubscription = this.messageService
+      .listen()
+      .subscribe((m: AppMessage) => {
+        this.messageHandler(m);
+      });
+  }
+
+  private messageHandler(m: AppMessage) {
+    switch (m.Type) {
+      case AppMessageType.ToggleWizard:
+        this.showWizard = !this.showWizard;
+    }
+  }
+
   ngOnInit() {
     this.WizardSections = [
       {
-        Name: 'Prepare',
+        Name: 'CDS',
         Status: WizardStatus.Down,
         Categories: [
           {
-            Name: 'Networking',
+            Name: 'Onboarding',
             Status: WizardStatus.Warning,
             Subcategories: [
               {
-                Name: 'Subnets',
+                Name: 'Tenant Intialization',
                 Status: WizardStatus.Warning,
                 Items: [
                   {
-                    Name: 'Subnet 3',
+                    Name: 'Networking',
                     Status: WizardStatus.Warning,
-                    Description: 'Subnet 3 only has 2 available IP addresses.'
+                  },
+                  {
+                    Name: 'Security',
+                    Status: WizardStatus.Warning,
+                  },
+                  {
+                    Name: 'CMDB',
+                    Status: WizardStatus.Up
                   }
                 ]
               },
               {
-                Name: 'Load Balancers',
+                Name: 'User Management',
                 Status: WizardStatus.Up,
-                Items: []
-              },
-              {
-                Name: 'Firewall Rules',
-                Status: WizardStatus.Warning,
                 Items: [
-                  {
-                    Name: 'Intra-VRF Rules',
-                    Status: WizardStatus.Warning,
-                    Description: `No contracts have been created between subnets in this VRF,
-                           this will prevent Intra-VRF communication between Subnets`
-                  }
                 ]
               }
             ]
           },
           {
-            Name: 'Data',
+            Name: 'Define Source Datacenter',
             Status: WizardStatus.Down,
             Subcategories: [
               {
-                Name: 'TSM Replication',
+                Name: 'Data Protection',
                 Status: WizardStatus.Down,
                 Items: [
                   {
-                    Name: 'Replication State',
+                    Name: 'Spectrum Protect',
                     Status: WizardStatus.Down,
-                    Description: 'Replication in failing state for 2h35m.'
+                  },
+                  {
+                    Name: 'Actifio',
+                    Status: WizardStatus.Down
+                  },
+                  {
+                    Name: 'SFTP',
+                    Status: WizardStatus.Up
+                  }
+                ]
+              },
+              {
+                Name: 'Networking',
+                Status: WizardStatus.Up,
+                Items: [
+                  {
+                    Name: 'Subnets',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Routing',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Firewall Rules',
+                    Status: WizardStatus.Up
+                  },
+                  {
+                    Name: 'Load Balancers',
+                    Status: WizardStatus.Up
                   }
                 ]
               }
             ]
           }
         ]
-      },
-      {
-        Name: 'Test',
-        Status: WizardStatus.Down,
-        Categories: [
-          {
-            Name: 'Tests',
-            Status: WizardStatus.Down,
-            Subcategories: []
-          }
-        ]
-      },
-      {
-        Name: 'Deploy',
-        Status: WizardStatus.Down,
-        Categories: [
-          {
-            Name: 'Deployment Readiness',
-            Status: WizardStatus.Down,
-            Subcategories: []
-          }
-        ]
       }
     ];
+
+    this.getMessageServiceSubscription();
   }
 }

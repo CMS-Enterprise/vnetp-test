@@ -4,7 +4,7 @@
       <fa name="times" size="2x" (click)="showWizard = false"></fa>
     </div>
   </div>
-
+  <!-- 
   <div class="form-group col-md-12">
     <div class="alert alert-success text-center">
       Your environment is DR ready.
@@ -31,7 +31,7 @@
         aria-valuemax="100"
       ></div>
     </div>
-  </div>
+  </div> -->
 
   <div
     *ngFor="let wizardSection of WizardSections"
@@ -39,11 +39,6 @@
   >
     <div class="card-header">
       <label
-        [ngClass]="{
-          'fg-danger': wizardSection.Status === 0,
-          'fg-warning': wizardSection.Status === 1,
-          'fg-success': wizardSection.Status === 2
-        }"
         ><h2>
           <fa
             name="{{
@@ -56,16 +51,10 @@
       ></label>
     </div>
 
-    <div *ngIf="wizardSection?.Expanded">
+    <div *ngIf="!wizardSection?.Expanded">
       <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
         <div class="card-header">
-          <label
-            [ngClass]="{
-              'fg-danger': category.Status === 0,
-              'fg-warning': category.Status === 1,
-              'fg-success': category.Status === 2
-            }"
-          >
+          <label>
             <fa
               name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
               (click)="category.Expanded = !category.Expanded"
@@ -74,18 +63,9 @@
           ></label>
         </div>
 
-        <div *ngIf="category?.Expanded">
-          <div
-            class="card"
-            *ngFor="let subcategory of category.Subcategories"
-            [ngClass]="{
-              'bg-danger': subcategory.Status === 0,
-              'bg-warning': subcategory.Status === 1,
-              'bg-success': subcategory.Status === 2
-            }"
-          >
-            <label
-            >
+        <div *ngIf="!category?.Expanded">
+          <div class="card" *ngFor="let subcategory of category.Subcategories">
+            <label>
               <fa
                 name="{{
                   subcategory?.Expanded ? 'chevron-down' : 'chevron-right'
@@ -97,19 +77,11 @@
               <fa name="{{ getFaName(subcategory.Status) }}"></fa
             ></label>
 
-            <div *ngIf="subcategory?.Expanded">
-              <div
-                class="pl-3 card"
-                *ngFor="let item of subcategory.Items"
-                [ngClass]="{
-                  'bg-danger': item.Status === 0,
-                  'bg-warning': item.Status === 1,
-                  'bg-success': item.Status === 2
-                }"
-              >
-                <label>{{ item.Name }}</label>
+            <div *ngIf="!subcategory?.Expanded">
+              <div class="pl-3 card" *ngFor="let item of subcategory.Items">
+                <div class="pull-left">{{ item.Name }} - <a routerLink=''>Ticket # 1234</a> - Not Started</div>
                 <p class="pl-4" *ngIf="item.Description">
-                 - {{ item.Description }}
+                  - {{ item.Description }}
                 </p>
               </div>
             </div>

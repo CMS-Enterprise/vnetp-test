@@ -98,7 +98,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" target="_blank" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item">Documentation</a>
-          <a class="dropdown-item">Configuration Wizard</a>
+          <a class="dropdown-item" (click)="toggleWizard()">Configuration Wizard</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
         </div>
