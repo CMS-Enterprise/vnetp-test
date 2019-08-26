@@ -8,7 +8,9 @@ export class WizardSection {
 
     Categories: Array<Category>;
 
-    Status: WizardStatus;
+    StatusProgress: number;
+
+    StatusText: string;
 
     Expanded?: boolean;
 }
@@ -21,8 +23,6 @@ export class Category {
 
     Subcategories: Array<Subcategory>;
 
-    Status: WizardStatus;
-
     Expanded?: boolean;
 }
 
@@ -30,8 +30,6 @@ export class Subcategory {
     Name: string;
 
     Items: Array<Item>;
-
-    Status: WizardStatus;
 
     Expanded?: boolean;
 }
@@ -44,13 +42,10 @@ export class Item {
 
     Description?: string;
 
-    Status: WizardStatus;
+    TicketNumber?: number;
+
+    Link?: string;
 
     Expanded?: boolean;
 }
 
-export enum WizardStatus {
-    Down,
-    Warning,
-    Up
-}

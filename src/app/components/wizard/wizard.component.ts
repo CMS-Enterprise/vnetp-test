@@ -1,9 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { WizardSection, WizardStatus } from 'src/app/models/wizard/wizard-data';
-import { AppMessage } from 'src/app/models/app-message';
-import { MessageService } from 'src/app/services/message.service';
-import { Subscription } from 'rxjs';
-import { AppMessageType } from 'src/app/models/app-message-type';
+import { WizardSection } from 'src/app/models/wizard/wizard-data';
 
 @Component({
   selector: 'app-wizard',
@@ -11,133 +7,386 @@ import { AppMessageType } from 'src/app/models/app-message-type';
   styleUrls: ['./wizard.component.css']
 })
 export class WizardComponent implements OnInit {
-
-  showWizard = true;
   WizardSections = new Array<WizardSection>();
   WizardProgress = 50;
-  messageServiceSubscription: Subscription;
-  messageService: MessageService;
 
   constructor() {}
 
-  getFaName(status: WizardStatus) {
-    switch (status) {
-      case WizardStatus.Down:
-        return 'times';
-      case WizardStatus.Warning:
-        return 'exclamation';
-      case WizardStatus.Up:
-        return 'check';
-      default:
-        return 'check';
-    }
-  }
-
-  getProgressBarPercentage() {
-    return `${this.WizardProgress}%`;
-  }
-
-  getMessageServiceSubscription() {
-    this.messageServiceSubscription = this.messageService
-      .listen()
-      .subscribe((m: AppMessage) => {
-        this.messageHandler(m);
-      });
-  }
-
-  private messageHandler(m: AppMessage) {
-    switch (m.Type) {
-      case AppMessageType.ToggleWizard:
-        this.showWizard = !this.showWizard;
-    }
+  getProgressBarPercentage(statusProgress: number) {
+    return `${statusProgress}%`;
   }
 
   ngOnInit() {
     this.WizardSections = [
       {
         Name: 'CDS',
-        Status: WizardStatus.Down,
+        StatusText: 'Defining',
+        StatusProgress: 10,
         Categories: [
           {
             Name: 'Onboarding',
-            Status: WizardStatus.Warning,
+
             Subcategories: [
               {
                 Name: 'Tenant Intialization',
-                Status: WizardStatus.Warning,
+
                 Items: [
                   {
-                    Name: 'Networking',
-                    Status: WizardStatus.Warning,
+                    Name: 'Networking'
                   },
                   {
-                    Name: 'Security',
-                    Status: WizardStatus.Warning,
+                    Name: 'Security'
                   },
                   {
-                    Name: 'CMDB',
-                    Status: WizardStatus.Up
+                    Name: 'CMDB'
                   }
                 ]
               },
               {
                 Name: 'User Management',
-                Status: WizardStatus.Up,
-                Items: [
-                ]
+
+                Items: []
               }
             ]
           },
           {
             Name: 'Define Source Datacenter',
-            Status: WizardStatus.Down,
+
             Subcategories: [
               {
                 Name: 'Data Protection',
-                Status: WizardStatus.Down,
+
                 Items: [
                   {
-                    Name: 'Spectrum Protect',
-                    Status: WizardStatus.Down,
+                    Name: 'Spectrum Protect'
                   },
                   {
-                    Name: 'Actifio',
-                    Status: WizardStatus.Down
+                    Name: 'Actifio'
                   },
                   {
-                    Name: 'SFTP',
-                    Status: WizardStatus.Up
+                    Name: 'SFTP'
                   }
                 ]
               },
               {
                 Name: 'Networking',
-                Status: WizardStatus.Up,
                 Items: [
                   {
                     Name: 'Subnets',
-                    Status: WizardStatus.Up
+                    Link: '/networks'
                   },
                   {
                     Name: 'Routing',
-                    Status: WizardStatus.Up
+                    Link: 'static-routes'
                   },
                   {
-                    Name: 'Firewall Rules',
-                    Status: WizardStatus.Up
+                    Name: 'Firewall Rules'
                   },
                   {
-                    Name: 'Load Balancers',
-                    Status: WizardStatus.Up
+                    Name: 'Load Balancers'
                   }
                 ]
+              },
+              {
+                Name: 'Compute',
+
+                Items: [
+                  {
+                    Name: 'VMware'
+                  },
+                  {
+                    Name: 'Solaris'
+                  },
+                  {
+                    Name: 'Physical'
+                  }
+                ]
+              },
+              {
+                Name: 'Mainframe',
+
+                Items: [
+                  {
+                    Name: 'z/OS'
+                  },
+                  {
+                    Name: 'z/VM'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            Name: 'Operational',
+
+            Subcategories: [
+              {
+                Name: 'Replication',
+
+                Items: []
+              },
+              {
+                Name: 'Testing',
+
+                Items: []
+              },
+              {
+                Name: 'Failover',
+
+                Items: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        Name: 'GDIT',
+        StatusProgress: 30,
+        StatusText: 'Defining',
+        Categories: [
+          {
+            Name: 'Onboarding',
+
+            Subcategories: [
+              {
+                Name: 'Tenant Intialization',
+
+                Items: [
+                  {
+                    Name: 'Networking'
+                  },
+                  {
+                    Name: 'Security'
+                  },
+                  {
+                    Name: 'CMDB'
+                  }
+                ]
+              },
+              {
+                Name: 'User Management',
+
+                Items: []
+              }
+            ]
+          },
+          {
+            Name: 'Define Source Datacenter',
+
+            Subcategories: [
+              {
+                Name: 'Data Protection',
+
+                Items: [
+                  {
+                    Name: 'Spectrum Protect'
+                  },
+                  {
+                    Name: 'Actifio'
+                  },
+                  {
+                    Name: 'SFTP'
+                  }
+                ]
+              },
+              {
+                Name: 'Networking',
+
+                Items: [
+                  {
+                    Name: 'Subnets',
+
+                    Link: '/networks'
+                  },
+                  {
+                    Name: 'Routing',
+
+                    Link: 'static-routes'
+                  },
+                  {
+                    Name: 'Firewall Rules'
+                  },
+                  {
+                    Name: 'Load Balancers'
+                  }
+                ]
+              },
+              {
+                Name: 'Compute',
+
+                Items: [
+                  {
+                    Name: 'VMware'
+                  },
+                  {
+                    Name: 'Solaris'
+                  },
+                  {
+                    Name: 'Physical'
+                  }
+                ]
+              },
+              {
+                Name: 'Mainframe',
+
+                Items: [
+                  {
+                    Name: 'z/OS'
+                  },
+                  {
+                    Name: 'z/VM'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            Name: 'Operational',
+
+            Subcategories: [
+              {
+                Name: 'Replication',
+
+                Items: []
+              },
+              {
+                Name: 'Testing',
+
+                Items: []
+              },
+              {
+                Name: 'Failover',
+
+                Items: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        Name: 'Leidos',
+        StatusProgress: 100,
+        StatusText: 'Operational',
+        Categories: [
+          {
+            Name: 'Onboarding',
+
+            Subcategories: [
+              {
+                Name: 'Tenant Intialization',
+
+                Items: [
+                  {
+                    Name: 'Networking'
+                  },
+                  {
+                    Name: 'Security'
+                  },
+                  {
+                    Name: 'CMDB'
+                  }
+                ]
+              },
+              {
+                Name: 'User Management',
+
+                Items: []
+              }
+            ]
+          },
+          {
+            Name: 'Define Source Datacenter',
+
+            Subcategories: [
+              {
+                Name: 'Data Protection',
+
+                Items: [
+                  {
+                    Name: 'Spectrum Protect'
+                  },
+                  {
+                    Name: 'Actifio'
+                  },
+                  {
+                    Name: 'SFTP'
+                  }
+                ]
+              },
+              {
+                Name: 'Networking',
+
+                Items: [
+                  {
+                    Name: 'Subnets',
+
+                    Link: '/networks'
+                  },
+                  {
+                    Name: 'Routing',
+
+                    Link: 'static-routes'
+                  },
+                  {
+                    Name: 'Firewall Rules'
+                  },
+                  {
+                    Name: 'Load Balancers'
+                  }
+                ]
+              },
+              {
+                Name: 'Compute',
+
+                Items: [
+                  {
+                    Name: 'VMware'
+                  },
+                  {
+                    Name: 'Solaris'
+                  },
+                  {
+                    Name: 'Physical'
+                  }
+                ]
+              },
+              {
+                Name: 'Mainframe',
+
+                Items: [
+                  {
+                    Name: 'z/OS'
+                  },
+                  {
+                    Name: 'z/VM'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            Name: 'Operational',
+
+            Subcategories: [
+              {
+                Name: 'Replication',
+
+                Items: []
+              },
+              {
+                Name: 'Testing',
+
+                Items: []
+              },
+              {
+                Name: 'Failover',
+
+                Items: []
               }
             ]
           }
         ]
       }
     ];
-
-    this.getMessageServiceSubscription();
   }
 }

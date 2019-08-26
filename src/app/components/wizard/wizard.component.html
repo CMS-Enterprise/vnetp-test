@@ -1,57 +1,18 @@
-<div *ngIf="showWizard" class="form-row p-3">
-  <div class="form-group col-md-12">
-    <div class="pull-right">
-      <fa name="times" size="2x" (click)="showWizard = false"></fa>
-    </div>
-  </div>
-  <!-- 
-  <div class="form-group col-md-12">
-    <div class="alert alert-success text-center">
-      Your environment is DR ready.
-    </div>
-
-    <div class="alert alert-warning text-center">
-      Your environment is DR ready, however several warnings exist. Please
-      review the warnings below.
-    </div>
-
-    <div class="alert alert-danger text-center">
-      There are several configuration issues that prevent your environment from
-      being DR ready. Please review the issues below.
-    </div>
-
-    <label>DR Readiness</label>
-    <div class="progress">
-      <div
-        class="progress-bar bg-danger"
-        role="progressbar"
-        [ngStyle]="{ width: getProgressBarPercentage() }"
-        aria-valuenow="30"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
-    </div>
-  </div> -->
-
+<div class="form-row p-3">
   <div
     *ngFor="let wizardSection of WizardSections"
-    class="form-group col-md-4 card"
+    class="form-group col-md-4 card border-secondary mb-3"
   >
     <div class="card-header">
-      <label
-        ><h2>
-          <fa
-            name="{{
-              wizardSection?.Expanded ? 'chevron-down' : 'chevron-right'
-            }}"
-            (click)="wizardSection.Expanded = !wizardSection.Expanded"
-          ></fa>
-          {{ wizardSection.Name }}
-          <fa name="{{ getFaName(wizardSection.Status) }}"></fa></h2
-      ></label>
+      <label><h2>
+          {{ wizardSection.Name }}</h2>Current Status: <span class="font-italic">{{ wizardSection.StatusText}}</span>
+      </label>
+
+      <div class="progress" style="height: 20px;">
+          <div class="progress-bar" role="progressbar" [ngStyle]="{'width': getProgressBarPercentage(wizardSection.StatusProgress)}"></div>
+        </div>
     </div>
 
-    <div *ngIf="!wizardSection?.Expanded">
       <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
         <div class="card-header">
           <label>
@@ -59,11 +20,10 @@
               name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
               (click)="category.Expanded = !category.Expanded"
             ></fa>
-            {{ category.Name }} <fa name="{{ getFaName(category.Status) }}"></fa
-          ></label>
+            {{ category.Name }}</label>
         </div>
 
-        <div *ngIf="!category?.Expanded">
+        <div *ngIf="category?.Expanded">
           <div class="card" *ngFor="let subcategory of category.Subcategories">
             <label>
               <fa
@@ -74,12 +34,12 @@
               ></fa>
 
               {{ subcategory.Name }}
-              <fa name="{{ getFaName(subcategory.Status) }}"></fa
-            ></label>
+            </label>
 
-            <div *ngIf="!subcategory?.Expanded">
+            <!--Move Ticket Number and Status to Right-->
+            <div *ngIf="subcategory?.Expanded">
               <div class="pl-3 card" *ngFor="let item of subcategory.Items">
-                <div class="pull-left">{{ item.Name }} - <a routerLink=''>Ticket # 1234</a> - Not Started</div>
+                <div class="pull-left">{{ item.Name }} - <a routerLink=item?.Link>Ticket # 1234</a> - Not Started</div>
                 <p class="pl-4" *ngIf="item.Description">
                   - {{ item.Description }}
                 </p>
@@ -88,7 +48,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 
   <hr />

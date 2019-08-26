@@ -32,6 +32,7 @@ import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-
 import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
+import { WizardComponent } from './components/wizard/wizard.component';
 
 // tslint:disable: max-line-length
 
@@ -115,6 +116,12 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'wizard',
+    component: WizardComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Wizard' },
   },
   {
     path: 'physical-server',
