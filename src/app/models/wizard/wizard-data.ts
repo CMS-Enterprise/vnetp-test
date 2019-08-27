@@ -44,12 +44,12 @@ export class Subcategory {
 export class Item {
     Name: string;
 
+    Status: string;
+
     Description?: string;
 
     TicketNumber?: number;
 
     Link?: string;
-
-    Expanded?: boolean;
 }
 

@@ -33,20 +33,28 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Networking'
+                    Name: 'Networking',
+                    Status: 'Completed'
                   },
                   {
-                    Name: 'Security'
+                    Name: 'Security',
+                    Status: 'Completed'
                   },
                   {
-                    Name: 'CMDB'
+                    Name: 'CMDB',
+                    Status: 'In Progress'
                   }
                 ]
               },
               {
                 Name: 'User Management',
 
-                Items: []
+                Items: [
+                  {
+                    Name: 'Create Users',
+                    Status: 'In Progress'
+                  }
+                ]
               }
             ]
           },
@@ -59,13 +67,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Spectrum Protect'
+                    Name: 'Spectrum Protect',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Actifio'
+                    Name: 'Actifio',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'SFTP'
+                    Name: 'SFTP',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -74,17 +85,21 @@ export class WizardComponent implements OnInit {
                 Items: [
                   {
                     Name: 'Subnets',
-                    Link: '/networks'
+                    Link: '/networks',
+                    Status: 'Not Started'
                   },
                   {
                     Name: 'Routing',
-                    Link: 'static-routes'
+                    Link: 'static-routes',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Firewall Rules'
+                    Name: 'Firewall Rules',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Load Balancers'
+                    Name: 'Load Balancers',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -93,13 +108,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'VMware'
+                    Name: 'VMware',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Solaris'
+                    Name: 'Solaris',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Physical'
+                    Name: 'Physical',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -108,10 +126,12 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'z/OS'
+                    Name: 'z/OS',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'z/VM'
+                    Name: 'z/VM',
+                    Status: 'Not Started'
                   }
                 ]
               }
@@ -122,16 +142,22 @@ export class WizardComponent implements OnInit {
 
             Subcategories: [
               {
-                Name: 'Replication',
-                Items: []
-              },
-              {
-                Name: 'Testing',
-                Items: []
+                Name: 'Replication State',
+
+                Items: [{
+                  Name: 'Replication',
+                  Status: 'Not Started'
+                }]
               },
               {
                 Name: 'Failover',
-                Items: []
+
+                Items: [
+                  {
+                    Name: 'Failover State',
+                    Status: 'Not Started'
+                  }
+                ]
               }
             ]
           }
@@ -151,13 +177,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Networking'
+                    Name: 'Networking',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Security'
+                    Name: 'Security',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'CMDB'
+                    Name: 'CMDB',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -178,13 +207,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Spectrum Protect'
+                    Name: 'Spectrum Protect',
+                    Status: 'In Progress'
                   },
                   {
-                    Name: 'Actifio'
+                    Name: 'Actifio',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'SFTP'
+                    Name: 'SFTP',
+                    Status: 'Completed'
                   }
                 ]
               },
@@ -194,19 +226,21 @@ export class WizardComponent implements OnInit {
                 Items: [
                   {
                     Name: 'Subnets',
-
+                    Status: 'Not Started',
                     Link: '/networks'
                   },
                   {
                     Name: 'Routing',
-
-                    Link: 'static-routes'
+                    Link: 'static-routes',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Firewall Rules'
+                    Name: 'Firewall Rules',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Load Balancers'
+                    Name: 'Load Balancers',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -215,13 +249,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'VMware'
+                    Name: 'VMware',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Solaris'
+                    Name: 'Solaris',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Physical'
+                    Name: 'Physical',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -230,10 +267,12 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'z/OS'
+                    Name: 'z/OS',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'z/VM'
+                    Name: 'z/VM',
+                    Status: 'Not Started'
                   }
                 ]
               }
@@ -273,13 +312,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Networking'
+                    Name: 'Networking',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Security'
+                    Name: 'Security',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'CMDB'
+                    Name: 'CMDB',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -299,13 +341,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'Spectrum Protect'
+                    Name: 'Spectrum Protect',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Actifio'
+                    Name: 'Actifio',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'SFTP'
+                    Name: 'SFTP',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -315,17 +360,21 @@ export class WizardComponent implements OnInit {
                 Items: [
                   {
                     Name: 'Subnets',
-                    Link: '/networks'
+                    Link: '/networks',
+                    Status: 'Not Started'
                   },
                   {
                     Name: 'Routing',
-                    Link: 'static-routes'
+                    Link: 'static-routes',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Firewall Rules'
+                    Name: 'Firewall Rules',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Load Balancers'
+                    Name: 'Load Balancers',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -334,13 +383,16 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'VMware'
+                    Name: 'VMware',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Solaris'
+                    Name: 'Solaris',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'Physical'
+                    Name: 'Physical',
+                    Status: 'Not Started'
                   }
                 ]
               },
@@ -349,10 +401,12 @@ export class WizardComponent implements OnInit {
 
                 Items: [
                   {
-                    Name: 'z/OS'
+                    Name: 'z/OS',
+                    Status: 'Not Started'
                   },
                   {
-                    Name: 'z/VM'
+                    Name: 'z/VM',
+                    Status: 'Not Started'
                   }
                 ]
               }
@@ -363,19 +417,22 @@ export class WizardComponent implements OnInit {
 
             Subcategories: [
               {
-                Name: 'Replication',
+                Name: 'Replication State',
 
-                Items: []
-              },
-              {
-                Name: 'Testing',
-
-                Items: []
+                Items: [{
+                  Name: 'Replication',
+                  Status: 'In Progress'
+                }]
               },
               {
                 Name: 'Failover',
 
-                Items: []
+                Items: [
+                  {
+                    Name: 'Failover State',
+                    Status: 'Completed'
+                  }
+                ]
               }
             ]
           }

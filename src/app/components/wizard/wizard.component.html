@@ -1,8 +1,5 @@
 <div class="form-row p-3">
-  <div
-    *ngFor="let wizardSection of WizardSections"
-    class="form-group col-sm-12 col-md-6 col-lg-4 border-secondary mb-3"
-  >
+  <div *ngFor="let wizardSection of WizardSections" class="form-group col-sm-12 col-md-6 col-lg-4 border-secondary mb-3">
     <div>
       <h2>
         {{ wizardSection.Name }}
@@ -35,9 +32,7 @@
         >
           Declaration and Recovery
         </li>
-        <li
-          [ngClass]="{ 'is-active': wizardSection.StatusText == 'Operational' }"
-        >
+        <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Operational' }">
           Operational
         </li>
         <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Failback' }">
@@ -49,24 +44,16 @@
     <div class="mb-2 card" *ngFor="let category of wizardSection.Categories">
       <div class="card-header">
         <label class="m-0">
-          <fa
-            name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
-            (click)="category.Expanded = !category.Expanded"
-          ></fa>
+          <fa name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}" (click)="category.Expanded = !category.Expanded"></fa>
           {{ category.Name }}</label
         >
       </div>
 
       <div *ngIf="category?.Expanded">
-        <div
-          class="p-2 pl-5"
-          *ngFor="let subcategory of category.Subcategories"
-        >
+        <div class="p-2 pl-5" *ngFor="let subcategory of category.Subcategories">
           <label>
             <fa
-              name="{{
-                subcategory?.Expanded ? 'chevron-down' : 'chevron-right'
-              }}"
+              name="{{ subcategory?.Expanded ? 'chevron-down' : 'chevron-right' }}"
               (click)="subcategory.Expanded = !subcategory.Expanded"
             ></fa>
 
@@ -77,11 +64,19 @@
             <div class="p-2 pl-5" *ngFor="let item of subcategory.Items">
               <div class="d-flex justify-content-between align-items-center">
                 <span>{{ item.Name }}</span>
-                <!-- <span class=""> -->
-                <button type="button" class="btn btn-outline-info btn-sm">
-                  Not Started
-                </button>
-                <!-- </span>  -->
+                <span class="pull-right">
+                  <button
+                    type="button"
+                    class="btn btn-xs"
+                    [ngClass]="{
+                      'btn-success': item.Status === 'Completed',
+                      'btn-info': item.Status === 'In Progress',
+                      'btn-warning': item.Status === 'Not Started'
+                    }"
+                  >
+                    {{ item.Status }}
+                  </button>
+                </span>
               </div>
             </div>
           </div>
