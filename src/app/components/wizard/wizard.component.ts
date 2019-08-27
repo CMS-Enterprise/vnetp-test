@@ -4,7 +4,7 @@ import { WizardSection } from 'src/app/models/wizard/wizard-data';
 @Component({
   selector: 'app-wizard',
   templateUrl: './wizard.component.html',
-  styleUrls: ['./wizard.component.css']
+  styleUrls: ['./wizard.component.scss']
 })
 export class WizardComponent implements OnInit {
   WizardSections = new Array<WizardSection>();

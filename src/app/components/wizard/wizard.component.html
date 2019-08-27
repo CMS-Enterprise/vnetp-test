@@ -1,7 +1,7 @@
 <div class="form-row p-3">
   <div
     *ngFor="let wizardSection of WizardSections"
-    class="form-group col-md-4  border-secondary mb-3"
+    class="form-group col-md-4 border-secondary mb-3"
   >
     <div>
       <h2>
@@ -9,21 +9,46 @@
       </h2>
     </div>
 
-    <div class="container-fluid">
-        <br /><br />
-        <ul class="list-unstyled multi-steps">
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Defining' }">Onboarding</li>
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'ConfiguringDatacenter' }">Configuring Datacenter</li>
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'DataProtection' }">Data Protection</li>
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'DisasterRecovery' }">Declaration and Recovery</li>
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Operational' }">Operational</li>
-          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Failback' }">Failback</li>
-        </ul>
-      </div>
+    <div class="container-fluid mt-4">
+      <ul class="list-unstyled multi-steps">
+        <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Defining' }">
+          Onboarding
+        </li>
+        <li
+          [ngClass]="{
+            'is-active': wizardSection.StatusText == 'ConfiguringDatacenter'
+          }"
+        >
+          Configuring Datacenter
+        </li>
+        <li
+          [ngClass]="{
+            'is-active': wizardSection.StatusText == 'DataProtection'
+          }"
+        >
+          Data Protection
+        </li>
+        <li
+          [ngClass]="{
+            'is-active': wizardSection.StatusText == 'DisasterRecovery'
+          }"
+        >
+          Declaration and Recovery
+        </li>
+        <li
+          [ngClass]="{ 'is-active': wizardSection.StatusText == 'Operational' }"
+        >
+          Operational
+        </li>
+        <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Failback' }">
+          Failback
+        </li>
+      </ul>
+    </div>
 
-    <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
+    <div class="mb-2 card" *ngFor="let category of wizardSection.Categories">
       <div class="card-header">
-        <label>
+        <label class="m-0">
           <fa
             name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
             (click)="category.Expanded = !category.Expanded"
@@ -33,7 +58,10 @@
       </div>
 
       <div *ngIf="category?.Expanded">
-        <div class="card" *ngFor="let subcategory of category.Subcategories">
+        <div
+          class="p-2 pl-5"
+          *ngFor="let subcategory of category.Subcategories"
+        >
           <label>
             <fa
               name="{{
@@ -45,15 +73,15 @@
             {{ subcategory.Name }}
           </label>
 
-          <div *ngIf="subcategory?.Expanded">
-            <div class="pl-3 card" *ngFor="let item of subcategory.Items">
-              <div class="m-2">
+          <div *ngIf="subcategory?.Expanded" class="mt-1">
+            <div class="p-2 pl-5" *ngFor="let item of subcategory.Items">
+              <div class="d-flex justify-content-between align-items-center">
                 <span>{{ item.Name }}</span>
-                <span class="pull-right">
-                  <button type="button" class="btn btn-primary btn-xs">
-                    Not Started
-                  </button>
-                </span>
+                <!-- <span class=""> -->
+                <button type="button" class="btn btn-outline-info btn-sm">
+                  Not Started
+                </button>
+                <!-- </span>  -->
               </div>
             </div>
           </div>
