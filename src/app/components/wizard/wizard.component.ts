@@ -19,7 +19,7 @@ export class WizardComponent implements OnInit {
   ngOnInit() {
     this.WizardSections = [
       {
-        Name: 'CDS',
+        Name: 'VDC1',
         StatusText: 'Defining',
         StatusProgress: 10,
         Categories: [
@@ -50,7 +50,7 @@ export class WizardComponent implements OnInit {
             ]
           },
           {
-            Name: 'Define Source Datacenter',
+            Name: 'Configuring Datacenter',
 
             Subcategories: [
               {
@@ -122,17 +122,14 @@ export class WizardComponent implements OnInit {
             Subcategories: [
               {
                 Name: 'Replication',
-
                 Items: []
               },
               {
                 Name: 'Testing',
-
                 Items: []
               },
               {
                 Name: 'Failover',
-
                 Items: []
               }
             ]
@@ -140,9 +137,9 @@ export class WizardComponent implements OnInit {
         ]
       },
       {
-        Name: 'GDIT',
+        Name: 'VDC2',
         StatusProgress: 30,
-        StatusText: 'Defining',
+        StatusText: 'DataProtection',
         Categories: [
           {
             Name: 'Onboarding',
@@ -171,7 +168,7 @@ export class WizardComponent implements OnInit {
             ]
           },
           {
-            Name: 'Define Source Datacenter',
+            Name: 'Configuring Datacenter',
 
             Subcategories: [
               {
@@ -246,17 +243,14 @@ export class WizardComponent implements OnInit {
             Subcategories: [
               {
                 Name: 'Replication',
-
                 Items: []
               },
               {
                 Name: 'Testing',
-
                 Items: []
               },
               {
                 Name: 'Failover',
-
                 Items: []
               }
             ]
@@ -264,7 +258,7 @@ export class WizardComponent implements OnInit {
         ]
       },
       {
-        Name: 'Leidos',
+        Name: 'VDC3',
         StatusProgress: 100,
         StatusText: 'Operational',
         Categories: [
@@ -295,7 +289,7 @@ export class WizardComponent implements OnInit {
             ]
           },
           {
-            Name: 'Define Source Datacenter',
+            Name: 'Configuring Datacenter',
 
             Subcategories: [
               {
@@ -319,12 +313,10 @@ export class WizardComponent implements OnInit {
                 Items: [
                   {
                     Name: 'Subnets',
-
                     Link: '/networks'
                   },
                   {
                     Name: 'Routing',
-
                     Link: 'static-routes'
                   },
                   {

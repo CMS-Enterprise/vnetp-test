@@ -1,53 +1,65 @@
 <div class="form-row p-3">
   <div
     *ngFor="let wizardSection of WizardSections"
-    class="form-group col-md-4 card border-secondary mb-3"
+    class="form-group col-md-4  border-secondary mb-3"
   >
-    <div class="card-header">
-      <label><h2>
-          {{ wizardSection.Name }}</h2>Current Status: <span class="font-italic">{{ wizardSection.StatusText}}</span>
-      </label>
-
-      <div class="progress" style="height: 20px;">
-          <div class="progress-bar" role="progressbar" [ngStyle]="{'width': getProgressBarPercentage(wizardSection.StatusProgress)}"></div>
-        </div>
+    <div>
+      <h2>
+        {{ wizardSection.Name }}
+      </h2>
     </div>
 
-      <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
-        <div class="card-header">
+    <div class="container-fluid">
+        <br /><br />
+        <ul class="list-unstyled multi-steps">
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Defining' }">Onboarding</li>
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'ConfiguringDatacenter' }">Configuring Datacenter</li>
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'DataProtection' }">Data Protection</li>
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'DisasterRecovery' }">Declaration and Recovery</li>
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Operational' }">Operational</li>
+          <li [ngClass]="{'is-active': wizardSection.StatusText == 'Failback' }">Failback</li>
+        </ul>
+      </div>
+
+    <div class="pl-1 card" *ngFor="let category of wizardSection.Categories">
+      <div class="card-header">
+        <label>
+          <fa
+            name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
+            (click)="category.Expanded = !category.Expanded"
+          ></fa>
+          {{ category.Name }}</label
+        >
+      </div>
+
+      <div *ngIf="category?.Expanded">
+        <div class="card" *ngFor="let subcategory of category.Subcategories">
           <label>
             <fa
-              name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}"
-              (click)="category.Expanded = !category.Expanded"
+              name="{{
+                subcategory?.Expanded ? 'chevron-down' : 'chevron-right'
+              }}"
+              (click)="subcategory.Expanded = !subcategory.Expanded"
             ></fa>
-            {{ category.Name }}</label>
-        </div>
 
-        <div *ngIf="category?.Expanded">
-          <div class="card" *ngFor="let subcategory of category.Subcategories">
-            <label>
-              <fa
-                name="{{
-                  subcategory?.Expanded ? 'chevron-down' : 'chevron-right'
-                }}"
-                (click)="subcategory.Expanded = !subcategory.Expanded"
-              ></fa>
+            {{ subcategory.Name }}
+          </label>
 
-              {{ subcategory.Name }}
-            </label>
-
-            <!--Move Ticket Number and Status to Right-->
-            <div *ngIf="subcategory?.Expanded">
-              <div class="pl-3 card" *ngFor="let item of subcategory.Items">
-                <div class="pull-left">{{ item.Name }} - <a routerLink=item?.Link>Ticket # 1234</a> - Not Started</div>
-                <p class="pl-4" *ngIf="item.Description">
-                  - {{ item.Description }}
-                </p>
+          <div *ngIf="subcategory?.Expanded">
+            <div class="pl-3 card" *ngFor="let item of subcategory.Items">
+              <div class="m-2">
+                <span>{{ item.Name }}</span>
+                <span class="pull-right">
+                  <button class="btn btn-primary btn-xs">
+                    Not Started
+                  </button>
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   </div>
 
   <hr />
