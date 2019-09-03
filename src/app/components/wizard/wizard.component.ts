@@ -25,7 +25,8 @@ export class WizardComponent implements OnInit {
         Categories: [
           {
             Name: 'Onboarding',
-
+            HasError: false,
+            HasWarning: false,
             Subcategories: [
               {
                 Name: 'Tenant Intialization',
@@ -169,7 +170,8 @@ export class WizardComponent implements OnInit {
           },
           {
             Name: 'Configuring Datacenter',
-
+            HasError: false,
+            HasWarning: true,
             Subcategories: [
               {
                 Name: 'Data Protection',

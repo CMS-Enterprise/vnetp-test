@@ -24,6 +24,10 @@ export class Category {
     Subcategories: Array<Subcategory>;
 
     Expanded?: boolean;
+
+    HasWarning?: boolean;
+
+    HasError?: boolean;
 }
 
 export class Subcategory {
