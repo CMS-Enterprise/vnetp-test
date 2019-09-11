@@ -39,7 +39,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     pool.Members = Object.assign([], this.poolMembers);
     pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
 
-    pool.Name.trim();
+    pool.Name = pool.Name.trim();
 
     const dto = new PoolModalDto();
     dto.Pool = pool;
