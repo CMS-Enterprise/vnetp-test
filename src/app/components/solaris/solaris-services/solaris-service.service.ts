@@ -26,7 +26,7 @@ export class SolarisService {
   currentVnic = new SolarisVnic();
   currentVds = new SolarisVdsDevs();
   SolarisImageDeviceName: string;
-  
+
   constructor(
     private auth: AuthService
   ) {
@@ -44,7 +44,6 @@ export class SolarisService {
    LDOMDevice.associatedcdom = tmpMetadata.associatedcdom;
    LDOMDevice.name = tmpMetadata.Name;
    LDOMDevice.customer_name = this.currentUser.CustomerName;
-   LDOMDevice.associatedcdom = tmpMetadata.associatedcdom;
    LDOMDevice.variables = tmpMetadata.variables;
    LDOMDevice.device_id = device.device_pk;
    return LDOMDevice;
@@ -74,16 +73,13 @@ export class SolarisService {
             const currentDevice = this.getCDOMDevice(
               this.AllDevices[i]
             );
-            console.log(currentDevice);
             this.CDOMArray.push(currentDevice);
           } else if (this.AllDevices[i].DeviceType === 'solaris_ldom') {
             const currentDevice = this.getLDOMDevice(
               this.AllDevices[i]
             );
-            console.log(currentDevice);
             this.LDOMArray.push(currentDevice);
           }
-          console.log(this.LDOMArray);
         }
         // finished looping through all devices, create dictionary to store CDOM/LDOM objects
         this.AllSolaris.push({
@@ -94,7 +90,6 @@ export class SolarisService {
           key: 'LDOM',
           value: this.LDOMArray
         });
-        console.log('Service', this.AllSolaris);
         return this.AllSolaris;
   }
   sanitizeMetadata(metadata: string) {
