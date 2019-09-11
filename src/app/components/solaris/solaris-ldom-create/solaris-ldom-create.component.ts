@@ -97,20 +97,18 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   }
   addTaggedVlan() {
     // verify duplicate of untagged vlan is not entered
-    if (this.vnicModalAddTaggedVlan == this.vnicModalUntaggedVlan) {
-      this.vnicModalAddTaggedVlan = null;
-      this.toastr.error('Duplicate VLAN Entered');
+    if (this.vnicModalAddTaggedVlan === this.vnicModalUntaggedVlan) {
+      this.toastr.error('Cannot use same VLAN as Untagged VLAN.');
     } else if (
       this.vnicModalTaggedVlans.indexOf(this.vnicModalAddTaggedVlan) === -1
     ) {
       // verify duplicate tagged vlan is not entered
       this.vnicModalTaggedVlans.push(this.vnicModalAddTaggedVlan);
-      this.vnicModalAddTaggedVlan = null;
     } else {
       // duplicate tagged vlan entered
-      this.vnicModalAddTaggedVlan = null;
       this.toastr.error('Duplicate VLAN Entered');
     }
+    this.vnicModalAddTaggedVlan = null;
   }
   moveObjectPosition(value: number, obj, objArray) {
     this.solarisService.moveObjectPosition(value, obj, objArray);
