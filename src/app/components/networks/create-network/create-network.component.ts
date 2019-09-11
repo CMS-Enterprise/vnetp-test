@@ -73,7 +73,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
     }
 
     // Validate that the supplied CIDR notation contains a valid IP address.
-    const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
+    const [isValid] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
     if (!isValid) {
       return; }
 
@@ -98,7 +98,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
 }
 
   createNetwork(action: string) {
-    const [isValid, error] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
+    const [isValid] = this.ipService.isValidIPv4CidrNotation(this.cidrAddress);
 
     if (!isValid || !this.subnet.name || !this.subnet.network ||
       !this.subnet.mask_bits || !this.subnet.subnet_mask ||

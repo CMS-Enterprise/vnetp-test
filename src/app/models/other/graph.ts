@@ -7,7 +7,7 @@ import { GraphContextMenuItem } from './graph-context-menu-item';
 /** Constructs a Graph by recursively iterating an object and its children. */
 export class Graph {
   constructor(obj: any, ignoreArray?: Array<string>, nameArray?: Array<string>,
-     contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
+              contextMenuArray?: Array<GraphContextMenu>, contextMenuCallback?: any) {
     this.nodes = new Array<GraphNode>();
     this.links = new Array<GraphLink>();
 
@@ -94,16 +94,15 @@ export class Graph {
   }
 
   private getGroupContextMenu(group, node, obj) {
-    if (!this.contextMenuArray) { return; };
-
+    if (!this.contextMenuArray) { return; }
 
     if (this.contextMenuArray[group - 1]) {
     const contextMenu = this.contextMenuArray[group - 1];
-    let nodeContextMenu = new GraphContextMenu();
+    const nodeContextMenu = new GraphContextMenu();
 
     // TODO: Bind context menu callback to all menu items with action.
     contextMenu.menuItems.forEach(mi => {
-      let nodeContextMenuItem = new GraphContextMenuItem(mi.title, false, mi.actionData);
+      const nodeContextMenuItem = new GraphContextMenuItem(mi.title, false, mi.actionData);
 
 
       if (mi.emitEvent) {
