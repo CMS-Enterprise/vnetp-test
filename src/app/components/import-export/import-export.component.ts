@@ -4,8 +4,7 @@ import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-import-export',
-  templateUrl: './import-export.component.html',
-  styleUrls: ['./import-export.component.css']
+  templateUrl: './import-export.component.html'
 })
 export class ImportExportComponent implements OnInit {
 

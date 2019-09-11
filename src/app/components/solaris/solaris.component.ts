@@ -3,8 +3,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-solaris',
-  templateUrl: './solaris.component.html',
-  styleUrls: ['./solaris.component.css']
+  templateUrl: './solaris.component.html'
 })
 export class SolarisComponent implements OnInit {
 

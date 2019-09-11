@@ -14,8 +14,7 @@ import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-network
 
 @Component({
   selector: 'app-service-objects-groups',
-  templateUrl: './service-objects-groups.component.html',
-  styleUrls: ['./service-objects-groups.component.css']
+  templateUrl: './service-objects-groups.component.html'
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
 

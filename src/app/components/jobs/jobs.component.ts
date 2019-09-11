@@ -3,8 +3,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-jobs',
-  templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.css']
+  templateUrl: './jobs.component.html'
 })
 export class JobsComponent implements OnInit {
   jobs: any;

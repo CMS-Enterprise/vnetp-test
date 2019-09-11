@@ -8,8 +8,7 @@ import { ContractModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-contract-modal',
-  templateUrl: './contract-modal.component.html',
-  styleUrls: ['./contract-modal.component.css']
+  templateUrl: './contract-modal.component.html'
 })
 export class ContractModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

@@ -5,8 +5,7 @@ import { PhysicalServer } from 'src/app/models/physical-server/physical-server';
 
 @Component({
   selector: 'app-physical-server-modal',
-  templateUrl: './physical-server-modal.component.html',
-  styleUrls: ['./physical-server-modal.component.css']
+  templateUrl: './physical-server-modal.component.html'
 })
 export class PhysicalServerModalComponent implements OnInit {
   form: FormGroup;

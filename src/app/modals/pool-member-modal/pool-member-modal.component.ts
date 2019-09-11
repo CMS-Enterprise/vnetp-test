@@ -8,8 +8,7 @@ import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-member-modal',
-  templateUrl: './pool-member-modal.component.html',
-  styleUrls: ['./pool-member-modal.component.css']
+  templateUrl: './pool-member-modal.component.html'
 })
 export class PoolMemberModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

@@ -10,8 +10,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-solaris-cdom-list',
-  templateUrl: './solaris-cdom-list.component.html',
-  styleUrls: ['./solaris-cdom-list.component.css']
+  templateUrl: './solaris-cdom-list.component.html'
 })
 export class SolarisCdomListComponent implements OnInit {
   devices: Array<any>;

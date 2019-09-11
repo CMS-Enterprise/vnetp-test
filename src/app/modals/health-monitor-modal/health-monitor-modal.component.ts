@@ -6,8 +6,7 @@ import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networkin
 
 @Component({
   selector: 'app-health-monitor-modal',
-  templateUrl: './health-monitor-modal.component.html',
-  styleUrls: ['./health-monitor-modal.component.css']
+  templateUrl: './health-monitor-modal.component.html'
 })
 export class HealthMonitorModalComponent implements OnInit {
   form: FormGroup;

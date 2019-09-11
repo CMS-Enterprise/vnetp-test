@@ -8,8 +8,7 @@ import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
 
 @Component({
   selector: 'app-ldom-list',
-  templateUrl: './ldom-list.component.html',
-  styleUrls: ['./ldom-list.component.css']
+  templateUrl: './ldom-list.component.html'
 })
 export class LdomListComponent implements OnInit {
 

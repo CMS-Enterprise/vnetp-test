@@ -17,8 +17,7 @@ import { Observable } from 'rxjs';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: 'app-solaris-cdom-create',
-  templateUrl: './solaris-cdom-create.component.html',
-  styleUrls: ['./solaris-cdom-create.component.css']
+  templateUrl: './solaris-cdom-create.component.html'
 })
 export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   CDOM: SolarisCdom;

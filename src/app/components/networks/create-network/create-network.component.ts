@@ -11,8 +11,7 @@ import { NetworkCreateHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-create-network',
-  templateUrl: './create-network.component.html',
-  styleUrls: ['./create-network.component.css']
+  templateUrl: './create-network.component.html'
 })
 export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
   subnet: Subnet;

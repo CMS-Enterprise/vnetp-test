@@ -14,8 +14,7 @@ import { NetworkInterfacesHelpText } from 'src/app/helptext/help-text-networking
 
 @Component({
   selector: 'app-network-interfaces',
-  templateUrl: './network-interfaces.component.html',
-  styleUrls: ['./network-interfaces.component.css']
+  templateUrl: './network-interfaces.component.html'
 })
 export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 

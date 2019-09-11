@@ -14,8 +14,7 @@ export interface InternalPieChartData extends PieChartData {
 
 @Component({
   selector: 'app-d3-pie-chart',
-  templateUrl: './d3-pie-chart.component.html',
-  styleUrls: ['./d3-pie-chart.component.css']
+  templateUrl: './d3-pie-chart.component.html'
 })
 export class D3PieChartComponent implements OnInit, OnChanges {
   @Input() data: Array<PieChartData> = [];

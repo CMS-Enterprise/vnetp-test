@@ -10,8 +10,7 @@ import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-modal',
-  templateUrl: './pool-modal.component.html',
-  styleUrls: ['./pool-modal.component.css']
+  templateUrl: './pool-modal.component.html'
 })
 export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

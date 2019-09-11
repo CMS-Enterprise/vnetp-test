@@ -20,8 +20,7 @@ import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-obje
 
 @Component({
   selector: 'app-firewall-rules-detail',
-  templateUrl: './firewall-rules-detail.component.html',
-  styleUrls: ['./firewall-rules-detail.component.css']
+  templateUrl: './firewall-rules-detail.component.html'
 })
 export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';

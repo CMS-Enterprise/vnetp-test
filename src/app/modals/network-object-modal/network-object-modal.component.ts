@@ -10,8 +10,7 @@ import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networkin
 
 @Component({
   selector: 'app-network-object-modal',
-  templateUrl: './network-object-modal.component.html',
-  styleUrls: ['./network-object-modal.component.css']
+  templateUrl: './network-object-modal.component.html'
 })
 export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

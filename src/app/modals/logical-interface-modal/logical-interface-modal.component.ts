@@ -11,8 +11,7 @@ import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-inte
 
 @Component({
   selector: 'app-logical-interface-modal',
-  templateUrl: './logical-interface-modal.component.html',
-  styleUrls: ['./logical-interface-modal.component.css']
+  templateUrl: './logical-interface-modal.component.html'
 })
 export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

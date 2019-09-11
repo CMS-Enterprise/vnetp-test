@@ -8,8 +8,7 @@ import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networkin
 
 @Component({
   selector: 'app-service-object-modal',
-  templateUrl: './service-object-modal.component.html',
-  styleUrls: ['./service-object-modal.component.css']
+  templateUrl: './service-object-modal.component.html'
 })
 export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

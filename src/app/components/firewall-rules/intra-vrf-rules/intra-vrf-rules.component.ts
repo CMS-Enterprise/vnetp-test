@@ -12,8 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-intra-vrf-rules',
-  templateUrl: './intra-vrf-rules.component.html',
-  styleUrls: ['./intra-vrf-rules.component.css']
+  templateUrl: './intra-vrf-rules.component.html'
 })
 export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
 

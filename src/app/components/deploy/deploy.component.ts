@@ -6,8 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-deploy',
-  templateUrl: './deploy.component.html',
-  styleUrls: ['./deploy.component.css']
+  templateUrl: './deploy.component.html'
 })
 export class DeployComponent implements OnInit {
 

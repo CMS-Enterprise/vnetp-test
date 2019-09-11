@@ -6,8 +6,7 @@ import { FirewallRulesHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-firewall-rules',
-  templateUrl: './firewall-rules.component.html',
-  styleUrls: ['./firewall-rules.component.css']
+  templateUrl: './firewall-rules.component.html'
 })
 export class FirewallRulesComponent implements OnInit {
   navIndex = 0;
