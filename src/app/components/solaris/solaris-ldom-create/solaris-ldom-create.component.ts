@@ -128,7 +128,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.LDOM = this.LDOM;
 
     const body = { extra_vars };
-    if (this.editLdom != true) {
+    if (this.editLdom) {
       this.automationApiService
         .launchTemplate(`save-ldom`, body, true)
         .subscribe();
