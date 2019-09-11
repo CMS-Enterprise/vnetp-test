@@ -7,12 +7,12 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
   styleUrls : [ 'tooltip.component.scss' ],
 })
 export class TooltipComponent {
-  @Input('message') message: string;
+  @Input() message: string;
   @ViewChild('tooltip') private tooltip: ElementRef;
 
-  public isShowTooltip: Boolean;
   public tooltipMsgStyle: any;
-  public isLockTooltip: Boolean = false;
+  public isShowTooltip = false;
+  public isLockTooltip = false;
 
   constructor() {}
 
