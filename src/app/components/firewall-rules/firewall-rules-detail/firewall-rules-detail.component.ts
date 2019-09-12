@@ -20,8 +20,7 @@ import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-obje
 
 @Component({
   selector: 'app-firewall-rules-detail',
-  templateUrl: './firewall-rules-detail.component.html',
-  styleUrls: ['./firewall-rules-detail.component.css']
+  templateUrl: './firewall-rules-detail.component.html'
 })
 export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
   Id = '';
@@ -95,23 +94,21 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   getEntity() {
+    let ruleScope = '';
+
     if (this.scope === FirewallRuleScope.vrf) {
-      this.automationApiService.getVrf(this.Id).subscribe(
-        data => {
-          this.vrf = data as Vrf;
-          this.getEntityCustomFields(this.vrf, 'firewall_rules');
-          this.getVrfCustomFields(this.vrf);
-        }
-      );
+      ruleScope = 'firewall_rules';
     } else if (this.scope === FirewallRuleScope.external) {
-      this.automationApiService.getVrf(this.Id).subscribe(
+      ruleScope = 'external_firewall_rules';
+    }
+
+    this.automationApiService.getVrf(this.Id).subscribe(
         data => {
-          this.vrf = data as Vrf;
-          this.getEntityCustomFields(this.vrf, 'external_firewall_rules');
+          this.vrf = data;
+          this.getEntityCustomFields(this.vrf, ruleScope);
           this.getVrfCustomFields(this.vrf);
         }
       );
-    }
   }
 
   getEntityCustomFields(entity: CustomFieldsObject, fieldName: string) {

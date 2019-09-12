@@ -7,8 +7,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-physical-server',
-  templateUrl: './physical-server.component.html',
-  styleUrls: ['./physical-server.component.css']
+  templateUrl: './physical-server.component.html'
 })
 export class PhysicalServerComponent implements OnInit, OnDestroy {
 

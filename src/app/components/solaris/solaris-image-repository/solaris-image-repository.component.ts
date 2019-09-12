@@ -8,8 +8,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: 'app-solaris-image-repository',
-  templateUrl: './solaris-image-repository.component.html',
-  styleUrls: ['./solaris-image-repository.component.css']
+  templateUrl: './solaris-image-repository.component.html'
 })
 export class SolarisImageRepositoryComponent implements OnInit {
   SolarisImages: Array<SolarisImage>;

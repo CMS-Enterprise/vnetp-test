@@ -10,8 +10,7 @@ import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-
 
 @Component({
   selector: 'app-network-topology',
-  templateUrl: './network-topology.component.html',
-  styleUrls: ['./network-topology.component.css']
+  templateUrl: './network-topology.component.html'
 })
 export class NetworkTopologyComponent implements OnInit {
   customers: Array<Customer>;

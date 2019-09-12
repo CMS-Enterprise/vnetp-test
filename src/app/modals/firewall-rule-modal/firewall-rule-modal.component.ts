@@ -19,8 +19,7 @@ import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking
 
 @Component({
   selector: 'app-firewall-rule-modal',
-  templateUrl: './firewall-rule-modal.component.html',
-  styleUrls: ['./firewall-rule-modal.component.css']
+  templateUrl: './firewall-rule-modal.component.html'
 })
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

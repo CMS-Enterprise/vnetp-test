@@ -12,8 +12,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-networks-detail',
-  templateUrl: './networks-detail.component.html',
-  styleUrls: ['./networks-detail.component.css']
+  templateUrl: './networks-detail.component.html'
 })
 export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
   constructor(

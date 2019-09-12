@@ -5,8 +5,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-networks',
-  templateUrl: './networks.component.html',
-  styleUrls: ['./networks.component.css']
+  templateUrl: './networks.component.html'
 })
 export class NetworksComponent implements OnInit {
 

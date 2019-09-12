@@ -17,8 +17,7 @@ import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-network
 
 @Component({
   selector: 'app-network-objects-groups',
-  templateUrl: './network-objects-groups.component.html',
-  styleUrls: ['./network-objects-groups.component.css']
+  templateUrl: './network-objects-groups.component.html'
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
   vrfs: Vrf[];

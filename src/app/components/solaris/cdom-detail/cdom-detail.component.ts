@@ -8,8 +8,7 @@ import { Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-cdom-detail',
-  templateUrl: './cdom-detail.component.html',
-  styleUrls: ['./cdom-detail.component.css']
+  templateUrl: './cdom-detail.component.html'
 })
 export class CdomDetailComponent implements OnInit {
   Id: string;

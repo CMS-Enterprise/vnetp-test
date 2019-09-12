@@ -9,8 +9,7 @@ import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networkin
 
 @Component({
   selector: 'app-virtual-server-modal',
-  templateUrl: './virtual-server-modal.component.html',
-  styleUrls: ['./virtual-server-modal.component.css']
+  templateUrl: './virtual-server-modal.component.html'
 })
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

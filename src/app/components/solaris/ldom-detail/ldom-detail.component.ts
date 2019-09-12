@@ -7,8 +7,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-ldom-detail',
-  templateUrl: './ldom-detail.component.html',
-  styleUrls: ['./ldom-detail.component.css']
+  templateUrl: './ldom-detail.component.html'
 })
 export class LdomDetailComponent implements OnInit {
   Ldom: SolarisLdom;

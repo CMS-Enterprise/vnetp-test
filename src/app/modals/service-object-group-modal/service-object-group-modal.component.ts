@@ -10,8 +10,7 @@ import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 
 @Component({
   selector: 'app-service-object-group-modal',
-  templateUrl: './service-object-group-modal.component.html',
-  styleUrls: ['./service-object-group-modal.component.css']
+  templateUrl: './service-object-group-modal.component.html'
 })
 export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

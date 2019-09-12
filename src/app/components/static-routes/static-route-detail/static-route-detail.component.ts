@@ -9,8 +9,7 @@ import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-static-route-detail',
-  templateUrl: './static-route-detail.component.html',
-  styleUrls: ['./static-route-detail.component.css']
+  templateUrl: './static-route-detail.component.html'
 })
 export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 

@@ -10,8 +10,7 @@ import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-modal',
-  templateUrl: './pool-modal.component.html',
-  styleUrls: ['./pool-modal.component.css']
+  templateUrl: './pool-modal.component.html'
 })
 export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -40,7 +39,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     pool.Members = Object.assign([], this.poolMembers);
     pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
 
-    pool.Name.trim();
+    pool.Name = pool.Name.trim();
 
     const dto = new PoolModalDto();
     dto.Pool = pool;

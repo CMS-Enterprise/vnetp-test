@@ -3,8 +3,7 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-ipaddresses',
-  templateUrl: './ipaddresses.component.html',
-  styleUrls: ['./ipaddresses.component.css']
+  templateUrl: './ipaddresses.component.html'
 })
 export class IpaddressesComponent implements OnInit {
   @Input()

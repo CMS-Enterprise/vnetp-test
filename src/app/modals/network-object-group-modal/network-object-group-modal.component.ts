@@ -13,8 +13,7 @@ import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 
 @Component({
   selector: 'app-network-object-group-modal',
-  templateUrl: './network-object-group-modal.component.html',
-  styleUrls: ['./network-object-group-modal.component.css']
+  templateUrl: './network-object-group-modal.component.html'
 })
 export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

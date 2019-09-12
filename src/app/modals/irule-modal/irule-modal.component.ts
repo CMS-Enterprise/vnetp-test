@@ -6,8 +6,7 @@ import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-irule-modal',
-  templateUrl: './irule-modal.component.html',
-  styleUrls: ['./irule-modal.component.css']
+  templateUrl: './irule-modal.component.html'
 })
 export class IRuleModalComponent implements OnInit {
   form: FormGroup;

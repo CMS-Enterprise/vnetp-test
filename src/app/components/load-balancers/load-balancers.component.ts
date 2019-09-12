@@ -19,8 +19,7 @@ import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-load-balancers',
-  templateUrl: './load-balancers.component.html',
-  styleUrls: ['./load-balancers.component.css']
+  templateUrl: './load-balancers.component.html'
 })
 export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   navIndex = 0;

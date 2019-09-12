@@ -17,8 +17,7 @@ import { Observable } from 'rxjs';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: 'app-solaris-cdom-create',
-  templateUrl: './solaris-cdom-create.component.html',
-  styleUrls: ['./solaris-cdom-create.component.css']
+  templateUrl: './solaris-cdom-create.component.html'
 })
 export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   CDOM: SolarisCdom;
@@ -38,7 +37,6 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   editCDOM: boolean;
   editCurrentVswitch: boolean;
   editVswitchIndex: number;
-
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -124,10 +122,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
-    if (this.editCDOM != true ) {
+    if (this.editCDOM) {
       this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
-    }
-    else{
+    } else {
       this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
     }
     this.router.navigate(['/solaris/cdom/list']);
@@ -154,7 +151,7 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     if (!this.CDOM.vsw) {
       this.CDOM.vsw = new Array<SolarisVswitch>();
     }
-    if (this.editCurrentVswitch){
+    if (this.editCurrentVswitch) {
       this.CDOM.vsw[this.editVswitchIndex] = this.hs.deepCopy(this.modalVswitch);
       this.editCurrentVswitch = false;
       this.editVswitchIndex = null;

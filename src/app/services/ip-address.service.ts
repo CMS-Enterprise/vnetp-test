@@ -52,7 +52,6 @@ export class IpAddressService {
   public ipv4MaskLessThan(cidr: string, length: number): boolean {
     const cidrComponents = cidr.split('/');
 
-    const ip = cidrComponents[0];
     const range = cidrComponents[1];
 
     if (Number(range) > length) {
@@ -68,7 +67,6 @@ export class IpAddressService {
     if (cidrComponents.length < 2) { return; }
 
     const ip = cidrComponents[0];
-    const range = cidrComponents[1];
 
     return `${ip}/${value}`;
   }
@@ -89,7 +87,6 @@ export class IpAddressService {
   public getIPv4CidrMask(cidr: string): number {
     const cidrComponents = cidr.split('/');
 
-    const ip = cidrComponents[0];
     const range = cidrComponents[1];
 
     return +range;
