@@ -31,7 +31,7 @@ describe('LoadBalancersComponent', () => {
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
         AngularFontAwesomeModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
         LoadBalancersComponent,
@@ -41,15 +41,10 @@ describe('LoadBalancersComponent', () => {
         PoolMemberModalComponent,
         HealthMonitorModalComponent,
         ImportExportComponent,
-        TooltipComponent
+        TooltipComponent,
       ],
-      providers: [
-        NgxSmartModalService,
-        CookieService,
-        FormBuilder
-      ]
-    })
-    .compileComponents();
+      providers: [NgxSmartModalService, CookieService, FormBuilder],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

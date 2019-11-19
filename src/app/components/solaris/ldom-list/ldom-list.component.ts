@@ -8,10 +8,9 @@ import { SolarisCdom } from 'src/app/models/solaris/solaris-cdom';
 
 @Component({
   selector: 'app-ldom-list',
-  templateUrl: './ldom-list.component.html'
+  templateUrl: './ldom-list.component.html',
 })
 export class LdomListComponent implements OnInit {
-
   @Input()
   CdomName: string;
 
@@ -21,8 +20,8 @@ export class LdomListComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private router: Router,
-    private hs: HelpersService
-    ) { }
+    private hs: HelpersService,
+  ) {}
 
   ngOnInit() {
     this.Ldoms = new Array<SolarisLdom>();
@@ -30,26 +29,30 @@ export class LdomListComponent implements OnInit {
   }
   getLdoms() {
     if (!this.CdomName) {
-      this.automationApiService.getLDoms().subscribe(
-        data => {
-          const result = data as any;
-          this.Ldoms = result.Devices as Array<SolarisLdom>;
-        }
-      );
-  } else if (this.CdomName) {
-    this.automationApiService.getLDomsForCDom(this.CdomName).subscribe(
-      data => {
+      this.automationApiService.getLDoms().subscribe(data => {
         const result = data as any;
         this.Ldoms = result.Devices as Array<SolarisLdom>;
       });
-     }
+    } else if (this.CdomName) {
+      this.automationApiService
+        .getLDomsForCDom(this.CdomName)
+        .subscribe(data => {
+          const result = data as any;
+          this.Ldoms = result.Devices as Array<SolarisLdom>;
+        });
     }
-  editLdom(device: SolarisLdom){
-    this.automationApiService.getDevicesbyID(device.device_id).subscribe(dataLdom => {
-      const resultLdom = dataLdom as SolarisLdom;
-      this.solarisService.currentLdom = this.hs.getJsonCustomField(resultLdom, 'Metadata') as SolarisLdom;
-      this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
-      this.router.navigate(['/solaris/ldom/create']);
-    });
+  }
+  editLdom(device: SolarisLdom) {
+    this.automationApiService
+      .getDevicesbyID(device.device_id)
+      .subscribe(dataLdom => {
+        const resultLdom = dataLdom as SolarisLdom;
+        this.solarisService.currentLdom = this.hs.getJsonCustomField(
+          resultLdom,
+          'Metadata',
+        ) as SolarisLdom;
+        this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
+        this.router.navigate(['/solaris/ldom/create']);
+      });
   }
 }

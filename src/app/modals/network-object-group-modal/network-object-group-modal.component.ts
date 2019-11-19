@@ -13,7 +13,7 @@ import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 
 @Component({
   selector: 'app-network-object-group-modal',
-  templateUrl: './network-object-group-modal.component.html'
+  templateUrl: './network-object-group-modal.component.html',
 })
 export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -27,11 +27,16 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   networkObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService,
-              public helpText: NetworkObjectGroupModalHelpText) { this.networkObjects = new Array<NetworkObject>();
-   }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private hs: HelpersService,
+    public helpText: NetworkObjectGroupModalHelpText,
+  ) {
+    this.networkObjects = new Array<NetworkObject>();
+  }
 
-   save() {
+  save() {
     this.submitted = true;
 
     if (this.form.invalid) {
@@ -55,11 +60,13 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   deleteNetworkObject(networkObject: NetworkObject) {
     const index = this.networkObjects.indexOf(networkObject);
-    if ( index > -1) {
+    if (index > -1) {
       this.networkObjects.splice(index, 1);
     }
   }
@@ -97,20 +104,26 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNetworkObjectModal() {
-    this.networkObjectModalSubscription =
-    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as NetworkObjectModalDto;
+    this.networkObjectModalSubscription = this.ngx
+      .getModal('networkObjectModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as NetworkObjectModalDto;
 
-      if (data && data.NetworkObject) {
-        this.saveNetworkObject(data.NetworkObject);
-      }
-      this.ngx.resetModalData('networkObjectModal');
-      this.networkObjectModalSubscription.unsubscribe();
-    });
+        if (data && data.NetworkObject) {
+          this.saveNetworkObject(data.NetworkObject);
+        }
+        this.ngx.resetModalData('networkObjectModal');
+        this.networkObjectModalSubscription.unsubscribe();
+      });
   }
 
   getData() {
-    const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
+    const dto = Object.assign(
+      {},
+      this.ngx.getModalData(
+        'networkObjectGroupModal',
+      ) as NetworkObjectGroupModalDto,
+    );
 
     if (dto.Subnets) {
       this.Subnets = dto.Subnets;
@@ -133,7 +146,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
     });
   }
 

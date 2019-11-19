@@ -11,7 +11,7 @@ describe('DeployComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [DeployComponent],
-      providers: [HttpClientTestingModule, CookieService]
+      providers: [HttpClientTestingModule, CookieService],
     }).compileComponents();
   }));
 

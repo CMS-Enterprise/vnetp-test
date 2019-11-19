@@ -1,7 +1,7 @@
 import { FirewallRule } from './firewall-rule';
 
 export class FirewallRuleModalDto {
-    VrfId: number;
+  VrfId: number;
 
-    FirewallRule: FirewallRule;
+  FirewallRule: FirewallRule;
 }

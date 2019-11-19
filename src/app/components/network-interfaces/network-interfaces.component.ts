@@ -14,12 +14,15 @@ import { NetworkInterfacesHelpText } from 'src/app/helptext/help-text-networking
 
 @Component({
   selector: 'app-network-interfaces',
-  templateUrl: './network-interfaces.component.html'
+  templateUrl: './network-interfaces.component.html',
 })
 export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
-
-  constructor(private hs: HelpersService, private api: AutomationApiService,
-              private ngx: NgxSmartModalService, public helpText: NetworkInterfacesHelpText) { }
+  constructor(
+    private hs: HelpersService,
+    private api: AutomationApiService,
+    private ngx: NgxSmartModalService,
+    public helpText: NetworkInterfacesHelpText,
+  ) {}
 
   LogicalInterfaces: Array<LogicalInterface>;
   Subnets: Array<Subnet>;
@@ -63,14 +66,17 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
   }
 
   getVrfObjects(vrf: Vrf) {
-      const networkInterfacesDto = this.hs.getJsonCustomField(vrf, 'network_interfaces') as NetworkInterfacesDto;
+    const networkInterfacesDto = this.hs.getJsonCustomField(
+      vrf,
+      'network_interfaces',
+    ) as NetworkInterfacesDto;
 
-      if (!networkInterfacesDto) {
-        this.LogicalInterfaces = new Array<LogicalInterface>();
-       } else if (networkInterfacesDto) {
-        this.LogicalInterfaces = networkInterfacesDto.LogicalInterfaces;
-      }
-      this.getVrfSubnets(vrf);
+    if (!networkInterfacesDto) {
+      this.LogicalInterfaces = new Array<LogicalInterface>();
+    } else if (networkInterfacesDto) {
+      this.LogicalInterfaces = networkInterfacesDto.LogicalInterfaces;
+    }
+    this.getVrfSubnets(vrf);
   }
 
   getVrfSubnets(vrf: Vrf) {
@@ -93,7 +99,9 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 
   editLogicalInterface(logicalInterface: LogicalInterface) {
     this.subscribeToLogicalInterfaceModal();
-    this.editLogicalInterfaceIndex = this.LogicalInterfaces.indexOf(logicalInterface);
+    this.editLogicalInterfaceIndex = this.LogicalInterfaces.indexOf(
+      logicalInterface,
+    );
     const dto = new LogicalInterfaceModalDto();
 
     dto.LogicalInterface = logicalInterface;
@@ -105,16 +113,17 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
   }
 
   subscribeToLogicalInterfaceModal() {
-    this.logicalInterfaceModalSubscription =
-    this.ngx.getModal('logicalInterfaceModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent ) => {
-      const data = modal.getData() as LogicalInterfaceModalDto;
+    this.logicalInterfaceModalSubscription = this.ngx
+      .getModal('logicalInterfaceModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as LogicalInterfaceModalDto;
 
-      if (data && data.LogicalInterface)  {
-        this.saveLogicalInterface(data.LogicalInterface);
-      }
-      this.ngx.resetModalData('logicalInterfaceModal');
-      this.logicalInterfaceModalSubscription.unsubscribe();
-    });
+        if (data && data.LogicalInterface) {
+          this.saveLogicalInterface(data.LogicalInterface);
+        }
+        this.ngx.resetModalData('logicalInterfaceModal');
+        this.logicalInterfaceModalSubscription.unsubscribe();
+      });
   }
 
   saveLogicalInterface(logicalInterface: LogicalInterface) {
@@ -142,7 +151,7 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
     dto.LogicalInterfaces = this.LogicalInterfaces;
     dto.VrfId = this.currentVrf.id;
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.network_interfaces_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
 
@@ -150,8 +159,14 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-interfaces-dto', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
+    this.api
+      .launchTemplate('save-network-interfaces-dto', body, true)
+      .subscribe(
+        data => {},
+        error => {
+          this.dirty = true;
+        },
+      );
   }
 
   ngOnInit() {
@@ -159,9 +174,11 @@ export class NetworkInterfacesComponent implements OnInit, PendingChangesGuard {
   }
 
   insertLogicalInterfaces(logicalIntefaces) {
-    if (!this.LogicalInterfaces) { this.LogicalInterfaces = new Array<LogicalInterface>(); }
+    if (!this.LogicalInterfaces) {
+      this.LogicalInterfaces = new Array<LogicalInterface>();
+    }
     logicalIntefaces.forEach(logicalInterface => {
       this.LogicalInterfaces.push(logicalInterface);
-    })
+    });
   }
 }

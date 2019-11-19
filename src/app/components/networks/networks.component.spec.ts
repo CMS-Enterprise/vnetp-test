@@ -15,11 +15,20 @@ describe('NetworksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]), FormsModule, PapaParseModule, HttpClientTestingModule ],
-      declarations: [ NetworksComponent, ImportExportComponent, TooltipComponent],
-      providers: [ CookieService ]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        RouterTestingModule.withRoutes([]),
+        FormsModule,
+        PapaParseModule,
+        HttpClientTestingModule,
+      ],
+      declarations: [
+        NetworksComponent,
+        ImportExportComponent,
+        TooltipComponent,
+      ],
+      providers: [CookieService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

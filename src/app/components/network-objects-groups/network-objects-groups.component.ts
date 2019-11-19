@@ -17,9 +17,10 @@ import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-network
 
 @Component({
   selector: 'app-network-objects-groups',
-  templateUrl: './network-objects-groups.component.html'
+  templateUrl: './network-objects-groups.component.html',
 })
-export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class NetworkObjectsGroupsComponent
+  implements OnInit, OnDestroy, PendingChangesGuard {
   vrfs: Vrf[];
   currentVrf: Vrf;
 
@@ -45,8 +46,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     return !this.dirty;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
-              public helpText: NetworkObjectsGroupsHelpText) {
+  constructor(
+    private ngx: NgxSmartModalService,
+    private api: AutomationApiService,
+    private papa: Papa,
+    private hs: HelpersService,
+    public helpText: NetworkObjectsGroupsHelpText,
+  ) {
     this.networkObjects = new Array<NetworkObject>();
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
@@ -77,15 +83,18 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   getVrfObjects(vrf: Vrf) {
-    const networkObjectDto = this.hs.getJsonCustomField(vrf, 'network_objects') as NetworkObjectDto;
+    const networkObjectDto = this.hs.getJsonCustomField(
+      vrf,
+      'network_objects',
+    ) as NetworkObjectDto;
 
     if (!networkObjectDto) {
-        this.networkObjects = new Array<NetworkObject>();
-        this.networkObjectGroups = new Array<NetworkObjectGroup>();
-      } else {
+      this.networkObjects = new Array<NetworkObject>();
+      this.networkObjectGroups = new Array<NetworkObjectGroup>();
+    } else {
       this.networkObjects = networkObjectDto.NetworkObjects;
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-      }
+    }
     this.getVrfSubnets(vrf);
   }
 
@@ -132,7 +141,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    this.subscribeToNetworkObjectGroupModal() ;
+    this.subscribeToNetworkObjectGroupModal();
     this.networkObjectGroupModalMode = ModalMode.Edit;
 
     const dto = new NetworkObjectGroupModalDto();
@@ -140,34 +149,38 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     dto.NetworkObjectGroup = networkObjectGroup;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
-    this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
+    this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(
+      networkObjectGroup,
+    );
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 
   subscribeToNetworkObjectModal() {
-    this.networkObjectModalSubscription =
-    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as NetworkObjectModalDto;
+    this.networkObjectModalSubscription = this.ngx
+      .getModal('networkObjectModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as NetworkObjectModalDto;
 
-      if (data && data.NetworkObject) {
-        this.saveNetworkObject(data.NetworkObject);
-      }
-      this.ngx.resetModalData('networkObjectModal');
-      this.networkObjectModalSubscription.unsubscribe();
-    });
+        if (data && data.NetworkObject) {
+          this.saveNetworkObject(data.NetworkObject);
+        }
+        this.ngx.resetModalData('networkObjectModal');
+        this.networkObjectModalSubscription.unsubscribe();
+      });
   }
 
   subscribeToNetworkObjectGroupModal() {
-    this.networkObjectGroupModalSubscription =
-    this.ngx.getModal('networkObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as NetworkObjectGroup;
+    this.networkObjectGroupModalSubscription = this.ngx
+      .getModal('networkObjectGroupModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as NetworkObjectGroup;
 
-      if (data !== undefined) {
-        this.saveNetworkObjectGroup(data);
-      }
-      this.ngx.resetModalData('networkObjectGroupModal');
-      this.networkObjectGroupModalSubscription.unsubscribe();
-    });
+        if (data !== undefined) {
+          this.saveNetworkObjectGroup(data);
+        }
+        this.ngx.resetModalData('networkObjectGroupModal');
+        this.networkObjectGroupModalSubscription.unsubscribe();
+      });
   }
 
   saveNetworkObject(networkObject: NetworkObject) {
@@ -181,10 +194,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
   deleteNetworkObject(networkObject: NetworkObject) {
     const index = this.networkObjects.indexOf(networkObject);
-    if ( index > -1) {
+    if (index > -1) {
       this.networkObjects.splice(index, 1);
 
-      if (!this.deletedNetworkObjects) { this.deletedNetworkObjects = new Array<NetworkObject>(); }
+      if (!this.deletedNetworkObjects) {
+        this.deletedNetworkObjects = new Array<NetworkObject>();
+      }
       this.deletedNetworkObjects.push(networkObject);
 
       this.dirty = true;
@@ -195,17 +210,21 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     if (this.networkObjectGroupModalMode === ModalMode.Create) {
       this.networkObjectGroups.push(networkObjectGroup);
     } else {
-      this.networkObjectGroups[this.editNetworkObjectGroupIndex] = networkObjectGroup;
+      this.networkObjectGroups[
+        this.editNetworkObjectGroupIndex
+      ] = networkObjectGroup;
     }
     this.dirty = true;
   }
 
   deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
     const index = this.networkObjectGroups.indexOf(networkObjectGroup);
-    if ( index > -1) {
+    if (index > -1) {
       this.networkObjectGroups.splice(index, 1);
 
-      if (!this.deletedNetworkObjectGroups) { this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>(); }
+      if (!this.deletedNetworkObjectGroups) {
+        this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>();
+      }
       this.deletedNetworkObjectGroups.push(networkObjectGroup);
 
       this.dirty = true;
@@ -222,7 +241,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.VrfId = this.currentVrf.id;
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.network_object_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
     extra_vars.deleted_network_objects = this.deletedNetworkObjects;
@@ -230,17 +249,22 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-network-object-dto', body, true).subscribe(data => {
-    }, error => { this.dirty = true; });
+    this.api.launchTemplate('save-network-object-dto', body, true).subscribe(
+      data => {},
+      error => {
+        this.dirty = true;
+      },
+    );
 
     this.deletedNetworkObjects = new Array<NetworkObject>();
     this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
   private unsubAll() {
-    [this.networkObjectModalSubscription,
-    this.networkObjectGroupModalSubscription]
-    .forEach(sub => {
+    [
+      this.networkObjectModalSubscription,
+      this.networkObjectGroupModalSubscription,
+    ].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -269,7 +293,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
     return dto;
   }
-
 
   ngOnInit() {
     this.getVrfs();

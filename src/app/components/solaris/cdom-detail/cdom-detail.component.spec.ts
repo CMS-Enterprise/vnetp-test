@@ -20,10 +20,10 @@ describe('CdomDetailComponent', () => {
         FormsModule,
         RouterTestingModule.withRoutes([]),
         NgxSmartModalModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [CdomDetailComponent, LdomListComponent],
-      providers: [CookieService, NgxSmartModalService]
+      providers: [CookieService, NgxSmartModalService],
     }).compileComponents();
   }));
 

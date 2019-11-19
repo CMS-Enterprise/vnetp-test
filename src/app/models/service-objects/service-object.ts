@@ -1,11 +1,11 @@
 import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
 export class ServiceObject implements UniqueNameObject {
-    Name: string;
+  Name: string;
 
-    Type: string;
+  Type: string;
 
-    SourcePort: string;
+  SourcePort: string;
 
-    DestinationPort: string;
+  DestinationPort: string;
 }

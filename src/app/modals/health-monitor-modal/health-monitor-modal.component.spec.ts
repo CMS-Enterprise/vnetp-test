@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -14,14 +19,25 @@ describe('HealthMonitorModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ HealthMonitorModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule.forRoot(),
+      ],
+      declarations: [HealthMonitorModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(HealthMonitorModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(HealthMonitorModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {

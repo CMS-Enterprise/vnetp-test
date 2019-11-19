@@ -20,9 +20,10 @@ import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-obje
 
 @Component({
   selector: 'app-firewall-rules-detail',
-  templateUrl: './firewall-rules-detail.component.html'
+  templateUrl: './firewall-rules-detail.component.html',
 })
-export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
+export class FirewallRulesDetailComponent
+  implements OnInit, PendingChangesGuard {
   Id = '';
 
   vrf: Vrf;
@@ -42,15 +43,21 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
 
   scope: FirewallRuleScope;
 
-  get scopeString() { return this.scope; }
+  get scopeString() {
+    return this.scope;
+  }
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService, private ngx: NgxSmartModalService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private automationApiService: AutomationApiService,
+    private hs: HelpersService,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngOnInit() {
     this.firewallRules = new Array<FirewallRule>();
@@ -73,22 +80,32 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     this.getEntity();
   }
 
-  moveFirewallRule(value: number, rule : FirewallRule) {
+  moveFirewallRule(value: number, rule: FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
 
     // If the rule isn't in the array, is at the start of the array and requested to move up
     // or if the rule is at the end of the array, return.
-    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewallRules.length) { return; }
+    if (
+      ruleIndex === -1 ||
+      (ruleIndex === 0 && value === -1) ||
+      ruleIndex + value === this.firewallRules.length
+    ) {
+      return;
+    }
 
     const nextRule = this.firewallRules[ruleIndex + value];
 
     // If the next rule doesn't exist, return.
-    if (nextRule === null) { return; }
+    if (nextRule === null) {
+      return;
+    }
 
     const nextRuleIndex = this.firewallRules.indexOf(nextRule);
 
-    [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] =
-    [this.firewallRules[nextRuleIndex], this.firewallRules[ruleIndex]];
+    [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] = [
+      this.firewallRules[nextRuleIndex],
+      this.firewallRules[ruleIndex],
+    ];
 
     this.dirty = true;
   }
@@ -102,32 +119,36 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
       ruleScope = 'external_firewall_rules';
     }
 
-    this.automationApiService.getVrf(this.Id).subscribe(
-        data => {
-          this.vrf = data;
-          this.getEntityCustomFields(this.vrf, ruleScope);
-          this.getVrfCustomFields(this.vrf);
-        }
-      );
+    this.automationApiService.getVrf(this.Id).subscribe(data => {
+      this.vrf = data;
+      this.getEntityCustomFields(this.vrf, ruleScope);
+      this.getVrfCustomFields(this.vrf);
+    });
   }
 
   getEntityCustomFields(entity: CustomFieldsObject, fieldName: string) {
     const firewallrules = entity.custom_fields.find(c => c.key === fieldName);
 
     if (firewallrules) {
-    this.firewallRules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
+      this.firewallRules = JSON.parse(firewallrules.value) as Array<
+        FirewallRule
+      >;
     }
   }
 
   getVrfCustomFields(vrf: Vrf) {
-    const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
+    const networkObjectDto = JSON.parse(
+      vrf.custom_fields.find(c => c.key === 'network_objects').value,
+    ) as NetworkObjectDto;
 
     if (networkObjectDto) {
       this.networkObjects = networkObjectDto.NetworkObjects;
       this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
     }
 
-    const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
+    const serviceObjectDto = JSON.parse(
+      vrf.custom_fields.find(c => c.key === 'service_objects').value,
+    ) as ServiceObjectDto;
 
     if (serviceObjectDto) {
       this.serviceObjects = serviceObjectDto.ServiceObjects;
@@ -138,7 +159,9 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   duplicateFirewallRule(rule: FirewallRule) {
     const ruleIndex = this.firewallRules.indexOf(rule);
 
-    if (ruleIndex === -1) { return; }
+    if (ruleIndex === -1) {
+      return;
+    }
 
     const dupRule = this.hs.deepCopy(rule) as FirewallRule;
     dupRule.Name = `${dupRule.Name}_copy`;
@@ -173,16 +196,17 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   subscribeToFirewallRuleModal() {
-    this.firewallRuleModalSubscription =
-    this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as FirewallRuleModalDto;
+    this.firewallRuleModalSubscription = this.ngx
+      .getModal('firewallRuleModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as FirewallRuleModalDto;
 
-      if (data && data.FirewallRule !== undefined) {
-        this.saveFirewallRule(data.FirewallRule);
-      }
-      this.ngx.resetModalData('firewallRuleModal');
-      this.firewallRuleModalSubscription.unsubscribe();
-    });
+        if (data && data.FirewallRule !== undefined) {
+          this.saveFirewallRule(data.FirewallRule);
+        }
+        this.ngx.resetModalData('firewallRuleModal');
+        this.firewallRuleModalSubscription.unsubscribe();
+      });
   }
 
   saveFirewallRule(firewallRule: FirewallRule) {
@@ -201,37 +225,46 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   updateFirewallRules() {
     this.dirty = false;
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
 
     if (this.scope === FirewallRuleScope.vrf) {
       extra_vars.scope = 'vrf';
       extra_vars.vrf = new Vrf();
       extra_vars.vrf.id = this.vrf.id;
       extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
+      extra_vars.vrf_name = this.vrf.name.split('-')[1];
       extra_vars.firewall_rules = this.firewallRules;
     } else if (this.scope === FirewallRuleScope.external) {
       extra_vars.scope = 'external';
       extra_vars.vrf = new Vrf();
       extra_vars.vrf.id = this.vrf.id;
       extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
+      extra_vars.vrf_name = this.vrf.name.split('-')[1];
       extra_vars.external_firewall_rules = this.firewallRules;
     }
 
     extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
 
     const body = { extra_vars };
-    if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
-    this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
-   }
+    if (
+      this.scope === FirewallRuleScope.vrf ||
+      this.scope === FirewallRuleScope.external
+    ) {
+      this.automationApiService
+        .launchTemplate('deploy-acl', body, true)
+        .subscribe(
+          data => {},
+          error => {
+            this.dirty = true;
+          },
+        );
+    }
     this.deletedFirewallRules = new Array<FirewallRule>();
-}
+  }
 
   deleteFirewallRule(firewallRule: FirewallRule) {
     const index = this.firewallRules.indexOf(firewallRule);
-    if ( index > -1) {
+    if (index > -1) {
       this.firewallRules.splice(index, 1);
       this.dirty = true;
       this.deletedFirewallRules.push(this.hs.deepCopy(firewallRule));
@@ -239,7 +272,9 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
   }
 
   insertFirewallRules(rules) {
-    if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
+    if (this.firewallRules == null) {
+      this.firewallRules = new Array<FirewallRule>();
+    }
     rules.forEach(rule => {
       if (rule.Name !== '') {
         this.firewallRules.push(rule);
@@ -248,4 +283,3 @@ export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard
     this.dirty = true;
   }
 }
-

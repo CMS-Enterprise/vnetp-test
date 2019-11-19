@@ -8,9 +8,8 @@ describe('D3PieChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ D3PieChartComponent ]
-    })
-    .compileComponents();
+      declarations: [D3PieChartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

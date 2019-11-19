@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
-import {AngularFontAwesomeModule} from 'angular-font-awesome';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
@@ -115,7 +115,7 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
     NetworkTopologyComponent,
     TooltipComponent,
     IntraVrfRulesComponent,
-    ContractModalComponent
+    ContractModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -132,13 +132,22 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
       positionClass: 'toast-bottom-right',
       progressBar: true,
       closeButton: true,
-      preventDuplicates: true
+      preventDuplicates: true,
     }),
     NgxSmartModalModule.forRoot(),
-    D3Module
+    D3Module,
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
-    NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
-  bootstrap: [AppComponent]
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpConfigInterceptor,
+      multi: true,
+    },
+    NgxSmartModalService,
+    CookieService,
+    FormBuilder,
+    PendingChangesGuard,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

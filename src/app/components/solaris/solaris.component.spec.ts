@@ -8,9 +8,8 @@ describe('SolarisComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SolarisComponent ]
-    })
-    .compileComponents();
+      declarations: [SolarisComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

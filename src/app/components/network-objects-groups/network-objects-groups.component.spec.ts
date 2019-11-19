@@ -23,23 +23,28 @@ describe('NetworkObjectsGroupsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule,
-         NgxSmartModalModule,
-         NgxMaskModule,
-         PapaParseModule,
-         FormsModule,
-         ReactiveFormsModule,
-         HttpClientTestingModule
-       ],
+      imports: [
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        NgxMaskModule,
+        PapaParseModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ],
       declarations: [
         NetworkObjectsGroupsComponent,
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent,
         TooltipComponent,
-        ImportExportComponent],
-      providers: [{provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
-    })
-    .compileComponents();
+        ImportExportComponent,
+      ],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -63,8 +68,10 @@ describe('NetworkObjectsGroupsComponent', () => {
   });
 
   it('should edit network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
+    component.networkObjects = [
+      { Name: 'Test' } as NetworkObject,
+      { Name: 'Test2' } as NetworkObject,
+    ];
 
     component.editNetworkObject(component.networkObjects[1]);
     expect(component.networkObjectModalSubscription).toBeTruthy();
@@ -84,8 +91,10 @@ describe('NetworkObjectsGroupsComponent', () => {
   });
 
   it('should edit network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
+    component.networkObjects = [
+      { Name: 'Test' } as NetworkObject,
+      { Name: 'Test2' } as NetworkObject,
+    ];
 
     component.editNetworkObject(component.networkObjects[1]);
 
@@ -98,8 +107,10 @@ describe('NetworkObjectsGroupsComponent', () => {
   });
 
   it('should delete network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
+    component.networkObjects = [
+      { Name: 'Test' } as NetworkObject,
+      { Name: 'Test2' } as NetworkObject,
+    ];
 
     component.deleteNetworkObject(component.networkObjects[1]);
     expect(component.deletedNetworkObjects.length === 1).toBeTruthy();
@@ -109,12 +120,16 @@ describe('NetworkObjectsGroupsComponent', () => {
   it('should create network object group', () => {
     component.createNetworkObjectGroup();
     expect(component.networkObjectGroupModalSubscription).toBeTruthy();
-    expect(component.networkObjectGroupModalMode === ModalMode.Create).toBeTruthy();
+    expect(
+      component.networkObjectGroupModalMode === ModalMode.Create,
+    ).toBeTruthy();
   });
 
   it('should set subscription, modal mode and index on edit', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
+    component.networkObjectGroups = [
+      { Name: 'Test' } as NetworkObjectGroup,
+      { Name: 'Test2' } as NetworkObjectGroup,
+    ];
 
     component.editNetworkObjectGroup(component.networkObjectGroups[1]);
 
@@ -135,8 +150,10 @@ describe('NetworkObjectsGroupsComponent', () => {
   });
 
   it('should edit network object group', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
+    component.networkObjectGroups = [
+      { Name: 'Test' } as NetworkObjectGroup,
+      { Name: 'Test2' } as NetworkObjectGroup,
+    ];
 
     component.editNetworkObjectGroup(component.networkObjectGroups[1]);
 
@@ -149,8 +166,10 @@ describe('NetworkObjectsGroupsComponent', () => {
   });
 
   it('should delete network object group', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
+    component.networkObjectGroups = [
+      { Name: 'Test' } as NetworkObjectGroup,
+      { Name: 'Test2' } as NetworkObjectGroup,
+    ];
 
     component.deleteNetworkObjectGroup(component.networkObjectGroups[1]);
     expect(component.networkObjectGroups.length === 1).toBeTruthy();

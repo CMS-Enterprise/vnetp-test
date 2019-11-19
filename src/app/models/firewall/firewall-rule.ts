@@ -1,41 +1,41 @@
 import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 
 export class FirewallRule implements UniqueNameObject {
-    Id: number;
+  Id: number;
 
-    Name: string;
+  Name: string;
 
-    Description: string;
+  Description: string;
 
-    Action: number;
+  Action: number;
 
-    Protocol: number;
+  Protocol: number;
 
-    Direction: string;
+  Direction: string;
 
-    SourceIP: string;
+  SourceIP: string;
 
-    SourceNetworkObject: string;
+  SourceNetworkObject: string;
 
-    SourceNetworkObjectGroup: string;
+  SourceNetworkObjectGroup: string;
 
-    SourcePorts: string;
+  SourcePorts: string;
 
-    SourceServiceObject: string;
+  SourceServiceObject: string;
 
-    SourceServiceObjectGroup: string;
+  SourceServiceObjectGroup: string;
 
-    DestinationIP: string;
+  DestinationIP: string;
 
-    DestinationNetworkObject: string;
+  DestinationNetworkObject: string;
 
-    DestinationNetworkObjectGroup: string;
+  DestinationNetworkObjectGroup: string;
 
-    DestinationPorts: string;
+  DestinationPorts: string;
 
-    DestinationServiceObject: string;
+  DestinationServiceObject: string;
 
-    DestinationServiceObjectGroup: string;
+  DestinationServiceObjectGroup: string;
 
-    Log: boolean;
+  Log: boolean;
 }

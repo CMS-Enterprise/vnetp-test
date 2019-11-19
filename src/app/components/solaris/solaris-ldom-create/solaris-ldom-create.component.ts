@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 @Component({
   selector: 'app-solaris-ldom-create',
-  templateUrl: './solaris-ldom-create.component.html'
+  templateUrl: './solaris-ldom-create.component.html',
 })
 export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
   LDOM: SolarisLdom;
@@ -68,7 +68,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     private hs: HelpersService,
     private ngxSm: NgxSmartModalService,
     public helpText: HelpTextSolaris,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {
     this.vnics = new Array<any>();
     this.LDOM = new SolarisLdom();
@@ -147,11 +147,11 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const response: { [k: string]: any } = {};
         response.data = data;
         response.data.parts.forEach(element => {
-        const imgResponse = this.hs.getJsonCustomField(
-          element,
-          'Metadata'
+          const imgResponse = this.hs.getJsonCustomField(
+            element,
+            'Metadata',
           ) as SolarisImage;
-        if (imgResponse !== null) {
+          if (imgResponse !== null) {
             this.SolarisImages.push(imgResponse);
           }
         });
@@ -179,10 +179,10 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       ) {
         this.automationApiService
           .getDevicesbyID(this.solarisService.parentCdom.device_id)
-          .subscribe(data => {
-            const result = data as SolarisCdom;
+          .subscribe(dataObj => {
+            const result = dataObj as SolarisCdom;
             this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(
-              c => c.device_id === result.device_id
+              c => c.device_id === result.device_id,
             )[0];
             this.solarisService.currentLdom = new SolarisLdom();
             this.getCdomVswitches();
@@ -195,12 +195,12 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         this.LDOM = this.solarisService.currentLdom;
         this.automationApiService
           .getDevicesbyID(
-            this.solarisService.currentLdom.associatedcdom.device_id
+            this.solarisService.currentLdom.associatedcdom.device_id,
           )
-          .subscribe(data => {
-            const result = data as SolarisCdom;
+          .subscribe(dataObj => {
+            const result = dataObj as SolarisCdom;
             this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(
-              c => c.device_id === result.device_id
+              c => c.device_id === result.device_id,
             )[0];
             this.solarisService.currentLdom = new SolarisLdom();
             this.getCdomVswitches();
@@ -219,7 +219,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
         const result = data as SolarisCdom;
         const cdomFull = this.hs.getJsonCustomField(
           result,
-          'Metadata'
+          'Metadata',
         ) as SolarisCdom;
         this.vnicModalVswitches = cdomFull.vsw;
         console.log(this.vnicModalVswitches);
@@ -290,7 +290,8 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
       this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
       this.vnicModalVswitch = this.vnicModalVswitches.filter(
-        v => v.vSwitchName === this.solarisService.currentVnic.VirtualSwitchName
+        v =>
+          v.vSwitchName === this.solarisService.currentVnic.VirtualSwitchName,
       )[0];
       this.solarisService.currentVnic = null;
     } else {

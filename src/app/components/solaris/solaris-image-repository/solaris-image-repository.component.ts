@@ -8,7 +8,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: 'app-solaris-image-repository',
-  templateUrl: './solaris-image-repository.component.html'
+  templateUrl: './solaris-image-repository.component.html',
 })
 export class SolarisImageRepositoryComponent implements OnInit {
   SolarisImages: Array<SolarisImage>;
@@ -25,11 +25,10 @@ export class SolarisImageRepositoryComponent implements OnInit {
 
   constructor(
     private ngxSm: NgxSmartModalService,
-    private authService: AuthService,
     private automationApiService: AutomationApiService,
     private solarisService: SolarisService,
     private hs: HelpersService,
-    public helpText: HelpTextSolaris
+    public helpText: HelpTextSolaris,
   ) {
     this.SolarisImages = new Array<SolarisImage>();
   }
@@ -44,7 +43,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
         response.data.parts.forEach(element => {
           const imgResponse = this.hs.getJsonCustomField(
             element,
-            'Metadata'
+            'Metadata',
           ) as SolarisImage;
           if (imgResponse !== null) {
             imgResponse.Id = element.part_id;
@@ -68,7 +67,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
     if (this.editCurrentImage) {
       this.SolarisImages[this.editImageIndex] = this.hs.deepCopy(
-        this.newSolarisImage
+        this.newSolarisImage,
       );
       // Reset edit flag and index
       this.editCurrentImage = false;
@@ -100,7 +99,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     }
   }
   launchSolarisImageJobs() {
-    //create extra_vars to pass into Ansible
+    // create extra_vars to pass into Ansible
     const extra_vars: { [k: string]: any } = {};
     this.newSolarisImage.Size = 0;
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;

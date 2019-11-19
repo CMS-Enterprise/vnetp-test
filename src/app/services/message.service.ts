@@ -3,23 +3,23 @@ import { Observable, Subject } from 'rxjs';
 import { AppMessage } from '../models/app-message';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessageService {
-    private subject = new Subject<any>();
-    public messageHistory = new Array<AppMessage>();
+  private subject = new Subject<any>();
+  public messageHistory = new Array<AppMessage>();
 
-    listen(): Observable<AppMessage> {
-       return this.subject.asObservable();
-    }
+  listen(): Observable<AppMessage> {
+    return this.subject.asObservable();
+  }
 
-    sendMessage(m: AppMessage) {
-       this.subject.next(m);
-       this.messageHistory.push(m);
-    }
+  sendMessage(m: AppMessage) {
+    this.subject.next(m);
+    this.messageHistory.push(m);
+  }
 
-    clearMessages() {
-       this.subject.next();
-       this.messageHistory = new Array<AppMessage>();
-    }
+  clearMessages() {
+    this.subject.next();
+    this.messageHistory = new Array<AppMessage>();
+  }
 }

@@ -2,7 +2,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectModalComponent } from './network-object-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -16,14 +21,25 @@ describe('NetworkObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule],
-      declarations: [ NetworkObjectModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule,
+      ],
+      declarations: [NetworkObjectModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(NetworkObjectModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(NetworkObjectModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -54,48 +70,48 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   // Initial Form State
-  it ('name should be required', () =>  {
+  it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
   });
 
-  it ('type should be required', () =>  {
+  it('type should be required', () => {
     const type = component.form.controls.type;
     expect(type.valid).toBeFalsy();
   });
 
-  it ('source subnet should not be required', () => {
+  it('source subnet should not be required', () => {
     const sourceSubnet = component.form.controls.sourceSubnet;
     expect(sourceSubnet.valid).toBeTruthy();
   });
 
-  it ('destination subnet should not be required', () => {
+  it('destination subnet should not be required', () => {
     const destinationSubnet = component.form.controls.destinationSubnet;
     expect(destinationSubnet.valid).toBeTruthy();
   });
 
-  it ('hostAddress should not be required', () =>  {
+  it('hostAddress should not be required', () => {
     const hostAddress = component.form.controls.hostAddress;
     expect(hostAddress.valid).toBeTruthy();
   });
 
-  it ('cidrAddress should not be required', () =>  {
+  it('cidrAddress should not be required', () => {
     const cidrAddress = component.form.controls.cidrAddress;
     expect(cidrAddress.valid).toBeTruthy();
   });
 
-  it ('startaddress should not be required', () =>  {
+  it('startaddress should not be required', () => {
     const startAddress = component.form.controls.startAddress;
     expect(startAddress.valid).toBeTruthy();
   });
 
-  it ('endAddress should not be required', () =>  {
+  it('endAddress should not be required', () => {
     const endAddress = component.form.controls.endAddress;
     expect(endAddress.valid).toBeTruthy();
   });
 
   // Form State when Type: Host selected
-  it ('hostAddress should be required', () => {
+  it('hostAddress should be required', () => {
     const type = component.form.controls.type;
     type.setValue('host');
     const hostAddress = component.form.controls.hostAddress;
@@ -103,14 +119,14 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   // Form State when Type: Range selected
-  it ('startAddress should be required', () => {
+  it('startAddress should be required', () => {
     const type = component.form.controls.type;
     type.setValue('range');
     const startAddress = component.form.controls.startAddress;
     expect(startAddress.valid).toBeFalsy();
   });
 
-  it ('endAddress should be required', () => {
+  it('endAddress should be required', () => {
     const type = component.form.controls.type;
     type.setValue('range');
     const endAddress = component.form.controls.endAddress;
@@ -118,7 +134,7 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   // Form State when Type: Subnet selected
-  it ('cidrAddress should be required', () => {
+  it('cidrAddress should be required', () => {
     const type = component.form.controls.type;
     type.setValue('subnet');
     const cidrAddress = component.form.controls.cidrAddress;
@@ -135,7 +151,7 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('source subnet should be required', () => {
-    const nat = component.form.controls.nat
+    const nat = component.form.controls.nat;
     nat.setValue(true);
 
     const sourceSubnet = component.form.controls.sourceSubnet;
@@ -143,11 +159,11 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('destination subnet should be required', () => {
-  const nat = component.form.controls.nat;
-  nat.setValue(true);
+    const nat = component.form.controls.nat;
+    nat.setValue(true);
 
-  const destinationSubnet = component.form.controls.destinationSubnet;
-  expect(destinationSubnet.valid).toBeFalsy();
+    const destinationSubnet = component.form.controls.destinationSubnet;
+    expect(destinationSubnet.valid).toBeFalsy();
   });
 
   // Form State when NAT Service Selected

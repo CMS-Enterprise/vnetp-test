@@ -1,17 +1,15 @@
 export class PoolMember {
-    Name: string;
+  Name: string;
 
-    Type: string;
+  Type: string;
 
-    IpAddress: string;
+  IpAddress: string;
 
-    Fqdn: string;
+  Fqdn: string;
 
-    ServicePort: number;
+  ServicePort: number;
 
-    Priority: number;
+  Priority: number;
 
-    AutoPopulate: boolean;
+  AutoPopulate: boolean;
 }
-
-

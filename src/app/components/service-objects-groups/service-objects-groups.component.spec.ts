@@ -24,24 +24,28 @@ describe('ServicesObjectsGroupsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule,
+      imports: [
+        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
-     declarations: [
-      ServiceObjectsGroupsComponent,
-      ServiceObjectModalComponent,
-      ServiceObjectGroupModalComponent,
-      ImportExportComponent,
-      TooltipComponent
-    ],
-     providers: [{ provide: NgxSmartModalService, useValue: ngx}, CookieService, FormBuilder],
-    })
-    .compileComponents();
+      declarations: [
+        ServiceObjectsGroupsComponent,
+        ServiceObjectModalComponent,
+        ServiceObjectGroupModalComponent,
+        ImportExportComponent,
+        TooltipComponent,
+      ],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -65,8 +69,10 @@ describe('ServicesObjectsGroupsComponent', () => {
   });
 
   it('should edit service object', () => {
-    component.serviceObjects = [ { Name: 'Test'} as ServiceObject,
-    { Name: 'Test2'} as ServiceObject];
+    component.serviceObjects = [
+      { Name: 'Test' } as ServiceObject,
+      { Name: 'Test2' } as ServiceObject,
+    ];
 
     component.editServiceObject(component.serviceObjects[1]);
     expect(component.editServiceObjectIndex === 1).toBeTruthy();
@@ -86,8 +92,10 @@ describe('ServicesObjectsGroupsComponent', () => {
   });
 
   it('should edit service object', () => {
-    component.serviceObjects = [ { Name: 'Test'} as ServiceObject,
-    { Name: 'Test2'} as ServiceObject];
+    component.serviceObjects = [
+      { Name: 'Test' } as ServiceObject,
+      { Name: 'Test2' } as ServiceObject,
+    ];
 
     component.editServiceObject(component.serviceObjects[1]);
 
@@ -100,8 +108,10 @@ describe('ServicesObjectsGroupsComponent', () => {
   });
 
   it('should delete service object', () => {
-    component.serviceObjects = [ { Name: 'Test'} as ServiceObject,
-    { Name: 'Test2'} as ServiceObject];
+    component.serviceObjects = [
+      { Name: 'Test' } as ServiceObject,
+      { Name: 'Test2' } as ServiceObject,
+    ];
 
     component.deleteServiceObject(component.serviceObjects[1]);
     expect(component.deletedServiceObjects.length === 1).toBeTruthy();
@@ -110,13 +120,17 @@ describe('ServicesObjectsGroupsComponent', () => {
 
   it('should create service object group', () => {
     component.createServiceObjectGroup();
-    expect(component.serviceObjectGroupModalMode === ModalMode.Create).toBeTruthy();
+    expect(
+      component.serviceObjectGroupModalMode === ModalMode.Create,
+    ).toBeTruthy();
     expect(component.serviceObjectGroupModalSubscription).toBeTruthy();
   });
 
   it('should edit service object group', () => {
-    component.serviceObjectGroups = [ { Name: 'Test'} as ServiceObjectGroup,
-    { Name: 'Test2'} as ServiceObjectGroup];
+    component.serviceObjectGroups = [
+      { Name: 'Test' } as ServiceObjectGroup,
+      { Name: 'Test2' } as ServiceObjectGroup,
+    ];
 
     component.editServiceObjectGroup(component.serviceObjectGroups[1]);
     expect(component.editServiceObjectGroupIndex === 1).toBeTruthy();
@@ -136,8 +150,10 @@ describe('ServicesObjectsGroupsComponent', () => {
   });
 
   it('should edit service object group', () => {
-    component.serviceObjectGroups = [ { Name: 'Test'} as ServiceObjectGroup,
-    { Name: 'Test2'} as ServiceObjectGroup];
+    component.serviceObjectGroups = [
+      { Name: 'Test' } as ServiceObjectGroup,
+      { Name: 'Test2' } as ServiceObjectGroup,
+    ];
 
     component.editServiceObjectGroup(component.serviceObjectGroups[1]);
 
@@ -150,8 +166,10 @@ describe('ServicesObjectsGroupsComponent', () => {
   });
 
   it('should delete service object group', () => {
-    component.serviceObjectGroups = [ { Name: 'Test'} as ServiceObjectGroup,
-    { Name: 'Test2'} as ServiceObjectGroup];
+    component.serviceObjectGroups = [
+      { Name: 'Test' } as ServiceObjectGroup,
+      { Name: 'Test2' } as ServiceObjectGroup,
+    ];
 
     component.deleteServiceObjectGroup(component.serviceObjectGroups[1]);
     expect(component.serviceObjectGroups.length === 1).toBeTruthy();

@@ -8,15 +8,18 @@ import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networkin
 
 @Component({
   selector: 'app-service-object-modal',
-  templateUrl: './service-object-modal.component.html'
+  templateUrl: './service-object-modal.component.html',
 })
 export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   destinationPortSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-              public helpText: ServiceObjectModalHelpText) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: ServiceObjectModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -31,7 +34,10 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     serviceObject.DestinationPort = this.form.value.destinationPort;
 
     this.ngx.resetModalData('serviceObjectModal');
-    this.ngx.setModalData(Object.assign({}, serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(
+      Object.assign({}, serviceObject),
+      'serviceObjectModal',
+    );
     this.ngx.close('serviceObjectModal');
     this.reset();
   }
@@ -41,19 +47,25 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
-
-  private setFormValidators() {
+  get f() {
+    return this.form.controls;
   }
 
+  private setFormValidators() {}
+
   getData() {
-    const serviceObject =  Object.assign({}, this.ngx.getModalData('serviceObjectModal') as ServiceObject);
+    const serviceObject = Object.assign(
+      {},
+      this.ngx.getModalData('serviceObjectModal') as ServiceObject,
+    );
     if (serviceObject !== undefined) {
       this.form.controls.name.setValue(serviceObject.Name);
       this.form.controls.type.setValue(serviceObject.Type);
-      this.form.controls.destinationPort.setValue(serviceObject.DestinationPort);
+      this.form.controls.destinationPort.setValue(
+        serviceObject.DestinationPort,
+      );
       this.form.controls.sourcePort.setValue(serviceObject.SourcePort);
-      }
+    }
     this.ngx.resetModalData('serviceObjectModal');
   }
 
@@ -61,8 +73,14 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      destinationPort: ['', Validators.compose([Validators.required, ValidatePortRange])],
-      sourcePort: ['', Validators.compose([Validators.required , ValidatePortRange])]
+      destinationPort: [
+        '',
+        Validators.compose([Validators.required, ValidatePortRange]),
+      ],
+      sourcePort: [
+        '',
+        Validators.compose([Validators.required, ValidatePortRange]),
+      ],
     });
   }
 

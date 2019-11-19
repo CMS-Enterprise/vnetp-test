@@ -7,7 +7,7 @@ import { Subnet } from '../models/d42/subnet';
 import { IPv4 } from 'ip-num/IPv4';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IpAddressService {
   constructor() {}
@@ -35,11 +35,13 @@ export class IpAddressService {
     const gatewayRange = IPv4Range.fromCidr(`${gateway}/32`);
 
     // If the main range contains the gateway and the gateway isn't the first IP of the range return true
-    return (range.contains(gatewayRange))
-    // Ensure that first address (network address) is not the gateway that user chose.
-    && gatewayRange.getFirst().toString() !== range.getFirst().toString()
-    // Ensure that last address (broadcast address) is not the gateway that user chose.
-    && gatewayRange.getFirst().toString() !== range.getLast().toString();
+    return (
+      range.contains(gatewayRange) &&
+      // Ensure that first address (network address) is not the gateway that user chose.
+      gatewayRange.getFirst().toString() !== range.getFirst().toString() &&
+      // Ensure that last address (broadcast address) is not the gateway that user chose.
+      gatewayRange.getFirst().toString() !== range.getLast().toString()
+    );
   }
 
   // Returns an IPv4 range from a cidr formatted IPv4 address.
@@ -64,7 +66,9 @@ export class IpAddressService {
   public updateIPv4CidrMask(cidr: string, value: number) {
     const cidrComponents = cidr.split('/');
 
-    if (cidrComponents.length < 2) { return; }
+    if (cidrComponents.length < 2) {
+      return;
+    }
 
     const ip = cidrComponents[0];
 
@@ -95,17 +99,20 @@ export class IpAddressService {
   // Checks if a supplied subnet overlaps with other subnets in array
   // Returns a tuple containing a boolean indicating whether the subnet is a overlapped,
   // and the existing Subnet that the provided Subnet overlaps or is overlapped by.
-  public checkIPv4RangeOverlap(subnet: Subnet, subnets: Subnet[]): [boolean, Subnet] {
+  public checkIPv4RangeOverlap(
+    subnet: Subnet,
+    subnets: Subnet[],
+  ): [boolean, Subnet] {
     // Create an IPv4 Range from the network to be evaluated.
-    const newRange = IPv4Range.fromCidr(`${subnet.network}/${subnet.mask_bits}`);
+    const newRange = IPv4Range.fromCidr(
+      `${subnet.network}/${subnet.mask_bits}`,
+    );
     for (const s of subnets) {
       const existingRange = IPv4Range.fromCidr(`${s.network}/${s.mask_bits}`);
       // Check that the existing IPv4 range does not include the new IPv4 range.
       if (existingRange.contains(newRange)) {
         return [true, s];
-      } else
-      // Check that the new IPv4 range does not include the existing IPv4 range.
-      if (newRange.contains(existingRange)) {
+      } else if (newRange.contains(existingRange)) {
         return [true, s];
       }
     }
@@ -115,18 +122,21 @@ export class IpAddressService {
   // Check if supplied subnet is a duplicate of another subnet in the array
   // Returns a tuple containing a boolean indicating whether the subnet is a duplicate, a string that indicates
   // what property of the subnet is a duplicate and the existing Subnet that the provided Subnet is a duplicate of.
-  public checkIPv4SubnetDuplicate(subnet: Subnet, vlanId: number, subnets: Subnet[]): [boolean, string, Subnet] {
+  public checkIPv4SubnetDuplicate(
+    subnet: Subnet,
+    vlanId: number,
+    subnets: Subnet[],
+  ): [boolean, string, Subnet] {
     for (const s of subnets) {
       // Names are case-insensitive, therefore change to lower case before checking.
       if (s.name.toLowerCase() === subnet.name.toLowerCase()) {
         return [true, 'name', s];
-      } else
-      // Check if same network address.
-      if (s.network === subnet.network) {
+      } else if (s.network === subnet.network) {
         return [true, 'network', s];
-      } else
-      // Check if same VLAN Id.
-      if (s.custom_fields.find(c => c.key === 'vlan_number').value === vlanId.toString()) {
+      } else if (
+        s.custom_fields.find(c => c.key === 'vlan_number').value ===
+        vlanId.toString()
+      ) {
         return [true, 'vlan', s];
       }
     }

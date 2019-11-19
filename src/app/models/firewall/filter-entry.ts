@@ -1,20 +1,25 @@
 export class FilterEntry {
-    Id: number;
+  Id: number;
 
-    Name: string;
+  Name: string;
 
-    Action: string;
+  Action: string;
 
-    Protocol: string;
+  Protocol: string;
 
-    SourcePorts: string;
+  SourcePorts: string;
 
-    DestinationPorts: string;
+  DestinationPorts: string;
 
-    constructor(name: string, protocol: string, sourcePorts: string, destinationPorts: string) {
-       this.Name = name;
-       this.Protocol = protocol;
-       this.SourcePorts = sourcePorts;
-       this.DestinationPorts = destinationPorts;
-    }
+  constructor(
+    name: string,
+    protocol: string,
+    sourcePorts: string,
+    destinationPorts: string,
+  ) {
+    this.Name = name;
+    this.Protocol = protocol;
+    this.SourcePorts = sourcePorts;
+    this.DestinationPorts = destinationPorts;
+  }
 }

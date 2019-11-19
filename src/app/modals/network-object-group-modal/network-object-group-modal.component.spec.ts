@@ -2,7 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
@@ -16,11 +21,19 @@ describe('NetworkObjectGroupModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ NetworkObjectGroupModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        FormsModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [NetworkObjectGroupModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -40,7 +53,7 @@ describe('NetworkObjectGroupModalComponent', () => {
   it('save should set ngxModal data', () => {
     component.form.controls.name.setValue('Name');
     component.form.controls.description.setValue('Description');
-    component.networkObjects.push({ Name: 'Test'} as NetworkObject);
+    component.networkObjects.push({ Name: 'Test' } as NetworkObject);
     expect(component.form.valid).toBeTruthy();
     component.save();
 

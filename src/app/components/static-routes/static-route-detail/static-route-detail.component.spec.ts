@@ -23,10 +23,10 @@ describe('StaticRouteDetailComponent', () => {
         RouterTestingModule.withRoutes([]),
         NgxMaskModule.forRoot(),
         PapaParseModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [StaticRouteDetailComponent, ImportExportComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 

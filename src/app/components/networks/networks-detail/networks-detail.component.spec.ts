@@ -20,14 +20,14 @@ describe('NetworksDetailComponent', () => {
         FormsModule,
         RouterTestingModule.withRoutes([]),
         NgxSmartModalModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
         NetworksDetailComponent,
         IpaddressesComponent,
-        TooltipComponent
+        TooltipComponent,
       ],
-      providers: [CookieService, NgxSmartModalService]
+      providers: [CookieService, NgxSmartModalService],
     }).compileComponents();
   }));
 

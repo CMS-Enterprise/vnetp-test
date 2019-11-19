@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { Userpass } from 'src/app/models/user/userpass'
-import { Router, ActivatedRoute } from '@angular/router'
-import { AuthService } from 'src/app/services/auth.service'
-import { first } from 'rxjs/operators'
-import { ToastrService } from 'ngx-toastr'
+import { Component, OnInit } from '@angular/core';
+import { Userpass } from 'src/app/models/user/userpass';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { first } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -20,11 +20,11 @@ export class LoginComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard'
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
 
     if (!this.auth.currentUser) {
       this.auth.logout();
@@ -51,9 +51,9 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.toastr.error('Invalid Username/Password');
-          this.errorMessage = 'Invalid Username/Password'
+          this.errorMessage = 'Invalid Username/Password';
           this.loading = false;
-        }
+        },
       );
   }
 }

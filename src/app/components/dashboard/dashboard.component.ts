@@ -6,7 +6,7 @@ import { SubnetResponse } from 'src/app/models/d42/subnet';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   constructor(private automationApiService: AutomationApiService) {
@@ -67,58 +67,61 @@ export class DashboardComponent implements OnInit {
     // timezone vs UTC.
     this.automationApiService
       .getJobs(
-        `?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`
+        `?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`,
       )
-      .subscribe(data => (this.jobs = data), error => {}, () => this.sortJobs());
+      .subscribe(
+        data => (this.jobs = data),
+        error => {},
+        () => this.sortJobs(),
+      );
   }
 
   sortJobs() {
-
     // TODO: Get cancelled and pending jobs.
 
     const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
-    this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
-    this.cancelledJobs = this.jobs.results.filter( job => job.failed && job.status === 'canceled').length;
+    this.failedJobs = this.jobs.results.filter(
+      job => job.failed && job.status !== 'canceled',
+    ).length;
+    this.cancelledJobs = this.jobs.results.filter(
+      job => job.failed && job.status === 'canceled',
+    ).length;
 
-    this.successfulJobs = nonFailedJobs.filter( job => job.status === 'successful').length;
-    this.runningJobs = nonFailedJobs.filter( job => job.status === 'running').length;
-    this.pendingJobs = nonFailedJobs.filter( job => job.status === 'pending').length;
+    this.successfulJobs = nonFailedJobs.filter(
+      job => job.status === 'successful',
+    ).length;
+    this.runningJobs = nonFailedJobs.filter(
+      job => job.status === 'running',
+    ).length;
+    this.pendingJobs = nonFailedJobs.filter(
+      job => job.status === 'pending',
+    ).length;
 
     this.pieChartData = new Array<PieChartData>();
 
     // Successful
     if (this.successfulJobs) {
-      this.pieChartData.push(
-        { value: this.successfulJobs, color: '#4eb796' }
-      );
+      this.pieChartData.push({ value: this.successfulJobs, color: '#4eb796' });
     }
 
     // Running
     if (this.runningJobs) {
-      this.pieChartData.push(
-        { value: this.runningJobs, color: '#ffdf5a'}
-      );
+      this.pieChartData.push({ value: this.runningJobs, color: '#ffdf5a' });
     }
 
     // Failed
     if (this.failedJobs) {
-      this.pieChartData.push(
-        { value: this.failedJobs, color: '#e84d4d' }
-      );
+      this.pieChartData.push({ value: this.failedJobs, color: '#e84d4d' });
     }
 
     // Pending
     if (this.pendingJobs) {
-        this.pieChartData.push(
-          { value: this.pendingJobs, color: '#5ac4f9'}
-        );
-      }
+      this.pieChartData.push({ value: this.pendingJobs, color: '#5ac4f9' });
+    }
 
     // Cancelled Jobs
     if (this.cancelledJobs) {
-      this.pieChartData.push(
-        { value: this.cancelledJobs, color: '#c2c2c6'}
-      );
+      this.pieChartData.push({ value: this.cancelledJobs, color: '#c2c2c6' });
     }
 
     // Default

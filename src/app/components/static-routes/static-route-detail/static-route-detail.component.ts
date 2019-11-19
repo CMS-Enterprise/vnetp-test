@@ -9,12 +9,14 @@ import { Vrf } from 'src/app/models/d42/vrf';
 
 @Component({
   selector: 'app-static-route-detail',
-  templateUrl: './static-route-detail.component.html'
+  templateUrl: './static-route-detail.component.html',
 })
 export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
-
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private automationApiService: AutomationApiService,
+    private hs: HelpersService,
+  ) {}
 
   Id = '';
   vrf = new Vrf();
@@ -28,17 +30,15 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   }
 
   ngOnInit() {
-    this.Id  += this.route.snapshot.paramMap.get('id');
+    this.Id += this.route.snapshot.paramMap.get('id');
     this.getNetwork();
   }
 
   getNetwork() {
-    this.automationApiService.getVrf(this.Id).subscribe(
-      data => {
-        this.vrf = data;
-        this.getStaticRoutes();
-      }
-    );
+    this.automationApiService.getVrf(this.Id).subscribe(data => {
+      this.vrf = data;
+      this.getStaticRoutes();
+    });
   }
 
   getInterfaceUiName(interfaceName: string) {
@@ -56,7 +56,9 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   }
 
   addStaticRoute() {
-    if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
+    if (this.staticRoutes == null) {
+      this.staticRoutes = new Array<StaticRoute>();
+    }
 
     const staticRoute = new StaticRoute();
     staticRoute.Interface = this.vrf.name;
@@ -71,14 +73,16 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
     if (index > -1) {
       this.staticRoutes.splice(index, 1);
-      if (!this.deletedStaticRoutes) { this.deletedStaticRoutes = new Array<StaticRoute>(); }
+      if (!this.deletedStaticRoutes) {
+        this.deletedStaticRoutes = new Array<StaticRoute>();
+      }
       this.deletedStaticRoutes.push(staticRoute);
       this.dirty = true;
     }
   }
 
   updateStaticRoutes() {
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.vrf = this.vrf;
 
     this.staticRoutes.forEach(sr => {
@@ -87,28 +91,38 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
 
     extra_vars.static_routes = this.staticRoutes;
 
-    var body = { extra_vars };
+    const body = { extra_vars };
 
     extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-    extra_vars.vrf_name =  this.vrf.name.split('-')[1];
+    extra_vars.vrf_name = this.vrf.name.split('-')[1];
 
-    this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
+    this.automationApiService
+      .launchTemplate('deploy-static-route', body, true)
+      .subscribe(
+        data => {},
+        error => {
+          this.dirty = true;
+        },
+      );
 
     this.dirty = false;
     this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
   getStaticRoutes() {
-    const staticRoutes = this.vrf.custom_fields.find(c => c.key === 'static_routes');
+    const staticRoutes = this.vrf.custom_fields.find(
+      c => c.key === 'static_routes',
+    );
 
     if (staticRoutes) {
       this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
     }
   }
 
-  insertStaticRoutes(routes){
-    if (!this.staticRoutes) { this.staticRoutes = new Array<StaticRoute>(); }
+  insertStaticRoutes(routes) {
+    if (!this.staticRoutes) {
+      this.staticRoutes = new Array<StaticRoute>();
+    }
     routes.forEach(route => {
       if (routes.Name !== '') {
         this.staticRoutes.push(route);

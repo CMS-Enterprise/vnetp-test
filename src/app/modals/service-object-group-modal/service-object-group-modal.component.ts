@@ -10,7 +10,7 @@ import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 
 @Component({
   selector: 'app-service-object-group-modal',
-  templateUrl: './service-object-group-modal.component.html'
+  templateUrl: './service-object-group-modal.component.html',
 })
 export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -23,10 +23,16 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   serviceObjectModalMode: ModalMode;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService,
-              public helpText: ServiceObjectGroupModalHelpText) { this.serviceObjects = new Array<ServiceObject>(); }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private hs: HelpersService,
+    public helpText: ServiceObjectGroupModalHelpText,
+  ) {
+    this.serviceObjects = new Array<ServiceObject>();
+  }
 
-   save() {
+  save() {
     this.submitted = true;
 
     if (this.form.invalid) {
@@ -51,11 +57,13 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   deleteServiceObject(serviceObject: ServiceObject) {
     const index = this.serviceObjects.indexOf(serviceObject);
-    if ( index > -1) {
+    if (index > -1) {
       this.serviceObjects.splice(index, 1);
     }
   }
@@ -77,25 +85,32 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   editServiceObject(serviceObject: ServiceObject) {
     this.subscribeToServiceObjectModal();
     this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(
+      this.hs.deepCopy(serviceObject),
+      'serviceObjectModal',
+    );
     this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
     this.ngx.getModal('serviceObjectModal').toggle();
   }
 
   subscribeToServiceObjectModal() {
-    this.serviceObjectModalSubscription =
-    this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as ServiceObject;
-      if (data !== undefined) {
-        this.saveServiceObject(data);
-      }
-      this.ngx.resetModalData('serviceObjectModal');
-      this.serviceObjectModalSubscription.unsubscribe();
-    });
+    this.serviceObjectModalSubscription = this.ngx
+      .getModal('serviceObjectModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as ServiceObject;
+        if (data !== undefined) {
+          this.saveServiceObject(data);
+        }
+        this.ngx.resetModalData('serviceObjectModal');
+        this.serviceObjectModalSubscription.unsubscribe();
+      });
   }
 
   getData() {
-    const serviceObjectGroup = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroup);
+    const serviceObjectGroup = Object.assign(
+      {},
+      this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroup,
+    );
     if (serviceObjectGroup !== undefined) {
       this.form.controls.name.setValue(serviceObjectGroup.Name);
       this.form.controls.description.setValue(serviceObjectGroup.Description);
@@ -113,7 +128,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
-      type: ['', Validators.required]
+      type: ['', Validators.required],
     });
   }
 

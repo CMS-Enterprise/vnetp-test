@@ -1,19 +1,19 @@
 import { IRule } from './irule';
 
 export class VirtualServer {
-    Name: string;
+  Name: string;
 
-    Description: string;
+  Description: string;
 
-    SourceAddress: string;
+  SourceAddress: string;
 
-    DestinationAddress: string;
+  DestinationAddress: string;
 
-    ServicePort: string;
+  ServicePort: string;
 
-    Type: string;
+  Type: string;
 
-    Pool: string;
+  Pool: string;
 
-    IRules: Array<string>;
+  IRules: Array<string>;
 }

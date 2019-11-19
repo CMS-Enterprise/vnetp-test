@@ -1,5 +1,5 @@
 export enum AppMessageType {
-    Info,
-    JobLaunchSuccess,
-    JobLaunchFail
+  Info,
+  JobLaunchSuccess,
+  JobLaunchFail,
 }

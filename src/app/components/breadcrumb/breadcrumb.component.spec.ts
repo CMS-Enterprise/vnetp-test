@@ -14,7 +14,7 @@ describe('BreadcrumbComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule],
       declarations: [BreadcrumbComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 

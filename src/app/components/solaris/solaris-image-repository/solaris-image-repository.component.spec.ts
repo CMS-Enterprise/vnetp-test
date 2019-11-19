@@ -8,9 +8,8 @@ describe('SolarisImageRepositoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SolarisImageRepositoryComponent ]
-    })
-    .compileComponents();
+      declarations: [SolarisImageRepositoryComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

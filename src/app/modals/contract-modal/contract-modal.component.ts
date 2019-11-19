@@ -8,7 +8,7 @@ import { ContractModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-contract-modal',
-  templateUrl: './contract-modal.component.html'
+  templateUrl: './contract-modal.component.html',
 })
 export class ContractModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -20,7 +20,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public helpText: ContractModalHelpText
+    public helpText: ContractModalHelpText,
   ) {}
 
   save() {
@@ -56,9 +56,10 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const contract = Object.assign({}, this.ngx.getModalData(
-      'contractModal'
-    ) as Contract);
+    const contract = Object.assign(
+      {},
+      this.ngx.getModalData('contractModal') as Contract,
+    );
 
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.Name);
@@ -77,9 +78,8 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
     });
-
   }
 
   private buildFilterEntryForm() {
@@ -88,12 +88,12 @@ export class ContractModalComponent implements OnInit, OnDestroy {
       protocol: ['', Validators.required],
       sourcePorts: [
         '',
-        Validators.compose([Validators.required, ValidatePortRange])
+        Validators.compose([Validators.required, ValidatePortRange]),
       ],
       destinationPorts: [
         '',
-        Validators.compose([Validators.required, ValidatePortRange])
-      ]
+        Validators.compose([Validators.required, ValidatePortRange]),
+      ],
     });
   }
 
@@ -107,7 +107,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
       this.filterEntryForm.value.name,
       this.filterEntryForm.value.protocol,
       this.filterEntryForm.value.sourcePorts,
-      this.filterEntryForm.value.destinationPorts
+      this.filterEntryForm.value.destinationPorts,
     );
 
     this.filterEntries.push(newFilterEntry);

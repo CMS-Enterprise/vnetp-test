@@ -3,14 +3,14 @@ import { AutomationApiService } from 'src/app/services/automation-api.service';
 
 @Component({
   selector: 'app-ipaddresses',
-  templateUrl: './ipaddresses.component.html'
+  templateUrl: './ipaddresses.component.html',
 })
 export class IpaddressesComponent implements OnInit {
   @Input()
   subnetId: number;
 
   @Input()
-  showTitle: boolean = true;
+  showTitle: true;
 
   // TODO: Create datatype for IP.
   ipResult: any;
@@ -29,7 +29,7 @@ export class IpaddressesComponent implements OnInit {
         },
         error => {
           console.log(error);
-        }
+        },
       );
     } else if (this.subnetId) {
       this.automationApiService.getSubnetIps(this.subnetId).subscribe(
@@ -38,7 +38,7 @@ export class IpaddressesComponent implements OnInit {
         },
         error => {
           console.log(error);
-        }
+        },
       );
     }
   }

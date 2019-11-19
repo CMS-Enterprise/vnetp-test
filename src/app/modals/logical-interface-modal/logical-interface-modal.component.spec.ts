@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LogicalInterfaceModalComponent } from './logical-interface-modal.component';
@@ -14,14 +19,26 @@ describe('LogicalInterfaceModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, AngularFontAwesomeModule,NgxMaskModule.forRoot()],
-      declarations: [ LogicalInterfaceModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        AngularFontAwesomeModule,
+        NgxMaskModule.forRoot(),
+      ],
+      declarations: [LogicalInterfaceModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(LogicalInterfaceModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(LogicalInterfaceModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -43,7 +60,7 @@ describe('LogicalInterfaceModalComponent', () => {
     component.selectSubnet();
 
     expect(component.selectedSubnets.length).toBeFalsy();
-  })
+  });
 
   // Initial Form State
   it('name should be required', () => {
@@ -55,6 +72,4 @@ describe('LogicalInterfaceModalComponent', () => {
     const nativeSubnet = component.form.controls.nativeSubnet;
     expect(nativeSubnet.valid).toBeFalsy();
   });
-
-
 });

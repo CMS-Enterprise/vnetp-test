@@ -11,19 +11,21 @@ import { LogicalInterfaceModalDto } from 'src/app/models/interfaces/logical-inte
 
 @Component({
   selector: 'app-logical-interface-modal',
-  templateUrl: './logical-interface-modal.component.html'
+  templateUrl: './logical-interface-modal.component.html',
 })
 export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-
   selectedSubnets = new Array<string>();
   availableSubnets = new Array<string>();
   nativeSubnetSubscription: any;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService) {
-  }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private hs: HelpersService,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -50,11 +52,17 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   getData() {
-
-    const dto =  Object.assign({}, this.ngx.getModalData('logicalInterfaceModal') as LogicalInterfaceModalDto);
+    const dto = Object.assign(
+      {},
+      this.ngx.getModalData(
+        'logicalInterfaceModal',
+      ) as LogicalInterfaceModalDto,
+    );
 
     const logicalInterface = dto.LogicalInterface;
 
@@ -75,12 +83,11 @@ export class LogicalInterfaceModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       nativeSubnet: ['', Validators.required],
-      selectedTaggedSubnet: ['']
+      selectedTaggedSubnet: [''],
     });
   }
 
-  private unsubAll() {
-  }
+  private unsubAll() {}
 
   private reset() {
     this.unsubAll();

@@ -1,10 +1,10 @@
-
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector : 'tooltip',
-  templateUrl : 'tooltip.component.html',
-  styleUrls : [ 'tooltip.component.scss' ],
+  // tslint:disable-next-line: component-selector
+  selector: 'tooltip',
+  templateUrl: 'tooltip.component.html',
+  styleUrls: ['tooltip.component.scss'],
 })
 export class TooltipComponent {
   @Input() message: string;
@@ -28,29 +28,43 @@ export class TooltipComponent {
 
     if (tooltipHeight > 200) {
       this.tooltip.nativeElement.lastElementChild.id = 'adjustme';
-    } else if ((posY / screenH > .85)) {
+    } else if (posY / screenH > 0.85) {
       this.tooltip.nativeElement.lastElementChild.id = 'raised-tooltip';
     }
 
     if (this.message.length <= 40) {
-      if ((posX / screenW) <= .6) {
-        this.tooltipMsgStyle = {left : '0px', 'max-width' : dynamicWidth + 'px'};
+      if (posX / screenW <= 0.6) {
+        this.tooltipMsgStyle = {
+          left: '0px',
+          'max-width': dynamicWidth + 'px',
+        };
       } else {
-        this.tooltipMsgStyle = {right : '8px', 'max-width' :  dynamicWidth + 'px'};
+        this.tooltipMsgStyle = {
+          right: '8px',
+          'max-width': dynamicWidth + 'px',
+        };
       }
     } else if (this.message.length > 750) {
-        if ((posX / screenW) <= .6) {
-          this.tooltipMsgStyle = {left : '0px', 'max-width' :  '600px', top : '-20px'};
-        } else {
-          this.tooltipMsgStyle = {right : '8px', 'max-width' :  '600px', top : '-20px'};
-        }
-    } else {
-      if ((posX / screenW) <= .52) {
-        this.tooltipMsgStyle = {left : '0px'};
-      } else if ((posX / screenW) <= .63) {
-        this.tooltipMsgStyle = {left : '0px', 'max-width' : '270px'};
+      if (posX / screenW <= 0.6) {
+        this.tooltipMsgStyle = {
+          left: '0px',
+          'max-width': '600px',
+          top: '-20px',
+        };
       } else {
-        this.tooltipMsgStyle = {right : '8px'};
+        this.tooltipMsgStyle = {
+          right: '8px',
+          'max-width': '600px',
+          top: '-20px',
+        };
+      }
+    } else {
+      if (posX / screenW <= 0.52) {
+        this.tooltipMsgStyle = { left: '0px' };
+      } else if (posX / screenW <= 0.63) {
+        this.tooltipMsgStyle = { left: '0px', 'max-width': '270px' };
+      } else {
+        this.tooltipMsgStyle = { right: '8px' };
       }
     }
   }

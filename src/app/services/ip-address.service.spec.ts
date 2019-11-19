@@ -50,43 +50,43 @@ describe('IpAddressService', () => {
     expect(result2[0]).toBeFalsy();
   });
 
-// getIpv4Range Tests
+  // getIpv4Range Tests
   it('should be a valid ip range', () => {
-  const service: IpAddressService = TestBed.get(IpAddressService);
-  const cidr = '192.168.1.0/24';
-  const result = service.getIpv4Range(cidr);
-  expect(`${result.getFirst()}` === '192.168.1.0');
-  expect(`${result.getLast()}` === '192.168.1.255');
-});
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.getIpv4Range(cidr);
+    expect(`${result.getFirst()}` === '192.168.1.0');
+    expect(`${result.getLast()}` === '192.168.1.255');
+  });
 
-// ipv4MaskLessThan Tests
+  // ipv4MaskLessThan Tests
   it('mask should be less than', () => {
-  const service: IpAddressService = TestBed.get(IpAddressService);
-  const cidr = '192.168.1.0/24';
-  const result = service.ipv4MaskLessThan(cidr, 25);
-  expect(result).toBeTruthy();
-});
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.ipv4MaskLessThan(cidr, 25);
+    expect(result).toBeTruthy();
+  });
 
   it('mask should not be less than', () => {
-  const service: IpAddressService = TestBed.get(IpAddressService);
-  const cidr = '192.168.1.0/24';
-  const result = service.ipv4MaskLessThan(cidr, 23);
-  expect(result).toBeFalsy();
-});
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.ipv4MaskLessThan(cidr, 23);
+    expect(result).toBeFalsy();
+  });
 
-// updateCidrMask Tests
+  // updateCidrMask Tests
   it('mask should be changed to 30', () => {
-  const service: IpAddressService = TestBed.get(IpAddressService);
-  const cidr = '192.168.1.0/24';
-  const result = service.updateIPv4CidrMask(cidr, 30).split('/');
-  expect(result[1] === '30').toBeTruthy();
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.updateIPv4CidrMask(cidr, 30).split('/');
+    expect(result[1] === '30').toBeTruthy();
   });
 
   it('mask should not be changed', () => {
-  const service: IpAddressService = TestBed.get(IpAddressService);
-  const cidr = '192.168.1.0/24';
-  const result = service.updateIPv4CidrMask(cidr, 24).split('/');
-  expect(result[1] === '24').toBeTruthy();
+    const service: IpAddressService = TestBed.get(IpAddressService);
+    const cidr = '192.168.1.0/24';
+    const result = service.updateIPv4CidrMask(cidr, 24).split('/');
+    expect(result[1] === '24').toBeTruthy();
   });
 
   // calculateSubnetMask Tests
@@ -116,7 +116,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.0.1',
       subnet_mask: '255.255.0.0',
       mask_bits: 16,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const subnets = new Array<Subnet>();
@@ -129,7 +129,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
-      custom_fields: null
+      custom_fields: null,
     };
 
     subnets.push(subnet1);
@@ -150,7 +150,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const subnets = new Array<Subnet>();
@@ -163,7 +163,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
-      custom_fields: null
+      custom_fields: null,
     };
 
     subnets.push(subnet1);
@@ -184,7 +184,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const subnets = new Array<Subnet>();
@@ -197,7 +197,7 @@ describe('IpAddressService', () => {
       gateway: '192.168.1.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
-      custom_fields: null
+      custom_fields: null,
     };
 
     subnets.push(subnet1);
@@ -219,7 +219,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const subnets = new Array<Subnet>();
@@ -232,7 +232,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: null
+      custom_fields: null,
     };
 
     subnets.push(subnet1);
@@ -254,7 +254,7 @@ describe('IpAddressService', () => {
       gateway: '172.16.0.1',
       subnet_mask: '255.255.255.0',
       mask_bits: 24,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const subnets = new Array<Subnet>();
@@ -267,7 +267,7 @@ describe('IpAddressService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'vlan_number', value: '50', notes: ''}]
+      custom_fields: [{ key: 'vlan_number', value: '50', notes: '' }],
     };
 
     subnets.push(subnet1);
@@ -282,19 +282,52 @@ describe('IpAddressService', () => {
   it('should be valid gateway', () => {
     const service: IpAddressService = TestBed.get(IpAddressService);
 
-    expect(service.isValidGateway('192.168.0.1', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
-    expect(service.isValidGateway('192.168.0.254', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
-    expect(service.isValidGateway('192.168.1.0', IPv4Range.fromCidr('192.168.0.0/23'))).toBeTruthy();
-    expect(service.isValidGateway('192.168.0.127', IPv4Range.fromCidr('192.168.0.0/24'))).toBeTruthy();
+    expect(
+      service.isValidGateway(
+        '192.168.0.1',
+        IPv4Range.fromCidr('192.168.0.0/24'),
+      ),
+    ).toBeTruthy();
+    expect(
+      service.isValidGateway(
+        '192.168.0.254',
+        IPv4Range.fromCidr('192.168.0.0/24'),
+      ),
+    ).toBeTruthy();
+    expect(
+      service.isValidGateway(
+        '192.168.1.0',
+        IPv4Range.fromCidr('192.168.0.0/23'),
+      ),
+    ).toBeTruthy();
+    expect(
+      service.isValidGateway(
+        '192.168.0.127',
+        IPv4Range.fromCidr('192.168.0.0/24'),
+      ),
+    ).toBeTruthy();
   });
 
   it('shoudl be invalid gateway', () => {
     const service: IpAddressService = TestBed.get(IpAddressService);
 
-    expect(service.isValidGateway('192.168.0.0', IPv4Range.fromCidr('192.168.0.0/24'))).toBeFalsy();
-    expect(service.isValidGateway('192.168.0.255', IPv4Range.fromCidr('192.168.0.0/24'))).toBeFalsy();
-    expect(service.isValidGateway('192.168.1.0', IPv4Range.fromCidr('192.168.1.0/24'))).toBeFalsy();
+    expect(
+      service.isValidGateway(
+        '192.168.0.0',
+        IPv4Range.fromCidr('192.168.0.0/24'),
+      ),
+    ).toBeFalsy();
+    expect(
+      service.isValidGateway(
+        '192.168.0.255',
+        IPv4Range.fromCidr('192.168.0.0/24'),
+      ),
+    ).toBeFalsy();
+    expect(
+      service.isValidGateway(
+        '192.168.1.0',
+        IPv4Range.fromCidr('192.168.1.0/24'),
+      ),
+    ).toBeFalsy();
   });
 });
-
-

@@ -24,10 +24,10 @@ describe('CreateNetworkComponent', () => {
         RouterTestingModule.withRoutes([]),
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [CreateNetworkComponent, TooltipComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 

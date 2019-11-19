@@ -7,7 +7,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-ldom-detail',
-  templateUrl: './ldom-detail.component.html'
+  templateUrl: './ldom-detail.component.html',
 })
 export class LdomDetailComponent implements OnInit {
   Ldom: SolarisLdom;
@@ -22,7 +22,8 @@ export class LdomDetailComponent implements OnInit {
     private automationApiService: AutomationApiService,
     private hs: HelpersService,
     public ngxSm: NgxSmartModalService,
-    private router: Router) { }
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
@@ -30,21 +31,25 @@ export class LdomDetailComponent implements OnInit {
   }
 
   getLdom() {
-    this.automationApiService.getDevicesbyID(this.Id).subscribe(
-      data => {
-        this.Ldom = data as SolarisLdom;
-        this.LdomMetadata = this.hs.getJsonCustomField(this.Ldom, 'Metadata') as SolarisLdom;
-      }
-    )
+    this.automationApiService.getDevicesbyID(this.Id).subscribe(data => {
+      this.Ldom = data as SolarisLdom;
+      this.LdomMetadata = this.hs.getJsonCustomField(
+        this.Ldom,
+        'Metadata',
+      ) as SolarisLdom;
+    });
   }
   deleteLdom() {
-    if (this.deleteLdomConfirm !== 'DELETE') { return; }
+    if (this.deleteLdomConfirm !== 'DELETE') {
+      return;
+    }
 
-    const extra_vars: {[k:string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.id = this.Ldom.device_id;
     const body = { extra_vars };
-    this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
+    this.automationApiService
+      .launchTemplate('delete-device', body, true)
+      .subscribe();
     this.router.navigate(['/solaris/ldom/list']);
-   }
-
+  }
 }

@@ -1,12 +1,10 @@
 export class StaticRoute {
-    Interface: string;
+  Interface: string;
 
-    CidrAddress: string;
+  CidrAddress: string;
 
-    NextHop: string;
+  NextHop: string;
 
-    // TODO: Remove
-    Edit: boolean;
+  // TODO: Remove
+  Edit: boolean;
 }
-
-

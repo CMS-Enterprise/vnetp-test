@@ -1,19 +1,22 @@
-import { Component, OnInit} from '@angular/core';
-import { NgxSmartModalService} from 'ngx-smart-modal';
+import { Component, OnInit } from '@angular/core';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRule } from 'src/app/models/loadbalancer/irule';
 import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-irule-modal',
-  templateUrl: './irule-modal.component.html'
+  templateUrl: './irule-modal.component.html',
 })
 export class IRuleModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-              public helpText: IRuleModalHelpText) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: IRuleModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -36,21 +39,26 @@ export class IRuleModalComponent implements OnInit {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   getData() {
-    const irule =  Object.assign({}, this.ngx.getModalData('iruleModal') as IRule);
+    const irule = Object.assign(
+      {},
+      this.ngx.getModalData('iruleModal') as IRule,
+    );
     if (irule !== undefined) {
       this.form.controls.name.setValue(irule.Name);
       this.form.controls.content.setValue(irule.Content);
-      }
+    }
     this.ngx.resetModalData('iruleModal');
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      content: ['', Validators.required]
+      content: ['', Validators.required],
     });
   }
 

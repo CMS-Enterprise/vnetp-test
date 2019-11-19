@@ -10,7 +10,7 @@ import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-
 
 @Component({
   selector: 'app-network-topology',
-  templateUrl: './network-topology.component.html'
+  templateUrl: './network-topology.component.html',
 })
 export class NetworkTopologyComponent implements OnInit {
   customers: Array<Customer>;
@@ -40,22 +40,22 @@ export class NetworkTopologyComponent implements OnInit {
       new GraphContextMenuItem(
         'View Networks',
         true,
-        new ActionData('Customer', 'View Networks')
-      )
+        new ActionData('Customer', 'View Networks'),
+      ),
     );
     customerMenu.menuItems.push(
       new GraphContextMenuItem(
         'View Static Routes',
         true,
-        new ActionData('Customer', 'View Static Routes')
-      )
+        new ActionData('Customer', 'View Static Routes'),
+      ),
     );
     customerMenu.menuItems.push(
       new GraphContextMenuItem(
         'View Firewall Rules',
         true,
-        new ActionData('Customer', 'View Firewall Rules')
-      )
+        new ActionData('Customer', 'View Firewall Rules'),
+      ),
     );
 
     // VRF Level Menu
@@ -64,8 +64,8 @@ export class NetworkTopologyComponent implements OnInit {
       new GraphContextMenuItem(
         'Add Subnet',
         true,
-        new ActionData('VRF', 'Add Subnet')
-      )
+        new ActionData('VRF', 'Add Subnet'),
+      ),
     );
 
     // Network Level Menu
@@ -74,24 +74,24 @@ export class NetworkTopologyComponent implements OnInit {
       new GraphContextMenuItem(
         'Edit Static Routes',
         true,
-        new ActionData('Subnet', 'Edit Static Routes')
-      )
+        new ActionData('Subnet', 'Edit Static Routes'),
+      ),
     );
 
     networkMenu.menuItems.push(
       new GraphContextMenuItem(
         'Edit Firewall Rules',
         true,
-        new ActionData('Subnet', 'Edit Firewall Rules')
-      )
+        new ActionData('Subnet', 'Edit Firewall Rules'),
+      ),
     );
 
     networkMenu.menuItems.push(
       new GraphContextMenuItem(
         'New Firewall Rule',
         true,
-        new ActionData('Subnet', 'New Firewall Rule')
-      )
+        new ActionData('Subnet', 'New Firewall Rule'),
+      ),
     );
 
     this.contextMenuArray.push(customerMenu);
@@ -137,11 +137,11 @@ export class NetworkTopologyComponent implements OnInit {
               this.router.navigate(['/networks']);
               break;
             case 'View Static Routes':
-                this.router.navigate(['/static-routes']);
-                break;
+              this.router.navigate(['/static-routes']);
+              break;
             case 'View Firewall Rules':
-                this.router.navigate(['/firewall-rules']);
-                break;
+              this.router.navigate(['/firewall-rules']);
+              break;
             default:
               break;
           }
@@ -149,8 +149,8 @@ export class NetworkTopologyComponent implements OnInit {
         case 'VRF':
           switch (actionData.ActionType) {
             case 'Add Subnet':
-                this.router.navigate(['/networks/create']);
-                break;
+              this.router.navigate(['/networks/create']);
+              break;
             default:
               break;
           }
@@ -158,13 +158,17 @@ export class NetworkTopologyComponent implements OnInit {
         case 'Subnet':
           switch (actionData.ActionType) {
             case 'Edit Static Routes':
-              this.router.navigate([`/static-routes/edit/${ctxMenuResult.object.subnet_id}`]);
+              this.router.navigate([
+                `/static-routes/edit/${ctxMenuResult.object.subnet_id}`,
+              ]);
               break;
             case 'Edit Firewall Rules':
-              this.router.navigate([`/firewall-rules/edit/${ctxMenuResult.object.subnet_id}`]);
+              this.router.navigate([
+                `/firewall-rules/edit/${ctxMenuResult.object.subnet_id}`,
+              ]);
               break;
             case 'New Firewall Rule':
-                break;
+              break;
             default:
               break;
           }

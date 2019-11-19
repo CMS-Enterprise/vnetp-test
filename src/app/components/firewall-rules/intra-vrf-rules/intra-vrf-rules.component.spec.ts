@@ -23,12 +23,12 @@ describe('IntraVrfRulesComponent', () => {
         NgxSmartModalModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
         IntraVrfRulesComponent,
         ContractModalComponent,
-        TooltipComponent
+        TooltipComponent,
       ],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
@@ -37,12 +37,12 @@ describe('IntraVrfRulesComponent', () => {
           useValue: {
             snapshot: {
               paramMap: convertToParamMap({ id: '1' }),
-              url: [{ path: 'firewall-rules' }, { path: 'intravrf' }]
-            }
-          }
+              url: [{ path: 'firewall-rules' }, { path: 'intravrf' }],
+            },
+          },
         },
-        CookieService
-      ]
+        CookieService,
+      ],
     }).compileComponents();
   }));
 

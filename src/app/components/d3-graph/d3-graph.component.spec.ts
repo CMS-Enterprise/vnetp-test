@@ -8,9 +8,8 @@ describe('D3GraphComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ D3GraphComponent ]
-    })
-    .compileComponents();
+      declarations: [D3GraphComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

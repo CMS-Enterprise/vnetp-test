@@ -1,19 +1,22 @@
-import { Component, OnInit} from '@angular/core';
-import { NgxSmartModalService} from 'ngx-smart-modal';
+import { Component, OnInit } from '@angular/core';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-health-monitor-modal',
-  templateUrl: './health-monitor-modal.component.html'
+  templateUrl: './health-monitor-modal.component.html',
 })
 export class HealthMonitorModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-              public helpText: HealthMonitorModalHelpText) { }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: HealthMonitorModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -29,7 +32,10 @@ export class HealthMonitorModalComponent implements OnInit {
     healthMonitor.Timeout = this.form.value.timeout;
 
     this.ngx.resetModalData('healthMonitorModal');
-    this.ngx.setModalData(Object.assign({}, healthMonitor), 'healthMonitorModal');
+    this.ngx.setModalData(
+      Object.assign({}, healthMonitor),
+      'healthMonitorModal',
+    );
     this.ngx.close('healthMonitorModal');
     this.reset();
   }
@@ -39,17 +45,22 @@ export class HealthMonitorModalComponent implements OnInit {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   getData() {
-    const healthMonitor =  Object.assign({}, this.ngx.getModalData('healthMonitorModal') as HealthMonitor);
+    const healthMonitor = Object.assign(
+      {},
+      this.ngx.getModalData('healthMonitorModal') as HealthMonitor,
+    );
     if (healthMonitor !== undefined) {
       this.form.controls.name.setValue(healthMonitor.Name);
       this.form.controls.type.setValue(healthMonitor.Type);
       this.form.controls.servicePort.setValue(healthMonitor.ServicePort);
       this.form.controls.interval.setValue(healthMonitor.Interval);
       this.form.controls.timeout.setValue(healthMonitor.Timeout);
-      }
+    }
     this.ngx.resetModalData('healthMonitorModal');
   }
 
@@ -58,9 +69,30 @@ export class HealthMonitorModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      servicePort: ['', Validators.compose([Validators.required,  Validators.min(1), Validators.max(65535)])],
-      interval: ['', Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)]) ],
-      timeout: ['', Validators.compose([Validators.required,  Validators.min(5), Validators.max(300)])]
+      servicePort: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(65535),
+        ]),
+      ],
+      interval: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(5),
+          Validators.max(300),
+        ]),
+      ],
+      timeout: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(5),
+          Validators.max(300),
+        ]),
+      ],
     });
   }
 

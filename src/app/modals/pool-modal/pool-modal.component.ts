@@ -10,7 +10,7 @@ import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-modal',
-  templateUrl: './pool-modal.component.html'
+  templateUrl: './pool-modal.component.html',
 })
 export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -23,9 +23,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   selectedHealthMonitors: string[];
   availableHealthMonitors: string[];
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-    public helpText: PoolModalHelpText) {
-  }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: PoolModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -55,10 +57,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
-
-  private setFormValidators() {
+  get f() {
+    return this.form.controls;
   }
+
+  private setFormValidators() {}
 
   deletePoolMember(poolMember: PoolMember) {
     const index = this.poolMembers.indexOf(poolMember);
@@ -94,22 +97,25 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   subscribeToPoolMemberModal() {
-    this.poolMemberModalSubscription =
-    this.ngx.getModal('poolMemberModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as PoolMember;
+    this.poolMemberModalSubscription = this.ngx
+      .getModal('poolMemberModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        let data = modal.getData() as PoolMember;
 
-      if (data !== undefined) {
-        data = Object.assign({}, data);
-        this.savePoolMember(data);
-      }
-      this.ngx.resetModalData('poolMemberModal');
-      this.poolMemberModalSubscription.unsubscribe();
-    });
+        if (data !== undefined) {
+          data = Object.assign({}, data);
+          this.savePoolMember(data);
+        }
+        this.ngx.resetModalData('poolMemberModal');
+        this.poolMemberModalSubscription.unsubscribe();
+      });
   }
 
   getData() {
-
-    const dto =  Object.assign({}, this.ngx.getModalData('poolModal') as PoolModalDto);
+    const dto = Object.assign(
+      {},
+      this.ngx.getModalData('poolModal') as PoolModalDto,
+    );
 
     const pool = dto.Pool;
 
@@ -143,11 +149,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       this.selectedHealthMonitors = new Array<string>();
     }
 
-    if (!this.availableHealthMonitors){
+    if (!this.availableHealthMonitors) {
       this.availableHealthMonitors = new Array<string>();
     }
 
-    healthMonitors.forEach( healthMonitor => {
+    healthMonitors.forEach(healthMonitor => {
       if (!this.selectedHealthMonitors.includes(healthMonitor)) {
         this.availableHealthMonitors.push(healthMonitor);
       }
@@ -182,12 +188,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       loadBalancingMethod: ['', Validators.required],
-      selectedHealthMonitor: ['']
+      selectedHealthMonitor: [''],
     });
   }
 
-  private unsubAll() {
-  }
+  private unsubAll() {}
 
   private reset() {
     this.unsubAll();

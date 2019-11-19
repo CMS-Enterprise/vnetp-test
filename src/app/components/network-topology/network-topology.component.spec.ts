@@ -5,7 +5,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { RouterTestingModule } from '@angular/router/testing';
 
-
 describe('NetworkTopologyComponent', () => {
   let component: NetworkTopologyComponent;
   let fixture: ComponentFixture<NetworkTopologyComponent>;
@@ -13,10 +12,9 @@ describe('NetworkTopologyComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [ NetworkTopologyComponent, D3GraphComponent],
-      providers: [ CookieService ]
-    })
-    .compileComponents();
+      declarations: [NetworkTopologyComponent, D3GraphComponent],
+      providers: [CookieService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

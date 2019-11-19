@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
@@ -19,9 +19,9 @@ import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-load-balancers',
-  templateUrl: './load-balancers.component.html'
+  templateUrl: './load-balancers.component.html',
 })
-export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
+export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   navIndex = 0;
 
   vrfs: Vrf[];
@@ -60,13 +60,13 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   }
 
   constructor(
-     private ngx: NgxSmartModalService,
-     private api: AutomationApiService,
-     private papa: Papa, 
-     private hs: HelpersService,
-     private toastr: ToastrService,
-     public helpText: LoadBalancersHelpText
-     ) {
+    private ngx: NgxSmartModalService,
+    private api: AutomationApiService,
+    private papa: Papa,
+    private hs: HelpersService,
+    private toastr: ToastrService,
+    public helpText: LoadBalancersHelpText,
+  ) {
     this.virtualServers = new Array<VirtualServer>();
     this.pools = new Array<Pool>();
   }
@@ -97,23 +97,26 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   }
 
   getVrfObjects(vrf: Vrf) {
-      const loadBalancerDto = this.hs.getJsonCustomField(vrf, 'load_balancers') as LoadBalancerDto;
+    const loadBalancerDto = this.hs.getJsonCustomField(
+      vrf,
+      'load_balancers',
+    ) as LoadBalancerDto;
 
-      if (!loadBalancerDto) {
-        this.virtualServers = new Array<VirtualServer>();
-        this.pools = new Array<Pool>();
-        this.irules = new Array<IRule>();
-        this.healthMonitors = new Array<HealthMonitor>();
-       } else if (loadBalancerDto) {
-        this.virtualServers = loadBalancerDto.VirtualServers;
-        this.pools = loadBalancerDto.Pools;
-        this.irules = loadBalancerDto.IRules;
-        this.healthMonitors = loadBalancerDto.HealthMonitors;
+    if (!loadBalancerDto) {
+      this.virtualServers = new Array<VirtualServer>();
+      this.pools = new Array<Pool>();
+      this.irules = new Array<IRule>();
+      this.healthMonitors = new Array<HealthMonitor>();
+    } else if (loadBalancerDto) {
+      this.virtualServers = loadBalancerDto.VirtualServers;
+      this.pools = loadBalancerDto.Pools;
+      this.irules = loadBalancerDto.IRules;
+      this.healthMonitors = loadBalancerDto.HealthMonitors;
     }
-      this.deletedVirtualServers = new Array<VirtualServer>();
-      this.deletedPools = new Array<Pool>();
-      this.deletedIRules = new Array<IRule>();
-      this.deletedHealthMonitors = new Array<HealthMonitor>();
+    this.deletedVirtualServers = new Array<VirtualServer>();
+    this.deletedPools = new Array<Pool>();
+    this.deletedIRules = new Array<IRule>();
+    this.deletedHealthMonitors = new Array<HealthMonitor>();
   }
 
   createVirtualServer() {
@@ -164,7 +167,7 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   }
 
   editPool(pool: Pool) {
-    this.subscribeToPoolModal() ;
+    this.subscribeToPoolModal();
     this.poolModalMode = ModalMode.Edit;
 
     const dto = new PoolModalDto();
@@ -188,61 +191,68 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   editHealthMonitor(healthMonitor: HealthMonitor) {
     this.subscribeToHealthMonitorModal();
     this.healthMonitorModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(healthMonitor), 'healthMonitorModal');
+    this.ngx.setModalData(
+      this.hs.deepCopy(healthMonitor),
+      'healthMonitorModal',
+    );
     this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
     this.ngx.getModal('healthMonitorModal').open();
   }
 
   subscribeToVirtualServerModal() {
-    this.virtualServerModalSubscription =
-    this.ngx.getModal('virtualServerModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as VirtualServerModalDto;
+    this.virtualServerModalSubscription = this.ngx
+      .getModal('virtualServerModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as VirtualServerModalDto;
 
-      if (data && data.VirtualServer !== undefined) {
-        this.saveVirtualServer(data.VirtualServer);
-      }
-      this.ngx.resetModalData('virtualServerModal');
-      this.virtualServerModalSubscription.unsubscribe();
-    });
+        if (data && data.VirtualServer !== undefined) {
+          this.saveVirtualServer(data.VirtualServer);
+        }
+        this.ngx.resetModalData('virtualServerModal');
+        this.virtualServerModalSubscription.unsubscribe();
+      });
   }
 
   subscribeToPoolModal() {
-    this.poolModalSubscription =
-    this.ngx.getModal('poolModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as PoolModalDto;
+    this.poolModalSubscription = this.ngx
+      .getModal('poolModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as PoolModalDto;
 
-      if (data && data.Pool !== undefined) {
-        this.savePool(data.Pool);
-      }
-      this.ngx.resetModalData('poolModal');
-      this.poolModalSubscription.unsubscribe();
-    });
+        if (data && data.Pool !== undefined) {
+          this.savePool(data.Pool);
+        }
+        this.ngx.resetModalData('poolModal');
+        this.poolModalSubscription.unsubscribe();
+      });
   }
 
   subscribeToIRuleModal() {
-    this.iruleModalSubscription =
-    this.ngx.getModal('iruleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as IRule;
+    this.iruleModalSubscription = this.ngx
+      .getModal('iruleModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as IRule;
 
-      if (data && data !== undefined) {
-        this.saveIRule(data);
-      }
-      this.ngx.resetModalData('iruleModal');
-      this.iruleModalSubscription.unsubscribe();
-    });
+        if (data && data !== undefined) {
+          this.saveIRule(data);
+        }
+        this.ngx.resetModalData('iruleModal');
+        this.iruleModalSubscription.unsubscribe();
+      });
   }
 
   subscribeToHealthMonitorModal() {
-    this.healthMonitorModalSubscription =
-    this.ngx.getModal('healthMonitorModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as HealthMonitor;
+    this.healthMonitorModalSubscription = this.ngx
+      .getModal('healthMonitorModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as HealthMonitor;
 
-      if (data && data !== undefined) {
-        this.saveHealthMonitor(data);
-      }
-      this.ngx.resetModalData('healthMonitorModal');
-      this.healthMonitorModalSubscription.unsubscribe();
-    });
+        if (data && data !== undefined) {
+          this.saveHealthMonitor(data);
+        }
+        this.ngx.resetModalData('healthMonitorModal');
+        this.healthMonitorModalSubscription.unsubscribe();
+      });
   }
 
   saveVirtualServer(virtualServer: VirtualServer) {
@@ -256,10 +266,12 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
 
   deleteVirtualServer(virtualServer: VirtualServer) {
     const index = this.virtualServers.indexOf(virtualServer);
-    if ( index > -1) {
+    if (index > -1) {
       this.virtualServers.splice(index, 1);
 
-      if (!this.deletedVirtualServers) { this.deletedVirtualServers = new Array<VirtualServer>(); }
+      if (!this.deletedVirtualServers) {
+        this.deletedVirtualServers = new Array<VirtualServer>();
+      }
       this.deletedVirtualServers.push(virtualServer);
       this.dirty = true;
     }
@@ -284,7 +296,7 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   }
 
   saveIRule(irule: IRule) {
-    if (this.iruleModalMode === ModalMode.Create){
+    if (this.iruleModalMode === ModalMode.Create) {
       this.irules.push(irule);
     } else {
       this.irules[this.editIRuleIndex] = irule;
@@ -302,10 +314,12 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
     }
 
     const index = this.pools.indexOf(pool);
-    if ( index > -1) {
+    if (index > -1) {
       this.pools.splice(index, 1);
 
-      if (!this.deletedPools) { this.deletedPools = new Array<Pool>(); }
+      if (!this.deletedPools) {
+        this.deletedPools = new Array<Pool>();
+      }
       this.deletedPools.push(pool);
 
       this.dirty = true;
@@ -325,7 +339,9 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
     if (index > -1) {
       this.irules.splice(index, 1);
 
-      if (!this.deletedIRules) { this.deletedIRules = new Array<IRule>(); }
+      if (!this.deletedIRules) {
+        this.deletedIRules = new Array<IRule>();
+      }
       this.deletedIRules.push(irule);
 
       this.dirty = true;
@@ -345,7 +361,9 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
     if (index > -1) {
       this.healthMonitors.splice(index, 1);
 
-      if (!this.deletedHealthMonitors) { this.deletedHealthMonitors = new Array<HealthMonitor>(); }
+      if (!this.deletedHealthMonitors) {
+        this.deletedHealthMonitors = new Array<HealthMonitor>();
+      }
       this.deletedHealthMonitors.push(healthMonitor);
 
       this.dirty = true;
@@ -362,7 +380,7 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
     dto.IRules = this.irules;
     dto.HealthMonitors = this.healthMonitors;
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.load_balancer_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
     extra_vars.vrf_id = this.currentVrf.id;
@@ -373,8 +391,12 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-load-balancer-dto', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
+    this.api.launchTemplate('save-load-balancer-dto', body, true).subscribe(
+      data => {},
+      error => {
+        this.dirty = true;
+      },
+    );
 
     this.deletedVirtualServers = new Array<VirtualServer>();
     this.deletedPools = new Array<Pool>();
@@ -393,7 +415,7 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
     this.dirty = true;
   }
 
-  exportLoadBalancerConfig(){
+  exportLoadBalancerConfig() {
     const dto = new LoadBalancerDto();
 
     dto.VirtualServers = this.virtualServers;
@@ -406,17 +428,17 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   }
 
   private unsubAll() {
-    [this.virtualServerModalSubscription,
-      this.poolModalSubscription]
-      .forEach(sub => {
+    [this.virtualServerModalSubscription, this.poolModalSubscription].forEach(
+      sub => {
         try {
           if (sub) {
-          sub.unsubscribe();
+            sub.unsubscribe();
           }
         } catch (e) {
           console.error(e);
         }
-      });
+      },
+    );
   }
 
   ngOnInit() {
@@ -426,5 +448,4 @@ export class LoadBalancersComponent implements OnInit, PendingChangesGuard {
   ngOnDestroy() {
     this.unsubAll();
   }
-
 }

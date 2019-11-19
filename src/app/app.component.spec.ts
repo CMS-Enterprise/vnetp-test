@@ -25,7 +25,7 @@ describe('AppComponent', () => {
         NgxMaskModule.forRoot(),
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
       declarations: [
         AppComponent,
@@ -35,9 +35,9 @@ describe('AppComponent', () => {
         NetworkObjectGroupModalComponent,
         ServiceObjectModalComponent,
         ServiceObjectGroupModalComponent,
-        TooltipComponent
+        TooltipComponent,
       ],
-      providers: [CookieService, NgxSmartModalService, FormBuilder]
+      providers: [CookieService, NgxSmartModalService, FormBuilder],
     }).compileComponents();
   }));
 

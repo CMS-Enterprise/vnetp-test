@@ -6,20 +6,19 @@ import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-deploy',
-  templateUrl: './deploy.component.html'
+  templateUrl: './deploy.component.html',
 })
 export class DeployComponent implements OnInit {
-
   tabIndex: number;
   subnets: Array<Subnet>;
 
   constructor(
     private hs: HelpersService,
     private automationApiService: AutomationApiService,
-    private auth: AuthService
-    ) {
+    private auth: AuthService,
+  ) {
     this.subnets = new Array<Subnet>();
-   }
+  }
 
   ngOnInit() {
     this.tabIndex = 0;
@@ -27,15 +26,16 @@ export class DeployComponent implements OnInit {
   }
 
   getSubnets() {
-    this.automationApiService.getSubnets()
-    .subscribe(data => {
+    this.automationApiService.getSubnets().subscribe(data => {
       const subnetResponse = data as SubnetResponse;
       this.getUndeployedSubnets(subnetResponse.subnets);
     });
   }
 
   getPropertyLength(subnet: Subnet, propertyName: string) {
-    const jsonFirewallRules = subnet.custom_fields.find(c => c.key === propertyName);
+    const jsonFirewallRules = subnet.custom_fields.find(
+      c => c.key === propertyName,
+    );
 
     const firewallRules = JSON.parse(jsonFirewallRules.value);
 
@@ -71,19 +71,23 @@ export class DeployComponent implements OnInit {
       this.deploySubnet(s);
     });
   }
-  deploySolaris(){
-    var extra_vars: {[k: string]: any} = {};
+  deploySolaris() {
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.customer_name = this.auth.currentUserValue.CustomerName;
     const body = { extra_vars };
-    this.automationApiService.launchTemplate('deploy-solaris', body, true).subscribe();
+    this.automationApiService
+      .launchTemplate('deploy-solaris', body, true)
+      .subscribe();
   }
 
-   private deploySubnet(subnet: Subnet) {
-    var extra_vars: {[k: string]: any} = {};
+  private deploySubnet(subnet: Subnet) {
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.subnet_id = subnet.subnet_id;
 
     const body = { extra_vars };
 
-    this.automationApiService.launchTemplate('deploy-network', body, true).subscribe();
+    this.automationApiService
+      .launchTemplate('deploy-network', body, true)
+      .subscribe();
   }
 }

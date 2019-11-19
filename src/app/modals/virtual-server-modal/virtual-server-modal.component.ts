@@ -2,14 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
-import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
+import {
+  ValidateIpv4CidrAddress,
+  ValidateIpv4Any,
+} from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-virtual-server-modal',
-  templateUrl: './virtual-server-modal.component.html'
+  templateUrl: './virtual-server-modal.component.html',
 })
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -18,9 +21,11 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   availableIRules: Array<string>;
   selectedIRules: Array<string>;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-    public helpText: VirtualServerModalHelpText) {
-  }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: VirtualServerModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -51,13 +56,17 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
-
-  private setFormValidators() {
+  get f() {
+    return this.form.controls;
   }
 
+  private setFormValidators() {}
+
   getData() {
-    const dto =  Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
+    const dto = Object.assign(
+      {},
+      this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto,
+    );
 
     this.pools = dto.Pools;
 
@@ -67,16 +76,18 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(virtualServer.Name);
       this.form.controls.type.setValue(virtualServer.Type);
       this.form.controls.sourceAddress.setValue(virtualServer.SourceAddress);
-      this.form.controls.destinationAddress.setValue(virtualServer.DestinationAddress);
+      this.form.controls.destinationAddress.setValue(
+        virtualServer.DestinationAddress,
+      );
       this.form.controls.servicePort.setValue(virtualServer.ServicePort);
       this.form.controls.pool.setValue(virtualServer.Pool);
 
       if (dto.VirtualServer.IRules) {
         this.selectedIRules = dto.VirtualServer.IRules;
-        } else {
-          this.selectedIRules = new Array<string>();
-        }
+      } else {
+        this.selectedIRules = new Array<string>();
       }
+    }
 
     this.getAvailableIRules(dto.IRules.map(i => i.Name));
     this.ngx.resetModalData('virtualServerModal');
@@ -91,7 +102,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.availableIRules = new Array<string>();
     }
 
-    irules.forEach( irule => {
+    irules.forEach(irule => {
       if (!this.selectedIRules.includes(irule)) {
         this.availableIRules.push(irule);
       }
@@ -127,17 +138,27 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     // If the rule isn't in the array, is at the start of the array and requested to move up
     // or if the rule is at the end of the array, return.
-    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.selectedIRules.length) { return; }
+    if (
+      ruleIndex === -1 ||
+      (ruleIndex === 0 && value === -1) ||
+      ruleIndex + value === this.selectedIRules.length
+    ) {
+      return;
+    }
 
     const nextRule = this.selectedIRules[ruleIndex + value];
 
     // If the next rule doesn't exist, return.
-    if (nextRule === null) { return; }
+    if (nextRule === null) {
+      return;
+    }
 
     const nextRuleIndex = this.selectedIRules.indexOf(nextRule);
 
-    [this.selectedIRules[ruleIndex], this.selectedIRules[nextRuleIndex]] =
-    [this.selectedIRules[nextRuleIndex], this.selectedIRules[ruleIndex]];
+    [this.selectedIRules[ruleIndex], this.selectedIRules[nextRuleIndex]] = [
+      this.selectedIRules[nextRuleIndex],
+      this.selectedIRules[ruleIndex],
+    ];
   }
 
   private buildForm() {
@@ -146,18 +167,27 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       description: [''],
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
-      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
-      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      destinationAddress: [
+        '',
+        Validators.compose([Validators.required, ValidateIpv4Any]),
+      ],
+      servicePort: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(65535),
+        ]),
+      ],
       pool: ['', Validators.required],
-      selectedIRule: ['']
+      selectedIRule: [''],
     });
 
     this.availableIRules = new Array<string>();
     this.selectedIRules = new Array<string>();
   }
 
-  private unsubAll() {
-  }
+  private unsubAll() {}
 
   private reset() {
     this.unsubAll();

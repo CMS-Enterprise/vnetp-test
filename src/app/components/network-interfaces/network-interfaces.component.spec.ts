@@ -27,21 +27,16 @@ describe('NetworkInterfacesComponent', () => {
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
         AngularFontAwesomeModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
-NetworkInterfacesComponent,
-LogicalInterfaceModalComponent,
-ImportExportComponent,
-TooltipComponent
+        NetworkInterfacesComponent,
+        LogicalInterfaceModalComponent,
+        ImportExportComponent,
+        TooltipComponent,
       ],
-      providers: [
-        NgxSmartModalService,
-        CookieService,
-        FormBuilder
-      ]
-    })
-    .compileComponents();
+      providers: [NgxSmartModalService, CookieService, FormBuilder],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

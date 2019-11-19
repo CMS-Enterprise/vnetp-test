@@ -8,14 +8,16 @@ import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient, private cs: CookieService) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<User>(
+      JSON.parse(localStorage.getItem('currentUser')),
+    );
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -26,12 +28,14 @@ export class AuthService {
   login(userpass: Userpass) {
     const httpOptions = {
       headers: new HttpHeaders({
-        Authorization: `Basic ${userpass.toBase64()}`
-      })
+        Authorization: `Basic ${userpass.toBase64()}`,
+      }),
     };
 
-    return this.http.get<any>(environment.apiBase + '/api/1.0/admingroups/', httpOptions)
-        .pipe(map(result => {
+    return this.http
+      .get<any>(environment.apiBase + '/api/1.0/admingroups/', httpOptions)
+      .pipe(
+        map(result => {
           const user = new User(userpass);
 
           if (!result.admingroups || result.total_count === 0) {
@@ -41,20 +45,21 @@ export class AuthService {
           const adminGroup = result.admingroups[0];
 
           if (adminGroup) {
-                user.CustomerName = adminGroup.name;
-                user.CustomerIdentifier = adminGroup.name.toLowerCase();
+            user.CustomerName = adminGroup.name;
+            user.CustomerIdentifier = adminGroup.name.toLowerCase();
 
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
-            }
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
 
           return user;
-        }));
-}
+        }),
+      );
+  }
 
   logout() {
     localStorage.clear();
-    this.cs.deleteAll( '/ ', window.location.hostname);
+    this.cs.deleteAll('/ ', window.location.hostname);
     this.cs.delete('d42sessnid', '/', window.location.hostname);
     this.currentUserSubject.next(null);
     location.reload();

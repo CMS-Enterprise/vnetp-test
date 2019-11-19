@@ -12,7 +12,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 
 @Component({
   selector: 'app-networks-detail',
-  templateUrl: './networks-detail.component.html'
+  templateUrl: './networks-detail.component.html',
 })
 export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
   constructor(
@@ -21,7 +21,7 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
     private router: Router,
     private hs: HelpersService,
     public ngx: NgxSmartModalService,
-    public helpText: NetworkDetailHelpText
+    public helpText: NetworkDetailHelpText,
   ) {}
 
   navIndex = 0;
@@ -54,7 +54,7 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
       this.subnet = data as Subnet;
       this.deployedState = this.hs.getBooleanCustomField(
         this.subnet,
-        'deployed'
+        'deployed',
       );
 
       this.getAvailableContracts(this.subnet);
@@ -71,7 +71,7 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
   getAssignedContracts(subnet: Subnet) {
     this.contractAssignments = this.hs.getJsonCustomField(
       subnet,
-      'contract_assignments'
+      'contract_assignments',
     ) as Array<ContractAssignment>;
   }
 
@@ -91,14 +91,17 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
     const duplicate = this.contractAssignments.filter(
       c =>
         c.ContractName === this.newContractAssignment.ContractName &&
-        c.Type === this.newContractAssignment.Type
+        c.Type === this.newContractAssignment.Type,
     );
 
     if (duplicate[0]) {
       return;
     }
 
-    if (!this.newContractAssignment.ContractName || !this.newContractAssignment.Type) {
+    if (
+      !this.newContractAssignment.ContractName ||
+      !this.newContractAssignment.Type
+    ) {
       return;
     }
 
@@ -124,7 +127,7 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
   saveContractAssignments() {
     this.dirty = false;
 
-    let extra_vars: { [k: string]: any } = {};
+    const extra_vars: { [k: string]: any } = {};
 
     extra_vars.subnet = this.subnet;
     extra_vars.deployed_state = this.deployedState;
@@ -135,7 +138,12 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
 
     this.automationApiService
       .launchTemplate('save-contract-assignment', body, true)
-      .subscribe(data => {}, error => {this.dirty = true; });
+      .subscribe(
+        data => {},
+        error => {
+          this.dirty = true;
+        },
+      );
   }
 
   deleteSubnet() {
@@ -143,16 +151,18 @@ export class NetworksDetailComponent implements OnInit, PendingChangesGuard {
       return;
     }
 
-    let extra_vars: { [k: string]: any } = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.subnet_id = this.subnet.subnet_id;
     const body = { extra_vars };
 
     this.automationApiService
       .launchTemplate('delete-network', body, true)
-      .subscribe(data => {
-        this.dirty = false;
-        this.router.navigate(['/networks']);
-      }, error => {});
-
+      .subscribe(
+        data => {
+          this.dirty = false;
+          this.router.navigate(['/networks']);
+        },
+        error => {},
+      );
   }
 }

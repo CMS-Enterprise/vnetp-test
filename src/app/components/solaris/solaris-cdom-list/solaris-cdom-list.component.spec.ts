@@ -8,9 +8,8 @@ describe('SolarisCdomListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SolarisCdomListComponent ]
-    })
-    .compileComponents();
+      declarations: [SolarisCdomListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

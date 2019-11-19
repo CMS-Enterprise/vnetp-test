@@ -14,10 +14,10 @@ import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-network
 
 @Component({
   selector: 'app-service-objects-groups',
-  templateUrl: './service-objects-groups.component.html'
+  templateUrl: './service-objects-groups.component.html',
 })
-export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
-
+export class ServiceObjectsGroupsComponent
+  implements OnInit, OnDestroy, PendingChangesGuard {
   vrfs: Vrf[];
   currentVrf: Vrf;
   serviceObjects: Array<ServiceObject>;
@@ -41,8 +41,13 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     return !this.dirty;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
-              public helpText: ServiceObjectsGroupsHelpText) {
+  constructor(
+    private ngx: NgxSmartModalService,
+    private api: AutomationApiService,
+    private papa: Papa,
+    private hs: HelpersService,
+    public helpText: ServiceObjectsGroupsHelpText,
+  ) {
     this.serviceObjects = new Array<ServiceObject>();
     this.serviceObjectGroups = new Array<ServiceObjectGroup>();
   }
@@ -73,14 +78,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   getVrfObjects(vrf: Vrf) {
-      const serviceObjectDto = this.hs.getJsonCustomField(vrf, 'service_objects') as ServiceObjectDto;
+    const serviceObjectDto = this.hs.getJsonCustomField(
+      vrf,
+      'service_objects',
+    ) as ServiceObjectDto;
 
-      if (!serviceObjectDto) {
-        this.serviceObjects = new Array<ServiceObject>();
-        this.serviceObjectGroups = new Array<ServiceObjectGroup>();
-       } else if (serviceObjectDto) {
-        this.serviceObjects = serviceObjectDto.ServiceObjects;
-        this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
+    if (!serviceObjectDto) {
+      this.serviceObjects = new Array<ServiceObject>();
+      this.serviceObjectGroups = new Array<ServiceObjectGroup>();
+    } else if (serviceObjectDto) {
+      this.serviceObjects = serviceObjectDto.ServiceObjects;
+      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
     }
   }
 
@@ -99,43 +107,53 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   editServiceObject(serviceObject: ServiceObject) {
     this.subscribeToServiceObjectModal();
     this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
+    this.ngx.setModalData(
+      this.hs.deepCopy(serviceObject),
+      'serviceObjectModal',
+    );
     this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
     this.ngx.getModal('serviceObjectModal').open();
   }
 
   editServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {
-    this.subscribeToServiceObjectGroupModal() ;
+    this.subscribeToServiceObjectGroupModal();
     this.serviceObjectGroupModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(serviceObjectGroup), 'serviceObjectGroupModal');
-    this.editServiceObjectGroupIndex = this.serviceObjectGroups.indexOf(serviceObjectGroup);
+    this.ngx.setModalData(
+      this.hs.deepCopy(serviceObjectGroup),
+      'serviceObjectGroupModal',
+    );
+    this.editServiceObjectGroupIndex = this.serviceObjectGroups.indexOf(
+      serviceObjectGroup,
+    );
     this.ngx.getModal('serviceObjectGroupModal').open();
   }
 
   subscribeToServiceObjectModal() {
-    this.serviceObjectModalSubscription =
-    this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as ServiceObject;
+    this.serviceObjectModalSubscription = this.ngx
+      .getModal('serviceObjectModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as ServiceObject;
 
-      if (data !== undefined) {
-        this.saveServiceObject(data);
-      }
-      this.ngx.resetModalData('serviceObjectModal');
-      this.serviceObjectModalSubscription.unsubscribe();
-    });
+        if (data !== undefined) {
+          this.saveServiceObject(data);
+        }
+        this.ngx.resetModalData('serviceObjectModal');
+        this.serviceObjectModalSubscription.unsubscribe();
+      });
   }
 
   subscribeToServiceObjectGroupModal() {
-    this.serviceObjectGroupModalSubscription =
-    this.ngx.getModal('serviceObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as ServiceObjectGroup;
+    this.serviceObjectGroupModalSubscription = this.ngx
+      .getModal('serviceObjectGroupModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as ServiceObjectGroup;
 
-      if (data !== undefined) {
-        this.saveServiceObjectGroup(data);
-      }
-      this.ngx.resetModalData('serviceObjectGroupModal');
-      this.serviceObjectGroupModalSubscription.unsubscribe();
-    });
+        if (data !== undefined) {
+          this.saveServiceObjectGroup(data);
+        }
+        this.ngx.resetModalData('serviceObjectGroupModal');
+        this.serviceObjectGroupModalSubscription.unsubscribe();
+      });
   }
 
   saveServiceObject(serviceObject: ServiceObject) {
@@ -149,10 +167,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
   deleteServiceObject(serviceObject: ServiceObject) {
     const index = this.serviceObjects.indexOf(serviceObject);
-    if ( index > -1) {
+    if (index > -1) {
       this.serviceObjects.splice(index, 1);
 
-      if (!this.deletedServiceObjects) { this.deletedServiceObjects = new Array<ServiceObject>(); }
+      if (!this.deletedServiceObjects) {
+        this.deletedServiceObjects = new Array<ServiceObject>();
+      }
       this.deletedServiceObjects.push(serviceObject);
       this.dirty = true;
     }
@@ -162,17 +182,21 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     if (this.serviceObjectGroupModalMode === ModalMode.Create) {
       this.serviceObjectGroups.push(serviceObjectGroup);
     } else {
-      this.serviceObjectGroups[this.editServiceObjectGroupIndex] = serviceObjectGroup;
+      this.serviceObjectGroups[
+        this.editServiceObjectGroupIndex
+      ] = serviceObjectGroup;
     }
     this.dirty = true;
   }
 
   deleteServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {
     const index = this.serviceObjectGroups.indexOf(serviceObjectGroup);
-    if ( index > -1) {
+    if (index > -1) {
       this.serviceObjectGroups.splice(index, 1);
 
-      if (!this.deletedServiceObjectGroups) { this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>(); }
+      if (!this.deletedServiceObjectGroups) {
+        this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>();
+      }
       this.deletedServiceObjectGroups.push(serviceObjectGroup);
 
       this.dirty = true;
@@ -187,7 +211,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     dto.ServiceObjectGroups = this.serviceObjectGroups;
     dto.VrfId = this.currentVrf.id;
 
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
     extra_vars.service_object_dto = dto;
     extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
     extra_vars.deleted_service_objects = this.deletedServiceObjects;
@@ -195,8 +219,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('save-service-object-dto', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
+    this.api.launchTemplate('save-service-object-dto', body, true).subscribe(
+      data => {},
+      error => {
+        this.dirty = true;
+      },
+    );
 
     this.deletedServiceObjects = new Array<ServiceObject>();
     this.deletedServiceObjectGroups = new Array<ServiceObjectGroup>();
@@ -222,17 +250,18 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [this.serviceObjectModalSubscription,
-      this.serviceObjectGroupModalSubscription]
-      .forEach(sub => {
-        try {
-          if (sub) {
+    [
+      this.serviceObjectModalSubscription,
+      this.serviceObjectGroupModalSubscription,
+    ].forEach(sub => {
+      try {
+        if (sub) {
           sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
         }
-      });
+      } catch (e) {
+        console.error(e);
+      }
+    });
   }
 
   ngOnInit() {

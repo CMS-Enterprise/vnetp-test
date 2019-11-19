@@ -12,10 +12,9 @@ describe('ImportExportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, PapaParseModule],
-      declarations: [ ImportExportComponent ]
-    })
-    .compileComponents();
+      imports: [AngularFontAwesomeModule, FormsModule, PapaParseModule],
+      declarations: [ImportExportComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -32,5 +31,5 @@ describe('ImportExportComponent', () => {
     component.fileInput = '/some/file/path';
     component.importCallback({});
     expect(component.fileInput).toEqual('');
-  })
+  });
 });

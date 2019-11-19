@@ -1,12 +1,11 @@
 export class HealthMonitor {
+  Name: string;
 
-    Name: string;
+  Type: string;
 
-    Type: string;
+  ServicePort: number;
 
-    ServicePort: number;
+  Interval: number;
 
-    Interval: number;
-
-    Timeout: number;
+  Timeout: number;
 }

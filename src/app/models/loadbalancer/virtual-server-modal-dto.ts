@@ -3,9 +3,9 @@ import { VirtualServer } from './virtual-server';
 import { IRule } from './irule';
 
 export class VirtualServerModalDto {
-    Pools: Array<Pool>;
+  Pools: Array<Pool>;
 
-    IRules: Array<IRule>;
+  IRules: Array<IRule>;
 
-    VirtualServer: VirtualServer;
+  VirtualServer: VirtualServer;
 }

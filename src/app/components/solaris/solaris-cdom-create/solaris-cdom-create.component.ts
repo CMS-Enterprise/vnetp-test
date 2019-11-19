@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
 import { HelpTextSolaris } from 'src/app/services/help-text-solaris';
 @Component({
   selector: 'app-solaris-cdom-create',
-  templateUrl: './solaris-cdom-create.component.html'
+  templateUrl: './solaris-cdom-create.component.html',
 })
 export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   CDOM: SolarisCdom;
@@ -51,15 +51,18 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     private hs: HelpersService,
     private authService: AuthService,
     private toastr: ToastrService,
-    public helpText: HelpTextSolaris
-  ) {
-  }
+    public helpText: HelpTextSolaris,
+  ) {}
 
   cloneCdom() {
-    this.automationApiService.getDevicesbyID(this.cdomInput.device_id).subscribe(data => {
-      const result = data as SolarisCdom;
-      this.CDOM = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
-    });
+    this.automationApiService
+      .getDevicesbyID(this.cdomInput.device_id)
+      .subscribe(data => {
+        const result = data as SolarisCdom;
+        this.CDOM = this.hs.deepCopy(
+          this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom,
+        );
+      });
   }
 
   getVrfs() {
@@ -67,14 +70,16 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
 
     this.automationApiService.getVrfs().subscribe(data => {
       data.forEach(d => {
-        const dto = this.hs.getJsonCustomField(d, 'network_interfaces'
+        const dto = this.hs.getJsonCustomField(
+          d,
+          'network_interfaces',
         ) as NetworkInterfacesDto;
 
         if (dto) {
-        dto.LogicalInterfaces.forEach(l => {
-          this.LogicalInterfaces.push(l);
-        });
-      }
+          dto.LogicalInterfaces.forEach(l => {
+            this.LogicalInterfaces.push(l);
+          });
+        }
       });
     });
   }
@@ -99,12 +104,16 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.ramCountArray = this.solarisService.buildNumberArray(0, 512, 32);
     this.LogicalInterfaces = new Array<LogicalInterface>();
     this.getVrfs();
-    if ( this.solarisService.currentCdom.device_id != null ) {
+    if (this.solarisService.currentCdom.device_id != null) {
       this.editCDOM = true;
-      this.automationApiService.getDevicesbyID(this.solarisService.currentCdom.device_id).subscribe(data => {
+      this.automationApiService
+        .getDevicesbyID(this.solarisService.currentCdom.device_id)
+        .subscribe(data => {
           const result = data as SolarisCdom;
-          this.CDOM = this.hs.deepCopy(this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom);
-      });
+          this.CDOM = this.hs.deepCopy(
+            this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom,
+          );
+        });
       this.solarisService.currentCdom = new SolarisCdom();
     }
   }
@@ -113,7 +122,6 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     this.solarisService.moveObjectPosition(value, obj, objArray);
   }
   launchCDOMJobs() {
-
     // TODO: Tie to reactive form pristine.
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
@@ -123,9 +131,13 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
     if (this.editCDOM) {
-      this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+      this.automationApiService
+        .launchTemplate(`save-cdom`, body, true)
+        .subscribe();
     } else {
-      this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
+      this.automationApiService
+        .launchTemplate('edit-cdom', body, true)
+        .subscribe();
     }
     this.router.navigate(['/solaris/cdom/list']);
   }
@@ -144,7 +156,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
   }
 
   insertVswitch() {
-    if (this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)) {
+    if (
+      this.modalVswitch.vlansTagged.includes(this.modalVswitch.vlansUntagged)
+    ) {
       this.toastr.error('Native VLAN cannot be in Tagged VLANs.');
       return;
     }
@@ -152,7 +166,9 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
       this.CDOM.vsw = new Array<SolarisVswitch>();
     }
     if (this.editCurrentVswitch) {
-      this.CDOM.vsw[this.editVswitchIndex] = this.hs.deepCopy(this.modalVswitch);
+      this.CDOM.vsw[this.editVswitchIndex] = this.hs.deepCopy(
+        this.modalVswitch,
+      );
       this.editCurrentVswitch = false;
       this.editVswitchIndex = null;
     } else {

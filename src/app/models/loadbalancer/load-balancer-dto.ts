@@ -4,13 +4,13 @@ import { IRule } from './irule';
 import { HealthMonitor } from './health-monitor';
 
 export class LoadBalancerDto {
-    Pools: Array<Pool>;
+  Pools: Array<Pool>;
 
-    VirtualServers: Array<VirtualServer>;
+  VirtualServers: Array<VirtualServer>;
 
-    VrfId: number;
+  VrfId: number;
 
-    IRules: Array<IRule>;
+  IRules: Array<IRule>;
 
-    HealthMonitors: Array<HealthMonitor>;
+  HealthMonitors: Array<HealthMonitor>;
 }

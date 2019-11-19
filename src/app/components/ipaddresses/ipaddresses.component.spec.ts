@@ -15,10 +15,10 @@ describe('IpaddressesComponent', () => {
       imports: [
         AngularFontAwesomeModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [IpaddressesComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 
@@ -27,7 +27,6 @@ describe('IpaddressesComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
 
   afterEach(() => {
     TestBed.resetTestingModule();

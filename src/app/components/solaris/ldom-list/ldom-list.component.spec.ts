@@ -8,9 +8,8 @@ describe('LdomListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LdomListComponent ]
-    })
-    .compileComponents();
+      declarations: [LdomListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

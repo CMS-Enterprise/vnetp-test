@@ -1,7 +1,12 @@
 // FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
@@ -16,14 +21,25 @@ describe('ServiceObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ ServiceObjectModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule.forRoot(),
+      ],
+      declarations: [ServiceObjectModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(ServiceObjectModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(ServiceObjectModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -41,7 +57,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should read service object from service', () => {
-    const modal = ngx.getModal('serviceObjectModal')
+    const modal = ngx.getModal('serviceObjectModal');
     const serviceObject = new ServiceObject();
     serviceObject.Name = 'Test';
     serviceObject.Type = 'tcp';
@@ -74,22 +90,22 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   // Initial Form State
-  it ('name should be required', () =>  {
+  it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
   });
 
-  it ('type should be required', () =>  {
+  it('type should be required', () => {
     const type = component.form.controls.type;
     expect(type.valid).toBeFalsy();
   });
 
-  it ('destinationPort should be required', () =>  {
+  it('destinationPort should be required', () => {
     const destinationPort = component.form.controls.destinationPort;
     expect(destinationPort.valid).toBeFalsy();
   });
 
-  it ('sourcePort should be required', () =>  {
+  it('sourcePort should be required', () => {
     const sourcePort = component.form.controls.sourcePort;
     expect(sourcePort.valid).toBeFalsy();
   });

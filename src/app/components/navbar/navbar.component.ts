@@ -13,7 +13,7 @@ import { Job } from 'src/app/models/other/job';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private ngx: NgxSmartModalService,
     private auth: AuthService,
-    private hs: HelpersService
+    private hs: HelpersService,
   ) {
     this.activeJobs = [];
     this.auth.currentUser.subscribe(u => (this.currentUser = u));

@@ -13,11 +13,14 @@ describe('LdomDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LdomDetailComponent ],
-      imports: [ AngularFontAwesomeModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
-      providers: [ CookieService, NgxSmartModalService]
-    })
-    .compileComponents();
+      declarations: [LdomDetailComponent],
+      imports: [
+        AngularFontAwesomeModule,
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule,
+      ],
+      providers: [CookieService, NgxSmartModalService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

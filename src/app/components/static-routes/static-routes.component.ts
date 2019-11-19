@@ -6,30 +6,29 @@ import { Vrf } from 'src/app/models/d42/vrf';
 @Component({
   selector: 'app-static-routes',
   templateUrl: './static-routes.component.html',
-  styleUrls: ['./static-routes.component.scss']
+  styleUrls: ['./static-routes.component.scss'],
 })
 export class StaticRoutesComponent implements OnInit {
-
   vrfs: Array<Vrf>;
   routingTable: any;
 
   constructor(private automationApiService: AutomationApiService) {
     this.vrfs = [];
     this.routingTable = [];
-   }
+  }
 
   ngOnInit() {
     this.getVrfs();
   }
 
   getVrfs() {
-    this.automationApiService.getVrfs().subscribe(
-      data => this.vrfs = data
-      );
+    this.automationApiService.getVrfs().subscribe(data => (this.vrfs = data));
   }
 
   getStaticRoutesCount(subnet: any) {
-    const jsonStaticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
+    const jsonStaticRoutes = subnet.custom_fields.find(
+      c => c.key === 'static_routes',
+    );
 
     const staticRoutes = JSON.parse(jsonStaticRoutes.value);
 
@@ -37,7 +36,9 @@ export class StaticRoutesComponent implements OnInit {
   }
 
   getStaticRoutes(subnet: any) {
-    const jsonStaticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
+    const jsonStaticRoutes = subnet.custom_fields.find(
+      c => c.key === 'static_routes',
+    );
 
     const staticRoutes = JSON.parse(jsonStaticRoutes.value);
 

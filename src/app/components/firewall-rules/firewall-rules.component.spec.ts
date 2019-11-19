@@ -28,18 +28,18 @@ describe('FirewallRulesComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
         FirewallRulesComponent,
         FirewallRuleModalComponent,
-        TooltipComponent
+        TooltipComponent,
       ],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         CookieService,
-        FormBuilder
-      ]
+        FormBuilder,
+      ],
     }).compileComponents();
   }));
 

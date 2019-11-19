@@ -1,13 +1,12 @@
 import { UniqueNameObject } from '../interfaces/unique-name-object.interface';
 import { ServiceObject } from './service-object';
 
-
 export class ServiceObjectGroup implements UniqueNameObject {
-    Name: string;
+  Name: string;
 
-    Description: string;
+  Description: string;
 
-    Type: string;
+  Type: string;
 
-    ServiceObjects: Array<ServiceObject>;
+  ServiceObjects: Array<ServiceObject>;
 }

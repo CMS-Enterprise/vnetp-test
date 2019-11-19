@@ -10,10 +10,9 @@ describe('JobsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [ JobsComponent ],
-      providers: [CookieService]
-    })
-    .compileComponents();
+      declarations: [JobsComponent],
+      providers: [CookieService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,14 +1,12 @@
 import { Directive, HostListener, ElementRef, Input } from '@angular/core';
 @Directive({
-  selector: '[appIsAlphanumeric]'
+  selector: '[appIsAlphanumeric]',
 })
 export class SpecialCharacterDirective {
-
   regexStr = '^[a-zA-Z0-9_]*$';
   @Input() isAlphaNumeric: boolean;
 
-  constructor(private el: ElementRef) { }
-
+  constructor(private el: ElementRef) {}
 
   @HostListener('keypress', ['$event']) onKeyPress(event) {
     return new RegExp(this.regexStr).test(event.key);
@@ -20,11 +18,10 @@ export class SpecialCharacterDirective {
 
   validateFields(event) {
     setTimeout(() => {
-
-      this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^A-Za-z ]/g, '').replace(/\s/g, '');
+      this.el.nativeElement.value = this.el.nativeElement.value
+        .replace(/[^A-Za-z ]/g, '')
+        .replace(/\s/g, '');
       event.preventDefault();
-
-    }, 100)
+    }, 100);
   }
-
 }

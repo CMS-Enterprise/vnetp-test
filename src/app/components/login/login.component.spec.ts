@@ -20,12 +20,14 @@ describe('LoginComponent', () => {
       imports: [
         AngularFontAwesomeModule,
         FormsModule,
-        RouterTestingModule.withRoutes([ {path: 'dashboard', component: DashboardComponent}]),
+        RouterTestingModule.withRoutes([
+          { path: 'dashboard', component: DashboardComponent },
+        ]),
         ToastrModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [LoginComponent, DashboardComponent, D3PieChartComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 

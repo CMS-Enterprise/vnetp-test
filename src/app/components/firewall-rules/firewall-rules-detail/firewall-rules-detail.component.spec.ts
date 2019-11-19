@@ -25,16 +25,38 @@ describe('FirewallRulesDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), PapaParseModule,
-      NgxSmartModalModule, NgxMaskModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [ FirewallRulesDetailComponent,
-      FirewallRuleModalComponent, ImportExportComponent, TooltipComponent ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder,
-      { provide: ActivatedRoute, useValue: {
-        snapshot: { paramMap: convertToParamMap({ id: '1' }), url: [{path: 'firewall-rules'}, {path: 'external'}]}
-    }}]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        RouterTestingModule.withRoutes([]),
+        PapaParseModule,
+        NgxSmartModalModule,
+        NgxMaskModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ],
+      declarations: [
+        FirewallRulesDetailComponent,
+        FirewallRuleModalComponent,
+        ImportExportComponent,
+        TooltipComponent,
+      ],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({ id: '1' }),
+              url: [{ path: 'firewall-rules' }, { path: 'external' }],
+            },
+          },
+        },
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -49,7 +71,7 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set set subscription and modal mode on create', () => {
-    component.vrf = {name: 'Test', id: 101} as Vrf;
+    component.vrf = { name: 'Test', id: 101 } as Vrf;
 
     component.createFirewallRule();
 
@@ -58,8 +80,8 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should set subscription, modal mode and index on edit', () => {
-    component.vrf = {name: 'Test', id: 102} as Vrf;
-    component.firewallRules = [{Name: 'TestRule'}] as Array<FirewallRule>;
+    component.vrf = { name: 'Test', id: 102 } as Vrf;
+    component.firewallRules = [{ Name: 'TestRule' }] as Array<FirewallRule>;
 
     component.editFirewallRule(component.firewallRules[0]);
 
@@ -69,8 +91,11 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should move firewall rule up', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.moveFirewallRule(-1, component.firewallRules[2]);
 
@@ -79,8 +104,11 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should not move firewall rule at front of array up', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.moveFirewallRule(-1, component.firewallRules[0]);
 
@@ -89,8 +117,11 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should not move firewall rule at end of array down', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.moveFirewallRule(1, component.firewallRules[2]);
 
@@ -98,10 +129,12 @@ describe('FirewallRulesDetailComponent', () => {
     expect(component.firewallRules[2].Name === 'Test3').toBeTruthy();
   });
 
-
   it('should move firewall rule down', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.moveFirewallRule(1, component.firewallRules[1]);
 
@@ -110,18 +143,27 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should duplicate firewall rule', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.duplicateFirewallRule(component.firewallRules[2]);
 
     expect(component.firewallRules.length === 4).toBeTruthy();
-    expect(component.firewallRules[2].Name === component.firewallRules[3].Name + '_copy').toBeTruthy();
+    expect(
+      component.firewallRules[2].Name ===
+        component.firewallRules[3].Name + '_copy',
+    ).toBeTruthy();
   });
 
   it('should delete firewall rule', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.deleteFirewallRule(component.firewallRules[0]);
 
@@ -132,8 +174,11 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   it('should not delete if firewall rule does not exist', () => {
-    component.firewallRules = [{ Name: 'Test'} as FirewallRule, { Name: 'Test2'} as FirewallRule
-    , { Name: 'Test3'} as FirewallRule];
+    component.firewallRules = [
+      { Name: 'Test' } as FirewallRule,
+      { Name: 'Test2' } as FirewallRule,
+      { Name: 'Test3' } as FirewallRule,
+    ];
 
     component.deleteFirewallRule(component.firewallRules[3]);
 
@@ -142,5 +187,4 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   // TODO: Modal invocation tests and edit tests.
-
 });

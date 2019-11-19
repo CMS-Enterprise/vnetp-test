@@ -2,21 +2,27 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
-import { ValidateIpv4Any, ValidateIpv4Address } from 'src/app/validators/network-form-validators';
+import {
+  ValidateIpv4Any,
+  ValidateIpv4Address,
+} from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-pool-member-modal',
-  templateUrl: './pool-member-modal.component.html'
+  templateUrl: './pool-member-modal.component.html',
 })
 export class PoolMemberModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   typeSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, public helpText: PoolMemberModalHelpText) {
-  }
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    public helpText: PoolMemberModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -44,41 +50,48 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   private setFormValidators() {
     const fqdn = this.form.get('fqdn');
     const autoPopulate = this.form.get('autoPopulate');
     const ipAddress = this.form.get('ipAddress');
 
-    this.typeSubscription = this.form.get('type').valueChanges
-    .subscribe( type => {
+    this.typeSubscription = this.form
+      .get('type')
+      .valueChanges.subscribe(type => {
+        if (type === 'ipaddress') {
+          ipAddress.setValidators(
+            Validators.compose([Validators.required, ValidateIpv4Address]),
+          );
+          ipAddress.setValue(null);
+          fqdn.setValidators(null);
+          fqdn.setValue(null);
+          autoPopulate.setValue(false);
+        }
 
-      if (type === 'ipaddress') {
-        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
-        ipAddress.setValue(null);
-        fqdn.setValidators(null);
-        fqdn.setValue(null);
-        autoPopulate.setValue(false);
-      }
+        if (type === 'fqdn') {
+          // TODO: Write FQDN Validator
+          fqdn.setValidators(Validators.compose([Validators.required]));
+          fqdn.setValue(null);
+          ipAddress.setValidators(null);
+          ipAddress.setValue(null);
+          autoPopulate.setValue(false);
+        }
 
-      if (type === 'fqdn') {
-        // TODO: Write FQDN Validator
-        fqdn.setValidators(Validators.compose([Validators.required]));
-        fqdn.setValue(null);
-        ipAddress.setValidators(null);
-        ipAddress.setValue(null);
-        autoPopulate.setValue(false);
-      }
-
-      fqdn.updateValueAndValidity();
-      autoPopulate.updateValueAndValidity();
-      ipAddress.updateValueAndValidity();
-    });
+        fqdn.updateValueAndValidity();
+        autoPopulate.updateValueAndValidity();
+        ipAddress.updateValueAndValidity();
+      });
   }
 
   getData() {
-    const poolMember =  Object.assign({}, this.ngx.getModalData('poolMemberModal') as PoolMember);
+    const poolMember = Object.assign(
+      {},
+      this.ngx.getModalData('poolMemberModal') as PoolMember,
+    );
     if (poolMember !== undefined) {
       this.form.controls.name.setValue(poolMember.Name);
       this.form.controls.type.setValue(poolMember.Type);
@@ -86,7 +99,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       this.form.controls.fqdn.setValue(poolMember.Fqdn);
       this.form.controls.autoPopulate.setValue(poolMember.AutoPopulate);
       this.form.controls.servicePort.setValue(poolMember.ServicePort);
-      }
+    }
     this.ngx.resetModalData('poolMemberModal');
   }
 
@@ -97,13 +110,20 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      servicePort: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(65535),
+        ]),
+      ],
     });
   }
 
   private unsubAll() {
     if (this.typeSubscription) {
-        this.typeSubscription.unsubscribe();
+      this.typeSubscription.unsubscribe();
     }
   }
 

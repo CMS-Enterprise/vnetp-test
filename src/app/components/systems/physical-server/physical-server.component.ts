@@ -7,10 +7,9 @@ import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-physical-server',
-  templateUrl: './physical-server.component.html'
+  templateUrl: './physical-server.component.html',
 })
 export class PhysicalServerComponent implements OnInit, OnDestroy {
-
   physicalServers: Array<PhysicalServer>;
   deletedPhysicalServers: Array<PhysicalServer>;
 
@@ -21,34 +20,40 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
 
   physicalServerModalSubscription: Subscription;
 
-  constructor(private ngxSmartModalService: NgxSmartModalService, private helperService: HelpersService) {
-   }
+  constructor(
+    private ngxSmartModalService: NgxSmartModalService,
+    private helperService: HelpersService,
+  ) {}
 
-   createPhysicalServer() {
-     this.subscribeToPhysicalServerModal();
-     this.physicalServerModalMode = ModalMode.Create;
-     this.ngxSmartModalService.getModal('physicalServerModal').open();
-   }
+  createPhysicalServer() {
+    this.subscribeToPhysicalServerModal();
+    this.physicalServerModalMode = ModalMode.Create;
+    this.ngxSmartModalService.getModal('physicalServerModal').open();
+  }
 
-   editPhysicalServer(physicalServer: PhysicalServer) {
-     this.subscribeToPhysicalServerModal();
-     this.physicalServerModalMode = ModalMode.Edit;
-     this.ngxSmartModalService.setModalData(this.helperService.deepCopy(physicalServer), 'physicalServerModal');
-     this.editPhysicalServerIndex = this.physicalServers.indexOf(physicalServer);
-     this.ngxSmartModalService.getModal('physicalServerModal').open();
-   }
+  editPhysicalServer(physicalServer: PhysicalServer) {
+    this.subscribeToPhysicalServerModal();
+    this.physicalServerModalMode = ModalMode.Edit;
+    this.ngxSmartModalService.setModalData(
+      this.helperService.deepCopy(physicalServer),
+      'physicalServerModal',
+    );
+    this.editPhysicalServerIndex = this.physicalServers.indexOf(physicalServer);
+    this.ngxSmartModalService.getModal('physicalServerModal').open();
+  }
 
-   subscribeToPhysicalServerModal() {
-    this.physicalServerModalSubscription =
-    this.ngxSmartModalService.getModal('physicalServerModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as PhysicalServer;
+  subscribeToPhysicalServerModal() {
+    this.physicalServerModalSubscription = this.ngxSmartModalService
+      .getModal('physicalServerModal')
+      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as PhysicalServer;
 
-      if (data !== undefined) {
-        this.savePhysicalServer(data);
-      }
-      this.ngxSmartModalService.resetModalData('physicalServerModal');
-      this.physicalServerModalSubscription.unsubscribe();
-    });
+        if (data !== undefined) {
+          this.savePhysicalServer(data);
+        }
+        this.ngxSmartModalService.resetModalData('physicalServerModal');
+        this.physicalServerModalSubscription.unsubscribe();
+      });
   }
 
   savePhysicalServer(physicalServer: PhysicalServer) {
@@ -65,7 +70,9 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     if (index > -1) {
       this.physicalServers.splice(index, 1);
 
-      if (!this.deletedPhysicalServers) { this.deletedPhysicalServers = new Array<PhysicalServer>(); }
+      if (!this.deletedPhysicalServers) {
+        this.deletedPhysicalServers = new Array<PhysicalServer>();
+      }
       this.deletedPhysicalServers.push(physicalServer);
 
       this.dirty = true;
@@ -77,8 +84,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.physicalServerModalSubscription]
-    .forEach(sub => {
+    [this.physicalServerModalSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();

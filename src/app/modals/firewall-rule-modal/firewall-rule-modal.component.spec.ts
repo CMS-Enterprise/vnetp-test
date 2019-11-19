@@ -5,7 +5,7 @@ import {
   FormsModule,
   FormBuilder,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
@@ -28,15 +28,15 @@ describe('FirewallRuleModalComponent', () => {
         NgxSmartModalModule,
         ReactiveFormsModule,
         NgxMaskModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [FirewallRuleModalComponent, TooltipComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         FormBuilder,
         Validators,
-        CookieService
-      ]
+        CookieService,
+      ],
     })
       .compileComponents()
       .then(() => {

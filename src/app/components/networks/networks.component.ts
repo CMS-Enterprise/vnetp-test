@@ -5,11 +5,13 @@ import { HelpersService } from 'src/app/services/helpers.service';
 
 @Component({
   selector: 'app-networks',
-  templateUrl: './networks.component.html'
+  templateUrl: './networks.component.html',
 })
 export class NetworksComponent implements OnInit {
-
-  constructor(private automationApiService: AutomationApiService, private helperService: HelpersService) {
+  constructor(
+    private automationApiService: AutomationApiService,
+    private helperService: HelpersService,
+  ) {
     this.subnets = [];
   }
 
@@ -20,26 +22,25 @@ export class NetworksComponent implements OnInit {
   }
 
   getNetworks() {
-    this.automationApiService.getSubnets()
-    .subscribe(data => {
-        const subnetResponse = data as SubnetResponse;
-        this.subnets = subnetResponse.subnets;
-      });
-    }
+    this.automationApiService.getSubnets().subscribe(data => {
+      const subnetResponse = data as SubnetResponse;
+      this.subnets = subnetResponse.subnets;
+    });
+  }
 
-    getDeployedState(subnet: Subnet) {
-      return this.helperService.getBooleanCustomField(subnet, 'deployed');
-    }
+  getDeployedState(subnet: Subnet) {
+    return this.helperService.getBooleanCustomField(subnet, 'deployed');
+  }
 
-    getTier(subnet: Subnet){
-      return this.helperService.getStringCustomField(subnet, 'tier');
-    }
+  getTier(subnet: Subnet) {
+    return this.helperService.getStringCustomField(subnet, 'tier');
+  }
 
-    exportNetworkConfig() {
-      return this.subnets;
-    }
+  exportNetworkConfig() {
+    return this.subnets;
+  }
 
-    importNetworkConfig(subnets) {
-      throw new Error('Not Implemented');
-    }
+  importNetworkConfig(subnets) {
+    throw new Error('Not Implemented');
+  }
 }

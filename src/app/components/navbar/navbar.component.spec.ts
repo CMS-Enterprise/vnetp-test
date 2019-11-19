@@ -14,11 +14,15 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, AngularFontAwesomeModule, NgxSmartModalModule, HttpClientTestingModule],
-      declarations: [ NavbarComponent ],
-      providers: [ CookieService, NgxSmartModalService]
-    })
-    .compileComponents();
+      imports: [
+        RouterTestingModule,
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        HttpClientTestingModule,
+      ],
+      declarations: [NavbarComponent],
+      providers: [CookieService, NgxSmartModalService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -14,7 +14,7 @@ describe('DashboardComponent', () => {
     TestBed.configureTestingModule({
       imports: [AngularFontAwesomeModule, HttpClientTestingModule],
       declarations: [DashboardComponent, D3PieChartComponent],
-      providers: [CookieService]
+      providers: [CookieService],
     }).compileComponents();
   }));
 

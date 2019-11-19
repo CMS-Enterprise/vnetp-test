@@ -1,5 +1,5 @@
 export class IRule {
-    Name: string;
+  Name: string;
 
-    Content: string;
+  Content: string;
 }

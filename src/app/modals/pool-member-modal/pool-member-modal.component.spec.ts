@@ -1,7 +1,12 @@
 // FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { PoolMemberModalComponent } from './pool-member-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -15,14 +20,25 @@ describe('PoolMemberModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
-      declarations: [ PoolMemberModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule.forRoot(),
+      ],
+      declarations: [PoolMemberModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(PoolMemberModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(PoolMemberModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -67,7 +83,7 @@ describe('PoolMemberModalComponent', () => {
   });
 
   // Form State when Type: FQDN selected
-  it ('ipaddress should be required', () => {
+  it('ipaddress should be required', () => {
     const type = component.form.controls.type;
     type.setValue('ipaddress');
     const ipAddress = component.form.controls.ipAddress;
@@ -75,7 +91,7 @@ describe('PoolMemberModalComponent', () => {
   });
 
   // Form State when Type: FQDN selected
-  it ('fqdn should be required', () => {
+  it('fqdn should be required', () => {
     const type = component.form.controls.type;
     type.setValue('fqdn');
     const fqdn = component.form.controls.fqdn;

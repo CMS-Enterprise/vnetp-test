@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
@@ -15,11 +20,19 @@ describe('ServiceObjectGroupModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ ServiceObjectGroupModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
-    })
-    .compileComponents();
+      imports: [
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        FormsModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [ServiceObjectGroupModalComponent, TooltipComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -40,7 +53,7 @@ describe('ServiceObjectGroupModalComponent', () => {
     component.form.controls.name.setValue('Name');
     component.form.controls.description.setValue('Description');
     component.form.controls.type.setValue(true);
-    component.serviceObjects.push({ Name: 'Test'} as ServiceObject);
+    component.serviceObjects.push({ Name: 'Test' } as ServiceObject);
     expect(component.form.valid).toBeTruthy();
     component.save();
 
