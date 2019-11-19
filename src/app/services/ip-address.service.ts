@@ -75,7 +75,7 @@ export class IpAddressService {
     return `${ip}/${value}`;
   }
 
-  // Calculates a subnet mask in xxx.xxx.xxx.xxx format
+  //Calculates a subnet mask in xxx.xxx.xxx.xxx format
   // from a cidr (xx) mask.
   public calculateIPv4SubnetMask(cidr: string): string {
     const cidrComponents = cidr.split('/');
