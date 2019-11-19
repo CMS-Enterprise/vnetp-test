@@ -14,7 +14,7 @@ export class HelpersService {
     object: CustomFieldsObject,
     fieldName: string,
   ): [boolean, CustomField] {
-    // Check to ensure that object has custom fields with at least 1 element.
+    //Check to ensure that object has custom fields with at least 1 element.
     if (object.custom_fields == null || object.custom_fields.length === 0) {
       return [false, null];
     }
