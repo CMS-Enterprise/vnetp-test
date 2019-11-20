@@ -14,6 +14,9 @@ import { NetworkObjectGroupModalComponent } from './modals/network-object-group-
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from './modals/modal-mock';
+
+const ngx = new NgxSmartModalServiceStub();
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -37,7 +40,11 @@ describe('AppComponent', () => {
         ServiceObjectGroupModalComponent,
         TooltipComponent,
       ],
-      providers: [CookieService, NgxSmartModalService, FormBuilder],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+      ],
     }).compileComponents();
   }));
 

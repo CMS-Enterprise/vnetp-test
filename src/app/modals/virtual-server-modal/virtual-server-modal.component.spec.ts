@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
   let fixture: ComponentFixture<VirtualServerModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

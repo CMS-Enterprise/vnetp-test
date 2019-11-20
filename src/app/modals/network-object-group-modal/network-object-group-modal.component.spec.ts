@@ -12,12 +12,13 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -59,10 +60,9 @@ describe('NetworkObjectGroupModalComponent', () => {
 
     // Get Data from the modal service
     const modal = ngx.getModal('networkObjectGroupModal');
-    const data = modal.getData() as NetworkObjectGroup;
-
+    const data = modal.getData();
     // Ensure that it is equal to our test data.
-    expect(data.Name === 'Name').toBeTruthy();
+    expect(data.Name === 'Test').toBeTruthy();
     expect(data.Description === 'Description').toBeTruthy();
     expect(data.NetworkObjects[0].Name === 'Test').toBeTruthy();
   });

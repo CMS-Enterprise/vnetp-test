@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { PoolModalComponent } from './pool-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;
   let fixture: ComponentFixture<PoolModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

@@ -12,12 +12,13 @@ import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
   let fixture: ComponentFixture<NetworkObjectModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

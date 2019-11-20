@@ -7,7 +7,11 @@ import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PapaParseModule } from 'ngx-papaparse';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import {
+  NgxSmartModalService,
+  NgxSmartModalModule,
+  NgxSmartModalComponent,
+} from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
@@ -15,13 +19,14 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ImportExportComponent } from '../../import-export/import-export.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
 import { Vrf } from 'src/app/models/d42/vrf';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
   let fixture: ComponentFixture<FirewallRulesDetailComponent>;
   let router: Router;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -74,7 +79,6 @@ describe('FirewallRulesDetailComponent', () => {
     component.vrf = { name: 'Test', id: 101 } as Vrf;
 
     component.createFirewallRule();
-
     expect(component.firewallRuleModalSubscription).toBeTruthy();
     expect(component.firewallRuleModalMode === ModalMode.Create).toBeTruthy();
   });

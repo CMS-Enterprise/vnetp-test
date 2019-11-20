@@ -165,7 +165,6 @@ export class NetworkObjectsGroupsComponent
           this.saveNetworkObject(data.NetworkObject);
         }
         this.ngx.resetModalData('networkObjectModal');
-        this.networkObjectModalSubscription.unsubscribe();
       });
   }
 
@@ -179,7 +178,6 @@ export class NetworkObjectsGroupsComponent
           this.saveNetworkObjectGroup(data);
         }
         this.ngx.resetModalData('networkObjectGroupModal');
-        this.networkObjectGroupModalSubscription.unsubscribe();
       });
   }
 

@@ -16,10 +16,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
   let fixture: ComponentFixture<LoadBalancersComponent>;
+
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,7 +46,11 @@ describe('LoadBalancersComponent', () => {
         ImportExportComponent,
         TooltipComponent,
       ],
-      providers: [NgxSmartModalService, CookieService, FormBuilder],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+      ],
     }).compileComponents();
   }));
 

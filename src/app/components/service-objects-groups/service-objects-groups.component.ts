@@ -138,7 +138,6 @@ export class ServiceObjectsGroupsComponent
           this.saveServiceObject(data);
         }
         this.ngx.resetModalData('serviceObjectModal');
-        this.serviceObjectModalSubscription.unsubscribe();
       });
   }
 
@@ -152,7 +151,6 @@ export class ServiceObjectsGroupsComponent
           this.saveServiceObjectGroup(data);
         }
         this.ngx.resetModalData('serviceObjectGroupModal');
-        this.serviceObjectGroupModalSubscription.unsubscribe();
       });
   }
 

@@ -6,11 +6,14 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let router: Router;
+
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +24,10 @@ describe('NavbarComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [NavbarComponent],
-      providers: [CookieService, NgxSmartModalService],
+      providers: [
+        CookieService,
+        { provide: NgxSmartModalService, useValue: ngx },
+      ],
     }).compileComponents();
   }));
 

@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { IRuleModalComponent } from './irule-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('IRuleModalComponent', () => {
   let component: IRuleModalComponent;
   let fixture: ComponentFixture<IRuleModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

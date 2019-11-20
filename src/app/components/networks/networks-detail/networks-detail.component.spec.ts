@@ -8,10 +8,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IpaddressesComponent } from '../../ipaddresses/ipaddresses.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('NetworksDetailComponent', () => {
   let component: NetworksDetailComponent;
   let fixture: ComponentFixture<NetworksDetailComponent>;
+
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,7 +30,10 @@ describe('NetworksDetailComponent', () => {
         IpaddressesComponent,
         TooltipComponent,
       ],
-      providers: [CookieService, NgxSmartModalService],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+      ],
     }).compileComponents();
   }));
 
