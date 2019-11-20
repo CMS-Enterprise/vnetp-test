@@ -25,7 +25,7 @@ import { ClickResult } from 'src/app/models/other/click-result';
 })
 export class D3GraphComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
-  @ViewChild('graphContainer') graphContainer: ElementRef;
+  @ViewChild('graphContainer', { static: true }) graphContainer: ElementRef;
 
   @Input() graphObject?: any;
   @Input() graph: Graph;

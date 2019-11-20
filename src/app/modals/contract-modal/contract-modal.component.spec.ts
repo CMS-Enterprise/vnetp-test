@@ -11,12 +11,13 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ContractModalComponent } from './contract-modal.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { ExpectedConditions } from 'protractor';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
   let fixture: ComponentFixture<ContractModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

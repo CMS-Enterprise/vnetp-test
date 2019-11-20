@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('HealthMonitorModalComponent', () => {
   let component: HealthMonitorModalComponent;
   let fixture: ComponentFixture<HealthMonitorModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

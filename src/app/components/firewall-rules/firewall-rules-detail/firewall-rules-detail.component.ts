@@ -200,12 +200,10 @@ export class FirewallRulesDetailComponent
       .getModal('firewallRuleModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
         const data = modal.getData() as FirewallRuleModalDto;
-
         if (data && data.FirewallRule !== undefined) {
           this.saveFirewallRule(data.FirewallRule);
         }
         this.ngx.resetModalData('firewallRuleModal');
-        this.firewallRuleModalSubscription.unsubscribe();
       });
   }
 

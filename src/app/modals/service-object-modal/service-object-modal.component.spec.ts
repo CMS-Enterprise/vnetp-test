@@ -12,12 +12,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -80,7 +81,7 @@ describe('ServiceObjectModalComponent', () => {
 
     // Get Data from the modal service
     const modal = ngx.getModal('serviceObjectModal');
-    const data = modal.getData() as ServiceObject;
+    const data = modal.getData();
 
     // Ensure that it is equal to our test data.
     expect(data.Name === 'Test').toBeTruthy();

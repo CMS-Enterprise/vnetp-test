@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LogicalInterfaceModalComponent } from './logical-interface-modal.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('LogicalInterfaceModalComponent', () => {
   let component: LogicalInterfaceModalComponent;
   let fixture: ComponentFixture<LogicalInterfaceModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

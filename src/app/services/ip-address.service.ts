@@ -1,6 +1,5 @@
 // TODO: Better error handling.
 import { Injectable } from '@angular/core';
-import { IPv4 } from 'ip-num/IPv4';
 import { IPv4CidrRange } from 'ip-num/IPv4CidrRange';
 import { Validator } from 'ip-num/Validator';
 import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';

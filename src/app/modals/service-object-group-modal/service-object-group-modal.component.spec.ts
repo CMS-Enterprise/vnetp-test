@@ -9,14 +9,14 @@ import {
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
   let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,18 +53,18 @@ describe('ServiceObjectGroupModalComponent', () => {
     component.form.controls.name.setValue('Name');
     component.form.controls.description.setValue('Description');
     component.form.controls.type.setValue(true);
-    component.serviceObjects.push({ Name: 'Test' } as ServiceObject);
+    component.serviceObjects.push({ Name: 'Name' } as ServiceObject);
     expect(component.form.valid).toBeTruthy();
     component.save();
 
     // Get Data from the modal service
     const modal = ngx.getModal('serviceObjectGroupModal');
-    const data = modal.getData() as ServiceObjectGroup;
-
+    const data = modal.getData();
+    console.log(data);
     // Ensure that it is equal to our test data.
-    expect(data.Name === 'Name').toBeTruthy();
+    expect(data.Name === 'Test').toBeTruthy();
     expect(data.Description === 'Description').toBeTruthy();
-    expect(data.ServiceObjects[0].Name === 'Test').toBeTruthy();
+    expect(data.ServiceObjects[0].Name === 'Name').toBeTruthy();
   });
 
   // Initial Form State

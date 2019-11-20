@@ -5,6 +5,9 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { PhysicalServerModalComponent } from 'src/app/modals/physical-server-modal/physical-server-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+
+const ngx = new NgxSmartModalServiceStub();
 
 describe('PhysicalServerComponent', () => {
   let component: PhysicalServerComponent;
@@ -19,7 +22,7 @@ describe('PhysicalServerComponent', () => {
         ReactiveFormsModule,
       ],
       declarations: [PhysicalServerComponent, PhysicalServerModalComponent],
-      providers: [NgxSmartModalService],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 

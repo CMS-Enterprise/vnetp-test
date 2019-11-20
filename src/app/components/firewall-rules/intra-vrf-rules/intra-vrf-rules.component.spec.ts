@@ -9,12 +9,13 @@ import { TooltipComponent } from '../../tooltip/tooltip.component';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('IntraVrfRulesComponent', () => {
   let component: IntraVrfRulesComponent;
   let fixture: ComponentFixture<IntraVrfRulesComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

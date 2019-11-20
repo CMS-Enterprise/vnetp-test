@@ -15,12 +15,13 @@ import { ServiceObjectGroup } from 'src/app/models/service-objects/service-objec
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
   let fixture: ComponentFixture<ServiceObjectsGroupsComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

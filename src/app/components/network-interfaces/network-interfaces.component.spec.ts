@@ -12,10 +12,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('NetworkInterfacesComponent', () => {
   let component: NetworkInterfacesComponent;
   let fixture: ComponentFixture<NetworkInterfacesComponent>;
+
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -35,7 +38,11 @@ describe('NetworkInterfacesComponent', () => {
         ImportExportComponent,
         TooltipComponent,
       ],
-      providers: [NgxSmartModalService, CookieService, FormBuilder],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        CookieService,
+        FormBuilder,
+      ],
     }).compileComponents();
   }));
 

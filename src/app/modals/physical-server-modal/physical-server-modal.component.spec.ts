@@ -10,12 +10,13 @@ import { NgxMaskModule } from 'ngx-mask';
 import { PhysicalServerModalComponent } from './physical-server-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('PhysicalServerModalComponent', () => {
   let component: PhysicalServerModalComponent;
   let fixture: ComponentFixture<PhysicalServerModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
