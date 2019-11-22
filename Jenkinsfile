@@ -12,7 +12,7 @@ pipeline {
                 docker.image('node:lts').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
                   sh 'npm i --unsafe-perm'
                   sh 'npm install chrome'
-                  sh 'sudo npm install --save-dev  --unsafe-perm node-sass' 
+                  sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm run test:ci'
                 }
               }
