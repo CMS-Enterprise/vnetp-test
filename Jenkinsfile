@@ -9,7 +9,7 @@ pipeline {
                   /* Wait until pg service is up */
                   sh 'while ! pg_isready -h db; do sleep 1; done'
                 }
-                docker.image('node:lts').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432") {
+                docker.image('node:lts').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
                   sh 'npm i --unsafe-perm'
                   sh 'npm install chrome'
                   sh 'npm run test:ci'
