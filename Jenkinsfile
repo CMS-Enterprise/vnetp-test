@@ -13,8 +13,10 @@ pipeline {
                   sh 'npm i --unsafe-perm'
                   sh 'npm install chrome'
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
+                  sh 'npm install npm-update-all -g'
+                  sh 'npm-update-all'
                   sh 'npm run test:ci'
-                  sh 'npm update'
+
                 }
               }
             }
