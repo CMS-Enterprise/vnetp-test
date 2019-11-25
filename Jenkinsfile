@@ -11,7 +11,6 @@ pipeline {
                 }
                 docker.image('node:12-alpine').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
                   sh 'apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main'
-                  sh 'apt-get install -f'
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm install npm-update-all -g'
                   sh 'npm i --unsafe-perm'
