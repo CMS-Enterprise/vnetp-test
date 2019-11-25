@@ -14,7 +14,7 @@ pipeline {
                   sh 'npm install chrome'
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm run test:ci'
-                  sh 'npn update'
+                  sh 'npm update'
                 }
               }
             }
