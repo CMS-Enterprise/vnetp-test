@@ -9,12 +9,12 @@ pipeline {
                   /* Wait until pg service is up */
                   sh 'while ! pg_isready -h db; do sleep 1; done'
                 }
-                docker.image('rastasheep/alpine-node-chromium:8-alpine').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
-                  sh 'apt-get update'
-                  sh 'apt-get install nodejs'
-                  sh 'npm i --unsafe-perm'
+                docker.image('node:lts').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
+                  sh 'wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
+                  sh 'dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install' 
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm install npm-update-all -g'
+                  sh 'npm i --unsafe-perm'
                   sh 'npm run test:ci'
 
                 }
