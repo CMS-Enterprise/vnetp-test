@@ -9,10 +9,8 @@ pipeline {
                   /* Wait until pg service is up */
                   sh 'while ! pg_isready -h db; do sleep 1; done'
                 }
-                docker.image('node:lts').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
-                  sh 'wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
-                  sh 'apt-get install libcurl3'
-                  sh 'dpkg -i --force-depends google-chrome-stable_current_amd64.deb; apt-get -fy install' 
+                docker.image('node1:12-alpine').inside("-u 0:0 --network=draas -e TEST_DATABASE_NAME=draas -e TEST_DATABASE_HOST=db -e TEST_DATABASE_PORT=5432 -e CHROME_BIN=/usr/bin/chromium-browser") {
+                  sh 'apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main'
                   sh 'apt-get install -f'
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm install npm-update-all -g'
