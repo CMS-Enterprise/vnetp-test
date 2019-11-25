@@ -24,7 +24,8 @@ pipeline {
   }
   post {
     always {
-      junit '*-report.xml'
+        junit 'build/reports/**/*.xml'
+      //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
