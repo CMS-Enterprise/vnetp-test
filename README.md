@@ -1,48 +1,34 @@
-### Building
+[![Build Status](https://drone.cds-cloud-labs.net/api/badges/draas/ui/status.svg)](https://drone.cds-cloud-labs.net/draas/ui)
 
-To install the required dependencies and to build the typescript sources run:
-```
-npm install
-npm run build
-```
+Adding drone
 
-### publishing
+# AutomationUi
 
-First build the package then run ```npm publish```
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
 
-### consuming
+## Development server
 
-Navigate to the folder of your consuming project and run one of next commands.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-_published:_
+## Code scaffolding
 
-```
-npm install @ --save
-```
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-_without publishing (not recommended):_
+## Build
 
-```
-npm install PATH_TO_GENERATED_PACKAGE/-.tgz --save
-```
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-_It's important to take the tgz file, otherwise you'll get trouble with links on windows_
+## Running unit tests
 
-_using `npm link`:_
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-In PATH_TO_GENERATED_PACKAGE:
-```
-npm link
-```
+## Running end-to-end tests
 
-In your project:
-```
-npm link
-```
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-__Note for Windows users:__ The Angular CLI has troubles to use linked npm packages.
-Please refer to this issue https://github.com/angular/angular-cli/issues/8284 for a solution / workaround.
-Published packages are not effected by this issue.
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 
 #### General usage
