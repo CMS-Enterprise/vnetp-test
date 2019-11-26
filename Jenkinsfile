@@ -20,6 +20,8 @@ pipeline {
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
+                  sh 'ln -s tests/test-results-unit.xml $WORKSPACE'
+                  junit "test-results-unit.xml"
                   
 
 
@@ -32,9 +34,8 @@ pipeline {
   post {
     always {
 
-      sh 'ln -s tests/test-results-unit.xml $WORKSPACE'
-      junit '**/reports/junit/*.xml'
-        
+
+      //junit '**/reports/junit/*.xml'  
       //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
