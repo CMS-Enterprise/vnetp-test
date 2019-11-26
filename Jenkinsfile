@@ -28,15 +28,20 @@ pipeline {
                 }
               }
             }
+
+                sh 'make check || true' 
+                junit '**/target/*.xml' 
+
+
           }
       }
   }
   post {
     always {
 
-      junit "$WORKSPACE/test-results-unit.xml"
+      //junit "$WORKSPACE/test-results-unit.xml"
       //junit '**/reports/junit/*.xml'  
-      //junit '*-report.xml'
+      junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
