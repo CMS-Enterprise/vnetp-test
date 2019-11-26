@@ -20,8 +20,6 @@ pipeline {
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
-                  junit allowEmptyResults: false, testResults: '**/test-results.xml'
-                  echo 'end test & coverage'
                   
 
 
