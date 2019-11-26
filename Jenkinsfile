@@ -17,17 +17,10 @@ pipeline {
 
                   sh 'npm install -g @angular/cli'
 
-                  sh' npm install karma-junit-reporter --save-dev'
-
                   sh 'npm run test:ci'
                   sh 'npm run coverage'
                   sh 'ls -a'
                   sh 'echo $PWD'
-
-                  def testResults = findFiles(glob: '*.xml')
-                  for(xml in testResults) {
-                      touch xml.getPath()
-                  }
                   
 
                 }
@@ -42,7 +35,7 @@ pipeline {
   post {
     always {
       archiveArtifacts artifacts: '*.xml'
-      junit '*.xml'
+      //junit '*.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
