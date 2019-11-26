@@ -15,12 +15,14 @@ pipeline {
                   sh 'npm install npm-update-all -g'
                   sh 'npm i --unsafe-perm'
 
-                  sh 'npm install jest --save-dev'
-                  sh 'npm install jest-junit --save-dev'
-                  sh ' install karma-junit-reporter --save-dev'
+                  //sh 'npm install jest --save-dev'
+                  //sh 'npm install jest-junit --save-dev'
+
+                  //sh 'install karma-junit-reporter --save-dev'
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
+                  sh 'npm run coverage'
                   //archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
 
                   
