@@ -20,7 +20,7 @@ pipeline {
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
-                  archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
+                  //archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
 
                   
                   
