@@ -16,8 +16,10 @@ pipeline {
                   sh 'npm i --unsafe-perm'
                   sh 'npm install jest --save-dev'
                   sh 'npm install jest-junit --save-dev'
+                  sh './gradlew build'
 
                   sh 'npm run test:ci'
+                  sh './gradlew check'
 
                 }
               }
@@ -27,7 +29,9 @@ pipeline {
   }
   post {
     always {
-        junit '**/reports/junit/*.xml'
+      archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+      junit 'build/reports/**/*.xml'
+      //junit '**/reports/junit/*.xml'
         
       //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
