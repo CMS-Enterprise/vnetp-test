@@ -24,7 +24,8 @@ pipeline {
   }
   post {
     always {
-        junit 'build/reports/**/*.xml'
+        junit '**/reports/junit/*.xml'
+        
       //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
