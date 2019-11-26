@@ -28,9 +28,8 @@ pipeline {
   }
   post {
     always {
-      archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
-      junit 'build/reports/**/*.xml'
-      //junit '**/reports/junit/*.xml'
+
+      junit '**/reports/junit/*.xml'
         
       //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
