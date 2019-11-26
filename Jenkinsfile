@@ -18,6 +18,7 @@ pipeline {
                   sh 'npm install jest-junit --save-dev'
 
                   sh 'npm run test:ci'
+                  junit 'reports/**/*.xml'
 
 
                 }
