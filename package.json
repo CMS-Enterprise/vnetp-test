@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI jest --ci --testResultsProcessor=jest-junit",
+    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner"
