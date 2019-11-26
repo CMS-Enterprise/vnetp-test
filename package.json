@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI",
+    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI jest --ci --testResultsProcessor=jest-junit",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner"
@@ -35,6 +35,8 @@
     "font-awesome": "^4.7.0",
     "ip-num": "^1.1.1",
     "ip-subnet-calculator": "^1.1.8",
+    "jest": "^22.4.4",
+    "jest-junit": "^4.0.0",
     "jquery": "^3.3.1",
     "ngx-cookie-service": "^2.1.0",
     "ngx-mask": "^7.8.9",
@@ -69,4 +71,12 @@
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
   }
+}
+"jest": {
+  "verbose": true,
+  "testResultsProcessor": "jest-junit"
+},
+"jest-junit": {
+  "suiteName": "Test Suite",
+  "output": "./junit.xml"
 }
