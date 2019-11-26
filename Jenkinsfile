@@ -17,6 +17,7 @@ pipeline {
 
                   sh 'npm install jest --save-dev'
                   sh 'npm install jest-junit --save-dev'
+                  sh ' install karma-junit-reporter --save-dev'
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
@@ -39,8 +40,8 @@ pipeline {
     always {
 
       //junit "$WORKSPACE/test-results-unit.xml"
-      //junit '**/reports/junit/*.xml'  
-      junit '*-report.xml'
+      junit '**/reports/junit/*.xml'  
+      //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
