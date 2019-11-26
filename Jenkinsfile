@@ -25,7 +25,7 @@ pipeline {
                   sh 'npm run coverage'
                   sh 'ls -a'
                   sh 'echo $PWD'
-                  archiveArtifacts artifacts: '/home/jenkins/workspace/fix-headless-chrome-ohai-jenkins/*.xml'
+                  archiveArtifacts artifacts: '*.xml'
 
                   
                   //maybe send to coverage analyzer, 
