@@ -14,6 +14,9 @@ pipeline {
                   sh 'npm install --save-dev  --unsafe-perm node-sass' 
                   sh 'npm install npm-update-all -g'
                   sh 'npm i --unsafe-perm'
+                  sh 'npm install jest --save-dev'
+                  sh 'npm install jest-junit --save-dev'
+
                   sh 'npm run test:ci'
 
                 }
