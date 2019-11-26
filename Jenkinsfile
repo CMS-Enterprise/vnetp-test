@@ -16,11 +16,9 @@ pipeline {
                   sh 'npm i --unsafe-perm'
                   sh 'npm install jest --save-dev'
                   sh 'npm install jest-junit --save-dev'
-                  sh './gradlew'
-                  sh './gradlew build'
 
                   sh 'npm run test:ci'
-                  sh './gradlew check'
+
 
                 }
               }
