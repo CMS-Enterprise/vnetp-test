@@ -6,6 +6,7 @@ pipeline {
         script{ 
           docker.image('zenika/alpine-chrome:with-node').inside("-u 0:0") {
             sh 'npm i --unsafe-perm'
+            sh 'npm rebuild node-sass'
             sh 'npm run coverage'
           }
         }
