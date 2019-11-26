@@ -23,10 +23,11 @@ pipeline {
 
                   sh 'npm run test:ci'
                   sh 'npm run coverage'
-                  archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
+                  archiveArtifacts artifacts: 'coverage/*'
 
                   
-                  
+                  //maybe send to coverage analyzer, 
+                  //karm ais also an anbalyzer
 
 
                 }
