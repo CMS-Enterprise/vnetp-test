@@ -15,22 +15,15 @@ pipeline {
                   sh 'npm install npm-update-all -g'
                   sh 'npm i --unsafe-perm'
 
-                  //sh 'npm install jest --save-dev'
-                  //sh 'npm install jest-junit --save-dev'
-
-                  //sh 'install karma-junit-reporter --save-dev'
                   sh 'npm install -g @angular/cli'
+
+                  sh' npm install karma-junit-reporter --save-dev'
 
                   sh 'npm run test:ci'
                   sh 'npm run coverage'
                   sh 'ls -a'
                   sh 'echo $PWD'
-                  archiveArtifacts artifacts: '*.xml'
-
                   
-                  //maybe send to coverage analyzer, 
-                  //karm ais also an anbalyzer
-
 
                 }
               }
@@ -43,10 +36,8 @@ pipeline {
   }
   post {
     always {
-
-      //junit "$WORKSPACE/test-results-unit.xml"
-      //junit '**/reports/junit/*.xml'  
-      //junit '*-report.xml'
+      archiveArtifacts artifacts: '*.xml'
+      junit '*.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
