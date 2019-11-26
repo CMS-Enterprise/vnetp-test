@@ -23,7 +23,7 @@ pipeline {
 
                   sh 'npm run test:ci'
                   sh 'npm run coverage'
-                  //archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
+                  archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
 
                   
                   
@@ -42,7 +42,7 @@ pipeline {
     always {
 
       //junit "$WORKSPACE/test-results-unit.xml"
-      junit '**/reports/junit/*.xml'  
+      //junit '**/reports/junit/*.xml'  
       //junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
