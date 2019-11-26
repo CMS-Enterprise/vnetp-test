@@ -20,6 +20,7 @@ pipeline {
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
+                  archiveArtifacts artifacts: '*-report.xml', fingerprint: true 
 
                   
                   
@@ -29,8 +30,6 @@ pipeline {
               }
             }
 
-                sh 'make check || true' 
-                junit '**/target/*.xml' 
 
 
           }
@@ -41,7 +40,7 @@ pipeline {
 
       //junit "$WORKSPACE/test-results-unit.xml"
       //junit '**/reports/junit/*.xml'  
-      //junit '*-report.xml'
+      junit '*-report.xml'
       // permissions problem from root ownership apparently [jvf]
       script {
         slackNotifier.notify(currentBuild.currentResult)
