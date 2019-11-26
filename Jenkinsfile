@@ -27,6 +27,7 @@ pipeline {
                   def testResults = findFiles(glob: '*.xml')
                   for(xml in testResults) {
                       touch xml.getPath()
+                  }
                   
 
                 }
