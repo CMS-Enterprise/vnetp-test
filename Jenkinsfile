@@ -20,8 +20,8 @@ pipeline {
                   sh 'npm install -g @angular/cli'
 
                   sh 'npm run test:ci'
-                  sh 'ln -s tests/test-results-unit.xml $WORKSPACE'
-                  junit "test-results-unit.xml"
+                  
+                  junit "$WORKSPACE/test-results-unit.xml"
                   
 
 
