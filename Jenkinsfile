@@ -18,6 +18,11 @@ pipeline {
                   sh 'npm install jest-junit --save-dev'
 
                   sh 'npm run test:ci'
+
+                  sh 'ng test --progress false --watch false'
+                  echo 'generate test report **/dist/test-reports/*.xml'
+                  junit allowEmptyResults: false, testResults: '**/test-results.xml'
+                  echo 'end test & coverage'
                   
 
 
