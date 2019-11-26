@@ -24,7 +24,7 @@ pipeline {
                   sh 'npm run test:ci'
                   sh 'npm run coverage'
                   sh 'ls -a'
-                  sh 'echo $pwd'
+                  sh 'echo $PWD'
                   archiveArtifacts artifacts: 'coverage/*'
 
                   
