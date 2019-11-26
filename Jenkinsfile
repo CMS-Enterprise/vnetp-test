@@ -23,6 +23,10 @@ pipeline {
                   sh 'npm run coverage'
                   sh 'ls -a'
                   sh 'echo $PWD'
+
+                  def testResults = findFiles(glob: '*.xml')
+                  for(xml in testResults) {
+                      touch xml.getPath()
                   
 
                 }
