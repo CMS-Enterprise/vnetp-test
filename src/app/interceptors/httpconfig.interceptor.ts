@@ -1,6 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable} from '@angular/core';
 import {
-    HttpInterceptor,
     HttpRequest,
     HttpResponse,
     HttpHandler,
@@ -24,13 +23,16 @@ export class HttpConfigInterceptor {
         const currentUser = this.auth.currentUserValue;
 
         if (!request.headers.has('Authorization')) {
-            request = request.clone({ headers: request.headers.set('Authorization', `Basic ${currentUser.Token}`) });
+            request = request.clone({ headers: request.headers.set('Authorization', `Bearer ${currentUser.Token}`) });
         }
 
-        if (!request.headers.has('Content-Type')) {
+        if (!request.headers.has('Accept')) {
+            request = request.clone({ headers: request.headers.set('Accept', 'application/json') });
+        }
+
+        if (!request.headers.has('Content-Type') && request.method !== 'GET') {
             request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
         }
-        request = request.clone({ headers: request.headers.set('Accept', 'application/json') });
 
         return next.handle(request).pipe(
             map((event: HttpEvent<any>) => {
@@ -43,20 +45,25 @@ export class HttpConfigInterceptor {
                 return event;
             }),
             catchError((error: HttpErrorResponse) => {
+                let toastrMessage = 'Request Failed!';
 
-                // Redirect to login page if a 401 error is returned.
-                if (error.status === 401) {
-                    this.auth.logout();
-                    return;
+                switch (error.status) {
+                    case 401:
+                        this.auth.logout();
+                        return;
+                    case 403:
+                        toastrMessage = 'Unauthorized.';
+                        break;
                 }
 
                 const data = {
-                    reason: error && error.error.reason ? error.error.reason : '',
+                    error,
                     status: error.status
                 };
 
-                console.log(data);
-                this.toastr.error('Request Failed!');
+                console.error(data);
+
+                this.toastr.error(toastrMessage);
                 return throwError(error);
             }));
     }
