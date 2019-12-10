@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   status: any;
   pieChartData: Array<PieChartData>;
 
-  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 60);
+  // dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 60);
 
   ngOnInit() {
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
@@ -36,11 +36,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboard() {
-    this.getDevices();
-    this.getNetworks();
-    this.getIps();
-    this.getStatus();
-    this.getJobs();
+    // this.getDevices();
+    // this.getNetworks();
+    // this.getIps();
+    // this.getStatus();
+    // this.getJobs();
   }
 
   getNetworks() {
