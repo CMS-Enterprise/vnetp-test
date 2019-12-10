@@ -27,7 +27,10 @@ export class AuthService {
 
     this.currentUserSubject = new BehaviorSubject<User>(user);
     this.currentUser = this.currentUserSubject.asObservable();
-    this.datacenterContextService.getDatacenters();
+
+    if (user) {
+      this.datacenterContextService.getDatacenters();
+    }
   }
 
   public get currentUserValue(): User {
@@ -47,8 +50,9 @@ export class AuthService {
           if (user && user.Token) {
             localStorage.setItem('token', result.token);
             this.currentUserSubject.next(user);
+            this.datacenterContextService.getDatacenters();
           }
-          this.datacenterContextService.getDatacenters();
+
           return user;
         }),
       );
