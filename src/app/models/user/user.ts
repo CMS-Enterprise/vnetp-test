@@ -1,13 +1,9 @@
-import { Userpass } from './userpass';
-
 export class User {
-  constructor(userpass: Userpass) {
-    this.Username = userpass.Username;
-    this.Token = userpass.toBase64();
-  }
 
   Username: string;
+  Email: string;
   Token: string;
   CustomerName: string;
   CustomerIdentifier: string;
+  Roles: string[]; // TODO: Use Roles enum
 }
