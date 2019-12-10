@@ -1,3 +1,5 @@
+import { Tier } from './tier';
+
 /**
  * Draas
  * Draas OAS Documentation
@@ -18,4 +20,5 @@ export interface Datacenter {
   deletedAt?: object;
   name: string;
   description?: string;
+  tiers: Tier[];
 }

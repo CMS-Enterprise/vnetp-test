@@ -33,7 +33,7 @@ import { Configuration } from '../configuration';
   providedIn: 'root',
 })
 export class DatacentersService {
-  protected basePath = 'http://localhost';
+  protected basePath = 'http://localhost:3000/api/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
   public encoder: HttpParameterCodec;
@@ -536,91 +536,91 @@ export class DatacentersService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public datacentersIdRestorePatch(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public datacentersIdRestorePatch(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public datacentersIdRestorePatch(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public datacentersIdRestorePatch(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public datacentersIdRestorePatch(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public datacentersIdRestorePatch(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public datacentersIdRestorePatch(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public datacentersIdRestorePatch(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.patch<any>(
-      `${this.configuration.basePath}/datacenters/${encodeURIComponent(
-        String(id),
-      )}/restore`,
-      null,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.patch<any>(
+  //     `${this.configuration.basePath}/datacenters/${encodeURIComponent(
+  //       String(id),
+  //     )}/restore`,
+  //     null,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Soft deletes an Entity.
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public datacentersIdSoftDelete(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public datacentersIdSoftDelete(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public datacentersIdSoftDelete(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public datacentersIdSoftDelete(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public datacentersIdSoftDelete(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public datacentersIdSoftDelete(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public datacentersIdSoftDelete(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public datacentersIdSoftDelete(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/datacenters/${encodeURIComponent(
-        String(id),
-      )}/soft`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.delete<any>(
+  //     `${this.configuration.basePath}/datacenters/${encodeURIComponent(
+  //       String(id),
+  //     )}/soft`,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Create one Datacenter

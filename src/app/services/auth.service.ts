@@ -7,21 +7,28 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { DatacenterContextService } from './datacenter-context.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(
+    null,
+  );
+  public currentUser: Observable<User> = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private cs: CookieService) {
-    this.currentUserSubject = new BehaviorSubject<User>(
-      this.getUserFromToken(localStorage.getItem('token')),
-    );
+  constructor(
+    private http: HttpClient,
+    private cs: CookieService,
+    private datacenterContextService: DatacenterContextService,
+  ) {
+    const user = this.getUserFromToken(localStorage.getItem('token'));
+
+    this.currentUserSubject = new BehaviorSubject<User>(user);
     this.currentUser = this.currentUserSubject.asObservable();
+    this.datacenterContextService.getDatacenters();
   }
-
 
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
@@ -41,7 +48,7 @@ export class AuthService {
             localStorage.setItem('token', result.token);
             this.currentUserSubject.next(user);
           }
-
+          this.datacenterContextService.getDatacenters();
           return user;
         }),
       );
@@ -56,7 +63,9 @@ export class AuthService {
 
   getUserFromToken(jwtEncoded: string): User {
     try {
-      if (!jwtEncoded) { return null; }
+      if (!jwtEncoded) {
+        return null;
+      }
 
       const jwtHelper = new JwtHelperService();
 
