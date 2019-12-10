@@ -1,0 +1,59 @@
+export * from './appliances.service';
+import { AppliancesService } from './appliances.service';
+export * from './datacenters.service';
+import { DatacentersService } from './datacenters.service';
+export * from './default.service';
+import { DefaultService } from './default.service';
+export * from './networkSecurityFirewallRuleGroups.service';
+import { NetworkSecurityFirewallRuleGroupsService } from './networkSecurityFirewallRuleGroups.service';
+export * from './networkSecurityFirewallRules.service';
+import { NetworkSecurityFirewallRulesService } from './networkSecurityFirewallRules.service';
+export * from './networkSecurityNetworkObjectGroups.service';
+import { NetworkSecurityNetworkObjectGroupsService } from './networkSecurityNetworkObjectGroups.service';
+export * from './networkSecurityNetworkObjects.service';
+import { NetworkSecurityNetworkObjectsService } from './networkSecurityNetworkObjects.service';
+export * from './networkSecurityServiceObjectGroups.service';
+import { NetworkSecurityServiceObjectGroupsService } from './networkSecurityServiceObjectGroups.service';
+export * from './networkSecurityServiceObjects.service';
+import { NetworkSecurityServiceObjectsService } from './networkSecurityServiceObjects.service';
+export * from './networkStaticRoutes.service';
+import { NetworkStaticRoutesService } from './networkStaticRoutes.service';
+export * from './networkSubnets.service';
+import { NetworkSubnetsService } from './networkSubnets.service';
+export * from './networkVlans.service';
+import { NetworkVlansService } from './networkVlans.service';
+export * from './physicalServers.service';
+import { PhysicalServersService } from './physicalServers.service';
+export * from './subnets.service';
+import { SubnetsService } from './subnets.service';
+export * from './tiers.service';
+import { TiersService } from './tiers.service';
+export * from './vlans.service';
+import { VlansService } from './vlans.service';
+export * from './vmwareNetworkAdapter.service';
+import { VmwareNetworkAdapterService } from './vmwareNetworkAdapter.service';
+export * from './vmwareVirtualDisks.service';
+import { VmwareVirtualDisksService } from './vmwareVirtualDisks.service';
+export * from './vmwareVirtualMachines.service';
+import { VmwareVirtualMachinesService } from './vmwareVirtualMachines.service';
+export const APIS = [
+  AppliancesService,
+  DatacentersService,
+  DefaultService,
+  NetworkSecurityFirewallRuleGroupsService,
+  NetworkSecurityFirewallRulesService,
+  NetworkSecurityNetworkObjectGroupsService,
+  NetworkSecurityNetworkObjectsService,
+  NetworkSecurityServiceObjectGroupsService,
+  NetworkSecurityServiceObjectsService,
+  NetworkStaticRoutesService,
+  NetworkSubnetsService,
+  NetworkVlansService,
+  PhysicalServersService,
+  SubnetsService,
+  TiersService,
+  VlansService,
+  VmwareNetworkAdapterService,
+  VmwareVirtualDisksService,
+  VmwareVirtualMachinesService,
+];

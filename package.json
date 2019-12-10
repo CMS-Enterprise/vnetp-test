@@ -67,6 +67,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "lint-staged": "^9.4.3",
     "prettier": "^1.19.1",
+    "openapi-generator": "^0.1.30",
     "protractor": "~5.4.0",
     "sonar-scanner": "^3.1.0",
     "ts-node": "~7.0.0",
