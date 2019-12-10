@@ -1,6 +1,6 @@
 // TODO: Better error handling.
 import { Injectable } from '@angular/core';
-import { IPv4Range } from 'ip-num/IPv4Range';
+import { IPv4CidrRange } from 'ip-num/IPv4CidrRange';
 import { Validator } from 'ip-num/Validator';
 import * as IpSubnetCalculator from 'ip-subnet-calculator/lib/ip-subnet-calculator.js';
 import { Subnet } from '../models/d42/subnet';
@@ -30,9 +30,9 @@ export class IpAddressService {
     }
   }
 
-  public isValidGateway(gateway: string, range: IPv4Range): boolean {
+  public isValidGateway(gateway: string, range: IPv4CidrRange): boolean {
     // Get an IPv4 Range from the gateway only by appending /32 to it.
-    const gatewayRange = IPv4Range.fromCidr(`${gateway}/32`);
+    const gatewayRange = IPv4CidrRange.fromCidr(`${gateway}/32`);
 
     // If the main range contains the gateway and the gateway isn't the first IP of the range return true
     return (range.contains(gatewayRange))
@@ -43,8 +43,8 @@ export class IpAddressService {
   }
 
   // Returns an IPv4 range from a cidr formatted IPv4 address.
-  public getIpv4Range(cidr: string): IPv4Range {
-    return IPv4Range.fromCidr(cidr);
+  public getIpv4Range(cidr: string): IPv4CidrRange {
+    return IPv4CidrRange.fromCidr(cidr);
   }
 
   // Returns a boolen indicating if an IPv4 cidr mask range is less
@@ -97,9 +97,9 @@ export class IpAddressService {
   // and the existing Subnet that the provided Subnet overlaps or is overlapped by.
   public checkIPv4RangeOverlap(subnet: Subnet, subnets: Subnet[]): [boolean, Subnet] {
     // Create an IPv4 Range from the network to be evaluated.
-    const newRange = IPv4Range.fromCidr(`${subnet.network}/${subnet.mask_bits}`);
+    const newRange = IPv4CidrRange.fromCidr(`${subnet.network}/${subnet.mask_bits}`);
     for (const s of subnets) {
-      const existingRange = IPv4Range.fromCidr(`${s.network}/${s.mask_bits}`);
+      const existingRange = IPv4CidrRange.fromCidr(`${s.network}/${s.mask_bits}`);
       // Check that the existing IPv4 range does not include the new IPv4 range.
       if (existingRange.contains(newRange)) {
         return [true, s];
