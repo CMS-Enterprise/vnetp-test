@@ -23,23 +23,23 @@ export class HttpConfigInterceptor {
   ): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
 
-    if (!request.headers.has('Authorization')) {
-      request = request.clone({
-        headers: request.headers.set(
-          'Authorization',
-          `Basic ${currentUser.Token}`,
-        ),
-      });
-    }
+    // if (!request.headers.has('Authorization')) {
+    //   request = request.clone({
+    //     headers: request.headers.set(
+    //       'Authorization',
+    //       `Basic ${currentUser.Token}`,
+    //     ),
+    //   });
+    // }
 
-    if (!request.headers.has('Authorization')) {
-      request = request.clone({
-        headers: request.headers.set(
-          'Authorization',
-          `Bearer ${currentUser.Token}`,
-        ),
-      });
-    }
+    // if (!request.headers.has('Authorization') && currentUser.Token) {
+    //   request = request.clone({
+    //     headers: request.headers.set(
+    //       'Authorization',
+    //       `Bearer ${currentUser.Token}`,
+    //     ),
+    //   });
+    // }
 
     if (!request.headers.has('Accept')) {
       request = request.clone({

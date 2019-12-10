@@ -26,31 +26,16 @@ export class AuthService {
   }
 
   login(userpass: Userpass) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Basic ${userpass.toBase64()}`,
-      }),
-    };
-
+    console.log(userpass);
     return this.http
-      .get<any>(environment.apiBase + '/api/1.0/admingroups/', httpOptions)
+      .post<any>(environment.apiBase + '/auth/login', {
+        username: userpass.Username,
+        password: userpass.Password,
+      })
       .pipe(
         map(result => {
+          console.log('here', result);
           const user = new User(userpass);
-
-          if (!result.admingroups || result.total_count === 0) {
-            throw Error('No Permissons to any Admin Group.');
-          }
-
-          const adminGroup = result.admingroups[0];
-
-          if (adminGroup) {
-            user.CustomerName = adminGroup.name;
-            user.CustomerIdentifier = adminGroup.name.toLowerCase();
-
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-          }
 
           return user;
         }),
