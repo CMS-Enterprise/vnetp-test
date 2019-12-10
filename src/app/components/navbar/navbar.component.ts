@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User;
   jobMessage: AppMessage;
 
-  jobPoller = setInterval(() => this.getJobs(), 5000);
+  // jobPoller = setInterval(() => this.getJobs(), 5000);
 
   modalJob: Job;
 
@@ -113,8 +113,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getJobs();
-    this.getMessageServiceSubscription();
+    // this.getJobs();
+    // this.getMessageServiceSubscription();
   }
 
   ngOnDestroy() {
