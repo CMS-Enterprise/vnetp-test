@@ -26,7 +26,6 @@ export class AuthService {
   }
 
   login(userpass: Userpass) {
-    console.log(userpass);
     return this.http
       .post<any>(environment.apiBase + '/auth/login', {
         username: userpass.Username,
@@ -34,8 +33,13 @@ export class AuthService {
       })
       .pipe(
         map(result => {
-          console.log('here', result);
+          userpass.Token = result.token;
           const user = new User(userpass);
+
+          if (user && user.Token) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
 
           return user;
         }),

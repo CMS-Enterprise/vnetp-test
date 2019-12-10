@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     if (!this.userpass.Username || !this.userpass.Password) {
       return;
     }
-    console.log('here1', this.userpass);
 
     this.errorMessage = null;
     this.loading = true;

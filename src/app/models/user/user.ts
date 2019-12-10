@@ -3,7 +3,7 @@ import { Userpass } from './userpass';
 export class User {
   constructor(userpass: Userpass) {
     this.Username = userpass.Username;
-    this.Token = userpass.toBase64();
+    this.Token = userpass.Token;
   }
 
   Username: string;
