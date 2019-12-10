@@ -92,8 +92,22 @@
         </div>
       </li>
     </ul>
+    
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
+
+        <li class="nav-item">
+            <select [(ngModel)]="selectedDatacenter" class="form-control">
+              <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
+            </select>
+          </li>
+    
+          <li class="nav-item" *ngIf="selectedDatacenter?.id != currentDatacenter?.id">
+            <button class="btn btn-sm btn-success" (click)="ngx.getModal('datacenterSwitchModal').open()">
+              Switch Datacenter
+            </button>
+          </li>
+  
       <li class="nav-item">
         <a class="nav-link disabled" [routerLinkActive]="['active']" routerLink="jobs">
           <fa
@@ -148,6 +162,45 @@
     </ul>
   </div>
 </nav>
+
+<ngx-smart-modal
+  #datacenterSwitchModal
+  identifier="datacenterSwitchModal"
+  customClass="'modal-content'"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Switch Datacenter Context?</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="datacenterSwitchModal.close()"
+    ></button>
+  </div>
+
+  <div>{{ currentDatacenter?.name }} -> {{ selectedDatacenter?.name }}</div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-link"
+      data-dismiss="modal"
+      (click)="datacenterSwitchModal.close()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-danger"
+      data-dismiss="modal"
+      (click)="switchDatacenter(); datacenterSwitchModal.close()"
+    >
+      Yes
+    </button>
+  </div>
+</ngx-smart-modal>
 
 <ngx-smart-modal
   #logoutModal

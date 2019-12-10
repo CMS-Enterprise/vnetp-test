@@ -9,6 +9,8 @@ import { AppMessage } from 'src/app/models/app-message';
 import { AppMessageType } from 'src/app/models/app-message-type';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Datacenter } from 'model/datacenter';
 
 @Component({
   selector: 'app-navbar',
@@ -17,16 +19,32 @@ import { Job } from 'src/app/models/other/job';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
+  datacenters: Datacenter[];
+  currentDatacenter: Datacenter;
+
+  selectedDatacenter: Datacenter;
 
   constructor(
     private automationApiService: AutomationApiService,
     private messageService: MessageService,
     private ngx: NgxSmartModalService,
     private auth: AuthService,
+    private datacenterContextService: DatacenterContextService,
     private hs: HelpersService,
   ) {
     this.activeJobs = [];
     this.auth.currentUser.subscribe(u => (this.currentUser = u));
+
+    // TODO: Unsub
+
+    this.datacenterContextService.datacenters.subscribe(
+      d => (this.datacenters = d),
+    );
+    // Set both selected and current here, that way when the observable changes we can
+    // update the UI.
+    this.datacenterContextService.currentDatacenter.subscribe(
+      cd => (this.currentDatacenter = this.selectedDatacenter = cd),
+    );
   }
 
   loggedIn: boolean;
@@ -94,6 +112,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  switchDatacenter() {
+    this.datacenterContextService.switchDatacenter(this.selectedDatacenter);
   }
 
   closeJobModal() {

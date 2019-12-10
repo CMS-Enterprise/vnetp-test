@@ -11,6 +11,7 @@ export class DatacenterContextService {
   private currentDatacenterSubject: BehaviorSubject<
     Datacenter
   > = new BehaviorSubject<Datacenter>(null);
+
   public currentDatacenter: Observable<
     Datacenter
   > = this.currentDatacenterSubject.asObservable();
@@ -18,6 +19,7 @@ export class DatacenterContextService {
   private datacentersSubject: BehaviorSubject<
     Datacenter[]
   > = new BehaviorSubject<Datacenter[]>(null);
+
   public datacenters: Observable<
     Datacenter[]
   > = this.datacentersSubject.asObservable();
@@ -25,6 +27,14 @@ export class DatacenterContextService {
   private _datacenters: Datacenter[] = new Array<Datacenter>();
 
   constructor(private DatacenterService: DatacentersService) {}
+
+  public get currentDatacenterValue(): Datacenter {
+    return this.currentDatacenterSubject.value;
+  }
+
+  public get datacentersValue(): Datacenter[] {
+    return this.datacentersSubject.value;
+  }
 
   getDatacenters() {
     this.DatacenterService.datacentersGet(
@@ -45,6 +55,8 @@ export class DatacenterContextService {
   }
 
   switchDatacenter(datacenter: Datacenter) {
+    // Validate that the datacenter we are switching to is a member
+    // of the private datacenters array.
     if (this._datacenters.map(d => d.id).includes(datacenter.id)) {
       this.currentDatacenterSubject.next(datacenter);
     }
