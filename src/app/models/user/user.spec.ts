@@ -3,6 +3,6 @@ import { Userpass } from './userpass';
 
 describe('User', () => {
   it('should create an instance', () => {
-    expect(new User(new Userpass())).toBeTruthy();
+    expect(new User()).toBeTruthy();
   });
 });
