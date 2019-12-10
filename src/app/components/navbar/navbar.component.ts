@@ -114,7 +114,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // this.getJobs();
-    this.getMessageServiceSubscription();
+    // this.getMessageServiceSubscription();
   }
 
   ngOnDestroy() {
