@@ -21,18 +21,16 @@ export interface ServiceObject {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    protocol: ServiceObject.ProtocolEnum;
+    protocol: ServiceObjectProtocol;
     sourcePorts: string;
     destinationPorts: string;
     tierId: string;
 }
-export namespace ServiceObject {
-    export type ProtocolEnum = 'ICMP' | 'TCP' | 'UDP';
-    export const ProtocolEnum = {
-        ICMP: 'ICMP' as ProtocolEnum,
-        TCP: 'TCP' as ProtocolEnum,
-        UDP: 'UDP' as ProtocolEnum
-    };
-}
+export enum ServiceObjectProtocol {
+    ICMP = 'ICMP',
+    TCP = 'TCP',
+    UDP = 'UDP'
+};
+
 
 

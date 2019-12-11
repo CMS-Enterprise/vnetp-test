@@ -21,18 +21,16 @@ export interface LoadBalancerNode {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    type: LoadBalancerNode.TypeEnum;
+    type: LoadBalancerNodeType;
     ipAddress: string;
     fqdn: string;
     autoPopulate: boolean;
     tierId: string;
 }
-export namespace LoadBalancerNode {
-    export type TypeEnum = 'IpAddress' | 'Fqdn';
-    export const TypeEnum = {
-        IpAddress: 'IpAddress' as TypeEnum,
-        Fqdn: 'Fqdn' as TypeEnum
-    };
-}
+export enum LoadBalancerNodeType {
+    IpAddress = 'IpAddress',
+    Fqdn = 'Fqdn'
+};
+
 
 

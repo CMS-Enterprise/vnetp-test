@@ -1,3 +1,4 @@
 {
-  "useSingleRequestParameter": true
+  "useSingleRequestParameter": true,
+  "stringEnums": true
 }

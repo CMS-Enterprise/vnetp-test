@@ -23,15 +23,15 @@ export interface FirewallRule {
     deletedAt?: object;
     name: string;
     description?: string;
-    direction: FirewallRule.DirectionEnum;
-    action: FirewallRule.ActionEnum;
-    protocol: FirewallRule.ProtocolEnum;
+    direction: FirewallRuleDirection;
+    action: FirewallRuleAction;
+    protocol: FirewallRuleProtocol;
     logging: boolean;
     ruleIndex: number;
-    sourceAddressType: FirewallRule.SourceAddressTypeEnum;
-    sourceServiceType: FirewallRule.SourceServiceTypeEnum;
-    destinationAddressType: FirewallRule.DestinationAddressTypeEnum;
-    destinationServiceType: FirewallRule.DestinationServiceTypeEnum;
+    sourceAddressType: FirewallRuleSourceAddressType;
+    sourceServiceType: FirewallRuleSourceServiceType;
+    destinationAddressType: FirewallRuleDestinationAddressType;
+    destinationServiceType: FirewallRuleDestinationServiceType;
     sourceIpAddress?: string;
     sourceNetworkObjectId?: string;
     sourceNetworkObjectGroupId?: string;
@@ -54,47 +54,39 @@ export interface FirewallRule {
     destinationServiceObject?: ServiceObject & object;
     destinationServiceObjectGroup?: ServiceObjectGroup & object;
 }
-export namespace FirewallRule {
-    export type DirectionEnum = 'In' | 'Out';
-    export const DirectionEnum = {
-        In: 'In' as DirectionEnum,
-        Out: 'Out' as DirectionEnum
-    };
-    export type ActionEnum = 'Permit' | 'Deny';
-    export const ActionEnum = {
-        Permit: 'Permit' as ActionEnum,
-        Deny: 'Deny' as ActionEnum
-    };
-    export type ProtocolEnum = 'ICMP' | 'TCP' | 'UDP';
-    export const ProtocolEnum = {
-        ICMP: 'ICMP' as ProtocolEnum,
-        TCP: 'TCP' as ProtocolEnum,
-        UDP: 'UDP' as ProtocolEnum
-    };
-    export type SourceAddressTypeEnum = 'IpAddress' | 'NetworkObject' | 'NetworkObjectGroup';
-    export const SourceAddressTypeEnum = {
-        IpAddress: 'IpAddress' as SourceAddressTypeEnum,
-        NetworkObject: 'NetworkObject' as SourceAddressTypeEnum,
-        NetworkObjectGroup: 'NetworkObjectGroup' as SourceAddressTypeEnum
-    };
-    export type SourceServiceTypeEnum = 'Port' | 'ServiceObject' | 'ServiceObjectGroup';
-    export const SourceServiceTypeEnum = {
-        Port: 'Port' as SourceServiceTypeEnum,
-        ServiceObject: 'ServiceObject' as SourceServiceTypeEnum,
-        ServiceObjectGroup: 'ServiceObjectGroup' as SourceServiceTypeEnum
-    };
-    export type DestinationAddressTypeEnum = 'IpAddress' | 'NetworkObject' | 'NetworkObjectGroup';
-    export const DestinationAddressTypeEnum = {
-        IpAddress: 'IpAddress' as DestinationAddressTypeEnum,
-        NetworkObject: 'NetworkObject' as DestinationAddressTypeEnum,
-        NetworkObjectGroup: 'NetworkObjectGroup' as DestinationAddressTypeEnum
-    };
-    export type DestinationServiceTypeEnum = 'Port' | 'ServiceObject' | 'ServiceObjectGroup';
-    export const DestinationServiceTypeEnum = {
-        Port: 'Port' as DestinationServiceTypeEnum,
-        ServiceObject: 'ServiceObject' as DestinationServiceTypeEnum,
-        ServiceObjectGroup: 'ServiceObjectGroup' as DestinationServiceTypeEnum
-    };
-}
+export enum FirewallRuleDirection {
+    In = 'In',
+    Out = 'Out'
+};
+export enum FirewallRuleAction {
+    Permit = 'Permit',
+    Deny = 'Deny'
+};
+export enum FirewallRuleProtocol {
+    ICMP = 'ICMP',
+    TCP = 'TCP',
+    UDP = 'UDP'
+};
+export enum FirewallRuleSourceAddressType {
+    IpAddress = 'IpAddress',
+    NetworkObject = 'NetworkObject',
+    NetworkObjectGroup = 'NetworkObjectGroup'
+};
+export enum FirewallRuleSourceServiceType {
+    Port = 'Port',
+    ServiceObject = 'ServiceObject',
+    ServiceObjectGroup = 'ServiceObjectGroup'
+};
+export enum FirewallRuleDestinationAddressType {
+    IpAddress = 'IpAddress',
+    NetworkObject = 'NetworkObject',
+    NetworkObjectGroup = 'NetworkObjectGroup'
+};
+export enum FirewallRuleDestinationServiceType {
+    Port = 'Port',
+    ServiceObject = 'ServiceObject',
+    ServiceObjectGroup = 'ServiceObjectGroup'
+};
+
 
 

@@ -21,21 +21,19 @@ export interface LoadBalancerHealthMonitor {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    type: LoadBalancerHealthMonitor.TypeEnum;
+    type: LoadBalancerHealthMonitorType;
     servicePort: number;
     interval: number;
     timeout: number;
     tierId: string;
 }
-export namespace LoadBalancerHealthMonitor {
-    export type TypeEnum = 'ICMP' | 'UDP' | 'TCP' | 'HTTP' | 'HTTPS';
-    export const TypeEnum = {
-        ICMP: 'ICMP' as TypeEnum,
-        UDP: 'UDP' as TypeEnum,
-        TCP: 'TCP' as TypeEnum,
-        HTTP: 'HTTP' as TypeEnum,
-        HTTPS: 'HTTPS' as TypeEnum
-    };
-}
+export enum LoadBalancerHealthMonitorType {
+    ICMP = 'ICMP',
+    UDP = 'UDP',
+    TCP = 'TCP',
+    HTTP = 'HTTP',
+    HTTPS = 'HTTPS'
+};
+
 
 
