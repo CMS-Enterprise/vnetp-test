@@ -11,11 +11,13 @@
  */
 
 export interface Vlan {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
   description?: string;
   vlanNumber: number;

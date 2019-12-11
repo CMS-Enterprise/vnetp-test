@@ -9,14 +9,26 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FirewallRule } from './firewallRule';
 
 export interface FirewallRuleGroup {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
-  type: string;
+  type: FirewallRuleGroup.TypeEnum;
   tierId: string;
+  readonly firewallRules?: Array<FirewallRule>;
+}
+export namespace FirewallRuleGroup {
+  export type TypeEnum = 'Intravrf' | 'Intervrf' | 'External';
+  export const TypeEnum = {
+    Intravrf: 'Intravrf' as TypeEnum,
+    Intervrf: 'Intervrf' as TypeEnum,
+    External: 'External' as TypeEnum,
+  };
 }

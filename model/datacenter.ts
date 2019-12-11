@@ -9,13 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Tier } from './tier';
 
 export interface Datacenter {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
   name: string;
   description?: string;
+  readonly tiers?: Array<Tier>;
 }

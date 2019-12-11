@@ -9,9 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PhysicalServerNetworkPort } from './physicalServerNetworkPort';
 
 export interface PhysicalServer {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
@@ -26,5 +27,6 @@ export interface PhysicalServer {
   sanType: string;
   sanRequired: boolean;
   sanStorageSize: number;
+  readonly networkPorts?: Array<PhysicalServerNetworkPort>;
   datacenterId: string;
 }

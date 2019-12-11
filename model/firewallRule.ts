@@ -9,9 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ServiceObjectGroup } from './serviceObjectGroup';
+import { NetworkObject } from './networkObject';
+import { ServiceObject } from './serviceObject';
+import { NetworkObjectGroup } from './networkObjectGroup';
 
 export interface FirewallRule {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
@@ -27,19 +31,27 @@ export interface FirewallRule {
   sourceServiceType: FirewallRule.SourceServiceTypeEnum;
   destinationAddressType: FirewallRule.DestinationAddressTypeEnum;
   destinationServiceType: FirewallRule.DestinationServiceTypeEnum;
-  sourceIpAddress: string;
-  sourceNetworkObjectId: string;
-  sourceNetworkObjectGroupId: string;
-  destinationIpAddress: string;
-  destinationNetworkObjectId: string;
-  destinationNetworkObjectGroupId: string;
-  sourcePorts: string;
-  sourceServiceObjectId: string;
-  sourceServiceObjectGroupId: string;
-  destinationPorts: string;
-  destinationServiceObjectId: string;
-  destinationServiceObjectGroupId: string;
+  sourceIpAddress?: string;
+  sourceNetworkObjectId?: string;
+  sourceNetworkObjectGroupId?: string;
+  destinationIpAddress?: string;
+  destinationNetworkObjectId?: string;
+  destinationNetworkObjectGroupId?: string;
+  sourcePorts?: string;
+  sourceServiceObjectId?: string;
+  sourceServiceObjectGroupId?: string;
+  destinationPorts?: string;
+  destinationServiceObjectId?: string;
+  destinationServiceObjectGroupId?: string;
   firewallRuleGroupId: string;
+  sourceNetworkObject?: NetworkObject & object;
+  sourceNetworkObjectGroup?: NetworkObjectGroup & object;
+  destinationNetworkObject?: NetworkObject & object;
+  destinationNetworkObjectGroup?: NetworkObjectGroup & object;
+  sourceServiceObject?: ServiceObject & object;
+  sourceServiceObjectGroup?: ServiceObjectGroup & object;
+  destinationServiceObject?: ServiceObject & object;
+  destinationServiceObjectGroup?: ServiceObjectGroup & object;
 }
 export namespace FirewallRule {
   export type DirectionEnum = 'In' | 'Out';

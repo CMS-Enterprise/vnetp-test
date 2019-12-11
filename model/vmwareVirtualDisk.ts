@@ -11,15 +11,17 @@
  */
 
 export interface VmwareVirtualDisk {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
   description?: string;
   diskSize: number;
-  rawLun: boolean;
-  rawLunId: number;
+  rawLun?: boolean;
+  rawLunId?: number;
   virtualMachineId: string;
 }

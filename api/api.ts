@@ -1,59 +1,74 @@
-export * from './appliances.service';
-import { AppliancesService } from './appliances.service';
-export * from './datacenters.service';
-import { DatacentersService } from './datacenters.service';
 export * from './default.service';
 import { DefaultService } from './default.service';
-export * from './networkSecurityFirewallRuleGroups.service';
-import { NetworkSecurityFirewallRuleGroupsService } from './networkSecurityFirewallRuleGroups.service';
-export * from './networkSecurityFirewallRules.service';
-import { NetworkSecurityFirewallRulesService } from './networkSecurityFirewallRules.service';
-export * from './networkSecurityNetworkObjectGroups.service';
-import { NetworkSecurityNetworkObjectGroupsService } from './networkSecurityNetworkObjectGroups.service';
-export * from './networkSecurityNetworkObjects.service';
-import { NetworkSecurityNetworkObjectsService } from './networkSecurityNetworkObjects.service';
-export * from './networkSecurityServiceObjectGroups.service';
-import { NetworkSecurityServiceObjectGroupsService } from './networkSecurityServiceObjectGroups.service';
-export * from './networkSecurityServiceObjects.service';
-import { NetworkSecurityServiceObjectsService } from './networkSecurityServiceObjects.service';
-export * from './networkStaticRoutes.service';
-import { NetworkStaticRoutesService } from './networkStaticRoutes.service';
-export * from './networkSubnets.service';
-import { NetworkSubnetsService } from './networkSubnets.service';
-export * from './networkVlans.service';
-import { NetworkVlansService } from './networkVlans.service';
-export * from './physicalServers.service';
-import { PhysicalServersService } from './physicalServers.service';
-export * from './subnets.service';
-import { SubnetsService } from './subnets.service';
-export * from './tiers.service';
-import { TiersService } from './tiers.service';
-export * from './vlans.service';
-import { VlansService } from './vlans.service';
-export * from './vmwareNetworkAdapter.service';
-import { VmwareNetworkAdapterService } from './vmwareNetworkAdapter.service';
-export * from './vmwareVirtualDisks.service';
-import { VmwareVirtualDisksService } from './vmwareVirtualDisks.service';
-export * from './vmwareVirtualMachines.service';
-import { VmwareVirtualMachinesService } from './vmwareVirtualMachines.service';
+export * from './v1Appliances.service';
+import { V1AppliancesService } from './v1Appliances.service';
+export * from './v1Datacenters.service';
+import { V1DatacentersService } from './v1Datacenters.service';
+export * from './v1LoadBalancerHealthMonitors.service';
+import { V1LoadBalancerHealthMonitorsService } from './v1LoadBalancerHealthMonitors.service';
+export * from './v1LoadBalancerIrules.service';
+import { V1LoadBalancerIrulesService } from './v1LoadBalancerIrules.service';
+export * from './v1LoadBalancerNodes.service';
+import { V1LoadBalancerNodesService } from './v1LoadBalancerNodes.service';
+export * from './v1LoadBalancerPools.service';
+import { V1LoadBalancerPoolsService } from './v1LoadBalancerPools.service';
+export * from './v1LoadBalancerVirtualServers.service';
+import { V1LoadBalancerVirtualServersService } from './v1LoadBalancerVirtualServers.service';
+export * from './v1NetworkSecurityFirewallRuleGroups.service';
+import { V1NetworkSecurityFirewallRuleGroupsService } from './v1NetworkSecurityFirewallRuleGroups.service';
+export * from './v1NetworkSecurityFirewallRules.service';
+import { V1NetworkSecurityFirewallRulesService } from './v1NetworkSecurityFirewallRules.service';
+export * from './v1NetworkSecurityNetworkObjectGroups.service';
+import { V1NetworkSecurityNetworkObjectGroupsService } from './v1NetworkSecurityNetworkObjectGroups.service';
+export * from './v1NetworkSecurityNetworkObjects.service';
+import { V1NetworkSecurityNetworkObjectsService } from './v1NetworkSecurityNetworkObjects.service';
+export * from './v1NetworkSecurityServiceObjectGroups.service';
+import { V1NetworkSecurityServiceObjectGroupsService } from './v1NetworkSecurityServiceObjectGroups.service';
+export * from './v1NetworkSecurityServiceObjects.service';
+import { V1NetworkSecurityServiceObjectsService } from './v1NetworkSecurityServiceObjects.service';
+export * from './v1NetworkStaticRoutes.service';
+import { V1NetworkStaticRoutesService } from './v1NetworkStaticRoutes.service';
+export * from './v1NetworkSubnets.service';
+import { V1NetworkSubnetsService } from './v1NetworkSubnets.service';
+export * from './v1NetworkVlans.service';
+import { V1NetworkVlansService } from './v1NetworkVlans.service';
+export * from './v1PhysicalServers.service';
+import { V1PhysicalServersService } from './v1PhysicalServers.service';
+export * from './v1Subnets.service';
+import { V1SubnetsService } from './v1Subnets.service';
+export * from './v1Tiers.service';
+import { V1TiersService } from './v1Tiers.service';
+export * from './v1Vlans.service';
+import { V1VlansService } from './v1Vlans.service';
+export * from './v1VmwareNetworkAdapter.service';
+import { V1VmwareNetworkAdapterService } from './v1VmwareNetworkAdapter.service';
+export * from './v1VmwareVirtualDisks.service';
+import { V1VmwareVirtualDisksService } from './v1VmwareVirtualDisks.service';
+export * from './v1VmwareVirtualMachines.service';
+import { V1VmwareVirtualMachinesService } from './v1VmwareVirtualMachines.service';
 export const APIS = [
-  AppliancesService,
-  DatacentersService,
   DefaultService,
-  NetworkSecurityFirewallRuleGroupsService,
-  NetworkSecurityFirewallRulesService,
-  NetworkSecurityNetworkObjectGroupsService,
-  NetworkSecurityNetworkObjectsService,
-  NetworkSecurityServiceObjectGroupsService,
-  NetworkSecurityServiceObjectsService,
-  NetworkStaticRoutesService,
-  NetworkSubnetsService,
-  NetworkVlansService,
-  PhysicalServersService,
-  SubnetsService,
-  TiersService,
-  VlansService,
-  VmwareNetworkAdapterService,
-  VmwareVirtualDisksService,
-  VmwareVirtualMachinesService,
+  V1AppliancesService,
+  V1DatacentersService,
+  V1LoadBalancerHealthMonitorsService,
+  V1LoadBalancerIrulesService,
+  V1LoadBalancerNodesService,
+  V1LoadBalancerPoolsService,
+  V1LoadBalancerVirtualServersService,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkStaticRoutesService,
+  V1NetworkSubnetsService,
+  V1NetworkVlansService,
+  V1PhysicalServersService,
+  V1SubnetsService,
+  V1TiersService,
+  V1VlansService,
+  V1VmwareNetworkAdapterService,
+  V1VmwareVirtualDisksService,
+  V1VmwareVirtualMachinesService,
 ];

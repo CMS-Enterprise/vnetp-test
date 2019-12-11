@@ -9,13 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VmwareNetworkAdapter } from './vmwareNetworkAdapter';
+import { VmwareVirtualDisk } from './vmwareVirtualDisk';
 
 export interface VmwareVirtualMachine {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
   description?: string;
   cpuCores: number;
@@ -23,4 +27,7 @@ export interface VmwareVirtualMachine {
   cpuReserved: boolean;
   memorySize: number;
   memoryReserved: boolean;
+  datacenterId: string;
+  readonly networkAdapters?: Array<VmwareNetworkAdapter>;
+  readonly virtualDisks?: Array<VmwareVirtualDisk>;
 }

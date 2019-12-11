@@ -11,15 +11,25 @@
  */
 
 export interface NetworkObject {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
   description?: string;
-  type: string;
-  ipAddress: string;
-  endIpAddress: string;
+  type: NetworkObject.TypeEnum;
+  ipAddress?: string;
+  startIpAddress?: string;
+  endIpAddress?: string;
   tierId: string;
+}
+export namespace NetworkObject {
+  export type TypeEnum = 'IpAddress' | 'Range';
+  export const TypeEnum = {
+    IpAddress: 'IpAddress' as TypeEnum,
+    Range: 'Range' as TypeEnum,
+  };
 }

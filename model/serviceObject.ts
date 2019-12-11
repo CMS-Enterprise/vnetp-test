@@ -11,15 +11,25 @@
  */
 
 export interface ServiceObject {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
   deletedAt?: object;
+  provisionedAt?: object;
+  readonly provisionedVersion?: number;
   name: string;
   description?: string;
-  protocol: string;
+  protocol: ServiceObject.ProtocolEnum;
   sourcePorts: string;
   destinationPorts: string;
   tierId: string;
+}
+export namespace ServiceObject {
+  export type ProtocolEnum = 'ICMP' | 'TCP' | 'UDP';
+  export const ProtocolEnum = {
+    ICMP: 'ICMP' as ProtocolEnum,
+    TCP: 'TCP' as ProtocolEnum,
+    UDP: 'UDP' as ProtocolEnum,
+  };
 }

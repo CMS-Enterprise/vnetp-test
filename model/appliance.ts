@@ -9,9 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ApplianceNetworkPort } from './applianceNetworkPort';
 
 export interface Appliance {
-  id?: string;
+  readonly id?: string;
   createdAt?: object;
   updatedAt?: object;
   readonly version?: number;
@@ -31,5 +32,6 @@ export interface Appliance {
   powerSupplyWattage: number;
   powerSupplyConnectionType: string;
   powerSupplyCount: number;
+  readonly networkPorts?: Array<ApplianceNetworkPort>;
   datacenterId: string;
 }

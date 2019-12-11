@@ -30,7 +30,7 @@ import { Configuration } from '../configuration';
   providedIn: 'root',
 })
 export class DefaultService {
-  protected basePath = 'http://localhost';
+  protected basePath = 'http://localhost/api';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
   public encoder: HttpParameterCodec;
@@ -53,33 +53,33 @@ export class DefaultService {
   }
 
   /**
-   * @param user User entity.
+   * @param user
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public authLoginPost(
+  public v1AuthLoginPost(
     user: object,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
-  public authLoginPost(
+  public v1AuthLoginPost(
     user: object,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
-  public authLoginPost(
+  public v1AuthLoginPost(
     user: object,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
-  public authLoginPost(
+  public v1AuthLoginPost(
     user: object,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
     if (user === null || user === undefined) {
       throw new Error(
-        'Required parameter user was null or undefined when calling authLoginPost.',
+        'Required parameter user was null or undefined when calling v1AuthLoginPost.',
       );
     }
 
@@ -104,7 +104,7 @@ export class DefaultService {
     }
 
     return this.httpClient.post<any>(
-      `${this.configuration.basePath}/auth/login`,
+      `${this.configuration.basePath}/v1/auth/login`,
       user,
       {
         withCredentials: this.configuration.withCredentials,
@@ -116,33 +116,33 @@ export class DefaultService {
   }
 
   /**
-   * @param user User entity.
+   * @param user
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public authRegisterPost(
+  public v1AuthRegisterPost(
     user: object,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
-  public authRegisterPost(
+  public v1AuthRegisterPost(
     user: object,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
-  public authRegisterPost(
+  public v1AuthRegisterPost(
     user: object,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
-  public authRegisterPost(
+  public v1AuthRegisterPost(
     user: object,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
     if (user === null || user === undefined) {
       throw new Error(
-        'Required parameter user was null or undefined when calling authRegisterPost.',
+        'Required parameter user was null or undefined when calling v1AuthRegisterPost.',
       );
     }
 
@@ -167,13 +167,13 @@ export class DefaultService {
     }
 
     return this.httpClient.post<any>(
-      `${this.configuration.basePath}/auth/register`,
+      `${this.configuration.basePath}/v1/auth/register`,
       user,
       {
         withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
       },
     );
   }
