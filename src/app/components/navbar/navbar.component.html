@@ -97,7 +97,7 @@
     <ul class="navbar-nav ml-auto align-items-lg-center">
 
         <li class="nav-item">
-            <select [(ngModel)]="selectedDatacenter" class="form-control">
+            <select [(ngModel)]="selectedDatacenter" [disabled]="lockCurrentDatacenter" class="form-control">
               <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
             </select>
           </li>

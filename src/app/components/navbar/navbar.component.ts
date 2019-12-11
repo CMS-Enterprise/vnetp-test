@@ -19,6 +19,9 @@ import { Datacenter } from 'model/datacenter';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
+
+  lockCurrentDatacenter: boolean;
+
   datacenters: Datacenter[];
   currentDatacenter: Datacenter;
 
@@ -44,6 +47,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // update the UI.
     this.datacenterContextService.currentDatacenter.subscribe(
       cd => (this.currentDatacenter = this.selectedDatacenter = cd),
+    );
+
+    this.datacenterContextService.lockCurrentDatacenter.subscribe(
+      lc => (this.lockCurrentDatacenter = lc),
     );
   }
 

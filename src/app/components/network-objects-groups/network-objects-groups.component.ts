@@ -24,7 +24,7 @@ import { Tier } from 'model/tier';
 export class NetworkObjectsGroupsComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   vrfs: Tier[];
-  currentVrf: Vrf;
+  currentVrf: Tier;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -190,7 +190,7 @@ export class NetworkObjectsGroupsComponent
     } else {
       this.networkObjects[this.editNetworkObjectIndex] = networkObject;
     }
-    this.dirty = true;
+    this.datacenterService.lockDatacenter();
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
@@ -240,7 +240,7 @@ export class NetworkObjectsGroupsComponent
 
     dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
+    // dto.VrfId = this.currentVrf.id;
 
     const extra_vars: { [k: string]: any } = {};
     extra_vars.network_object_dto = dto;
@@ -290,17 +290,19 @@ export class NetworkObjectsGroupsComponent
 
     dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
+    // dto.VrfId = this.currentVrf.id;
 
     return dto;
   }
 
   ngOnInit() {
+    // TODO: Unsubscribe
     this.datacenterService.currentDatacenter.subscribe(cd => {
       // TODO: Consider refactor to use Subject instead of BehaviorSubject
       // so this null check isn't required.
       if (cd) {
         this.vrfs = cd.tiers;
+        this.currentVrf = cd.tiers[0];
       }
     });
   }
