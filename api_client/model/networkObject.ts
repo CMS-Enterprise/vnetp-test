@@ -21,18 +21,16 @@ export interface NetworkObject {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    type: NetworkObject.TypeEnum;
+    type: NetworkObjectType;
     ipAddress?: string;
     startIpAddress?: string;
     endIpAddress?: string;
     tierId: string;
 }
-export namespace NetworkObject {
-    export type TypeEnum = 'IpAddress' | 'Range';
-    export const TypeEnum = {
-        IpAddress: 'IpAddress' as TypeEnum,
-        Range: 'Range' as TypeEnum
-    };
-}
+export enum NetworkObjectType {
+    IpAddress = 'IpAddress',
+    Range = 'Range'
+};
+
 
 

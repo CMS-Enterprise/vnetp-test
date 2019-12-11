@@ -21,17 +21,15 @@ export interface FirewallRuleGroup {
     provisionedAt?: object;
     readonly provisionedVersion?: number;
     name: string;
-    type: FirewallRuleGroup.TypeEnum;
+    type: FirewallRuleGroupType;
     tierId: string;
     readonly firewallRules?: Array<FirewallRule>;
 }
-export namespace FirewallRuleGroup {
-    export type TypeEnum = 'Intravrf' | 'Intervrf' | 'External';
-    export const TypeEnum = {
-        Intravrf: 'Intravrf' as TypeEnum,
-        Intervrf: 'Intervrf' as TypeEnum,
-        External: 'External' as TypeEnum
-    };
-}
+export enum FirewallRuleGroupType {
+    Intravrf = 'Intravrf',
+    Intervrf = 'Intervrf',
+    External = 'External'
+};
+
 
 

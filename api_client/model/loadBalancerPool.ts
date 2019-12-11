@@ -22,19 +22,17 @@ export interface LoadBalancerPool {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    loadBalancingMethod: LoadBalancerPool.LoadBalancingMethodEnum;
+    loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
     readonly nodes?: Array<LoadBalancerNode>;
     servicePort: number;
     tierId: string;
 }
-export namespace LoadBalancerPool {
-    export type LoadBalancingMethodEnum = 'RoundRobin' | 'LeastSessions' | 'FastestNode' | 'FastestAppResponse';
-    export const LoadBalancingMethodEnum = {
-        RoundRobin: 'RoundRobin' as LoadBalancingMethodEnum,
-        LeastSessions: 'LeastSessions' as LoadBalancingMethodEnum,
-        FastestNode: 'FastestNode' as LoadBalancingMethodEnum,
-        FastestAppResponse: 'FastestAppResponse' as LoadBalancingMethodEnum
-    };
-}
+export enum LoadBalancerPoolLoadBalancingMethod {
+    RoundRobin = 'RoundRobin',
+    LeastSessions = 'LeastSessions',
+    FastestNode = 'FastestNode',
+    FastestAppResponse = 'FastestAppResponse'
+};
+
 
 

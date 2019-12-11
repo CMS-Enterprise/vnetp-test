@@ -28,37 +28,33 @@ export interface LoadBalancerVirtualServer {
     defaultPoolId?: string;
     defaultPool?: LoadBalancerPool & object;
     readonly irules?: Array<LoadBalancerIrule>;
-    clientSslProfiles?: Array<LoadBalancerVirtualServer.ClientSslProfilesEnum>;
-    serverSslProfiles?: Array<LoadBalancerVirtualServer.ServerSslProfilesEnum>;
-    sourceAddressTranslation: LoadBalancerVirtualServer.SourceAddressTranslationEnum;
+    clientSslProfiles?: Array<LoadBalancerVirtualServerClientSslProfiles>;
+    serverSslProfiles?: Array<LoadBalancerVirtualServerServerSslProfiles>;
+    sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation;
     tierId: string;
 }
-export namespace LoadBalancerVirtualServer {
-    export type ClientSslProfilesEnum = 'clientssl' | 'clientssl-secure' | 'clientssl-insecure-compatible' | 'crypto-server-default-clientssl' | 'splitsession-default-clientssl' | 'wom-default-clientssl';
-    export const ClientSslProfilesEnum = {
-        Clientssl: 'clientssl' as ClientSslProfilesEnum,
-        ClientsslSecure: 'clientssl-secure' as ClientSslProfilesEnum,
-        ClientsslInsecureCompatible: 'clientssl-insecure-compatible' as ClientSslProfilesEnum,
-        CryptoServerDefaultClientssl: 'crypto-server-default-clientssl' as ClientSslProfilesEnum,
-        SplitsessionDefaultClientssl: 'splitsession-default-clientssl' as ClientSslProfilesEnum,
-        WomDefaultClientssl: 'wom-default-clientssl' as ClientSslProfilesEnum
-    };
-    export type ServerSslProfilesEnum = 'serverssl' | 'serverssl-insecure-incompatbile' | 'splitsession-default-serverssl' | 'apm-default-serverssl' | 'crypto-client-default-serverssl' | 'pcoip-default-serverssl' | 'wom-default-serverssl';
-    export const ServerSslProfilesEnum = {
-        Serverssl: 'serverssl' as ServerSslProfilesEnum,
-        ServersslInsecureIncompatbile: 'serverssl-insecure-incompatbile' as ServerSslProfilesEnum,
-        SplitsessionDefaultServerssl: 'splitsession-default-serverssl' as ServerSslProfilesEnum,
-        ApmDefaultServerssl: 'apm-default-serverssl' as ServerSslProfilesEnum,
-        CryptoClientDefaultServerssl: 'crypto-client-default-serverssl' as ServerSslProfilesEnum,
-        PcoipDefaultServerssl: 'pcoip-default-serverssl' as ServerSslProfilesEnum,
-        WomDefaultServerssl: 'wom-default-serverssl' as ServerSslProfilesEnum
-    };
-    export type SourceAddressTranslationEnum = 'None' | 'AutoMap' | 'SNAT';
-    export const SourceAddressTranslationEnum = {
-        None: 'None' as SourceAddressTranslationEnum,
-        AutoMap: 'AutoMap' as SourceAddressTranslationEnum,
-        SNAT: 'SNAT' as SourceAddressTranslationEnum
-    };
-}
+export enum LoadBalancerVirtualServerClientSslProfiles {
+    Clientssl = 'clientssl',
+    ClientsslSecure = 'clientssl-secure',
+    ClientsslInsecureCompatible = 'clientssl-insecure-compatible',
+    CryptoServerDefaultClientssl = 'crypto-server-default-clientssl',
+    SplitsessionDefaultClientssl = 'splitsession-default-clientssl',
+    WomDefaultClientssl = 'wom-default-clientssl'
+};
+export enum LoadBalancerVirtualServerServerSslProfiles {
+    Serverssl = 'serverssl',
+    ServersslInsecureIncompatbile = 'serverssl-insecure-incompatbile',
+    SplitsessionDefaultServerssl = 'splitsession-default-serverssl',
+    ApmDefaultServerssl = 'apm-default-serverssl',
+    CryptoClientDefaultServerssl = 'crypto-client-default-serverssl',
+    PcoipDefaultServerssl = 'pcoip-default-serverssl',
+    WomDefaultServerssl = 'wom-default-serverssl'
+};
+export enum LoadBalancerVirtualServerSourceAddressTranslation {
+    None = 'None',
+    AutoMap = 'AutoMap',
+    SNAT = 'SNAT'
+};
+
 
 
