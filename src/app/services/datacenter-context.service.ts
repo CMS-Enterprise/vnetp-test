@@ -44,9 +44,10 @@ export class DatacenterContextService {
     private messageService: MessageService,
     private router: Router,
   ) {
+    const selectedDatacenterId = localStorage.getItem('currentDatacenter');
     // Get datacenters when currentUser changes.
     this.authService.currentUser.subscribe(s => {
-      this.getDatacenters();
+      this.getDatacenters(selectedDatacenterId);
     });
 
     // This subscription ensures that we release
@@ -80,7 +81,7 @@ export class DatacenterContextService {
     this.lockCurrentDatacenterSubject.next(false);
   }
 
-  getDatacenters() {
+  getDatacenters(currentDatacenterId: string) {
     this.DatacenterService.datacentersGet(
       undefined,
       undefined,
@@ -91,9 +92,18 @@ export class DatacenterContextService {
       this._datacenters = data;
       this.datacentersSubject.next(data);
 
-      // TODO: Selected DC could be persisted to local storage.
       if (data.length) {
-        this.currentDatacenterSubject.next(data[0]);
+        let datacenter;
+
+        if (currentDatacenterId) {
+          datacenter = data.find(d => d.id === currentDatacenterId);
+        }
+
+        if (datacenter) {
+          this.currentDatacenterSubject.next(datacenter);
+        } else {
+          this.currentDatacenterSubject.next(data[0]);
+        }
       }
     });
   }
@@ -112,6 +122,7 @@ export class DatacenterContextService {
           AppMessageType.DatacenterContextSwitch,
         ),
       );
+      localStorage.setItem('currentDatacenter', datacenter.id);
     }
   }
 }
