@@ -1,3 +1,5 @@
+import { NetworkObjectInterface } from './networkObject';
+
 /**
  * Draas
  * Draas OAS Documentation
@@ -19,4 +21,5 @@ export interface Tier {
   name: string;
   description?: string;
   datacenterId: string;
+  networkObjects: NetworkObjectInterface[];
 }

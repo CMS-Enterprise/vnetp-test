@@ -24,7 +24,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { GeneratedNetworkObjectBulkDto } from '../model/generatedNetworkObjectBulkDto';
-import { NetworkObject } from '../model/networkObject';
+import { NetworkObjectInterface } from '../model/networkObject';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
@@ -33,7 +33,7 @@ import { Configuration } from '../configuration';
   providedIn: 'root',
 })
 export class NetworkSecurityNetworkObjectsService {
-  protected basePath = 'http://localhost';
+  protected basePath = 'http://localhost:3000/api/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
   public encoder: HttpParameterCodec;
@@ -65,17 +65,17 @@ export class NetworkSecurityNetworkObjectsService {
     generatedNetworkObjectBulkDto: GeneratedNetworkObjectBulkDto,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<Array<NetworkObject>>;
+  ): Observable<Array<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsBulkPost(
     generatedNetworkObjectBulkDto: GeneratedNetworkObjectBulkDto,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<Array<NetworkObject>>>;
+  ): Observable<HttpResponse<Array<NetworkObjectInterface>>>;
   public networkSecurityNetworkObjectsBulkPost(
     generatedNetworkObjectBulkDto: GeneratedNetworkObjectBulkDto,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<Array<NetworkObject>>>;
+  ): Observable<HttpEvent<Array<NetworkObjectInterface>>>;
   public networkSecurityNetworkObjectsBulkPost(
     generatedNetworkObjectBulkDto: GeneratedNetworkObjectBulkDto,
     observe: any = 'body',
@@ -110,7 +110,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.post<Array<NetworkObject>>(
+    return this.httpClient.post<Array<NetworkObjectInterface>>(
       `${this.configuration.basePath}/network-security/network-objects/bulk`,
       generatedNetworkObjectBulkDto,
       {
@@ -148,7 +148,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<Array<NetworkObject>>;
+  ): Observable<Array<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsGet(
     fields?: string,
     filter?: string,
@@ -161,7 +161,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<Array<NetworkObject>>>;
+  ): Observable<HttpResponse<Array<NetworkObjectInterface>>>;
   public networkSecurityNetworkObjectsGet(
     fields?: string,
     filter?: string,
@@ -174,7 +174,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<Array<NetworkObject>>>;
+  ): Observable<HttpEvent<Array<NetworkObjectInterface>>>;
   public networkSecurityNetworkObjectsGet(
     fields?: string,
     filter?: string,
@@ -228,7 +228,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    return this.httpClient.get<Array<NetworkObject>>(
+    return this.httpClient.get<Array<NetworkObjectInterface>>(
       `${this.configuration.basePath}/network-security/network-objects`,
       {
         params: queryParameters,
@@ -250,17 +250,17 @@ export class NetworkSecurityNetworkObjectsService {
     id: string,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<NetworkObject>;
+  ): Observable<NetworkObjectInterface>;
   public networkSecurityNetworkObjectsIdDelete(
     id: string,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<NetworkObject>>;
+  ): Observable<HttpResponse<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdDelete(
     id: string,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<NetworkObject>>;
+  ): Observable<HttpEvent<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdDelete(
     id: string,
     observe: any = 'body',
@@ -283,7 +283,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    return this.httpClient.delete<NetworkObject>(
+    return this.httpClient.delete<NetworkObjectInterface>(
       `${
         this.configuration.basePath
       }/network-security/network-objects/${encodeURIComponent(String(id))}`,
@@ -312,7 +312,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<NetworkObject>;
+  ): Observable<NetworkObjectInterface>;
   public networkSecurityNetworkObjectsIdGet(
     id: string,
     fields?: string,
@@ -320,7 +320,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<NetworkObject>>;
+  ): Observable<HttpResponse<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdGet(
     id: string,
     fields?: string,
@@ -328,7 +328,7 @@ export class NetworkSecurityNetworkObjectsService {
     cache?: number,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<NetworkObject>>;
+  ): Observable<HttpEvent<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdGet(
     id: string,
     fields?: string,
@@ -365,7 +365,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    return this.httpClient.get<NetworkObject>(
+    return this.httpClient.get<NetworkObjectInterface>(
       `${
         this.configuration.basePath
       }/network-security/network-objects/${encodeURIComponent(String(id))}`,
@@ -388,25 +388,25 @@ export class NetworkSecurityNetworkObjectsService {
    */
   public networkSecurityNetworkObjectsIdPatch(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<NetworkObject>;
+  ): Observable<NetworkObjectInterface>;
   public networkSecurityNetworkObjectsIdPatch(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<NetworkObject>>;
+  ): Observable<HttpResponse<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdPatch(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<NetworkObject>>;
+  ): Observable<HttpEvent<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdPatch(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
@@ -441,7 +441,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.patch<NetworkObject>(
+    return this.httpClient.patch<NetworkObjectInterface>(
       `${
         this.configuration.basePath
       }/network-security/network-objects/${encodeURIComponent(String(id))}`,
@@ -464,25 +464,25 @@ export class NetworkSecurityNetworkObjectsService {
    */
   public networkSecurityNetworkObjectsIdPut(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<NetworkObject>;
+  ): Observable<NetworkObjectInterface>;
   public networkSecurityNetworkObjectsIdPut(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<NetworkObject>>;
+  ): Observable<HttpResponse<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdPut(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<NetworkObject>>;
+  ): Observable<HttpEvent<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsIdPut(
     id: string,
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
@@ -517,7 +517,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.put<NetworkObject>(
+    return this.httpClient.put<NetworkObjectInterface>(
       `${
         this.configuration.basePath
       }/network-security/network-objects/${encodeURIComponent(String(id))}`,
@@ -536,95 +536,95 @@ export class NetworkSecurityNetworkObjectsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public networkSecurityNetworkObjectsIdRestorePatch(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public networkSecurityNetworkObjectsIdRestorePatch(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public networkSecurityNetworkObjectsIdRestorePatch(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public networkSecurityNetworkObjectsIdRestorePatch(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public networkSecurityNetworkObjectsIdRestorePatch(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public networkSecurityNetworkObjectsIdRestorePatch(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public networkSecurityNetworkObjectsIdRestorePatch(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public networkSecurityNetworkObjectsIdRestorePatch(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.patch<any>(
-      `${
-        this.configuration.basePath
-      }/network-security/network-objects/${encodeURIComponent(
-        String(id),
-      )}/restore`,
-      null,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.patch<any>(
+  //     `${
+  //       this.configuration.basePath
+  //     }/network-security/network-objects/${encodeURIComponent(
+  //       String(id),
+  //     )}/restore`,
+  //     null,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Soft deletes an Entity.
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public networkSecurityNetworkObjectsIdSoftDelete(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public networkSecurityNetworkObjectsIdSoftDelete(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public networkSecurityNetworkObjectsIdSoftDelete(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public networkSecurityNetworkObjectsIdSoftDelete(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public networkSecurityNetworkObjectsIdSoftDelete(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public networkSecurityNetworkObjectsIdSoftDelete(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public networkSecurityNetworkObjectsIdSoftDelete(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public networkSecurityNetworkObjectsIdSoftDelete(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.delete<any>(
-      `${
-        this.configuration.basePath
-      }/network-security/network-objects/${encodeURIComponent(
-        String(id),
-      )}/soft`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.delete<any>(
+  //     `${
+  //       this.configuration.basePath
+  //     }/network-security/network-objects/${encodeURIComponent(
+  //       String(id),
+  //     )}/soft`,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Create one NetworkObject
@@ -633,22 +633,22 @@ export class NetworkSecurityNetworkObjectsService {
    * @param reportProgress flag to report request and response progress.
    */
   public networkSecurityNetworkObjectsPost(
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'body',
     reportProgress?: boolean,
-  ): Observable<NetworkObject>;
+  ): Observable<NetworkObjectInterface>;
   public networkSecurityNetworkObjectsPost(
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'response',
     reportProgress?: boolean,
-  ): Observable<HttpResponse<NetworkObject>>;
+  ): Observable<HttpResponse<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsPost(
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe?: 'events',
     reportProgress?: boolean,
-  ): Observable<HttpEvent<NetworkObject>>;
+  ): Observable<HttpEvent<NetworkObjectInterface>>;
   public networkSecurityNetworkObjectsPost(
-    networkObject: NetworkObject,
+    networkObject: NetworkObjectInterface,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
@@ -678,7 +678,7 @@ export class NetworkSecurityNetworkObjectsService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.post<NetworkObject>(
+    return this.httpClient.post<NetworkObjectInterface>(
       `${this.configuration.basePath}/network-security/network-objects`,
       networkObject,
       {

@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { NetworkObject } from './networkObject';
+import { NetworkObjectInterface } from './networkObject';
 
 export interface GeneratedNetworkObjectBulkDto {
-  bulk: Array<NetworkObject>;
+  bulk: Array<NetworkObjectInterface>;
 }

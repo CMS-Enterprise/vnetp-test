@@ -44,7 +44,7 @@
           aria-label="Type"
         >
           <option></option>
-          <option value="host">Host</option>
+          <option value="IpAddress">Ip Address</option>
           <option value="range">Range</option>
           <option value="subnet">Subnet</option>
         </select>
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'host'">
+      <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
         <label for="name">Host Address</label>
         <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.HostAddress"></tooltip>
         <input
@@ -65,7 +65,7 @@
           [dropSpecialCharacters]="false"
           mask="099.099.099.099"
           aria-label="Host Address"
-          *ngIf="f.type.value == 'host'"
+          *ngIf="f.type.value == 'IpAddress'"
         />
         <div *ngIf="submitted && f.hostAddress.errors" class="invalid-feedback">
           <div *ngIf="f.hostAddress.errors.required">

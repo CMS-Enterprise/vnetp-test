@@ -33,7 +33,7 @@ import { Configuration } from '../configuration';
   providedIn: 'root',
 })
 export class TiersService {
-  protected basePath = 'http://localhost';
+  protected basePath = 'http://localhost:3000/api/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
   public encoder: HttpParameterCodec;
@@ -520,46 +520,46 @@ export class TiersService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public tiersIdDeprovisionPatch(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public tiersIdDeprovisionPatch(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public tiersIdDeprovisionPatch(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public tiersIdDeprovisionPatch(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public tiersIdDeprovisionPatch(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public tiersIdDeprovisionPatch(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public tiersIdDeprovisionPatch(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public tiersIdDeprovisionPatch(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.patch<any>(
-      `${this.configuration.basePath}/tiers/${encodeURIComponent(
-        String(id),
-      )}/deprovision`,
-      null,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.patch<any>(
+  //     `${this.configuration.basePath}/tiers/${encodeURIComponent(
+  //       String(id),
+  //     )}/deprovision`,
+  //     null,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Retrieve one Tier
@@ -721,46 +721,46 @@ export class TiersService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public tiersIdProvisionPut(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public tiersIdProvisionPut(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public tiersIdProvisionPut(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public tiersIdProvisionPut(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public tiersIdProvisionPut(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public tiersIdProvisionPut(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public tiersIdProvisionPut(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public tiersIdProvisionPut(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.put<any>(
-      `${this.configuration.basePath}/tiers/${encodeURIComponent(
-        String(id),
-      )}/provision`,
-      null,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.put<any>(
+  //     `${this.configuration.basePath}/tiers/${encodeURIComponent(
+  //       String(id),
+  //     )}/provision`,
+  //     null,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Replace one Tier
@@ -836,96 +836,96 @@ export class TiersService {
     );
   }
 
-  /**
-   * Restores a Soft-Deleted Entity.
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public tiersIdRestorePatch(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public tiersIdRestorePatch(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public tiersIdRestorePatch(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public tiersIdRestorePatch(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // /**
+  //  * Restores a Soft-Deleted Entity.
+  //  * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+  //  * @param reportProgress flag to report request and response progress.
+  //  */
+  // public tiersIdRestorePatch(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public tiersIdRestorePatch(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public tiersIdRestorePatch(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public tiersIdRestorePatch(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.patch<any>(
-      `${this.configuration.basePath}/tiers/${encodeURIComponent(
-        String(id),
-      )}/restore`,
-      null,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.patch<any>(
+  //     `${this.configuration.basePath}/tiers/${encodeURIComponent(
+  //       String(id),
+  //     )}/restore`,
+  //     null,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Soft deletes an Entity.
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public tiersIdSoftDelete(
-    observe?: 'body',
-    reportProgress?: boolean,
-  ): Observable<any>;
-  public tiersIdSoftDelete(
-    observe?: 'response',
-    reportProgress?: boolean,
-  ): Observable<HttpResponse<any>>;
-  public tiersIdSoftDelete(
-    observe?: 'events',
-    reportProgress?: boolean,
-  ): Observable<HttpEvent<any>>;
-  public tiersIdSoftDelete(
-    observe: any = 'body',
-    reportProgress: boolean = false,
-  ): Observable<any> {
-    let headers = this.defaultHeaders;
+  // public tiersIdSoftDelete(
+  //   observe?: 'body',
+  //   reportProgress?: boolean,
+  // ): Observable<any>;
+  // public tiersIdSoftDelete(
+  //   observe?: 'response',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpResponse<any>>;
+  // public tiersIdSoftDelete(
+  //   observe?: 'events',
+  //   reportProgress?: boolean,
+  // ): Observable<HttpEvent<any>>;
+  // public tiersIdSoftDelete(
+  //   observe: any = 'body',
+  //   reportProgress: boolean = false,
+  // ): Observable<any> {
+  //   let headers = this.defaultHeaders;
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected:
-      | string
-      | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+  //   // to determine the Accept header
+  //   const httpHeaderAccepts: string[] = [];
+  //   const httpHeaderAcceptSelected:
+  //     | string
+  //     | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+  //   if (httpHeaderAcceptSelected !== undefined) {
+  //     headers = headers.set('Accept', httpHeaderAcceptSelected);
+  //   }
 
-    return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/tiers/${encodeURIComponent(
-        String(id),
-      )}/soft`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress,
-      },
-    );
-  }
+  //   return this.httpClient.delete<any>(
+  //     `${this.configuration.basePath}/tiers/${encodeURIComponent(
+  //       String(id),
+  //     )}/soft`,
+  //     {
+  //       withCredentials: this.configuration.withCredentials,
+  //       headers,
+  //       observe,
+  //       reportProgress,
+  //     },
+  //   );
+  // }
 
   /**
    * Create one Tier

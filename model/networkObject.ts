@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface NetworkObject {
+export interface NetworkObjectInterface {
   id?: string;
   createdAt?: object;
   updatedAt?: object;

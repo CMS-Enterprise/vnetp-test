@@ -16,6 +16,7 @@ import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/netwo
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'model/tier';
+import { TiersService } from 'api/tiers.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -53,6 +54,7 @@ export class NetworkObjectsGroupsComponent
     private ngx: NgxSmartModalService,
     private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
+    private tierService: TiersService,
     private papa: Papa,
     private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
@@ -61,60 +63,22 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
-  // getVrfs() {
-  //   this.dirty = false;
-
-  //   let vrfId: number = null;
-
-  //   if (this.currentVrf) {
-  //     vrfId = this.currentVrf.id;
-  //   }
-
-  //   this.api.getVrfs().subscribe(data => {
-  //     this.vrfs = data;
-
-  //     if (!vrfId) {
-  //       this.currentVrf = this.vrfs[0];
-  //     } else {
-  //       this.currentVrf = this.vrfs.find(v => v.id === vrfId);
-
-  //       if (!this.currentVrf) {
-  //         this.currentVrf = this.vrfs[0];
-  //       }
-  //     }
-  //     this.getVrfObjects(this.currentVrf);
-  //   });
-  // }
-
-  getVrfObjects(vrf: Vrf) {
-    const networkObjectDto = this.hs.getJsonCustomField(
-      vrf,
-      'network_objects',
-    ) as NetworkObjectDto;
-
-    if (!networkObjectDto) {
-      this.networkObjects = new Array<NetworkObject>();
-      this.networkObjectGroups = new Array<NetworkObjectGroup>();
-    } else {
-      this.networkObjects = networkObjectDto.NetworkObjects;
-      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-    }
-    this.getVrfSubnets(vrf);
-  }
-
-  getVrfSubnets(vrf: Vrf) {
-    this.api.getSubnets(vrf.id).subscribe(data => {
-      const result = data as SubnetResponse;
-      this.Subnets = result.subnets;
-    });
+  getNetworkObjects() {
+    this.tierService
+      .tiersIdGet(this.currentVrf.id, undefined, 'networkObjects')
+      .subscribe(data => {
+        this.networkObjects = data.networkObjects;
+      });
   }
 
   createNetworkObject() {
+    this.datacenterService.lockDatacenter();
     this.subscribeToNetworkObjectModal();
     this.networkObjectModalMode = ModalMode.Create;
 
     const dto = new NetworkObjectModalDto();
     dto.Subnets = this.Subnets;
+    dto.TierId = this.currentVrf.id;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
@@ -169,6 +133,7 @@ export class NetworkObjectsGroupsComponent
           this.saveNetworkObject(data.NetworkObject);
         }
         this.ngx.resetModalData('networkObjectModal');
+        this.datacenterService.unlockDatacenter();
       });
   }
 
@@ -191,7 +156,6 @@ export class NetworkObjectsGroupsComponent
     } else {
       this.networkObjects[this.editNetworkObjectIndex] = networkObject;
     }
-    this.datacenterService.lockDatacenter();
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
@@ -306,6 +270,7 @@ export class NetworkObjectsGroupsComponent
         if (cd) {
           this.vrfs = cd.tiers;
           this.currentVrf = cd.tiers[0];
+          this.getNetworkObjects();
         }
       },
     );

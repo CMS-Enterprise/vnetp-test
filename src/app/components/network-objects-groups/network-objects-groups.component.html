@@ -79,33 +79,33 @@
       <tbody>
         <tr *ngFor="let netObj of networkObjects">
           <td>
-            <span>{{ netObj.Name }}</span>
+            <span>{{ netObj?.name }}</span>
           </td>
           <td>
-            <span>{{ netObj.Type }}</span>
+            <span>{{ netObj?.type }}</span>
           </td>
           <td>
-            <span>{{ netObj.SourceSubnet }}</span>
+            <span>{{ netObj?.SourceSubnet }}</span>
           </td>
           <td>
-            <span *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</span>
-            <span *ngIf="netObj.Type === 'range'">
-              {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
+            <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+            <span *ngIf="netObj?.type === 'range'">
+              {{ netObj?.StartAddress }} - {{ netObj?.EndAddress }}
             </span>
-            <span *ngIf="netObj.Type === 'subnet'">
-              {{ netObj.CidrAddress }}
+            <span *ngIf="netObj?.type === 'subnet'">
+              {{ netObj?.CidrAddress }}
             </span>
           </td>
           <td>
-            <span *ngIf="netObj.Nat">{{ netObj.TranslatedIpAddress }}</span>
+            <span *ngIf="netObj?.Nat">{{ netObj?.TranslatedIpAddress }}</span>
           </td>
           <td>
-            <span>{{ netObj.DestinationSubnet }}</span>
+            <span>{{ netObj?.DestinationSubnet }}</span>
           </td>
           <td>
-            <span *ngIf="netObj.Nat">
-              {{ netObj.NatProtocol }} {{ netObj.SourcePort }}:{{
-                netObj.TranslatedPort
+            <span *ngIf="netObj?.Nat">
+              {{ netObj?.NatProtocol }} {{ netObj?.SourcePort }}:{{
+                netObj?.TranslatedPort
               }}
             </span>
           </td>
