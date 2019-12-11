@@ -4,6 +4,9 @@ import { Datacenter } from 'model/datacenter';
 import { Data } from '@angular/router';
 import { DatacentersService } from 'api/datacenters.service';
 import { AuthService } from './auth.service';
+import { MessageService } from './message.service';
+import { AppMessageType } from '../models/app-message-type';
+import { AppMessage } from '../models/app-message';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +33,7 @@ export class DatacenterContextService {
   constructor(
     private authService: AuthService,
     private DatacenterService: DatacentersService,
+    private messageService: MessageService,
   ) {
     // Get datacenters when currentUser changes.
     this.authService.currentUser.subscribe(s => {
@@ -68,6 +72,12 @@ export class DatacenterContextService {
     // of the private datacenters array.
     if (this._datacenters.map(d => d.id).includes(datacenter.id)) {
       this.currentDatacenterSubject.next(datacenter);
+      this.messageService.sendMessage(
+        new AppMessage(
+          'Datacenter Context Switch',
+          AppMessageType.DatacenterContextSwitch,
+        ),
+      );
     }
   }
 }
