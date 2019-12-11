@@ -83,7 +83,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "!(api_client)/**/*.{js,ts}": [
       "prettier --write",
       "git add"
     ]
