@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { DatacenterContextService } from './datacenter-context.service';
 
 @Injectable({
   providedIn: 'root',

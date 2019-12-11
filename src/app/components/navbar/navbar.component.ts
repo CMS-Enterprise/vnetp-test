@@ -27,6 +27,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   selectedDatacenter: Datacenter;
 
+  currentUserSubscription: Subscription;
+  datacentersSubscription: Subscription;
+  currentDatacenterSubscription: Subscription;
+  datacenterLockSubscription: Subscription;
+
   constructor(
     private automationApiService: AutomationApiService,
     private messageService: MessageService,
@@ -36,22 +41,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private hs: HelpersService,
   ) {
     this.activeJobs = [];
-    this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
-    // TODO: Unsub
-
-    this.datacenterContextService.datacenters.subscribe(
-      d => (this.datacenters = d),
-    );
-    // Set both selected and current here, that way when the observable changes we can
-    // update the UI.
-    this.datacenterContextService.currentDatacenter.subscribe(
-      cd => (this.currentDatacenter = this.selectedDatacenter = cd),
-    );
-
-    this.datacenterContextService.lockCurrentDatacenter.subscribe(
-      lc => (this.lockCurrentDatacenter = lc),
-    );
   }
 
   loggedIn: boolean;
@@ -136,13 +125,43 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
+    [
+      this.currentUserSubscription,
+      this.datacentersSubscription,
+      this.currentUserSubscription,
+      this.datacenterLockSubscription,
+    ].forEach(sub => {
+      try {
+        if (sub) {
+          sub.unsubscribe();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
     if (this.messageServiceSubscription) {
       this.messageServiceSubscription.unsubscribe();
     }
   }
 
   ngOnInit() {
-    // this.getJobs();
+    this.currentUserSubscription = this.auth.currentUser.subscribe(
+      u => (this.currentUser = u),
+    );
+
+    this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(
+      d => (this.datacenters = d),
+    );
+    // Set both selected and current here, that way when the observable changes we can
+    // update the UI.
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
+      cd => (this.currentDatacenter = this.selectedDatacenter = cd),
+    );
+
+    this.datacenterLockSubscription = this.datacenterContextService.lockCurrentDatacenter.subscribe(
+      lc => (this.lockCurrentDatacenter = lc),
+    );
     // this.getMessageServiceSubscription();
   }
 

@@ -42,6 +42,7 @@ export class NetworkObjectsGroupsComponent
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
   Subnets: Array<Subnet>;
+  currentDatacenterSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -265,6 +266,7 @@ export class NetworkObjectsGroupsComponent
     [
       this.networkObjectModalSubscription,
       this.networkObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
     ].forEach(sub => {
       try {
         if (sub) {
@@ -297,14 +299,16 @@ export class NetworkObjectsGroupsComponent
 
   ngOnInit() {
     // TODO: Unsubscribe
-    this.datacenterService.currentDatacenter.subscribe(cd => {
-      // TODO: Consider refactor to use Subject instead of BehaviorSubject
-      // so this null check isn't required.
-      if (cd) {
-        this.vrfs = cd.tiers;
-        this.currentVrf = cd.tiers[0];
-      }
-    });
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+      cd => {
+        // TODO: Consider refactor to use Subject instead of BehaviorSubject
+        // so this null check isn't required.
+        if (cd) {
+          this.vrfs = cd.tiers;
+          this.currentVrf = cd.tiers[0];
+        }
+      },
+    );
   }
 
   ngOnDestroy() {
