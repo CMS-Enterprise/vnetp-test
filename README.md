@@ -31,6 +31,10 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 
+### Generating UI from OAS Spec
+
+Run `npm run start` in API and move `swagger-spec.yaml` from API to root of UI. Run `openapi-generator generate -i swagger-spec.yaml -g typescript-angular --skip-validate-spec` to generate OAS docs from yaml file.
+
 #### General usage
 
 In your Angular project:

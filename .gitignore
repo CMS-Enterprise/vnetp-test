@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+swagger-spec.yaml
 
 # dependencies
 /node_modules
