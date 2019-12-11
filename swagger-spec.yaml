@@ -3594,7 +3594,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/vlans/{vlanId}/subnets':
+  '/v1/network/vlans/{vlanId}/subnets':
     get:
       summary: Retrieve many Subnet
       parameters:
@@ -3739,12 +3739,12 @@ paths:
             items:
               $ref: '#/definitions/Subnet'
       tags: &ref_13
-        - v1/subnets
+        - v1/network/vlans
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/vlans/{vlanId}/subnets/{id}':
+  '/v1/network/vlans/{vlanId}/subnets/{id}':
     get:
       summary: Retrieve one Subnet
       parameters:
@@ -3796,7 +3796,7 @@ paths:
     get:
       summary: Retrieve many Subnet
       parameters:
-        - name: vlanId
+        - name: tierId
           required: true
           in: path
           type: string
@@ -3937,7 +3937,7 @@ paths:
             items:
               $ref: '#/definitions/Subnet'
       tags: &ref_14
-        - v1/subnets
+        - v1/tiers/
       produces:
         - application/json
       consumes:
@@ -3950,7 +3950,7 @@ paths:
           required: true
           in: path
           type: string
-        - name: vlanId
+        - name: tierId
           required: true
           in: path
           type: string
