@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Datacenter } from 'model/datacenter';
 import { Data } from '@angular/router';
 import { DatacentersService } from 'api/datacenters.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,15 @@ export class DatacenterContextService {
 
   private _datacenters: Datacenter[] = new Array<Datacenter>();
 
-  constructor(private DatacenterService: DatacentersService) {}
+  constructor(
+    private authService: AuthService,
+    private DatacenterService: DatacentersService,
+  ) {
+    // Get datacenters when currentUser changes.
+    this.authService.currentUser.subscribe(s => {
+      this.getDatacenters();
+    });
+  }
 
   public get currentDatacenterValue(): Datacenter {
     return this.currentDatacenterSubject.value;

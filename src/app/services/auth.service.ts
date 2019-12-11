@@ -18,19 +18,9 @@ export class AuthService {
   );
   public currentUser: Observable<User> = this.currentUserSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private cs: CookieService,
-    private datacenterContextService: DatacenterContextService,
-  ) {
+  constructor(private http: HttpClient, private cs: CookieService) {
     const user = this.getUserFromToken(localStorage.getItem('token'));
-
-    this.currentUserSubject = new BehaviorSubject<User>(user);
-    this.currentUser = this.currentUserSubject.asObservable();
-
-    if (user) {
-      this.datacenterContextService.getDatacenters();
-    }
+    this.currentUserSubject.next(user);
   }
 
   public get currentUserValue(): User {
@@ -50,7 +40,6 @@ export class AuthService {
           if (user && user.Token) {
             localStorage.setItem('token', result.token);
             this.currentUserSubject.next(user);
-            this.datacenterContextService.getDatacenters();
           }
 
           return user;
