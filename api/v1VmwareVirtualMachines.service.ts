@@ -29,6 +29,63 @@ import { VmwareVirtualMachine } from '../model/vmwareVirtualMachine';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
+export interface V1VmwareVirtualMachinesBulkPostRequestParams {
+  generatedVmwareVirtualMachineBulkDto: GeneratedVmwareVirtualMachineBulkDto;
+}
+
+export interface V1VmwareVirtualMachinesGetRequestParams {
+  fields?: string;
+  filter?: string;
+  or?: string;
+  sort?: string;
+  join?: string;
+  perPage?: number;
+  offset?: number;
+  page?: number;
+  cache?: number;
+}
+
+export interface V1VmwareVirtualMachinesIdDeleteRequestParams {
+  id: string;
+}
+
+export interface V1VmwareVirtualMachinesIdDeprovisionPatchRequestParams {
+  id: string;
+}
+
+export interface V1VmwareVirtualMachinesIdGetRequestParams {
+  id: string;
+  fields?: string;
+  join?: string;
+  cache?: number;
+}
+
+export interface V1VmwareVirtualMachinesIdPatchRequestParams {
+  id: string;
+  vmwareVirtualMachine: VmwareVirtualMachine;
+}
+
+export interface V1VmwareVirtualMachinesIdProvisionPutRequestParams {
+  id: string;
+}
+
+export interface V1VmwareVirtualMachinesIdPutRequestParams {
+  id: string;
+  vmwareVirtualMachine: VmwareVirtualMachine;
+}
+
+export interface V1VmwareVirtualMachinesIdRestorePatchRequestParams {
+  id: string;
+}
+
+export interface V1VmwareVirtualMachinesIdSoftDeleteRequestParams {
+  id: string;
+}
+
+export interface V1VmwareVirtualMachinesPostRequestParams {
+  vmwareVirtualMachine: VmwareVirtualMachine;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -57,30 +114,32 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Create many VmwareVirtualMachine
-   * @param generatedVmwareVirtualMachineBulkDto
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesBulkPost(
-    generatedVmwareVirtualMachineBulkDto: GeneratedVmwareVirtualMachineBulkDto,
+    requestParameters: V1VmwareVirtualMachinesBulkPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesBulkPost(
-    generatedVmwareVirtualMachineBulkDto: GeneratedVmwareVirtualMachineBulkDto,
+    requestParameters: V1VmwareVirtualMachinesBulkPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<VmwareVirtualMachine>>>;
   public v1VmwareVirtualMachinesBulkPost(
-    generatedVmwareVirtualMachineBulkDto: GeneratedVmwareVirtualMachineBulkDto,
+    requestParameters: V1VmwareVirtualMachinesBulkPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<VmwareVirtualMachine>>>;
   public v1VmwareVirtualMachinesBulkPost(
-    generatedVmwareVirtualMachineBulkDto: GeneratedVmwareVirtualMachineBulkDto,
+    requestParameters: V1VmwareVirtualMachinesBulkPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const generatedVmwareVirtualMachineBulkDto =
+      requestParameters.generatedVmwareVirtualMachineBulkDto;
     if (
       generatedVmwareVirtualMachineBulkDto === null ||
       generatedVmwareVirtualMachineBulkDto === undefined
@@ -124,70 +183,40 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Retrieve many VmwareVirtualMachine
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param filter &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt;
-   * @param or &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;
-   * @param sort &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param perPage &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt;
-   * @param offset &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt;
-   * @param page &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt;
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<VmwareVirtualMachine>>>;
   public v1VmwareVirtualMachinesGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<VmwareVirtualMachine>>>;
   public v1VmwareVirtualMachinesGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const fields = requestParameters.fields;
+    const filter = requestParameters.filter;
+    const or = requestParameters.or;
+    const sort = requestParameters.sort;
+    const join = requestParameters.join;
+    const perPage = requestParameters.perPage;
+    const offset = requestParameters.offset;
+    const page = requestParameters.page;
+    const cache = requestParameters.cache;
+
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
       queryParameters = queryParameters.set('fields', <any>fields);
@@ -242,30 +271,31 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Delete one VmwareVirtualMachine
-   * @param id
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdDelete(
-    id: string,
+    requestParameters: V1VmwareVirtualMachinesIdDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<VmwareVirtualMachine>;
   public v1VmwareVirtualMachinesIdDelete(
-    id: string,
+    requestParameters: V1VmwareVirtualMachinesIdDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdDelete(
-    id: string,
+    requestParameters: V1VmwareVirtualMachinesIdDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdDelete(
-    id: string,
+    requestParameters: V1VmwareVirtualMachinesIdDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdDelete.',
@@ -298,25 +328,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Deprovisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdDeprovisionPatch(
+    requestParameters: V1VmwareVirtualMachinesIdDeprovisionPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1VmwareVirtualMachinesIdDeprovisionPatch(
+    requestParameters: V1VmwareVirtualMachinesIdDeprovisionPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1VmwareVirtualMachinesIdDeprovisionPatch(
+    requestParameters: V1VmwareVirtualMachinesIdDeprovisionPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1VmwareVirtualMachinesIdDeprovisionPatch(
+    requestParameters: V1VmwareVirtualMachinesIdDeprovisionPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdDeprovisionPatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -346,50 +388,39 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Retrieve one VmwareVirtualMachine
-   * @param id
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesIdGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<VmwareVirtualMachine>;
   public v1VmwareVirtualMachinesIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesIdGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesIdGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1VmwareVirtualMachinesIdGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdGet.',
       );
     }
+    const fields = requestParameters.fields;
+    const join = requestParameters.join;
+    const cache = requestParameters.cache;
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
@@ -429,40 +460,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Update one VmwareVirtualMachine
-   * @param id
-   * @param vmwareVirtualMachine
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdPatch(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<VmwareVirtualMachine>;
   public v1VmwareVirtualMachinesIdPatch(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdPatch(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdPatch(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdPatch.',
       );
     }
+    const vmwareVirtualMachine = requestParameters.vmwareVirtualMachine;
     if (vmwareVirtualMachine === null || vmwareVirtualMachine === undefined) {
       throw new Error(
         'Required parameter vmwareVirtualMachine was null or undefined when calling v1VmwareVirtualMachinesIdPatch.',
@@ -505,25 +533,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Provisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdProvisionPut(
+    requestParameters: V1VmwareVirtualMachinesIdProvisionPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1VmwareVirtualMachinesIdProvisionPut(
+    requestParameters: V1VmwareVirtualMachinesIdProvisionPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1VmwareVirtualMachinesIdProvisionPut(
+    requestParameters: V1VmwareVirtualMachinesIdProvisionPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1VmwareVirtualMachinesIdProvisionPut(
+    requestParameters: V1VmwareVirtualMachinesIdProvisionPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdProvisionPut.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -551,40 +591,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Replace one VmwareVirtualMachine
-   * @param id
-   * @param vmwareVirtualMachine
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdPut(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<VmwareVirtualMachine>;
   public v1VmwareVirtualMachinesIdPut(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdPut(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesIdPut(
-    id: string,
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesIdPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdPut.',
       );
     }
+    const vmwareVirtualMachine = requestParameters.vmwareVirtualMachine;
     if (vmwareVirtualMachine === null || vmwareVirtualMachine === undefined) {
       throw new Error(
         'Required parameter vmwareVirtualMachine was null or undefined when calling v1VmwareVirtualMachinesIdPut.',
@@ -627,25 +664,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Restores a Soft-Deleted Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdRestorePatch(
+    requestParameters: V1VmwareVirtualMachinesIdRestorePatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1VmwareVirtualMachinesIdRestorePatch(
+    requestParameters: V1VmwareVirtualMachinesIdRestorePatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1VmwareVirtualMachinesIdRestorePatch(
+    requestParameters: V1VmwareVirtualMachinesIdRestorePatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1VmwareVirtualMachinesIdRestorePatch(
+    requestParameters: V1VmwareVirtualMachinesIdRestorePatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdRestorePatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -673,25 +722,37 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Soft deletes an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesIdSoftDelete(
+    requestParameters: V1VmwareVirtualMachinesIdSoftDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1VmwareVirtualMachinesIdSoftDelete(
+    requestParameters: V1VmwareVirtualMachinesIdSoftDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1VmwareVirtualMachinesIdSoftDelete(
+    requestParameters: V1VmwareVirtualMachinesIdSoftDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1VmwareVirtualMachinesIdSoftDelete(
+    requestParameters: V1VmwareVirtualMachinesIdSoftDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1VmwareVirtualMachinesIdSoftDelete.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -718,30 +779,31 @@ export class V1VmwareVirtualMachinesService {
 
   /**
    * Create one VmwareVirtualMachine
-   * @param vmwareVirtualMachine
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1VmwareVirtualMachinesPost(
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<VmwareVirtualMachine>;
   public v1VmwareVirtualMachinesPost(
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesPost(
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<VmwareVirtualMachine>>;
   public v1VmwareVirtualMachinesPost(
-    vmwareVirtualMachine: VmwareVirtualMachine,
+    requestParameters: V1VmwareVirtualMachinesPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const vmwareVirtualMachine = requestParameters.vmwareVirtualMachine;
     if (vmwareVirtualMachine === null || vmwareVirtualMachine === undefined) {
       throw new Error(
         'Required parameter vmwareVirtualMachine was null or undefined when calling v1VmwareVirtualMachinesPost.',

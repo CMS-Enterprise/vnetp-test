@@ -29,6 +29,63 @@ import { LoadBalancerVirtualServer } from '../model/loadBalancerVirtualServer';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
+export interface V1LoadBalancerVirtualServersBulkPostRequestParams {
+  generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto;
+}
+
+export interface V1LoadBalancerVirtualServersGetRequestParams {
+  fields?: string;
+  filter?: string;
+  or?: string;
+  sort?: string;
+  join?: string;
+  perPage?: number;
+  offset?: number;
+  page?: number;
+  cache?: number;
+}
+
+export interface V1LoadBalancerVirtualServersIdDeleteRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerVirtualServersIdDeprovisionPatchRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerVirtualServersIdGetRequestParams {
+  id: string;
+  fields?: string;
+  join?: string;
+  cache?: number;
+}
+
+export interface V1LoadBalancerVirtualServersIdPatchRequestParams {
+  id: string;
+  loadBalancerVirtualServer: LoadBalancerVirtualServer;
+}
+
+export interface V1LoadBalancerVirtualServersIdProvisionPutRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerVirtualServersIdPutRequestParams {
+  id: string;
+  loadBalancerVirtualServer: LoadBalancerVirtualServer;
+}
+
+export interface V1LoadBalancerVirtualServersIdRestorePatchRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerVirtualServersIdSoftDeleteRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerVirtualServersPostRequestParams {
+  loadBalancerVirtualServer: LoadBalancerVirtualServer;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -57,30 +114,32 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Create many LoadBalancerVirtualServer
-   * @param generatedLoadBalancerVirtualServerBulkDto
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersBulkPost(
-    generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto,
+    requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersBulkPost(
-    generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto,
+    requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<LoadBalancerVirtualServer>>>;
   public v1LoadBalancerVirtualServersBulkPost(
-    generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto,
+    requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<LoadBalancerVirtualServer>>>;
   public v1LoadBalancerVirtualServersBulkPost(
-    generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto,
+    requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const generatedLoadBalancerVirtualServerBulkDto =
+      requestParameters.generatedLoadBalancerVirtualServerBulkDto;
     if (
       generatedLoadBalancerVirtualServerBulkDto === null ||
       generatedLoadBalancerVirtualServerBulkDto === undefined
@@ -124,70 +183,40 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Retrieve many LoadBalancerVirtualServer
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param filter &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt;
-   * @param or &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;
-   * @param sort &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param perPage &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt;
-   * @param offset &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt;
-   * @param page &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt;
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<LoadBalancerVirtualServer>>>;
   public v1LoadBalancerVirtualServersGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<LoadBalancerVirtualServer>>>;
   public v1LoadBalancerVirtualServersGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const fields = requestParameters.fields;
+    const filter = requestParameters.filter;
+    const or = requestParameters.or;
+    const sort = requestParameters.sort;
+    const join = requestParameters.join;
+    const perPage = requestParameters.perPage;
+    const offset = requestParameters.offset;
+    const page = requestParameters.page;
+    const cache = requestParameters.cache;
+
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
       queryParameters = queryParameters.set('fields', <any>fields);
@@ -242,30 +271,31 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Delete one LoadBalancerVirtualServer
-   * @param id
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerVirtualServersIdDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerVirtualServer>;
   public v1LoadBalancerVirtualServersIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerVirtualServersIdDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerVirtualServersIdDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerVirtualServersIdDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdDelete.',
@@ -298,25 +328,37 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Deprovisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerVirtualServersIdDeprovisionPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerVirtualServersIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerVirtualServersIdDeprovisionPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerVirtualServersIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerVirtualServersIdDeprovisionPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerVirtualServersIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerVirtualServersIdDeprovisionPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdDeprovisionPatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -346,50 +388,39 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Retrieve one LoadBalancerVirtualServer
-   * @param id
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersIdGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerVirtualServer>;
   public v1LoadBalancerVirtualServersIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersIdGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersIdGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerVirtualServersIdGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdGet.',
       );
     }
+    const fields = requestParameters.fields;
+    const join = requestParameters.join;
+    const cache = requestParameters.cache;
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
@@ -429,40 +460,38 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Update one LoadBalancerVirtualServer
-   * @param id
-   * @param loadBalancerVirtualServer
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdPatch(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerVirtualServer>;
   public v1LoadBalancerVirtualServersIdPatch(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdPatch(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdPatch(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdPatch.',
       );
     }
+    const loadBalancerVirtualServer =
+      requestParameters.loadBalancerVirtualServer;
     if (
       loadBalancerVirtualServer === null ||
       loadBalancerVirtualServer === undefined
@@ -508,25 +537,37 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Provisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdProvisionPut(
+    requestParameters: V1LoadBalancerVirtualServersIdProvisionPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerVirtualServersIdProvisionPut(
+    requestParameters: V1LoadBalancerVirtualServersIdProvisionPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerVirtualServersIdProvisionPut(
+    requestParameters: V1LoadBalancerVirtualServersIdProvisionPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerVirtualServersIdProvisionPut(
+    requestParameters: V1LoadBalancerVirtualServersIdProvisionPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdProvisionPut.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -556,40 +597,38 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Replace one LoadBalancerVirtualServer
-   * @param id
-   * @param loadBalancerVirtualServer
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdPut(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerVirtualServer>;
   public v1LoadBalancerVirtualServersIdPut(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdPut(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersIdPut(
-    id: string,
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersIdPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdPut.',
       );
     }
+    const loadBalancerVirtualServer =
+      requestParameters.loadBalancerVirtualServer;
     if (
       loadBalancerVirtualServer === null ||
       loadBalancerVirtualServer === undefined
@@ -635,25 +674,37 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Restores a Soft-Deleted Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdRestorePatch(
+    requestParameters: V1LoadBalancerVirtualServersIdRestorePatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerVirtualServersIdRestorePatch(
+    requestParameters: V1LoadBalancerVirtualServersIdRestorePatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerVirtualServersIdRestorePatch(
+    requestParameters: V1LoadBalancerVirtualServersIdRestorePatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerVirtualServersIdRestorePatch(
+    requestParameters: V1LoadBalancerVirtualServersIdRestorePatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdRestorePatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -683,25 +734,37 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Soft deletes an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersIdSoftDelete(
+    requestParameters: V1LoadBalancerVirtualServersIdSoftDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerVirtualServersIdSoftDelete(
+    requestParameters: V1LoadBalancerVirtualServersIdSoftDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerVirtualServersIdSoftDelete(
+    requestParameters: V1LoadBalancerVirtualServersIdSoftDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerVirtualServersIdSoftDelete(
+    requestParameters: V1LoadBalancerVirtualServersIdSoftDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerVirtualServersIdSoftDelete.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -730,30 +793,32 @@ export class V1LoadBalancerVirtualServersService {
 
   /**
    * Create one LoadBalancerVirtualServer
-   * @param loadBalancerVirtualServer
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerVirtualServersPost(
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerVirtualServer>;
   public v1LoadBalancerVirtualServersPost(
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersPost(
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerVirtualServer>>;
   public v1LoadBalancerVirtualServersPost(
-    loadBalancerVirtualServer: LoadBalancerVirtualServer,
+    requestParameters: V1LoadBalancerVirtualServersPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const loadBalancerVirtualServer =
+      requestParameters.loadBalancerVirtualServer;
     if (
       loadBalancerVirtualServer === null ||
       loadBalancerVirtualServer === undefined

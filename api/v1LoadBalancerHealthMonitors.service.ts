@@ -29,6 +29,63 @@ import { LoadBalancerHealthMonitor } from '../model/loadBalancerHealthMonitor';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
+export interface V1LoadBalancerHealthMonitorsBulkPostRequestParams {
+  generatedLoadBalancerHealthMonitorBulkDto: GeneratedLoadBalancerHealthMonitorBulkDto;
+}
+
+export interface V1LoadBalancerHealthMonitorsGetRequestParams {
+  fields?: string;
+  filter?: string;
+  or?: string;
+  sort?: string;
+  join?: string;
+  perPage?: number;
+  offset?: number;
+  page?: number;
+  cache?: number;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdDeleteRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdDeprovisionPatchRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdGetRequestParams {
+  id: string;
+  fields?: string;
+  join?: string;
+  cache?: number;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdPatchRequestParams {
+  id: string;
+  loadBalancerHealthMonitor: LoadBalancerHealthMonitor;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdProvisionPutRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdPutRequestParams {
+  id: string;
+  loadBalancerHealthMonitor: LoadBalancerHealthMonitor;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdRestorePatchRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerHealthMonitorsIdSoftDeleteRequestParams {
+  id: string;
+}
+
+export interface V1LoadBalancerHealthMonitorsPostRequestParams {
+  loadBalancerHealthMonitor: LoadBalancerHealthMonitor;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -57,30 +114,32 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Create many LoadBalancerHealthMonitor
-   * @param generatedLoadBalancerHealthMonitorBulkDto
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsBulkPost(
-    generatedLoadBalancerHealthMonitorBulkDto: GeneratedLoadBalancerHealthMonitorBulkDto,
+    requestParameters: V1LoadBalancerHealthMonitorsBulkPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsBulkPost(
-    generatedLoadBalancerHealthMonitorBulkDto: GeneratedLoadBalancerHealthMonitorBulkDto,
+    requestParameters: V1LoadBalancerHealthMonitorsBulkPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<LoadBalancerHealthMonitor>>>;
   public v1LoadBalancerHealthMonitorsBulkPost(
-    generatedLoadBalancerHealthMonitorBulkDto: GeneratedLoadBalancerHealthMonitorBulkDto,
+    requestParameters: V1LoadBalancerHealthMonitorsBulkPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<LoadBalancerHealthMonitor>>>;
   public v1LoadBalancerHealthMonitorsBulkPost(
-    generatedLoadBalancerHealthMonitorBulkDto: GeneratedLoadBalancerHealthMonitorBulkDto,
+    requestParameters: V1LoadBalancerHealthMonitorsBulkPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const generatedLoadBalancerHealthMonitorBulkDto =
+      requestParameters.generatedLoadBalancerHealthMonitorBulkDto;
     if (
       generatedLoadBalancerHealthMonitorBulkDto === null ||
       generatedLoadBalancerHealthMonitorBulkDto === undefined
@@ -124,70 +183,40 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Retrieve many LoadBalancerHealthMonitor
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param filter &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt;
-   * @param or &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;
-   * @param sort &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param perPage &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt;
-   * @param offset &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt;
-   * @param page &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt;
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<LoadBalancerHealthMonitor>>>;
   public v1LoadBalancerHealthMonitorsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<LoadBalancerHealthMonitor>>>;
   public v1LoadBalancerHealthMonitorsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const fields = requestParameters.fields;
+    const filter = requestParameters.filter;
+    const or = requestParameters.or;
+    const sort = requestParameters.sort;
+    const join = requestParameters.join;
+    const perPage = requestParameters.perPage;
+    const offset = requestParameters.offset;
+    const page = requestParameters.page;
+    const cache = requestParameters.cache;
+
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
       queryParameters = queryParameters.set('fields', <any>fields);
@@ -242,30 +271,31 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Delete one LoadBalancerHealthMonitor
-   * @param id
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerHealthMonitor>;
   public v1LoadBalancerHealthMonitorsIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdDelete(
-    id: string,
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdDelete.',
@@ -298,25 +328,37 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Deprovisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeprovisionPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerHealthMonitorsIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeprovisionPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerHealthMonitorsIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeprovisionPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerHealthMonitorsIdDeprovisionPatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdDeprovisionPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdDeprovisionPatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -346,50 +388,39 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Retrieve one LoadBalancerHealthMonitor
-   * @param id
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsIdGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerHealthMonitor>;
   public v1LoadBalancerHealthMonitorsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsIdGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsIdGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1LoadBalancerHealthMonitorsIdGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdGet.',
       );
     }
+    const fields = requestParameters.fields;
+    const join = requestParameters.join;
+    const cache = requestParameters.cache;
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
@@ -429,40 +460,38 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Update one LoadBalancerHealthMonitor
-   * @param id
-   * @param loadBalancerHealthMonitor
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdPatch(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerHealthMonitor>;
   public v1LoadBalancerHealthMonitorsIdPatch(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdPatch(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdPatch(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdPatch.',
       );
     }
+    const loadBalancerHealthMonitor =
+      requestParameters.loadBalancerHealthMonitor;
     if (
       loadBalancerHealthMonitor === null ||
       loadBalancerHealthMonitor === undefined
@@ -508,25 +537,37 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Provisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdProvisionPut(
+    requestParameters: V1LoadBalancerHealthMonitorsIdProvisionPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerHealthMonitorsIdProvisionPut(
+    requestParameters: V1LoadBalancerHealthMonitorsIdProvisionPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerHealthMonitorsIdProvisionPut(
+    requestParameters: V1LoadBalancerHealthMonitorsIdProvisionPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerHealthMonitorsIdProvisionPut(
+    requestParameters: V1LoadBalancerHealthMonitorsIdProvisionPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdProvisionPut.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -556,40 +597,38 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Replace one LoadBalancerHealthMonitor
-   * @param id
-   * @param loadBalancerHealthMonitor
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdPut(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerHealthMonitor>;
   public v1LoadBalancerHealthMonitorsIdPut(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdPut(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsIdPut(
-    id: string,
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsIdPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdPut.',
       );
     }
+    const loadBalancerHealthMonitor =
+      requestParameters.loadBalancerHealthMonitor;
     if (
       loadBalancerHealthMonitor === null ||
       loadBalancerHealthMonitor === undefined
@@ -635,25 +674,37 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Restores a Soft-Deleted Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdRestorePatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdRestorePatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerHealthMonitorsIdRestorePatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdRestorePatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerHealthMonitorsIdRestorePatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdRestorePatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerHealthMonitorsIdRestorePatch(
+    requestParameters: V1LoadBalancerHealthMonitorsIdRestorePatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdRestorePatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -683,25 +734,37 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Soft deletes an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsIdSoftDelete(
+    requestParameters: V1LoadBalancerHealthMonitorsIdSoftDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1LoadBalancerHealthMonitorsIdSoftDelete(
+    requestParameters: V1LoadBalancerHealthMonitorsIdSoftDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1LoadBalancerHealthMonitorsIdSoftDelete(
+    requestParameters: V1LoadBalancerHealthMonitorsIdSoftDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1LoadBalancerHealthMonitorsIdSoftDelete(
+    requestParameters: V1LoadBalancerHealthMonitorsIdSoftDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1LoadBalancerHealthMonitorsIdSoftDelete.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -730,30 +793,32 @@ export class V1LoadBalancerHealthMonitorsService {
 
   /**
    * Create one LoadBalancerHealthMonitor
-   * @param loadBalancerHealthMonitor
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1LoadBalancerHealthMonitorsPost(
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<LoadBalancerHealthMonitor>;
   public v1LoadBalancerHealthMonitorsPost(
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsPost(
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
   public v1LoadBalancerHealthMonitorsPost(
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor,
+    requestParameters: V1LoadBalancerHealthMonitorsPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const loadBalancerHealthMonitor =
+      requestParameters.loadBalancerHealthMonitor;
     if (
       loadBalancerHealthMonitor === null ||
       loadBalancerHealthMonitor === undefined

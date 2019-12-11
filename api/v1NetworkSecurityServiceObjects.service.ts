@@ -29,6 +29,63 @@ import { ServiceObject } from '../model/serviceObject';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
+export interface V1NetworkSecurityServiceObjectsBulkPostRequestParams {
+  generatedServiceObjectBulkDto: GeneratedServiceObjectBulkDto;
+}
+
+export interface V1NetworkSecurityServiceObjectsGetRequestParams {
+  fields?: string;
+  filter?: string;
+  or?: string;
+  sort?: string;
+  join?: string;
+  perPage?: number;
+  offset?: number;
+  page?: number;
+  cache?: number;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdDeleteRequestParams {
+  id: string;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdDeprovisionPatchRequestParams {
+  id: string;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdGetRequestParams {
+  id: string;
+  fields?: string;
+  join?: string;
+  cache?: number;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdPatchRequestParams {
+  id: string;
+  serviceObject: ServiceObject;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdProvisionPutRequestParams {
+  id: string;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdPutRequestParams {
+  id: string;
+  serviceObject: ServiceObject;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdRestorePatchRequestParams {
+  id: string;
+}
+
+export interface V1NetworkSecurityServiceObjectsIdSoftDeleteRequestParams {
+  id: string;
+}
+
+export interface V1NetworkSecurityServiceObjectsPostRequestParams {
+  serviceObject: ServiceObject;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -57,30 +114,32 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Create many ServiceObject
-   * @param generatedServiceObjectBulkDto
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsBulkPost(
-    generatedServiceObjectBulkDto: GeneratedServiceObjectBulkDto,
+    requestParameters: V1NetworkSecurityServiceObjectsBulkPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsBulkPost(
-    generatedServiceObjectBulkDto: GeneratedServiceObjectBulkDto,
+    requestParameters: V1NetworkSecurityServiceObjectsBulkPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<ServiceObject>>>;
   public v1NetworkSecurityServiceObjectsBulkPost(
-    generatedServiceObjectBulkDto: GeneratedServiceObjectBulkDto,
+    requestParameters: V1NetworkSecurityServiceObjectsBulkPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<ServiceObject>>>;
   public v1NetworkSecurityServiceObjectsBulkPost(
-    generatedServiceObjectBulkDto: GeneratedServiceObjectBulkDto,
+    requestParameters: V1NetworkSecurityServiceObjectsBulkPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const generatedServiceObjectBulkDto =
+      requestParameters.generatedServiceObjectBulkDto;
     if (
       generatedServiceObjectBulkDto === null ||
       generatedServiceObjectBulkDto === undefined
@@ -124,70 +183,40 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Retrieve many ServiceObject
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param filter &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt;
-   * @param or &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;
-   * @param sort &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param perPage &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt;
-   * @param offset &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt;
-   * @param page &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt;
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<Array<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<Array<ServiceObject>>>;
   public v1NetworkSecurityServiceObjectsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<Array<ServiceObject>>>;
   public v1NetworkSecurityServiceObjectsGet(
-    fields?: string,
-    filter?: string,
-    or?: string,
-    sort?: string,
-    join?: string,
-    perPage?: number,
-    offset?: number,
-    page?: number,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const fields = requestParameters.fields;
+    const filter = requestParameters.filter;
+    const or = requestParameters.or;
+    const sort = requestParameters.sort;
+    const join = requestParameters.join;
+    const perPage = requestParameters.perPage;
+    const offset = requestParameters.offset;
+    const page = requestParameters.page;
+    const cache = requestParameters.cache;
+
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
       queryParameters = queryParameters.set('fields', <any>fields);
@@ -242,30 +271,31 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Delete one ServiceObject
-   * @param id
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdDelete(
-    id: string,
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<ServiceObject>;
   public v1NetworkSecurityServiceObjectsIdDelete(
-    id: string,
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdDelete(
-    id: string,
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdDelete(
-    id: string,
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdDelete.',
@@ -298,25 +328,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Deprovisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdDeprovisionPatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeprovisionPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1NetworkSecurityServiceObjectsIdDeprovisionPatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeprovisionPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1NetworkSecurityServiceObjectsIdDeprovisionPatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeprovisionPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1NetworkSecurityServiceObjectsIdDeprovisionPatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdDeprovisionPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdDeprovisionPatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -346,50 +388,39 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Retrieve one ServiceObject
-   * @param id
-   * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
-   * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
-   * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsIdGetRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<ServiceObject>;
   public v1NetworkSecurityServiceObjectsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsIdGetRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsIdGetRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdGet(
-    id: string,
-    fields?: string,
-    join?: string,
-    cache?: number,
+    requestParameters: V1NetworkSecurityServiceObjectsIdGetRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdGet.',
       );
     }
+    const fields = requestParameters.fields;
+    const join = requestParameters.join;
+    const cache = requestParameters.cache;
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fields !== undefined && fields !== null) {
@@ -429,40 +460,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Update one ServiceObject
-   * @param id
-   * @param serviceObject
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdPatch(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<ServiceObject>;
   public v1NetworkSecurityServiceObjectsIdPatch(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdPatch(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdPatch(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdPatch.',
       );
     }
+    const serviceObject = requestParameters.serviceObject;
     if (serviceObject === null || serviceObject === undefined) {
       throw new Error(
         'Required parameter serviceObject was null or undefined when calling v1NetworkSecurityServiceObjectsIdPatch.',
@@ -505,25 +533,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Provisions an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdProvisionPut(
+    requestParameters: V1NetworkSecurityServiceObjectsIdProvisionPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1NetworkSecurityServiceObjectsIdProvisionPut(
+    requestParameters: V1NetworkSecurityServiceObjectsIdProvisionPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1NetworkSecurityServiceObjectsIdProvisionPut(
+    requestParameters: V1NetworkSecurityServiceObjectsIdProvisionPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1NetworkSecurityServiceObjectsIdProvisionPut(
+    requestParameters: V1NetworkSecurityServiceObjectsIdProvisionPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdProvisionPut.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -553,40 +593,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Replace one ServiceObject
-   * @param id
-   * @param serviceObject
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdPut(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPutRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<ServiceObject>;
   public v1NetworkSecurityServiceObjectsIdPut(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPutRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdPut(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPutRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsIdPut(
-    id: string,
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsIdPutRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
     if (id === null || id === undefined) {
       throw new Error(
         'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdPut.',
       );
     }
+    const serviceObject = requestParameters.serviceObject;
     if (serviceObject === null || serviceObject === undefined) {
       throw new Error(
         'Required parameter serviceObject was null or undefined when calling v1NetworkSecurityServiceObjectsIdPut.',
@@ -629,25 +666,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Restores a Soft-Deleted Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdRestorePatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdRestorePatchRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1NetworkSecurityServiceObjectsIdRestorePatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdRestorePatchRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1NetworkSecurityServiceObjectsIdRestorePatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdRestorePatchRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1NetworkSecurityServiceObjectsIdRestorePatch(
+    requestParameters: V1NetworkSecurityServiceObjectsIdRestorePatchRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdRestorePatch.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -677,25 +726,37 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Soft deletes an Entity.
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsIdSoftDelete(
+    requestParameters: V1NetworkSecurityServiceObjectsIdSoftDeleteRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1NetworkSecurityServiceObjectsIdSoftDelete(
+    requestParameters: V1NetworkSecurityServiceObjectsIdSoftDeleteRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1NetworkSecurityServiceObjectsIdSoftDelete(
+    requestParameters: V1NetworkSecurityServiceObjectsIdSoftDeleteRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1NetworkSecurityServiceObjectsIdSoftDelete(
+    requestParameters: V1NetworkSecurityServiceObjectsIdSoftDeleteRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const id = requestParameters.id;
+    if (id === null || id === undefined) {
+      throw new Error(
+        'Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectsIdSoftDelete.',
+      );
+    }
+
     let headers = this.defaultHeaders;
 
     // to determine the Accept header
@@ -724,30 +785,31 @@ export class V1NetworkSecurityServiceObjectsService {
 
   /**
    * Create one ServiceObject
-   * @param serviceObject
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1NetworkSecurityServiceObjectsPost(
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<ServiceObject>;
   public v1NetworkSecurityServiceObjectsPost(
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsPost(
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<ServiceObject>>;
   public v1NetworkSecurityServiceObjectsPost(
-    serviceObject: ServiceObject,
+    requestParameters: V1NetworkSecurityServiceObjectsPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const serviceObject = requestParameters.serviceObject;
     if (serviceObject === null || serviceObject === undefined) {
       throw new Error(
         'Required parameter serviceObject was null or undefined when calling v1NetworkSecurityServiceObjectsPost.',

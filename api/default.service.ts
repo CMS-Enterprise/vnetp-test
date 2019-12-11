@@ -26,6 +26,14 @@ import { Observable } from 'rxjs';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
+export interface V1AuthLoginPostRequestParams {
+  user: object;
+}
+
+export interface V1AuthRegisterPostRequestParams {
+  user: object;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,30 +61,31 @@ export class DefaultService {
   }
 
   /**
-   * @param user
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1AuthLoginPost(
-    user: object,
+    requestParameters: V1AuthLoginPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1AuthLoginPost(
-    user: object,
+    requestParameters: V1AuthLoginPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1AuthLoginPost(
-    user: object,
+    requestParameters: V1AuthLoginPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1AuthLoginPost(
-    user: object,
+    requestParameters: V1AuthLoginPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const user = requestParameters.user;
     if (user === null || user === undefined) {
       throw new Error(
         'Required parameter user was null or undefined when calling v1AuthLoginPost.',
@@ -116,30 +125,31 @@ export class DefaultService {
   }
 
   /**
-   * @param user
+   * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public v1AuthRegisterPost(
-    user: object,
+    requestParameters: V1AuthRegisterPostRequestParams,
     observe?: 'body',
     reportProgress?: boolean,
   ): Observable<any>;
   public v1AuthRegisterPost(
-    user: object,
+    requestParameters: V1AuthRegisterPostRequestParams,
     observe?: 'response',
     reportProgress?: boolean,
   ): Observable<HttpResponse<any>>;
   public v1AuthRegisterPost(
-    user: object,
+    requestParameters: V1AuthRegisterPostRequestParams,
     observe?: 'events',
     reportProgress?: boolean,
   ): Observable<HttpEvent<any>>;
   public v1AuthRegisterPost(
-    user: object,
+    requestParameters: V1AuthRegisterPostRequestParams,
     observe: any = 'body',
     reportProgress: boolean = false,
   ): Observable<any> {
+    const user = requestParameters.user;
     if (user === null || user === undefined) {
       throw new Error(
         'Required parameter user was null or undefined when calling v1AuthRegisterPost.',

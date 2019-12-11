@@ -33,7 +33,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### Generating UI from OAS Spec
 
-Run `npm run start` in API and move `swagger-spec.yaml` from API to root of UI. Run `openapi-generator generate -i swagger-spec.yaml -g typescript-angular --skip-validate-spec` to generate OAS docs from yaml file.
+Run `npm run start` in API and move `swagger-spec.yaml` from API to root of UI. Run `openapi-generator generate -i swagger-spec.yaml -g typescript-angular --skip-validate-spec -c generator-config` to generate OAS docs from yaml file.
 
 #### General usage
 

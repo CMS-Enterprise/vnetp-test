@@ -265,6 +265,11 @@ paths:
   '/v1/datacenters/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -276,6 +281,11 @@ paths:
   '/v1/datacenters/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -775,6 +785,11 @@ paths:
   '/v1/tiers/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -786,6 +801,11 @@ paths:
   '/v1/tiers/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -797,6 +817,11 @@ paths:
   '/v1/tiers/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -808,6 +833,11 @@ paths:
   '/v1/tiers/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1109,6 +1139,11 @@ paths:
   '/v1/network-security/firewall-rule-groups/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1120,6 +1155,11 @@ paths:
   '/v1/network-security/firewall-rule-groups/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1131,6 +1171,11 @@ paths:
   '/v1/network-security/firewall-rule-groups/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1142,6 +1187,11 @@ paths:
   '/v1/network-security/firewall-rule-groups/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1443,6 +1493,11 @@ paths:
   '/v1/network-security/firewall-rules/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1454,6 +1509,11 @@ paths:
   '/v1/network-security/firewall-rules/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1755,6 +1815,11 @@ paths:
   '/v1/network-security/network-objects/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1766,6 +1831,11 @@ paths:
   '/v1/network-security/network-objects/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1777,6 +1847,11 @@ paths:
   '/v1/network-security/network-objects/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -1788,6 +1863,11 @@ paths:
   '/v1/network-security/network-objects/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2089,6 +2169,11 @@ paths:
   '/v1/network-security/network-object-groups/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2100,6 +2185,11 @@ paths:
   '/v1/network-security/network-object-groups/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2111,6 +2201,11 @@ paths:
   '/v1/network-security/network-object-groups/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2122,6 +2217,11 @@ paths:
   '/v1/network-security/network-object-groups/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2475,6 +2575,11 @@ paths:
   '/v1/network-security/service-objects/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2486,6 +2591,11 @@ paths:
   '/v1/network-security/service-objects/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2497,6 +2607,11 @@ paths:
   '/v1/network-security/service-objects/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2508,6 +2623,11 @@ paths:
   '/v1/network-security/service-objects/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2809,6 +2929,11 @@ paths:
   '/v1/network-security/service-object-groups/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2820,6 +2945,11 @@ paths:
   '/v1/network-security/service-object-groups/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2831,6 +2961,11 @@ paths:
   '/v1/network-security/service-object-groups/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -2842,6 +2977,11 @@ paths:
   '/v1/network-security/service-object-groups/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -3393,6 +3533,11 @@ paths:
   '/v1/network/vlans/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -3404,6 +3549,11 @@ paths:
   '/v1/network/vlans/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -3415,6 +3565,11 @@ paths:
   '/v1/network/vlans/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -3426,6 +3581,11 @@ paths:
   '/v1/network/vlans/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4123,6 +4283,11 @@ paths:
   '/v1/network/subnets/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4134,6 +4299,11 @@ paths:
   '/v1/network/subnets/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4145,6 +4315,11 @@ paths:
   '/v1/network/subnets/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4156,6 +4331,11 @@ paths:
   '/v1/network/subnets/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4457,6 +4637,11 @@ paths:
   '/v1/network/static-routes/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4468,6 +4653,11 @@ paths:
   '/v1/network/static-routes/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4479,6 +4669,11 @@ paths:
   '/v1/network/static-routes/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4490,6 +4685,11 @@ paths:
   '/v1/network/static-routes/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4821,6 +5021,11 @@ paths:
   '/v1/vmware/virtual-machines/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4832,6 +5037,11 @@ paths:
   '/v1/vmware/virtual-machines/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4843,6 +5053,11 @@ paths:
   '/v1/vmware/virtual-machines/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -4854,6 +5069,11 @@ paths:
   '/v1/vmware/virtual-machines/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5155,6 +5375,11 @@ paths:
   '/v1/vmware/network-adapter/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5166,6 +5391,11 @@ paths:
   '/v1/vmware/network-adapter/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5467,6 +5697,11 @@ paths:
   '/v1/vmware/virtual-disks/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5478,6 +5713,11 @@ paths:
   '/v1/vmware/virtual-disks/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5779,6 +6019,11 @@ paths:
   '/v1/physical-servers/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -5790,6 +6035,11 @@ paths:
   '/v1/physical-servers/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6091,6 +6341,11 @@ paths:
   '/v1/appliances/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6102,6 +6357,11 @@ paths:
   '/v1/appliances/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6403,6 +6663,11 @@ paths:
   '/v1/load-balancer/virtual-servers/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6414,6 +6679,11 @@ paths:
   '/v1/load-balancer/virtual-servers/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6425,6 +6695,11 @@ paths:
   '/v1/load-balancer/virtual-servers/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6436,6 +6711,11 @@ paths:
   '/v1/load-balancer/virtual-servers/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6737,6 +7017,11 @@ paths:
   '/v1/load-balancer/pools/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6748,6 +7033,11 @@ paths:
   '/v1/load-balancer/pools/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6759,6 +7049,11 @@ paths:
   '/v1/load-balancer/pools/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -6770,6 +7065,11 @@ paths:
   '/v1/load-balancer/pools/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7071,6 +7371,11 @@ paths:
   '/v1/load-balancer/nodes/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7082,6 +7387,11 @@ paths:
   '/v1/load-balancer/nodes/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7093,6 +7403,11 @@ paths:
   '/v1/load-balancer/nodes/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7104,6 +7419,11 @@ paths:
   '/v1/load-balancer/nodes/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7405,6 +7725,11 @@ paths:
   '/v1/load-balancer/health-monitors/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7416,6 +7741,11 @@ paths:
   '/v1/load-balancer/health-monitors/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7427,6 +7757,11 @@ paths:
   '/v1/load-balancer/health-monitors/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7438,6 +7773,11 @@ paths:
   '/v1/load-balancer/health-monitors/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7739,6 +8079,11 @@ paths:
   '/v1/load-balancer/irules/{id}/provision':
     put:
       summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7750,6 +8095,11 @@ paths:
   '/v1/load-balancer/irules/{id}/deprovision':
     patch:
       summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7761,6 +8111,11 @@ paths:
   '/v1/load-balancer/irules/{id}/soft':
     delete:
       summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
@@ -7772,6 +8127,11 @@ paths:
   '/v1/load-balancer/irules/{id}/restore':
     patch:
       summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
       responses:
         '200':
           description: ''
