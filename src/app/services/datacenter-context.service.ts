@@ -1,13 +1,14 @@
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Datacenter } from 'model/datacenter';
-import { Data, Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { DatacentersService } from 'api/datacenters.service';
 import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
 
+/** Service to store and expose the Current Datacenter Context. */
 @Injectable({
   providedIn: 'root',
 })
@@ -16,22 +17,27 @@ export class DatacenterContextService {
     Datacenter
   > = new BehaviorSubject<Datacenter>(null);
 
-  public currentDatacenter: Observable<
-    Datacenter
-  > = this.currentDatacenterSubject.asObservable();
-
   private datacentersSubject: BehaviorSubject<
     Datacenter[]
   > = new BehaviorSubject<Datacenter[]>(null);
-
-  public datacenters: Observable<
-    Datacenter[]
-  > = this.datacentersSubject.asObservable();
 
   private lockCurrentDatacenterSubject: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
 
+  /** Current Datacenter Context. */
+  public currentDatacenter: Observable<
+    Datacenter
+  > = this.currentDatacenterSubject.asObservable();
+
+  /** Datacenters available within the Tenant. */
+  public datacenters: Observable<
+    Datacenter[]
+  > = this.datacentersSubject.asObservable();
+
+  /** Indicates whether the current datacenter
+   *  context can be changed.
+   */
   public lockCurrentDatacenter: Observable<
     boolean
   > = this.lockCurrentDatacenterSubject.asObservable();
@@ -65,23 +71,35 @@ export class DatacenterContextService {
     });
   }
 
+  /** Current Datacenter */
   public get currentDatacenterValue(): Datacenter {
     return this.currentDatacenterSubject.value;
   }
 
+  /** Datacenters available within the Tenant. */
   public get datacentersValue(): Datacenter[] {
     return this.datacentersSubject.value;
   }
 
+  /** Locks the currentDatacenter. This prevents the
+   * datacenter context switch from occurring.
+   */
   public lockDatacenter() {
     this.lockCurrentDatacenterSubject.next(true);
   }
 
+  /** Unlocks the currentDatacenter. This allows the
+   * datacenter context switch to occur.
+   */
   public unlockDatacenter() {
     this.lockCurrentDatacenterSubject.next(false);
   }
 
-  getDatacenters(currentDatacenterId: string) {
+  /** Get datacenters for the tenant.
+   * @param currentDatacenterId Optional currentDatacenterId, this will be compared against the
+   * array of datacenters returned from the API. If it is present then that datacenter will be selected.
+   */
+  private getDatacenters(currentDatacenterId?: string) {
     this.DatacenterService.datacentersGet(
       undefined,
       undefined,
@@ -90,11 +108,16 @@ export class DatacenterContextService {
       'tiers',
     ).subscribe(data => {
       this._datacenters = data;
+
+      // Update the datacenters subject.
       this.datacentersSubject.next(data);
 
       if (data.length) {
         let datacenter;
 
+        // If a datacenter matching currentDatacenterId is present
+        // set currentDatacenter to that datacenter. Otherwise choose
+        // the first datacenter returned.
         if (currentDatacenterId) {
           datacenter = data.find(d => d.id === currentDatacenterId);
         }
@@ -108,7 +131,10 @@ export class DatacenterContextService {
     });
   }
 
-  switchDatacenter(datacenter: Datacenter) {
+  /** Switch from the currentDatacenter to the provided datacenter.
+   * @param datacenter Datacenter to switch to.
+   */
+  public switchDatacenter(datacenter: Datacenter) {
     // Validate that the datacenter we are switching to is a member
     // of the private datacenters array.
     if (
