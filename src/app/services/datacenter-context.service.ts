@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Datacenter } from 'model/datacenter';
 import { Router, NavigationEnd } from '@angular/router';
-import { DatacentersService } from 'api/datacenters.service';
 import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
+import { Datacenter, V1DatacentersService } from 'api_client';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({
@@ -46,7 +45,7 @@ export class DatacenterContextService {
 
   constructor(
     private authService: AuthService,
-    private DatacenterService: DatacentersService,
+    private DatacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
   ) {
@@ -100,34 +99,30 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(currentDatacenterId?: string) {
-    this.DatacenterService.datacentersGet(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      'tiers',
-    ).subscribe(data => {
-      // Update internal datacenters array and external subject.
-      this._datacenters = data;
-      this.datacentersSubject.next(data);
+    this.DatacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(
+      data => {
+        // Update internal datacenters array and external subject.
+        this._datacenters = data;
+        this.datacentersSubject.next(data);
 
-      if (data.length) {
-        let datacenter;
+        if (data.length) {
+          let datacenter;
 
-        // If a datacenter matching currentDatacenterId is present
-        // set currentDatacenter to that datacenter. Otherwise choose
-        // the first datacenter returned.
-        if (currentDatacenterId) {
-          datacenter = data.find(d => d.id === currentDatacenterId);
+          // If a datacenter matching currentDatacenterId is present
+          // set currentDatacenter to that datacenter. Otherwise choose
+          // the first datacenter returned.
+          if (currentDatacenterId) {
+            datacenter = data.find(d => d.id === currentDatacenterId);
+          }
+
+          if (datacenter) {
+            this.currentDatacenterSubject.next(datacenter);
+          } else {
+            this.currentDatacenterSubject.next(data[0]);
+          }
         }
-
-        if (datacenter) {
-          this.currentDatacenterSubject.next(datacenter);
-        } else {
-          this.currentDatacenterSubject.next(data[0]);
-        }
-      }
-    });
+      },
+    );
   }
 
   /** Switch from the currentDatacenter to the provided datacenter.

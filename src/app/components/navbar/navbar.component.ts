@@ -10,7 +10,7 @@ import { AppMessageType } from 'src/app/models/app-message-type';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Datacenter } from 'model/datacenter';
+import { Datacenter } from 'api_client/model/datacenter';
 
 @Component({
   selector: 'app-navbar',

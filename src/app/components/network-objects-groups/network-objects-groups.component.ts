@@ -15,7 +15,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'model/tier';
+import { Tier } from 'api_client/model/tier';
 
 @Component({
   selector: 'app-network-objects-groups',
