@@ -9377,6 +9377,74 @@ definitions:
       - fqdn
       - autoPopulate
       - tierId
+  LoadBalancerHealthMonitor:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      type:
+        type: string
+        enum:
+          - ICMP
+          - UDP
+          - TCP
+          - HTTP
+          - HTTPS
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      interval:
+        type: number
+        minimum: 1
+        maximum: 300
+      timeout:
+        type: number
+        minimum: 1
+        maximum: 300
+      tierId:
+        type: string
+    required:
+      - name
+      - type
+      - servicePort
+      - interval
+      - timeout
+      - tierId
   LoadBalancerPool:
     type: object
     properties:
@@ -9428,6 +9496,11 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerNode'
+      healthMonitors:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerHealthMonitor'
       servicePort:
         type: number
         minimum: 1
@@ -9605,74 +9678,6 @@ definitions:
           $ref: '#/definitions/LoadBalancerNode'
     required:
       - bulk
-  LoadBalancerHealthMonitor:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      type:
-        type: string
-        enum:
-          - ICMP
-          - UDP
-          - TCP
-          - HTTP
-          - HTTPS
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      interval:
-        type: number
-        minimum: 1
-        maximum: 300
-      timeout:
-        type: number
-        minimum: 1
-        maximum: 300
-      tierId:
-        type: string
-    required:
-      - name
-      - type
-      - servicePort
-      - interval
-      - timeout
-      - tierId
   GeneratedLoadBalancerHealthMonitorBulkDto:
     type: object
     properties:
