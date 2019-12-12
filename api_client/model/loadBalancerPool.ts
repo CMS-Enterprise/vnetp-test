@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { LoadBalancerNode } from './loadBalancerNode';
+import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
 
 
 export interface LoadBalancerPool { 
@@ -24,6 +25,7 @@ export interface LoadBalancerPool {
     description?: string;
     loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
     readonly nodes?: Array<LoadBalancerNode>;
+    readonly healthMonitors?: Array<LoadBalancerHealthMonitor>;
     servicePort: number;
     tierId: string;
 }
