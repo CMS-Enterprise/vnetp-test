@@ -107,9 +107,8 @@ export class DatacenterContextService {
       undefined,
       'tiers',
     ).subscribe(data => {
+      // Update internal datacenters array and external subject.
       this._datacenters = data;
-
-      // Update the datacenters subject.
       this.datacentersSubject.next(data);
 
       if (data.length) {
@@ -134,13 +133,12 @@ export class DatacenterContextService {
   /** Switch from the currentDatacenter to the provided datacenter.
    * @param datacenter Datacenter to switch to.
    */
-  public switchDatacenter(datacenter: Datacenter) {
+  public switchDatacenter(datacenterId: string) {
     // Validate that the datacenter we are switching to is a member
     // of the private datacenters array.
-    if (
-      !this.lockCurrentDatacenterSubject.value &&
-      this._datacenters.map(d => d.id).includes(datacenter.id)
-    ) {
+    const datacenter = this._datacenters.find(dc => dc.id === datacenterId);
+
+    if (!this.lockCurrentDatacenterSubject.value && datacenter) {
       this.currentDatacenterSubject.next(datacenter);
       this.messageService.sendMessage(
         new AppMessage(

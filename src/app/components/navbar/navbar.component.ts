@@ -111,7 +111,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   switchDatacenter() {
-    this.datacenterContextService.switchDatacenter(this.selectedDatacenter);
+    this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
   }
 
   closeJobModal() {
