@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sonar": "sonar-scanner"
+    "sonar": "sonar-scanner",
+    "generate-client": "openapi-generator generate -i swagger-spec.yaml -g typescript-angular -c generator-config.json -o api_client"
   },
   "private": true,
   "dependencies": {
@@ -54,6 +55,7 @@
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
     "@compodoc/compodoc": "^1.1.11",
+    "@openapitools/openapi-generator-cli": "^1.0.8-4.2.2",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -67,8 +69,8 @@
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
     "lint-staged": "^9.4.3",
-    "prettier": "^1.19.1",
     "openapi-generator": "^0.1.30",
+    "prettier": "^1.19.1",
     "protractor": "~5.4.0",
     "sonar-scanner": "^3.1.0",
     "ts-node": "~7.0.0",
@@ -82,7 +84,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "!(api_client)/**/*.{js,ts}": [
       "prettier --write",
       "git add"
     ]
