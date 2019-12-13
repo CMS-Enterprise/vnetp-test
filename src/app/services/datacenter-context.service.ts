@@ -51,11 +51,6 @@ export class DatacenterContextService {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    // Get datacenters when currentUser changes.
-    this.authService.currentUser.subscribe(s => {
-      this.getDatacenters();
-    });
-
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
     // event occurs. This is useful in the event
@@ -72,9 +67,12 @@ export class DatacenterContextService {
 
     // Subscribe to the activatedRoute, validate that the
     // datacenter param has a valid id present.
-    this.activatedRoute.queryParamMap.subscribe(qp => {
-      console.log('qp');
-      const datacenterParam = qp.get('datacenter');
+    this.activatedRoute.queryParamMap.subscribe(queryParams => {
+      if (!authService.currentUserValue) {
+        return;
+      }
+
+      const datacenterParam = queryParams.get('datacenter');
       if (datacenterParam) {
         const datacenter = this._datacenters.find(
           dc => dc.id === datacenterParam,
@@ -82,9 +80,10 @@ export class DatacenterContextService {
         // If the datacenter isn't present in the current array its possible that it
         // was newly created, refresh the datacenter list and pass the query param value in.
         if (!datacenter) {
-          console.log('Invalid Datacenter');
           this.getDatacenters(datacenterParam);
         }
+      } else if (!this.currentDatacenterValue) {
+        this.getDatacenters();
       }
     });
   }
