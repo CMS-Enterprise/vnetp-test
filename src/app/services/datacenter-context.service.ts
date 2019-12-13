@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
 import { Datacenter, V1DatacentersService } from 'api_client';
+import { query } from '@angular/animations';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({
@@ -48,11 +49,11 @@ export class DatacenterContextService {
     private DatacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
-    const selectedDatacenterId = localStorage.getItem('currentDatacenter');
     // Get datacenters when currentUser changes.
     this.authService.currentUser.subscribe(s => {
-      this.getDatacenters(selectedDatacenterId);
+      this.getDatacenters();
     });
 
     // This subscription ensures that we release
@@ -66,6 +67,24 @@ export class DatacenterContextService {
         e instanceof NavigationEnd
       ) {
         this.lockCurrentDatacenterSubject.next(false);
+      }
+    });
+
+    // Subscribe to the activatedRoute, validate that the
+    // datacenter param has a valid id present.
+    this.activatedRoute.queryParamMap.subscribe(qp => {
+      console.log('qp');
+      const datacenterParam = qp.get('datacenter');
+      if (datacenterParam) {
+        const datacenter = this._datacenters.find(
+          dc => dc.id === datacenterParam,
+        );
+        // If the datacenter isn't present in the current array its possible that it
+        // was newly created, refresh the datacenter list and pass the query param value in.
+        if (!datacenter) {
+          console.log('Invalid Datacenter');
+          this.getDatacenters(datacenterParam);
+        }
       }
     });
   }
@@ -116,9 +135,12 @@ export class DatacenterContextService {
           }
 
           if (datacenter) {
-            this.currentDatacenterSubject.next(datacenter);
+            this.switchDatacenter(datacenter.id);
           } else {
-            this.currentDatacenterSubject.next(data[0]);
+            // TODO: Allow user to set a preferred datacenter or persist the one they switched
+            // to last in their user entity. That way if a param isn't passed we can send them
+            // to where they were last and not to the first dc returned.
+            this.switchDatacenter(data[0].id);
           }
         }
       },
@@ -141,7 +163,10 @@ export class DatacenterContextService {
           AppMessageType.DatacenterContextSwitch,
         ),
       );
-      localStorage.setItem('currentDatacenter', datacenter.id);
+      this.router.navigate([], {
+        queryParams: { datacenter: datacenter.id },
+        queryParamsHandling: 'merge',
+      });
     }
   }
 }
