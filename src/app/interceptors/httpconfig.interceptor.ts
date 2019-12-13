@@ -22,11 +22,15 @@ export class HttpConfigInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
-    const skipAuthHeader = request.url.includes('auth/login');
+    const isLogin = request.url.includes('auth/login');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
-    if (!skipAuthHeader && !request.headers.has('Authorization') && currentUser.Token) {
+    if (
+      !isLogin &&
+      !request.headers.has('Authorization') &&
+      currentUser.Token
+    ) {
       request = request.clone({
         headers: request.headers.set(
           'Authorization',
@@ -59,13 +63,15 @@ export class HttpConfigInterceptor {
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
 
-        switch (error.status) {
-          case 401:
-            this.auth.logout();
-            return;
-          case 403:
-            toastrMessage = 'Unauthorized.';
-            break;
+        if (!isLogin) {
+          switch (error.status) {
+            case 401:
+              this.auth.logout();
+              return;
+            case 403:
+              toastrMessage = 'Unauthorized.';
+              break;
+          }
         }
 
         const data = {
