@@ -97,12 +97,12 @@
     <ul class="navbar-nav ml-auto align-items-lg-center">
 
         <li class="nav-item dropdown">
-          <a>{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
+          <a [ngClass]="{'text-danger': !currentDatacenter }" class="text-bold">{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
         </li>
     
         <li class="nav-item">        
-          <button class="btn btn-sm btn-success" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">   
-            Switch Datacenter
+          <button class="btn btn-sm btn-info" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">   
+            {{ currentDatacenter ? 'Switch' : 'Select'}} Datacenter
           </button>
         </li>
   
@@ -113,9 +113,8 @@
             style="padding-right:5px;"
             [hidden]="!activeJobs.length"
           ></fa>
-          <span class="badge badge-success" [hidden]="!activeJobs.length">{{
-            activeJobs.length
-          }}</span>
+          <span class="badge badge-success" [hidden]="!activeJobs.length">
+            {{ activeJobs.length }}</span>
           Jobs</a
         >
       </li>
