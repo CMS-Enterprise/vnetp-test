@@ -11,6 +11,7 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Datacenter } from 'api_client/model/datacenter';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -35,6 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private automationApiService: AutomationApiService,
     private messageService: MessageService,
+    private toastrService: ToastrService,
     private ngx: NgxSmartModalService,
     private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
@@ -111,7 +113,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   switchDatacenter() {
-    this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
+    try {
+      this.datacenterContextService.switchDatacenter(
+        this.selectedDatacenter.id,
+      );
+      this.toastrService.success('Datacenter Switched');
+    } catch (error) {
+      this.toastrService.error(error);
+    }
   }
 
   closeJobModal() {
@@ -151,17 +160,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
     );
 
     this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(
-      d => (this.datacenters = d),
+      datacenters => (this.datacenters = datacenters),
     );
-    // Set both selected and current here, that way when the observable changes we can
-    // update the UI.
+
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => (this.currentDatacenter = this.selectedDatacenter = cd),
+      currentDatacenter => (this.currentDatacenter = currentDatacenter),
     );
 
     this.datacenterLockSubscription = this.datacenterContextService.lockCurrentDatacenter.subscribe(
-      lc => (this.lockCurrentDatacenter = lc),
+      lockCurrentDatacenter =>
+        (this.lockCurrentDatacenter = lockCurrentDatacenter),
     );
+
     // this.getMessageServiceSubscription();
   }
 

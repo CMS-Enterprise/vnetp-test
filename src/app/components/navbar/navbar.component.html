@@ -96,17 +96,15 @@
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
 
-        <li class="nav-item">
-            <select [(ngModel)]="selectedDatacenter" [disabled]="lockCurrentDatacenter" class="form-control">
-              <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
-            </select>
-          </li>
+        <li class="nav-item dropdown">
+          <a [ngClass]="{'text-danger': !currentDatacenter }" class="text-bold">{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
+        </li>
     
-          <li class="nav-item" *ngIf="selectedDatacenter?.id != currentDatacenter?.id">
-            <button class="btn btn-sm btn-success" (click)="ngx.getModal('datacenterSwitchModal').open()">
-              Switch Datacenter
-            </button>
-          </li>
+        <li class="nav-item">        
+          <button class="btn btn-sm btn-info" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">   
+            {{ currentDatacenter ? 'Switch' : 'Select'}} Datacenter
+          </button>
+        </li>
   
       <li class="nav-item">
         <a class="nav-link disabled" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
@@ -115,9 +113,8 @@
             style="padding-right:5px;"
             [hidden]="!activeJobs.length"
           ></fa>
-          <span class="badge badge-success" [hidden]="!activeJobs.length">{{
-            activeJobs.length
-          }}</span>
+          <span class="badge badge-success" [hidden]="!activeJobs.length">
+            {{ activeJobs.length }}</span>
           Jobs</a
         >
       </li>
@@ -179,7 +176,13 @@
     ></button>
   </div>
 
-  <div>{{ currentDatacenter?.name }} -> {{ selectedDatacenter?.name }}</div>
+  <div>Current Datacenter: {{ currentDatacenter?.name || 'No Datacenter Selected'}}
+
+    <select [(ngModel)]="selectedDatacenter" class="form-control">
+      <option></option>
+      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
+    </select>
+  </div>
 
   <div class="modal-footer">
     <button
