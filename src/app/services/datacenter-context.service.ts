@@ -68,23 +68,11 @@ export class DatacenterContextService {
     // Subscribe to the activatedRoute, validate that the
     // datacenter param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!authService.currentUserValue) {
+      if (!this.authService.currentUserValue) {
         return;
       }
 
-      const datacenterParam = queryParams.get('datacenter');
-      if (datacenterParam) {
-        const datacenter = this._datacenters.find(
-          dc => dc.id === datacenterParam,
-        );
-        // If the datacenter isn't present in the current array its possible that it
-        // was newly created, refresh the datacenter list and pass the query param value in.
-        if (!datacenter) {
-          this.getDatacenters(datacenterParam);
-        }
-      } else if (!this.currentDatacenterValue) {
-        this.getDatacenters();
-      }
+      this.getDatacenters(queryParams.get('datacenter'));
     });
   }
 
@@ -113,34 +101,20 @@ export class DatacenterContextService {
   }
 
   /** Get datacenters for the tenant.
-   * @param currentDatacenterId Optional currentDatacenterId, this will be compared against the
+   * @param datacenterParam Optional currentDatacenterId, this will be compared against the
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
-  private getDatacenters(currentDatacenterId?: string) {
+  private getDatacenters(datacenterParam?: string) {
     this.DatacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(
       data => {
         // Update internal datacenters array and external subject.
         this._datacenters = data;
         this.datacentersSubject.next(data);
 
-        if (data.length) {
-          let datacenter;
-
-          // If a datacenter matching currentDatacenterId is present
-          // set currentDatacenter to that datacenter. Otherwise choose
-          // the first datacenter returned.
-          if (currentDatacenterId) {
-            datacenter = data.find(d => d.id === currentDatacenterId);
-          }
-
-          if (datacenter) {
-            this.switchDatacenter(datacenter.id);
-          } else {
-            // TODO: Allow user to set a preferred datacenter or persist the one they switched
-            // to last in their user entity. That way if a param isn't passed we can send them
-            // to where they were last and not to the first dc returned.
-            this.switchDatacenter(data[0].id);
-          }
+        // If a datacenter matching currentDatacenterId is present
+        // set currentDatacenter to that datacenter.
+        if (datacenterParam) {
+          this.switchDatacenter(datacenterParam);
         }
       },
     );
@@ -150,22 +124,38 @@ export class DatacenterContextService {
    * @param datacenter Datacenter to switch to.
    */
   public switchDatacenter(datacenterId: string) {
+    if (this.lockCurrentDatacenterSubject.value) {
+      throw Error('Current Datacenter Locked.');
+    }
+
     // Validate that the datacenter we are switching to is a member
     // of the private datacenters array.
     const datacenter = this._datacenters.find(dc => dc.id === datacenterId);
 
-    if (!this.lockCurrentDatacenterSubject.value && datacenter) {
+    if (
+      this.currentDatacenterValue &&
+      datacenter.id === this.currentDatacenterValue.id
+    ) {
+      throw Error('Datacenter already Selected.');
+    }
+
+    if (datacenter) {
+      // Update Subject
       this.currentDatacenterSubject.next(datacenter);
-      this.messageService.sendMessage(
-        new AppMessage(
-          'Datacenter Context Switch',
-          AppMessageType.DatacenterContextSwitch,
-        ),
-      );
+
+      // Update Query Params
       this.router.navigate([], {
         queryParams: { datacenter: datacenter.id },
         queryParamsHandling: 'merge',
       });
+
+      // Send Context Switch Message
+      this.messageService.sendMessage(
+        new AppMessage(
+          `Datacenter Context Switch ${datacenterId}`,
+          AppMessageType.DatacenterContextSwitch,
+        ),
+      );
     }
   }
 }
