@@ -22,14 +22,13 @@ export class AuthService {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
   }
 
   login(userpass: Userpass) {
     return this.http
-      .post<any>(environment.apiBase + '/auth/login', {
+      .post<any>(environment.apiBase + '/v1/auth/login', {
         username: userpass.Username,
         password: userpass.Password,
       })
@@ -56,7 +55,9 @@ export class AuthService {
 
   getUserFromToken(jwtEncoded: string): User {
     try {
-      if (!jwtEncoded) { return null; }
+      if (!jwtEncoded) {
+        return null;
+      }
 
       const jwtHelper = new JwtHelperService();
 
