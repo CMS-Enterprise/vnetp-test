@@ -37,6 +37,8 @@ export * from './serviceObjectGroup';
 export * from './staticRoute';
 export * from './subnet';
 export * from './tier';
+export * from './user';
+export * from './userPass';
 export * from './vlan';
 export * from './vmwareNetworkAdapter';
 export * from './vmwareVirtualDisk';
