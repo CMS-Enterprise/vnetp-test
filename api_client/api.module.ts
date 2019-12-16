@@ -3,8 +3,8 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
-import { DefaultService } from './api/default.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
+import { V1AuthService } from './api/v1Auth.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
 import { V1LoadBalancerIrulesService } from './api/v1LoadBalancerIrules.service';
@@ -32,8 +32,8 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
   declarations: [],
   exports:      [],
   providers: [
-    DefaultService,
     V1AppliancesService,
+    V1AuthService,
     V1DatacentersService,
     V1LoadBalancerHealthMonitorsService,
     V1LoadBalancerIrulesService,

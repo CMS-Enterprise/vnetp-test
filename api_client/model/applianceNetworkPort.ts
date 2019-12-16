@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Vlan } from './vlan';
 
 
 export interface ApplianceNetworkPort { 
@@ -21,5 +22,6 @@ export interface ApplianceNetworkPort {
     description?: string;
     nativeVlanId: string;
     applianceId: string;
+    readonly taggedVlans?: Array<Vlan>;
 }
 

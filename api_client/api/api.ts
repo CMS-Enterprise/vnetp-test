@@ -1,7 +1,7 @@
-export * from './default.service';
-import { DefaultService } from './default.service';
 export * from './v1Appliances.service';
 import { V1AppliancesService } from './v1Appliances.service';
+export * from './v1Auth.service';
+import { V1AuthService } from './v1Auth.service';
 export * from './v1Datacenters.service';
 import { V1DatacentersService } from './v1Datacenters.service';
 export * from './v1LoadBalancerHealthMonitors.service';
@@ -44,4 +44,4 @@ export * from './v1VmwareVirtualDisks.service';
 import { V1VmwareVirtualDisksService } from './v1VmwareVirtualDisks.service';
 export * from './v1VmwareVirtualMachines.service';
 import { V1VmwareVirtualMachinesService } from './v1VmwareVirtualMachines.service';
-export const APIS = [DefaultService, V1AppliancesService, V1DatacentersService, V1LoadBalancerHealthMonitorsService, V1LoadBalancerIrulesService, V1LoadBalancerNodesService, V1LoadBalancerPoolsService, V1LoadBalancerVirtualServersService, V1NetworkSecurityFirewallRuleGroupsService, V1NetworkSecurityFirewallRulesService, V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService, V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1NetworkStaticRoutesService, V1NetworkSubnetsService, V1NetworkVlansService, V1PhysicalServersService, V1TiersService, V1VlansService, V1VmwareNetworkAdapterService, V1VmwareVirtualDisksService, V1VmwareVirtualMachinesService];
+export const APIS = [V1AppliancesService, V1AuthService, V1DatacentersService, V1LoadBalancerHealthMonitorsService, V1LoadBalancerIrulesService, V1LoadBalancerNodesService, V1LoadBalancerPoolsService, V1LoadBalancerVirtualServersService, V1NetworkSecurityFirewallRuleGroupsService, V1NetworkSecurityFirewallRulesService, V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService, V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1NetworkStaticRoutesService, V1NetworkSubnetsService, V1NetworkVlansService, V1PhysicalServersService, V1TiersService, V1VlansService, V1VmwareNetworkAdapterService, V1VmwareVirtualDisksService, V1VmwareVirtualMachinesService];
