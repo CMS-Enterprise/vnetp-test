@@ -81,21 +81,6 @@ export class HttpConfigInterceptor {
       });
     }
 
-    if (
-      request.params.get('join') &&
-      request.params.get('join').split(',').length > 1
-    ) {
-      const queryStingReplacement = request.params
-        .get('join')
-        .split(',')
-        .join('&join=');
-      const requestUrl = `${request.url}?join=${queryStingReplacement}`;
-      request = request.clone({
-        url: requestUrl,
-        params: request.params.delete('join'),
-      });
-    }
-
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
