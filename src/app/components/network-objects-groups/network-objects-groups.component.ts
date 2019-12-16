@@ -3,12 +3,11 @@ import { NetworkObjectGroup } from 'src/app/models/network-objects/network-objec
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
-import { Vrf } from 'src/app/models/d42/vrf';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription, Observable } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
+import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
@@ -76,8 +75,8 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectModalMode = ModalMode.Create;
 
     const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
     dto.TierId = this.currentVrf.id;
+    dto.ModalMode = ModalMode.Create;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
@@ -99,8 +98,9 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectModalMode = ModalMode.Edit;
 
     const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
-    // dto.NetworkObject = networkObject;
+    dto.NetworkObject = networkObject;
+    dto.TierId = this.currentVrf.id;
+    dto.ModalMode = ModalMode.Edit;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);

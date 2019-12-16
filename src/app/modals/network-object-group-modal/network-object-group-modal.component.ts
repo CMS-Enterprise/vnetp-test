@@ -6,7 +6,6 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -77,44 +76,6 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     } else {
       this.networkObjects[this.editNetworkObjectIndex] = networkObject;
     }
-  }
-
-  createNetworkObject() {
-    this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Create;
-
-    const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
-    this.ngx.getModal('networkObjectModal').toggle();
-  }
-
-  editNetworkObject(networkObject: NetworkObject) {
-    this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Edit;
-
-    const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
-    dto.NetworkObject = networkObject;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
-    this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
-    this.ngx.getModal('networkObjectModal').toggle();
-  }
-
-  subscribeToNetworkObjectModal() {
-    this.networkObjectModalSubscription = this.ngx
-      .getModal('networkObjectModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as NetworkObjectModalDto;
-
-        if (data && data.NetworkObject) {
-          this.saveNetworkObject(data.NetworkObject);
-        }
-        this.ngx.resetModalData('networkObjectModal');
-        this.networkObjectModalSubscription.unsubscribe();
-      });
   }
 
   getData() {

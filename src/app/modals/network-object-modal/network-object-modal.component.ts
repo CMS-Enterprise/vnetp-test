@@ -10,8 +10,12 @@ import {
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkSecurityNetworkObjectsService } from 'api/networkSecurityNetworkObjects.service';
+import {
+  V1NetworkSecurityNetworkObjectsService,
+  NetworkObject,
+  NetworkObjectType,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -23,14 +27,15 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   networkTypeSubscription: Subscription;
   natSubscription: Subscription;
   natServiceSubscription: Subscription;
-  Subnets: Array<Subnet>;
   TierId: string;
+  NetworkObjectId: string;
+  ModalMode: ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     public helpText: NetworkObjectModalHelpText,
-    private networkObjectService: NetworkSecurityNetworkObjectsService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
   ) {}
 
   save() {
@@ -39,37 +44,65 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const networkObject = new NetworkObject();
-    networkObject.name = this.form.value.name;
-    networkObject.type = this.form.getRawValue().type;
-    networkObject.ipAddress = this.form.value.hostAddress;
-    // networkObject.SourceSubnet = this.form.value.sourceSubnet;
-    // networkObject.DestinationSubnet = this.form.value.destinationSubnet;
-    // networkObject.CidrAddress = this.form.value.cidrAddress;
-    // networkObject.StartAddress = this.form.value.startAddress;
-    // networkObject.EndAddress = this.form.value.endAddress;
-    // networkObject.Nat = this.form.value.nat;
-    // networkObject.TranslatedIpAddress = this.form.value.translatedIp;
-    // networkObject.NatService = this.form.value.natService;
-    // networkObject.NatProtocol = this.form.value.natProtocol;
-    // networkObject.SourcePort = this.form.value.sourcePort;
-    // networkObject.TranslatedPort = this.form.value.translatedPort;
-    networkObject.tierId = this.TierId;
+    const modalNetworkObject = {} as NetworkObject;
 
-    this.networkObjectService
-      .networkSecurityNetworkObjectsPost(networkObject)
-      .subscribe(
-        data => {
-          const dto = new NetworkObjectModalDto();
-          dto.NetworkObject = networkObject;
+    modalNetworkObject.name = this.form.value.name;
+    modalNetworkObject.type = this.form.getRawValue().type;
 
-          this.ngx.resetModalData('networkObjectModal');
-          this.ngx.setModalData(Object.assign({}, dto), 'networkObjectModal');
-          this.ngx.close('networkObjectModal');
-          this.reset();
-        },
-        error => {},
-      );
+    if (modalNetworkObject.type === NetworkObjectType.IpAddress) {
+      modalNetworkObject.ipAddress = this.form.value.ipAddress;
+    } else if (modalNetworkObject.type === NetworkObjectType.Range) {
+      modalNetworkObject.startIpAddress = this.form.value.startIpAddress;
+      modalNetworkObject.endIpAddress = this.form.value.endIpAddress;
+    }
+
+    modalNetworkObject.nat = this.form.value.nat;
+
+    if (modalNetworkObject.nat) {
+      modalNetworkObject.translatedIpAddress = this.form.value.translatedIpAddress;
+      modalNetworkObject.natDirection = this.form.value.natDirection;
+      modalNetworkObject.natType = this.form.value.natType;
+    }
+
+    modalNetworkObject.natService = this.form.value.natService;
+
+    if (modalNetworkObject.natService) {
+      modalNetworkObject.natProtocol = this.form.value.natProtocol;
+      modalNetworkObject.natSourcePorts = this.form.value.natSourcePorts;
+      modalNetworkObject.natDestinationPorts = this.form.value.natDestinationPorts;
+    }
+
+    if (this.ModalMode === ModalMode.Create) {
+      modalNetworkObject.tierId = this.TierId;
+      this.networkObjectService
+        .v1NetworkSecurityNetworkObjectsPost({
+          networkObject: modalNetworkObject,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.networkObjectService
+        .v1NetworkSecurityNetworkObjectsIdPut({
+          id: this.NetworkObjectId,
+          networkObject: modalNetworkObject,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+  }
+
+  private closeModal() {
+    this.ngx.resetModalData('networkObjectModal');
+    this.ngx.close('networkObjectModal');
+    this.reset();
   }
 
   cancel() {
@@ -82,60 +115,42 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   }
 
   private setFormValidators() {
-    const cidrAddress = this.form.get('cidrAddress');
-    const hostAddress = this.form.get('hostAddress');
-    const startAddress = this.form.get('startAddress');
-    const endAddress = this.form.get('endAddress');
+    const ipAddress = this.form.get('ipAddress');
+    const startIpAddress = this.form.get('startIpAddress');
+    const endIpAddress = this.form.get('endIpAddress');
     const nat = this.form.get('nat');
 
     this.networkTypeSubscription = this.form
       .get('type')
       .valueChanges.subscribe(type => {
         if (type === 'IpAddress') {
-          hostAddress.setValidators(
+          ipAddress.setValidators(
             Validators.compose([Validators.required, ValidateIpv4Address]),
           );
-          cidrAddress.setValidators(null);
-          cidrAddress.setValue(null);
-          startAddress.setValidators(null);
-          startAddress.setValue(null);
-          endAddress.setValidators(null);
-          endAddress.setValue(null);
+          startIpAddress.setValidators(null);
+          startIpAddress.setValue(null);
+          endIpAddress.setValidators(null);
+          endIpAddress.setValue(null);
         }
 
-        if (type === 'range') {
-          startAddress.setValidators(
+        if (type === 'Range') {
+          startIpAddress.setValidators(
             Validators.compose([Validators.required, ValidateIpv4Address]),
           );
-          startAddress.setValue(null);
-          endAddress.setValidators(
+          startIpAddress.setValue(null);
+          endIpAddress.setValidators(
             Validators.compose([Validators.required, ValidateIpv4Address]),
           );
-          endAddress.setValue(null);
-          hostAddress.setValidators(null);
-          hostAddress.setValue(null);
-          cidrAddress.setValidators(null);
-          cidrAddress.setValue(null);
+          endIpAddress.setValue(null);
+
+          ipAddress.setValidators(null);
+          ipAddress.setValue(null);
           nat.setValue(false);
         }
 
-        if (type === 'subnet') {
-          cidrAddress.setValidators(
-            Validators.compose([Validators.required, ValidateIpv4CidrAddress]),
-          );
-          hostAddress.setValidators(null);
-          hostAddress.setValue(null);
-          startAddress.setValidators(null);
-          startAddress.setValue(null);
-          endAddress.setValidators(null);
-          endAddress.setValue(null);
-          nat.setValue(false);
-        }
-
-        cidrAddress.updateValueAndValidity();
-        hostAddress.updateValueAndValidity();
-        startAddress.updateValueAndValidity();
-        endAddress.updateValueAndValidity();
+        ipAddress.updateValueAndValidity();
+        startIpAddress.updateValueAndValidity();
+        endIpAddress.updateValueAndValidity();
         nat.updateValueAndValidity({ emitEvent: false });
       });
 
@@ -143,29 +158,29 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       .get('nat')
       .valueChanges.subscribe(natValue => {
         if (natValue) {
-          this.form.controls.type.setValue('host');
+          this.form.controls.type.setValue('IpAddress');
           this.form.controls.type.updateValueAndValidity();
-          this.form.controls.translatedIp.setValidators(
+          this.form.controls.translatedIpAddress.setValidators(
             Validators.compose([Validators.required, ValidateIpv4Address]),
           );
-          this.form.controls.destinationSubnet.setValidators(
+          this.form.controls.natDirection.setValidators(
             Validators.compose([Validators.required]),
           );
-          this.form.controls.sourceSubnet.setValidators(
+          this.form.controls.natType.setValidators(
             Validators.compose([Validators.required]),
           );
         } else if (!natValue) {
-          this.form.controls.translatedIp.setValue(null);
-          this.form.controls.translatedIp.setValidators(null);
-          this.form.controls.destinationSubnet.setValue(null);
-          this.form.controls.destinationSubnet.setValidators(null);
-          this.form.controls.sourceSubnet.setValue(null);
-          this.form.controls.sourceSubnet.setValidators(null);
+          this.form.controls.translatedIpAddress.setValue(null);
+          this.form.controls.translatedIpAddress.setValidators(null);
+          this.form.controls.natDirection.setValue(null);
+          this.form.controls.natDirection.setValidators(null);
+          this.form.controls.natType.setValue(null);
+          this.form.controls.natType.setValidators(null);
         }
 
-        this.form.controls.translatedIp.updateValueAndValidity();
-        this.form.controls.sourceSubnet.updateValueAndValidity();
-        this.form.controls.destinationSubnet.updateValueAndValidity();
+        this.form.controls.translatedIpAddress.updateValueAndValidity();
+        this.form.controls.natType.updateValueAndValidity();
+        this.form.controls.natDirection.updateValueAndValidity();
       });
 
     this.natServiceSubscription = this.form
@@ -175,24 +190,24 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           this.form.controls.natProtocol.setValidators(
             Validators.compose([Validators.required]),
           );
-          this.form.controls.sourcePort.setValidators(
+          this.form.controls.natSourcePorts.setValidators(
             Validators.compose([Validators.required, ValidatePortRange]),
           );
-          this.form.controls.translatedPort.setValidators(
+          this.form.controls.natDestinationPorts.setValidators(
             Validators.compose([Validators.required, ValidatePortRange]),
           );
         } else if (!natService) {
           this.form.controls.natProtocol.setValue(null);
           this.form.controls.natProtocol.setValidators(null);
-          this.form.controls.sourcePort.setValue(null);
-          this.form.controls.sourcePort.setValidators(null);
-          this.form.controls.translatedPort.setValue(null);
-          this.form.controls.translatedPort.setValidators(null);
+          this.form.controls.natSourcePorts.setValue(null);
+          this.form.controls.natSourcePorts.setValidators(null);
+          this.form.controls.natDestinationPorts.setValue(null);
+          this.form.controls.natDestinationPorts.setValidators(null);
         }
 
         this.form.controls.natProtocol.updateValueAndValidity();
-        this.form.controls.sourcePort.updateValueAndValidity();
-        this.form.controls.translatedPort.updateValueAndValidity();
+        this.form.controls.natSourcePorts.updateValueAndValidity();
+        this.form.controls.natDestinationPorts.updateValueAndValidity();
       });
   }
 
@@ -202,12 +217,18 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.ngx.getModalData('networkObjectModal') as NetworkObjectModalDto,
     );
 
-    if (dto.Subnets) {
-      this.Subnets = dto.Subnets;
-    }
-
     if (dto.TierId) {
       this.TierId = dto.TierId;
+    }
+
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.NetworkObjectId = dto.NetworkObject.id;
+      }
     }
 
     const networkObject = dto.NetworkObject;
@@ -215,23 +236,26 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     if (networkObject !== undefined) {
       this.form.controls.name.setValue(networkObject.name);
       this.form.controls.type.setValue(networkObject.type);
-      this.form.controls.hostAddress.setValue(networkObject.ipAddress);
+      this.form.controls.ipAddress.setValue(networkObject.ipAddress);
 
-      // this.form.controls.sourceSubnet.setValue(networkObject.SourceSubnet);
-      // this.form.controls.destinationSubnet.setValue(
-      //   networkObject.DestinationSubnet,
-      // );
-      // this.form.controls.cidrAddress.setValue(networkObject.CidrAddress);
-      // this.form.controls.startAddress.setValue(networkObject.StartAddress);
-      // this.form.controls.endAddress.setValue(networkObject.EndAddress);
-      // this.form.controls.nat.setValue(networkObject.Nat);
-      // this.form.controls.translatedIp.setValue(
-      //   networkObject.TranslatedIpAddress,
-      // );
-      // this.form.controls.natService.setValue(networkObject.NatService);
-      // this.form.controls.natProtocol.setValue(networkObject.NatProtocol);
-      // this.form.controls.sourcePort.setValue(networkObject.SourcePort);
-      // this.form.controls.translatedPort.setValue(networkObject.TranslatedPort);
+      this.form.controls.startIpAddress.setValue(networkObject.startIpAddress);
+      this.form.controls.endIpAddress.setValue(networkObject.endIpAddress);
+
+      this.form.controls.nat.setValue(networkObject.nat);
+
+      this.form.controls.natType.setValue(networkObject.natType);
+      this.form.controls.natDirection.setValue(networkObject.natDirection);
+      this.form.controls.translatedIpAddress.setValue(
+        networkObject.translatedIpAddress,
+      );
+
+      this.form.controls.natService.setValue(networkObject.natService);
+
+      this.form.controls.natProtocol.setValue(networkObject.natProtocol);
+      this.form.controls.natSourcePorts.setValue(networkObject.natSourcePorts);
+      this.form.controls.natDestinationPorts.setValue(
+        networkObject.natDestinationPorts,
+      );
     }
     this.ngx.resetModalData('networkObjectModal');
   }
@@ -240,19 +264,17 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      ipVersion: [''],
-      cidrAddress: [''],
-      hostAddress: [''],
-      startAddress: [''],
-      endAddress: [''],
-      sourceSubnet: [''],
-      destinationSubnet: [''],
+      ipAddress: [''],
+      startIpAddress: [''],
+      endIpAddress: [''],
       nat: [false],
-      translatedIp: [''],
+      natType: [''],
+      natDirection: [''],
+      translatedIpAddress: [''],
       natService: [false],
       natProtocol: [''],
-      sourcePort: [''],
-      translatedPort: [''],
+      natSourcePorts: [''],
+      natDestinationPorts: [''],
     });
   }
 
@@ -275,7 +297,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   private reset() {
     this.unsubAll();
     this.submitted = false;
-    this.Subnets = new Array<Subnet>();
+    this.TierId = '';
+    this.NetworkObjectId = '';
     this.buildForm();
     this.setFormValidators();
   }
