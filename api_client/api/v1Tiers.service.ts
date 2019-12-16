@@ -130,7 +130,7 @@ export interface V1TiersTierIdSubnetsIdGetRequestParams {
 })
 export class V1TiersService {
 
-    protected basePath = 'http://localhost/api/v1';
+    protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;

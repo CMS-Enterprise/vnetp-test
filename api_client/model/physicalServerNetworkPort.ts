@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Vlan } from './vlan';
 
 
 export interface PhysicalServerNetworkPort { 
@@ -21,5 +22,6 @@ export interface PhysicalServerNetworkPort {
     description?: string;
     nativeVlanId: string;
     physicalServerId: string;
+    readonly taggedVlans?: Array<Vlan>;
 }
 

@@ -1,5 +1,3 @@
-import { Tier } from './tier';
-
 /**
  * Draas
  * Draas OAS Documentation
