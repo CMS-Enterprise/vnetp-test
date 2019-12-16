@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NetworkObject } from './networkObject';
 
 
 export interface NetworkObjectGroup { 
@@ -21,7 +22,7 @@ export interface NetworkObjectGroup {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    networkObjects: Array<string>;
+    readonly networkObjects?: Array<NetworkObject>;
     tierId: string;
 }
 

@@ -25,6 +25,14 @@ export interface NetworkObject {
     ipAddress?: string;
     startIpAddress?: string;
     endIpAddress?: string;
+    nat?: boolean;
+    translatedIpAddress?: string;
+    natDirection?: string;
+    natType?: string;
+    natService?: boolean;
+    natProtocol?: string;
+    natSourcePorts?: string;
+    natDestinationPorts?: string;
     tierId: string;
 }
 export enum NetworkObjectType {

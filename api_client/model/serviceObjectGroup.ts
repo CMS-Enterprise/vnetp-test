@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ServiceObject } from './serviceObject';
 
 
 export interface ServiceObjectGroup { 
@@ -21,7 +22,7 @@ export interface ServiceObjectGroup {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    serviceObjects: Array<string>;
+    readonly serviceObjects?: Array<ServiceObject>;
     tierId: string;
 }
 
