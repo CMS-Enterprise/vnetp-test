@@ -51,16 +51,49 @@ export class HttpConfigInterceptor {
       });
     }
 
-    if (request.params.get('join')) {
-      const joins = request.params.get('join').split(',');
-      if (joins.length > 1) {
-        const queryStingReplacement = joins.join('&join=');
-        const requestUrl = `${request.url}?join=${queryStingReplacement}`;
-        request = request.clone({
-          url: requestUrl,
-          params: request.params.delete('join'),
-        });
-      }
+    if (
+      request.params.get('join') &&
+      request.params.get('join').split(',').length > 1
+    ) {
+      const queryStingReplacement = request.params
+        .get('join')
+        .split(',')
+        .join('&join=');
+      const requestUrl = `${request.url}?join=${queryStingReplacement}`;
+      request = request.clone({
+        url: requestUrl,
+        params: request.params.delete('join'),
+      });
+    }
+
+    if (
+      request.params.get('sort') &&
+      request.params.get('sort').split(',').length > 1
+    ) {
+      const queryStingReplacement = request.params
+        .get('sort')
+        .split(',')
+        .join('&sort=');
+      const requestUrl = `${request.url}?sort=${queryStingReplacement}`;
+      request = request.clone({
+        url: requestUrl,
+        params: request.params.delete('sort'),
+      });
+    }
+
+    if (
+      request.params.get('join') &&
+      request.params.get('join').split(',').length > 1
+    ) {
+      const queryStingReplacement = request.params
+        .get('join')
+        .split(',')
+        .join('&join=');
+      const requestUrl = `${request.url}?join=${queryStingReplacement}`;
+      request = request.clone({
+        url: requestUrl,
+        params: request.params.delete('join'),
+      });
     }
 
     return next.handle(request).pipe(
