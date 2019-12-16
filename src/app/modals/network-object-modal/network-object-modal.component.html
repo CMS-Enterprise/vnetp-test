@@ -242,31 +242,31 @@
 
       <div class="form-row" *ngIf="f.natService.value">
         <div class="form-group col-md-6">
-          <label for="natSourcePorts">
+          <label for="natSourcePort">
             Source Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.natSourcePorts"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.natSourcePort"></tooltip>
           <input
             type="text"
-            name="natSourcePorts"
+            name="natSourcePort"
             class="form-control"
-            formControlName="natSourcePorts"
-            [ngClass]="{ 'is-invalid': submitted && f.natSourcePorts.errors }"
+            formControlName="natSourcePort"
+            [ngClass]="{ 'is-invalid': submitted && f.natSourcePort.errors }"
             mask="09999"
           />
         </div>
 
         <div class="form-group col-md-6">
-          <label for="natDestinationPorts">
+          <label for="natTranslatedPort">
             Destination Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.natDestinationPorts"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.natTranslatedPort"></tooltip>
           <input
             type="text"
-            name="natDestinationPorts"
+            name="natTranslatedPort"
             class="form-control"
-            formControlName="natDestinationPorts"
-            [ngClass]="{ 'is-invalid': submitted && f.natDestinationPorts.errors }"
+            formControlName="natTranslatedPort"
+            [ngClass]="{ 'is-invalid': submitted && f.natTranslatedPort.errors }"
             mask="09999"
           />
         </div>

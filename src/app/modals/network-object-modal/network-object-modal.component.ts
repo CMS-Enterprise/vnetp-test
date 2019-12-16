@@ -67,8 +67,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
     if (modalNetworkObject.natService) {
       modalNetworkObject.natProtocol = this.form.value.natProtocol;
-      modalNetworkObject.natSourcePorts = this.form.value.natSourcePorts;
-      modalNetworkObject.natDestinationPorts = this.form.value.natDestinationPorts;
+      modalNetworkObject.natSourcePort = this.form.value.natSourcePort;
+      modalNetworkObject.natTranslatedPort = this.form.value.natTranslatedPort;
     }
 
     if (this.ModalMode === ModalMode.Create) {
@@ -188,24 +188,24 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           this.form.controls.natProtocol.setValidators(
             Validators.compose([Validators.required]),
           );
-          this.form.controls.natSourcePorts.setValidators(
+          this.form.controls.natSourcePort.setValidators(
             Validators.compose([Validators.required, ValidatePortRange]),
           );
-          this.form.controls.natDestinationPorts.setValidators(
+          this.form.controls.natTranslatedPort.setValidators(
             Validators.compose([Validators.required, ValidatePortRange]),
           );
         } else if (!natService) {
           this.form.controls.natProtocol.setValue(null);
           this.form.controls.natProtocol.setValidators(null);
-          this.form.controls.natSourcePorts.setValue(null);
-          this.form.controls.natSourcePorts.setValidators(null);
-          this.form.controls.natDestinationPorts.setValue(null);
-          this.form.controls.natDestinationPorts.setValidators(null);
+          this.form.controls.natSourcePort.setValue(null);
+          this.form.controls.natSourcePort.setValidators(null);
+          this.form.controls.natTranslatedPort.setValue(null);
+          this.form.controls.natTranslatedPort.setValidators(null);
         }
 
         this.form.controls.natProtocol.updateValueAndValidity();
-        this.form.controls.natSourcePorts.updateValueAndValidity();
-        this.form.controls.natDestinationPorts.updateValueAndValidity();
+        this.form.controls.natSourcePort.updateValueAndValidity();
+        this.form.controls.natTranslatedPort.updateValueAndValidity();
       });
   }
 
@@ -250,9 +250,9 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.natService.setValue(networkObject.natService);
 
       this.form.controls.natProtocol.setValue(networkObject.natProtocol);
-      this.form.controls.natSourcePorts.setValue(networkObject.natSourcePorts);
-      this.form.controls.natDestinationPorts.setValue(
-        networkObject.natDestinationPorts,
+      this.form.controls.natSourcePort.setValue(networkObject.natSourcePort);
+      this.form.controls.natTranslatedPort.setValue(
+        networkObject.natTranslatedPort,
       );
     }
     this.ngx.resetModalData('networkObjectModal');
@@ -271,8 +271,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       translatedIpAddress: [''],
       natService: [false],
       natProtocol: [''],
-      natSourcePorts: [''],
-      natDestinationPorts: [''],
+      natSourcePort: [''],
+      natTranslatedPort: [''],
     });
   }
 

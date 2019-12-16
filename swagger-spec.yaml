@@ -8767,9 +8767,9 @@ definitions:
           - ICMP
           - TCP
           - UDP
-      natSourcePorts:
+      natSourcePort:
         type: string
-      natDestinationPorts:
+      natTranslatedPort:
         type: string
       tierId:
         type: string

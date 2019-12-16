@@ -31,8 +31,8 @@ export interface NetworkObject {
     natType?: NetworkObjectNatType;
     natService?: boolean;
     natProtocol?: NetworkObjectNatProtocol;
-    natSourcePorts?: string;
-    natDestinationPorts?: string;
+    natSourcePort?: string;
+    natTranslatedPort?: string;
     tierId: string;
 }
 export enum NetworkObjectType {

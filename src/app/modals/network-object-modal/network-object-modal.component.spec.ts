@@ -95,12 +95,12 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   it('source port should be not required', () => {
-    const natSourcePort = component.form.controls.natSourcePorts;
+    const natSourcePort = component.form.controls.natSourcePort;
     expect(natSourcePort.valid).toBeTruthy();
   });
 
   it('destination port should not be required', () => {
-    const natDestinationPort = component.form.controls.natDestinationPorts;
+    const natDestinationPort = component.form.controls.natTranslatedPort;
     expect(natDestinationPort.valid).toBeTruthy();
   });
 
@@ -165,7 +165,7 @@ describe('NetworkObjectModalComponent', () => {
     const natService = component.form.controls.natService;
     natService.setValue(true);
 
-    const natSourcePort = component.form.controls.natSourcePorts;
+    const natSourcePort = component.form.controls.natSourcePort;
     expect(natSourcePort.valid).toBeFalsy();
   });
 
@@ -173,7 +173,7 @@ describe('NetworkObjectModalComponent', () => {
     const natService = component.form.controls.natService;
     natService.setValue(true);
 
-    const natDestinationPort = component.form.controls.natDestinationPorts;
+    const natDestinationPort = component.form.controls.natTranslatedPort;
     expect(natDestinationPort.valid).toBeFalsy();
   });
 });
