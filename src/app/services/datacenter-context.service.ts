@@ -1,13 +1,14 @@
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Datacenter } from 'model/datacenter';
-import { Data, Router, NavigationEnd } from '@angular/router';
-import { DatacentersService } from 'api/datacenters.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
+import { Datacenter, V1DatacentersService } from 'api_client';
+import { query } from '@angular/animations';
 
+/** Service to store and expose the Current Datacenter Context. */
 @Injectable({
   providedIn: 'root',
 })
@@ -16,22 +17,27 @@ export class DatacenterContextService {
     Datacenter
   > = new BehaviorSubject<Datacenter>(null);
 
-  public currentDatacenter: Observable<
-    Datacenter
-  > = this.currentDatacenterSubject.asObservable();
-
   private datacentersSubject: BehaviorSubject<
     Datacenter[]
   > = new BehaviorSubject<Datacenter[]>(null);
-
-  public datacenters: Observable<
-    Datacenter[]
-  > = this.datacentersSubject.asObservable();
 
   private lockCurrentDatacenterSubject: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
 
+  /** Current Datacenter Context. */
+  public currentDatacenter: Observable<
+    Datacenter
+  > = this.currentDatacenterSubject.asObservable();
+
+  /** Datacenters available within the Tenant. */
+  public datacenters: Observable<
+    Datacenter[]
+  > = this.datacentersSubject.asObservable();
+
+  /** Indicates whether the current datacenter
+   *  context can be changed.
+   */
   public lockCurrentDatacenter: Observable<
     boolean
   > = this.lockCurrentDatacenterSubject.asObservable();
@@ -40,15 +46,11 @@ export class DatacenterContextService {
 
   constructor(
     private authService: AuthService,
-    private DatacenterService: DatacentersService,
+    private DatacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
-    // Get datacenters when currentUser changes.
-    this.authService.currentUser.subscribe(s => {
-      this.getDatacenters();
-    });
-
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
     // event occurs. This is useful in the event
@@ -62,53 +64,95 @@ export class DatacenterContextService {
         this.lockCurrentDatacenterSubject.next(false);
       }
     });
+
+    // Subscribe to the activatedRoute, validate that the
+    // datacenter param has a valid id present.
+    this.activatedRoute.queryParamMap.subscribe(queryParams => {
+      if (!this.authService.currentUserValue) {
+        return;
+      }
+
+      this.getDatacenters(queryParams.get('datacenter'));
+    });
   }
 
+  /** Current Datacenter */
   public get currentDatacenterValue(): Datacenter {
     return this.currentDatacenterSubject.value;
   }
 
+  /** Datacenters available within the Tenant. */
   public get datacentersValue(): Datacenter[] {
     return this.datacentersSubject.value;
   }
 
+  /** Locks the currentDatacenter. This prevents the
+   * datacenter context switch from occurring.
+   */
   public lockDatacenter() {
     this.lockCurrentDatacenterSubject.next(true);
   }
 
+  /** Unlocks the currentDatacenter. This allows the
+   * datacenter context switch to occur.
+   */
   public unlockDatacenter() {
     this.lockCurrentDatacenterSubject.next(false);
   }
 
-  getDatacenters() {
-    this.DatacenterService.datacentersGet(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      'tiers',
-    ).subscribe(data => {
-      this._datacenters = data;
-      this.datacentersSubject.next(data);
+  /** Get datacenters for the tenant.
+   * @param datacenterParam Optional currentDatacenterId, this will be compared against the
+   * array of datacenters returned from the API. If it is present then that datacenter will be selected.
+   */
+  private getDatacenters(datacenterParam?: string) {
+    this.DatacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(
+      data => {
+        // Update internal datacenters array and external subject.
+        this._datacenters = data;
+        this.datacentersSubject.next(data);
 
-      // TODO: Selected DC could be persisted to local storage.
-      if (data.length) {
-        this.currentDatacenterSubject.next(data[0]);
-      }
-    });
+        // If a datacenter matching currentDatacenterId is present
+        // set currentDatacenter to that datacenter.
+        if (datacenterParam) {
+          this.switchDatacenter(datacenterParam);
+        }
+      },
+    );
   }
 
-  switchDatacenter(datacenter: Datacenter) {
+  /** Switch from the currentDatacenter to the provided datacenter.
+   * @param datacenter Datacenter to switch to.
+   */
+  public switchDatacenter(datacenterId: string) {
+    if (this.lockCurrentDatacenterSubject.value) {
+      throw Error('Current Datacenter Locked.');
+    }
+
     // Validate that the datacenter we are switching to is a member
     // of the private datacenters array.
+    const datacenter = this._datacenters.find(dc => dc.id === datacenterId);
+
     if (
-      !this.lockCurrentDatacenterSubject.value &&
-      this._datacenters.map(d => d.id).includes(datacenter.id)
+      this.currentDatacenterValue &&
+      datacenter.id === this.currentDatacenterValue.id
     ) {
+      throw Error('Datacenter already Selected.');
+    }
+
+    if (datacenter) {
+      // Update Subject
       this.currentDatacenterSubject.next(datacenter);
+
+      // Update Query Params
+      this.router.navigate([], {
+        queryParams: { datacenter: datacenter.id },
+        queryParamsHandling: 'merge',
+      });
+
+      // Send Context Switch Message
       this.messageService.sendMessage(
         new AppMessage(
-          'Datacenter Context Switch',
+          `Datacenter Context Switch ${datacenterId}`,
           AppMessageType.DatacenterContextSwitch,
         ),
       );

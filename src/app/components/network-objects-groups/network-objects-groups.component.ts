@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -15,8 +14,8 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'model/tier';
-import { TiersService } from 'api/tiers.service';
+import { Tier } from 'api_client/model/tier';
+import { V1TiersService, NetworkObject } from 'api_client';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -53,7 +52,7 @@ export class NetworkObjectsGroupsComponent
     private ngx: NgxSmartModalService,
     private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
-    private tierService: TiersService,
+    private tierService: V1TiersService,
     private papa: Papa,
     private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
@@ -65,7 +64,7 @@ export class NetworkObjectsGroupsComponent
   getNetworkObjects() {
     this.networkObjects = [];
     this.tierService
-      .tiersIdGet(this.currentVrf.id, undefined, 'networkObjects')
+      .v1TiersIdGet({ id: this.currentVrf.id, join: 'networkObjects' })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;
       });
@@ -101,7 +100,7 @@ export class NetworkObjectsGroupsComponent
 
     const dto = new NetworkObjectModalDto();
     dto.Subnets = this.Subnets;
-    dto.NetworkObject = networkObject;
+    // dto.NetworkObject = networkObject;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
@@ -195,7 +194,7 @@ export class NetworkObjectsGroupsComponent
   exportNetworkObjectConfig() {
     const dto = new NetworkObjectDto();
 
-    dto.NetworkObjects = this.networkObjects;
+    // dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
     // dto.VrfId = this.currentVrf.id;
 

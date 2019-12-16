@@ -28,7 +28,7 @@ export class AuthService {
 
   login(userpass: Userpass) {
     return this.http
-      .post<any>(environment.apiBase + '/auth/login', {
+      .post<any>(environment.apiBase + '/v1/auth/login', {
         username: userpass.Username,
         password: userpass.Password,
       })

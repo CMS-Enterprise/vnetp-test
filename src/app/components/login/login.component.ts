@@ -24,12 +24,18 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
+    this.returnUrl = '/dashboard';
+
+    if (this.route.snapshot.queryParams.returnUrl) {
+      this.returnUrl = decodeURIComponent(
+        this.route.snapshot.queryParams.returnUrl,
+      );
+    }
 
     if (!this.auth.currentUser) {
       this.auth.logout();
     } else {
-      this.router.navigate([this.returnUrl]);
+      this.router.navigateByUrl(this.returnUrl);
     }
   }
 
@@ -47,7 +53,7 @@ export class LoginComponent implements OnInit {
       .subscribe(
         data => {
           this.toastr.success(`Welcome ${this.userpass.Username}!`);
-          this.router.navigate([this.returnUrl]);
+          this.router.navigateByUrl(this.returnUrl);
         },
         error => {
           this.toastr.error('Invalid Username/Password');
