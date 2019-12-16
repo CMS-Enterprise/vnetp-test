@@ -14,7 +14,11 @@ import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/netwo
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'api_client/model/tier';
-import { V1TiersService, NetworkObject } from 'api_client';
+import {
+  V1TiersService,
+  NetworkObject,
+  V1NetworkSecurityNetworkObjectsService,
+} from 'api_client';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -52,6 +56,7 @@ export class NetworkObjectsGroupsComponent
     private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private papa: Papa,
     private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
@@ -120,12 +125,7 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectModalSubscription = this.ngx
       .getModal('networkObjectModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as NetworkObjectModalDto;
-
-        if (data) {
-          this.getNetworkObjects();
-        }
-
+        this.getNetworkObjects();
         this.ngx.resetModalData('networkObjectModal');
         this.datacenterService.unlockDatacenter();
       });
@@ -145,10 +145,19 @@ export class NetworkObjectsGroupsComponent
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
-    const index = this.networkObjects.indexOf(networkObject);
-    if (index > -1) {
-      this.networkObjects.splice(index, 1);
-      this.dirty = true;
+    // TODO: Warning Modal
+    if (!networkObject.deletedAt) {
+      this.networkObjectService
+        .v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id })
+        .subscribe(data => {
+          this.getNetworkObjects();
+        });
+    } else {
+      this.networkObjectService
+        .v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id })
+        .subscribe(data => {
+          this.getNetworkObjects();
+        });
     }
   }
 

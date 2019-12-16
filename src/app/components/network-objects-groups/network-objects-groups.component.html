@@ -45,11 +45,10 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
-          <th scope="col">Source Subnet</th>
           <th scope="col">Address</th>
           <th scope="col">Translated Address</th>
-          <th scope="col">Destination Subnet</th>
-          <th scope="col">Source/Translated Port</th>
+          <th scope="col">NAT Type | Direction</th>
+          <th scope="col">NAT Protocol Source:Translated Port</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -62,27 +61,21 @@
             <span>{{ netObj?.type }}</span>
           </td>
           <td>
-            <span>{{ netObj?.SourceSubnet }}</span>
-          </td>
-          <td>
             <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
-            <span *ngIf="netObj?.type === 'range'">
-              {{ netObj?.StartAddress }} - {{ netObj?.EndAddress }}
-            </span>
-            <span *ngIf="netObj?.type === 'subnet'">
-              {{ netObj?.CidrAddress }}
+            <span *ngIf="netObj?.type === 'Range'">
+              {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }}
             </span>
           </td>
           <td>
-            <span *ngIf="netObj?.Nat">{{ netObj?.TranslatedIpAddress }}</span>
+            <span *ngIf="netObj?.nat">{{ netObj?.translatedIpAddress }}</span>
           </td>
           <td>
-            <span>{{ netObj?.DestinationSubnet }}</span>
+            <span>{{ netObj?.natType }} | {{ netObj?.natDirection }}</span>
           </td>
           <td>
-            <span *ngIf="netObj?.Nat">
-              {{ netObj?.NatProtocol }} {{ netObj?.SourcePort }}:{{
-                netObj?.TranslatedPort
+            <span *ngIf="netObj?.natService">
+              {{ netObj?.natProtocol }} {{ netObj?.natSourcePort }}:{{
+                netObj?.natTranslatedPort
               }}
             </span>
           </td>
@@ -93,7 +86,7 @@
               aria-label="Edit Network Object"
             >
             </fa>
-            <fa name="trash" (click)="deleteNetworkObject(netObj)"> </fa>
+            <fa name="trash" [ngClass]="{'fg-danger': netObj.deletedAt }" (click)="deleteNetworkObject(netObj)"> </fa>
           </td>
         </tr>
         <tr *ngIf="!networkObjects?.length" class="text-center">
