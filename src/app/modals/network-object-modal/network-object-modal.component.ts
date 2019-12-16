@@ -4,11 +4,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   ValidateIpv4Address,
-  ValidateIpv4CidrAddress,
   ValidatePortRange,
+  ValidateIpv4Any,
 } from 'src/app/validators/network-form-validators';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
-import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   V1NetworkSecurityNetworkObjectsService,
@@ -100,7 +99,6 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.resetModalData('networkObjectModal');
     this.ngx.close('networkObjectModal');
     this.reset();
   }
@@ -125,7 +123,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       .valueChanges.subscribe(type => {
         if (type === 'IpAddress') {
           ipAddress.setValidators(
-            Validators.compose([Validators.required, ValidateIpv4Address]),
+            Validators.compose([Validators.required, ValidateIpv4Any]),
           );
           startIpAddress.setValidators(null);
           startIpAddress.setValue(null);
@@ -161,7 +159,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           this.form.controls.type.setValue('IpAddress');
           this.form.controls.type.updateValueAndValidity();
           this.form.controls.translatedIpAddress.setValidators(
-            Validators.compose([Validators.required, ValidateIpv4Address]),
+            Validators.compose([Validators.required, ValidateIpv4Any]),
           );
           this.form.controls.natDirection.setValidators(
             Validators.compose([Validators.required]),
@@ -299,6 +297,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.TierId = '';
     this.NetworkObjectId = '';
+    this.ngx.resetModalData('networkObjectModal');
     this.buildForm();
     this.setFormValidators();
   }

@@ -62,7 +62,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
           [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
+          mask="099.099.099.099/09"
           aria-label="Host Address"
           *ngIf="f.type.value == 'IpAddress'"
         />
@@ -198,7 +198,7 @@
           aria-label="Translated IP"
           [ngClass]="{ 'is-invalid': submitted && f.translatedIpAddress.errors }"
           [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
+          mask="099.099.099.099/09"
         />
       </div>
 

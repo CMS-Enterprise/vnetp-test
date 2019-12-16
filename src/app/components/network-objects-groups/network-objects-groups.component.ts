@@ -69,15 +69,23 @@ export class NetworkObjectsGroupsComponent
       });
   }
 
-  createNetworkObject() {
-    this.datacenterService.lockDatacenter();
+  openNetworkObjectModal(modalMode: ModalMode, networkObject?: NetworkObject) {
+    if (modalMode === ModalMode.Edit && !networkObject) {
+      throw new Error('Network Object required.');
+    }
+
     this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Create;
 
     const dto = new NetworkObjectModalDto();
-    dto.TierId = this.currentVrf.id;
-    dto.ModalMode = ModalMode.Create;
 
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentVrf.id;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.NetworkObject = networkObject;
+    }
+
+    this.datacenterService.lockDatacenter();
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
@@ -91,20 +99,6 @@ export class NetworkObjectsGroupsComponent
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
     this.ngx.getModal('networkObjectGroupModal').open();
-  }
-
-  editNetworkObject(networkObject: NetworkObject) {
-    this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Edit;
-
-    const dto = new NetworkObjectModalDto();
-    dto.NetworkObject = networkObject;
-    dto.TierId = this.currentVrf.id;
-    dto.ModalMode = ModalMode.Edit;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
-    this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
-    this.ngx.getModal('networkObjectModal').open();
   }
 
   editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {

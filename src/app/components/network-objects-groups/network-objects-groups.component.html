@@ -32,7 +32,7 @@
       <button
         type="button"
         class="btn btn-success"
-        (click)="createNetworkObject()"
+        (click)="openNetworkObjectModal('Create')"
         aria-label="Create Network Object"
       >
         <fa name="plus"></fa>
@@ -89,7 +89,7 @@
           <td class="item-actions">
             <fa
               name="pencil"
-              (click)="editNetworkObject(netObj)"
+              (click)="openNetworkObjectModal('Edit',netObj)"
               aria-label="Edit Network Object"
             >
             </fa>
