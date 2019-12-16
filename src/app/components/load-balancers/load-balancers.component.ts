@@ -17,7 +17,14 @@ import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier, V1TiersService } from 'api_client';
+import {
+  Tier,
+  V1TiersService,
+  LoadBalancerPool,
+  LoadBalancerIrule,
+  LoadBalancerHealthMonitor,
+  LoadBalancerVirtualServer,
+} from 'api_client';
 
 @Component({
   selector: 'app-load-balancers',
@@ -30,15 +37,15 @@ export class LoadBalancersComponent
   vrfs: Tier[];
   currentVrf: Tier;
 
-  virtualServers: Array<VirtualServer>;
-  pools: Array<Pool>;
-  irules: Array<IRule>;
-  healthMonitors: Array<HealthMonitor>;
+  virtualServers: LoadBalancerVirtualServer[];
+  pools: LoadBalancerPool[];
+  irules: LoadBalancerIrule[];
+  healthMonitors: LoadBalancerHealthMonitor[];
 
-  deletedVirtualServers: Array<VirtualServer>;
-  deletedPools: Array<Pool>;
-  deletedIRules: Array<IRule>;
-  deletedHealthMonitors: Array<HealthMonitor>;
+  deletedVirtualServers: LoadBalancerVirtualServer[];
+  deletedPools: LoadBalancerPool[];
+  deletedIRules: LoadBalancerIrule[];
+  deletedHealthMonitors: LoadBalancerHealthMonitor[];
 
   editVirtualServerIndex: number;
   editPoolIndex: number;
@@ -72,13 +79,9 @@ export class LoadBalancersComponent
     private hs: HelpersService,
     private toastr: ToastrService,
     public helpText: LoadBalancersHelpText,
-  ) {
-    this.virtualServers = new Array<VirtualServer>();
-    this.pools = new Array<Pool>();
-  }
+  ) {}
 
   getVrfs() {
-    this.vrfs = [];
     this.tierService
       .v1TiersIdGet({
         id: '42284ed9-cfb2-4665-a156-89e403677562',
@@ -87,9 +90,7 @@ export class LoadBalancersComponent
       })
       .subscribe(data => {
         console.log(data);
-        // will change to not being an array when hardcoded tier goes away
-        this.vrfs = [data];
-        // this.pools = data.
+        // this.virtualServers = data.loadBalancerVirtualServers;
       });
   }
 
@@ -152,80 +153,80 @@ export class LoadBalancersComponent
     this.ngx.getModal('virtualServerModal').open();
   }
 
-  createPool() {
-    this.subscribeToPoolModal();
-    const dto = new PoolModalDto();
-    dto.HealthMonitors = this.healthMonitors;
+  // createPool() {
+  //   this.subscribeToPoolModal();
+  //   const dto = new PoolModalDto();
+  //   dto.HealthMonitors = this.healthMonitors;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
-    this.poolModalMode = ModalMode.Create;
-    this.ngx.getModal('poolModal').open();
-  }
+  //   this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
+  //   this.poolModalMode = ModalMode.Create;
+  //   this.ngx.getModal('poolModal').open();
+  // }
 
-  createIRule() {
-    this.subscribeToIRuleModal();
-    this.iruleModalMode = ModalMode.Create;
-    this.ngx.getModal('iruleModal').open();
-  }
+  // createIRule() {
+  //   this.subscribeToIRuleModal();
+  //   this.iruleModalMode = ModalMode.Create;
+  //   this.ngx.getModal('iruleModal').open();
+  // }
 
-  createHealthMonitor() {
-    this.subscribeToHealthMonitorModal();
-    this.healthMonitorModalMode = ModalMode.Create;
-    this.ngx.getModal('healthMonitorModal').open();
-  }
+  // createHealthMonitor() {
+  //   this.subscribeToHealthMonitorModal();
+  //   this.healthMonitorModalMode = ModalMode.Create;
+  //   this.ngx.getModal('healthMonitorModal').open();
+  // }
 
-  editVirtualServer(virtualServer: VirtualServer) {
-    this.subscribeToVirtualServerModal();
-    this.virtualServerModalMode = ModalMode.Edit;
+  // editVirtualServer(virtualServer: VirtualServer) {
+  //   this.subscribeToVirtualServerModal();
+  //   this.virtualServerModalMode = ModalMode.Edit;
 
-    const dto = new VirtualServerModalDto();
-    dto.Pools = this.pools;
-    dto.VirtualServer = virtualServer;
-    dto.IRules = this.irules;
+  //   const dto = new VirtualServerModalDto();
+  //   dto.Pools = this.pools;
+  //   dto.VirtualServer = virtualServer;
+  //   dto.IRules = this.irules;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'virtualServerModal');
-    this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
-    this.ngx.getModal('virtualServerModal').open();
-  }
+  //   this.ngx.setModalData(this.hs.deepCopy(dto), 'virtualServerModal');
+  //   this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
+  //   this.ngx.getModal('virtualServerModal').open();
+  // }
 
-  editPool(pool: Pool) {
-    this.subscribeToPoolModal();
-    this.poolModalMode = ModalMode.Edit;
+  // editPool(pool: Pool) {
+  //   this.subscribeToPoolModal();
+  //   this.poolModalMode = ModalMode.Edit;
 
-    const dto = new PoolModalDto();
-    dto.Pool = pool;
-    dto.HealthMonitors = this.healthMonitors;
+  //   const dto = new PoolModalDto();
+  //   dto.Pool = pool;
+  //   dto.HealthMonitors = this.healthMonitors;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
-    this.editPoolIndex = this.pools.indexOf(pool);
-    this.ngx.getModal('poolModal').open();
-  }
+  //   this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
+  //   this.editPoolIndex = this.pools.indexOf(pool);
+  //   this.ngx.getModal('poolModal').open();
+  // }
 
-  editIRule(irule: IRule) {
-    this.subscribeToIRuleModal();
-    this.iruleModalMode = ModalMode.Edit;
+  // editIRule(irule: IRule) {
+  //   this.subscribeToIRuleModal();
+  //   this.iruleModalMode = ModalMode.Edit;
 
-    this.ngx.setModalData(this.hs.deepCopy(irule), 'iruleModal');
-    this.editIRuleIndex = this.irules.indexOf(irule);
-    this.ngx.getModal('iruleModal').open();
-  }
+  //   this.ngx.setModalData(this.hs.deepCopy(irule), 'iruleModal');
+  //   this.editIRuleIndex = this.irules.indexOf(irule);
+  //   this.ngx.getModal('iruleModal').open();
+  // }
 
-  editHealthMonitor(healthMonitor: HealthMonitor) {
-    this.subscribeToHealthMonitorModal();
-    this.healthMonitorModalMode = ModalMode.Edit;
-    this.ngx.setModalData(
-      this.hs.deepCopy(healthMonitor),
-      'healthMonitorModal',
-    );
-    this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
-    this.ngx.getModal('healthMonitorModal').open();
-  }
+  // editHealthMonitor(healthMonitor: HealthMonitor) {
+  //   this.subscribeToHealthMonitorModal();
+  //   this.healthMonitorModalMode = ModalMode.Edit;
+  //   this.ngx.setModalData(
+  //     this.hs.deepCopy(healthMonitor),
+  //     'healthMonitorModal',
+  //   );
+  //   this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
+  //   this.ngx.getModal('healthMonitorModal').open();
+  // }
 
   subscribeToVirtualServerModal() {
     this.virtualServerModalSubscription = this.ngx
       .getModal('virtualServerModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as VirtualServerModalDto;
+        const data = modal.getData();
 
         if (data && data.VirtualServer !== undefined) {
           this.saveVirtualServer(data.VirtualServer);
@@ -235,49 +236,49 @@ export class LoadBalancersComponent
       });
   }
 
-  subscribeToPoolModal() {
-    this.poolModalSubscription = this.ngx
-      .getModal('poolModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as PoolModalDto;
+  // subscribeToPoolModal() {
+  //   this.poolModalSubscription = this.ngx
+  //     .getModal('poolModal')
+  //     .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+  //       const data = modal.getData();
 
-        if (data && data.Pool !== undefined) {
-          this.savePool(data.Pool);
-        }
-        this.ngx.resetModalData('poolModal');
-        this.poolModalSubscription.unsubscribe();
-      });
-  }
+  //       if (data && data.Pool !== undefined) {
+  //         this.savePool(data.Pool);
+  //       }
+  //       this.ngx.resetModalData('poolModal');
+  //       this.poolModalSubscription.unsubscribe();
+  //     });
+  // }
 
-  subscribeToIRuleModal() {
-    this.iruleModalSubscription = this.ngx
-      .getModal('iruleModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as IRule;
+  // subscribeToIRuleModal() {
+  //   this.iruleModalSubscription = this.ngx
+  //     .getModal('iruleModal')
+  //     .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+  //       const data = modal.getData() as IRule;
 
-        if (data && data !== undefined) {
-          this.saveIRule(data);
-        }
-        this.ngx.resetModalData('iruleModal');
-        this.iruleModalSubscription.unsubscribe();
-      });
-  }
+  //       if (data && data !== undefined) {
+  //         this.saveIRule(data);
+  //       }
+  //       this.ngx.resetModalData('iruleModal');
+  //       this.iruleModalSubscription.unsubscribe();
+  //     });
+  // }
 
-  subscribeToHealthMonitorModal() {
-    this.healthMonitorModalSubscription = this.ngx
-      .getModal('healthMonitorModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as HealthMonitor;
+  // subscribeToHealthMonitorModal() {
+  //   this.healthMonitorModalSubscription = this.ngx
+  //     .getModal('healthMonitorModal')
+  //     .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+  //       const data = modal.getData() as HealthMonitor;
 
-        if (data && data !== undefined) {
-          this.saveHealthMonitor(data);
-        }
-        this.ngx.resetModalData('healthMonitorModal');
-        this.healthMonitorModalSubscription.unsubscribe();
-      });
-  }
+  //       if (data && data !== undefined) {
+  //         this.saveHealthMonitor(data);
+  //       }
+  //       this.ngx.resetModalData('healthMonitorModal');
+  //       this.healthMonitorModalSubscription.unsubscribe();
+  //     });
+  // }
 
-  saveVirtualServer(virtualServer: VirtualServer) {
+  saveVirtualServer(virtualServer: LoadBalancerVirtualServer) {
     if (this.virtualServerModalMode === ModalMode.Create) {
       this.virtualServers.push(virtualServer);
     } else {
@@ -286,145 +287,111 @@ export class LoadBalancersComponent
     this.dirty = true;
   }
 
-  deleteVirtualServer(virtualServer: VirtualServer) {
-    const index = this.virtualServers.indexOf(virtualServer);
-    if (index > -1) {
-      this.virtualServers.splice(index, 1);
+  // deleteVirtualServer(virtualServer: VirtualServer) {
+  //   const index = this.virtualServers.indexOf(virtualServer);
+  //   if (index > -1) {
+  //     this.virtualServers.splice(index, 1);
 
-      if (!this.deletedVirtualServers) {
-        this.deletedVirtualServers = new Array<VirtualServer>();
-      }
-      this.deletedVirtualServers.push(virtualServer);
-      this.dirty = true;
-    }
-  }
+  //     if (!this.deletedVirtualServers) {
+  //       this.deletedVirtualServers = new Array<VirtualServer>();
+  //     }
+  //     this.deletedVirtualServers.push(virtualServer);
+  //     this.dirty = true;
+  //   }
+  // }
 
-  savePool(pool: Pool) {
-    if (this.poolModalMode === ModalMode.Create) {
-      this.pools.push(pool);
-    } else {
-      this.pools[this.editPoolIndex] = pool;
-    }
-    this.dirty = true;
-  }
+  // savePool(pool: Pool) {
+  //   if (this.poolModalMode === ModalMode.Create) {
+  //     this.pools.push(pool);
+  //   } else {
+  //     this.pools[this.editPoolIndex] = pool;
+  //   }
+  //   this.dirty = true;
+  // }
 
-  saveHealthMonitor(healthMonitor: HealthMonitor) {
-    if (this.healthMonitorModalMode === ModalMode.Create) {
-      this.healthMonitors.push(healthMonitor);
-    } else {
-      this.healthMonitors[this.editHealthMonitorIndex] = healthMonitor;
-    }
-    this.dirty = true;
-  }
+  // saveHealthMonitor(healthMonitor: HealthMonitor) {
+  //   if (this.healthMonitorModalMode === ModalMode.Create) {
+  //     this.healthMonitors.push(healthMonitor);
+  //   } else {
+  //     this.healthMonitors[this.editHealthMonitorIndex] = healthMonitor;
+  //   }
+  //   this.dirty = true;
+  // }
 
-  saveIRule(irule: IRule) {
-    if (this.iruleModalMode === ModalMode.Create) {
-      this.irules.push(irule);
-    } else {
-      this.irules[this.editIRuleIndex] = irule;
-    }
-    this.dirty = true;
-  }
+  // saveIRule(irule: IRule) {
+  //   if (this.iruleModalMode === ModalMode.Create) {
+  //     this.irules.push(irule);
+  //   } else {
+  //     this.irules[this.editIRuleIndex] = irule;
+  //   }
+  //   this.dirty = true;
+  // }
 
-  deletePool(pool: Pool) {
-    for (const vs of this.virtualServers) {
-      if (vs.Pool === pool.Name) {
-        this.toastr.error(`Pool in use! Virtual Server: ${vs.Name}`);
-        console.log('Pool in use!'); // TODO: Toastr
-        return;
-      }
-    }
+  // deletePool(pool: Pool) {
+  //   for (const vs of this.virtualServers) {
+  //     if (vs.Pool === pool.Name) {
+  //       this.toastr.error(`Pool in use! Virtual Server: ${vs.Name}`);
+  //       console.log('Pool in use!'); // TODO: Toastr
+  //       return;
+  //     }
+  //   }
 
-    const index = this.pools.indexOf(pool);
-    if (index > -1) {
-      this.pools.splice(index, 1);
+  //   const index = this.pools.indexOf(pool);
+  //   if (index > -1) {
+  //     this.pools.splice(index, 1);
 
-      if (!this.deletedPools) {
-        this.deletedPools = new Array<Pool>();
-      }
-      this.deletedPools.push(pool);
+  //     if (!this.deletedPools) {
+  //       this.deletedPools = new Array<Pool>();
+  //     }
+  //     this.deletedPools.push(pool);
 
-      this.dirty = true;
-    }
-  }
+  //     this.dirty = true;
+  //   }
+  // }
 
-  deleteIRule(irule: IRule) {
-    for (const vs of this.virtualServers) {
-      if (vs.IRules.includes(irule.Name)) {
-        this.toastr.error(`iRule in use! Virtual Server: ${vs.Name}`);
-        console.log('iRule in use!'); // TODO: Toastr
-        return;
-      }
-    }
+  // deleteIRule(irule: IRule) {
+  //   for (const vs of this.virtualServers) {
+  //     if (vs.IRules.includes(irule.Name)) {
+  //       this.toastr.error(`iRule in use! Virtual Server: ${vs.Name}`);
+  //       console.log('iRule in use!'); // TODO: Toastr
+  //       return;
+  //     }
+  //   }
 
-    const index = this.irules.indexOf(irule);
-    if (index > -1) {
-      this.irules.splice(index, 1);
+  //   const index = this.irules.indexOf(irule);
+  //   if (index > -1) {
+  //     this.irules.splice(index, 1);
 
-      if (!this.deletedIRules) {
-        this.deletedIRules = new Array<IRule>();
-      }
-      this.deletedIRules.push(irule);
+  //     if (!this.deletedIRules) {
+  //       this.deletedIRules = new Array<IRule>();
+  //     }
+  //     this.deletedIRules.push(irule);
 
-      this.dirty = true;
-    }
-  }
+  //     this.dirty = true;
+  //   }
+  // }
 
-  deleteHealthMonitor(healthMonitor: HealthMonitor) {
-    for (const p of this.pools) {
-      if (p.HealthMonitors.includes(healthMonitor.Name)) {
-        this.toastr.error(`Health Monitor in use! Pool: ${p.Name}`);
-        console.log('Health Monitor in use!'); // TODO: Toastr
-        return;
-      }
-    }
+  // deleteHealthMonitor(healthMonitor: HealthMonitor) {
+  //   for (const p of this.pools) {
+  //     if (p.HealthMonitors.includes(healthMonitor.Name)) {
+  //       this.toastr.error(`Health Monitor in use! Pool: ${p.Name}`);
+  //       console.log('Health Monitor in use!'); // TODO: Toastr
+  //       return;
+  //     }
+  //   }
 
-    const index = this.healthMonitors.indexOf(healthMonitor);
-    if (index > -1) {
-      this.healthMonitors.splice(index, 1);
+  //   const index = this.healthMonitors.indexOf(healthMonitor);
+  //   if (index > -1) {
+  //     this.healthMonitors.splice(index, 1);
 
-      if (!this.deletedHealthMonitors) {
-        this.deletedHealthMonitors = new Array<HealthMonitor>();
-      }
-      this.deletedHealthMonitors.push(healthMonitor);
+  //     if (!this.deletedHealthMonitors) {
+  //       this.deletedHealthMonitors = new Array<HealthMonitor>();
+  //     }
+  //     this.deletedHealthMonitors.push(healthMonitor);
 
-      this.dirty = true;
-    }
-  }
-
-  saveAll() {
-    this.dirty = false;
-    const dto = new LoadBalancerDto();
-
-    dto.VirtualServers = this.virtualServers;
-    dto.Pools = this.pools;
-    dto.VrfId = Number(this.currentVrf.id);
-    dto.IRules = this.irules;
-    dto.HealthMonitors = this.healthMonitors;
-
-    const extra_vars: { [k: string]: any } = {};
-    extra_vars.load_balancer_dto = dto;
-    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
-    extra_vars.vrf_id = this.currentVrf.id;
-    extra_vars.deleted_virtual_servers = this.deletedVirtualServers;
-    extra_vars.deleted_pools = this.deletedPools;
-    extra_vars.deleted_irules = this.deletedIRules;
-    extra_vars.deleted_healthmonitors = this.deletedHealthMonitors;
-
-    const body = { extra_vars };
-
-    this.api.launchTemplate('save-load-balancer-dto', body, true).subscribe(
-      data => {},
-      error => {
-        this.dirty = true;
-      },
-    );
-
-    this.deletedVirtualServers = new Array<VirtualServer>();
-    this.deletedPools = new Array<Pool>();
-    this.deletedIRules = new Array<IRule>();
-    this.deletedHealthMonitors = new Array<HealthMonitor>();
-  }
+  //     this.dirty = true;
+  //   }
+  // }
 
   importLoadBalancerConfig(importObject) {
     // TODO: Import Validation.
@@ -465,6 +432,15 @@ export class LoadBalancersComponent
 
   ngOnInit() {
     this.getVrfs();
+    // this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+    //   cd => {
+    //     if (cd) {
+    //       this.vrfs = cd.tiers;
+    //       this.currentVrf = cd.tiers[0];
+    //       this.getVrfs();
+    //     }
+    //   },
+    // );
   }
 
   ngOnDestroy() {

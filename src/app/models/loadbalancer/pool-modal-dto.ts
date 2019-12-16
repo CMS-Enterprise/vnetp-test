@@ -1,8 +1,7 @@
-import { HealthMonitor } from './health-monitor';
-import { Pool } from './pool';
+import { LoadBalancerHealthMonitor, LoadBalancerPool } from 'api_client';
 
 export class PoolModalDto {
-  Pool: Pool;
+  Pool: LoadBalancerPool;
 
-  HealthMonitors: Array<HealthMonitor>;
+  HealthMonitors: LoadBalancerHealthMonitor[];
 }

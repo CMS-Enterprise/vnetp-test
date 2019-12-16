@@ -2,15 +2,21 @@ import { Pool } from './pool';
 import { VirtualServer } from './virtual-server';
 import { IRule } from './irule';
 import { HealthMonitor } from './health-monitor';
+import {
+  LoadBalancerPool,
+  LoadBalancerVirtualServer,
+  LoadBalancerIrule,
+  LoadBalancerHealthMonitor,
+} from 'api_client';
 
 export class LoadBalancerDto {
-  Pools: Array<Pool>;
+  Pools: LoadBalancerPool[];
 
-  VirtualServers: Array<VirtualServer>;
+  VirtualServers: LoadBalancerVirtualServer[];
 
   VrfId: number;
 
-  IRules: Array<IRule>;
+  IRules: LoadBalancerIrule[];
 
-  HealthMonitors: Array<HealthMonitor>;
+  HealthMonitors: LoadBalancerHealthMonitor[];
 }
