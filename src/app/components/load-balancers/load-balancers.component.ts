@@ -16,16 +16,19 @@ import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Tier, V1TiersService } from 'api_client';
 
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
 })
-export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class LoadBalancersComponent
+  implements OnInit, OnDestroy, PendingChangesGuard {
   navIndex = 0;
 
-  vrfs: Vrf[];
-  currentVrf: Vrf;
+  vrfs: Tier[];
+  currentVrf: Tier;
 
   virtualServers: Array<VirtualServer>;
   pools: Array<Pool>;
@@ -54,6 +57,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
 
+  currentDatacenterSubscription: Subscription;
+
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
@@ -62,7 +67,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   constructor(
     private ngx: NgxSmartModalService,
     private api: AutomationApiService,
-    private papa: Papa,
+    private datacenterService: DatacenterContextService,
+    private tierService: V1TiersService,
     private hs: HelpersService,
     private toastr: ToastrService,
     public helpText: LoadBalancersHelpText,
@@ -72,52 +78,68 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getVrfs() {
-    this.dirty = false;
-
-    let vrfId: number = null;
-
-    if (this.currentVrf) {
-      vrfId = this.currentVrf.id;
-    }
-
-    this.api.getVrfs().subscribe(data => {
-      this.vrfs = data;
-
-      if (!vrfId) {
-        this.currentVrf = this.vrfs[0];
-      } else {
-        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
-
-        if (!this.currentVrf) {
-          this.currentVrf = this.vrfs[0];
-        }
-      }
-      this.getVrfObjects(this.currentVrf);
-    });
+    this.vrfs = [];
+    this.tierService
+      .v1TiersIdGet({
+        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        join:
+          'loadBalancerPools,loadBalancerVirtualServers,loadBalancerNodes,loadBalancerHealthMonitors,loadBalancerIrules',
+      })
+      .subscribe(data => {
+        console.log(data);
+        // will change to not being an array when hardcoded tier goes away
+        this.vrfs = [data];
+        // this.pools = data.
+      });
   }
 
-  getVrfObjects(vrf: Vrf) {
-    const loadBalancerDto = this.hs.getJsonCustomField(
-      vrf,
-      'load_balancers',
-    ) as LoadBalancerDto;
+  // getVrfs() {
+  //   this.dirty = false;
 
-    if (!loadBalancerDto) {
-      this.virtualServers = new Array<VirtualServer>();
-      this.pools = new Array<Pool>();
-      this.irules = new Array<IRule>();
-      this.healthMonitors = new Array<HealthMonitor>();
-    } else if (loadBalancerDto) {
-      this.virtualServers = loadBalancerDto.VirtualServers;
-      this.pools = loadBalancerDto.Pools;
-      this.irules = loadBalancerDto.IRules;
-      this.healthMonitors = loadBalancerDto.HealthMonitors;
-    }
-    this.deletedVirtualServers = new Array<VirtualServer>();
-    this.deletedPools = new Array<Pool>();
-    this.deletedIRules = new Array<IRule>();
-    this.deletedHealthMonitors = new Array<HealthMonitor>();
-  }
+  //   let vrfId: number = null;
+
+  //   if (this.currentVrf) {
+  //     vrfId = this.currentVrf.id;
+  //   }
+
+  //   this.api.getVrfs().subscribe(data => {
+  //     this.vrfs = data;
+
+  //     if (!vrfId) {
+  //       this.currentVrf = this.vrfs[0];
+  //     } else {
+  //       this.currentVrf = this.vrfs.find(v => v.id === vrfId);
+
+  //       if (!this.currentVrf) {
+  //         this.currentVrf = this.vrfs[0];
+  //       }
+  //     }
+  //     this.getVrfObjects(this.currentVrf);
+  //   });
+  // }
+
+  // getVrfObjects(vrf: Vrf) {
+  //   const loadBalancerDto = this.hs.getJsonCustomField(
+  //     vrf,
+  //     'load_balancers',
+  //   ) as LoadBalancerDto;
+
+  //   if (!loadBalancerDto) {
+  //     this.virtualServers = new Array<VirtualServer>();
+  //     this.pools = new Array<Pool>();
+  //     this.irules = new Array<IRule>();
+  //     this.healthMonitors = new Array<HealthMonitor>();
+  //   } else if (loadBalancerDto) {
+  //     this.virtualServers = loadBalancerDto.VirtualServers;
+  //     this.pools = loadBalancerDto.Pools;
+  //     this.irules = loadBalancerDto.IRules;
+  //     this.healthMonitors = loadBalancerDto.HealthMonitors;
+  //   }
+  //   this.deletedVirtualServers = new Array<VirtualServer>();
+  //   this.deletedPools = new Array<Pool>();
+  //   this.deletedIRules = new Array<IRule>();
+  //   this.deletedHealthMonitors = new Array<HealthMonitor>();
+  // }
 
   createVirtualServer() {
     this.subscribeToVirtualServerModal();
@@ -376,7 +398,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
     dto.VirtualServers = this.virtualServers;
     dto.Pools = this.pools;
-    dto.VrfId = this.currentVrf.id;
+    dto.VrfId = Number(this.currentVrf.id);
     dto.IRules = this.irules;
     dto.HealthMonitors = this.healthMonitors;
 
@@ -422,7 +444,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     dto.Pools = this.pools;
     dto.IRules = this.irules;
     dto.HealthMonitors = this.healthMonitors;
-    dto.VrfId = this.currentVrf.id;
+    dto.VrfId = Number(this.currentVrf.id);
 
     return dto;
   }

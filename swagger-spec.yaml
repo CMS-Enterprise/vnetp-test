@@ -8331,13 +8331,13 @@ definitions:
         maxLength: 500
       networkObjects:
         type: array
+        readOnly: true
         items:
-          type: string
+          $ref: '#/definitions/NetworkObject'
       tierId:
         type: string
     required:
       - name
-      - networkObjects
       - tierId
   ServiceObject:
     type: object
@@ -8437,13 +8437,13 @@ definitions:
         maxLength: 500
       serviceObjects:
         type: array
+        readOnly: true
         items:
-          type: string
+          $ref: '#/definitions/ServiceObject'
       tierId:
         type: string
     required:
       - name
-      - serviceObjects
       - tierId
   FirewallRule:
     type: object
@@ -9115,6 +9115,11 @@ definitions:
         type: string
       physicalServerId:
         type: string
+      taggedVlans:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Vlan'
     required:
       - name
       - nativeVlanId
@@ -9225,6 +9230,11 @@ definitions:
         type: string
       applianceId:
         type: string
+      taggedVlans:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Vlan'
     required:
       - name
       - nativeVlanId
