@@ -139,6 +139,10 @@ export class NetworkObjectsGroupsComponent
       throw new Error('Cannot delete provisioned object.');
     }
 
+    const deleteDescription = networkObject.deletedAt
+      ? 'Delete'
+      : 'Soft-Delete';
+
     const deleteFunction = () => {
       if (!networkObject.deletedAt) {
         this.networkObjectService
@@ -157,8 +161,8 @@ export class NetworkObjectsGroupsComponent
 
     this.confirmDeleteObject(
       new YesNoModalDto(
-        'Delete Network Object',
-        `Do you want to delete network object "${networkObject.name}"?`,
+        `${deleteDescription} Network Object?`,
+        `Do you want to ${deleteDescription} network object "${networkObject.name}"?`,
       ),
       deleteFunction,
     );
@@ -178,6 +182,10 @@ export class NetworkObjectsGroupsComponent
     if (networkObjectGroup.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
     }
+
+    const deleteDescription = networkObjectGroup.deletedAt
+      ? 'Delete'
+      : 'Soft-Delete';
 
     const deleteFunction = () => {
       if (!networkObjectGroup.deletedAt) {
@@ -201,8 +209,8 @@ export class NetworkObjectsGroupsComponent
 
     this.confirmDeleteObject(
       new YesNoModalDto(
-        'Delete Network Object Group',
-        `Do you want to delete the network object group "${networkObjectGroup.name}"?`,
+        `${deleteDescription} Network Object Group`,
+        `Do you want to ${deleteDescription} the network object group "${networkObjectGroup.name}"?`,
       ),
       deleteFunction,
     );
@@ -231,9 +239,7 @@ export class NetworkObjectsGroupsComponent
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         const data = modal.getData() as YesNoModalDto;
         modal.removeData();
-        if (!data) {
-          return;
-        } else if (data.modalYes) {
+        if (data && data.modalYes) {
           deleteFunction();
         }
         yesNoModalSubscription.unsubscribe();
