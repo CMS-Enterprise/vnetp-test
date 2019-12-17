@@ -57,7 +57,6 @@ export class NetworkObjectsGroupsComponent
   }
 
   getNetworkObjects() {
-    this.networkObjects = [];
     this.tierService
       .v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjects' })
       .subscribe(data => {
@@ -66,7 +65,6 @@ export class NetworkObjectsGroupsComponent
   }
 
   getNetworkObjectGroups() {
-    this.networkObjectGroups = [];
     this.tierService
       .v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjectGroups' })
       .subscribe(data => {
@@ -211,15 +209,19 @@ export class NetworkObjectsGroupsComponent
   }
 
   ngOnInit() {
-    // TODO: Unsubscribe
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
       cd => {
-        // TODO: Consider refactor to use Subject instead of BehaviorSubject
-        // so this null check isn't required.
         if (cd) {
           this.tiers = cd.tiers;
-          this.currentTier = cd.tiers[0];
-          this.getNetworkObjects();
+
+          if (cd.tiers.length) {
+            this.currentTier = cd.tiers[0];
+            if (this.navIndex === 0) {
+              this.getNetworkObjects();
+            } else {
+              this.getNetworkObjectGroups();
+            }
+          }
         }
       },
     );
