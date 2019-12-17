@@ -1,11 +1,12 @@
-import { LoadBalancerHealthMonitor, LoadBalancerPool } from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerPool, Tier } from 'api_client';
 
 export class Pool {
-  Name: string;
-
-  LoadBalancingMethod: string;
-
-  HealthMonitors: LoadBalancerHealthMonitor[];
-
-  Members: LoadBalancerPool[];
+  name: string;
+  description: string;
+  loadBalancingMethod: string;
+  healthMonitors: LoadBalancerHealthMonitor[];
+  nodes: LoadBalancerPool[];
+  servicePort: number;
+  tierId: string;
+  tier: Tier;
 }

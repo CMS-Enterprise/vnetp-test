@@ -1,19 +1,11 @@
-import { IRule } from './irule';
+import { LoadBalancerPool, LoadBalancerIrule } from 'api_client';
 
 export class VirtualServer {
-  Name: string;
-
-  Description: string;
-
-  SourceAddress: string;
-
-  DestinationAddress: string;
-
-  ServicePort: string;
-
-  Type: string;
-
-  Pool: string;
-
-  IRules: Array<string>;
+  name: string;
+  description: string;
+  sourceIpAddress: string;
+  destinationIpAddress: string;
+  defaultPoolId: string;
+  defaultPool: LoadBalancerPool;
+  irules: LoadBalancerIrule[];
 }

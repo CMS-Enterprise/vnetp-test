@@ -1,15 +1,16 @@
+import { LoadBalancerNodeType, Tier } from 'api_client';
+
 export class PoolMember {
-  Name: string;
+  name: string;
+  description: string;
+  type: LoadBalancerNodeType;
+  ipAddress: string;
+  fqdn: string;
+  // do you want to add this to API?
+  servicePort: number;
+  priority: number;
 
-  Type: string;
-
-  IpAddress: string;
-
-  Fqdn: string;
-
-  ServicePort: number;
-
-  Priority: number;
-
-  AutoPopulate: boolean;
+  autoPopulate: boolean;
+  tier: Tier;
+  tierId: string;
 }
