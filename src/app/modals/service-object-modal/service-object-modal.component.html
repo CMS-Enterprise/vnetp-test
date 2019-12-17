@@ -34,73 +34,72 @@
       </div>
 
       <div class="form-group">
-        <label for="type">Type</label>
+        <label for="protocol">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select
-          name="type"
-          formControlName="type"
+          name="protocol"
+          formControlName="protocol"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
           aria-label="Type"
         >
           <option></option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
+          <option value="TCP">TCP</option>
+          <option value="UDP">UDP</option>
         </select>
-        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
-          <div *ngIf="f.type.errors.required">Type is required</div>
+        <div *ngIf="submitted && f.protocol.errors" class="invalid-feedback">
+          <div *ngIf="f.protocol.errors.required">Type is required</div>
         </div>
       </div>
 
       <div class="form-group">
-          <label for="name">Destination Port/Range</label>
-          <tooltip [message]="helpText.Port"></tooltip>
-          <input
-            type="text"
-            name="name"
-            formControlName="destinationPort"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destinationPort.errors }"
-            aria-label="Destination Port"
-          />
-          <div *ngIf="submitted && f.destinationPort.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationPort.errors.required">
-                  Destination Port/Range required.
-            </div>
-            <div *ngIf="f.destinationPort.errors.validPortNumber">
-              Destination Port/Range values must be greater than 0 and less than or equal to 65535.
-            </div>
-            <div *ngIf="f.destinationPort.errors.validPortRange">
-              Destination Port Range is invalid.
-            </div>
-          </div>
-        </div>
-
-
-      <div class="form-group">
-        <label for="name">Source Port/Range</label>
+        <label for="name">Source Port/Port Range</label>
         <tooltip [message]="helpText.Port"></tooltip>
         <input
           type="text"
           name="name"
-          formControlName="sourcePort"
+          formControlName="sourcePorts"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
           aria-label="Source Port"
         />
-        <div *ngIf="submitted && f.sourcePort.errors" class="invalid-feedback">
-          <div *ngIf="f.sourcePort.errors.required">
+        <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
+          <div *ngIf="f.sourcePorts.errors.required">
             Source Port/Range required.
           </div>
-          <div *ngIf="f.sourcePort.errors.validPortNumber">
+          <div *ngIf="f.sourcePorts.errors.validPortNumber">
             Source Port/Range values must be greater than 0 and less than or
             equal to 65535.
           </div>
-          <div *ngIf="f.sourcePort.errors.validPortRange">
+          <div *ngIf="f.sourcePorts.errors.validPortRange">
             Source Port Range is invalid.
           </div>
         </div>
       </div>
+
+      <div class="form-group">
+          <label for="name">Destination Port/Port Range</label>
+          <tooltip [message]="helpText.Port"></tooltip>
+          <input
+            type="text"
+            name="name"
+            formControlName="destinationPorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+            aria-label="Destination Port"
+          />
+          <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationPorts.errors.required">
+                  Destination Port/Range required.
+            </div>
+            <div *ngIf="f.destinationPorts.errors.validPortNumber">
+              Destination Port/Range values must be greater than 0 and less than or equal to 65535.
+            </div>
+            <div *ngIf="f.destinationPorts.errors.validPortRange">
+              Destination Port Range is invalid.
+            </div>
+          </div>
+        </div>
     </div>
 
       <div class="modal-footer">
