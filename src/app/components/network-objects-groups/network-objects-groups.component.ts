@@ -118,7 +118,7 @@ export class NetworkObjectsGroupsComponent
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription = this.ngx
       .getModal('networkObjectModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getNetworkObjects();
         this.ngx.resetModalData('networkObjectModal');
         this.datacenterService.unlockDatacenter();
@@ -128,7 +128,7 @@ export class NetworkObjectsGroupsComponent
   subscribeToNetworkObjectGroupModal() {
     this.networkObjectGroupModalSubscription = this.ngx
       .getModal('networkObjectGroupModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         const data = modal.getData() as NetworkObjectGroup;
 
         if (data !== undefined) {
