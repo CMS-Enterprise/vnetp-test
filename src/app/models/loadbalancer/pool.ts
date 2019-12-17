@@ -1,11 +1,11 @@
-import { PoolMember } from './pool-member';
+import { LoadBalancerHealthMonitor, LoadBalancerPool } from 'api_client';
 
 export class Pool {
   Name: string;
 
   LoadBalancingMethod: string;
 
-  HealthMonitors: Array<string>; // TODO: Refactor
+  HealthMonitors: LoadBalancerHealthMonitor[];
 
-  Members: Array<PoolMember>;
+  Members: LoadBalancerPool[];
 }

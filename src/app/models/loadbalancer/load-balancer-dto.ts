@@ -14,7 +14,7 @@ export class LoadBalancerDto {
 
   VirtualServers: LoadBalancerVirtualServer[];
 
-  VrfId: number;
+  VrfId: string;
 
   IRules: LoadBalancerIrule[];
 

@@ -9,6 +9,7 @@ import {
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
+import { LoadBalancerPool } from 'api_client';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -17,7 +18,7 @@ import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networkin
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
-  pools: Array<Pool>;
+  pools: LoadBalancerPool[];
   availableIRules: Array<string>;
   selectedIRules: Array<string>;
 
@@ -43,7 +44,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     virtualServer.IRules = Object.assign([], this.selectedIRules);
 
     const dto = new VirtualServerModalDto();
-    dto.VirtualServer = virtualServer;
+    // dto.VirtualServer = virtualServer;
 
     this.ngx.resetModalData('virtualServerModal');
     this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
@@ -68,28 +69,30 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto,
     );
 
-    this.pools = dto.Pools;
+    // this.pools = dto.Pools;
 
     const virtualServer = dto.VirtualServer;
 
     if (virtualServer !== undefined) {
-      this.form.controls.name.setValue(virtualServer.Name);
-      this.form.controls.type.setValue(virtualServer.Type);
-      this.form.controls.sourceAddress.setValue(virtualServer.SourceAddress);
-      this.form.controls.destinationAddress.setValue(
-        virtualServer.DestinationAddress,
+      this.form.controls.name.setValue(virtualServer.name);
+      // this.form.controls.type.setValue(virtualServer.type);
+      this.form.controls.sourceAddress.setValue(
+        virtualServer.sourceAddressTranslation,
       );
-      this.form.controls.servicePort.setValue(virtualServer.ServicePort);
-      this.form.controls.pool.setValue(virtualServer.Pool);
+      this.form.controls.destinationAddress.setValue(
+        virtualServer.destinationIpAddress,
+      );
+      // this.form.controls.servicePort.setValue(virtualServer.ServicePort);
+      // this.form.controls.pool.setValue(virtualServer.Pool);
 
-      if (dto.VirtualServer.IRules) {
-        this.selectedIRules = dto.VirtualServer.IRules;
-      } else {
-        this.selectedIRules = new Array<string>();
-      }
+      // if (dto.VirtualServer.IRules) {
+      //   this.selectedIRules = dto.VirtualServer.IRules;
+      // } else {
+      this.selectedIRules = new Array<string>();
+      // }
     }
 
-    this.getAvailableIRules(dto.IRules.map(i => i.Name));
+    this.getAvailableIRules(dto.IRules.map(i => i.name));
     this.ngx.resetModalData('virtualServerModal');
   }
 

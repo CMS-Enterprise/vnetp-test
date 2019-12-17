@@ -8144,7 +8144,7 @@ definitions:
   Date:
     type: object
     properties: {}
-  Tier:
+  Vlan:
     type: object
     properties:
       id:
@@ -8183,12 +8183,17 @@ definitions:
       description:
         type: string
         maxLength: 500
-      datacenterId:
+      vlanNumber:
+        type: number
+        minimum: 1
+        maximum: 4094
+      tierId:
         type: string
     required:
       - name
-      - datacenterId
-  Datacenter:
+      - vlanNumber
+      - tierId
+  Subnet:
     type: object
     properties:
       id:
@@ -8212,29 +8217,90 @@ definitions:
         allOf:
           - $ref: '#/definitions/Date'
           - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
       name:
         type: string
         minLength: 3
         maxLength: 100
       description:
         type: string
-        maxLength: 100
-      tiers:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/Tier'
+        maxLength: 500
+      network:
+        type: string
+      gateway:
+        type: string
+      vlanId:
+        type: string
+      tierId:
+        type: string
     required:
       - name
-  GeneratedTierBulkDto:
+      - network
+      - gateway
+      - vlanId
+      - tierId
+  StaticRoute:
     type: object
     properties:
-      bulk:
-        type: array
-        items:
-          $ref: '#/definitions/Tier'
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      destinationNetwork:
+        type: string
+      nextHop:
+        type: string
+      metric:
+        type: number
+        minimum: 1
+        maximum: 255
+      tierId:
+        type: string
     required:
-      - bulk
+      - name
+      - destinationNetwork
+      - nextHop
+      - metric
+      - tierId
   NetworkObject:
     type: object
     properties:
@@ -8652,6 +8718,495 @@ definitions:
       - name
       - type
       - tierId
+  LoadBalancerIrule:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      content:
+        type: string
+      tierId:
+        type: string
+    required:
+      - name
+      - content
+      - tierId
+  LoadBalancerNode:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      type:
+        type: string
+        enum:
+          - IpAddress
+          - Fqdn
+      ipAddress:
+        type: string
+      fqdn:
+        type: string
+      autoPopulate:
+        type: boolean
+      tierId:
+        type: string
+    required:
+      - name
+      - type
+      - ipAddress
+      - fqdn
+      - autoPopulate
+      - tierId
+  LoadBalancerHealthMonitor:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      type:
+        type: string
+        enum:
+          - ICMP
+          - UDP
+          - TCP
+          - HTTP
+          - HTTPS
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      interval:
+        type: number
+        minimum: 1
+        maximum: 300
+      timeout:
+        type: number
+        minimum: 1
+        maximum: 300
+      tierId:
+        type: string
+    required:
+      - name
+      - type
+      - servicePort
+      - interval
+      - timeout
+      - tierId
+  LoadBalancerPool:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      loadBalancingMethod:
+        type: string
+        enum:
+          - RoundRobin
+          - LeastSessions
+          - FastestNode
+          - FastestAppResponse
+      nodes:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerNode'
+      healthMonitors:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerHealthMonitor'
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      tierId:
+        type: string
+    required:
+      - name
+      - loadBalancingMethod
+      - servicePort
+      - tierId
+  LoadBalancerVirtualServer:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      sourceIpAddress:
+        type: string
+      destinationIpAddress:
+        type: string
+      defaultPoolId:
+        type: string
+      defaultPool:
+        title: LoadBalancerPool
+        allOf:
+          - $ref: '#/definitions/LoadBalancerPool'
+          - readOnly: true
+      irules:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerIrule'
+      clientSslProfiles:
+        type: array
+        items:
+          type: string
+          enum:
+            - clientssl
+            - clientssl-secure
+            - clientssl-insecure-compatible
+            - crypto-server-default-clientssl
+            - splitsession-default-clientssl
+            - wom-default-clientssl
+      serverSslProfiles:
+        type: array
+        items:
+          type: string
+          enum:
+            - serverssl
+            - serverssl-insecure-incompatbile
+            - splitsession-default-serverssl
+            - apm-default-serverssl
+            - crypto-client-default-serverssl
+            - pcoip-default-serverssl
+            - wom-default-serverssl
+      sourceAddressTranslation:
+        type: string
+        enum:
+          - None
+          - AutoMap
+          - SNAT
+      tierId:
+        type: string
+    required:
+      - name
+      - sourceIpAddress
+      - destinationIpAddress
+      - sourceAddressTranslation
+      - tierId
+  Tier:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      datacenterId:
+        type: string
+      vlans:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Vlan'
+      subnets:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Subnet'
+      staticRoutes:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/StaticRoute'
+      firewallRuleGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/FirewallRuleGroup'
+      networkObjects:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/NetworkObject'
+      networkObjectGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/NetworkObjectGroup'
+      serviceObjects:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/ServiceObject'
+      serviceObjectGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/ServiceObjectGroup'
+      loadBalancerIrules:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerIrule'
+      loadBalancerNodes:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerNode'
+      loadBalancerPools:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerPool'
+      loadBalancerHealthMonitors:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerHealthMonitor'
+      loadBalancerVirtualServers:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerVirtualServer'
+    required:
+      - name
+      - datacenterId
+  Datacenter:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 100
+      tiers:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Tier'
+    required:
+      - name
+  GeneratedTierBulkDto:
+    type: object
+    properties:
+      bulk:
+        type: array
+        items:
+          $ref: '#/definitions/Tier'
+    required:
+      - bulk
   GeneratedFirewallRuleGroupBulkDto:
     type: object
     properties:
@@ -8706,55 +9261,6 @@ definitions:
           $ref: '#/definitions/ServiceObjectGroup'
     required:
       - bulk
-  Vlan:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      vlanNumber:
-        type: number
-        minimum: 1
-        maximum: 4094
-      tierId:
-        type: string
-    required:
-      - name
-      - vlanNumber
-      - tierId
   GeneratedVlanBulkDto:
     type: object
     properties:
@@ -8764,59 +9270,6 @@ definitions:
           $ref: '#/definitions/Vlan'
     required:
       - bulk
-  Subnet:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      network:
-        type: string
-      gateway:
-        type: string
-      vlanId:
-        type: string
-      tierId:
-        type: string
-    required:
-      - name
-      - network
-      - gateway
-      - vlanId
-      - tierId
   GeneratedSubnetBulkDto:
     type: object
     properties:
@@ -8826,61 +9279,6 @@ definitions:
           $ref: '#/definitions/Subnet'
     required:
       - bulk
-  StaticRoute:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      destinationNetwork:
-        type: string
-      nextHop:
-        type: string
-      metric:
-        type: number
-        minimum: 1
-        maximum: 255
-      tierId:
-        type: string
-    required:
-      - name
-      - destinationNetwork
-      - nextHop
-      - metric
-      - tierId
   GeneratedStaticRouteBulkDto:
     type: object
     properties:
@@ -9328,339 +9726,6 @@ definitions:
           $ref: '#/definitions/Appliance'
     required:
       - bulk
-  LoadBalancerNode:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      type:
-        type: string
-        enum:
-          - IpAddress
-          - Fqdn
-      ipAddress:
-        type: string
-      fqdn:
-        type: string
-      autoPopulate:
-        type: boolean
-      tierId:
-        type: string
-    required:
-      - name
-      - type
-      - ipAddress
-      - fqdn
-      - autoPopulate
-      - tierId
-  LoadBalancerHealthMonitor:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      type:
-        type: string
-        enum:
-          - ICMP
-          - UDP
-          - TCP
-          - HTTP
-          - HTTPS
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      interval:
-        type: number
-        minimum: 1
-        maximum: 300
-      timeout:
-        type: number
-        minimum: 1
-        maximum: 300
-      tierId:
-        type: string
-    required:
-      - name
-      - type
-      - servicePort
-      - interval
-      - timeout
-      - tierId
-  LoadBalancerPool:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      loadBalancingMethod:
-        type: string
-        enum:
-          - RoundRobin
-          - LeastSessions
-          - FastestNode
-          - FastestAppResponse
-      nodes:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/LoadBalancerNode'
-      healthMonitors:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/LoadBalancerHealthMonitor'
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      tierId:
-        type: string
-    required:
-      - name
-      - loadBalancingMethod
-      - servicePort
-      - tierId
-  LoadBalancerIrule:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      content:
-        type: string
-      tierId:
-        type: string
-    required:
-      - name
-      - content
-      - tierId
-  LoadBalancerVirtualServer:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      sourceIpAddress:
-        type: string
-      destinationIpAddress:
-        type: string
-      defaultPoolId:
-        type: string
-      defaultPool:
-        title: LoadBalancerPool
-        allOf:
-          - $ref: '#/definitions/LoadBalancerPool'
-          - readOnly: true
-      irules:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/LoadBalancerIrule'
-      clientSslProfiles:
-        type: array
-        items:
-          type: string
-          enum:
-            - clientssl
-            - clientssl-secure
-            - clientssl-insecure-compatible
-            - crypto-server-default-clientssl
-            - splitsession-default-clientssl
-            - wom-default-clientssl
-      serverSslProfiles:
-        type: array
-        items:
-          type: string
-          enum:
-            - serverssl
-            - serverssl-insecure-incompatbile
-            - splitsession-default-serverssl
-            - apm-default-serverssl
-            - crypto-client-default-serverssl
-            - pcoip-default-serverssl
-            - wom-default-serverssl
-      sourceAddressTranslation:
-        type: string
-        enum:
-          - None
-          - AutoMap
-          - SNAT
-      tierId:
-        type: string
-    required:
-      - name
-      - sourceIpAddress
-      - destinationIpAddress
-      - sourceAddressTranslation
-      - tierId
   GeneratedLoadBalancerVirtualServerBulkDto:
     type: object
     properties:

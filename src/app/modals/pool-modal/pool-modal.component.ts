@@ -7,6 +7,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
+import { LoadBalancerNode, LoadBalancerPool } from 'api_client';
 
 @Component({
   selector: 'app-pool-modal',
@@ -16,7 +17,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-  poolMembers: Array<PoolMember>;
+  poolMembers: LoadBalancerNode[];
   poolMemberModalMode: ModalMode;
   editPoolMemberIndex: any;
   poolMemberModalSubscription: Subscription;
@@ -44,7 +45,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     pool.Name = pool.Name.trim();
 
     const dto = new PoolModalDto();
-    dto.Pool = pool;
+    // dto.Pool = pool;
 
     this.ngx.resetModalData('poolModal');
     this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
@@ -63,16 +64,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   private setFormValidators() {}
 
-  deletePoolMember(poolMember: PoolMember) {
+  deletePoolMember(poolMember: LoadBalancerNode) {
     const index = this.poolMembers.indexOf(poolMember);
     if (index > -1) {
       this.poolMembers.splice(index, 1);
     }
   }
 
-  savePoolMember(poolMember: PoolMember) {
+  savePoolMember(poolMember: LoadBalancerNode) {
     if (!this.poolMembers) {
-      this.poolMembers = new Array<PoolMember>();
+      this.poolMembers = new Array<LoadBalancerNode>();
     }
 
     if (this.poolMemberModalMode === ModalMode.Create) {
@@ -88,7 +89,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.ngx.getModal('poolMemberModal').toggle();
   }
 
-  editPoolMember(poolMember: PoolMember) {
+  editPoolMember(poolMember: LoadBalancerNode) {
     this.subscribeToPoolMemberModal();
     this.poolMemberModalMode = ModalMode.Edit;
     this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
@@ -100,7 +101,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.poolMemberModalSubscription = this.ngx
       .getModal('poolMemberModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        let data = modal.getData() as PoolMember;
+        let data = modal.getData() as LoadBalancerNode;
 
         if (data !== undefined) {
           data = Object.assign({}, data);
@@ -120,24 +121,24 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     const pool = dto.Pool;
 
     if (pool !== undefined) {
-      this.form.controls.name.setValue(pool.Name);
-      this.form.controls.loadBalancingMethod.setValue(pool.LoadBalancingMethod);
+      this.form.controls.name.setValue(pool.name);
+      this.form.controls.loadBalancingMethod.setValue(pool.loadBalancingMethod);
 
-      if (dto.Pool.HealthMonitors) {
-        this.selectedHealthMonitors = dto.Pool.HealthMonitors;
-      } else {
-        this.selectedHealthMonitors = new Array<string>();
-      }
+      // if (dto.Pool.HealthMonitors) {
+      //   this.selectedHealthMonitors = dto.Pool.HealthMonitors;
+      // } else {
+      //   this.selectedHealthMonitors = new Array<string>();
+      // }
 
-      if (pool.Members) {
-        this.poolMembers = pool.Members;
+      if (pool.nodes) {
+        this.poolMembers = pool.nodes;
       } else {
-        this.poolMembers = new Array<PoolMember>();
+        this.poolMembers = new Array<LoadBalancerNode>();
       }
     }
 
     if (dto.HealthMonitors) {
-      this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.Name));
+      this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.name));
     }
     this.ngx.resetModalData('poolModal');
   }
@@ -198,7 +199,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
-    this.poolMembers = new Array<PoolMember>();
+    this.poolMembers = new Array<LoadBalancerNode>();
     this.selectedHealthMonitors = new Array<string>();
     this.availableHealthMonitors = new Array<string>();
   }
