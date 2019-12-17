@@ -53,11 +53,11 @@
         <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
       </div>
 
-      <button class="btn btn-success btn-lg" type="submit" (click)="login()">
+      <button class="btn btn-success btn-lg" type="submit">
         Login
       </button>
 
-      <div *ngIf="errorMessage" class="alert alert-danger">
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
         {{ errorMessage }}
       </div>
     </form>

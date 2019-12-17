@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { AppMessage } from '../models/app-message';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,10 @@ export class MessageService {
   }
 
   sendMessage(m: AppMessage) {
+    if (!environment.production) {
+      console.log('debug-messageService-->>', m);
+    }
+
     this.subject.next(m);
     this.messageHistory.push(m);
   }

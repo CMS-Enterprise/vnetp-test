@@ -14,6 +14,8 @@ import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-ob
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Tier } from 'api_client/model/tier';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -21,8 +23,8 @@ import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-network
 })
 export class NetworkObjectsGroupsComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
-  vrfs: Vrf[];
-  currentVrf: Vrf;
+  vrfs: Tier[];
+  currentVrf: Tier;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -40,6 +42,7 @@ export class NetworkObjectsGroupsComponent
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
   Subnets: Array<Subnet>;
+  currentDatacenterSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
@@ -49,6 +52,7 @@ export class NetworkObjectsGroupsComponent
   constructor(
     private ngx: NgxSmartModalService,
     private api: AutomationApiService,
+    private datacenterService: DatacenterContextService,
     private papa: Papa,
     private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
@@ -57,30 +61,30 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
-  getVrfs() {
-    this.dirty = false;
+  // getVrfs() {
+  //   this.dirty = false;
 
-    let vrfId: number = null;
+  //   let vrfId: number = null;
 
-    if (this.currentVrf) {
-      vrfId = this.currentVrf.id;
-    }
+  //   if (this.currentVrf) {
+  //     vrfId = this.currentVrf.id;
+  //   }
 
-    this.api.getVrfs().subscribe(data => {
-      this.vrfs = data;
+  //   this.api.getVrfs().subscribe(data => {
+  //     this.vrfs = data;
 
-      if (!vrfId) {
-        this.currentVrf = this.vrfs[0];
-      } else {
-        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
+  //     if (!vrfId) {
+  //       this.currentVrf = this.vrfs[0];
+  //     } else {
+  //       this.currentVrf = this.vrfs.find(v => v.id === vrfId);
 
-        if (!this.currentVrf) {
-          this.currentVrf = this.vrfs[0];
-        }
-      }
-      this.getVrfObjects(this.currentVrf);
-    });
-  }
+  //       if (!this.currentVrf) {
+  //         this.currentVrf = this.vrfs[0];
+  //       }
+  //     }
+  //     this.getVrfObjects(this.currentVrf);
+  //   });
+  // }
 
   getVrfObjects(vrf: Vrf) {
     const networkObjectDto = this.hs.getJsonCustomField(
@@ -187,7 +191,7 @@ export class NetworkObjectsGroupsComponent
     } else {
       this.networkObjects[this.editNetworkObjectIndex] = networkObject;
     }
-    this.dirty = true;
+    this.datacenterService.lockDatacenter();
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
@@ -237,7 +241,7 @@ export class NetworkObjectsGroupsComponent
 
     dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
+    // dto.VrfId = this.currentVrf.id;
 
     const extra_vars: { [k: string]: any } = {};
     extra_vars.network_object_dto = dto;
@@ -262,6 +266,7 @@ export class NetworkObjectsGroupsComponent
     [
       this.networkObjectModalSubscription,
       this.networkObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
     ].forEach(sub => {
       try {
         if (sub) {
@@ -287,13 +292,23 @@ export class NetworkObjectsGroupsComponent
 
     dto.NetworkObjects = this.networkObjects;
     dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
+    // dto.VrfId = this.currentVrf.id;
 
     return dto;
   }
 
   ngOnInit() {
-    this.getVrfs();
+    // TODO: Unsubscribe
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+      cd => {
+        // TODO: Consider refactor to use Subject instead of BehaviorSubject
+        // so this null check isn't required.
+        if (cd) {
+          this.vrfs = cd.tiers;
+          this.currentVrf = cd.tiers[0];
+        }
+      },
+    );
   }
 
   ngOnDestroy() {

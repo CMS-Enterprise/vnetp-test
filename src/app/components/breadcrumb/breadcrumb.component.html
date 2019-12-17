@@ -1,7 +1,7 @@
 <ul class="breadcrumb" *ngIf="currentUser">
     <li *ngFor="let breadcrumb of breadcrumbs"
         class="breadcrumb-item">
-      <a routerLink="{{breadcrumb.url}}">
+      <a routerLink="{{breadcrumb.url}}" queryParamsHandling="merge">
         {{ breadcrumb.label }}
       </a>
     </li>
