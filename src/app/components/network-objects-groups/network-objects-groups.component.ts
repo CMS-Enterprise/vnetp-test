@@ -39,8 +39,9 @@ export class NetworkObjectsGroupsComponent
   currentDatacenterSubscription: Subscription;
 
   @HostListener('window:beforeunload')
+  @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
+    return !this.datacenterService.datacenterLockValue;
   }
 
   constructor(
@@ -134,7 +135,9 @@ export class NetworkObjectsGroupsComponent
         if (data !== undefined) {
           throw new Error('Not Implemented');
         }
+        this.getNetworkObjectGroups();
         this.ngx.resetModalData('networkObjectGroupModal');
+        this.datacenterService.unlockDatacenter();
       });
   }
 
