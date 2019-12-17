@@ -176,6 +176,14 @@ export class NetworkObjectsGroupsComponent
     }
   }
 
+  getObjectsForNavIndex() {
+    if (this.navIndex === 0) {
+      this.getNetworkObjects();
+    } else {
+      this.getNetworkObjectGroups();
+    }
+  }
+
   private unsubAll() {
     [
       this.networkObjectModalSubscription,
@@ -216,11 +224,7 @@ export class NetworkObjectsGroupsComponent
 
           if (cd.tiers.length) {
             this.currentTier = cd.tiers[0];
-            if (this.navIndex === 0) {
-              this.getNetworkObjects();
-            } else {
-              this.getNetworkObjectGroups();
-            }
+            this.getObjectsForNavIndex();
           }
         }
       },

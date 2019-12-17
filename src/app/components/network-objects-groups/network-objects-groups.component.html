@@ -3,15 +3,15 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Vrf"></tooltip></span>
+      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip></span>
       <select
-        name="vrf"
+        name="tier"
         class="form-control col-md-3 mr-1"
         [(ngModel)]="currentTier"
-        (ngModelChange)="getVrfObjects(currentTier)"
+        (ngModelChange)="getObjectsForNavIndex()"
         [disabled]="dirty"
       >
-        <option *ngFor="let vrf of tiers" [ngValue]="vrf">{{ vrf.name }}</option>
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
     </div>
   </div>
@@ -90,7 +90,7 @@
           </td>
         </tr>
         <tr *ngIf="!networkObjects?.length" class="text-center">
-          <td colspan="8">No Network Objects in this Tier (VRF)</td>
+          <td colspan="8">No Network Objects in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -137,7 +137,7 @@
           </td>
         </tr>
         <tr *ngIf="!networkObjectGroups?.length" class="text-center">
-          <td colspan="3">No Network Object Groups in this Tier (VRF)</td>
+          <td colspan="3">No Network Object Groups in this Tier</td>
         </tr>
       </tbody>
     </table>
