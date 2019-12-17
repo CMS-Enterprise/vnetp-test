@@ -46,9 +46,11 @@
           <th scope="col">Name</th>
           <th scope="col">Type</th>
           <th scope="col">Address</th>
-          <th scope="col">Translated Address</th>
-          <th scope="col">NAT Type | Direction</th>
-          <th scope="col">NAT Protocol Source:Translated Port</th>
+          <th scope="col">NAT Translated IP Address</th>
+          <th scope="col">NAT Type</th>
+          <th scope="col">NAT Direction</th>
+          <th scope="col">NAT Protocol</th>
+          <th scope="col">NAT Source:Translated Port</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -67,16 +69,20 @@
             </span>
           </td>
           <td>
-            <span *ngIf="netObj?.nat">{{ netObj?.translatedIpAddress }}</span>
+            <span>{{ netObj?.translatedIpAddress }}</span>
           </td>
           <td>
-            <span>{{ netObj?.natType }} | {{ netObj?.natDirection }}</span>
+            <span>{{ netObj?.natType }}</span>
+          </td>
+          <td>
+            <span>{{ netObj?.natDirection }}</span>
+          </td>
+          <td>
+            <span>{{ netObj?.natProtocol }}</span>
           </td>
           <td>
             <span *ngIf="netObj?.natService">
-              {{ netObj?.natProtocol }} {{ netObj?.natSourcePort }}:{{
-                netObj?.natTranslatedPort
-              }}
+               {{ netObj?.natSourcePort }} : {{netObj?.natTranslatedPort}}
             </span>
           </td>
           <td class="item-actions">
