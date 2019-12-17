@@ -86,6 +86,11 @@ export class DatacenterContextService {
     return this.datacentersSubject.value;
   }
 
+  /** Current Datacenter Lock State. */
+  public get datacenterLockValue(): boolean {
+    return this.lockCurrentDatacenterSubject.value;
+  }
+
   /** Locks the currentDatacenter. This prevents the
    * datacenter context switch from occurring.
    */
