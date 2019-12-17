@@ -7,11 +7,11 @@
       <select
         name="vrf"
         class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentVrf"
-        (ngModelChange)="getVrfObjects(currentVrf)"
+        [(ngModel)]="currentTier"
+        (ngModelChange)="getVrfObjects(currentTier)"
         [disabled]="dirty"
       >
-        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+        <option *ngFor="let vrf of tiers" [ngValue]="vrf">{{ vrf.name }}</option>
       </select>
     </div>
   </div>
@@ -144,10 +144,10 @@
   </div>
 </div>
 
-<div *ngIf="currentVrf" class="pull-right">
+<div *ngIf="currentTier" class="pull-right">
   <app-import-export
     [exportObject]="exportNetworkObjectConfig()"
-    exportFileName="networkObjects-{{ currentVrf.name }}"
+    exportFileName="networkObjects-{{ currentTier.name }}"
     disableCsv="true"
     (import)="importNetworkObjectConfig($event)"
   ></app-import-export>

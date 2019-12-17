@@ -24,8 +24,8 @@ import {
 })
 export class NetworkObjectsGroupsComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
-  vrfs: Tier[];
-  currentVrf: Tier;
+  tiers: Tier[];
+  currentTier: Tier;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -59,7 +59,7 @@ export class NetworkObjectsGroupsComponent
   getNetworkObjects() {
     this.networkObjects = [];
     this.tierService
-      .v1TiersIdGet({ id: this.currentVrf.id, join: 'networkObjects' })
+      .v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjects' })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;
       });
@@ -68,7 +68,7 @@ export class NetworkObjectsGroupsComponent
   getNetworkObjectGroups() {
     this.networkObjectGroups = [];
     this.tierService
-      .v1TiersIdGet({ id: this.currentVrf.id, join: 'networkObjectGroups' })
+      .v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjectGroups' })
       .subscribe(data => {
         this.networkObjectGroups = data.networkObjectGroups;
       });
@@ -82,7 +82,7 @@ export class NetworkObjectsGroupsComponent
     const dto = new NetworkObjectModalDto();
 
     dto.ModalMode = modalMode;
-    dto.TierId = this.currentVrf.id;
+    dto.TierId = this.currentTier.id;
 
     if (modalMode === ModalMode.Edit) {
       dto.NetworkObject = networkObject;
@@ -105,7 +105,7 @@ export class NetworkObjectsGroupsComponent
     const dto = new NetworkObjectGroupModalDto();
 
     dto.ModalMode = modalMode;
-    dto.TierId = this.currentVrf.id;
+    dto.TierId = this.currentTier.id;
 
     if (modalMode === ModalMode.Edit) {
       dto.NetworkObjectGroup = networkObjectGroup;
@@ -217,8 +217,8 @@ export class NetworkObjectsGroupsComponent
         // TODO: Consider refactor to use Subject instead of BehaviorSubject
         // so this null check isn't required.
         if (cd) {
-          this.vrfs = cd.tiers;
-          this.currentVrf = cd.tiers[0];
+          this.tiers = cd.tiers;
+          this.currentTier = cd.tiers[0];
           this.getNetworkObjects();
         }
       },
