@@ -62,6 +62,18 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
           },
           error => {},
         );
+    } else {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsIdPut({
+          id: this.NetworkObjectGroupId,
+          networkObjectGroup: modalNetworkObjectGroup,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
     }
 
     this.closeModal();
