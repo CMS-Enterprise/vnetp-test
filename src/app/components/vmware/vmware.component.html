@@ -1,0 +1,55 @@
+<div>
+  <h1>VMWare</h1>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <button
+      type="button"
+      class="btn btn-success mr-1"
+      (click)="createVirtualMachine()"
+    >
+      <fa name="plus"></fa>
+      Create Virtual Machine
+    </button>
+
+    <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
+      <fa name="refresh"></fa>
+      Refresh
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">CPUs</th>
+        <th scope="col">Cores per Socket</th>
+        <th scope="col">Memory</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vm of virtualMachines">
+        <td>
+          {{ vm.Name }}
+        </td>
+        <td>
+          {{ vm.CpuCount }}
+        </td>
+        <td>
+          {{ vm.CoreCount }}
+        </td>
+        <td>
+          {{ vm.MemorySize }}
+        </td>
+        <td>
+          <fa name="pencil" (click)="editPhysicalServer(vm)"></fa>
+          <fa name="trash" (click)="deletePhysicalServer(vm)"></fa>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualMachines?.length" class="text-center">
+        <td colspan="9">No Virtual Machines</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-virtual-machine-modal></app-virtual-machine-modal>

@@ -27,7 +27,7 @@ import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.
 import { TiersComponent } from './components/tiers/tiers.component';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
-import { VmwareComponent } from './vmware/vmware.component';
+import { VmwareComponent } from './components/vmware/vmware.component';
 
 // tslint:disable: max-line-length
 
