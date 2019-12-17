@@ -11,7 +11,7 @@
         class="form-control col-md-3 mr-1"
         [(ngModel)]="currentTier"
         (ngModelChange)="getObjectsForNavIndex()"
-        [disabled]="dirty"
+        [disabled]="datacenterService.datacenterLockValue"
       >
         <option *ngFor="let tier of tiers" [ngValue]="tier">{{
           tier.name

@@ -53,8 +53,8 @@
       </div>
 
       <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
-        <label for="name">Host Address</label>
-        <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.ipAddress"></tooltip>
+        <label for="name">IP Address</label>
+        <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
         <input
           type="text"
           name="name"
@@ -63,7 +63,7 @@
           [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
           [dropSpecialCharacters]="false"
           mask="099.099.099.099/09"
-          aria-label="Host Address"
+          aria-label="IP Address"
           *ngIf="f.type.value == 'IpAddress'"
         />
         <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
@@ -79,7 +79,7 @@
       <div class="form-group">
         <label for="subnetMask" *ngIf="f.type.value == 'Range'"
           >Start Address</label>
-          <tooltip *ngIf="f.type.value == 'range'" [message]="helpText.startIpAddress"></tooltip>
+          <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.StartIpAddress"></tooltip>
         <input
           type="text"
           name="startIpAddress"
@@ -114,7 +114,7 @@
       <div class="form-group">
         <label for="subnetMask" *ngIf="f.type.value == 'Range'"
           >End Address</label>
-          <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.endIpAddress"></tooltip>
+          <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.EndIpAddress"></tooltip>
         <input
           type="text"
           name="endIpAddress"
@@ -149,13 +149,13 @@
           <label class="form-check-label" for="nat">
             NAT
           </label>
-          <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.Nat"></tooltip>
+          <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.Nat"></tooltip>
         </div>
       </div>
       
       <div class="form-group" *ngIf="f.nat.value">
         <label for="natType">NAT Type</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.Source"></tooltip>
+        <tooltip *ngIf="f.nat.value" [message]="helpText.NatType"></tooltip>
         <select
         name="natType"
         formControlName="natType"
@@ -171,7 +171,7 @@
 
       <div class="form-group" *ngIf="f.nat.value">
         <label for="natDirection">NAT Direction</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.Destination"></tooltip>
+        <tooltip *ngIf="f.nat.value" [message]="helpText.NatDirection"></tooltip>
         <select
           name="natDirection"
           formControlName="natDirection"
@@ -245,7 +245,7 @@
           <label for="natSourcePort">
             Source Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.natSourcePort"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.NatSourcePort"></tooltip>
           <input
             type="text"
             name="natSourcePort"
@@ -260,7 +260,7 @@
           <label for="natTranslatedPort">
             Destination Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.natTranslatedPort"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
           <input
             type="text"
             name="natTranslatedPort"

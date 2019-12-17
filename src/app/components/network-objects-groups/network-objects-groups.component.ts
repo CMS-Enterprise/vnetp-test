@@ -3,7 +3,6 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
@@ -31,11 +30,9 @@ export class NetworkObjectsGroupsComponent
   networkObjectGroups: Array<NetworkObjectGroup>;
 
   navIndex = 0;
-  dirty: boolean;
 
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
-  Subnets: Array<Subnet>;
   currentDatacenterSubscription: Subscription;
 
   @HostListener('window:beforeunload')
@@ -46,7 +43,7 @@ export class NetworkObjectsGroupsComponent
 
   constructor(
     private ngx: NgxSmartModalService,
-    private datacenterService: DatacenterContextService,
+    public datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
