@@ -16,6 +16,7 @@ import {
   NetworkObjectGroup,
   V1NetworkSecurityNetworkObjectGroupsService,
 } from 'api_client';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -127,11 +128,6 @@ export class NetworkObjectsGroupsComponent
     this.networkObjectGroupModalSubscription = this.ngx
       .getModal('networkObjectGroupModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as NetworkObjectGroup;
-
-        if (data !== undefined) {
-          throw new Error('Not Implemented');
-        }
         this.getNetworkObjectGroups();
         this.ngx.resetModalData('networkObjectGroupModal');
         this.datacenterService.unlockDatacenter();
@@ -143,20 +139,29 @@ export class NetworkObjectsGroupsComponent
       throw new Error('Cannot delete provisioned object.');
     }
 
-    // TODO: Warning Modal
-    if (!networkObject.deletedAt) {
-      this.networkObjectService
-        .v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id })
-        .subscribe(data => {
-          this.getNetworkObjects();
-        });
-    } else {
-      this.networkObjectService
-        .v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id })
-        .subscribe(data => {
-          this.getNetworkObjects();
-        });
-    }
+    const deleteFunction = () => {
+      if (!networkObject.deletedAt) {
+        this.networkObjectService
+          .v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id })
+          .subscribe(data => {
+            this.getNetworkObjects();
+          });
+      } else {
+        this.networkObjectService
+          .v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id })
+          .subscribe(data => {
+            this.getNetworkObjects();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        'Delete Network Object',
+        `Do you want to delete network object "${networkObject.name}"?`,
+      ),
+      deleteFunction,
+    );
   }
 
   restoreNetworkObject(networkObject: NetworkObject) {
@@ -174,24 +179,33 @@ export class NetworkObjectsGroupsComponent
       throw new Error('Cannot delete provisioned object.');
     }
 
-    // TODO: Warning Modal
-    if (!networkObjectGroup.deletedAt) {
-      this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
-          id: networkObjectGroup.id,
-        })
-        .subscribe(data => {
-          this.getNetworkObjectGroups();
-        });
-    } else {
-      this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsIdDelete({
-          id: networkObjectGroup.id,
-        })
-        .subscribe(data => {
-          this.getNetworkObjectGroups();
-        });
-    }
+    const deleteFunction = () => {
+      if (!networkObjectGroup.deletedAt) {
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
+            id: networkObjectGroup.id,
+          })
+          .subscribe(data => {
+            this.getNetworkObjectGroups();
+          });
+      } else {
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsIdDelete({
+            id: networkObjectGroup.id,
+          })
+          .subscribe(data => {
+            this.getNetworkObjectGroups();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        'Delete Network Object Group',
+        `Do you want to delete the network object group "${networkObjectGroup.name}"?`,
+      ),
+      deleteFunction,
+    );
   }
 
   restoreNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
@@ -204,6 +218,26 @@ export class NetworkObjectsGroupsComponent
           this.getNetworkObjectGroups();
         });
     }
+  }
+
+  private confirmDeleteObject(
+    modalDto: YesNoModalDto,
+    deleteFunction: () => void,
+  ) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (!data) {
+          return;
+        } else if (data.modalYes) {
+          deleteFunction();
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   getObjectsForNavIndex() {
