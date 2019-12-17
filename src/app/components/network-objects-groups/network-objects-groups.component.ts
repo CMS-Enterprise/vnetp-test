@@ -139,6 +139,10 @@ export class NetworkObjectsGroupsComponent
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
+    if (networkObject.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+
     // TODO: Warning Modal
     if (!networkObject.deletedAt) {
       this.networkObjectService
@@ -155,7 +159,21 @@ export class NetworkObjectsGroupsComponent
     }
   }
 
+  restoreNetworkObject(networkObject: NetworkObject) {
+    if (networkObject.deletedAt) {
+      this.networkObjectService
+        .v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id })
+        .subscribe(data => {
+          this.getNetworkObjects();
+        });
+    }
+  }
+
   deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
+    if (networkObjectGroup.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+
     // TODO: Warning Modal
     if (!networkObjectGroup.deletedAt) {
       this.networkObjectGroupService
@@ -168,6 +186,18 @@ export class NetworkObjectsGroupsComponent
     } else {
       this.networkObjectGroupService
         .v1NetworkSecurityNetworkObjectGroupsIdDelete({
+          id: networkObjectGroup.id,
+        })
+        .subscribe(data => {
+          this.getNetworkObjectGroups();
+        });
+    }
+  }
+
+  restoreNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
+    if (networkObjectGroup.deletedAt) {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsIdRestorePatch({
           id: networkObjectGroup.id,
         })
         .subscribe(data => {

@@ -3,7 +3,9 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip></span>
+      <span class="col-form-label mr-2"
+        >Tier <tooltip [message]="helpText.Tier"></tooltip
+      ></span>
       <select
         name="tier"
         class="form-control col-md-3 mr-1"
@@ -11,7 +13,9 @@
         (ngModelChange)="getObjectsForNavIndex()"
         [disabled]="dirty"
       >
-        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{
+          tier.name
+        }}</option>
       </select>
     </div>
   </div>
@@ -19,11 +23,14 @@
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0; getNetworkObjects()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-        >Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip></a>
+        >Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip
+      ></a>
     </li>
     <li class="nav-item" (click)="navIndex = 1; getNetworkObjectGroups()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >Network Object Groups <tooltip [message]="helpText.NetworkObjects"></tooltip></a>
+        >Network Object Groups
+        <tooltip [message]="helpText.NetworkObjects"></tooltip
+      ></a>
     </li>
   </ul>
 
@@ -63,7 +70,9 @@
             <span>{{ netObj?.type }}</span>
           </td>
           <td>
-            <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+            <span *ngIf="netObj?.type === 'IpAddress'">{{
+              netObj?.ipAddress
+            }}</span>
             <span *ngIf="netObj?.type === 'Range'">
               {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }}
             </span>
@@ -82,17 +91,31 @@
           </td>
           <td>
             <span *ngIf="netObj?.natService">
-               {{ netObj?.natSourcePort }} : {{netObj?.natTranslatedPort}}
+              {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }}
             </span>
           </td>
           <td class="item-actions">
             <fa
               name="pencil"
-              (click)="openNetworkObjectModal('Edit',netObj)"
+              *ngIf="!netObj?.deletedAt"
+              (click)="openNetworkObjectModal('Edit', netObj)"
               aria-label="Edit Network Object"
             >
             </fa>
-            <fa name="trash" [ngClass]="{'fg-danger': netObj.deletedAt }" (click)="deleteNetworkObject(netObj)"> </fa>
+            <fa
+              name="undo"
+              *ngIf="netObj?.deletedAt"
+              class="fg-success"
+              (click)="restoreNetworkObject(netObj)"
+              aria-label="Restore Network Object"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': netObj.deletedAt }"
+              (click)="deleteNetworkObject(netObj)"
+              aria-label="Soft-Delete/Delete Network Object"
+            >
+            </fa>
           </td>
         </tr>
         <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -134,12 +157,23 @@
           <td class="item-actions">
             <fa
               name="pencil"
+              *ngIf="!netObjGroup?.deletedAt"
               (click)="openNetworkObjectGroupModal('Edit', netObjGroup)"
               aria-label="Edit Network Object Group"
-            >
-            </fa>
-            <fa name="trash" [ngClass]="{'fg-danger': netObjGroup.deletedAt }" (click)="deleteNetworkObjectGroup(netObjGroup)">
-            </fa>
+            ></fa>
+            <fa
+              name="undo"
+              *ngIf="netObjGroup?.deletedAt"
+              class="fg-success"
+              (click)="restoreNetworkObjectGroup(netObjGroup)"
+              aria-label="Restore Network Object Group"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': netObjGroup.deletedAt }"
+              (click)="deleteNetworkObjectGroup(netObjGroup)"
+              aria-label="Soft-Delete/Delete Network Object Group"
+            ></fa>
           </td>
         </tr>
         <tr *ngIf="!networkObjectGroups?.length" class="text-center">
