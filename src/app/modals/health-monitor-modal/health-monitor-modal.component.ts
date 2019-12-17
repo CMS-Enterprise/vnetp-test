@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerHealthMonitor } from 'api_client';
+import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -26,11 +26,11 @@ export class HealthMonitorModalComponent implements OnInit {
     }
 
     const healthMonitor = new HealthMonitor();
-    healthMonitor.Name = this.form.value.name;
-    healthMonitor.Type = this.form.value.type;
-    healthMonitor.ServicePort = this.form.value.servicePort;
-    healthMonitor.Interval = this.form.value.interval;
-    healthMonitor.Timeout = this.form.value.timeout;
+    healthMonitor.name = this.form.value.name;
+    healthMonitor.type = this.form.value.type;
+    healthMonitor.servicePort = this.form.value.servicePort;
+    healthMonitor.interval = this.form.value.interval;
+    healthMonitor.timeout = this.form.value.timeout;
 
     this.ngx.resetModalData('healthMonitorModal');
     this.ngx.setModalData(

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IRule } from 'src/app/models/loadbalancer/irule';
 import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerIrule } from 'api_client';
+import { IRule } from 'src/app/models/loadbalancer/irule';
 
 @Component({
   selector: 'app-irule-modal',
@@ -26,8 +26,8 @@ export class IRuleModalComponent implements OnInit {
     }
 
     const irule = new IRule();
-    irule.Name = this.form.value.name;
-    irule.Content = this.form.value.content;
+    irule.name = this.form.value.name;
+    irule.content = this.form.value.content;
 
     this.ngx.resetModalData('iruleModal');
     this.ngx.setModalData(Object.assign({}, irule), 'iruleModal');

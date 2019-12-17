@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import {
   ValidateIpv4Any,
   ValidateIpv4Address,
 } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
+import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 
 @Component({
   selector: 'app-pool-member-modal',
@@ -31,13 +31,13 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     }
 
     const poolMember = new PoolMember();
-    poolMember.Name = this.form.value.name;
-    poolMember.Type = this.form.value.type;
-    poolMember.IpAddress = this.form.value.ipAddress;
-    poolMember.Fqdn = this.form.value.fqdn;
-    poolMember.AutoPopulate = this.form.value.autoPopulate;
-    poolMember.ServicePort = this.form.value.servicePort;
-    poolMember.Priority = this.form.value.priority;
+    poolMember.name = this.form.value.name;
+    poolMember.type = this.form.value.type;
+    poolMember.ipAddress = this.form.value.ipAddress;
+    poolMember.fqdn = this.form.value.fqdn;
+    poolMember.autoPopulate = this.form.value.autoPopulate;
+    poolMember.servicePort = this.form.value.servicePort;
+    poolMember.priority = this.form.value.priority;
 
     this.ngx.resetModalData('poolMemberModal');
     this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
@@ -93,12 +93,12 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       this.ngx.getModalData('poolMemberModal') as PoolMember,
     );
     if (poolMember !== undefined) {
-      this.form.controls.name.setValue(poolMember.Name);
-      this.form.controls.type.setValue(poolMember.Type);
-      this.form.controls.ipAddress.setValue(poolMember.IpAddress);
-      this.form.controls.fqdn.setValue(poolMember.Fqdn);
-      this.form.controls.autoPopulate.setValue(poolMember.AutoPopulate);
-      this.form.controls.servicePort.setValue(poolMember.ServicePort);
+      this.form.controls.name.setValue(poolMember.name);
+      this.form.controls.type.setValue(poolMember.type);
+      this.form.controls.ipAddress.setValue(poolMember.ipAddress);
+      this.form.controls.fqdn.setValue(poolMember.fqdn);
+      this.form.controls.autoPopulate.setValue(poolMember.autoPopulate);
+      this.form.controls.servicePort.setValue(poolMember.servicePort);
     }
     this.ngx.resetModalData('poolMemberModal');
   }

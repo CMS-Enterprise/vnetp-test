@@ -119,8 +119,8 @@ export class LoadBalancersComponent
     }
     this.subscribeToPoolModal();
     const dto = new PoolModalDto();
-    dto.Pool = pool;
-    dto.HealthMonitors = this.healthMonitors;
+    // dto.pool = pool;
+    dto.healthMonitors = this.healthMonitors;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
 

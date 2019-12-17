@@ -7,7 +7,12 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerNode, LoadBalancerPool } from 'api_client';
+import {
+  LoadBalancerNode,
+  LoadBalancerPool,
+  LoadBalancerHealthMonitorType,
+  LoadBalancerHealthMonitor,
+} from 'api_client';
 
 @Component({
   selector: 'app-pool-modal',
@@ -21,8 +26,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   poolMemberModalMode: ModalMode;
   editPoolMemberIndex: any;
   poolMemberModalSubscription: Subscription;
-  selectedHealthMonitors: string[];
-  availableHealthMonitors: string[];
+  selectedHealthMonitors: LoadBalancerHealthMonitor[];
+  availableHealthMonitors: LoadBalancerHealthMonitor[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -37,15 +42,15 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     const pool = new Pool();
-    pool.Name = this.form.value.name;
-    pool.LoadBalancingMethod = this.form.value.loadBalancingMethod;
-    pool.Members = Object.assign([], this.poolMembers);
-    pool.HealthMonitors = Object.assign([], this.selectedHealthMonitors);
+    pool.name = this.form.value.name;
+    pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
+    pool.nodes = Object.assign([], this.poolMembers);
+    pool.healthMonitors = Object.assign([], this.selectedHealthMonitors);
 
-    pool.Name = pool.Name.trim();
+    pool.name = pool.name.trim();
 
     const dto = new PoolModalDto();
-    // dto.Pool = pool;
+    dto.pool = pool;
 
     this.ngx.resetModalData('poolModal');
     this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
@@ -118,17 +123,17 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       this.ngx.getModalData('poolModal') as PoolModalDto,
     );
 
-    const pool = dto.Pool;
+    const pool = dto.pool;
 
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.name);
       this.form.controls.loadBalancingMethod.setValue(pool.loadBalancingMethod);
 
-      // if (dto.Pool.HealthMonitors) {
-      //   this.selectedHealthMonitors = dto.Pool.HealthMonitors;
-      // } else {
-      //   this.selectedHealthMonitors = new Array<string>();
-      // }
+      if (dto.pool.healthMonitors) {
+        this.selectedHealthMonitors = dto.pool.healthMonitors;
+      } else {
+        this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+      }
 
       if (pool.nodes) {
         this.poolMembers = pool.nodes;
@@ -137,21 +142,23 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (dto.HealthMonitors) {
-      this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.name));
+    if (dto.healthMonitors) {
+      // this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.name));
     }
     this.ngx.resetModalData('poolModal');
   }
 
-  private getAvailableHealthMonitors(healthMonitors: Array<string>) {
-    this.availableHealthMonitors = new Array<string>();
+  private getAvailableHealthMonitors(
+    healthMonitors: Array<LoadBalancerHealthMonitor>,
+  ) {
+    this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
 
     if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<string>();
+      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
     }
 
     if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<string>();
+      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
     }
 
     healthMonitors.forEach(healthMonitor => {
@@ -200,8 +207,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.buildForm();
     this.poolMembers = new Array<LoadBalancerNode>();
-    this.selectedHealthMonitors = new Array<string>();
-    this.availableHealthMonitors = new Array<string>();
+    this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+    this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
   }
 
   ngOnInit() {

@@ -35,13 +35,13 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     }
 
     const virtualServer = new VirtualServer();
-    virtualServer.Name = this.form.value.name;
-    virtualServer.Type = this.form.value.type;
-    virtualServer.SourceAddress = this.form.value.sourceAddress;
-    virtualServer.DestinationAddress = this.form.value.destinationAddress;
-    virtualServer.ServicePort = this.form.value.servicePort;
-    virtualServer.Pool = this.form.value.pool;
-    virtualServer.IRules = Object.assign([], this.selectedIRules);
+    virtualServer.name = this.form.value.name;
+    // virtualServer.type = this.form.value.type;
+    virtualServer.sourceIpAddress = this.form.value.sourceAddress;
+    virtualServer.destinationIpAddress = this.form.value.destinationAddress;
+    // virtualServer.servicePort = this.form.value.servicePort;
+    virtualServer.defaultPool = this.form.value.pool;
+    virtualServer.irules = Object.assign([], this.selectedIRules);
 
     const dto = new VirtualServerModalDto();
     // dto.VirtualServer = virtualServer;
