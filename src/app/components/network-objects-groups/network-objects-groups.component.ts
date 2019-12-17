@@ -1,11 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription, Observable } from 'rxjs';
-import { Papa } from 'ngx-papaparse';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
@@ -18,6 +14,8 @@ import {
   V1TiersService,
   NetworkObject,
   V1NetworkSecurityNetworkObjectsService,
+  NetworkObjectGroup,
+  V1NetworkSecurityNetworkObjectGroupsService,
 } from 'api_client';
 
 @Component({
@@ -33,12 +31,6 @@ export class NetworkObjectsGroupsComponent
   networkObjectGroups: Array<NetworkObjectGroup>;
 
   navIndex = 0;
-
-  editNetworkObjectIndex: number;
-  editNetworkObjectGroupIndex: number;
-
-  networkObjectModalMode: ModalMode;
-  networkObjectGroupModalMode: ModalMode;
   dirty: boolean;
 
   networkObjectModalSubscription: Subscription;
@@ -53,11 +45,10 @@ export class NetworkObjectsGroupsComponent
 
   constructor(
     private ngx: NgxSmartModalService,
-    private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
-    private papa: Papa,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
   ) {
@@ -74,12 +65,19 @@ export class NetworkObjectsGroupsComponent
       });
   }
 
+  getNetworkObjectGroups() {
+    this.networkObjectGroups = [];
+    this.tierService
+      .v1TiersIdGet({ id: this.currentVrf.id, join: 'networkObjectGroups' })
+      .subscribe(data => {
+        this.networkObjectGroups = data.networkObjectGroups;
+      });
+  }
+
   openNetworkObjectModal(modalMode: ModalMode, networkObject?: NetworkObject) {
     if (modalMode === ModalMode.Edit && !networkObject) {
       throw new Error('Network Object required.');
     }
-
-    this.subscribeToNetworkObjectModal();
 
     const dto = new NetworkObjectModalDto();
 
@@ -90,34 +88,32 @@ export class NetworkObjectsGroupsComponent
       dto.NetworkObject = networkObject;
     }
 
+    this.subscribeToNetworkObjectModal();
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
 
-  createNetworkObjectGroup() {
-    this.subscribeToNetworkObjectGroupModal();
-    this.networkObjectGroupModalMode = ModalMode.Create;
+  openNetworkObjectGroupModal(
+    modalMode: ModalMode,
+    networkObjectGroup: NetworkObjectGroup,
+  ) {
+    if (modalMode === ModalMode.Edit && !networkObjectGroup) {
+      throw new Error('Network Object required.');
+    }
 
     const dto = new NetworkObjectGroupModalDto();
-    dto.Subnets = this.Subnets;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
-    this.ngx.getModal('networkObjectGroupModal').open();
-  }
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentVrf.id;
 
-  editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
+    if (modalMode === ModalMode.Edit) {
+      dto.NetworkObjectGroup = networkObjectGroup;
+    }
+
     this.subscribeToNetworkObjectGroupModal();
-    this.networkObjectGroupModalMode = ModalMode.Edit;
-
-    const dto = new NetworkObjectGroupModalDto();
-    dto.Subnets = this.Subnets;
-    dto.NetworkObjectGroup = networkObjectGroup;
-
+    this.datacenterService.lockDatacenter();
     this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
-    this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(
-      networkObjectGroup,
-    );
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 
@@ -162,10 +158,23 @@ export class NetworkObjectsGroupsComponent
   }
 
   deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    const index = this.networkObjectGroups.indexOf(networkObjectGroup);
-    if (index > -1) {
-      this.networkObjectGroups.splice(index, 1);
-      this.dirty = true;
+    // TODO: Warning Modal
+    if (!networkObjectGroup.deletedAt) {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
+          id: networkObjectGroup.id,
+        })
+        .subscribe(data => {
+          this.getNetworkObjectGroups();
+        });
+    } else {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsIdDelete({
+          id: networkObjectGroup.id,
+        })
+        .subscribe(data => {
+          this.getNetworkObjectGroups();
+        });
     }
   }
 
@@ -188,20 +197,17 @@ export class NetworkObjectsGroupsComponent
   importNetworkObjectConfig(config) {
     // TODO: Import Validation
     // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    this.networkObjects = config.NetworkObjects;
-    this.networkObjectGroups = config.NetworkObjectGroups;
-
-    this.dirty = true;
+    // this.networkObjects = config.NetworkObjects;
+    // this.networkObjectGroups = config.NetworkObjectGroups;
+    // this.dirty = true;
   }
 
   exportNetworkObjectConfig() {
-    const dto = new NetworkObjectDto();
-
+    // const dto = new NetworkObjectDto();
     // dto.NetworkObjects = this.networkObjects;
-    dto.NetworkObjectGroups = this.networkObjectGroups;
+    // dto.NetworkObjectGroups = this.networkObjectGroups;
     // dto.VrfId = this.currentVrf.id;
-
-    return dto;
+    // return dto;
   }
 
   ngOnInit() {

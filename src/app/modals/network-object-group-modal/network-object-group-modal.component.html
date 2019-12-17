@@ -53,11 +53,17 @@
 
       Network Objects
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
-      <div class="btn-group-sm pull-right mb-2" role="group">
+      <div *ngIf="ModalMode==='Edit'" class="btn-group-sm pull-right mb-2" role="group">
+
+        <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{standalone: true}">
+          <option></option>
+          <option *ngFor="let tierNetworkObject of tierNetworkObjects" [ngValue]="tierNetworkObject">{{ tierNetworkObject?.name }}</option>
+        </select>
+
         <button
           type="button"
           class="btn btn-info"
-          (click)="createNetworkObject()"
+          (click)="addNetworkObject()"
           aria-label="Network Object"
         >
           <fa name="plus"></fa>
@@ -77,23 +83,19 @@
         <tbody>
           <tr *ngFor="let netObj of networkObjects">
             <td>
-              <p>{{ netObj.Name }}</p>
+              <p>{{ netObj.name }}</p>
             </td>
             <td>
-              <p>{{ netObj.Type }}</p>
+              <p>{{ netObj.type }}</p>
             </td>
             <td>
-              <p *ngIf="netObj.Type === 'host'">{{ netObj.HostAddress }}</p>
-              <p *ngIf="netObj.Type === 'range'">
-                {{ netObj.StartAddress }} - {{ netObj.EndAddress }}
-              </p>
-              <p *ngIf="netObj.Type === 'subnet'">
-                {{ netObj.CidrAddress }}
+              <p *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</p>
+              <p *ngIf="netObj.type === 'Range'">
+                {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }}
               </p>
             </td>
             <td class="item-actions">
-              <fa name="pencil" (click)="editNetworkObject(netObj)"> </fa>
-              <fa name="trash" (click)="deleteNetworkObject(netObj)"> </fa>
+              <fa name="trash" (click)="removeNetworkObject(netObj)"> </fa>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">
