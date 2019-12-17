@@ -60,16 +60,16 @@
       <tbody>
         <tr *ngFor="let svcObj of serviceObjects">
           <td>
-            <span>{{ serviceObject.Name }}</span>
+            <span>{{ svcObj?.name }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.Type }}</span>
+            <span>{{ svcObj?.protocol }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.SourcePort }}</span>
+            <span>{{ svcObj?.sourcePorts }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.DestinationPort }}</span>
+            <span>{{ svcObj?.destinationPorts }}</span>
           </td>
           <td class="item-actions">
             <fa
