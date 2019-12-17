@@ -51,6 +51,7 @@ export class LoadBalancersComponent
   iruleModalMode: ModalMode;
   healthMonitorModalMode: ModalMode;
 
+  // we shouldn't need any 'dirty' if we are saving on modals
   dirty: boolean;
 
   virtualServerModalSubscription: Subscription;
@@ -264,7 +265,7 @@ export class LoadBalancersComponent
     } else {
       this.healthMonitors[this.editHealthMonitorIndex] = healthMonitor;
     }
-    this.dirty = true;
+    // this.dirty = true;
   }
 
   saveIRule(irule: LoadBalancerIrule) {

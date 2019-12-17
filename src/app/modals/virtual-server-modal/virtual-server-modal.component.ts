@@ -9,7 +9,7 @@ import {
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerPool } from 'api_client';
+import { LoadBalancerPool, LoadBalancerIrule } from 'api_client';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -19,8 +19,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   pools: LoadBalancerPool[];
-  availableIRules: Array<string>;
-  selectedIRules: Array<string>;
+  availableIRules: LoadBalancerIrule[];
+  selectedIRules: LoadBalancerIrule[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -64,6 +64,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
+    // I don't think virtual server modal dto is aligned with API
     const dto = Object.assign(
       {},
       this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto,
@@ -75,36 +76,29 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.name);
+      // not sure what field this maps to in new api
       // this.form.controls.type.setValue(virtualServer.type);
       this.form.controls.sourceAddress.setValue(
         virtualServer.sourceAddressTranslation,
       );
+      // is this the right field to map to?
       this.form.controls.destinationAddress.setValue(
         virtualServer.destinationIpAddress,
       );
-      // this.form.controls.servicePort.setValue(virtualServer.ServicePort);
-      // this.form.controls.pool.setValue(virtualServer.Pool);
+      // is this the right field to map to?
+      this.form.controls.servicePort.setValue(virtualServer.sourceIpAddress);
+      this.form.controls.pool.setValue(virtualServer.defaultPool);
 
-      // if (dto.VirtualServer.IRules) {
-      //   this.selectedIRules = dto.VirtualServer.IRules;
-      // } else {
-      this.selectedIRules = new Array<string>();
-      // }
+      if (dto.VirtualServer.irules) {
+        this.selectedIRules = dto.VirtualServer.irules;
+      }
     }
 
-    this.getAvailableIRules(dto.IRules.map(i => i.name));
+    // this.getAvailableIRules(dto.IRules.map(i => i.name));
     this.ngx.resetModalData('virtualServerModal');
   }
 
-  private getAvailableIRules(irules: Array<string>) {
-    if (!this.selectedIRules) {
-      this.selectedIRules = new Array<string>();
-    }
-
-    if (!this.availableIRules) {
-      this.availableIRules = new Array<string>();
-    }
-
+  private getAvailableIRules(irules: LoadBalancerIrule[]) {
     irules.forEach(irule => {
       if (!this.selectedIRules.includes(irule)) {
         this.availableIRules.push(irule);
@@ -186,8 +180,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       selectedIRule: [''],
     });
 
-    this.availableIRules = new Array<string>();
-    this.selectedIRules = new Array<string>();
+    this.availableIRules = new Array<LoadBalancerIrule>();
+    this.selectedIRules = new Array<LoadBalancerIrule>();
   }
 
   private unsubAll() {}

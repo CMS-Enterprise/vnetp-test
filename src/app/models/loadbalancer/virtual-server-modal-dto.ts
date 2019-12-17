@@ -1,3 +1,6 @@
+import { Pool } from './pool';
+import { VirtualServer } from './virtual-server';
+import { IRule } from './irule';
 import {
   LoadBalancerPool,
   LoadBalancerIrule,
@@ -9,5 +12,6 @@ export class VirtualServerModalDto {
 
   IRules: LoadBalancerIrule[];
 
+  // Is this right?
   VirtualServer: LoadBalancerVirtualServer;
 }
