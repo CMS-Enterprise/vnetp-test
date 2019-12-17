@@ -22,7 +22,15 @@ export interface ServiceObjectGroup {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
+    type: ServiceObjectGroupType;
     readonly serviceObjects?: Array<ServiceObject>;
     tierId: string;
 }
+export enum ServiceObjectGroupType {
+    TCP = 'TCP',
+    UDP = 'UDP',
+    TCPUDP = 'TCPUDP'
+};
+
+
 

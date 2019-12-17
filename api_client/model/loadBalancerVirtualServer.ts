@@ -31,6 +31,8 @@ export interface LoadBalancerVirtualServer {
     clientSslProfiles?: Array<LoadBalancerVirtualServerClientSslProfiles>;
     serverSslProfiles?: Array<LoadBalancerVirtualServerServerSslProfiles>;
     sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation;
+    type: LoadBalancerVirtualServerType;
+    servicePort: number;
     tierId: string;
 }
 export enum LoadBalancerVirtualServerClientSslProfiles {
@@ -54,6 +56,9 @@ export enum LoadBalancerVirtualServerSourceAddressTranslation {
     None = 'None',
     AutoMap = 'AutoMap',
     SNAT = 'SNAT'
+};
+export enum LoadBalancerVirtualServerType {
+    Standard = 'Standard'
 };
 
 
