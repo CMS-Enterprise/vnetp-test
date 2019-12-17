@@ -96,7 +96,7 @@
               </p>
             </td>
             <td class="item-actions">
-              <fa name="trash" (click)="removeNetworkObject(netObj)"> </fa>
+              <fa name="times" class="fg-danger" (click)="removeNetworkObject(netObj)"> </fa>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -122,3 +122,5 @@
     </div>
   </form>
 </ngx-smart-modal>
+
+<app-yes-no-modal></app-yes-no-modal>
