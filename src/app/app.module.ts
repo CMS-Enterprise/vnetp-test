@@ -65,7 +65,8 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { ContractModalComponent } from './modals/contract-modal/contract-modal.component';
-import { VmwareComponent } from './vmware/vmware.component';
+import { VmwareComponent } from './components/vmware/vmware.component';
+import { VirtualMachineModalComponent } from './modals/virtual-machine-modal/virtual-machine-modal.component';
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
 import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
@@ -131,6 +132,7 @@ export function apiConfigFactory(): Configuration {
     FilterPipe,
     ResolvePipe,
     VmwareComponent,
+    VirtualMachineModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
