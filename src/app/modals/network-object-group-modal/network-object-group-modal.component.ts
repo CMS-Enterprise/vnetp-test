@@ -175,7 +175,6 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     this.tierService
       .v1TiersIdGet({ id: this.TierId, join: 'networkObjects' })
       .subscribe(data => {
-        // TODO: Remove network objects already selected.
         this.tierNetworkObjects = data.networkObjects;
       });
   }

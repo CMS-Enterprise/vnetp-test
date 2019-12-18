@@ -20,7 +20,7 @@ export class YesNoModalComponent implements OnInit {
 
     yesNoModalDto.modalYes = true;
 
-    // this.ngx.resetModalData('yesNoModal');
+    this.ngx.resetModalData('yesNoModal');
     this.ngx.setModalData(Object.assign({}, yesNoModalDto), 'yesNoModal');
     this.ngx.close('yesNoModal');
   }
@@ -32,8 +32,6 @@ export class YesNoModalComponent implements OnInit {
 
   getData() {
     const modalConfig = this.ngx.getModalData('yesNoModal') as YesNoModalDto;
-
-    console.log(modalConfig);
 
     this.modalTitle = modalConfig.modalTitle;
     this.modalBody = modalConfig.modalBody;

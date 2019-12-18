@@ -13,6 +13,7 @@ import { NetworkObjectGroup } from 'src/app/models/network-objects/network-objec
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
@@ -27,6 +28,7 @@ describe('NetworkObjectGroupModalComponent', () => {
         NgxSmartModalModule,
         FormsModule,
         ReactiveFormsModule,
+        HttpClientTestingModule,
       ],
       declarations: [NetworkObjectGroupModalComponent, TooltipComponent],
       providers: [
@@ -50,22 +52,6 @@ describe('NetworkObjectGroupModalComponent', () => {
   it('should have network object group form', () => {
     expect(component.form).toBeTruthy();
   });
-
-  // it('save should set ngxModal data', () => {
-  //   component.form.controls.name.setValue('Name');
-  //   component.form.controls.description.setValue('Description');
-  //   component.networkObjects.push({ Name: 'Test' } as NetworkObject);
-  //   expect(component.form.valid).toBeTruthy();
-  //   component.save();
-
-  //   // Get Data from the modal service
-  //   const modal = ngx.getModal('networkObjectGroupModal');
-  //   const data = modal.getData();
-  //   // Ensure that it is equal to our test data.
-  //   expect(data.Name === 'Test').toBeTruthy();
-  //   expect(data.Description === 'Description').toBeTruthy();
-  //   expect(data.NetworkObjects[0].Name === 'Test').toBeTruthy();
-  // });
 
   // Initial Form State
   it('name should be required', () => {
