@@ -182,7 +182,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       }
 
       if (firewallRule) {
-        this.form.controls.sourceNetworkType.setValue('ip');
+        this.form.controls.sourceNetworkType.setValue('IpAddress');
         this.form.controls.sourceIp.setValue(firewallRule.sourceIpAddress);
       } else if (firewallRule.sourceNetworkObject) {
         this.form.controls.sourceNetworkType.setValue('NetworkObject');
@@ -212,7 +212,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       }
 
       if (firewallRule.destinationIpAddress) {
-        this.form.controls.destinationNetworkType.setValue('ip');
+        this.form.controls.destinationNetworkType.setValue('IpAddress');
         this.form.controls.destinationIp.setValue(
           firewallRule.destinationIpAddress,
         );

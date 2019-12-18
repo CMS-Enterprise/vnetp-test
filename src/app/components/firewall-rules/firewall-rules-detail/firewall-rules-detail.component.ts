@@ -5,7 +5,6 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
 import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
@@ -17,6 +16,7 @@ import { Vrf } from 'src/app/models/d42/vrf';
 import {
   V1NetworkSecurityFirewallRuleGroupsService,
   FirewallRule,
+  FirewallRuleGroup,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
@@ -32,6 +32,7 @@ export class FirewallRulesDetailComponent
 
   dirty: boolean;
   deployedState: boolean;
+  firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
   deletedFirewallRules: Array<FirewallRule>;
 
@@ -47,6 +48,8 @@ export class FirewallRulesDetailComponent
 
   scope: FirewallRuleScope;
   TierId: string;
+  FirewallRuleGroup: FirewallRuleGroup;
+  currentDatacenterSubscription: Subscription;
 
   get scopeString() {
     return this.scope;
@@ -67,17 +70,20 @@ export class FirewallRulesDetailComponent
   ) {}
 
   ngOnInit() {
-    this.datacenterService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        // This component locks the datacenter for the entire edit lifecycle.
-        this.datacenterService.lockDatacenter();
-        this.Id += this.route.snapshot.paramMap.get('id');
-        this.getFirewallRules();
-      }
-    });
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+      cd => {
+        if (cd) {
+          // This component locks the datacenter for the entire edit lifecycle.
+          this.datacenterService.lockDatacenter();
+          this.Id += this.route.snapshot.paramMap.get('id');
+          this.getFirewallRules();
+        }
+      },
+    );
   }
 
   ngOnDestroy() {
+    this.currentDatacenterSubscription.unsubscribe();
     this.datacenterService.unlockDatacenter();
   }
 
@@ -122,6 +128,11 @@ export class FirewallRulesDetailComponent
         join: 'firewallRules',
       })
       .subscribe(data => {
+        this.FirewallRuleGroup = {
+          name: data.name,
+          type: data.type,
+        } as FirewallRuleGroup;
+
         this.firewallRules = data.firewallRules.sort(
           (a, b) => a.ruleIndex - b.ruleIndex,
         );
@@ -171,29 +182,13 @@ export class FirewallRulesDetailComponent
   subscribeToFirewallRuleModal() {
     this.firewallRuleModalSubscription = this.ngx
       .getModal('firewallRuleModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as FirewallRuleModalDto;
-        // if (data && data.FirewallRule !== undefined) {
-        //   this.saveFirewallRule(data.FirewallRule);
-        // }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getFirewallRules();
         this.ngx.resetModalData('firewallRuleModal');
       });
   }
 
-  saveFirewallRule(firewallRule: FirewallRule) {
-    if (!this.firewallRules) {
-      this.firewallRules = new Array<FirewallRule>();
-    }
-
-    if (this.firewallRuleModalMode === ModalMode.Create) {
-      this.firewallRules.push(firewallRule);
-    } else {
-      this.firewallRules[this.editFirewallRuleIndex] = firewallRule;
-    }
-    this.dirty = true;
-  }
-
-  updateFirewallRules() {
+  updateFirewallRuleGroup() {
     // TODO: Update Firewall Rule Group
   }
 

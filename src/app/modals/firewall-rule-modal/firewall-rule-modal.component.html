@@ -118,23 +118,23 @@
             class="form-control"
             aria-label="Source Network Type"
           >
-            <option value="ip">IP</option>
-            <option value="networkObject">Network Object</option>
-            <option value="networkObjectGroup">Network Object Group</option>
+            <option value="IpAddress">IP</option>
+            <option value="NetworkObject">Network Object</option>
+            <option value="NetworkObjectGroup">Network Object Group</option>
           </select>
         </div>
 
         <div class="form-group col-md-6">
-          <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'ip'"
+          <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'IpAddress'"
             >Source IP</label>
-            <tooltip *ngIf="f.sourceNetworkType.value === 'ip'" [message]="helpText.IpNetworkType"></tooltip>
+            <tooltip *ngIf="f.sourceNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
           <input
             type="text"
             formControlName="sourceIp"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
             aria-label="Source IP"
-            *ngIf="f.sourceNetworkType.value === 'ip'"
+            *ngIf="f.sourceNetworkType.value === 'IpAddress'"
           />
           <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.sourceIp.errors.required">
@@ -142,10 +142,10 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.sourceNetworkType.value === 'networkObject'"
+          <label for="name" *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
             >Source Object</label
           >
-          <tooltip *ngIf="f.sourceNetworkType.value === 'networkObject'" [message]="helpText.NetworkObjectType"></tooltip>
+          <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
           <select
             formControlName="sourceNetworkObject"
             class="form-control"
@@ -153,7 +153,7 @@
               'is-invalid': submitted && f.sourceNetworkObject.errors
             }"
             aria-label="Source Object"
-            *ngIf="f.sourceNetworkType.value === 'networkObject'"
+            *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
           >
             <option
               *ngFor="let networkObject of networkObjects"
@@ -172,10 +172,10 @@
 
           <label
             for="sourceNetworkObjectGroup"
-            *ngIf="f.sourceNetworkType.value === 'networkObjectGroup'"
+            *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
             >Source Object Group</label
           >
-          <tooltip *ngIf="f.sourceNetworkType.value === 'networkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
+          <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
           <select
             formControlName="sourceNetworkObjectGroup"
             class="form-control"
@@ -183,7 +183,7 @@
               'is-invalid': submitted && f.sourceNetworkObjectGroup.errors
             }"
             aria-label="Name"
-            *ngIf="f.sourceNetworkType.value === 'networkObjectGroup'"
+            *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
           >
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
@@ -213,8 +213,8 @@
             aria-label="Source Service Type"
           >
             <option value="Port">Port</option>
-            <option value="serviceObject">Service Object</option>
-            <option value="serviceObjectGroup">Service Object Group</option>
+            <option value="ServiceObject">Service Object</option>
+            <option value="ServiceObjectGroup">Service Object Group</option>
           </select>
         </div>
 
@@ -310,25 +310,25 @@
             class="form-control"
             aria-label="Destination Network Type"
           >
-            <option value="ip">IP</option>
-            <option value="networkObject">Network Object</option>
-            <option value="networkObjectGroup">Network Object Group</option>
+            <option value="IpAddress">IP</option>
+            <option value="NetworkObject">Network Object</option>
+            <option value="NetworkObjectGroup">Network Object Group</option>
           </select>
         </div>
 
         <div class="form-group col-md-6">
           <label
             for="destinationIp"
-            *ngIf="f.destinationNetworkType.value === 'ip'"
+            *ngIf="f.destinationNetworkType.value === 'IpAddress'"
             >Destination IP</label>
-            <tooltip *ngIf="f.destinationNetworkType.value === 'ip'" [message]="helpText.IpNetworkType"></tooltip>
+            <tooltip *ngIf="f.destinationNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
           <input
             type="text"
             formControlName="destinationIp"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
             aria-label="Destination IP"
-            *ngIf="f.destinationNetworkType.value === 'ip'"
+            *ngIf="f.destinationNetworkType.value === 'IpAddress'"
           />
           <div
             *ngIf="submitted && f.destinationIp.errors"
@@ -339,10 +339,10 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.destinationNetworkType.value === 'networkObject'"
+          <label for="name" *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
             >Destination Object</label
           >
-          <tooltip *ngIf="f.destinationNetworkType.value === 'networkObject'" [message]="helpText.NetworkObjectType"></tooltip>
+          <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
           <select
             formControlName="destinationNetworkObject"
             class="form-control"
@@ -350,7 +350,7 @@
               'is-invalid': submitted && f.destinationNetworkObject.errors
             }"
             aria-label="Destination Object"
-            *ngIf="f.destinationNetworkType.value === 'networkObject'"
+            *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
           >
             <option
               *ngFor="let networkObject of networkObjects"
@@ -369,10 +369,10 @@
 
           <label
             for="destinationNetworkObjectGroup"
-            *ngIf="f.destinationNetworkType.value === 'networkObjectGroup'"
+            *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
             >Destination Object Group</label
           >
-          <tooltip *ngIf="f.destinationNetworkType.value === 'networkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
+          <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
           <select
             formControlName="destinationNetworkObjectGroup"
             class="form-control"
@@ -380,7 +380,7 @@
               'is-invalid': submitted && f.destinationNetworkObjectGroup.errors
             }"
             aria-label="Name"
-            *ngIf="f.destinationNetworkType.value === 'networkObjectGroup'"
+            *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
           >
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
@@ -410,8 +410,8 @@
             aria-label="Destination Service Type"
           >
             <option value="Port">Port</option>
-            <option value="serviceObject">Service Object</option>
-            <option value="serviceObjectGroup">Service Object Group</option>
+            <option value="ServiceObject">Service Object</option>
+            <option value="ServiceObjectGroup">Service Object Group</option>
           </select>
         </div>
 
