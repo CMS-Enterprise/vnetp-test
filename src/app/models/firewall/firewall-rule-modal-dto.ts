@@ -1,7 +1,9 @@
-import { FirewallRule } from './firewall-rule';
+import { FirewallRule } from 'api_client';
 
 export class FirewallRuleModalDto {
-  VrfId: number;
+  FirewallRuleGroupId: string;
+
+  TierId: string;
 
   FirewallRule: FirewallRule;
 }
