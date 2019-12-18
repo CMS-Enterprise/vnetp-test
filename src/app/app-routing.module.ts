@@ -9,7 +9,6 @@ import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { AuthGuard } from './guards/auth.guard';
-import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
@@ -74,12 +73,6 @@ const routes: Routes = [
     component: JobsComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Jobs' },
-  },
-  {
-    path: 'ipaddresses',
-    component: IpaddressesComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'IP Addresses' },
   },
   {
     path: 'network-objects-groups',
