@@ -5,7 +5,7 @@
     <button
       type="button"
       class="btn btn-success mr-1"
-      (click)="createVirtualMachine()"
+      (click)="openVirtualMachineModal('Create')"
     >
       <fa name="plus"></fa>
       Create Virtual Machine
@@ -41,7 +41,7 @@
           {{ vm.MemorySize }}
         </td>
         <td>
-          <fa name="pencil" (click)="editPhysicalServer(vm)"></fa>
+          <fa name="pencil" (click)="openVirtualMachineModal('Edit', vm)"></fa>
           <fa name="trash" (click)="deletePhysicalServer(vm)"></fa>
         </td>
       </tr>

@@ -27,6 +27,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
           aria-label="Name"
+          required
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
@@ -50,6 +51,7 @@
           name="virtualDatacenter"
           formControlName="virtualDatacenter"
           class="form-control"
+          required
         >
           <option></option>
           <!-- <option *ngFor="let vdc of ???">
@@ -65,6 +67,7 @@
             name="cpuCount"
             formControlName="cpuCount"
             class="form-control"
+            required
           >
             <option></option>
             <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
@@ -79,6 +82,7 @@
             name="coreCount"
             formControlName="coreCount"
             class="form-control"
+            required
           >
             <option></option>
             <!-- TO DO: get correct options -->
@@ -94,9 +98,10 @@
             name="cpuReserved"
             formControlName="cpuReserved"
             class="form-control"
+            required
           >
             <option></option>
-            <option *ngFor="let opt of [True, False]">
+            <option *ngFor="let opt of [true, false]">
               {{ opt }}
             </option>
           </select>
@@ -110,6 +115,7 @@
             name="memorySize"
             formControlName="memorySize"
             class="form-control"
+            required
           >
             <option></option>
             <option *ngFor="let memory of [1, 2, 4, 8, 16, 32]">
@@ -124,9 +130,10 @@
             name="memoryReserved"
             formControlName="memoryReserved"
             class="form-control"
+            required
           >
             <option></option>
-            <option *ngFor="let opt of [True, False]">
+            <option *ngFor="let opt of [true, false]">
               {{ opt }}
             </option>
           </select>
@@ -143,7 +150,7 @@
           Cancel
         </button>
 
-        <button class="btn btn-success" data-dismiss="modal">
+        <button class="btn btn-success" data-dismiss="modal" (click)="save()">
           <fa name="save"></fa>
           Save
         </button>

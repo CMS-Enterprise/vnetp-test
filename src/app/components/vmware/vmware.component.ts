@@ -3,7 +3,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { VirtualMachine } from 'src/app/models/vmware/virtual-machine';
+import { V1TiersService, Tier, VmwareVirtualMachine } from 'api_client';
 
 @Component({
   selector: 'app-vmware',
@@ -11,30 +11,66 @@ import { VirtualMachine } from 'src/app/models/vmware/virtual-machine';
   styleUrls: ['./vmware.component.css'],
 })
 export class VmwareComponent implements OnInit {
-  virtualMachines: Array<VirtualMachine>;
-  deletedVirtualMachines: Array<VirtualMachine>;
-
+  virtualMachines: Array<VmwareVirtualMachine>;
+  deletedVirtualMachines: Array<VmwareVirtualMachine>;
   editVirtualMachineIndex: number;
-
-  virtualMachineModalMode: ModalMode;
+  ModalMode: ModalMode;
   dirty: boolean;
-
   virtualMachineModalSubscription: Subscription;
+  currentDatacenterSubscription: Subscription;
+  tiers: Tier[];
+  currentTier: Tier;
 
   constructor(
     private ngxSmartModalService: NgxSmartModalService,
     private helperService: HelpersService,
+    private tierService: V1TiersService,
   ) {}
 
-  createVirtualMachine() {
+  getVirtualMachines() {
+    this.tierService
+      .v1TiersIdGet({ id: this.currentTier.id, join: 'virtualMachines' })
+      .subscribe(data => {
+        this.virtualMachines = data.virtualMachines;
+      });
+  }
+
+  openVirtualMachineModal(modalMode: ModalMode, vm?: VmwareVirtualMachine) {
+    if (modalMode === ModalMode.Edit && !vm) {
+      throw new Error('VM required.');
+    }
+
+    let _vm;
+    if (!vm) {
+      _vm = {} as VmwareVirtualMachine;
+      _vm.name = 'Hi';
+    } else {
+      _vm = vm;
+    }
+    _vm.ModalMode = modalMode;
+    // vm.TierId = this.currentTier.id;
+
     this.subscribeToVirtualMachineModal();
-    this.virtualMachineModalMode = ModalMode.Create;
+    // this.datacenterService.lockDatacenter();
+    this.ngxSmartModalService.setModalData(
+      this.helperService.deepCopy(_vm),
+      'virtualMachineModal',
+    );
     this.ngxSmartModalService.getModal('virtualMachineModal').open();
   }
 
-  editVirtualMachine(virtualMachine: VirtualMachine) {
+  createVirtualMachine(modalMode: ModalMode) {
     this.subscribeToVirtualMachineModal();
-    this.virtualMachineModalMode = ModalMode.Edit;
+    this.ModalMode = ModalMode.Create;
+    this.ngxSmartModalService.getModal('virtualMachineModal').open();
+  }
+
+  editVirtualMachine(
+    modalMode: ModalMode,
+    virtualMachine: VmwareVirtualMachine,
+  ) {
+    this.subscribeToVirtualMachineModal();
+    this.ModalMode = ModalMode.Edit;
     this.ngxSmartModalService.setModalData(
       this.helperService.deepCopy(virtualMachine),
       'virtualMachineModal',
@@ -47,7 +83,7 @@ export class VmwareComponent implements OnInit {
     this.virtualMachineModalSubscription = this.ngxSmartModalService
       .getModal('virtualMachineModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as VirtualMachine;
+        const data = modal.getData() as VmwareVirtualMachine;
 
         if (data !== undefined) {
           this.saveVirtualMachine(data);
@@ -57,8 +93,8 @@ export class VmwareComponent implements OnInit {
       });
   }
 
-  saveVirtualMachine(virtualMachine: VirtualMachine) {
-    if (this.virtualMachineModalMode === ModalMode.Create) {
+  saveVirtualMachine(virtualMachine: VmwareVirtualMachine) {
+    if (this.ModalMode === ModalMode.Create) {
       this.virtualMachines.push(virtualMachine);
     } else {
       this.virtualMachines[this.editVirtualMachineIndex] = virtualMachine;
@@ -66,22 +102,18 @@ export class VmwareComponent implements OnInit {
     this.dirty = true;
   }
 
-  deleteVirtualMachine(virtualMachine: VirtualMachine) {
+  deleteVirtualMachine(virtualMachine: VmwareVirtualMachine) {
     const index = this.virtualMachines.indexOf(virtualMachine);
     if (index > -1) {
       this.virtualMachines.splice(index, 1);
 
       if (!this.deletedVirtualMachines) {
-        this.deletedVirtualMachines = new Array<VirtualMachine>();
+        this.deletedVirtualMachines = new Array<VmwareVirtualMachine>();
       }
       this.deletedVirtualMachines.push(virtualMachine);
 
       this.dirty = true;
     }
-  }
-
-  saveAll() {
-    throw new Error('Not Implemented');
   }
 
   private unsubAll() {
@@ -97,7 +129,7 @@ export class VmwareComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.virtualMachines = new Array<VirtualMachine>();
+    this.virtualMachines = new Array<VmwareVirtualMachine>();
   }
 
   ngOnDestroy() {

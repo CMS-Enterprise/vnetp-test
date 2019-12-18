@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { VirtualMachine } from 'src/app/models/vmware/virtual-machine';
+import {
+  V1TiersService,
+  V1VmwareVirtualMachinesService,
+  VmwareVirtualMachine,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
   selector: 'app-virtual-machine-modal',
@@ -11,10 +16,15 @@ import { VirtualMachine } from 'src/app/models/vmware/virtual-machine';
 export class VirtualMachineModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
+  ModalMode: ModalMode;
+  TierId: string;
+  // VirtualMachine: VmwareVirtualMachine;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private virtualMachineService: V1VmwareVirtualMachinesService,
+    private tierService: V1TiersService,
   ) {}
 
   save() {
@@ -23,28 +33,43 @@ export class VirtualMachineModalComponent implements OnInit {
       return;
     }
 
-    const virtualMachine = new VirtualMachine();
-    virtualMachine.Name = this.form.value.name;
-    virtualMachine.Description = this.form.value.description;
-    virtualMachine.CpuCount = this.form.value.cpuCount;
-    virtualMachine.CoreCount = this.form.value.coreCount;
-    virtualMachine.CpuReserved = this.form.value.cpuReserved;
-    virtualMachine.MemorySize = this.form.value.memorySize;
-    virtualMachine.MemoryReserved = this.form.value.memoryReserved;
-    virtualMachine.VirtualDatacenter = this.form.value.virtualDatacenter;
+    const virtualMachine = {} as VmwareVirtualMachine;
+    virtualMachine.name = this.form.value.name;
+    virtualMachine.description = this.form.value.description;
+    virtualMachine.cpuCores = this.form.value.cpuCount;
+    virtualMachine.cpuCoresPerSocket = this.form.value.coreCount;
+    virtualMachine.cpuReserved = this.form.value.cpuReserved;
+    virtualMachine.memorySize = this.form.value.memorySize;
+    virtualMachine.memoryReserved = this.form.value.memoryReserved;
+    virtualMachine.datacenterId = this.form.value.virtualDatacenter;
 
     this.ngx.resetModalData('virtualMachineModal');
     this.ngx.setModalData(
       Object.assign({}, virtualMachine),
       'virtualMachineModal',
     );
-    this.ngx.close('virtualMachineModal');
-    this.reset();
+
+    if (this.ModalMode === 'Create') {
+      console.log('saving?');
+
+      // modalNetworkObjectGroup.tierId = this.TierId;
+      this.virtualMachineService
+        .v1VmwareVirtualMachinesPost({
+          vmwareVirtualMachine: virtualMachine,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      console.log(typeof this.ModalMode);
+    }
   }
 
   cancel() {
-    this.ngx.close('virtualMachineModal');
-    this.reset();
+    this.closeModal();
   }
 
   get f() {
@@ -54,19 +79,26 @@ export class VirtualMachineModalComponent implements OnInit {
   getData() {
     const virtualMachine = Object.assign(
       {},
-      this.ngx.getModalData('virtualMachineModal') as VirtualMachine,
+      this.ngx.getModalData('virtualMachineModal') as VmwareVirtualMachine,
     );
+
+    if (!virtualMachine.ModalMode) {
+      throw Error('Modal Mode not set.');
+    } else {
+      this.ModalMode = virtualMachine.ModalMode;
+    }
+
     if (virtualMachine !== undefined) {
-      this.form.controls.name.setValue(virtualMachine.Name);
-      this.form.controls.description.setValue(virtualMachine.Description);
+      this.form.controls.name.setValue(virtualMachine.name);
+      this.form.controls.description.setValue(virtualMachine.description);
       this.form.controls.virtualDatacenter.setValue(
-        virtualMachine.VirtualDatacenter,
+        virtualMachine.datacenterId,
       );
-      this.form.controls.cpuCount.setValue(virtualMachine.CpuCount);
-      this.form.controls.coreCount.setValue(virtualMachine.CoreCount);
-      this.form.controls.cpuReserved.setValue(virtualMachine.CpuReserved);
-      this.form.controls.memorySize.setValue(virtualMachine.MemorySize);
-      this.form.controls.memoryReserved.setValue(virtualMachine.MemoryReserved);
+      this.form.controls.cpuCount.setValue(virtualMachine.cpuCores);
+      this.form.controls.coreCount.setValue(virtualMachine.cpuCoresPerSocket);
+      this.form.controls.cpuReserved.setValue(virtualMachine.cpuReserved);
+      this.form.controls.memorySize.setValue(virtualMachine.memorySize);
+      this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
     }
     this.ngx.resetModalData('virtualMachineModal');
   }
@@ -82,6 +114,11 @@ export class VirtualMachineModalComponent implements OnInit {
       memorySize: [''],
       memoryReserved: [''],
     });
+  }
+
+  private closeModal() {
+    this.ngx.close('virtualMachineModal');
+    this.reset();
   }
 
   private reset() {
