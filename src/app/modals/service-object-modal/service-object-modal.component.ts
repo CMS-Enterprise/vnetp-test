@@ -100,6 +100,8 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.ServiceObjectId = dto.ServiceObject.id;
+      } else {
+        this.form.controls.protocol.enable();
       }
     }
 
@@ -108,6 +110,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     if (serviceObject !== undefined) {
       this.form.controls.name.setValue(serviceObject.name);
       this.form.controls.protocol.setValue(serviceObject.protocol);
+      this.form.controls.protocol.disable();
       this.form.controls.destinationPorts.setValue(
         serviceObject.destinationPorts,
       );
