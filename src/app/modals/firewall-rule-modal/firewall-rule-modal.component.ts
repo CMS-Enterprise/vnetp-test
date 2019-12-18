@@ -68,7 +68,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     modalFirewallRule.action = this.form.controls.action.value;
     modalFirewallRule.protocol = this.form.controls.protocol.value;
     modalFirewallRule.direction = this.form.controls.direction.value;
-    modalFirewallRule.logging = this.form.controls.log.value;
+    modalFirewallRule.logging = this.form.controls.logging.value;
     modalFirewallRule.ruleIndex = this.form.controls.ruleIndex.value;
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
@@ -77,7 +77,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       modalFirewallRule.sourceAddressType ===
       FirewallRuleSourceAddressType.IpAddress
     ) {
-      modalFirewallRule.sourceIpAddress = this.form.controls.sourceIp.value;
+      modalFirewallRule.sourceIpAddress = this.form.controls.sourceIpAddress.value;
     } else if (
       modalFirewallRule.sourceAddressType ===
       FirewallRuleSourceAddressType.NetworkObject
@@ -114,7 +114,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       modalFirewallRule.destinationAddressType ===
       FirewallRuleDestinationAddressType.IpAddress
     ) {
-      modalFirewallRule.destinationIpAddress = this.form.controls.destinationIp.value;
+      modalFirewallRule.destinationIpAddress = this.form.controls.destinationIpAddress.value;
     } else if (
       modalFirewallRule.destinationAddressType ===
       FirewallRuleDestinationAddressType.NetworkObject
@@ -219,7 +219,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.ruleIndex.setValue(firewallRule.ruleIndex);
 
       if (firewallRule.logging) {
-        this.form.controls.log.setValue(firewallRule.logging);
+        this.form.controls.logging.setValue(firewallRule.logging);
       }
 
       if (
@@ -229,26 +229,28 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.form.controls.sourceNetworkType.setValue(
           FirewallRuleSourceAddressType.IpAddress,
         );
-        this.form.controls.sourceIp.setValue(firewallRule.sourceIpAddress);
+        this.form.controls.sourceIpAddress.setValue(
+          firewallRule.sourceIpAddress,
+        );
       } else if (
         firewallRule.sourceAddressType ===
         FirewallRuleSourceAddressType.NetworkObject
       ) {
         this.form.controls.sourceNetworkType.setValue(
-          FirewallRuleSourceAddressType.IpAddress,
+          FirewallRuleSourceAddressType.NetworkObject,
         );
         this.form.controls.sourceNetworkObject.setValue(
-          firewallRule.sourceNetworkObject,
+          firewallRule.sourceNetworkObjectId,
         );
       } else if (
         firewallRule.sourceAddressType ===
         FirewallRuleSourceAddressType.NetworkObjectGroup
       ) {
         this.form.controls.sourceNetworkType.setValue(
-          FirewallRuleSourceAddressType.IpAddress,
+          FirewallRuleSourceAddressType.NetworkObjectGroup,
         );
         this.form.controls.sourceNetworkObjectGroup.setValue(
-          firewallRule.sourceNetworkObjectGroup,
+          firewallRule.sourceNetworkObjectGroupId,
         );
       }
 
@@ -267,7 +269,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           FirewallRuleSourceServiceType.ServiceObject,
         );
         this.form.controls.sourceServiceObject.setValue(
-          firewallRule.sourceServiceObject,
+          firewallRule.sourceServiceObjectId,
         );
       } else if (
         firewallRule.sourceServiceType ===
@@ -277,7 +279,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           FirewallRuleSourceServiceType.ServiceObjectGroup,
         );
         this.form.controls.sourceServiceObjectGroup.setValue(
-          firewallRule.sourceServiceObjectGroup,
+          firewallRule.sourceServiceObjectGroupId,
         );
       }
 
@@ -288,7 +290,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.form.controls.destinationNetworkType.setValue(
           FirewallRuleDestinationAddressType.IpAddress,
         );
-        this.form.controls.destinationIp.setValue(
+        this.form.controls.destinationIpAddress.setValue(
           firewallRule.destinationIpAddress,
         );
       } else if (
@@ -296,20 +298,20 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         FirewallRuleDestinationAddressType.NetworkObject
       ) {
         this.form.controls.destinationNetworkType.setValue(
-          FirewallRuleDestinationAddressType.IpAddress,
+          FirewallRuleDestinationAddressType.NetworkObject,
         );
         this.form.controls.destinationNetworkObject.setValue(
-          firewallRule.destinationNetworkObject,
+          firewallRule.destinationNetworkObjectId,
         );
       } else if (
         firewallRule.destinationAddressType ===
         FirewallRuleDestinationAddressType.NetworkObjectGroup
       ) {
         this.form.controls.destinationNetworkType.setValue(
-          FirewallRuleDestinationAddressType.IpAddress,
+          FirewallRuleDestinationAddressType.NetworkObjectGroup,
         );
         this.form.controls.destinationNetworkObjectGroup.setValue(
-          firewallRule.destinationNetworkObjectGroup,
+          firewallRule.destinationNetworkObjectGroupId,
         );
       }
 
@@ -331,7 +333,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           FirewallRuleDestinationServiceType.ServiceObject,
         );
         this.form.controls.destinationServiceObject.setValue(
-          firewallRule.destinationServiceObject,
+          firewallRule.destinationServiceObjectId,
         );
       } else if (
         firewallRule.destinationServiceType ===
@@ -341,7 +343,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           FirewallRuleDestinationServiceType.ServiceObjectGroup,
         );
         this.form.controls.destinationServiceObjectGroup.setValue(
-          firewallRule.destinationServiceObjectGroup,
+          firewallRule.destinationServiceObjectGroupId,
         );
       }
 
@@ -351,7 +353,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private setFormValidators() {
-    const sourceIp = this.form.controls.sourceIp;
+    const sourceIpAddress = this.form.controls.sourceIpAddress;
     const sourceNetworkObject = this.form.controls.sourceNetworkObject;
     const sourceNetworkObjectGroup = this.form.controls
       .sourceNetworkObjectGroup;
@@ -360,7 +362,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       sourceNetworkType => {
         switch (sourceNetworkType) {
           case 'IpAddress':
-            sourceIp.setValidators(
+            sourceIpAddress.setValidators(
               Validators.compose([Validators.required, ValidateIpv4Any]),
             );
             sourceNetworkObject.setValue(null);
@@ -369,15 +371,15 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             sourceNetworkObjectGroup.setValidators(null);
             break;
           case 'NetworkObject':
-            sourceIp.setValue(null);
-            sourceIp.setValidators(null);
+            sourceIpAddress.setValue(null);
+            sourceIpAddress.setValidators(null);
             sourceNetworkObject.setValidators(Validators.required);
             sourceNetworkObjectGroup.setValue(null);
             sourceNetworkObjectGroup.setValidators(null);
             break;
           case 'NetworkObjectGroup':
-            sourceIp.setValue(null);
-            sourceIp.setValidators(null);
+            sourceIpAddress.setValue(null);
+            sourceIpAddress.setValidators(null);
             sourceNetworkObject.setValue(null);
             sourceNetworkObject.setValidators(null);
             sourceNetworkObjectGroup.setValidators(Validators.required);
@@ -386,13 +388,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             break;
         }
 
-        sourceIp.updateValueAndValidity();
+        sourceIpAddress.updateValueAndValidity();
         sourceNetworkObject.updateValueAndValidity();
         sourceNetworkObjectGroup.updateValueAndValidity();
       },
     );
 
-    const sourcePort = this.form.controls.sourcePorts;
+    const sourcePorts = this.form.controls.sourcePorts;
     const sourceServiceObject = this.form.controls.sourceServiceObject;
     const sourceServiceObjectGroup = this.form.controls
       .sourceServiceObjectGroup;
@@ -401,7 +403,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       sourceServiceType => {
         switch (sourceServiceType) {
           case 'Port':
-            sourcePort.setValidators(
+            sourcePorts.setValidators(
               Validators.compose([Validators.required, ValidatePortRange]),
             );
             sourceServiceObject.setValue(null);
@@ -410,8 +412,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             sourceServiceObjectGroup.setValidators(null);
             break;
           case 'ServiceObject':
-            sourcePort.setValue(null);
-            sourcePort.setValidators(null);
+            sourcePorts.setValue(null);
+            sourcePorts.setValidators(null);
             sourceServiceObject.setValidators(
               Validators.compose([Validators.required]),
             );
@@ -419,8 +421,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             sourceServiceObjectGroup.setValidators(null);
             break;
           case 'ServiceObjectGroup':
-            sourcePort.setValue(null);
-            sourcePort.setValidators(null);
+            sourcePorts.setValue(null);
+            sourcePorts.setValidators(null);
             sourceServiceObject.setValue(null);
             sourceServiceObject.setValidators(null);
             sourceServiceObjectGroup.setValidators(
@@ -431,13 +433,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             break;
         }
 
-        sourcePort.updateValueAndValidity();
+        sourcePorts.updateValueAndValidity();
         sourceServiceObject.updateValueAndValidity();
         sourceServiceObjectGroup.updateValueAndValidity();
       },
     );
 
-    const destinationIp = this.form.controls.destinationIp;
+    const destinationIpAddress = this.form.controls.destinationIpAddress;
     const destinationNetworkObject = this.form.controls
       .destinationNetworkObject;
     const destinationNetworkObjectGroup = this.form.controls
@@ -447,7 +449,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationNetworkType => {
         switch (destinationNetworkType) {
           case 'IpAddress':
-            destinationIp.setValidators(
+            destinationIpAddress.setValidators(
               Validators.compose([Validators.required, ValidateIpv4Any]),
             );
             destinationNetworkObject.setValue(null);
@@ -456,15 +458,15 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             destinationNetworkObjectGroup.setValidators(null);
             break;
           case 'NetworkObject':
-            destinationIp.setValue(null);
-            destinationIp.setValidators(null);
+            destinationIpAddress.setValue(null);
+            destinationIpAddress.setValidators(null);
             destinationNetworkObject.setValidators(Validators.required);
             destinationNetworkObjectGroup.setValue(null);
             destinationNetworkObjectGroup.setValidators(null);
             break;
           case 'NetworkObjectGroup':
-            destinationIp.setValue(null);
-            destinationIp.setValidators(null);
+            destinationIpAddress.setValue(null);
+            destinationIpAddress.setValidators(null);
             destinationNetworkObject.setValue(null);
             destinationNetworkObject.setValidators(null);
             destinationNetworkObjectGroup.setValidators(Validators.required);
@@ -473,13 +475,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             break;
         }
 
-        destinationIp.updateValueAndValidity();
+        destinationIpAddress.updateValueAndValidity();
         destinationNetworkObject.updateValueAndValidity();
         destinationNetworkObjectGroup.updateValueAndValidity();
       },
     );
 
-    const destinationPort = this.form.controls.destinationPorts;
+    const destinationPorts = this.form.controls.destinationPorts;
     const destinationServiceObject = this.form.controls
       .destinationServiceObject;
     const destinationServiceObjectGroup = this.form.controls
@@ -489,7 +491,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationServiceType => {
         switch (destinationServiceType) {
           case 'Port':
-            destinationPort.setValidators(
+            destinationPorts.setValidators(
               Validators.compose([Validators.required, ValidatePortRange]),
             );
             destinationServiceObject.setValue(null);
@@ -498,8 +500,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             destinationServiceObjectGroup.setValidators(null);
             break;
           case 'ServiceObject':
-            destinationPort.setValue(null);
-            destinationPort.setValidators(null);
+            destinationPorts.setValue(null);
+            destinationPorts.setValidators(null);
             destinationServiceObject.setValidators(
               Validators.compose([Validators.required]),
             );
@@ -507,8 +509,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             destinationServiceObjectGroup.setValidators(null);
             break;
           case 'ServiceObjectGroup':
-            destinationPort.setValue(null);
-            destinationPort.setValidators(null);
+            destinationPorts.setValue(null);
+            destinationPorts.setValidators(null);
             destinationServiceObject.setValue(null);
             destinationServiceObject.setValidators(null);
             destinationServiceObjectGroup.setValidators(
@@ -519,7 +521,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             break;
         }
 
-        destinationPort.updateValueAndValidity();
+        destinationPorts.updateValueAndValidity();
         destinationServiceObject.updateValueAndValidity();
         destinationServiceObjectGroup.updateValueAndValidity();
       },
@@ -543,7 +545,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       // Source Network Info
       sourceNetworkType: ['IpAddress'],
-      sourceIp: [
+      sourceIpAddress: [
         '',
         Validators.compose([Validators.required, ValidateIpv4Any]),
       ],
@@ -561,7 +563,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       // Destination Network Info
       destinationNetworkType: ['IpAddress'],
-      destinationIp: [
+      destinationIpAddress: [
         '',
         Validators.compose([Validators.required, ValidateIpv4Any]),
       ],
@@ -577,7 +579,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationServiceObject: [''],
       destinationServiceObjectGroup: [''],
 
-      log: [false],
+      logging: [false],
     });
   }
 

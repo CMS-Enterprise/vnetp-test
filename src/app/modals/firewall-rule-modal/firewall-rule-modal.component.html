@@ -90,20 +90,20 @@
         </div>
 
         <div class="form-group col-md-2">
-          <label for="type">Log</label>
-          <tooltip [message]="helpText.Log"></tooltip>
+          <label for="type">Logging</label>
+          <tooltip [message]="helpText.Logging"></tooltip>
           <select
-            name="log"
-            formControlName="log"
+            name="logging"
+            formControlName="logging"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.log.errors }"
-            aria-label="Log"
+            [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
+            aria-label="Logging"
           >
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
-          <div *ngIf="submitted && f.log.errors" class="invalid-feedback">
-            <div *ngIf="f.log.errors.required">Protocol is required</div>
+          <div *ngIf="submitted && f.logging.errors" class="invalid-feedback">
+            <div *ngIf="f.logging.errors.required">Protocol is required</div>
           </div>
         </div>
 
@@ -140,19 +140,19 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="sourceIp" *ngIf="f.sourceNetworkType.value === 'IpAddress'"
+          <label for="sourceIpAddress" *ngIf="f.sourceNetworkType.value === 'IpAddress'"
             >Source IP</label>
             <tooltip *ngIf="f.sourceNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
           <input
             type="text"
-            formControlName="sourceIp"
+            formControlName="sourceIpAddress"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourceIp.errors }"
+            [ngClass]="{ 'is-invalid': submitted && f.sourceIpAddress.errors }"
             aria-label="Source IP"
             *ngIf="f.sourceNetworkType.value === 'IpAddress'"
           />
-          <div *ngIf="submitted && f.sourceIp.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceIp.errors.required">
+          <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceIpAddress.errors.required">
               Source IP is required
             </div>
           </div>
@@ -333,23 +333,23 @@
 
         <div class="form-group col-md-6">
           <label
-            for="destinationIp"
+            for="destinationIpAddress"
             *ngIf="f.destinationNetworkType.value === 'IpAddress'"
             >Destination IP</label>
             <tooltip *ngIf="f.destinationNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
           <input
             type="text"
-            formControlName="destinationIp"
+            formControlName="destinationIpAddress"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destinationIp.errors }"
+            [ngClass]="{ 'is-invalid': submitted && f.destinationIpAddress.errors }"
             aria-label="Destination IP"
             *ngIf="f.destinationNetworkType.value === 'IpAddress'"
           />
           <div
-            *ngIf="submitted && f.destinationIp.errors"
+            *ngIf="submitted && f.destinationIpAddress.errors"
             class="invalid-feedback"
           >
-            <div *ngIf="f.destinationIp.errors.required">
+            <div *ngIf="f.destinationIpAddress.errors.required">
               Destination IP is required
             </div>
           </div>
