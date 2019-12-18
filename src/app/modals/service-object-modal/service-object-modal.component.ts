@@ -65,7 +65,6 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     }
-    this.closeModal();
   }
 
   private closeModal() {

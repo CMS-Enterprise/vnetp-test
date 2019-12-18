@@ -74,8 +74,6 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {
@@ -154,9 +152,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
-      }
-
-      if (this.ModalMode === ModalMode.Create) {
+      } else {
         this.form.controls.type.enable();
       }
     }
