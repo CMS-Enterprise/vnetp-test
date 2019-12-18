@@ -7,9 +7,9 @@
   <li class="nav-item" (click)="navIndex = 1">
     <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Inter-VRF <tooltip [message]="helpText.InterVrf"></tooltip></a>
   </li>
-  <li class="nav-item" (click)="navIndex = 2">
+  <!-- <li class="nav-item" (click)="navIndex = 2">
     <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Intra-VRF <tooltip [message]="helpText.IntraVrf"></tooltip></a>
-  </li>
+  </li> -->
 </ul>
 
 <div *ngIf="navIndex == 0">
@@ -36,15 +36,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let vrf of vrfs">
+      <tr *ngFor="let vrf of firewallRuleGroups">
         <td>
           <a routerLink="/firewall-rules/external/edit/{{ vrf.id }}">{{
             vrf.name
           }}</a>
         </td>
-        <td>
-          {{ getFirewallRulesCount(vrf, "external") }}
-        </td>
       </tr>
       <tr *ngIf="vrfs?.length === 0" class="text-center">
         <td colspan="2">No VRFs</td>
@@ -53,50 +50,10 @@
   </table>
 </div>
 
-<div *ngIf="navIndex == 1">
-  <h1 class="mt-3">Inter-VRF Firewall Rules</h1>
-  <!--TOOLTIP: These rules are applied to traffic between VRFs-->
-
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      type="button"
-      class="btn btn-info btn-sm"
-      (click)="getVrfs()"
-      aria-label="Refresh Networks"
-    >
-      <fa name="refresh"></fa>
-      Refresh
-    </button>
-  </div>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Tier</th>
-        <th scope="col">Firewall Rules</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vrf of vrfs">
-        <td>
-          <a routerLink="/firewall-rules/intervrf/edit/{{ vrf.id }}">{{
-            vrf.name
-          }}</a>
-        </td>
-        <td>
-          {{ getFirewallRulesCount(vrf, "intervrf") }}
-        </td>
-      </tr>
-      <tr *ngIf="vrfs?.length === 0" class="text-center">
-        <td colspan="2">No VRFs</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div *ngIf="navIndex == 2">
-  <h1 class="mt-3">Intra-VRF Firewall Rules</h1>
   <!--These rules are applied to individual subnets within the VRF-->
+
+<!-- <div *ngIf="navIndex == 2">
+  <h1 class="mt-3">Intra-VRF Firewall Rules</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button
@@ -133,4 +90,4 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->
