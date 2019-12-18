@@ -152,7 +152,7 @@
             [ngClass]="{
               'is-invalid': submitted && f.sourceNetworkObject.errors
             }"
-            aria-label="Source Object"
+            aria-label="Source Network Object"
             *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
           >
             <option
@@ -264,7 +264,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.sourceServiceObject.errors.required">
-              Source Object is required
+              Source Service Object is required
             </div>
           </div>
 
@@ -292,7 +292,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.sourceServiceObjectGroup.errors.required">
-              Source Object Group is required
+              Source Service Object Group is required
             </div>
           </div>
         </div>
@@ -340,7 +340,7 @@
           </div>
 
           <label for="name" *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
-            >Destination Object</label
+            >Destination Network Object</label
           >
           <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
           <select
@@ -349,7 +349,7 @@
             [ngClass]="{
               'is-invalid': submitted && f.destinationNetworkObject.errors
             }"
-            aria-label="Destination Object"
+            aria-label="Destination Network Object"
             *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
           >
             <option
@@ -363,14 +363,14 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.destinationNetworkObject.errors.required">
-              Destination Object is required
+              Destination Network Object is required
             </div>
           </div>
 
           <label
             for="destinationNetworkObjectGroup"
             *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
-            >Destination Object Group</label
+            >Destination Network Object Group</label
           >
           <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
           <select
@@ -393,7 +393,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.destinationNetworkObjectGroup.errors.required">
-              Destination Object Group is required
+              Destination Network Object Group is required
             </div>
           </div>
         </div>
@@ -463,7 +463,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.destinationServiceObject.errors.required">
-              Destination Object is required
+              Destination Service Object is required
             </div>
           </div>
 
@@ -493,7 +493,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.destinationServiceObjectGroup.errors.required">
-              Destination Object Group is required
+              Destination Service Object Group is required
             </div>
           </div>
         </div>
