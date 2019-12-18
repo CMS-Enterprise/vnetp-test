@@ -15,11 +15,12 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
   templateUrl: './firewall-rules.component.html',
 })
 export class FirewallRulesComponent implements OnInit {
-  navIndex = 0;
+  navIndex = FirewallRuleGroupType.External;
 
   tiers: Array<Tier>;
   currentDatacenterSubscription: Subscription;
   firewallRuleGroups: Array<FirewallRuleGroup>;
+  DatacenterId: string;
 
   constructor(
     public helpText: FirewallRulesHelpText,
@@ -27,10 +28,10 @@ export class FirewallRulesComponent implements OnInit {
     private tierService: V1TiersService,
   ) {}
 
-  getTiers(dcId: string) {
+  getTiers() {
     this.tierService
       .v1DatacentersDatacenterIdTiersGet({
-        datacenterId: dcId,
+        datacenterId: this.DatacenterId,
         join: 'firewallRuleGroups',
       })
       .subscribe(data => {
@@ -46,11 +47,22 @@ export class FirewallRulesComponent implements OnInit {
       });
   }
 
+  filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup) => {
+    return firewallRuleGroup.type === this.navIndex;
+    // Using arrow function to pass execution context.
+    // tslint:disable-next-line: semicolon
+  };
+
+  getTierName(tierId: string) {
+    return this.tiers.find(t => t.id === tierId).name || 'Error Resolving Name';
+  }
+
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
       cd => {
         if (cd) {
-          this.getTiers(cd.id);
+          this.DatacenterId = cd.id;
+          this.getTiers();
         }
       },
     );

@@ -68,6 +68,7 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
 import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -125,6 +126,7 @@ export function apiConfigFactory(): Configuration {
     IntraVrfRulesComponent,
     ContractModalComponent,
     YesNoModalComponent,
+    FilterPipe,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
