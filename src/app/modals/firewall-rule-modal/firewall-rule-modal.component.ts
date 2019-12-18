@@ -45,7 +45,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   serviceObjectGroups: Array<ServiceObjectGroup>;
   FirewallRuleGroupId: string;
   ModalMode: ModalMode;
-  NetworkObjectId: any;
+  NetworkObjectId: string;
   FirewallRuleId: string;
 
   constructor(
@@ -62,7 +62,22 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const modalFirewallRule = {} as FirewallRule;
+    // TODO: Setting these properties to null to prevent check constraint violations when changing a rule between types.
+    // Move this to the backend.
+    const modalFirewallRule = {
+      sourceIpAddress: null,
+      sourceNetworkObjectId: null,
+      sourceNetworkObjectGroupId: null,
+      sourcePorts: null,
+      sourceServiceObjectId: null,
+      sourceServiceObjectGroupId: null,
+      destinationIpAddress: null,
+      destinationNetworkObjectId: null,
+      destinationNetworkObjectGroupId: null,
+      destinationPorts: null,
+      destinationServiceObjectId: null,
+      destinationServiceObjectGroupId: null,
+    } as FirewallRule;
 
     modalFirewallRule.name = this.form.controls.name.value;
     modalFirewallRule.action = this.form.controls.action.value;

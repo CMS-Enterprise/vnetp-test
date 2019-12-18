@@ -98,17 +98,17 @@
           </p>
         </td>
         <td>
-          <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Destination IP">
+          <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
             {{ firewallRule?.destinationIpAddress }}
           </p>
           <p
-          *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
+          *ngIf="firewallRule.destinationAddressType === 'NetworkObject'"
           aria-label="Destination Network Object"
           >
             {{ firewallRule?.destinationNetworkObject }} (Object)
           </p>
           <p
-            *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
+            *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
             aria-label="Destination Network Object Group"
           >
             {{ firewallRule?.destinationNetworkObjectGroup }} (Object Group)
