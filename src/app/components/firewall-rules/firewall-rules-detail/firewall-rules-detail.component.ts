@@ -18,8 +18,10 @@ import {
   ServiceObject,
   ServiceObjectGroup,
   V1TiersService,
+  V1NetworkSecurityFirewallRulesService,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -66,6 +68,7 @@ export class FirewallRulesDetailComponent
     private automationApiService: AutomationApiService,
     private hs: HelpersService,
     private ngx: NgxSmartModalService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
@@ -212,7 +215,60 @@ export class FirewallRulesDetailComponent
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {
-    // TODO: Yes/No Modal
+    const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!firewallRule.deletedAt) {
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      } else {
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Firewall Rule`,
+        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?
+        The firewall rule will be removed from the infrastructure on the next provisioning cycle.`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  restoreFirewallRule(firewallRule: FirewallRule) {
+    if (firewallRule.deletedAt) {
+      this.firewallRuleService
+        .v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id })
+        .subscribe(data => {
+          this.getFirewallRules();
+        });
+    }
+  }
+
+  private confirmDeleteObject(
+    modalDto: YesNoModalDto,
+    deleteFunction: () => void,
+  ) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          deleteFunction();
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   insertFirewallRules(rules) {

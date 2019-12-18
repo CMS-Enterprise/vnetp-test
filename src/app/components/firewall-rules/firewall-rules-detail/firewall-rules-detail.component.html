@@ -141,13 +141,25 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa name="pencil" (click)="openFirewallRuleModal('Edit', firewallRule)"> </fa>
-          <!-- <fa name="chevron-up" (click)="moveFirewallRule(-1, firewallRule)">
-          </fa>
-          <fa name="chevron-down" (click)="moveFirewallRule(1, firewallRule)">
-          </fa> -->
-          <fa name="trash" (click)="deleteFirewallRule(firewallRule)"> </fa>
-          <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
+          <fa name="pencil" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal('Edit', firewallRule)"> </fa>
+        <fa
+          name="undo"
+          *ngIf="firewallRule?.deletedAt"
+          class="fg-success"
+          (click)="restoreFirewallRule(firewallRule)"
+          aria-label="Restore Network Object Group"
+        ></fa>
+        <fa
+          name="trash"
+          [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
+          (click)="deleteFirewallRule(firewallRule)"
+          aria-label="Soft-Delete/Delete Firewall Rule"
+        ></fa> 
+        <!-- <fa name="chevron-up" (click)="moveFirewallRule(-1, firewallRule)">
+        </fa>
+        <fa name="chevron-down" (click)="moveFirewallRule(1, firewallRule)">
+        </fa> -->        
+        <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
         </td>
       </tr>
       <tr *ngIf="firewallRules?.length === 0" class="text-center">
@@ -169,3 +181,4 @@
 </div>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
+<app-yes-no-modal></app-yes-no-modal>
