@@ -47,10 +47,10 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
     modalServiceObjectGroup.name = this.form.value.name;
     modalServiceObjectGroup.description = this.form.value.description;
-    // modalServiceObjectGroup.protocol = this.form.value.protocol;
 
     if (this.ModalMode === ModalMode.Create) {
       modalServiceObjectGroup.tierId = this.TierId;
+      modalServiceObjectGroup.type = this.form.value.type;
       this.serviceObjectGroupService
         .v1NetworkSecurityServiceObjectGroupsPost({
           serviceObjectGroup: modalServiceObjectGroup,
@@ -155,6 +155,10 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
       if (this.ModalMode === ModalMode.Edit) {
         this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
       }
+
+      if (this.ModalMode === ModalMode.Create) {
+        this.form.controls.type.enable();
+      }
     }
 
     const serviceObjectGroup = dto.ServiceObjectGroup;
@@ -162,7 +166,8 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     if (serviceObjectGroup !== undefined) {
       this.form.controls.name.setValue(serviceObjectGroup.name);
       this.form.controls.description.setValue(serviceObjectGroup.description);
-      // this.form.controls.type.setValue(serviceObjectGroup.protocol);
+      this.form.controls.type.setValue(serviceObjectGroup.type);
+      this.form.controls.type.disable();
 
       this.getGroupServiceObjects();
       this.getTierServiceObjects();
@@ -193,7 +198,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
-      // type: ['', Validators.required],
+      type: ['', Validators.required],
     });
   }
 

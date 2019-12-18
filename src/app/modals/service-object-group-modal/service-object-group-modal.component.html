@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <!-- <div class="form-row">
+      <div class="form-row">
         <div class="form-group col-md-12">
           <label for="type">Type</label>
           <tooltip [message]="helpText.Type"></tooltip>
@@ -46,15 +46,15 @@
             aria-label="Type"
           >
             <option></option>
-            <option value="tcp-udp">TCP-UDP</option>
-            <option value="tcp">TCP</option>
-            <option value="udp">UDP</option>
+            <option value="TCPUDP">TCP/UDP</option>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <div class="form-group">
         <label for="name">Description</label>
