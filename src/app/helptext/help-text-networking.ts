@@ -130,7 +130,7 @@ export class NetworkObjectGroupModalHelpText {
 export class ServiceObjectsGroupsHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Vrf = `Tier (VRF) that Service Objects & Groups are created within.`;
+  Tier = `Tier that Service Objects & Groups are created within.`;
   ServiceObjects = `Service Objects consist of a source and destination ports.`;
   ServiceObjectGroups = `Service Object Groups are a collection of Service Objects.`;
 }
