@@ -143,7 +143,7 @@
           </div>
 
           <label for="name" *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
-            >Source Object</label
+            >Source Network Object</label
           >
           <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
           <select
@@ -157,8 +157,8 @@
           >
             <option
               *ngFor="let networkObject of networkObjects"
-              [ngValue]="networkObject.Name"
-              >{{ networkObject.Name }}</option
+              [ngValue]="networkObject.id"
+              >{{ networkObject?.name }}</option
             >
           </select>
           <div
@@ -166,14 +166,14 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.sourceNetworkObject.errors.required">
-              Source Object is required
+              Source Network Object is required
             </div>
           </div>
 
           <label
             for="sourceNetworkObjectGroup"
             *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
-            >Source Object Group</label
+            >Source Network Object Group</label
           >
           <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
           <select
@@ -187,8 +187,8 @@
           >
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
-              [ngValue]="networkObjectGroup.Name"
-              >{{ networkObjectGroup.Name }}</option
+              [ngValue]="networkObjectGroup.id"
+              >{{ networkObjectGroup.name }}</option
             >
           </select>
           <div
@@ -196,7 +196,7 @@
             class="invalid-feedback"
           >
             <div *ngIf="f.sourceNetworkObjectGroup.errors.required">
-              Source Object Group is required
+              Source Network Object Group is required
             </div>
           </div>
         </div>
@@ -240,10 +240,10 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceeObject'"
+          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceObject'"
             >Source Service Object
           </label>
-          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceeObject'" [message]="helpText.ServiceObjectType"></tooltip>
+          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
           <select
             formControlName="sourceServiceObject"
             class="form-control"
@@ -251,12 +251,12 @@
               'is-invalid': submitted && f.sourceServiceObject.errors
             }"
             aria-label="Name"
-            *ngIf="f.sourceServiceType.value === 'ServiceeObject'"
+            *ngIf="f.sourceServiceType.value === 'ServiceObject'"
           >
             <option
               *ngFor="let serviceObject of serviceObjects"
-              [ngValue]="serviceObject.Name"
-              >{{ serviceObject.Name }}</option
+              [ngValue]="serviceObject.id"
+              >{{ serviceObject.name }}</option
             >
           </select>
           <div
@@ -268,10 +268,10 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceeObjectGroup'"
+          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'"
             >Source Service Object Group</label
           >
-          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceeObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
+          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
           <select
             formControlName="sourceServiceObjectGroup"
             class="form-control"
@@ -279,12 +279,12 @@
               'is-invalid': submitted && f.sourceServiceObjectGroup.errors
             }"
             aria-label="Name"
-            *ngIf="f.sourceServiceType.value === 'ServiceeObjectGroup'"
+            *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'"
           >
             <option
               *ngFor="let serviceObjectGroup of serviceObjectGroups"
-              [ngValue]="serviceObjectGroup.Name"
-              >{{ serviceObjectGroup.Name }}</option
+              [ngValue]="serviceObjectGroup.id"
+              >{{ serviceObjectGroup.name }}</option
             >
           </select>
           <div
@@ -354,8 +354,8 @@
           >
             <option
               *ngFor="let networkObject of networkObjects"
-              [ngValue]="networkObject.Name"
-              >{{ networkObject.Name }}</option
+              [ngValue]="networkObject.id"
+              >{{ networkObject.name }}</option
             >
           </select>
           <div
@@ -384,8 +384,8 @@
           >
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
-              [ngValue]="networkObjectGroup.Name"
-              >{{ networkObjectGroup.Name }}</option
+              [ngValue]="networkObjectGroup.id"
+              >{{ networkObjectGroup.name }}</option
             >
           </select>
           <div
@@ -439,10 +439,10 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.destinationServiceType.value === 'ServiceeObject'"
+          <label for="name" *ngIf="f.destinationServiceType.value === 'ServiceObject'"
             >Destination Service Object
           </label>
-          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceeObject'" [message]="helpText.ServiceObjectType"></tooltip>
+          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
           <select
             formControlName="destinationServiceObject"
             class="form-control"
@@ -450,12 +450,12 @@
               'is-invalid': submitted && f.destinationServiceObject.errors
             }"
             aria-label="Name"
-            *ngIf="f.destinationServiceType.value === 'ServiceeObject'"
+            *ngIf="f.destinationServiceType.value === 'ServiceObject'"
           >
             <option
               *ngFor="let serviceObject of serviceObjects"
-              [ngValue]="serviceObject.Name"
-              >{{ serviceObject.Name }}</option
+              [ngValue]="serviceObject.id"
+              >{{ serviceObject.name }}</option
             >
           </select>
           <div
@@ -469,10 +469,10 @@
 
           <label
             for="name"
-            *ngIf="f.destinationServiceType.value === 'ServiceeObjectGroup'"
+            *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'"
             >Destination Service Object Group</label
           >
-          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceeObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
+          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
           <select
             formControlName="destinationServiceObjectGroup"
             class="form-control"
@@ -480,12 +480,12 @@
               'is-invalid': submitted && f.destinationServiceObjectGroup.errors
             }"
             aria-label="Name"
-            *ngIf="f.destinationServiceType.value === 'ServiceeObjectGroup'"
+            *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'"
           >
             <option
               *ngFor="let serviceObjectGroup of serviceObjectGroups"
-              [ngValue]="serviceObjectGroup.Name"
-              >{{ serviceObjectGroup.Name }}</option
+              [ngValue]="serviceObjectGroup.id"
+              >{{ serviceObjectGroup.name }}</option
             >
           </select>
           <div

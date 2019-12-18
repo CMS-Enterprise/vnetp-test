@@ -6,7 +6,7 @@
       <button
         type="button"
         class="btn btn-success mr-1"
-        (click)="createFirewallRule()"
+        (click)="openFirewallRuleModal('Create')"
         aria-label="Add Firewall Rule"
       >
         <fa name="plus"></fa>
@@ -141,7 +141,7 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa name="pencil" (click)="editFirewallRule(firewallRule)"> </fa>
+          <fa name="pencil" (click)="openFirewallRuleModal('Edit', firewallRule)"> </fa>
           <!-- <fa name="chevron-up" (click)="moveFirewallRule(-1, firewallRule)">
           </fa>
           <fa name="chevron-down" (click)="moveFirewallRule(1, firewallRule)">

@@ -5,10 +5,6 @@ import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
@@ -17,6 +13,11 @@ import {
   V1NetworkSecurityFirewallRuleGroupsService,
   FirewallRule,
   FirewallRuleGroup,
+  NetworkObject,
+  NetworkObjectGroup,
+  ServiceObject,
+  ServiceObjectGroup,
+  V1TiersService,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
@@ -66,6 +67,7 @@ export class FirewallRulesDetailComponent
     private hs: HelpersService,
     private ngx: NgxSmartModalService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
   ) {}
 
@@ -137,6 +139,23 @@ export class FirewallRulesDetailComponent
           (a, b) => a.ruleIndex - b.ruleIndex,
         );
         this.TierId = data.tierId;
+
+        this.getObjects();
+      });
+  }
+
+  getObjects() {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.TierId,
+        join:
+          'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
+      })
+      .subscribe(data => {
+        this.networkObjects = data.networkObjects;
+        this.networkObjectGroups = data.networkObjectGroups;
+        this.serviceObjects = data.serviceObjects;
+        this.serviceObjectGroups = data.serviceObjectGroups;
       });
   }
 
@@ -154,27 +173,27 @@ export class FirewallRulesDetailComponent
   //   this.dirty = true;
   // }
 
-  createFirewallRule() {
-    this.subscribeToFirewallRuleModal();
+  openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule) {
+    if (modalMode === ModalMode.Edit && !firewallRule) {
+      throw new Error('Firewall Rule Required');
+    }
+
     this.firewallRuleModalMode = ModalMode.Create;
 
     const dto = new FirewallRuleModalDto();
     dto.FirewallRuleGroupId = this.Id;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
-    this.firewallRuleModalMode = ModalMode.Create;
-    this.ngx.getModal('firewallRuleModal').open();
-  }
-
-  editFirewallRule(firewallRule: FirewallRule) {
-    this.subscribeToFirewallRuleModal();
-    this.firewallRuleModalMode = ModalMode.Edit;
-
-    const dto = new FirewallRuleModalDto();
-    dto.FirewallRule = firewallRule;
     dto.TierId = this.TierId;
-    dto.FirewallRuleGroupId = this.Id;
+    dto.ModalMode = modalMode;
+    dto.NetworkObjects = this.networkObjects;
+    dto.NetworkObjectGroups = this.networkObjectGroups;
+    dto.ServiceObjects = this.serviceObjects;
+    dto.ServiceObjectGroups = this.serviceObjectGroups;
 
+    if (modalMode === ModalMode.Edit) {
+      dto.FirewallRule = firewallRule;
+    }
+
+    this.subscribeToFirewallRuleModal();
     this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
   }

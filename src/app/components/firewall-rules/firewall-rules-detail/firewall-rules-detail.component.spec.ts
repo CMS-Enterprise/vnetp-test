@@ -78,7 +78,7 @@ describe('FirewallRulesDetailComponent', () => {
   it('should set set subscription and modal mode on create', () => {
     component.vrf = { name: 'Test', id: 101 } as Vrf;
 
-    component.createFirewallRule();
+    component.openFirewallRuleModal();
     expect(component.firewallRuleModalSubscription).toBeTruthy();
     expect(component.firewallRuleModalMode === ModalMode.Create).toBeTruthy();
   });

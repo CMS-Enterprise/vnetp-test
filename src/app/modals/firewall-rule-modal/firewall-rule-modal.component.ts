@@ -6,17 +6,18 @@ import {
   ValidateIpv4Any,
   ValidatePortRange,
 } from 'src/app/validators/network-form-validators';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ObjectService } from 'src/app/services/object.service';
 import { RuleLocation } from 'src/app/models/firewall/rule-location';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
-import { V1TiersService } from 'api_client';
+import {
+  V1TiersService,
+  ServiceObject,
+  ServiceObjectGroup,
+  NetworkObjectGroup,
+  NetworkObject,
+} from 'api_client';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -62,83 +63,83 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     firewallRule.Direction = this.form.controls.direction.value;
     firewallRule.Log = this.form.controls.log.value;
 
-    const sourceNetworkType = this.form.controls.sourceNetworkType.value;
-    if (sourceNetworkType === 'ip') {
-      firewallRule.SourceIP = this.form.controls.sourceIp.value;
-    } else if (sourceNetworkType === 'NetworkObject') {
-      ObjectService.mapNetworkObject(
-        firewallRule,
-        this.form.controls.sourceNetworkObject.value,
-        this.networkObjects,
-        RuleLocation.Source,
-      );
-    } else if (sourceNetworkType === 'NetworkObjectGroup') {
-      ObjectService.mapNetworkObjectGroup(
-        firewallRule,
-        this.form.controls.sourceNetworkObjectGroup.value,
-        this.networkObjectGroups,
-        RuleLocation.Source,
-      );
-    }
+    // const sourceNetworkType = this.form.controls.sourceNetworkType.value;
+    // if (sourceNetworkType === 'ip') {
+    //   firewallRule.SourceIP = this.form.controls.sourceIp.value;
+    // } else if (sourceNetworkType === 'NetworkObject') {
+    //   ObjectService.mapNetworkObject(
+    //     firewallRule,
+    //     this.form.controls.sourceNetworkObject.value,
+    //     this.networkObjects,
+    //     RuleLocation.Source,
+    //   );
+    // } else if (sourceNetworkType === 'NetworkObjectGroup') {
+    //   ObjectService.mapNetworkObjectGroup(
+    //     firewallRule,
+    //     this.form.controls.sourceNetworkObjectGroup.value,
+    //     this.networkObjectGroups,
+    //     RuleLocation.Source,
+    //   );
+    // }
 
-    const sourceServiceType = this.form.controls.sourceServiceType.value;
-    if (sourceServiceType === 'Port') {
-      firewallRule.SourcePorts = this.form.controls.sourcePorts.value;
-    } else if (sourceServiceType === 'ServiceObject') {
-      ObjectService.mapServiceObject(
-        firewallRule,
-        this.form.controls.sourceServiceObject.value,
-        this.serviceObjects,
-        RuleLocation.Source,
-      );
-    } else if (sourceServiceType === 'ServiceObjectGroup') {
-      ObjectService.mapServiceObjectGroup(
-        firewallRule,
-        this.form.controls.sourceServiceObjectGroup.value,
-        this.serviceObjectGroups,
-        RuleLocation.Source,
-      );
-    }
+    // const sourceServiceType = this.form.controls.sourceServiceType.value;
+    // if (sourceServiceType === 'Port') {
+    //   firewallRule.SourcePorts = this.form.controls.sourcePorts.value;
+    // } else if (sourceServiceType === 'ServiceObject') {
+    //   ObjectService.mapServiceObject(
+    //     firewallRule,
+    //     this.form.controls.sourceServiceObject.value,
+    //     this.serviceObjects,
+    //     RuleLocation.Source,
+    //   );
+    // } else if (sourceServiceType === 'ServiceObjectGroup') {
+    //   ObjectService.mapServiceObjectGroup(
+    //     firewallRule,
+    //     this.form.controls.sourceServiceObjectGroup.value,
+    //     this.serviceObjectGroups,
+    //     RuleLocation.Source,
+    //   );
+    // }
 
-    const destinationNetworkType = this.form.controls.destinationNetworkType
-      .value;
-    if (destinationNetworkType === 'ip') {
-      firewallRule.DestinationIP = this.form.controls.destinationIp.value;
-    } else if (destinationNetworkType === 'NetworkObject') {
-      ObjectService.mapNetworkObject(
-        firewallRule,
-        this.form.controls.destinationNetworkObject.value,
-        this.networkObjects,
-        RuleLocation.Destination,
-      );
-    } else if (destinationNetworkType === 'NetworkObjectGroup') {
-      ObjectService.mapNetworkObjectGroup(
-        firewallRule,
-        this.form.controls.destinationNetworkObjectGroup.value,
-        this.networkObjectGroups,
-        RuleLocation.Destination,
-      );
-    }
+    // const destinationNetworkType = this.form.controls.destinationNetworkType
+    //   .value;
+    // if (destinationNetworkType === 'ip') {
+    //   firewallRule.DestinationIP = this.form.controls.destinationIp.value;
+    // } else if (destinationNetworkType === 'NetworkObject') {
+    //   ObjectService.mapNetworkObject(
+    //     firewallRule,
+    //     this.form.controls.destinationNetworkObject.value,
+    //     this.networkObjects,
+    //     RuleLocation.Destination,
+    //   );
+    // } else if (destinationNetworkType === 'NetworkObjectGroup') {
+    //   ObjectService.mapNetworkObjectGroup(
+    //     firewallRule,
+    //     this.form.controls.destinationNetworkObjectGroup.value,
+    //     this.networkObjectGroups,
+    //     RuleLocation.Destination,
+    //   );
+    // }
 
-    const destinationServiceType = this.form.controls.destinationServiceType
-      .value;
-    if (destinationServiceType === 'Port') {
-      firewallRule.DestinationPorts = this.form.controls.destinationPorts.value;
-    } else if (destinationServiceType === 'ServiceObject') {
-      ObjectService.mapServiceObject(
-        firewallRule,
-        this.form.controls.destinationServiceObject.value,
-        this.serviceObjects,
-        RuleLocation.Destination,
-      );
-    } else if (destinationServiceType === 'ServiceObjectGroup') {
-      ObjectService.mapServiceObjectGroup(
-        firewallRule,
-        this.form.controls.destinationServiceObjectGroup.value,
-        this.serviceObjectGroups,
-        RuleLocation.Destination,
-      );
-    }
+    // const destinationServiceType = this.form.controls.destinationServiceType
+    //   .value;
+    // if (destinationServiceType === 'Port') {
+    //   firewallRule.DestinationPorts = this.form.controls.destinationPorts.value;
+    // } else if (destinationServiceType === 'ServiceObject') {
+    //   ObjectService.mapServiceObject(
+    //     firewallRule,
+    //     this.form.controls.destinationServiceObject.value,
+    //     this.serviceObjects,
+    //     RuleLocation.Destination,
+    //   );
+    // } else if (destinationServiceType === 'ServiceObjectGroup') {
+    //   ObjectService.mapServiceObjectGroup(
+    //     firewallRule,
+    //     this.form.controls.destinationServiceObjectGroup.value,
+    //     this.serviceObjectGroups,
+    //     RuleLocation.Destination,
+    //   );
+    // }
 
     const dto = new FirewallRuleModalDto();
     // dto.FirewallRule = firewallRule;
@@ -168,6 +169,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     this.TierId = firewallRuleModalDto.TierId;
     this.FirewallRuleGroupId = firewallRuleModalDto.FirewallRuleGroupId;
+    this.networkObjects = firewallRuleModalDto.NetworkObjects;
+    this.networkObjectGroups = firewallRuleModalDto.NetworkObjectGroups;
+    this.serviceObjects = firewallRuleModalDto.ServiceObjects;
+    this.serviceObjectGroups = firewallRuleModalDto.ServiceObjectGroups;
 
     const firewallRule = firewallRuleModalDto.FirewallRule;
 
