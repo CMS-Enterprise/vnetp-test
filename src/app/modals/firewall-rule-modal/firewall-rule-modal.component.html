@@ -35,7 +35,7 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="type">Action</label>
           <tooltip [message]="helpText.Action"></tooltip>
           <select
@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="type">Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select
@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="type">Protocol</label>
           <tooltip [message]="helpText.Protocol"></tooltip>
           <select
@@ -89,7 +89,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="type">Log</label>
           <tooltip [message]="helpText.Log"></tooltip>
           <select
@@ -104,6 +104,21 @@
           </select>
           <div *ngIf="submitted && f.log.errors" class="invalid-feedback">
             <div *ngIf="f.log.errors.required">Protocol is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-2">
+          <label for="type">Rule Index</label>
+          <tooltip [message]="helpText.RuleIndex"></tooltip>
+          <input
+          type="number"
+          formControlName="ruleIndex"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.ruleIndex.errors }"
+          aria-label="Rule Index"
+          />
+          <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
+            <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
           </div>
         </div>
       </div>
