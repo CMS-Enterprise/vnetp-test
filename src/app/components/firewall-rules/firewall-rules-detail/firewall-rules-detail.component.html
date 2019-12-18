@@ -62,90 +62,90 @@
     <tbody>
       <tr *ngFor="let firewallRule of firewallRules">
         <td>
-          <p>{{ firewallRule.Name }}</p>
+          <p>{{ firewallRule?.name }}</p>
         </td>
         <td>
-          <p>{{ firewallRule.Action }}</p>
+          <p>{{ firewallRule?.action }}</p>
         </td>
         <td>
-          <p>{{ firewallRule.Protocol }}</p>
+          <p>{{ firewallRule?.protocol }}</p>
         </td>
         <td>
-          <p>{{ firewallRule.Direction }}</p>
+          <p>{{ firewallRule?.direction }}</p>
         </td>
         <td>
-          <p *ngIf="firewallRule.SourceIP" aria-label="Source IP">
-            {{ firewallRule.SourceIP }}
+          <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
+            {{ firewallRule?.sourceIpAddress }}
           </p>
           <p
-            *ngIf="firewallRule.SourceNetworkObject"
+            *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
             aria-label="Source Network Object"
           >
-            {{ firewallRule.SourceNetworkObject }} (Object)
+            {{ firewallRule?.sourceNetworkObject }} (Object)
           </p>
           <p
-            *ngIf="firewallRule.SourceNetworkObjectGroup"
+            *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
             aria-label="Source Network Object Group"
           >
-            {{ firewallRule.SourceNetworkObjectGroup }} (Object Group)
+            {{ firewallRule?.sourceNetworkObjectGroup }} (Object Group)
           </p>
         </td>
         <td>
-          <p *ngIf="firewallRule.SourcePorts" aria-label="Source Ports">
-            {{ firewallRule.SourcePorts }}
+          <p *ngIf="firewallRule.sourceServiceType === 'Port'" aria-label="Source Ports">
+            {{ firewallRule?.sourcePorts }}
           </p>
           <p
-            *ngIf="firewallRule.SourceServiceObject"
+            *ngIf="firewallRule.sourceServiceType === 'ServiceObject'"
             aria-label="Source Service Object"
           >
-            {{ firewallRule.SourceServiceObject }} (Object)
+            {{ firewallRule?.sourceServiceObject }} (Object)
           </p>
           <p
-            *ngIf="firewallRule.SourceServiceObjectGroup"
+            *ngIf="firewallRule.sourceServiceType === 'ServiceObjectGroup'"
             aria-label="Source Service Object Group"
           >
-            {{ firewallRule.SourceServiceObjectGroup }} (Object Group)
+            {{ firewallRule?.sourceServiceObjectGroup }} (Object Group)
           </p>
         </td>
         <td>
-          <p *ngIf="firewallRule.DestinationIP" aria-label="Destination IP">
-            {{ firewallRule.DestinationIP }}
+          <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Destination IP">
+            {{ firewallRule?.destinationIpAddress }}
           </p>
           <p
-            *ngIf="firewallRule.DestinationNetworkObject"
-            aria-label="Destination Network Object"
+          *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
+          aria-label="Destination Network Object"
           >
-            {{ firewallRule.DestinationNetworkObject }} (Object)
+            {{ firewallRule?.destinationNetworkObject }} (Object)
           </p>
           <p
-            *ngIf="firewallRule.DestinationNetworkObjectGroup"
+            *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
             aria-label="Destination Network Object Group"
           >
-            {{ firewallRule.DestinationNetworkObjectGroup }} (Object Group)
+            {{ firewallRule?.destinationNetworkObjectGroup }} (Object Group)
           </p>
         </td>
         <td>
           <p
-            *ngIf="firewallRule.DestinationPorts"
+          *ngIf="firewallRule.destinationServiceType === 'Port'"
             aria-label="Destination Ports"
           >
-            {{ firewallRule.DestinationPorts }}
+            {{ firewallRule?.destinationPorts }}
           </p>
           <p
-            *ngIf="firewallRule.DestinationServiceObject"
+            *ngIf="firewallRule.destinationServiceType === 'ServiceObject'"
             aria-label="Destination Service Object"
           >
-            {{ firewallRule.DestinationServiceObject }} (Object)
+            {{ firewallRule?.destinationServiceObject }} (Object)
           </p>
           <p
-            *ngIf="firewallRule.DestinationServiceObjectGroup"
-            aria-label="Destination Service Object Group"
+          *ngIf="firewallRule.destinationServiceType === 'ServiceObjectGroup'"
+          aria-label="Destination Service Object Group"
           >
-            {{ firewallRule.DestinationServiceObjectGroup }} (Object Group)
+            {{ firewallRule?.destinationServiceObjectGroup }} (Object Group)
           </p>
         </td>
         <td>
-          <p>{{ firewallRule.Log }}</p>
+          <p>{{ firewallRule?.logging }}</p>
         </td>
         <td class="item-actions">
           <fa name="pencil" (click)="editFirewallRule(firewallRule)"> </fa>
