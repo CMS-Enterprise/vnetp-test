@@ -122,7 +122,9 @@ export class FirewallRulesDetailComponent
         join: 'firewallRules',
       })
       .subscribe(data => {
-        this.firewallRules = data.firewallRules;
+        this.firewallRules = data.firewallRules.sort(
+          (a, b) => a.ruleIndex - b.ruleIndex,
+        );
         this.TierId = data.tierId;
       });
   }
