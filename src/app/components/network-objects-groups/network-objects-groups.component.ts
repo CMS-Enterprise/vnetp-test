@@ -93,7 +93,7 @@ export class NetworkObjectsGroupsComponent
 
   openNetworkObjectGroupModal(
     modalMode: ModalMode,
-    networkObjectGroup: NetworkObjectGroup,
+    networkObjectGroup?: NetworkObjectGroup,
   ) {
     if (modalMode === ModalMode.Edit && !networkObjectGroup) {
       throw new Error('Network Object required.');
