@@ -30,8 +30,6 @@ export class FirewallRulesDetailComponent
   Id = '';
   TierName = '';
 
-  vrf: Vrf;
-
   dirty: boolean;
   deployedState: boolean;
   firewallRuleGroup: FirewallRuleGroup;
@@ -105,16 +103,16 @@ export class FirewallRulesDetailComponent
           type: data.type,
         } as FirewallRuleGroup;
 
-        this.firewallRules = data.firewallRules.sort(
+        const sortedFirewallRules = data.firewallRules.sort(
           (a, b) => a.ruleIndex - b.ruleIndex,
         );
         this.TierId = data.tierId;
 
-        this.getObjects();
+        this.getObjects(sortedFirewallRules);
       });
   }
 
-  getObjects() {
+  getObjects(sortedFirewallRules: Array<FirewallRule>) {
     this.tierService
       .v1TiersIdGet({
         id: this.TierId,
@@ -127,6 +125,11 @@ export class FirewallRulesDetailComponent
         this.serviceObjects = data.serviceObjects;
         this.serviceObjectGroups = data.serviceObjectGroups;
         this.TierName = data.name;
+
+        // Only set the firewall rules after object arrays
+        // have been populated, this allows us to use a pure
+        // pipe to resolve id's to names.
+        this.firewallRules = sortedFirewallRules;
       });
   }
 
@@ -202,6 +205,7 @@ export class FirewallRulesDetailComponent
     if (objects && objects.length) {
       return objects.find(o => o.id === id).name || 'N/A';
     }
+    return 'no';
   }
 
   updateFirewallRuleGroup() {

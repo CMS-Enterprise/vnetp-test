@@ -2,7 +2,7 @@ import { PipeTransform, Pipe } from '@angular/core';
 
 @Pipe({
   name: 'resolve',
-  pure: false,
+  pure: true,
 })
 export class ResolvePipe implements PipeTransform {
   transform(item: any, callback: (item: any) => boolean): any {

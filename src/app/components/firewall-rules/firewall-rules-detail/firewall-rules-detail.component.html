@@ -15,7 +15,7 @@
 
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ vrf?.name }}-{{ scope == 0 ? 'external' : 'intervrf' }}"
+        exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
         (import)="insertFirewallRules($event)"
         disableExport="true"
       ></app-import-export>
