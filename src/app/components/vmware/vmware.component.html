@@ -40,8 +40,27 @@
         </td>
         <td>{{ vm.memorySize }} GB</td>
         <td>
-          <fa name="pencil" (click)="openVirtualMachineModal('Edit', vm)"></fa>
-          <fa name="trash" (click)="deletePhysicalServer(vm)"></fa>
+          <fa
+            name="pencil"
+            *ngIf="!vm?.deletedAt"
+            (click)="openVirtualMachineModal('Edit', vm)"
+            aria-label="Edit Virtual Machine"
+          >
+          </fa>
+          <fa
+            name="undo"
+            *ngIf="vm?.deletedAt"
+            class="fg-success"
+            (click)="restoreVirtualMachine(vm)"
+            aria-label="Restore Virtual Machine"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': vm.deletedAt }"
+            (click)="deleteVirtualMachine(vm)"
+            aria-label="Soft-Delete/Delete Virtual Machine"
+          >
+          </fa>
         </td>
       </tr>
       <tr *ngIf="!virtualMachines?.length" class="text-center">
@@ -52,3 +71,4 @@
 </div>
 
 <app-virtual-machine-modal></app-virtual-machine-modal>
+<app-yes-no-modal></app-yes-no-modal>

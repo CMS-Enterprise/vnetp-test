@@ -2,21 +2,23 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { VmwareVirtualMachine, V1DatacentersService } from 'api_client';
+import {
+  VmwareVirtualMachine,
+  V1DatacentersService,
+  V1VmwareVirtualMachinesService,
+} from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-vmware',
   templateUrl: './vmware.component.html',
   styleUrls: ['./vmware.component.css'],
 })
-export class VmwareComponent implements OnInit {
+export class VmwareComponent implements OnInit, OnDestroy {
   virtualMachines: Array<VmwareVirtualMachine>;
-  deletedVirtualMachines: Array<VmwareVirtualMachine>;
-  editVirtualMachineIndex: number;
   ModalMode: ModalMode;
-  dirty: boolean;
   virtualMachineModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
@@ -25,6 +27,7 @@ export class VmwareComponent implements OnInit {
     private ngxSmartModalService: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
+    private virtualMachineService: V1VmwareVirtualMachinesService,
   ) {}
 
   getVirtualMachines() {
@@ -57,20 +60,6 @@ export class VmwareComponent implements OnInit {
     this.ngxSmartModalService.getModal('virtualMachineModal').open();
   }
 
-  // editVirtualMachine(
-  //   modalMode: ModalMode,
-  //   virtualMachine: VmwareVirtualMachine,
-  // ) {
-  //   this.subscribeToVirtualMachineModal();
-  //   this.ModalMode = ModalMode.Edit;
-  //   this.ngxSmartModalService.setModalData(
-  //     this.helperService.deepCopy(virtualMachine),
-  //     'virtualMachineModal',
-  //   );
-  //   this.editVirtualMachineIndex = this.virtualMachines.indexOf(virtualMachine);
-  //   this.ngxSmartModalService.getModal('virtualMachineModal').open();
-  // }
-
   subscribeToVirtualMachineModal() {
     this.virtualMachineModalSubscription = this.ngxSmartModalService
       .getModal('virtualMachineModal')
@@ -81,28 +70,67 @@ export class VmwareComponent implements OnInit {
       });
   }
 
-  saveVirtualMachine(virtualMachine: VmwareVirtualMachine) {
-    if (this.ModalMode === ModalMode.Create) {
-      this.virtualMachines.push(virtualMachine);
-    } else {
-      this.virtualMachines[this.editVirtualMachineIndex] = virtualMachine;
+  deleteVirtualMachine(vm: VmwareVirtualMachine) {
+    if (vm.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
     }
-    this.dirty = true;
+
+    const deleteDescription = vm.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!vm.deletedAt) {
+        this.virtualMachineService
+          .v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id })
+          .subscribe(data => {
+            this.getVirtualMachines();
+          });
+      } else {
+        this.virtualMachineService
+          .v1VmwareVirtualMachinesIdDelete({ id: vm.id })
+          .subscribe(data => {
+            this.getVirtualMachines();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Network Object?`,
+        `Do you want to ${deleteDescription} network object "${vm.name}"?`,
+      ),
+      deleteFunction,
+    );
   }
 
-  // deleteVirtualMachine(virtualMachine: VmwareVirtualMachine) {
-  //   const index = this.virtualMachines.indexOf(virtualMachine);
-  //   if (index > -1) {
-  //     this.virtualMachines.splice(index, 1);
+  restoreVirtualMachine(vm: VmwareVirtualMachine) {
+    if (vm.deletedAt) {
+      this.virtualMachineService
+        .v1VmwareVirtualMachinesIdRestorePatch({
+          id: vm.id,
+        })
+        .subscribe(data => {
+          this.getVirtualMachines();
+        });
+    }
+  }
 
-  //     if (!this.deletedVirtualMachines) {
-  //       this.deletedVirtualMachines = new Array<VmwareVirtualMachine>();
-  //     }
-  //     this.deletedVirtualMachines.push(virtualMachine);
-
-  //     this.dirty = true;
-  //   }
-  // }
+  private confirmDeleteObject(
+    modalDto: YesNoModalDto,
+    deleteFunction: () => void,
+  ) {
+    this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
+    this.ngxSmartModalService.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngxSmartModalService
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          deleteFunction();
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
 
   private unsubAll() {
     [
