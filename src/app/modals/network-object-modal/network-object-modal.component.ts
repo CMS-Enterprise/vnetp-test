@@ -84,6 +84,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
+      modalNetworkObject.type = null;
       this.networkObjectService
         .v1NetworkSecurityNetworkObjectsIdPut({
           id: this.NetworkObjectId,
@@ -226,6 +227,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.NetworkObjectId = dto.NetworkObject.id;
+      } else {
+        this.form.controls.type.enable();
       }
     }
 
@@ -234,6 +237,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     if (networkObject !== undefined) {
       this.form.controls.name.setValue(networkObject.name);
       this.form.controls.type.setValue(networkObject.type);
+      this.form.controls.type.disable();
       this.form.controls.ipAddress.setValue(networkObject.ipAddress);
 
       this.form.controls.startIpAddress.setValue(networkObject.startIpAddress);

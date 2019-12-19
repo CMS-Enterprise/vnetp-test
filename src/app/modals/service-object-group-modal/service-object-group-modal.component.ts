@@ -62,6 +62,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
+      modalServiceObjectGroup.type = null;
       this.serviceObjectGroupService
         .v1NetworkSecurityServiceObjectGroupsIdPut({
           id: this.ServiceObjectGroupId,
