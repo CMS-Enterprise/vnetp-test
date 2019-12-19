@@ -184,12 +184,6 @@
             </fa>
             <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restorePool(irule)" aria-label="Restore Irule"></fa>
             <fa name="trash" [ngClass]="{ 'fg-danger': irule?.deletedAt }" (click)="deletePool(irule)" aria-label="Soft-Delete/Delete Irule"></fa>
-            <fa
-              name="trash"
-              (click)="deleteIRule(irule)"
-              aria-label="Delete iRule"
-            >
-            </fa>
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">

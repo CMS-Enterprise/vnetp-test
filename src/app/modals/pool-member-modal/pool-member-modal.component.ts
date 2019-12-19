@@ -37,7 +37,6 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     poolMember.ipAddress = this.form.value.ipAddress;
     poolMember.fqdn = this.form.value.fqdn;
     poolMember.autoPopulate = this.form.value.autoPopulate;
-    // poolMember.servicePort = this.form.value.servicePort;
     // poolMember.priority = this.form.value.priority;
 
     this.ngx.resetModalData('poolMemberModal');
@@ -99,7 +98,6 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       this.form.controls.ipAddress.setValue(poolMember.ipAddress);
       this.form.controls.fqdn.setValue(poolMember.fqdn);
       this.form.controls.autoPopulate.setValue(poolMember.autoPopulate);
-      this.form.controls.servicePort.setValue(poolMember.servicePort);
     }
     this.ngx.resetModalData('poolMemberModal');
   }
