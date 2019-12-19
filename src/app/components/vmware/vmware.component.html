@@ -24,22 +24,21 @@
         <th scope="col">CPUs</th>
         <th scope="col">Cores per Socket</th>
         <th scope="col">Memory</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let vm of virtualMachines">
         <td>
-          {{ vm.Name }}
+          {{ vm.name }}
         </td>
         <td>
-          {{ vm.CpuCount }}
+          {{ vm.cpuCores }}
         </td>
         <td>
-          {{ vm.CoreCount }}
+          {{ vm.cpuCoresPerSocket }}
         </td>
-        <td>
-          {{ vm.MemorySize }}
-        </td>
+        <td>{{ vm.memorySize }} GB</td>
         <td>
           <fa name="pencil" (click)="openVirtualMachineModal('Edit', vm)"></fa>
           <fa name="trash" (click)="deletePhysicalServer(vm)"></fa>

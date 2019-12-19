@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
-  V1TiersService,
   V1VmwareVirtualMachinesService,
   VmwareVirtualMachine,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 
 @Component({
   selector: 'app-virtual-machine-modal',
@@ -17,14 +17,13 @@ export class VirtualMachineModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
-  TierId: string;
-  // VirtualMachine: VmwareVirtualMachine;
+  DatacenterId: string;
+  VirtualMachineId: string;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private virtualMachineService: V1VmwareVirtualMachinesService,
-    private tierService: V1TiersService,
   ) {}
 
   save() {
@@ -34,14 +33,13 @@ export class VirtualMachineModalComponent implements OnInit {
     }
 
     const virtualMachine = {} as VmwareVirtualMachine;
-    virtualMachine.name = this.form.value.name;
+
     virtualMachine.description = this.form.value.description;
     virtualMachine.cpuCores = this.form.value.cpuCount;
-    virtualMachine.cpuCoresPerSocket = this.form.value.coreCount;
+    virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
-    virtualMachine.memorySize = this.form.value.memorySize;
+    virtualMachine.memorySize = parseInt(this.form.value.memorySize); // TO DO - convert to bytes, figure out type problem
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
-    virtualMachine.datacenterId = this.form.value.virtualDatacenter;
 
     this.ngx.resetModalData('virtualMachineModal');
     this.ngx.setModalData(
@@ -49,10 +47,10 @@ export class VirtualMachineModalComponent implements OnInit {
       'virtualMachineModal',
     );
 
-    if (this.ModalMode === 'Create') {
-      console.log('saving?');
+    if (this.ModalMode === ModalMode.Create) {
+      virtualMachine.name = this.form.value.name;
+      virtualMachine.datacenterId = this.DatacenterId;
 
-      // modalNetworkObjectGroup.tierId = this.TierId;
       this.virtualMachineService
         .v1VmwareVirtualMachinesPost({
           vmwareVirtualMachine: virtualMachine,
@@ -64,7 +62,17 @@ export class VirtualMachineModalComponent implements OnInit {
           error => {},
         );
     } else {
-      console.log(typeof this.ModalMode);
+      this.virtualMachineService
+        .v1VmwareVirtualMachinesIdPut({
+          id: this.VirtualMachineId,
+          vmwareVirtualMachine: virtualMachine,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
     }
   }
 
@@ -77,23 +85,30 @@ export class VirtualMachineModalComponent implements OnInit {
   }
 
   getData() {
-    const virtualMachine = Object.assign(
+    const dto = Object.assign(
       {},
-      this.ngx.getModalData('virtualMachineModal') as VmwareVirtualMachine,
+      this.ngx.getModalData('virtualMachineModal') as VirtualMachineModalDto,
     );
 
-    if (!virtualMachine.ModalMode) {
+    if (dto.DatacenterId) {
+      this.DatacenterId = dto.DatacenterId;
+    }
+
+    if (!dto.ModalMode) {
       throw Error('Modal Mode not set.');
     } else {
-      this.ModalMode = virtualMachine.ModalMode;
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.VirtualMachineId = dto.VmwareVirtualMachine.id;
+      }
     }
+
+    const virtualMachine = dto.VmwareVirtualMachine;
 
     if (virtualMachine !== undefined) {
       this.form.controls.name.setValue(virtualMachine.name);
       this.form.controls.description.setValue(virtualMachine.description);
-      this.form.controls.virtualDatacenter.setValue(
-        virtualMachine.datacenterId,
-      );
       this.form.controls.cpuCount.setValue(virtualMachine.cpuCores);
       this.form.controls.coreCount.setValue(virtualMachine.cpuCoresPerSocket);
       this.form.controls.cpuReserved.setValue(virtualMachine.cpuReserved);
@@ -107,7 +122,6 @@ export class VirtualMachineModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: [''],
       description: [''],
-      virtualDatacenter: [''],
       cpuCount: [''],
       coreCount: [''],
       cpuReserved: [''],
