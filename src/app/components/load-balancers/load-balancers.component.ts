@@ -4,7 +4,6 @@ import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
-import { LoadBalancerDto } from 'src/app/models/loadbalancer/load-balancer-dto';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { ToastrService } from 'ngx-toastr';
@@ -86,23 +85,21 @@ export class LoadBalancersComponent
   getVirtualServers() {
     this.tierService
       .v1TiersIdGet({
-        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        id: this.currentTier.id,
         join: 'loadBalancerVirtualServers',
       })
-      .subscribe(data => {
-        console.log(data);
-        this.virtualServers = data.loadBalancerVirtualServers;
-      });
+      .subscribe(
+        data => (this.virtualServers = data.loadBalancerVirtualServers),
+      );
   }
 
   getPools() {
     this.tierService
       .v1TiersIdGet({
-        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        id: this.currentTier.id,
         join: 'loadBalancerPools,loadBalancerNodes,loadBalancerHealthMonitors',
       })
       .subscribe(data => {
-        console.log(data);
         this.pools = data.loadBalancerPools;
         this.healthMonitors = data.loadBalancerHealthMonitors;
       });
@@ -111,29 +108,24 @@ export class LoadBalancersComponent
   getIrules() {
     this.tierService
       .v1TiersIdGet({
-        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        id: this.currentTier.id,
         join: 'loadBalancerIrules',
       })
-      .subscribe(data => {
-        console.log(data);
-        this.irules = data.loadBalancerIrules;
-      });
+      .subscribe(data => (this.irules = data.loadBalancerIrules));
   }
 
   getHealthMonitors() {
     this.tierService
       .v1TiersIdGet({
-        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        id: this.currentTier.id,
         join: 'loadBalancerHealthMonitors',
       })
-      .subscribe(data => {
-        console.log(data);
-        this.healthMonitors = data.loadBalancerHealthMonitors;
-      });
+      .subscribe(
+        data => (this.healthMonitors = data.loadBalancerHealthMonitors),
+      );
   }
 
   getObjectsForNavIndex() {
-    console.log('here', this.navIndex);
     if (this.navIndex === 0) {
       this.getVirtualServers();
     } else if (this.navIndex === 1) {

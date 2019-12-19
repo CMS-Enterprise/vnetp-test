@@ -32,6 +32,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   availableHealthMonitors: LoadBalancerHealthMonitor[];
   Tier: Tier;
   Pool: LoadBalancerPool;
+  Nodes: LoadBalancerNode[];
+  HealthMonitors: LoadBalancerHealthMonitor[];
   ModalMode: ModalMode;
 
   constructor(
@@ -122,9 +124,14 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   private getPools() {
     this.poolService
-      .v1LoadBalancerPoolsIdGet({ id: this.Pool.id })
+      .v1LoadBalancerPoolsIdGet({
+        id: this.Pool.id,
+        join: 'LoadBalancerNodes,LoadBalancerHealthMonitors',
+      })
       .subscribe(data => {
         this.Pool = data;
+        this.HealthMonitors = data.healthMonitors;
+        this.Nodes = data.nodes;
       });
   }
 
