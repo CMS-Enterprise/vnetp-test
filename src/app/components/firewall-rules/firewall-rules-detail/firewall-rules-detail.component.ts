@@ -28,6 +28,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 export class FirewallRulesDetailComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
+  TierName = '';
 
   vrf: Vrf;
 
@@ -125,6 +126,7 @@ export class FirewallRulesDetailComponent
         this.networkObjectGroups = data.networkObjectGroups;
         this.serviceObjects = data.serviceObjects;
         this.serviceObjectGroups = data.serviceObjectGroups;
+        this.TierName = data.name;
       });
   }
 
