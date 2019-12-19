@@ -69,7 +69,7 @@ export class FirewallRuleModalHelpText {
   Action = `Action that the firewall will take on traffic that matches this rule.`;
   Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
-  Log = `Indicates whether traffic that matches this rule should be logged.`;
+  Logging = `Indicates whether traffic that matches this rule should be logged.`;
   SourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
@@ -80,6 +80,7 @@ export class FirewallRuleModalHelpText {
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
   ServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
   ServiceObjectGroupType = `Service Object Group created under IPAM.`;
+  RuleIndex = `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`;
 }
 
 @Injectable({
