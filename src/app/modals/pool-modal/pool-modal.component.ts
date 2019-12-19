@@ -12,6 +12,7 @@ import {
   LoadBalancerPool,
   LoadBalancerHealthMonitorType,
   LoadBalancerHealthMonitor,
+  Tier,
 } from 'api_client';
 
 @Component({
@@ -28,6 +29,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   poolMemberModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
+  tier: Tier;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -41,15 +43,17 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const pool = new Pool();
+    const pool = {} as LoadBalancerPool;
     pool.name = this.form.value.name;
     pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
-    pool.nodes = Object.assign([], this.poolMembers);
-    pool.healthMonitors = Object.assign([], this.selectedHealthMonitors);
+    // how should be saving?
+    // pool.nodes = Object.assign([], (this.poolMembers));
+    // pool.healthMonitors = Object.assign([], this.selectedHealthMonitors);
 
     pool.name = pool.name.trim();
 
     const dto = new PoolModalDto();
+
     dto.pool = pool;
 
     this.ngx.resetModalData('poolModal');
@@ -143,7 +147,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     if (dto.healthMonitors) {
-      // this.getAvailableHealthMonitors(dto.HealthMonitors.map(h => h.name));
+      this.getAvailableHealthMonitors(dto.healthMonitors.map(h => h));
     }
     this.ngx.resetModalData('poolModal');
   }

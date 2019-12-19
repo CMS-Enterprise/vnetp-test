@@ -81,12 +81,11 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.form.controls.sourceAddress.setValue(
         virtualServer.sourceAddressTranslation,
       );
-      // is this the right field to map to?
       this.form.controls.destinationAddress.setValue(
         virtualServer.destinationIpAddress,
       );
-      // is this the right field to map to?
-      this.form.controls.servicePort.setValue(virtualServer.sourceIpAddress);
+      // is this the right field to map to? wrong
+      // this.form.controls.servicePort.setValue(virtualServer.sourceIpAddress);
       this.form.controls.pool.setValue(virtualServer.defaultPool);
 
       if (dto.VirtualServer.irules) {

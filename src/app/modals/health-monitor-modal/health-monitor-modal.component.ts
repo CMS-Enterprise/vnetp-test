@@ -25,7 +25,7 @@ export class HealthMonitorModalComponent implements OnInit {
       return;
     }
 
-    const healthMonitor = new HealthMonitor();
+    const healthMonitor = {} as LoadBalancerHealthMonitor;
     healthMonitor.name = this.form.value.name;
     healthMonitor.type = this.form.value.type;
     healthMonitor.servicePort = this.form.value.servicePort;

@@ -8,6 +8,7 @@ import {
 import { Subscription } from 'rxjs';
 import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
 import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
+import { LoadBalancerNode } from 'api_client';
 
 @Component({
   selector: 'app-pool-member-modal',
@@ -30,14 +31,14 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const poolMember = new PoolMember();
+    const poolMember = {} as LoadBalancerNode;
     poolMember.name = this.form.value.name;
     poolMember.type = this.form.value.type;
     poolMember.ipAddress = this.form.value.ipAddress;
     poolMember.fqdn = this.form.value.fqdn;
     poolMember.autoPopulate = this.form.value.autoPopulate;
-    poolMember.servicePort = this.form.value.servicePort;
-    poolMember.priority = this.form.value.priority;
+    // poolMember.servicePort = this.form.value.servicePort;
+    // poolMember.priority = this.form.value.priority;
 
     this.ngx.resetModalData('poolMemberModal');
     this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
@@ -90,7 +91,7 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
   getData() {
     const poolMember = Object.assign(
       {},
-      this.ngx.getModalData('poolMemberModal') as PoolMember,
+      this.ngx.getModalData('poolMemberModal') as LoadBalancerNode,
     );
     if (poolMember !== undefined) {
       this.form.controls.name.setValue(poolMember.name);
