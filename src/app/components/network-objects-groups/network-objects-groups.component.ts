@@ -48,7 +48,6 @@ export class NetworkObjectsGroupsComponent
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-    private hs: HelpersService,
     public helpText: NetworkObjectsGroupsHelpText,
   ) {
     this.networkObjects = new Array<NetworkObject>();
@@ -87,7 +86,7 @@ export class NetworkObjectsGroupsComponent
 
     this.subscribeToNetworkObjectModal();
     this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
+    this.ngx.setModalData(dto, 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
 
@@ -110,7 +109,7 @@ export class NetworkObjectsGroupsComponent
 
     this.subscribeToNetworkObjectGroupModal();
     this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
+    this.ngx.setModalData(dto, 'networkObjectGroupModal');
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 
