@@ -8922,6 +8922,12 @@ definitions:
       description:
         type: string
         maxLength: 500
+      type:
+        type: string
+        enum:
+          - TCP
+          - UDP
+          - TCPUDP
       serviceObjects:
         type: array
         readOnly: true
@@ -8931,6 +8937,7 @@ definitions:
         type: string
     required:
       - name
+      - type
       - tierId
   FirewallRule:
     type: object
@@ -9464,6 +9471,14 @@ definitions:
           - None
           - AutoMap
           - SNAT
+      type:
+        type: string
+        enum:
+          - Standard
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
       tierId:
         type: string
     required:
@@ -9471,6 +9486,8 @@ definitions:
       - sourceIpAddress
       - destinationIpAddress
       - sourceAddressTranslation
+      - type
+      - servicePort
       - tierId
   Tier:
     type: object
