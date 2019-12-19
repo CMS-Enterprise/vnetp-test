@@ -95,25 +95,11 @@ const routes: Routes = [
     data: { breadcrumb: 'Firewall Rules' },
   },
   {
-    path: 'firewall-rules/intravrf/edit/:id',
-    component: IntraVrfRulesComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Intra-VRF Rules' },
-  },
-  {
-    path: 'firewall-rules/intervrf/edit/:id',
+    path: 'firewall-rule-group/edit/:id',
     component: FirewallRulesDetailComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Inter-VRF Firewall Rules' },
-  },
-  {
-    path: 'firewall-rules/external/edit/:id',
-    component: FirewallRulesDetailComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'External Firewall Rules' },
+    data: { breadcrumb: 'Firewall Rule Group' },
   },
   {
     path: 'load-balancers',

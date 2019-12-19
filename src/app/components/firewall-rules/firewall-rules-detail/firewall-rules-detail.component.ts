@@ -1,47 +1,50 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
-import { Vrf } from 'src/app/models/d42/vrf';
-import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-object.interface';
+import {
+  V1NetworkSecurityFirewallRuleGroupsService,
+  FirewallRule,
+  FirewallRuleGroup,
+  NetworkObject,
+  NetworkObjectGroup,
+  ServiceObject,
+  ServiceObjectGroup,
+  V1TiersService,
+  V1NetworkSecurityFirewallRulesService,
+} from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
 export class FirewallRulesDetailComponent
-  implements OnInit, PendingChangesGuard {
+  implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
-
-  vrf: Vrf;
+  TierName = '';
 
   dirty: boolean;
-  deployedState: boolean;
+
+  firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
-  deletedFirewallRules: Array<FirewallRule>;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
-  editFirewallRuleIndex: number;
-  firewallRuleModalMode: ModalMode;
+
   firewallRuleModalSubscription: Subscription;
 
   scope: FirewallRuleScope;
+  TierId: string;
+  FirewallRuleGroup: FirewallRuleGroup;
+  currentDatacenterSubscription: Subscription;
 
   get scopeString() {
     return this.scope;
@@ -54,230 +57,209 @@ export class FirewallRulesDetailComponent
 
   constructor(
     private route: ActivatedRoute,
-    private automationApiService: AutomationApiService,
-    private hs: HelpersService,
     private ngx: NgxSmartModalService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private tierService: V1TiersService,
+    private datacenterService: DatacenterContextService,
   ) {}
 
   ngOnInit() {
-    this.firewallRules = new Array<FirewallRule>();
-    this.deletedFirewallRules = new Array<FirewallRule>();
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+      cd => {
+        if (cd) {
+          // This component locks the datacenter for the entire edit lifecycle.
+          this.datacenterService.lockDatacenter();
+          this.Id += this.route.snapshot.paramMap.get('id');
+          this.getFirewallRules();
+        }
+      },
+    );
+  }
 
-    this.Id += this.route.snapshot.paramMap.get('id');
-    const scopeUrlElement = this.route.snapshot.url[1].path;
-
-    if (scopeUrlElement === 'external') {
-      this.scope = FirewallRuleScope.external;
-    } else if (scopeUrlElement === 'intervrf') {
-      this.scope = FirewallRuleScope.vrf;
-    }
-
-    this.getEntity();
+  ngOnDestroy() {
+    this.currentDatacenterSubscription.unsubscribe();
+    this.datacenterService.unlockDatacenter();
   }
 
   refresh() {
-    this.deletedFirewallRules = new Array<FirewallRule>();
-    this.getEntity();
+    this.getFirewallRules();
   }
 
-  moveFirewallRule(value: number, rule: FirewallRule) {
-    const ruleIndex = this.firewallRules.indexOf(rule);
+  getFirewallRules() {
+    this.firewallRuleGroupService
+      .v1NetworkSecurityFirewallRuleGroupsIdGet({
+        id: this.Id,
+        join: 'firewallRules',
+      })
+      .subscribe(data => {
+        this.FirewallRuleGroup = {
+          name: data.name,
+          type: data.type,
+        } as FirewallRuleGroup;
 
-    // If the rule isn't in the array, is at the start of the array and requested to move up
-    // or if the rule is at the end of the array, return.
-    if (
-      ruleIndex === -1 ||
-      (ruleIndex === 0 && value === -1) ||
-      ruleIndex + value === this.firewallRules.length
-    ) {
-      return;
-    }
+        const sortedFirewallRules = data.firewallRules.sort(
+          (a, b) => a.ruleIndex - b.ruleIndex,
+        );
+        this.TierId = data.tierId;
 
-    const nextRule = this.firewallRules[ruleIndex + value];
-
-    // If the next rule doesn't exist, return.
-    if (nextRule === null) {
-      return;
-    }
-
-    const nextRuleIndex = this.firewallRules.indexOf(nextRule);
-
-    [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] = [
-      this.firewallRules[nextRuleIndex],
-      this.firewallRules[ruleIndex],
-    ];
-
-    this.dirty = true;
+        this.getObjects(sortedFirewallRules);
+      });
   }
 
-  getEntity() {
-    let ruleScope = '';
+  getObjects(sortedFirewallRules: Array<FirewallRule>) {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.TierId,
+        join:
+          'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
+      })
+      .subscribe(data => {
+        this.networkObjects = data.networkObjects;
+        this.networkObjectGroups = data.networkObjectGroups;
+        this.serviceObjects = data.serviceObjects;
+        this.serviceObjectGroups = data.serviceObjectGroups;
+        this.TierName = data.name;
 
-    if (this.scope === FirewallRuleScope.vrf) {
-      ruleScope = 'firewall_rules';
-    } else if (this.scope === FirewallRuleScope.external) {
-      ruleScope = 'external_firewall_rules';
-    }
-
-    this.automationApiService.getVrf(this.Id).subscribe(data => {
-      this.vrf = data;
-      this.getEntityCustomFields(this.vrf, ruleScope);
-      this.getVrfCustomFields(this.vrf);
-    });
-  }
-
-  getEntityCustomFields(entity: CustomFieldsObject, fieldName: string) {
-    const firewallrules = entity.custom_fields.find(c => c.key === fieldName);
-
-    if (firewallrules) {
-      this.firewallRules = JSON.parse(firewallrules.value) as Array<
-        FirewallRule
-      >;
-    }
-  }
-
-  getVrfCustomFields(vrf: Vrf) {
-    const networkObjectDto = JSON.parse(
-      vrf.custom_fields.find(c => c.key === 'network_objects').value,
-    ) as NetworkObjectDto;
-
-    if (networkObjectDto) {
-      this.networkObjects = networkObjectDto.NetworkObjects;
-      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-    }
-
-    const serviceObjectDto = JSON.parse(
-      vrf.custom_fields.find(c => c.key === 'service_objects').value,
-    ) as ServiceObjectDto;
-
-    if (serviceObjectDto) {
-      this.serviceObjects = serviceObjectDto.ServiceObjects;
-      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-    }
-  }
-
-  duplicateFirewallRule(rule: FirewallRule) {
-    const ruleIndex = this.firewallRules.indexOf(rule);
-
-    if (ruleIndex === -1) {
-      return;
-    }
-
-    const dupRule = this.hs.deepCopy(rule) as FirewallRule;
-    dupRule.Name = `${dupRule.Name}_copy`;
-
-    this.firewallRules.splice(ruleIndex, 0, dupRule);
-    this.dirty = true;
+        // Only set the firewall rules after object arrays
+        // have been populated, this allows us to use a pure
+        // pipe to resolve id's to names.
+        this.firewallRules = sortedFirewallRules;
+      });
   }
 
   createFirewallRule() {
-    this.subscribeToFirewallRuleModal();
-    this.firewallRuleModalMode = ModalMode.Create;
-
-    const dto = new FirewallRuleModalDto();
-    dto.VrfId = this.vrf.id;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
-    this.firewallRuleModalMode = ModalMode.Create;
-    this.ngx.getModal('firewallRuleModal').open();
+    this.openFirewallRuleModal(ModalMode.Create);
   }
 
-  editFirewallRule(firewallRule: FirewallRule) {
-    this.subscribeToFirewallRuleModal();
-    this.firewallRuleModalMode = ModalMode.Edit;
+  openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule) {
+    if (modalMode === ModalMode.Edit && !firewallRule) {
+      throw new Error('Firewall Rule Required');
+    }
 
     const dto = new FirewallRuleModalDto();
-    dto.FirewallRule = firewallRule;
-    dto.VrfId = this.vrf.id;
+    dto.FirewallRuleGroupId = this.Id;
+    dto.TierId = this.TierId;
+    dto.ModalMode = modalMode;
+    dto.NetworkObjects = this.networkObjects;
+    dto.NetworkObjectGroups = this.networkObjectGroups;
+    dto.ServiceObjects = this.serviceObjects;
+    dto.ServiceObjectGroups = this.serviceObjectGroups;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
-    this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
+    if (modalMode === ModalMode.Edit) {
+      dto.FirewallRule = firewallRule;
+    }
+
+    this.subscribeToFirewallRuleModal();
+    this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
   }
 
   subscribeToFirewallRuleModal() {
     this.firewallRuleModalSubscription = this.ngx
       .getModal('firewallRuleModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as FirewallRuleModalDto;
-        if (data && data.FirewallRule !== undefined) {
-          this.saveFirewallRule(data.FirewallRule);
-        }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getFirewallRules();
         this.ngx.resetModalData('firewallRuleModal');
       });
   }
 
-  saveFirewallRule(firewallRule: FirewallRule) {
-    if (!this.firewallRules) {
-      this.firewallRules = new Array<FirewallRule>();
-    }
+  getServiceObjectName = (id: string) => {
+    return this.getObjectName(id, this.serviceObjects);
+    // tslint:disable-next-line: semicolon
+  };
 
-    if (this.firewallRuleModalMode === ModalMode.Create) {
-      this.firewallRules.push(firewallRule);
-    } else {
-      this.firewallRules[this.editFirewallRuleIndex] = firewallRule;
+  getServiceObjectGroupName = (id: string) => {
+    return this.getObjectName(id, this.serviceObjectGroups);
+    // tslint:disable-next-line: semicolon
+  };
+
+  getNetworkObjectName = (id: string) => {
+    return this.getObjectName(id, this.networkObjects);
+    // tslint:disable-next-line: semicolon
+  };
+
+  getNetworkObjectGroupName = (id: string) => {
+    return this.getObjectName(id, this.networkObjectGroups);
+    // tslint:disable-next-line: semicolon
+  };
+
+  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
+    if (objects && objects.length) {
+      return objects.find(o => o.id === id).name || 'N/A';
     }
-    this.dirty = true;
   }
 
-  updateFirewallRules() {
-    this.dirty = false;
-
-    const extra_vars: { [k: string]: any } = {};
-
-    if (this.scope === FirewallRuleScope.vrf) {
-      extra_vars.scope = 'vrf';
-      extra_vars.vrf = new Vrf();
-      extra_vars.vrf.id = this.vrf.id;
-      extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name = this.vrf.name.split('-')[1];
-      extra_vars.firewall_rules = this.firewallRules;
-    } else if (this.scope === FirewallRuleScope.external) {
-      extra_vars.scope = 'external';
-      extra_vars.vrf = new Vrf();
-      extra_vars.vrf.id = this.vrf.id;
-      extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name = this.vrf.name.split('-')[1];
-      extra_vars.external_firewall_rules = this.firewallRules;
-    }
-
-    extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
-
-    const body = { extra_vars };
-    if (
-      this.scope === FirewallRuleScope.vrf ||
-      this.scope === FirewallRuleScope.external
-    ) {
-      this.automationApiService
-        .launchTemplate('deploy-acl', body, true)
-        .subscribe(
-          data => {},
-          error => {
-            this.dirty = true;
-          },
-        );
-    }
-    this.deletedFirewallRules = new Array<FirewallRule>();
+  updateFirewallRuleGroup() {
+    // TODO: Update Firewall Rule Group
   }
 
   deleteFirewallRule(firewallRule: FirewallRule) {
-    const index = this.firewallRules.indexOf(firewallRule);
-    if (index > -1) {
-      this.firewallRules.splice(index, 1);
-      this.dirty = true;
-      this.deletedFirewallRules.push(this.hs.deepCopy(firewallRule));
+    const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!firewallRule.deletedAt) {
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      } else {
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Firewall Rule`,
+        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?
+        The firewall rule will be removed from the infrastructure on the next provisioning cycle.`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  restoreFirewallRule(firewallRule: FirewallRule) {
+    if (firewallRule.deletedAt) {
+      this.firewallRuleService
+        .v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id })
+        .subscribe(data => {
+          this.getFirewallRules();
+        });
     }
   }
 
+  private confirmDeleteObject(
+    modalDto: YesNoModalDto,
+    deleteFunction: () => void,
+  ) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          deleteFunction();
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
   insertFirewallRules(rules) {
-    if (this.firewallRules == null) {
-      this.firewallRules = new Array<FirewallRule>();
-    }
-    rules.forEach(rule => {
-      if (rule.Name !== '') {
-        this.firewallRules.push(rule);
-      }
-    });
-    this.dirty = true;
+    // if (this.firewallRules == null) {
+    //   this.firewallRules = new Array<FirewallRule>();
+    // }
+    // rules.forEach(rule => {
+    //   if (rule.Name !== '') {
+    //     this.firewallRules.push(rule);
+    //   }
+    // });
+    // this.dirty = true;
   }
 }

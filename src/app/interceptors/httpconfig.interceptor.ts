@@ -51,6 +51,36 @@ export class HttpConfigInterceptor {
       });
     }
 
+    if (
+      request.params.get('join') &&
+      request.params.get('join').split(',').length > 1
+    ) {
+      const queryStingReplacement = request.params
+        .get('join')
+        .split(',')
+        .join('&join=');
+      const requestUrl = `${request.url}?join=${queryStingReplacement}`;
+      request = request.clone({
+        url: requestUrl,
+        params: request.params.delete('join'),
+      });
+    }
+
+    if (
+      request.params.get('sort') &&
+      request.params.get('sort').split(',').length > 1
+    ) {
+      const queryStingReplacement = request.params
+        .get('sort')
+        .split(',')
+        .join('&sort=');
+      const requestUrl = `${request.url}?sort=${queryStingReplacement}`;
+      request = request.clone({
+        url: requestUrl,
+        params: request.params.delete('sort'),
+      });
+    }
+
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
