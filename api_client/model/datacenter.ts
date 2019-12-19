@@ -9,7 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VmwareVirtualMachine } from './vmwareVirtualMachine';
+import { Appliance } from './appliance';
 import { Tier } from './tier';
+import { PhysicalServer } from './physicalServer';
 
 
 export interface Datacenter { 
@@ -20,6 +23,9 @@ export interface Datacenter {
     deletedAt?: object;
     name: string;
     description?: string;
+    readonly appliances?: Array<Appliance>;
+    readonly physicalServers?: Array<PhysicalServer>;
+    readonly vmwareVirtualMachines?: Array<VmwareVirtualMachine>;
     readonly tiers?: Array<Tier>;
 }
 

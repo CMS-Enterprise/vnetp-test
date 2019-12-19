@@ -492,6 +492,70 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/datacenters/{datacenterId}/tiers/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/datacenters/{datacenterId}/tiers/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/datacenters/{datacenterId}/tiers/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/datacenters/{datacenterId}/tiers/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/tiers:
     get:
       summary: Retrieve many Tier
@@ -4700,21 +4764,25 @@ paths:
         - application/json
   /v1/auth/login:
     post:
+      summary: Login
       parameters:
-        - name: User
+        - name: UserPass
           required: true
           in: body
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/UserPass'
       responses:
         '200':
           description: ''
+      tags: &ref_17
+        - v1/auth
       produces:
         - application/json
       consumes:
         - application/json
   /v1/auth/register:
     post:
+      summary: Register
       parameters:
         - name: User
           required: true
@@ -4724,6 +4792,7 @@ paths:
       responses:
         '201':
           description: ''
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4868,7 +4937,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualMachine'
-      tags: &ref_17
+      tags: &ref_18
         - v1/vmware/virtual-machines
       produces:
         - application/json
@@ -4887,7 +4956,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4931,7 +5000,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4953,7 +5022,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4975,7 +5044,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4992,7 +5061,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5013,7 +5082,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5029,7 +5098,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5045,7 +5114,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5061,7 +5130,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5077,7 +5146,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5222,7 +5291,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: &ref_18
+      tags: &ref_19
         - v1/vmware/network-adapter
       produces:
         - application/json
@@ -5241,7 +5310,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5285,7 +5354,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5307,7 +5376,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5329,7 +5398,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5346,7 +5415,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5367,7 +5436,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5383,7 +5452,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5399,7 +5468,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5544,7 +5613,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualDisk'
-      tags: &ref_19
+      tags: &ref_20
         - v1/vmware/virtual-disks
       produces:
         - application/json
@@ -5563,7 +5632,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5607,7 +5676,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5629,7 +5698,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5651,7 +5720,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5668,7 +5737,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5689,7 +5758,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5705,7 +5774,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5721,7 +5790,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5866,7 +5935,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: &ref_20
+      tags: &ref_21
         - v1/physical-servers
       produces:
         - application/json
@@ -5885,7 +5954,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5929,7 +5998,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5951,7 +6020,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5973,7 +6042,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5990,7 +6059,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6011,7 +6080,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6027,7 +6096,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6043,7 +6112,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6188,7 +6257,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: &ref_21
+      tags: &ref_22
         - v1/appliances
       produces:
         - application/json
@@ -6207,7 +6276,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6251,7 +6320,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6273,7 +6342,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6295,7 +6364,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6312,7 +6381,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6333,7 +6402,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6349,7 +6418,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6365,7 +6434,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6510,7 +6579,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_22
+      tags: &ref_23
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -6529,7 +6598,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6573,7 +6642,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6595,7 +6664,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6617,7 +6686,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6634,7 +6703,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6655,7 +6724,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6671,7 +6740,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6687,7 +6756,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6703,7 +6772,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6719,7 +6788,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6864,7 +6933,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: &ref_23
+      tags: &ref_24
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -6883,7 +6952,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6927,7 +6996,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6949,7 +7018,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6971,7 +7040,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6988,7 +7057,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7009,7 +7078,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7025,7 +7094,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7041,7 +7110,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7057,7 +7126,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7073,7 +7142,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7218,7 +7287,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_24
+      tags: &ref_25
         - v1/load-balancer/nodes
       produces:
         - application/json
@@ -7237,7 +7306,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7281,7 +7350,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7303,7 +7372,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7325,7 +7394,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7342,7 +7411,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7363,7 +7432,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7379,7 +7448,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7395,7 +7464,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7411,7 +7480,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7427,7 +7496,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7572,7 +7641,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_25
+      tags: &ref_26
         - v1/load-balancer/health-monitors
       produces:
         - application/json
@@ -7591,7 +7660,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7635,7 +7704,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7657,7 +7726,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7679,7 +7748,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7696,7 +7765,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7717,7 +7786,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7733,7 +7802,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7749,7 +7818,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7765,7 +7834,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7781,7 +7850,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7926,7 +7995,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: &ref_26
+      tags: &ref_27
         - v1/load-balancer/irules
       produces:
         - application/json
@@ -7945,7 +8014,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7989,7 +8058,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8011,7 +8080,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8033,7 +8102,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8050,7 +8119,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8071,7 +8140,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8087,7 +8156,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8103,7 +8172,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8119,7 +8188,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8135,7 +8204,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8193,6 +8262,396 @@ definitions:
       - name
       - vlanNumber
       - tierId
+  ApplianceNetworkPort:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+      description:
+        type: string
+      nativeVlanId:
+        type: string
+      applianceId:
+        type: string
+      taggedVlans:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Vlan'
+    required:
+      - name
+      - nativeVlanId
+      - applianceId
+  Appliance:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      rackUnits:
+        type: number
+      serialNumber:
+        type: string
+      deliveryDate:
+        $ref: '#/definitions/Date'
+      localStorageType:
+        type: string
+      localStorageRequired:
+        type: boolean
+      localStorageSize:
+        type: number
+      sanType:
+        type: string
+      sanRequired:
+        type: boolean
+      sanStorageSize:
+        type: number
+      powerSupplyVoltage:
+        type: number
+      powerSupplyWattage:
+        type: number
+      powerSupplyConnectionType:
+        type: string
+      powerSupplyCount:
+        type: number
+      networkPorts:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/ApplianceNetworkPort'
+      datacenterId:
+        type: string
+    required:
+      - name
+      - rackUnits
+      - serialNumber
+      - deliveryDate
+      - localStorageType
+      - localStorageRequired
+      - localStorageSize
+      - sanType
+      - sanRequired
+      - sanStorageSize
+      - powerSupplyVoltage
+      - powerSupplyWattage
+      - powerSupplyConnectionType
+      - powerSupplyCount
+      - datacenterId
+  PhysicalServerNetworkPort:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+      description:
+        type: string
+      nativeVlanId:
+        type: string
+      physicalServerId:
+        type: string
+      taggedVlans:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Vlan'
+    required:
+      - name
+      - nativeVlanId
+      - physicalServerId
+  PhysicalServer:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      serialNumber:
+        type: string
+      deliveryDate:
+        $ref: '#/definitions/Date'
+      localStorageType:
+        type: string
+      localStorageRequired:
+        type: boolean
+      localStorageSize:
+        type: number
+      sanType:
+        type: string
+      sanRequired:
+        type: boolean
+      sanStorageSize:
+        type: number
+      networkPorts:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/PhysicalServerNetworkPort'
+      datacenterId:
+        type: string
+    required:
+      - name
+      - serialNumber
+      - deliveryDate
+      - localStorageType
+      - localStorageRequired
+      - localStorageSize
+      - sanType
+      - sanRequired
+      - sanStorageSize
+      - datacenterId
+  VmwareNetworkAdapter:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+      vlanId:
+        type: string
+      virtualMachineId:
+        type: string
+    required:
+      - name
+      - vlanId
+      - virtualMachineId
+  VmwareVirtualDisk:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+      description:
+        type: string
+      diskSize:
+        type: number
+      rawLun:
+        type: boolean
+      rawLunId:
+        type: number
+      virtualMachineId:
+        type: string
+    required:
+      - name
+      - diskSize
+      - virtualMachineId
+  VmwareVirtualMachine:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      cpuCores:
+        type: number
+      cpuCoresPerSocket:
+        type: number
+      cpuReserved:
+        type: boolean
+      memorySize:
+        type: number
+      memoryReserved:
+        type: boolean
+      datacenterId:
+        type: string
+      networkAdapters:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/VmwareNetworkAdapter'
+      virtualDisks:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/VmwareVirtualDisk'
+    required:
+      - name
+      - cpuCores
+      - cpuCoresPerSocket
+      - cpuReserved
+      - memorySize
+      - memoryReserved
+      - datacenterId
   Subnet:
     type: object
     properties:
@@ -8350,6 +8809,32 @@ definitions:
         type: string
       endIpAddress:
         type: string
+      nat:
+        type: boolean
+      translatedIpAddress:
+        type: string
+      natDirection:
+        type: string
+        enum:
+          - In
+          - Out
+      natType:
+        type: string
+        enum:
+          - Intervrf
+          - External
+      natService:
+        type: boolean
+      natProtocol:
+        type: string
+        enum:
+          - ICMP
+          - TCP
+          - UDP
+      natSourcePort:
+        type: string
+      natTranslatedPort:
+        type: string
       tierId:
         type: string
     required:
@@ -8501,6 +8986,12 @@ definitions:
       description:
         type: string
         maxLength: 500
+      type:
+        type: string
+        enum:
+          - TCP
+          - UDP
+          - TCPUDP
       serviceObjects:
         type: array
         readOnly: true
@@ -8510,6 +9001,7 @@ definitions:
         type: string
     required:
       - name
+      - type
       - tierId
   FirewallRule:
     type: object
@@ -8704,40 +9196,9 @@ definitions:
       type:
         type: string
         enum:
-          - IpAddress
-          - Range
-      ipAddress:
-        type: string
-      startIpAddress:
-        type: string
-      endIpAddress:
-        type: string
-      nat:
-        type: boolean
-      translatedIpAddress:
-        type: string
-      natDirection:
-        type: string
-        enum:
-          - In
-          - Out
-      natType:
-        type: string
-        enum:
+          - Intravrf
           - Intervrf
           - External
-      natService:
-        type: boolean
-      natProtocol:
-        type: string
-        enum:
-          - ICMP
-          - TCP
-          - UDP
-      natSourcePort:
-        type: string
-      natTranslatedPort:
-        type: string
       tierId:
         type: string
       firewallRules:
@@ -8897,19 +9358,31 @@ definitions:
       type:
         type: string
         enum:
-          - TCP
+          - ICMP
           - UDP
-          - TCPUDP
-      serviceObjects:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/ServiceObject'
+          - TCP
+          - HTTP
+          - HTTPS
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      interval:
+        type: number
+        minimum: 1
+        maximum: 300
+      timeout:
+        type: number
+        minimum: 1
+        maximum: 300
       tierId:
         type: string
     required:
       - name
       - type
+      - servicePort
+      - interval
+      - timeout
       - tierId
   LoadBalancerPool:
     type: object
@@ -9062,6 +9535,14 @@ definitions:
           - None
           - AutoMap
           - SNAT
+      type:
+        type: string
+        enum:
+          - Standard
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
       tierId:
         type: string
     required:
@@ -9069,6 +9550,8 @@ definitions:
       - sourceIpAddress
       - destinationIpAddress
       - sourceAddressTranslation
+      - type
+      - servicePort
       - tierId
   Tier:
     type: object
@@ -9210,6 +9693,21 @@ definitions:
       description:
         type: string
         maxLength: 100
+      appliances:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Appliance'
+      physicalServers:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/PhysicalServer'
+      vmwareVirtualMachines:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/VmwareVirtualMachine'
       tiers:
         type: array
         readOnly: true
@@ -9307,212 +9805,67 @@ definitions:
           $ref: '#/definitions/StaticRoute'
     required:
       - bulk
+  UserPass:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - username
+      - password
   User:
     type: object
-    properties: {}
-  VmwareNetworkAdapter:
-    type: object
     properties:
       id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
         type: number
         readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
+      username:
         type: string
-        minLength: 3
-        maxLength: 100
-      description:
+      password:
         type: string
-      vlanId:
+      email:
         type: string
-      virtualMachineId:
-        type: string
-    required:
-      - name
-      - vlanId
-      - virtualMachineId
-  VmwareVirtualDisk:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-      description:
-        type: string
-      diskSize:
-        type: number
-      rawLun:
-        type: boolean
-      rawLunId:
-        type: number
-      virtualMachineId:
-        type: string
-    required:
-      - name
-      - diskSize
-      - virtualMachineId
-  VmwareVirtualMachine:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      cpuCores:
-        type: number
-      cpuCoresPerSocket:
-        type: number
-      cpuReserved:
-        type: boolean
-      memorySize:
-        type: number
-      memoryReserved:
-        type: boolean
-      datacenterId:
-        type: string
-      networkAdapters:
+      roles:
         type: array
         readOnly: true
         items:
-          $ref: '#/definitions/VmwareNetworkAdapter'
-      virtualDisks:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/VmwareVirtualDisk'
+          type: string
+          enum:
+            - User
+            - Administrator
+            - NetworkSecurityAdministrator
+            - LoadBalancerAdministrator
+            - NetworkAdministrator
+            - VMwareAdministrator
+            - ZOSAdministrator
+            - ZVMAdministrator
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
     required:
-      - name
-      - cpuCores
-      - cpuCoresPerSocket
-      - cpuReserved
-      - memorySize
-      - memoryReserved
-      - datacenterId
+      - username
+      - password
+      - email
+      - roles
   GeneratedVmwareVirtualMachineBulkDto:
     type: object
     properties:
       bulk:
         type: array
         items:
-          type: string
-          enum:
-            - serverssl
-            - serverssl-insecure-incompatbile
-            - splitsession-default-serverssl
-            - apm-default-serverssl
-            - crypto-client-default-serverssl
-            - pcoip-default-serverssl
-            - wom-default-serverssl
-      sourceAddressTranslation:
-        type: string
-        enum:
-          - None
-          - AutoMap
-          - SNAT
-      type:
-        type: string
-        enum:
-          - Standard
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      tierId:
-        type: string
+          $ref: '#/definitions/VmwareVirtualMachine'
     required:
-      - name
-      - sourceIpAddress
-      - destinationIpAddress
-      - sourceAddressTranslation
-      - type
-      - servicePort
-      - tierId
-  Tier:
+      - bulk
+  GeneratedVmwareNetworkAdapterBulkDto:
     type: object
     properties:
       bulk:
@@ -9530,112 +9883,6 @@ definitions:
           $ref: '#/definitions/VmwareVirtualDisk'
     required:
       - bulk
-  PhysicalServerNetworkPort:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      name:
-        type: string
-      description:
-        type: string
-      nativeVlanId:
-        type: string
-      physicalServerId:
-        type: string
-      taggedVlans:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/Vlan'
-    required:
-      - name
-      - nativeVlanId
-      - physicalServerId
-  PhysicalServer:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      serialNumber:
-        type: string
-      deliveryDate:
-        $ref: '#/definitions/Date'
-      localStorageType:
-        type: string
-      localStorageRequired:
-        type: boolean
-      localStorageSize:
-        type: number
-      sanType:
-        type: string
-      sanRequired:
-        type: boolean
-      sanStorageSize:
-        type: number
-      networkPorts:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/PhysicalServerNetworkPort'
-      datacenterId:
-        type: string
-    required:
-      - name
-      - serialNumber
-      - deliveryDate
-      - localStorageType
-      - localStorageRequired
-      - localStorageSize
-      - sanType
-      - sanRequired
-      - sanStorageSize
-      - datacenterId
   GeneratedPhysicalServerBulkDto:
     type: object
     properties:
@@ -9645,127 +9892,6 @@ definitions:
           $ref: '#/definitions/PhysicalServer'
     required:
       - bulk
-  ApplianceNetworkPort:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      name:
-        type: string
-      description:
-        type: string
-      nativeVlanId:
-        type: string
-      applianceId:
-        type: string
-      taggedVlans:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/Vlan'
-    required:
-      - name
-      - nativeVlanId
-      - applianceId
-  Appliance:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      rackUnits:
-        type: number
-      serialNumber:
-        type: string
-      deliveryDate:
-        $ref: '#/definitions/Date'
-      localStorageType:
-        type: string
-      localStorageRequired:
-        type: boolean
-      localStorageSize:
-        type: number
-      sanType:
-        type: string
-      sanRequired:
-        type: boolean
-      sanStorageSize:
-        type: number
-      powerSupplyVoltage:
-        type: number
-      powerSupplyWattage:
-        type: number
-      powerSupplyConnectionType:
-        type: string
-      powerSupplyCount:
-        type: number
-      networkPorts:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/ApplianceNetworkPort'
-      datacenterId:
-        type: string
-    required:
-      - name
-      - rackUnits
-      - serialNumber
-      - deliveryDate
-      - localStorageType
-      - localStorageRequired
-      - localStorageSize
-      - sanType
-      - sanRequired
-      - sanStorageSize
-      - powerSupplyVoltage
-      - powerSupplyWattage
-      - powerSupplyConnectionType
-      - powerSupplyCount
-      - datacenterId
   GeneratedApplianceBulkDto:
     type: object
     properties:

@@ -38,12 +38,28 @@ export interface V1DatacentersDatacenterIdTiersGetRequestParams {
     cache?: number;
 }
 
+export interface V1DatacentersDatacenterIdTiersIdDeprovisionPatchRequestParams {
+    id: string;
+}
+
 export interface V1DatacentersDatacenterIdTiersIdGetRequestParams {
     id: string;
     datacenterId: string;
     fields?: string;
     join?: string;
     cache?: number;
+}
+
+export interface V1DatacentersDatacenterIdTiersIdProvisionPutRequestParams {
+    id: string;
+}
+
+export interface V1DatacentersDatacenterIdTiersIdRestorePatchRequestParams {
+    id: string;
+}
+
+export interface V1DatacentersDatacenterIdTiersIdSoftDeleteRequestParams {
+    id: string;
 }
 
 export interface V1TiersBulkPostRequestParams {
@@ -227,6 +243,43 @@ export class V1TiersService {
     }
 
     /**
+     * Deprovisions an Entity.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1DatacentersDatacenterIdTiersIdDeprovisionPatch(requestParameters: V1DatacentersDatacenterIdTiersIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1DatacentersDatacenterIdTiersIdDeprovisionPatch(requestParameters: V1DatacentersDatacenterIdTiersIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1DatacentersDatacenterIdTiersIdDeprovisionPatch(requestParameters: V1DatacentersDatacenterIdTiersIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1DatacentersDatacenterIdTiersIdDeprovisionPatch(requestParameters: V1DatacentersDatacenterIdTiersIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1DatacentersDatacenterIdTiersIdDeprovisionPatch.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}/deprovision`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Retrieve one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -274,6 +327,116 @@ export class V1TiersService {
         return this.httpClient.get<Tier>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Provisions an Entity.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1DatacentersDatacenterIdTiersIdProvisionPut(requestParameters: V1DatacentersDatacenterIdTiersIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1DatacentersDatacenterIdTiersIdProvisionPut(requestParameters: V1DatacentersDatacenterIdTiersIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1DatacentersDatacenterIdTiersIdProvisionPut(requestParameters: V1DatacentersDatacenterIdTiersIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1DatacentersDatacenterIdTiersIdProvisionPut(requestParameters: V1DatacentersDatacenterIdTiersIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1DatacentersDatacenterIdTiersIdProvisionPut.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}/provision`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Restores a Soft-Deleted Entity.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1DatacentersDatacenterIdTiersIdRestorePatch(requestParameters: V1DatacentersDatacenterIdTiersIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1DatacentersDatacenterIdTiersIdRestorePatch(requestParameters: V1DatacentersDatacenterIdTiersIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1DatacentersDatacenterIdTiersIdRestorePatch(requestParameters: V1DatacentersDatacenterIdTiersIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1DatacentersDatacenterIdTiersIdRestorePatch(requestParameters: V1DatacentersDatacenterIdTiersIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1DatacentersDatacenterIdTiersIdRestorePatch.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}/restore`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Soft deletes an Entity.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1DatacentersDatacenterIdTiersIdSoftDelete(requestParameters: V1DatacentersDatacenterIdTiersIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1DatacentersDatacenterIdTiersIdSoftDelete(requestParameters: V1DatacentersDatacenterIdTiersIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1DatacentersDatacenterIdTiersIdSoftDelete(requestParameters: V1DatacentersDatacenterIdTiersIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1DatacentersDatacenterIdTiersIdSoftDelete(requestParameters: V1DatacentersDatacenterIdTiersIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1DatacentersDatacenterIdTiersIdSoftDelete.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}/soft`,
+            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
