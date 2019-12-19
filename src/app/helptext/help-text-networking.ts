@@ -88,7 +88,7 @@ export class FirewallRuleModalHelpText {
 export class NetworkObjectsGroupsHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Vrf = `Tier (VRF) that Network Objects & Groups are created within.`;
+  Tier = `Tier that Network Objects & Groups are created within.`;
   NetworkObjects = `Network Objects can consist of a single host (with NAT/PAT), range or subnet.`;
   NetworkObjectGroups = `Network Object Groups are a collection of Network Objects.`;
 }
@@ -98,21 +98,21 @@ export class NetworkObjectsGroupsHelpText {
 })
 export class NetworkObjectModalHelpText {
   Name = 'Name of the Network Object.';
-  Type = `Type of Network Object (Host, Range, Subnet).`;
-  HostAddress = `Host Address (X.X.X.X) of Host Network Object.`;
-  StartAddress = `Start Address (X.X.X.X) of Range Network Object.`;
-  EndAddress = `End Address (X.X.X.X) of Range Network Object.`;
-  CidrAddress = `Subnet (X.X.X.X/YY) of Subnet Network Object.`;
-  Nat = `Sets whether Network Object should be NATed when traversing between the Source/Destination.`;
-  Source = 'Traffic Source for a Network Object with NAT enabled.';
-  Destination = 'ITraffic Destination for a Network Object with NAT enabled.';
-  TranslatedIp =
+  Type = `Type of Network Object (IpAddress, Range).`;
+  IpAddress = `Ip Address/Subnet the Network Object.`;
+  StartIpAddress = `Start Address (X.X.X.X) of Range Network Object.`;
+  EndIpAddress = `End Address (X.X.X.X) of Range Network Object.`;
+  Nat = `Sets whether Network Object should be NATed.`;
+  NatType =
+    'Type of NAT translation, InterVRF creates a translation between two Tiers, External creates a translation between a Tier and External.';
+  NatDirection =
+    'Direction of the NAT translation, "In" applies the translation to traffic entering the Tier, "Out" applies the translation to traffic exiting the Tier.';
+  TranslatedIpAddress =
     'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
-  NatService =
-    'Sets whether Network Object should be PATed when traversing between the Source/Destination.';
+  NatService = 'Sets whether Network Object should be PATed.';
   NatProtocol = 'Protocol (TCP/UDP) that traffic must match in order to NAT.';
-  SourcePort = 'Source Port that traffic must match in order to PAT.';
-  TranslatedPort = 'Port that traffic is PATed to.';
+  NatSourcePort = 'Source Port that traffic must match in order to PAT.';
+  NatTranslatedPort = 'Port that traffic is PATed to.';
 }
 
 @Injectable({

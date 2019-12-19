@@ -20,13 +20,13 @@ export class ObjectService {
     networkObjects: Array<NetworkObject>,
     ruleLocation: RuleLocation,
   ) {
-    const networkObject = networkObjects.find(n => n.Name === objectName);
+    const networkObject = networkObjects.find(n => n.name === objectName);
 
     if (networkObject) {
       if (ruleLocation === RuleLocation.Source) {
-        firewallRule.SourceNetworkObject = networkObject.Name;
+        firewallRule.SourceNetworkObject = networkObject.name;
       } else if (ruleLocation === RuleLocation.Destination) {
-        firewallRule.DestinationNetworkObject = networkObject.Name;
+        firewallRule.DestinationNetworkObject = networkObject.name;
       }
     } else if (!networkObject) {
       throw new Error('Unable to find Network Object.');

@@ -3,16 +3,15 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Vrf"></tooltip>
+      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Tier"></tooltip>
       </span>
       <select
-        name="vrf"
+        name="tier"
         class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentVrf"
-        (ngModelChange)="getVrfObjects(currentVrf)"
-        [disabled]="dirty"
-      >
-        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+        [(ngModel)]="currentTier"
+        [disabled]="datacenterService.datacenterLockValue"
+        >
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
     </div>
   </div>
@@ -88,11 +87,12 @@
               aria-label="Edit Virtual Server"
             >
             </fa>
-            <fa name="trash" (click)="deleteVirtualServer(virtualServer)"> </fa>
+            <fa name="undo" *ngIf="virtualServer?.deletedAt" class="fg-success" (click)="restoreVirtualServer(virtualServer)" aria-label="Restore Virtual Server"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': virtualServer?.deletedAt }" (click)="deleteVirtualServer(virtualServer)" aria-label="Soft-Delete/Delete Virtual Server"></fa>
           </td>
         </tr>
         <tr *ngIf="virtualServers?.length === 0" class="text-center">
-          <td colspan="6">No Virtual Servers in this VRF.</td>
+          <td colspan="6">No Virtual Servers in this Tier.</td>
         </tr>
       </tbody>
     </table>
@@ -103,7 +103,7 @@
       <button
         type="button"
         class="btn btn-success"
-        (click)="createPool()"
+        (click)="openPoolModal('Create')"
         aria-label="Create Pool"
       >
         <fa name="plus"></fa>
@@ -138,12 +138,8 @@
           <td class="item-actions">
             <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool">
             </fa>
-            <fa
-              name="trash"
-              (click)="deletePool(pool)"
-              aria-label="Delete Pool"
-            >
-            </fa>
+            <fa name="undo" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': pool?.deletedAt }" (click)="deletePool(pool)" aria-label="Soft-Delete/Delete Pool"></fa>
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
@@ -185,6 +181,8 @@
               aria-label="Edit iRule"
             >
             </fa>
+            <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restorePool(irule)" aria-label="Restore Irule"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': irule?.deletedAt }" (click)="deletePool(irule)" aria-label="Soft-Delete/Delete Irule"></fa>
             <fa
               name="trash"
               (click)="deleteIRule(irule)"
@@ -194,7 +192,7 @@
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">
-          <td colspan="2">No iRules in this VRF</td>
+          <td colspan="2">No iRules in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -249,28 +247,25 @@
               aria-label="Edit Health Monitor"
             >
             </fa>
-            <fa
-              name="trash"
-              (click)="deleteHealthMonitor(healthMonitor)"
-              aria-label="Delete Health Monitor"
-            >
-            </fa>
+            <fa name="undo" *ngIf="healthMonitor?.deletedAt" class="fg-success" (click)="restoreHealthMonitor(healthMonitor)" aria-label="Restore Health Monitor"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': healthMonitor?.deletedAt }" (click)="deleteHealthMonitor(healthMonitor)"
+              aria-label="Soft-Delete/Delete Health Monitor"></fa>
           </td>
         </tr>
         <tr *ngIf="!healthMonitors?.length" class="text-center">
-          <td colspan="6">No Health Monitors in this VRF</td>
+          <td colspan="6">No Health Monitors in this Tier</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div *ngIf="currentVrf" class="pull-right">
-    <app-import-export
+  <div *ngIf="currentTier" class="pull-right">
+    <!-- <app-import-export
       [exportObject]="exportLoadBalancerConfig()"
-      exportFileName="loadBalancers-{{ currentVrf.name }}"
+      exportFileName="loadBalancers-{{ currentTier.name }}"
       disableCsv="true"
       (import)="importLoadBalancerConfig($event)"
-    ></app-import-export>
+    ></app-import-export> -->
   </div>
 
   <app-virtual-server-modal></app-virtual-server-modal>
@@ -279,3 +274,4 @@
   <app-irule-modal></app-irule-modal>
   <app-health-monitor-modal></app-health-monitor-modal>
 </div>
+<app-yes-no-modal></app-yes-no-modal>

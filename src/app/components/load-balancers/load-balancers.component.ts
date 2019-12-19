@@ -18,7 +18,13 @@ import {
   LoadBalancerIrule,
   LoadBalancerHealthMonitor,
   LoadBalancerVirtualServer,
+  V1LoadBalancerIrulesService,
+  V1LoadBalancerVirtualServersService,
+  V1LoadBalancerPoolsService,
+  V1LoadBalancerHealthMonitorsService,
+  LoadBalancerNode,
 } from 'api_client';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -28,8 +34,8 @@ export class LoadBalancersComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   navIndex = 0;
 
-  vrfs: Tier[];
-  currentVrf: Tier;
+  tiers: Tier[];
+  currentTier: Tier;
 
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];
@@ -62,8 +68,10 @@ export class LoadBalancersComponent
   currentDatacenterSubscription: Subscription;
 
   @HostListener('window:beforeunload')
+  @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
+    return;
+    // return !this.datacenterService.datacenterLockValue;
   }
 
   constructor(
@@ -71,12 +79,16 @@ export class LoadBalancersComponent
     private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
+    private irulesService: V1LoadBalancerIrulesService,
+    private virtualServersService: V1LoadBalancerVirtualServersService,
+    private poolsService: V1LoadBalancerPoolsService,
+    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private hs: HelpersService,
     private toastr: ToastrService,
     public helpText: LoadBalancersHelpText,
   ) {}
 
-  getVrfs() {
+  getTiers() {
     this.tierService
       .v1TiersIdGet({
         id: '42284ed9-cfb2-4665-a156-89e403677562',
@@ -175,56 +187,45 @@ export class LoadBalancersComponent
   subscribeToVirtualServerModal() {
     this.virtualServerModalSubscription = this.ngx
       .getModal('virtualServerModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData();
-
-        if (data && data.VirtualServer !== undefined) {
-          this.saveVirtualServer(data.VirtualServer);
-        }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        // not the biggest fan of this pattern
+        this.getTiers();
         this.ngx.resetModalData('virtualServerModal');
         this.virtualServerModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
       });
   }
 
   subscribeToPoolModal() {
     this.poolModalSubscription = this.ngx
       .getModal('poolModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData();
-
-        if (data && data.Pool !== undefined) {
-          this.savePool(data.Pool);
-        }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getTiers();
         this.ngx.resetModalData('poolModal');
         this.poolModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
       });
   }
 
   subscribeToIRuleModal() {
     this.iruleModalSubscription = this.ngx
       .getModal('iruleModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as LoadBalancerIrule;
-
-        if (data && data !== undefined) {
-          this.saveIRule(data);
-        }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getTiers();
         this.ngx.resetModalData('iruleModal');
         this.iruleModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
       });
   }
 
   subscribeToHealthMonitorModal() {
     this.healthMonitorModalSubscription = this.ngx
       .getModal('healthMonitorModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as LoadBalancerHealthMonitor;
-
-        if (data && data !== undefined) {
-          this.saveHealthMonitor(data);
-        }
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getTiers();
         this.ngx.resetModalData('healthMonitorModal');
         this.healthMonitorModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
       });
   }
 
@@ -238,43 +239,164 @@ export class LoadBalancersComponent
   }
 
   deleteVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    const index = this.virtualServers.indexOf(virtualServer);
-    if (index > -1) {
-      this.virtualServers.splice(index, 1);
+    if (virtualServer.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = virtualServer.deletedAt
+      ? 'Delete'
+      : 'Soft-Delete';
 
-      if (!this.deletedVirtualServers) {
-        // this.deletedVirtualServers = new Array<VirtualServer>();
+    const deleteFunction = () => {
+      if (!virtualServer.deletedAt) {
+        this.virtualServersService
+          .v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id })
+          .subscribe(data => {
+            // do we want to be getting just virtual servers here?
+            this.getTiers();
+          });
+      } else {
+        this.virtualServersService
+          .v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
       }
-      this.deletedVirtualServers.push(virtualServer);
-      this.dirty = true;
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Virtual Server?`,
+        `Do you want to ${deleteDescription} virtual server "${virtualServer.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  deleteIrule(irule: LoadBalancerIrule) {
+    if (irule.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = irule.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!irule.deletedAt) {
+        this.irulesService
+          .v1LoadBalancerIrulesIdSoftDelete({ id: irule.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      } else {
+        this.irulesService
+          .v1LoadBalancerIrulesIdDelete({ id: irule.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Irule?`,
+        `Do you want to ${deleteDescription} irule "${irule.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+    if (healthMonitor.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = healthMonitor.deletedAt
+      ? 'Delete'
+      : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!healthMonitor.deletedAt) {
+        this.healthMonitorsService
+          .v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      } else {
+        this.healthMonitorsService
+          .v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Health Monitor?`,
+        `Do you want to ${deleteDescription} health monitor "${healthMonitor.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  deletePool(pool: LoadBalancerPool) {
+    if (pool.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = pool.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!pool.deletedAt) {
+        this.poolsService
+          .v1LoadBalancerPoolsIdSoftDelete({ id: pool.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      } else {
+        this.poolsService
+          .v1LoadBalancerPoolsIdDelete({ id: pool.id })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Pool?`,
+        `Do you want to ${deleteDescription} pool "${pool.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {
+    if (virtualServer.deletedAt) {
+      this.virtualServersService
+        .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
+        .subscribe(data => this.getTiers());
     }
   }
 
-  savePool(pool: LoadBalancerPool) {
-    if (this.poolModalMode === ModalMode.Create) {
-      this.pools.push(pool);
-    } else {
-      this.pools[this.editPoolIndex] = pool;
+  restorePool(pool: LoadBalancerPool) {
+    if (pool.deletedAt) {
+      this.poolsService
+        .v1LoadBalancerPoolsIdRestorePatch({ id: pool.id })
+        .subscribe(data => this.getTiers());
     }
-    this.dirty = true;
   }
 
-  saveHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (this.healthMonitorModalMode === ModalMode.Create) {
-      this.healthMonitors.push(healthMonitor);
-    } else {
-      this.healthMonitors[this.editHealthMonitorIndex] = healthMonitor;
+  restoreIrules(irule: LoadBalancerIrule) {
+    if (irule.deletedAt) {
+      this.irulesService
+        .v1LoadBalancerIrulesIdRestorePatch({ id: irule.id })
+        .subscribe(data => this.getTiers());
     }
-    // this.dirty = true;
   }
 
-  saveIRule(irule: LoadBalancerIrule) {
-    if (this.iruleModalMode === ModalMode.Create) {
-      this.irules.push(irule);
-    } else {
-      this.irules[this.editIRuleIndex] = irule;
+  restoreHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+    if (healthMonitor.deletedAt) {
+      this.healthMonitorsService
+        .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
+        .subscribe(data => this.getTiers());
     }
-    this.dirty = true;
   }
 
   // deletePool(pool: LoadBalancerPool) {
@@ -344,26 +466,41 @@ export class LoadBalancersComponent
   // }
 
   importLoadBalancerConfig(importObject) {
-    // TODO: Import Validation.
-    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    this.virtualServers = importObject.VirtualServers;
-    this.pools = importObject.Pools;
-    this.irules = importObject.IRules;
-    this.healthMonitors = importObject.HealthMonitors;
-
-    this.dirty = true;
+    //   // TODO: Import Validation.
+    //   // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
+    //   this.virtualServers = importObject.VirtualServers;
+    //   this.pools = importObject.Pools;
+    //   this.irules = importObject.IRules;
+    //   this.healthMonitors = importObject.HealthMonitors;
+    //   this.dirty = true;
   }
 
   exportLoadBalancerConfig() {
-    const dto = new LoadBalancerDto();
+    //   const dto = new LoadBalancerDto();
+    //   dto.VirtualServers = this.virtualServers;
+    //   dto.Pools = this.pools;
+    //   dto.IRules = this.irules;
+    //   dto.HealthMonitors = this.healthMonitors;
+    //   dto.VrfId = this.currentTier.id;
+    //   return dto;
+  }
 
-    dto.VirtualServers = this.virtualServers;
-    dto.Pools = this.pools;
-    dto.IRules = this.irules;
-    dto.HealthMonitors = this.healthMonitors;
-    dto.VrfId = this.currentVrf.id;
-
-    return dto;
+  private confirmDeleteObject(
+    modalDto: YesNoModalDto,
+    deleteFunction: () => void,
+  ) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          deleteFunction();
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   private unsubAll() {
@@ -381,16 +518,15 @@ export class LoadBalancersComponent
   }
 
   ngOnInit() {
-    this.getVrfs();
-    // this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
-    //   cd => {
-    //     if (cd) {
-    //       this.vrfs = cd.tiers;
-    //       this.currentVrf = cd.tiers[0];
-    //       this.getVrfs();
-    //     }
-    //   },
-    // );
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
+      cd => {
+        if (cd) {
+          this.tiers = cd.tiers;
+          this.currentTier = cd.tiers[0];
+          this.getTiers();
+        }
+      },
+    );
   }
 
   ngOnDestroy() {

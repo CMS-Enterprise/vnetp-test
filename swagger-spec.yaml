@@ -8704,9 +8704,46 @@ definitions:
       type:
         type: string
         enum:
+<<<<<<< HEAD
           - Intravrf
           - Intervrf
           - External
+=======
+          - IpAddress
+          - Range
+      ipAddress:
+        type: string
+      startIpAddress:
+        type: string
+      endIpAddress:
+        type: string
+      nat:
+        type: boolean
+      translatedIpAddress:
+        type: string
+      natDirection:
+        type: string
+        enum:
+          - In
+          - Out
+      natType:
+        type: string
+        enum:
+          - Intervrf
+          - External
+      natService:
+        type: boolean
+      natProtocol:
+        type: string
+        enum:
+          - ICMP
+          - TCP
+          - UDP
+      natSourcePort:
+        type: string
+      natTranslatedPort:
+        type: string
+>>>>>>> dpt-516/network-objects-network-object-groups
       tierId:
         type: string
       firewallRules:

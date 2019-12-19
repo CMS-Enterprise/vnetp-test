@@ -66,8 +66,16 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { ContractModalComponent } from './modals/contract-modal/contract-modal.component';
-import { ApiModule, Configuration } from 'api_client';
+import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
+import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
+
+export function apiConfigFactory(): Configuration {
+  const params: ConfigurationParameters = {
+    basePath: environment.apiBase,
+  };
+  return new Configuration(params);
+}
 
 @NgModule({
   declarations: [
@@ -118,11 +126,10 @@ import { environment } from 'src/environments/environment';
     TooltipComponent,
     IntraVrfRulesComponent,
     ContractModalComponent,
+    YesNoModalComponent,
   ],
   imports: [
-    ApiModule.forRoot(
-      () => new Configuration({ basePath: environment.apiBase }),
-    ),
+    ApiModule.forRoot(apiConfigFactory),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
