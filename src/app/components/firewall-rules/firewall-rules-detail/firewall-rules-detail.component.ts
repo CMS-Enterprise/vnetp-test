@@ -1,7 +1,5 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
@@ -65,8 +63,6 @@ export class FirewallRulesDetailComponent
 
   constructor(
     private route: ActivatedRoute,
-    private automationApiService: AutomationApiService,
-    private hs: HelpersService,
     private ngx: NgxSmartModalService,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
@@ -95,36 +91,6 @@ export class FirewallRulesDetailComponent
   refresh() {
     this.getFirewallRules();
   }
-
-  // moveFirewallRule(value: number, rule: FirewallRule) {
-  //   const ruleIndex = this.firewallRules.indexOf(rule);
-
-  //   // If the rule isn't in the array, is at the start of the array and requested to move up
-  //   // or if the rule is at the end of the array, return.
-  //   if (
-  //     ruleIndex === -1 ||
-  //     (ruleIndex === 0 && value === -1) ||
-  //     ruleIndex + value === this.firewallRules.length
-  //   ) {
-  //     return;
-  //   }
-
-  //   const nextRule = this.firewallRules[ruleIndex + value];
-
-  //   // If the next rule doesn't exist, return.
-  //   if (nextRule === null) {
-  //     return;
-  //   }
-
-  //   const nextRuleIndex = this.firewallRules.indexOf(nextRule);
-
-  //   [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] = [
-  //     this.firewallRules[nextRuleIndex],
-  //     this.firewallRules[ruleIndex],
-  //   ];
-
-  //   this.dirty = true;
-  // }
 
   getFirewallRules() {
     this.firewallRuleGroupService
