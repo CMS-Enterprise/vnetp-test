@@ -1,5 +1,5 @@
 <div>
-  <h1>VMWare</h1>
+  <h1>Virtual Machines</h1>
 
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <button
@@ -30,7 +30,7 @@
     <tbody>
       <tr *ngFor="let vm of virtualMachines">
         <td>
-          {{ vm.name }}
+          <a routerLink="/vmware/{{ vm.id }}">{{ vm.name }}</a>
         </td>
         <td>
           {{ vm.cpuCores }}

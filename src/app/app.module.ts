@@ -73,6 +73,7 @@ import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.compone
 import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
 import { TiersComponent } from './components/tiers/tiers.component';
 import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
+import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -135,6 +136,7 @@ export function apiConfigFactory(): Configuration {
     TierModalComponent,
     VmwareComponent,
     VirtualMachineModalComponent,
+    VmwareDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
