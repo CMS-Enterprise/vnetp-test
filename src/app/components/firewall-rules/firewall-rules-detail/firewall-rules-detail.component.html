@@ -71,13 +71,13 @@
             *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
             aria-label="Source Network Object"
           >
-            {{ firewallRule?.sourceNetworkObject }} (Object)
+            {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }} (Object)
           </p>
           <p
             *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
             aria-label="Source Network Object Group"
           >
-            {{ firewallRule?.sourceNetworkObjectGroup }} (Object Group)
+            {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} (Object Group)
           </p>
         </td>
         <td>
@@ -88,13 +88,13 @@
             *ngIf="firewallRule.sourceServiceType === 'ServiceObject'"
             aria-label="Source Service Object"
           >
-            {{ firewallRule?.sourceServiceObject }} (Object)
+            {{ firewallRule?.sourceServiceObjectId | resolve: getServiceObjectName  }} (Object)
           </p>
           <p
             *ngIf="firewallRule.sourceServiceType === 'ServiceObjectGroup'"
             aria-label="Source Service Object Group"
           >
-            {{ firewallRule?.sourceServiceObjectGroup }} (Object Group)
+            {{ firewallRule?.sourceServiceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
           </p>
         </td>
         <td>
@@ -105,13 +105,13 @@
           *ngIf="firewallRule.destinationAddressType === 'NetworkObject'"
           aria-label="Destination Network Object"
           >
-            {{ firewallRule?.destinationNetworkObject }} (Object)
+            {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }} (Object)
           </p>
           <p
             *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
             aria-label="Destination Network Object Group"
           >
-            {{ firewallRule?.destinationNetworkObjectGroup }} (Object Group)
+            {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} (Object Group)
           </p>
         </td>
         <td>
@@ -125,13 +125,13 @@
             *ngIf="firewallRule.destinationServiceType === 'ServiceObject'"
             aria-label="Destination Service Object"
           >
-            {{ firewallRule?.destinationServiceObject }} (Object)
+            {{ firewallRule?.destinationServiceObjectId | resolve: getServiceObjectName }} (Object)
           </p>
           <p
           *ngIf="firewallRule.destinationServiceType === 'ServiceObjectGroup'"
           aria-label="Destination Service Object Group"
           >
-            {{ firewallRule?.destinationServiceObjectGroup }} (Object Group)
+            {{ firewallRule?.destinationServiceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
           </p>
         </td>
         <td>

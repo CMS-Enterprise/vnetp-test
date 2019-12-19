@@ -178,6 +178,32 @@ export class FirewallRulesDetailComponent
       });
   }
 
+  getServiceObjectName = (id: string) => {
+    return this.getObjectName(id, this.serviceObjects);
+    // tslint:disable-next-line: semicolon
+  };
+
+  getServiceObjectGroupName = (id: string) => {
+    return this.getObjectName(id, this.serviceObjectGroups);
+    // tslint:disable-next-line: semicolon
+  };
+
+  getNetworkObjectName = (id: string) => {
+    return this.getObjectName(id, this.networkObjects);
+    // tslint:disable-next-line: semicolon
+  };
+
+  getNetworkObjectGroupName = (id: string) => {
+    return this.getObjectName(id, this.networkObjectGroups);
+    // tslint:disable-next-line: semicolon
+  };
+
+  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
+    if (objects && objects.length) {
+      return objects.find(o => o.id === id).name || 'N/A';
+    }
+  }
+
   updateFirewallRuleGroup() {
     // TODO: Update Firewall Rule Group
   }
