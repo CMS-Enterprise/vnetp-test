@@ -30,6 +30,7 @@ import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detai
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { VmwareComponent } from './components/vmware/vmware.component';
+import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 
 // tslint:disable: max-line-length
 
@@ -138,6 +139,12 @@ const routes: Routes = [
     component: VmwareComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'VMWare' },
+  },
+  {
+    path: 'vmware/:id',
+    component: VmwareDetailComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'VMWare Detail' },
   },
   {
     path: 'solaris',

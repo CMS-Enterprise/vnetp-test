@@ -72,6 +72,7 @@ import { environment } from 'src/environments/environment';
 import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ResolvePipe } from './pipes/resolve.pipe';
+import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -133,6 +134,7 @@ export function apiConfigFactory(): Configuration {
     ResolvePipe,
     VmwareComponent,
     VirtualMachineModalComponent,
+    VmwareDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
