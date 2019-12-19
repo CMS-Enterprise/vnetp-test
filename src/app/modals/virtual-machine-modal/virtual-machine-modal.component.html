@@ -45,21 +45,6 @@
         />
       </div>
 
-      <div class="form-group">
-        <label>Virtual Datacenter</label>
-        <select
-          name="virtualDatacenter"
-          formControlName="virtualDatacenter"
-          class="form-control"
-          required
-        >
-          <option></option>
-          <!-- <option *ngFor="let vdc of ???">
-              {{ vdc }}</option
-            > -->
-        </select>
-      </div>
-
       <div class="form-row">
         <div class="form-group col-md-4">
           <label>CPU Cores</label>
@@ -110,7 +95,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Memory</label>
+          <label>Memory (GB)</label>
           <select
             name="memorySize"
             formControlName="memorySize"
@@ -119,7 +104,7 @@
           >
             <option></option>
             <option *ngFor="let memory of [1, 2, 4, 8, 16, 32]">
-              {{ memory }} GB
+              {{ memory }}
             </option>
           </select>
         </div>
@@ -150,7 +135,7 @@
           Cancel
         </button>
 
-        <button class="btn btn-success" data-dismiss="modal" (click)="save()">
+        <button class="btn btn-success" data-dismiss="modal">
           <fa name="save"></fa>
           Save
         </button>
