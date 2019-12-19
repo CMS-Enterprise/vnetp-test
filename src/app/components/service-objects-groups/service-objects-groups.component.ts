@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -48,7 +47,6 @@ export class ServiceObjectsGroupsComponent
     private tierService: V1TiersService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
-    private hs: HelpersService,
     public helpText: ServiceObjectsGroupsHelpText,
   ) {
     this.serviceObjects = new Array<ServiceObject>();
@@ -87,7 +85,7 @@ export class ServiceObjectsGroupsComponent
 
     this.subscribeToServiceObjectModal();
     this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'serviceObjectModal');
+    this.ngx.setModalData(dto, 'serviceObjectModal');
     this.ngx.getModal('serviceObjectModal').open();
   }
 
@@ -110,7 +108,7 @@ export class ServiceObjectsGroupsComponent
 
     this.subscribeToServiceObjectGroupModal();
     this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'serviceObjectGroupModal');
+    this.ngx.setModalData(dto, 'serviceObjectGroupModal');
     this.ngx.getModal('serviceObjectGroupModal').open();
   }
 
