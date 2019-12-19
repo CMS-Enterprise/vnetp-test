@@ -27,7 +27,6 @@ import { JobsComponent } from './components/jobs/jobs.component';
 import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
-import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
@@ -89,7 +88,6 @@ export function apiConfigFactory(): Configuration {
     JobsComponent,
     CreateNetworkComponent,
     NavbarComponent,
-    IpaddressesComponent,
     NotfoundComponent,
     BreadcrumbComponent,
     StaticRoutesComponent,
