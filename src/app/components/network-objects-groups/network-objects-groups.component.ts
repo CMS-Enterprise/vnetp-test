@@ -290,6 +290,8 @@ export class NetworkObjectsGroupsComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
+          this.networkObjects = [];
+          this.networkObjectGroups = [];
 
           if (cd.tiers.length) {
             this.currentTier = cd.tiers[0];

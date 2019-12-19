@@ -289,6 +289,8 @@ export class ServiceObjectsGroupsComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
+          this.serviceObjects = [];
+          this.serviceObjectGroups = [];
 
           if (cd.tiers.length) {
             this.currentTier = cd.tiers[0];
