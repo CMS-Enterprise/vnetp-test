@@ -10,10 +10,11 @@ import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerNode,
   LoadBalancerPool,
-  LoadBalancerHealthMonitorType,
   LoadBalancerHealthMonitor,
   Tier,
+  V1LoadBalancerPoolsService,
 } from 'api_client';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-pool-modal',
@@ -29,11 +30,14 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   poolMemberModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
-  tier: Tier;
+  Tier: Tier;
+  Pool: LoadBalancerPool;
+  ModalMode: ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private poolService: V1LoadBalancerPoolsService,
     public helpText: PoolModalHelpText,
   ) {}
 
@@ -45,20 +49,44 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
     const pool = {} as LoadBalancerPool;
     pool.name = this.form.value.name;
-    pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
-    // how should be saving?
-    // pool.nodes = Object.assign([], (this.poolMembers));
-    // pool.healthMonitors = Object.assign([], this.selectedHealthMonitors);
-
     pool.name = pool.name.trim();
+    pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
 
     const dto = new PoolModalDto();
 
     dto.pool = pool;
 
-    this.ngx.resetModalData('poolModal');
-    this.ngx.setModalData(Object.assign({}, dto), 'poolModal');
-    this.ngx.close('poolModal');
+    if (this.ModalMode === ModalMode.Create) {
+      pool.tierId = this.Tier.id;
+      this.poolService
+        .v1LoadBalancerPoolsPost({
+          loadBalancerPool: pool,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.poolService
+        .v1LoadBalancerPoolsIdPut({
+          id: this.Pool.id,
+          loadBalancerPool: pool,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+
+    this.closeModal();
+  }
+
+  private closeModal() {
+    this.ngx.close('healthMonitorModal');
     this.reset();
   }
 
@@ -69,6 +97,35 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   get f() {
     return this.form.controls;
+  }
+
+  removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+    const modalDto = new YesNoModalDto('Remove Health Monitor', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.poolService
+            .v1LoadBalancerPoolsIdDelete({ id: healthMonitor.id })
+            .subscribe(() => {
+              this.getPools();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  private getPools() {
+    this.poolService
+      .v1LoadBalancerPoolsIdGet({ id: this.Pool.id })
+      .subscribe(data => {
+        this.Pool = data;
+      });
   }
 
   private setFormValidators() {}

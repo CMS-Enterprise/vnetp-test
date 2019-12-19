@@ -42,11 +42,6 @@ export class LoadBalancersComponent
   irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
 
-  deletedVirtualServers: LoadBalancerVirtualServer[];
-  deletedPools: LoadBalancerPool[];
-  deletedIRules: LoadBalancerIrule[];
-  deletedHealthMonitors: LoadBalancerHealthMonitor[];
-
   editVirtualServerIndex: number;
   editPoolIndex: number;
   editIRuleIndex: number;
@@ -88,20 +83,66 @@ export class LoadBalancersComponent
     public helpText: LoadBalancersHelpText,
   ) {}
 
-  getTiers() {
+  getVirtualServers() {
     this.tierService
       .v1TiersIdGet({
         id: '42284ed9-cfb2-4665-a156-89e403677562',
-        join:
-          'loadBalancerPools,loadBalancerVirtualServers,loadBalancerNodes,loadBalancerHealthMonitors,loadBalancerIrules',
+        join: 'loadBalancerVirtualServers',
       })
       .subscribe(data => {
         console.log(data);
         this.virtualServers = data.loadBalancerVirtualServers;
+      });
+  }
+
+  getPools() {
+    this.tierService
+      .v1TiersIdGet({
+        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        join: 'loadBalancerPools,loadBalancerNodes,loadBalancerHealthMonitors',
+      })
+      .subscribe(data => {
+        console.log(data);
         this.pools = data.loadBalancerPools;
-        this.irules = data.loadBalancerIrules;
         this.healthMonitors = data.loadBalancerHealthMonitors;
       });
+  }
+
+  getIrules() {
+    this.tierService
+      .v1TiersIdGet({
+        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        join: 'loadBalancerIrules',
+      })
+      .subscribe(data => {
+        console.log(data);
+        this.irules = data.loadBalancerIrules;
+      });
+  }
+
+  getHealthMonitors() {
+    this.tierService
+      .v1TiersIdGet({
+        id: '42284ed9-cfb2-4665-a156-89e403677562',
+        join: 'loadBalancerHealthMonitors',
+      })
+      .subscribe(data => {
+        console.log(data);
+        this.healthMonitors = data.loadBalancerHealthMonitors;
+      });
+  }
+
+  getObjectsForNavIndex() {
+    console.log('here', this.navIndex);
+    if (this.navIndex === 0) {
+      this.getVirtualServers();
+    } else if (this.navIndex === 1) {
+      this.getPools();
+    } else if (this.navIndex === 2) {
+      this.getIrules();
+    } else if (this.navIndex === 3) {
+      this.getHealthMonitors();
+    }
   }
 
   openVirtualServerModal(
@@ -131,7 +172,7 @@ export class LoadBalancersComponent
     }
     this.subscribeToPoolModal();
     const dto = new PoolModalDto();
-    // dto.pool = pool;
+    dto.pool = pool;
     dto.healthMonitors = this.healthMonitors;
 
     this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
@@ -188,8 +229,7 @@ export class LoadBalancersComponent
     this.virtualServerModalSubscription = this.ngx
       .getModal('virtualServerModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        // not the biggest fan of this pattern
-        this.getTiers();
+        this.getVirtualServers();
         this.ngx.resetModalData('virtualServerModal');
         this.virtualServerModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
@@ -200,7 +240,7 @@ export class LoadBalancersComponent
     this.poolModalSubscription = this.ngx
       .getModal('poolModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getTiers();
+        this.getPools();
         this.ngx.resetModalData('poolModal');
         this.poolModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
@@ -211,7 +251,7 @@ export class LoadBalancersComponent
     this.iruleModalSubscription = this.ngx
       .getModal('iruleModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getTiers();
+        this.getIrules();
         this.ngx.resetModalData('iruleModal');
         this.iruleModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
@@ -222,20 +262,11 @@ export class LoadBalancersComponent
     this.healthMonitorModalSubscription = this.ngx
       .getModal('healthMonitorModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getTiers();
+        this.getHealthMonitors();
         this.ngx.resetModalData('healthMonitorModal');
         this.healthMonitorModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
       });
-  }
-
-  saveVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    if (this.virtualServerModalMode === ModalMode.Create) {
-      this.virtualServers.push(virtualServer);
-    } else {
-      this.virtualServers[this.editVirtualServerIndex] = virtualServer;
-    }
-    this.dirty = true;
   }
 
   deleteVirtualServer(virtualServer: LoadBalancerVirtualServer) {
@@ -252,13 +283,13 @@ export class LoadBalancersComponent
           .v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id })
           .subscribe(data => {
             // do we want to be getting just virtual servers here?
-            this.getTiers();
+            this.getVirtualServers();
           });
       } else {
         this.virtualServersService
           .v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getVirtualServers();
           });
       }
     };
@@ -283,13 +314,13 @@ export class LoadBalancersComponent
         this.irulesService
           .v1LoadBalancerIrulesIdSoftDelete({ id: irule.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getIrules();
           });
       } else {
         this.irulesService
           .v1LoadBalancerIrulesIdDelete({ id: irule.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getIrules();
           });
       }
     };
@@ -316,13 +347,13 @@ export class LoadBalancersComponent
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getHealthMonitors();
           });
       } else {
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getHealthMonitors();
           });
       }
     };
@@ -347,13 +378,13 @@ export class LoadBalancersComponent
         this.poolsService
           .v1LoadBalancerPoolsIdSoftDelete({ id: pool.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getPools();
           });
       } else {
         this.poolsService
           .v1LoadBalancerPoolsIdDelete({ id: pool.id })
           .subscribe(data => {
-            this.getTiers();
+            this.getPools();
           });
       }
     };
@@ -371,7 +402,7 @@ export class LoadBalancersComponent
     if (virtualServer.deletedAt) {
       this.virtualServersService
         .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
-        .subscribe(data => this.getTiers());
+        .subscribe(data => this.getVirtualServers());
     }
   }
 
@@ -379,7 +410,7 @@ export class LoadBalancersComponent
     if (pool.deletedAt) {
       this.poolsService
         .v1LoadBalancerPoolsIdRestorePatch({ id: pool.id })
-        .subscribe(data => this.getTiers());
+        .subscribe(data => this.getPools());
     }
   }
 
@@ -387,7 +418,7 @@ export class LoadBalancersComponent
     if (irule.deletedAt) {
       this.irulesService
         .v1LoadBalancerIrulesIdRestorePatch({ id: irule.id })
-        .subscribe(data => this.getTiers());
+        .subscribe(data => this.getIrules());
     }
   }
 
@@ -395,75 +426,9 @@ export class LoadBalancersComponent
     if (healthMonitor.deletedAt) {
       this.healthMonitorsService
         .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
-        .subscribe(data => this.getTiers());
+        .subscribe(data => this.getHealthMonitors());
     }
   }
-
-  // deletePool(pool: LoadBalancerPool) {
-  //   for (const vs of this.virtualServers) {
-  //     if (vs.Pool === pool.Name) {
-  //       this.toastr.error(`Pool in use! Virtual Server: ${vs.Name}`);
-  //       console.log('Pool in use!'); // TODO: Toastr
-  //       return;
-  //     }
-  //   }
-
-  //   const index = this.pools.indexOf(pool);
-  //   if (index > -1) {
-  //     this.pools.splice(index, 1);
-
-  //     if (!this.deletedPools) {
-  //       this.deletedPools = new Array<Pool>();
-  //     }
-  //     this.deletedPools.push(pool);
-
-  //     this.dirty = true;
-  //   }
-  // }
-
-  // deleteIRule(irule: LoadBalancerIrule) {
-  //   for (const vs of this.virtualServers) {
-  //     if (vs.IRules.includes(irule.Name)) {
-  //       this.toastr.error(`iRule in use! Virtual Server: ${vs.Name}`);
-  //       console.log('iRule in use!'); // TODO: Toastr
-  //       return;
-  //     }
-  //   }
-
-  //   const index = this.irules.indexOf(irule);
-  //   if (index > -1) {
-  //     this.irules.splice(index, 1);
-
-  //     if (!this.deletedIRules) {
-  //       this.deletedIRules = new Array<IRule>();
-  //     }
-  //     this.deletedIRules.push(irule);
-
-  //     this.dirty = true;
-  //   }
-  // }
-
-  // deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-  //   for (const p of this.pools) {
-  //     if (p.HealthMonitors.includes(healthMonitor.name)) {
-  //       this.toastr.error(`Health Monitor in use! Pool: ${p.Name}`);
-  //       console.log('Health Monitor in use!'); // TODO: Toastr
-  //       return;
-  //     }
-  //   }
-
-  //   const index = this.healthMonitors.indexOf(healthMonitor);
-  //   if (index > -1) {
-  //     this.healthMonitors.splice(index, 1);
-
-  //     if (!this.deletedHealthMonitors) {
-  //       this.deletedHealthMonitors = new Array<HealthMonitor>();
-  //     }
-  //     this.deletedHealthMonitors.push(healthMonitor);
-
-  //     this.dirty = true;
-  //   }
-  // }
 
   importLoadBalancerConfig(importObject) {
     //   // TODO: Import Validation.
@@ -523,7 +488,7 @@ export class LoadBalancersComponent
         if (cd) {
           this.tiers = cd.tiers;
           this.currentTier = cd.tiers[0];
-          this.getTiers();
+          this.getObjectsForNavIndex();
         }
       },
     );

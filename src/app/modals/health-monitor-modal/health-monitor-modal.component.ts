@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerHealthMonitor } from 'api_client';
-import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
+import {
+  LoadBalancerHealthMonitor,
+  V1LoadBalancerHealthMonitorsService,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -12,10 +16,14 @@ import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 export class HealthMonitorModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
+  TierId: string;
+  ModalMode: ModalMode;
+  HealthMonitor: LoadBalancerHealthMonitor;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private healthMonitorService: V1LoadBalancerHealthMonitorsService,
     public helpText: HealthMonitorModalHelpText,
   ) {}
 
@@ -32,11 +40,36 @@ export class HealthMonitorModalComponent implements OnInit {
     healthMonitor.interval = this.form.value.interval;
     healthMonitor.timeout = this.form.value.timeout;
 
-    this.ngx.resetModalData('healthMonitorModal');
-    this.ngx.setModalData(
-      Object.assign({}, healthMonitor),
-      'healthMonitorModal',
-    );
+    if (this.ModalMode === ModalMode.Create) {
+      healthMonitor.tierId = this.TierId;
+      this.healthMonitorService
+        .v1LoadBalancerHealthMonitorsPost({
+          loadBalancerHealthMonitor: healthMonitor,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.healthMonitorService
+        .v1LoadBalancerHealthMonitorsIdPut({
+          id: this.HealthMonitor.id,
+          loadBalancerHealthMonitor: healthMonitor,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+
+    this.closeModal();
+  }
+
+  private closeModal() {
     this.ngx.close('healthMonitorModal');
     this.reset();
   }
@@ -48,6 +81,35 @@ export class HealthMonitorModalComponent implements OnInit {
 
   get f() {
     return this.form.controls;
+  }
+
+  removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+    const modalDto = new YesNoModalDto('Remove Health Monitor', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.healthMonitorService
+            .v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id })
+            .subscribe(() => {
+              this.getHealthMonitors();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  private getHealthMonitors() {
+    this.healthMonitorService
+      .v1LoadBalancerHealthMonitorsIdGet({ id: this.HealthMonitor.id })
+      .subscribe(data => {
+        this.HealthMonitor = data;
+      });
   }
 
   getData() {

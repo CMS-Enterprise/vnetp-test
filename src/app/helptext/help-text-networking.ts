@@ -30,7 +30,7 @@ export class NetworkCreateHelpText {
 export class LoadBalancersHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Vrf = `Tier (VRF) that Load Balancer configurations are created within.`;
+  Tier = `Tier that Load Balancer configurations are created within.`;
   VirtualServers = `Manage Virtual Servers.`;
   Pools = `Manage Pools and Pool Members.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;

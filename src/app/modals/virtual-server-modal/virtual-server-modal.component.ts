@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
 import {
@@ -9,7 +9,14 @@ import {
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerPool, LoadBalancerIrule } from 'api_client';
+import {
+  LoadBalancerPool,
+  LoadBalancerIrule,
+  LoadBalancerVirtualServer,
+  V1LoadBalancerVirtualServersService,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -21,10 +28,14 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   pools: LoadBalancerPool[];
   availableIRules: LoadBalancerIrule[];
   selectedIRules: LoadBalancerIrule[];
+  TierId: string;
+  VirtualServer: LoadBalancerVirtualServer;
+  ModalMode: ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private virtualServerService: V1LoadBalancerVirtualServersService,
     public helpText: VirtualServerModalHelpText,
   ) {}
 
@@ -34,21 +45,64 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const virtualServer = new VirtualServer();
+    const virtualServer = {} as LoadBalancerVirtualServer;
     virtualServer.name = this.form.value.name;
     // virtualServer.type = this.form.value.type;
     virtualServer.sourceIpAddress = this.form.value.sourceAddress;
     virtualServer.destinationIpAddress = this.form.value.destinationAddress;
     // virtualServer.servicePort = this.form.value.servicePort;
     virtualServer.defaultPool = this.form.value.pool;
-    virtualServer.irules = Object.assign([], this.selectedIRules);
 
-    const dto = new VirtualServerModalDto();
-    // dto.VirtualServer = virtualServer;
+    if (this.ModalMode === ModalMode.Create) {
+      virtualServer.tierId = this.TierId;
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersPost({
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersIdPut({
+          id: this.VirtualServer.id,
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+  }
 
-    this.ngx.resetModalData('virtualServerModal');
-    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
-    this.ngx.close('virtualServerModal');
+  removeVirtualServer(virtualServer: LoadBalancerVirtualServer) {
+    const modalDto = new YesNoModalDto('Remove Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.virtualServerService
+            .v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id })
+            .subscribe(() => {
+              this.getVirtualServers();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  private closeModal() {
+    this.ngx.close('healthMonitorModal');
     this.reset();
   }
 
@@ -181,6 +235,14 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     this.availableIRules = new Array<LoadBalancerIrule>();
     this.selectedIRules = new Array<LoadBalancerIrule>();
+  }
+
+  private getVirtualServers() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersIdGet({ id: this.VirtualServer.id })
+      .subscribe(data => {
+        this.VirtualServer = data;
+      });
   }
 
   private unsubAll() {}
