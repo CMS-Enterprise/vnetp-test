@@ -8,11 +8,11 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
@@ -28,6 +28,7 @@ describe('NetworkObjectModalComponent', () => {
         NgxSmartModalModule,
         ReactiveFormsModule,
         NgxMaskModule,
+        HttpClientTestingModule,
       ],
       declarations: [NetworkObjectModalComponent, TooltipComponent],
       providers: [
@@ -57,19 +58,6 @@ describe('NetworkObjectModalComponent', () => {
     expect(component.form).toBeTruthy();
   });
 
-  it('should read network object from service', () => {
-    const modal = ngx.getModal('networkObjectModal');
-    const networkObject = new NetworkObject();
-    networkObject.Name = 'Test';
-    networkObject.Type = 'host';
-    networkObject.HostAddress = '1.1.1.1';
-
-    modal.setData(networkObject);
-    modal.open(); // FIXME: Isn't firing onOpen.
-
-    expect(component.form).toBeTruthy();
-  });
-
   // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;
@@ -81,65 +69,62 @@ describe('NetworkObjectModalComponent', () => {
     expect(type.valid).toBeFalsy();
   });
 
-  it('source subnet should not be required', () => {
-    const sourceSubnet = component.form.controls.sourceSubnet;
-    expect(sourceSubnet.valid).toBeTruthy();
+  it('NAT type should not be required', () => {
+    const natType = component.form.controls.natType;
+    expect(natType.valid).toBeTruthy();
   });
 
-  it('destination subnet should not be required', () => {
-    const destinationSubnet = component.form.controls.destinationSubnet;
-    expect(destinationSubnet.valid).toBeTruthy();
+  it('NAT direction should not be required', () => {
+    const natDirection = component.form.controls.natDirection;
+    expect(natDirection.valid).toBeTruthy();
   });
 
   it('hostAddress should not be required', () => {
-    const hostAddress = component.form.controls.hostAddress;
-    expect(hostAddress.valid).toBeTruthy();
-  });
-
-  it('cidrAddress should not be required', () => {
-    const cidrAddress = component.form.controls.cidrAddress;
-    expect(cidrAddress.valid).toBeTruthy();
+    const ipAddress = component.form.controls.ipAddress;
+    expect(ipAddress.valid).toBeTruthy();
   });
 
   it('startaddress should not be required', () => {
-    const startAddress = component.form.controls.startAddress;
-    expect(startAddress.valid).toBeTruthy();
+    const startIpAddress = component.form.controls.startIpAddress;
+    expect(startIpAddress.valid).toBeTruthy();
   });
 
   it('endAddress should not be required', () => {
-    const endAddress = component.form.controls.endAddress;
-    expect(endAddress.valid).toBeTruthy();
+    const endIpAddress = component.form.controls.endIpAddress;
+    expect(endIpAddress.valid).toBeTruthy();
+  });
+
+  it('source port should be not required', () => {
+    const natSourcePort = component.form.controls.natSourcePort;
+    expect(natSourcePort.valid).toBeTruthy();
+  });
+
+  it('destination port should not be required', () => {
+    const natDestinationPort = component.form.controls.natTranslatedPort;
+    expect(natDestinationPort.valid).toBeTruthy();
   });
 
   // Form State when Type: Host selected
-  it('hostAddress should be required', () => {
+  it('ipAddress should be required', () => {
     const type = component.form.controls.type;
-    type.setValue('host');
-    const hostAddress = component.form.controls.hostAddress;
-    expect(hostAddress.valid).toBeFalsy();
+    type.setValue('IpAddress');
+    const ipAddress = component.form.controls.ipAddress;
+    expect(ipAddress.valid).toBeFalsy();
   });
 
   // Form State when Type: Range selected
   it('startAddress should be required', () => {
     const type = component.form.controls.type;
-    type.setValue('range');
-    const startAddress = component.form.controls.startAddress;
-    expect(startAddress.valid).toBeFalsy();
+    type.setValue('Range');
+    const startIpAddress = component.form.controls.startIpAddress;
+    expect(startIpAddress.valid).toBeFalsy();
   });
 
   it('endAddress should be required', () => {
     const type = component.form.controls.type;
-    type.setValue('range');
-    const endAddress = component.form.controls.endAddress;
-    expect(endAddress.valid).toBeFalsy();
-  });
-
-  // Form State when Type: Subnet selected
-  it('cidrAddress should be required', () => {
-    const type = component.form.controls.type;
-    type.setValue('subnet');
-    const cidrAddress = component.form.controls.cidrAddress;
-    expect(cidrAddress.valid).toBeFalsy();
+    type.setValue('Range');
+    const endIpAddress = component.form.controls.endIpAddress;
+    expect(endIpAddress.valid).toBeFalsy();
   });
 
   // Form State when NAT Selected
@@ -147,24 +132,24 @@ describe('NetworkObjectModalComponent', () => {
     const nat = component.form.controls.nat;
     nat.setValue(true);
 
-    const translatedAddress = component.form.controls.translatedIp;
-    expect(translatedAddress.valid).toBeFalsy();
+    const translatedIpAddress = component.form.controls.translatedIpAddress;
+    expect(translatedIpAddress.valid).toBeFalsy();
   });
 
-  it('source subnet should be required', () => {
+  it('NAT type should be required', () => {
     const nat = component.form.controls.nat;
     nat.setValue(true);
 
-    const sourceSubnet = component.form.controls.sourceSubnet;
-    expect(sourceSubnet.valid).toBeFalsy();
+    const natType = component.form.controls.natType;
+    expect(natType.valid).toBeFalsy();
   });
 
-  it('destination subnet should be required', () => {
+  it('NAT direction should be required', () => {
     const nat = component.form.controls.nat;
     nat.setValue(true);
 
-    const destinationSubnet = component.form.controls.destinationSubnet;
-    expect(destinationSubnet.valid).toBeFalsy();
+    const natDirection = component.form.controls.natDirection;
+    expect(natDirection.valid).toBeFalsy();
   });
 
   // Form State when NAT Service Selected
@@ -180,15 +165,15 @@ describe('NetworkObjectModalComponent', () => {
     const natService = component.form.controls.natService;
     natService.setValue(true);
 
-    const sourcePort = component.form.controls.sourcePort;
-    expect(sourcePort.valid).toBeFalsy();
+    const natSourcePort = component.form.controls.natSourcePort;
+    expect(natSourcePort.valid).toBeFalsy();
   });
 
   it('translated port should be required', () => {
     const natService = component.form.controls.natService;
     natService.setValue(true);
 
-    const translatedPort = component.form.controls.translatedPort;
-    expect(translatedPort.valid).toBeFalsy();
+    const natDestinationPort = component.form.controls.natTranslatedPort;
+    expect(natDestinationPort.valid).toBeFalsy();
   });
 });

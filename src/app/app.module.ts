@@ -68,6 +68,7 @@ import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-ru
 import { ContractModalComponent } from './modals/contract-modal/contract-modal.component';
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
+import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -125,6 +126,7 @@ export function apiConfigFactory(): Configuration {
     TooltipComponent,
     IntraVrfRulesComponent,
     ContractModalComponent,
+    YesNoModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

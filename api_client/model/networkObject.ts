@@ -27,17 +27,30 @@ export interface NetworkObject {
     endIpAddress?: string;
     nat?: boolean;
     translatedIpAddress?: string;
-    natDirection?: string;
-    natType?: string;
+    natDirection?: NetworkObjectNatDirection;
+    natType?: NetworkObjectNatType;
     natService?: boolean;
-    natProtocol?: string;
-    natSourcePorts?: string;
-    natDestinationPorts?: string;
+    natProtocol?: NetworkObjectNatProtocol;
+    natSourcePort?: string;
+    natTranslatedPort?: string;
     tierId: string;
 }
 export enum NetworkObjectType {
     IpAddress = 'IpAddress',
     Range = 'Range'
+};
+export enum NetworkObjectNatDirection {
+    In = 'In',
+    Out = 'Out'
+};
+export enum NetworkObjectNatType {
+    Intervrf = 'Intervrf',
+    External = 'External'
+};
+export enum NetworkObjectNatProtocol {
+    ICMP = 'ICMP',
+    TCP = 'TCP',
+    UDP = 'UDP'
 };
 
 

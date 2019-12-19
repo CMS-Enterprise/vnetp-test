@@ -8751,15 +8751,25 @@ definitions:
         type: string
       natDirection:
         type: string
+        enum:
+          - In
+          - Out
       natType:
         type: string
+        enum:
+          - Intervrf
+          - External
       natService:
         type: boolean
       natProtocol:
         type: string
-      natSourcePorts:
+        enum:
+          - ICMP
+          - TCP
+          - UDP
+      natSourcePort:
         type: string
-      natDestinationPorts:
+      natTranslatedPort:
         type: string
       tierId:
         type: string
