@@ -36,9 +36,9 @@ export class VirtualMachineModalComponent implements OnInit {
 
     virtualMachine.description = this.form.value.description;
     virtualMachine.cpuCores = this.form.value.cpuCount;
-    virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount); // TO DO - figure out type problem
+    virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount, 10); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
-    virtualMachine.memorySize = parseInt(this.form.value.memorySize); // TO DO - convert to bytes, figure out type problem
+    virtualMachine.memorySize = parseInt(this.form.value.memorySize, 10); // TO DO - convert to bytes, figure out type problem
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
 
     this.ngx.resetModalData('virtualMachineModal');
