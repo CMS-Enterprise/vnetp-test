@@ -1,10 +1,10 @@
 <ul class="nav nav-tabs">
-  <li class="nav-item" (click)="navIndex = 'External'">
+  <li class="nav-item" (click)="showExternal()">
     <a class="nav-link" [ngClass]="{ active: navIndex == 'External' }">
       External <tooltip [message]="helpText.External"></tooltip>
     </a>
   </li>
-  <li class="nav-item" (click)="navIndex = 'Intervrf'">
+  <li class="nav-item" (click)="showIntervrf()">
     <a class="nav-link" [ngClass]="{ active: navIndex == 'Intervrf' }"> Intervrf <tooltip [message]="helpText.InterVrf"></tooltip></a>
   </li>
   <!-- <li class="nav-item" (click)="navIndex = 2">

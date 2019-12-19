@@ -28,6 +28,14 @@ export class FirewallRulesComponent implements OnInit {
     private tierService: V1TiersService,
   ) {}
 
+  showExternal() {
+    this.navIndex = FirewallRuleGroupType.External;
+  }
+
+  showIntervrf() {
+    this.navIndex = FirewallRuleGroupType.Intervrf;
+  }
+
   getTiers() {
     this.tierService
       .v1DatacentersDatacenterIdTiersGet({
