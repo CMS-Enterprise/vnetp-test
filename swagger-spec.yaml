@@ -8704,11 +8704,6 @@ definitions:
       type:
         type: string
         enum:
-<<<<<<< HEAD
-          - Intravrf
-          - Intervrf
-          - External
-=======
           - IpAddress
           - Range
       ipAddress:
@@ -8743,7 +8738,6 @@ definitions:
         type: string
       natTranslatedPort:
         type: string
->>>>>>> dpt-516/network-objects-network-object-groups
       tierId:
         type: string
       firewallRules:
@@ -8903,31 +8897,19 @@ definitions:
       type:
         type: string
         enum:
-          - ICMP
-          - UDP
           - TCP
-          - HTTP
-          - HTTPS
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      interval:
-        type: number
-        minimum: 1
-        maximum: 300
-      timeout:
-        type: number
-        minimum: 1
-        maximum: 300
+          - UDP
+          - TCPUDP
+      serviceObjects:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/ServiceObject'
       tierId:
         type: string
     required:
       - name
       - type
-      - servicePort
-      - interval
-      - timeout
       - tierId
   LoadBalancerPool:
     type: object
@@ -9497,10 +9479,40 @@ definitions:
       bulk:
         type: array
         items:
-          $ref: '#/definitions/VmwareVirtualMachine'
+          type: string
+          enum:
+            - serverssl
+            - serverssl-insecure-incompatbile
+            - splitsession-default-serverssl
+            - apm-default-serverssl
+            - crypto-client-default-serverssl
+            - pcoip-default-serverssl
+            - wom-default-serverssl
+      sourceAddressTranslation:
+        type: string
+        enum:
+          - None
+          - AutoMap
+          - SNAT
+      type:
+        type: string
+        enum:
+          - Standard
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      tierId:
+        type: string
     required:
-      - bulk
-  GeneratedVmwareNetworkAdapterBulkDto:
+      - name
+      - sourceIpAddress
+      - destinationIpAddress
+      - sourceAddressTranslation
+      - type
+      - servicePort
+      - tierId
+  Tier:
     type: object
     properties:
       bulk:

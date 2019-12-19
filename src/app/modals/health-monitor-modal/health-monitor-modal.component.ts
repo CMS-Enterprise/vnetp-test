@@ -113,16 +113,16 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   getData() {
-    const healthMonitor = Object.assign(
+    const dto = Object.assign(
       {},
       this.ngx.getModalData('healthMonitorModal') as LoadBalancerHealthMonitor,
     );
-    if (healthMonitor !== undefined) {
-      this.form.controls.name.setValue(healthMonitor.name);
-      this.form.controls.type.setValue(healthMonitor.type);
-      this.form.controls.servicePort.setValue(healthMonitor.servicePort);
-      this.form.controls.interval.setValue(healthMonitor.interval);
-      this.form.controls.timeout.setValue(healthMonitor.timeout);
+    if (dto !== undefined) {
+      this.form.controls.name.setValue(dto.name);
+      this.form.controls.type.setValue(dto.type);
+      this.form.controls.servicePort.setValue(dto.servicePort);
+      this.form.controls.interval.setValue(dto.interval);
+      this.form.controls.timeout.setValue(dto.timeout);
     }
     this.ngx.resetModalData('healthMonitorModal');
   }

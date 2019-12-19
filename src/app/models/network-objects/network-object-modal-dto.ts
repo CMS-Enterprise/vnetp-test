@@ -1,4 +1,3 @@
-import { Subnet } from '../d42/subnet';
 import { NetworkObject } from 'api_client';
 import { ModalMode } from '../other/modal-mode';
 

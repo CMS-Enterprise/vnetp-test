@@ -36,13 +36,6 @@
     </a>
   </li>
 </ul>
-<div *ngIf="navIndex === 0">
-  <app-ipaddresses
-    *ngIf="subnet"
-    [subnetId]="subnet?.subnet_id"
-    [showTitle]="false"
-  ></app-ipaddresses>
-</div>
 
 <div *ngIf="navIndex === 1">
   <div class="input-group align-items-center col-md-6 pt-3 pb-3">

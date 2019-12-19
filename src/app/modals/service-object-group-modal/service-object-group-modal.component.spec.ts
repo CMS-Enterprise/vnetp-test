@@ -11,6 +11,7 @@ import { ServiceObjectGroupModalComponent } from './service-object-group-modal.c
 import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -25,6 +26,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         NgxSmartModalModule,
         FormsModule,
         ReactiveFormsModule,
+        HttpClientTestingModule,
       ],
       declarations: [ServiceObjectGroupModalComponent, TooltipComponent],
       providers: [
@@ -47,24 +49,6 @@ describe('ServiceObjectGroupModalComponent', () => {
 
   it('should have service object group form', () => {
     expect(component.form).toBeTruthy();
-  });
-
-  it('save should set ngxModal data', () => {
-    component.form.controls.name.setValue('Name');
-    component.form.controls.description.setValue('Description');
-    component.form.controls.type.setValue(true);
-    component.serviceObjects.push({ Name: 'Name' } as ServiceObject);
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('serviceObjectGroupModal');
-    const data = modal.getData();
-    console.log(data);
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Test').toBeTruthy();
-    expect(data.Description === 'Description').toBeTruthy();
-    expect(data.ServiceObjects[0].Name === 'Name').toBeTruthy();
   });
 
   // Initial Form State

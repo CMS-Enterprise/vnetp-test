@@ -130,7 +130,7 @@ export class NetworkObjectGroupModalHelpText {
 export class ServiceObjectsGroupsHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Vrf = `Tier (VRF) that Service Objects & Groups are created within.`;
+  Tier = `Tier that Service Objects & Groups are created within.`;
   ServiceObjects = `Service Objects consist of a source and destination ports.`;
   ServiceObjectGroups = `Service Object Groups are a collection of Service Objects.`;
 }
@@ -140,7 +140,7 @@ export class ServiceObjectsGroupsHelpText {
 })
 export class ServiceObjectModalHelpText {
   Name = `Name of Service Object.`;
-  Type = `Type of Service Object (TCP, UDP).`;
+  Type = `Type of Service Object (TCP, UDP). Cannot be changed after creation.`;
   Port = `Single Port (80) or Port Range (22-23) or 'any' to match any Port.`;
 }
 
@@ -149,7 +149,7 @@ export class ServiceObjectModalHelpText {
 })
 export class ServiceObjectGroupModalHelpText {
   Name = `Name of Service Object Group.`;
-  Type = `Type of the Service Object Group (TCP, UDP). Overrides Type set on any Child Service Objects.`;
+  Type = `Type of the Service Object Group (TCP, UDP, TCP/UDP). Cannot be changed after creation.`;
   Description = `Description of the Service Object Group.`;
   ServiceObjects = `Service Objects in the Service Object Group.`;
 }
