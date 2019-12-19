@@ -188,7 +188,6 @@ export class FirewallRulesDetailComponent
     if (objects && objects.length) {
       return objects.find(o => o.id === id).name || 'N/A';
     }
-    return 'no';
   }
 
   updateFirewallRuleGroup() {
