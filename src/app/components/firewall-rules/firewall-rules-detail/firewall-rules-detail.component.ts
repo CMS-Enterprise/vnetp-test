@@ -6,7 +6,6 @@ import { Subscription, Observable } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
-import { Vrf } from 'src/app/models/d42/vrf';
 import {
   V1NetworkSecurityFirewallRuleGroupsService,
   FirewallRule,
@@ -31,18 +30,14 @@ export class FirewallRulesDetailComponent
   TierName = '';
 
   dirty: boolean;
-  deployedState: boolean;
+
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
-  deletedFirewallRules: Array<FirewallRule>;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
-
-  editFirewallRuleIndex: number;
-  firewallRuleModalMode: ModalMode;
 
   firewallRuleModalSubscription: Subscription;
 
@@ -133,26 +128,14 @@ export class FirewallRulesDetailComponent
       });
   }
 
-  // duplicateFirewallRule(rule: FirewallRule) {
-  //   const ruleIndex = this.firewallRules.indexOf(rule);
-
-  //   if (ruleIndex === -1) {
-  //     return;
-  //   }
-
-  //   const dupRule = this.hs.deepCopy(rule) as FirewallRule;
-  //   dupRule.Name = `${dupRule.Name}_copy`;
-
-  //   this.firewallRules.splice(ruleIndex, 0, dupRule);
-  //   this.dirty = true;
-  // }
+  createFirewallRule() {
+    this.openFirewallRuleModal(ModalMode.Create);
+  }
 
   openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule) {
     if (modalMode === ModalMode.Edit && !firewallRule) {
       throw new Error('Firewall Rule Required');
     }
-
-    this.firewallRuleModalMode = ModalMode.Create;
 
     const dto = new FirewallRuleModalDto();
     dto.FirewallRuleGroupId = this.Id;
