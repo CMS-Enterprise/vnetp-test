@@ -12,6 +12,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -20,6 +21,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 export class StaticRouteDetailComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   currentDatacenterSubscription: Subscription;
+  staticRouteModalSubscription: Subscription;
 
   constructor(
     private datacenterService: DatacenterContextService,
@@ -55,7 +57,32 @@ export class StaticRouteDetailComponent
     this.openStaticRouteModal(ModalMode.Create);
   }
 
-  openStaticRouteModal(modalMode: ModalMode, staticRoute?: StaticRoute) {}
+  openStaticRouteModal(modalMode: ModalMode, staticRoute?: StaticRoute) {
+    if (modalMode === ModalMode.Edit && !staticRoute) {
+      throw new Error('Firewall Rule Required');
+    }
+
+    const dto = new StaticRouteModalDto();
+    dto.TierId = this.tier.id;
+    dto.ModalMode = modalMode;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.StaticRoute = staticRoute;
+    }
+
+    this.subscribeToStaticRouteModal();
+    this.ngx.setModalData(dto, 'staticRouteModal');
+    this.ngx.getModal('staticRouteModal').open();
+  }
+
+  subscribeToStaticRouteModal() {
+    this.staticRouteModalSubscription = this.ngx
+      .getModal('staticRouteModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getStaticRoutes();
+        this.ngx.resetModalData('staticRouteModal');
+      });
+  }
 
   ngOnDestroy() {
     this.currentDatacenterSubscription.unsubscribe();
