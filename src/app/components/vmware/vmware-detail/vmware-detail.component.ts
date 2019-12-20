@@ -55,7 +55,7 @@ export class VmwareDetailComponent implements OnInit {
             id: vm.id,
           })
           .subscribe(data => {
-            this.router.navigate(['/vmware']);
+            this.router.navigate(['/vmware'], { queryParamsHandling: 'merge' });
           });
       }
     };
