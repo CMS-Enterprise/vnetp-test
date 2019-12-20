@@ -45,7 +45,8 @@ export class StaticRouteDetailComponent
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
       cd => {
         if (cd) {
-          this.Id += this.route.snapshot.paramMap.get('id');
+          this.Id = this.route.snapshot.paramMap.get('id');
+          // TODO: Ensure Tier is in selected datacenter tiers.
           this.staticRoutes = [];
           this.getStaticRoutes();
         }
