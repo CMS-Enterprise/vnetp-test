@@ -82,6 +82,7 @@ export class StaticRouteDetailComponent
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getStaticRoutes();
         this.ngx.resetModalData('staticRouteModal');
+        this.staticRouteModalSubscription.unsubscribe();
       });
   }
 
