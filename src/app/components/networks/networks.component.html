@@ -7,7 +7,8 @@
         type="button"
         class="btn btn-success mr-1"
         aria-label="Create Subnet"
-        [routerLink]="['create']"
+        [routerLink]="['create']" 
+        queryParamsHandling="merge"
         >
         <fa name="plus"></fa>
         Create Subnet
@@ -39,7 +40,7 @@
     <tbody>
       <tr *ngFor="let subnet of subnets">
         <td>
-          <a routerLink="/networks/edit/{{ subnet.id }}">
+          <a routerLink="/networks/edit/{{ subnet.id }}" queryParamsHandling="merge">
             {{ subnet?.name }}
           </a>
         </td>
