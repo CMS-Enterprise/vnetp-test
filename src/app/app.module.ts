@@ -50,8 +50,6 @@ import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
-import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
@@ -113,8 +111,6 @@ export function apiConfigFactory(): Configuration {
     PoolMemberModalComponent,
     IRuleModalComponent,
     HealthMonitorModalComponent,
-    NetworkInterfacesComponent,
-    LogicalInterfaceModalComponent,
     SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
