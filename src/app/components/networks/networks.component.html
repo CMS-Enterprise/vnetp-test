@@ -32,21 +32,19 @@
     <thead>
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">Address Range</th>
-        <th scope="col">Deployed</th>
+        <th scope="col">Subnet - Gateway</th>
         <th scope="col">Tier (VRF)</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let subnet of subnets">
         <td>
-          <a routerLink="/networks/edit/{{ subnet.subnet_id }}">
-            {{ subnet.name }}
+          <a routerLink="/networks/edit/{{ subnet.id }}">
+            {{ subnet?.name }}
           </a>
         </td>
-        <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
-        <td>{{ getDeployedState(subnet) }}</td>
-        <td>{{ subnet.vrf_group_name }}</td>
+        <td>{{ subnet?.network }} - {{ subnet?.gateway }}</td>
+        <td>{{ subnet?.tierId | resolve: getTierName  }}</td>
       </tr>
       <tr *ngIf="subnets?.length === 0" class="text-center">
         <td colspan="4">No Subnets</td>
