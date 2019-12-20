@@ -30,7 +30,9 @@
     <tbody>
       <tr *ngFor="let vm of virtualMachines">
         <td>
-          <a routerLink="/vmware/{{ vm.id }}">{{ vm.name }}</a>
+          <a routerLink="/vmware/{{ vm.id }}" queryParamsHandling="merge">{{
+            vm.name
+          }}</a>
         </td>
         <td>
           {{ vm.cpuCores }}
