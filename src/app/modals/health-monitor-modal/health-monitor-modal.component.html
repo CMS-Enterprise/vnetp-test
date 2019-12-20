@@ -44,9 +44,9 @@
             [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
             aria-label="Type"
           >
-            <option value="tcp">TCP</option>
-            <option value="http">HTTP</option>
-            <option value="https">HTTPS</option>
+            <option value="TCP">TCP</option>
+            <option value="HTTP">HTTP</option>
+            <option value="HTTPS">HTTPS</option>
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>

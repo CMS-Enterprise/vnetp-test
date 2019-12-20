@@ -19,6 +19,7 @@ export class HealthMonitorModalComponent implements OnInit {
   TierId: string;
   ModalMode: ModalMode;
   HealthMonitor: LoadBalancerHealthMonitor;
+  HealthMonitorId: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -55,7 +56,7 @@ export class HealthMonitorModalComponent implements OnInit {
     } else {
       this.healthMonitorService
         .v1LoadBalancerHealthMonitorsIdPut({
-          id: this.HealthMonitor.id,
+          id: this.HealthMonitorId,
           loadBalancerHealthMonitor: healthMonitor,
         })
         .subscribe(
@@ -115,8 +116,23 @@ export class HealthMonitorModalComponent implements OnInit {
   getData() {
     const dto = Object.assign(
       {},
-      this.ngx.getModalData('healthMonitorModal') as LoadBalancerHealthMonitor,
+      this.ngx.getModalData('healthMonitorModal') as any,
     );
+
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
+
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.HealthMonitorId = dto.healthMonitor.id;
+      }
+    }
+
     if (dto !== undefined) {
       this.form.controls.name.setValue(dto.name);
       this.form.controls.type.setValue(dto.type);

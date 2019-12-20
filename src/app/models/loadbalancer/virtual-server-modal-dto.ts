@@ -3,12 +3,16 @@ import {
   LoadBalancerIrule,
   LoadBalancerVirtualServer,
 } from 'api_client';
+import { ModalMode } from '../other/modal-mode';
 
 export class VirtualServerModalDto {
   Pools: LoadBalancerPool[];
 
   IRules: LoadBalancerIrule[];
 
-  // Is this right?
   VirtualServer: LoadBalancerVirtualServer;
+
+  TierId: string;
+
+  ModalMode: ModalMode;
 }

@@ -16,6 +16,7 @@ export class IRuleModalComponent implements OnInit {
   ModalMode: ModalMode;
   TierId: string;
   Irule: LoadBalancerIrule;
+  IruleId: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -49,7 +50,7 @@ export class IRuleModalComponent implements OnInit {
     } else {
       this.iruleService
         .v1LoadBalancerIrulesIdPut({
-          id: this.Irule.id,
+          id: this.IruleId,
           loadBalancerIrule: irule,
         })
         .subscribe(
@@ -64,7 +65,7 @@ export class IRuleModalComponent implements OnInit {
   }
 
   private closeModal() {
-    this.ngx.close('healthMonitorModal');
+    this.ngx.close('iruleModal');
     this.reset();
   }
 
@@ -78,13 +79,24 @@ export class IRuleModalComponent implements OnInit {
   }
 
   getData() {
-    const irule = Object.assign(
-      {},
-      this.ngx.getModalData('iruleModal') as LoadBalancerIrule,
-    );
-    if (irule !== undefined) {
-      this.form.controls.name.setValue(irule.name);
-      this.form.controls.content.setValue(irule.content);
+    const dto = Object.assign({}, this.ngx.getModalData('iruleModal'));
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
+
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.IruleId = dto.irule.id;
+      }
+    }
+
+    if (dto !== undefined) {
+      this.form.controls.name.setValue(dto.irule.name);
+      this.form.controls.content.setValue(dto.irule.content);
     }
     this.ngx.resetModalData('iruleModal');
   }
@@ -112,7 +124,7 @@ export class IRuleModalComponent implements OnInit {
 
   private getIrules() {
     this.iruleService
-      .v1LoadBalancerIrulesIdGet({ id: this.Irule.id })
+      .v1LoadBalancerIrulesIdGet({ id: this.IruleId })
       .subscribe(data => {
         this.Irule = data;
       });

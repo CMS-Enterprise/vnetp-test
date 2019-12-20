@@ -73,13 +73,13 @@
             <span>{{ virtualServer?.type }}</span>
           </td>
           <td>
-            <span>{{ virtualServer?.destinationAddress }}</span>
+            <span>{{ virtualServer?.destinationIpAddress }}</span>
           </td>
           <td>
             <span>{{ virtualServer?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ virtualServer?.pool }}</span>
+            <span>{{ virtualServer?.defaultPoolId }}</span>
           </td>
           <td class="item-actions">
             <fa
@@ -117,6 +117,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">LB Method</th>
+          <th scope="col">Service Port</th>
           <th scope="col">Pool Members</th>
           <th scope="col">Health Monitors</th>
           <th scope="col"></th>
@@ -129,6 +130,9 @@
           </td>
           <td>
             <span>{{ pool?.loadBalancingMethod }}</span>
+          </td>
+          <td>
+            <span>{{ pool?.servicePort }}</span>
           </td>
           <td>
             <span>{{ pool?.Members?.length }}</span>
@@ -167,13 +171,16 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col"></th>
+          <th scope="col">Content</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let irule of irules">
           <td>
             <span>{{ irule?.name }}</span>
+          </td>
+          <td>
+            <span>{{ irule?.content }}</span>
           </td>
           <td class="item-actions">
             <fa
@@ -182,8 +189,8 @@
               aria-label="Edit iRule"
             >
             </fa>
-            <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restorePool(irule)" aria-label="Restore Irule"></fa>
-            <fa name="trash" [ngClass]="{ 'fg-danger': irule?.deletedAt }" (click)="deletePool(irule)" aria-label="Soft-Delete/Delete Irule"></fa>
+            <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore Irule"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': irule?.deletedAt }" (click)="deleteIrule(irule)" aria-label="Soft-Delete/Delete Irule"></fa>
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">

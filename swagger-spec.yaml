@@ -9243,6 +9243,10 @@ definitions:
         type: string
       autoPopulate:
         type: boolean
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
       tierId:
         type: string
     required:
@@ -9251,6 +9255,7 @@ definitions:
       - ipAddress
       - fqdn
       - autoPopulate
+      - servicePort
       - tierId
   LoadBalancerHealthMonitor:
     type: object
@@ -9370,7 +9375,7 @@ definitions:
         type: array
         readOnly: true
         items:
-          $ref: '#/definitions/LoadBalancerNode'
+          type: array
       healthMonitors:
         type: array
         readOnly: true

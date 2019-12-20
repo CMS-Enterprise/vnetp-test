@@ -20,7 +20,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip [message]="helpText.Name"></tooltip> 
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -36,7 +36,7 @@
 
       <div class="form-group">
         <label for="type">Type</label>
-        <tooltip [message]="helpText.Type"></tooltip> 
+        <tooltip [message]="helpText.Type"></tooltip>
         <select
           name="type"
           formControlName="type"
@@ -44,7 +44,6 @@
           [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
           aria-label="Type"
         >
-          <option></option>
           <option value="standard">Standard</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
@@ -52,10 +51,30 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="sourceAddressTranslation">Source Address Translation</label>
+        <tooltip [message]="helpText.SourceAddressTranslation"></tooltip>
+        <select
+          name="sourceAddressTranslation"
+          formControlName="sourceAddressTranslation"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.sourceAddressTranslation.errors }"
+          aria-label="Type"
+        >
+          <option></option>
+          <option value="None">None</option>
+          <option value="AutoMap">Auto Map</option>
+          <option value="SNAT">SNAT</option>
+        </select>
+        <div *ngIf="submitted && f.sourceAddressTranslation.errors" class="invalid-feedback">
+          <div *ngIf="f.sourceAddressTranslation.errors.required">Source Address Translation is required</div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="sourceAddress">Source Address</label>
-          <tooltip [message]="helpText.SourceAddress"></tooltip> 
+          <tooltip [message]="helpText.SourceAddress"></tooltip>
           <input
             name="sourceAddress"
             formControlName="sourceAddress"
@@ -67,7 +86,7 @@
 
         <div class="form-group col-md-6">
           <label for="destinationAddress">Destination Address</label>
-          <tooltip [message]="helpText.DestinationAddress"></tooltip> 
+          <tooltip [message]="helpText.DestinationAddress"></tooltip>
           <input
             name="destinationAddress"
             formControlName="destinationAddress"
@@ -87,7 +106,7 @@
           <label for="servicePort">
             Service Port
           </label>
-          <tooltip [message]="helpText.ServicePort"></tooltip> 
+          <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
             class="form-control"
             name="servicePort"
@@ -102,7 +121,7 @@
           <label for="pool">
             Pool
           </label>
-          <tooltip [message]="helpText.Pool"></tooltip> 
+          <tooltip [message]="helpText.Pool"></tooltip>
           <select
             class="form-control"
             name="pool"
@@ -111,8 +130,8 @@
             aria-label="Pool"
           >
             <option></option>
-            <option *ngFor="let pool of pools" [ngValue]="pool.Name">
-              {{ pool.Name }}
+            <option *ngFor="let pool of pools" [ngValue]="pool.name">
+              {{ pool.name }}
             </option>
           </select>
         </div>
@@ -121,7 +140,7 @@
       <div class="form-row">
         <div class="form-group col-md-12">
           <label>iRules</label>
-          <tooltip [message]="helpText.IRules"></tooltip> 
+          <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">
             <select
               class="form-control"
@@ -130,7 +149,7 @@
             >
               <option></option>
               <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{
-                irule
+                irule.name
               }}</option>
             </select>
             <button
@@ -155,7 +174,7 @@
         <tbody>
           <tr *ngFor="let irule of selectedIRules">
             <td>
-              {{ irule }}
+              {{ irule.name }}
             </td>
             <td class="item-actions">
               <fa name="trash" (click)="unselectIRule(irule)"> </fa>

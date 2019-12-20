@@ -31,6 +31,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   TierId: string;
   VirtualServer: LoadBalancerVirtualServer;
   ModalMode: ModalMode;
+  VirtualServerId: string;
+  Pools: LoadBalancerPool[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -47,11 +49,12 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     const virtualServer = {} as LoadBalancerVirtualServer;
     virtualServer.name = this.form.value.name;
-    // virtualServer.type = this.form.value.type;
+    virtualServer.type = this.form.value.type;
     virtualServer.sourceIpAddress = this.form.value.sourceAddress;
     virtualServer.destinationIpAddress = this.form.value.destinationAddress;
-    // virtualServer.servicePort = this.form.value.servicePort;
+    virtualServer.servicePort = this.form.value.servicePort;
     virtualServer.defaultPool = this.form.value.pool;
+    virtualServer.sourceAddressTranslation = this.form.value.sourceAddressTranslation;
 
     if (this.ModalMode === ModalMode.Create) {
       virtualServer.tierId = this.TierId;
@@ -68,7 +71,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     } else {
       this.virtualServerService
         .v1LoadBalancerVirtualServersIdPut({
-          id: this.VirtualServer.id,
+          id: this.VirtualServerId,
           loadBalancerVirtualServer: virtualServer,
         })
         .subscribe(
@@ -102,7 +105,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.close('healthMonitorModal');
+    this.ngx.close('virtualServerModal');
     this.reset();
   }
 
@@ -118,28 +121,37 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    // I don't think virtual server modal dto is aligned with API
     const dto = Object.assign(
       {},
       this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto,
     );
 
-    // this.pools = dto.Pools;
-
+    this.pools = dto.Pools;
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
     const virtualServer = dto.VirtualServer;
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.VirtualServerId = dto.VirtualServer.id;
+      }
+    }
 
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.name);
-      // not sure what field this maps to in new api
-      // this.form.controls.type.setValue(virtualServer.type);
-      this.form.controls.sourceAddress.setValue(
-        virtualServer.sourceAddressTranslation,
-      );
+      this.form.controls.type.setValue(virtualServer.type);
+      this.form.controls.sourceAddress.setValue(virtualServer.sourceIpAddress);
       this.form.controls.destinationAddress.setValue(
         virtualServer.destinationIpAddress,
       );
-      // is this the right field to map to? wrong
-      // this.form.controls.servicePort.setValue(virtualServer.sourceIpAddress);
+      this.form.controls.servicePort.setValue(virtualServer.servicePort);
+      this.form.controls.sourceAddressTranslation.setValue(
+        virtualServer.sourceAddressTranslation,
+      );
       this.form.controls.pool.setValue(virtualServer.defaultPool);
 
       if (dto.VirtualServer.irules) {
@@ -147,7 +159,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       }
     }
 
-    // this.getAvailableIRules(dto.IRules.map(i => i.name));
+    this.getAvailableIRules(dto.IRules.map(i => i));
     this.ngx.resetModalData('virtualServerModal');
   }
 
@@ -217,6 +229,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       description: [''],
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
+      sourceAddressTranslation: [''],
       destinationAddress: [
         '',
         Validators.compose([Validators.required, ValidateIpv4Any]),

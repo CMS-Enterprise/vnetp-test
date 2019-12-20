@@ -161,6 +161,7 @@ export class VirtualServerModalHelpText {
   Name = `Name of Virtual Server.`;
   Type = `Type of Virtual Server.`;
   SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
+  SourceAddressTranslation = `Source Address type.`;
   DestinationAddress = `Address that the Virtual Server accepts traffic at.`;
   ServicePort = `Port that the Virtual Server listens on.`;
   Pool = `Pool that the Virtual Server forwards the request to.`;
@@ -176,6 +177,7 @@ export class PoolModalHelpText {
   PoolMembers = `Members of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
+  ServicePort = `Service Port of the Pool.`;
 }
 
 @Injectable({

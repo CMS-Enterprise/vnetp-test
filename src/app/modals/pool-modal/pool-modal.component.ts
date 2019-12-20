@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Pool } from 'src/app/models/loadbalancer/pool';
-import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
@@ -11,7 +9,6 @@ import {
   LoadBalancerNode,
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
-  Tier,
   V1LoadBalancerPoolsService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -30,11 +27,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   poolMemberModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
-  Tier: Tier;
+  TierId: string;
   Pool: LoadBalancerPool;
   Nodes: LoadBalancerNode[];
   HealthMonitors: LoadBalancerHealthMonitor[];
   ModalMode: ModalMode;
+  PoolId: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -50,16 +48,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     const pool = {} as LoadBalancerPool;
-    pool.name = this.form.value.name;
-    pool.name = pool.name.trim();
+    pool.name = this.form.value.name.trim();
     pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
-
-    const dto = new PoolModalDto();
-
-    dto.pool = pool;
+    pool.servicePort = this.form.value.servicePort;
 
     if (this.ModalMode === ModalMode.Create) {
-      pool.tierId = this.Tier.id;
+      pool.tierId = this.TierId;
       this.poolService
         .v1LoadBalancerPoolsPost({
           loadBalancerPool: pool,
@@ -73,7 +67,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     } else {
       this.poolService
         .v1LoadBalancerPoolsIdPut({
-          id: this.Pool.id,
+          id: this.PoolId,
           loadBalancerPool: pool,
         })
         .subscribe(
@@ -88,7 +82,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.close('healthMonitorModal');
+    this.ngx.close('poolModal');
     this.reset();
   }
 
@@ -191,11 +185,26 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       this.ngx.getModalData('poolModal') as PoolModalDto,
     );
 
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
+
     const pool = dto.pool;
+
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.PoolId = dto.pool.id;
+      }
+    }
 
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.name);
       this.form.controls.loadBalancingMethod.setValue(pool.loadBalancingMethod);
+      this.form.controls.servicePort.setValue(pool.servicePort);
 
       if (dto.pool.healthMonitors) {
         this.selectedHealthMonitors = dto.pool.healthMonitors;
@@ -265,6 +274,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
+      servicePort: [''],
     });
   }
 

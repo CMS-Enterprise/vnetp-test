@@ -47,12 +47,8 @@ export class LoadBalancersComponent
   editHealthMonitorIndex: number;
 
   virtualServerModalMode: ModalMode;
-  poolModalMode: ModalMode;
   iruleModalMode: ModalMode;
   healthMonitorModalMode: ModalMode;
-
-  // we shouldn't need any 'dirty' if we are saving on modals
-  dirty: boolean;
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
@@ -86,11 +82,13 @@ export class LoadBalancersComponent
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
-        join: 'loadBalancerVirtualServers',
+        join: 'loadBalancerVirtualServers,loadBalancerPools,loadBalancerIrules',
       })
-      .subscribe(
-        data => (this.virtualServers = data.loadBalancerVirtualServers),
-      );
+      .subscribe(data => {
+        this.virtualServers = data.loadBalancerVirtualServers;
+        this.pools = data.loadBalancerPools;
+        this.irules = data.loadBalancerIrules;
+      });
   }
 
   getPools() {
@@ -141,20 +139,20 @@ export class LoadBalancersComponent
     modalMode: ModalMode,
     virtualServer?: LoadBalancerVirtualServer,
   ) {
-    this.subscribeToVirtualServerModal();
     const dto = new VirtualServerModalDto();
+    dto.TierId = this.currentTier.id;
     dto.Pools = this.pools;
     dto.VirtualServer = virtualServer;
     dto.IRules = this.irules;
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'virtualServerModal');
+    dto.ModalMode = modalMode;
 
     if (modalMode === ModalMode.Edit && !virtualServer) {
-      this.virtualServerModalMode = ModalMode.Edit;
       this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
-    } else {
-      this.virtualServerModalMode = ModalMode.Create;
     }
 
+    this.subscribeToVirtualServerModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'virtualServerModal');
     this.ngx.getModal('virtualServerModal').open();
   }
 
@@ -162,20 +160,19 @@ export class LoadBalancersComponent
     if (modalMode === ModalMode.Edit && !pool) {
       throw new Error('Pool required.');
     }
-    this.subscribeToPoolModal();
     const dto = new PoolModalDto();
     dto.pool = pool;
     dto.healthMonitors = this.healthMonitors;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'poolModal');
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
 
     if (modalMode === ModalMode.Edit) {
-      this.poolModalMode = ModalMode.Edit;
       this.editPoolIndex = this.pools.indexOf(pool);
-    } else {
-      this.poolModalMode = ModalMode.Create;
     }
 
+    this.subscribeToPoolModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'poolModal');
     this.ngx.getModal('poolModal').open();
   }
 
@@ -183,15 +180,18 @@ export class LoadBalancersComponent
     if (modalMode === ModalMode.Edit && !irule) {
       throw new Error('IRule required.');
     }
-    this.subscribeToIRuleModal();
+
+    const dto = {} as any;
+    dto.irule = irule;
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
+
     if (modalMode === ModalMode.Edit) {
-      this.iruleModalMode = ModalMode.Edit;
-      this.ngx.setModalData(this.hs.deepCopy(irule), 'iruleModal');
       this.editIRuleIndex = this.irules.indexOf(irule);
-    } else {
-      this.iruleModalMode = ModalMode.Create;
     }
+    this.subscribeToIRuleModal();
     this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'iruleModal');
     this.ngx.getModal('iruleModal').open();
   }
 
@@ -202,18 +202,18 @@ export class LoadBalancersComponent
     if (modalMode === ModalMode.Edit && !healthMonitor) {
       throw new Error('Health Monitor required.');
     }
-    this.subscribeToHealthMonitorModal();
+
+    const dto = {} as any;
+    dto.healthMonitor = healthMonitor;
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
+
     if (modalMode === ModalMode.Edit) {
-      this.healthMonitorModalMode = ModalMode.Edit;
-      this.ngx.setModalData(
-        this.hs.deepCopy(healthMonitor),
-        'healthMonitorModal',
-      );
       this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
-    } else {
-      this.healthMonitorModalMode = ModalMode.Create;
     }
+    this.subscribeToHealthMonitorModal();
     this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'healthMonitorModal');
     this.ngx.getModal('healthMonitorModal').open();
   }
 
@@ -274,7 +274,6 @@ export class LoadBalancersComponent
         this.virtualServersService
           .v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id })
           .subscribe(data => {
-            // do we want to be getting just virtual servers here?
             this.getVirtualServers();
           });
       } else {

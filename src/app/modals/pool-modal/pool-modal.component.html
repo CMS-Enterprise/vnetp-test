@@ -47,16 +47,31 @@
         >
           <!--TODO: Do we want to expose all LB methods to users?-->
           <option></option>
-          <option value="round-robin">Round Robin</option>
-          <option value="least-sessions">Least Sessions</option>
-          <option value="fastest-node">Fastest Node</option>
-          <option value="fastest-app-response">Fastest App Response</option>
+          <option value="RoundRobin">Round Robin</option>
+          <option value="LeastSessions">Least Sessions</option>
+          <option value="FastestNode">Fastest Node</option>
+          <option value="FastestAppResponse">Fastest App Response</option>
         </select>
         <div
           *ngIf="submitted && f.loadBalancingMethod.errors"
           class="invalid-feedback"
         >
           <div *ngIf="f.name.load.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="servicePort">Service Port</label>
+        <tooltip [message]="helpText.ServicePort"></tooltip>
+        <input
+          type="text"
+          formControlName="servicePort"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+          aria-label="Service Port"
+        />
+        <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+          <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
         </div>
       </div>
 
@@ -89,22 +104,22 @@
         <tbody>
           <tr *ngFor="let poolMember of poolMembers">
             <td>
-              <p>{{ poolMember.Name }}</p>
+              <p>{{ poolMember?.name }}</p>
             </td>
             <td>
-              <p>{{ poolMember.Type }}</p>
+              <p>{{ poolMember?.type }}</p>
             </td>
             <td>
-              <p *ngIf="poolMember.Type == 'ipaddress'">
-                {{ poolMember.IpAddress }}
+              <p *ngIf="poolMember.Type == 'IpAddress'">
+                {{ poolMember?.IpAddress }}
               </p>
-              <p *ngIf="poolMember.Type == 'fqdn'">{{ poolMember.Fqdn }}</p>
+              <p *ngIf="poolMember.Type == 'Fqdn'">{{ poolMember?.Fqdn }}</p>
             </td>
             <td>
-              <p>{{ poolMember.ServicePort }}</p>
+              <p>{{ poolMember?.servicePort }}</p>
             </td>
             <td>
-              <p>{{ poolMember.AutoPopulate }}</p>
+              <p>{{ poolMember?.autoPopulate }}</p>
             </td>
             <td>
               <fa name="pencil" (click)="editPoolMember(poolMember)"> </fa>
