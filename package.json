@@ -9,7 +9,9 @@
     "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sonar": "sonar-scanner"
+    "sonar": "sonar-scanner",
+    "test:jest-junit": "jest --no-cache",
+    "test:jest-junit:ci": "jest --ci --no-cache"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^7.2.11",
     "@angular/router": "^7.2.11",
     "@types/d3": "^5.7.2",
+    "@types/jest": "^24.0.23",
     "@types/ldapjs": "0.0.0",
     "angular-font-awesome": "^3.1.2",
     "angular-jwt": "^0.1.11",
@@ -35,8 +38,8 @@
     "font-awesome": "^4.7.0",
     "ip-num": "^1.1.1",
     "ip-subnet-calculator": "^1.1.8",
-    "jest": "^22.4.4",
-    "jest-junit": "^4.0.0",
+    "jest": "^24.9.0",
+    "jest-preset-angular": "^8.0.0",
     "jquery": "^3.3.1",
     "ngx-cookie-service": "^2.1.0",
     "ngx-mask": "^7.8.9",
@@ -46,6 +49,7 @@
     "rxjs": "~6.3.3",
     "save-svg-as-png": "^1.4.14",
     "tslib": "^1.9.0",
+    "ts-jest": "^24.2.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -59,6 +63,7 @@
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
+    "jest-junit": "^10.0.0",
     "karma": "~3.1.1",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.5",
@@ -71,5 +76,8 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
+  },
+  "jest-junit": {
+    "outputName": "jest-junit.xml"
   }
 }

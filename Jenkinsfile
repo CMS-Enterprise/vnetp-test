@@ -3,11 +3,12 @@ pipeline {
   stages {
     stage('test') {
       steps {
-        script{ 
+        script{
           docker.image('zenika/alpine-chrome:with-node').inside("-u 0:0") {
             sh 'npm i --unsafe-perm'
             sh 'npm rebuild node-sass'
             sh 'npm run coverage'
+            sh 'npm run test:jest-junit:ci'
           }
         }
       }
@@ -15,11 +16,11 @@ pipeline {
   }
   post {
     always {
-      junit 'src/*.xml'
-      // permissions problem from root ownership apparently [jvf]
+      junit 'jest-junit.xml'
       script {
         slackNotifier.notify(currentBuild.currentResult)
       }
     }
   }
 }
+

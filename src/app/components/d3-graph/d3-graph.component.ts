@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
-import contextMenuFactory from 'd3-context-menu';
+import * as contextMenuFactory from 'd3-context-menu';
 import * as save_svg_as_png from 'save-svg-as-png';
 import { color } from 'd3';
 import { Graph } from 'src/app/models/other/graph';

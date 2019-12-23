@@ -39,6 +39,7 @@ yarn-error.log
 testem.log
 /typings
 src/*.xml
+jest-junit.xml
 
 # System Files
 .DS_Store
