@@ -30,12 +30,14 @@
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
         </div>
+        
       </div>
 
       <div class="form-group">
           <label for="name">VLAN Number</label>
-          <tooltip [message]="helpText?.vlanNumber"></tooltip>
+          <tooltip [message]="helpText?.Vlan"></tooltip>
           <input
             type="number"
             name="name"
@@ -47,6 +49,12 @@
           <div *ngIf="submitted && f.vlanNumber.errors" class="invalid-feedback">
             <div *ngIf="f.vlanNumber.errors.required">
                   VLAN Number Required.
+            </div>
+            <div *ngIf="f.vlanNumber.errors.min">
+                  VLAN Number must be greater than 0.
+            </div>
+            <div *ngIf="f.vlanNumber.errors.max">
+                  VLAN Number must be less than 4094
             </div>
           </div>
         </div>

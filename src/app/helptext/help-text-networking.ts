@@ -37,6 +37,14 @@ export class SubnetModalHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class VlanModalHelpText {
+  Name = 'Name of the VLAN.';
+  Vlan = `VLAN Number.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class LoadBalancersHelpText {
   wikiBase: string = environment.wikiBase;
 

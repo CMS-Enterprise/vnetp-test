@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Vlan, V1NetworkVlansService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
-import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
+import { VlanModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-vlan-modal',
@@ -21,7 +21,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public helpText: SubnetModalHelpText,
+    public helpText: VlanModalHelpText,
     private vlanService: V1NetworkVlansService,
   ) {}
 
@@ -116,7 +116,10 @@ export class VlanModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: [
+        '',
+        Validators.compose([Validators.required, Validators.minLength(3)]),
+      ],
       vlanNumber: [
         '',
         Validators.compose([Validators.min(1), Validators.max(4094)]),
