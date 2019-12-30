@@ -250,7 +250,7 @@ export class SubnetsVlansComponent
     }
 
     if (this.navIndex === 0) {
-      this.getSubnets();
+      this.getVlans(true);
     } else {
       this.getVlans();
     }
