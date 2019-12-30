@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
-import { SubnetResponse } from 'src/app/models/d42/subnet';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +10,6 @@ import { SubnetResponse } from 'src/app/models/d42/subnet';
 export class DashboardComponent implements OnInit {
   constructor(private automationApiService: AutomationApiService) {
     this.ips = { ips: [] };
-    this.subnets = { subnets: [] };
     this.devices = { Devices: [] };
     this.jobs = { results: [] };
   }
@@ -41,12 +39,6 @@ export class DashboardComponent implements OnInit {
     // this.getIps();
     // this.getStatus();
     // this.getJobs();
-  }
-
-  getNetworks() {
-    this.automationApiService
-      .getSubnets()
-      .subscribe(data => (this.subnets = data as SubnetResponse));
   }
 
   getIps() {
