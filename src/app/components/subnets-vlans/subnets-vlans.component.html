@@ -1,0 +1,179 @@
+<div>
+  <h4>Subnets & VLANs</h4>
+
+  <div class="mt-3 mb-3">
+    <div class="form-row pb-2">
+      <span class="col-form-label mr-2"
+        >Tier <tooltip [message]="helpText?.Tier"></tooltip
+      ></span>
+      <select
+        name="tier"
+        class="form-control col-md-3 mr-1"
+        [(ngModel)]="currentTier"
+        (ngModelChange)="getObjectsForNavIndex()"
+        [disabled]="datacenterService.datacenterLockValue"
+      >
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{
+          tier.name
+        }}</option>
+      </select>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
+        >Subnets <tooltip [message]="helpText?.Subnets"></tooltip
+      ></a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
+        >VLANs
+        <tooltip [message]="helpText?.Vlans"></tooltip
+      ></a>
+    </li>
+  </ul>
+
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="openSubnetModal('Create')"
+        aria-label="Create Service Object"
+      >
+        <fa name="plus"></fa>
+        Create Service Object
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Source Port</th>
+          <th scope="col">Destination Port</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subnet of subnets">
+          <td>
+            <span>{{ subnet?.name }}</span>
+          </td>
+          <td>
+            <span>{{ subnet?.vlanId }}</span>
+          </td>
+          <td>
+            <span>{{ subnet?.network }}</span>
+          </td>
+          <td>
+            <span>{{ subnet?.gateway }}</span>
+          </td>
+          <td class="item-actions">
+            <fa
+              name="pencil"
+              *ngIf="!subnet?.deletedAt"
+              (click)="openSubnetModal('Edit', subnet)"
+              aria-label="Edit Service Object"
+            >
+            </fa>
+            <fa
+              name="undo"
+              *ngIf="subnet?.deletedAt"
+              class="fg-success"
+              (click)="restoreSubnet(subnet)"
+              aria-label="Restore Service Object"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': subnet.deletedAt }"
+              (click)="deleteSubnet(subnet)"
+              aria-label="Soft-Delete/Delete Service Object"
+            >
+            </fa>
+          </td>
+        </tr>
+        <tr *ngIf="!subnets?.length" class="text-center">
+          <td colspan="9">No Subnets in this Tier</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex == 1">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="openVlanModal('Create')"
+        aria-label="VLANs"
+      >
+        <fa name="plus"></fa>
+        Create Service Object Group
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Members</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vlan of vlans">
+          <td>
+            <span>{{ vlan?.name }}</span>
+          </td>
+          <td>
+            <span>{{ vlan?.vlanNumber }}</span>
+          </td>
+          <td>
+            <span>{{ vlan?.description }}</span>
+          </td>
+          <td class="item-actions">
+            <fa
+              name="pencil"
+              *ngIf="!vlan?.deletedAt"
+              (click)="openVlanModal('Edit', vlan)"
+              aria-label="Edit Service Object Group"
+            ></fa>
+            <fa
+              name="undo"
+              *ngIf="vlan?.deletedAt"
+              class="fg-success"
+              (click)="restoreVlan(vlan)"
+              aria-label="Restore Service Object Group"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': vlan.deletedAt }"
+              (click)="deleteVlan(vlan)"
+              aria-label="Soft-Delete/Delete Service Object Group"
+            ></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!vlans?.length" class="text-center">
+          <td colspan="4">No VLANs in this Tier</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 
+<div *ngIf="currentTier" class="pull-right">
+  <app-import-export
+    [exportObject]="exportSubnetConfig()"
+    exportFileName="subnets-{{ currentTier.name }}"
+    disableCsv="true"
+    (import)="importSubnetConfig($event)"
+  ></app-import-export>
+</div> -->
+
+
+<app-yes-no-modal></app-yes-no-modal>

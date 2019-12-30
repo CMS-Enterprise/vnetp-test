@@ -16,6 +16,15 @@ export class NetworkDetailHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class SubnetsVlansHelpText {
+  Subnets = `IPv4/IPv6 Subnets within the selected Tier.`;
+  Vlans = `Vlans within the selected Tier.`;
+  Tier = `Tier that Subnets and VLANs are created within.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class NetworkCreateHelpText {
   Name = `Name of the Subnet.`;
   Vrf = `Tier (VRF) that the subnet will be created within.`;

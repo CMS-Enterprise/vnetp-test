@@ -28,6 +28,7 @@ import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detai
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 
 // tslint:disable: max-line-length
 
@@ -52,6 +53,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Subnet' },
+  },
+  {
+    path: 'subnets-vlans',
+    component: SubnetsVlansComponent,
+    canActivate: [AuthGuard],
+    canDeactivate: [PendingChangesGuard],
+    data: { breadcrumb: 'Subnets & VLANs' },
   },
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {

@@ -69,6 +69,7 @@ import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.componen
 import { FilterPipe } from './pipes/filter.pipe';
 import { ResolvePipe } from './pipes/resolve.pipe';
 import { StaticRouteModalComponent } from './modals/static-route-modal/static-route-modal.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -127,6 +128,7 @@ export function apiConfigFactory(): Configuration {
     FilterPipe,
     ResolvePipe,
     StaticRouteModalComponent,
+    SubnetsVlansComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

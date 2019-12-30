@@ -34,6 +34,7 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Subnet - Gateway</th>
+        <th scope="col">VLAN</th>
         <th scope="col">Tier (VRF)</th>
       </tr>
     </thead>
@@ -45,6 +46,7 @@
           </a>
         </td>
         <td>{{ subnet?.network }} - {{ subnet?.gateway }}</td>
+        <td>{{ subnet?.vlanId | resolve: getVlanName }}</td>
         <td>{{ subnet?.tierId | resolve: getTierName  }}</td>
       </tr>
       <tr *ngIf="subnets?.length === 0" class="text-center">
