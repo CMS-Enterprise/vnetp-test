@@ -71,6 +71,7 @@ import { ResolvePipe } from './pipes/resolve.pipe';
 import { StaticRouteModalComponent } from './modals/static-route-modal/static-route-modal.component';
 import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.component';
+import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -131,6 +132,7 @@ export function apiConfigFactory(): Configuration {
     StaticRouteModalComponent,
     SubnetsVlansComponent,
     SubnetModalComponent,
+    VlanModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
