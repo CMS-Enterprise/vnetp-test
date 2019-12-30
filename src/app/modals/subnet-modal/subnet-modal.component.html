@@ -30,6 +30,7 @@
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
         </div>
       </div>
 
@@ -66,6 +67,9 @@
           <div *ngIf="f.network.errors.required">
             Network required.
           </div>
+          <div *ngIf="f.network.errors.validIpv4Address">
+            IP Address is invalid
+          </div>
         </div>
       </div>
 
@@ -82,7 +86,10 @@
           />
           <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
             <div *ngIf="f.gateway.errors.required">
-                  Gateway required.
+              Gateway required.
+            </div>
+            <div *ngIf="f.gateway.errors.validIpv4Address">
+              IP Address is invalid
             </div>
           </div>
         </div>
