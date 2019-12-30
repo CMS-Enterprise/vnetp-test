@@ -40,10 +40,10 @@
         type="button"
         class="btn btn-success"
         (click)="openSubnetModal('Create')"
-        aria-label="Create Service Object"
+        aria-label="Create Subnet"
       >
         <fa name="plus"></fa>
-        Create Service Object
+        Create Subnet
       </button>
     </div>
 
@@ -51,9 +51,9 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Source Port</th>
-          <th scope="col">Destination Port</th>
+          <th scope="col">VLAN</th>
+          <th scope="col">Network</th>
+          <th scope="col">Gateway</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -63,7 +63,7 @@
             <span>{{ subnet?.name }}</span>
           </td>
           <td>
-            <span>{{ subnet?.vlanId }}</span>
+            <span>{{ subnet?.vlanId | resolve: getVlanName }}</span>
           </td>
           <td>
             <span>{{ subnet?.network }}</span>
@@ -76,7 +76,7 @@
               name="pencil"
               *ngIf="!subnet?.deletedAt"
               (click)="openSubnetModal('Edit', subnet)"
-              aria-label="Edit Service Object"
+              aria-label="Edit Subnet"
             >
             </fa>
             <fa
@@ -84,13 +84,13 @@
               *ngIf="subnet?.deletedAt"
               class="fg-success"
               (click)="restoreSubnet(subnet)"
-              aria-label="Restore Service Object"
+              aria-label="Restore Subnet"
             ></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': subnet.deletedAt }"
               (click)="deleteSubnet(subnet)"
-              aria-label="Soft-Delete/Delete Service Object"
+              aria-label="Soft-Delete/Delete Subnet"
             >
             </fa>
           </td>
@@ -111,7 +111,7 @@
         aria-label="VLANs"
       >
         <fa name="plus"></fa>
-        Create Service Object Group
+        Create Subnet Group
       </button>
     </div>
 
@@ -140,20 +140,20 @@
               name="pencil"
               *ngIf="!vlan?.deletedAt"
               (click)="openVlanModal('Edit', vlan)"
-              aria-label="Edit Service Object Group"
+              aria-label="Edit VLAN"
             ></fa>
             <fa
               name="undo"
               *ngIf="vlan?.deletedAt"
               class="fg-success"
               (click)="restoreVlan(vlan)"
-              aria-label="Restore Service Object Group"
+              aria-label="Restore VLAN"
             ></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': vlan.deletedAt }"
               (click)="deleteVlan(vlan)"
-              aria-label="Soft-Delete/Delete Service Object Group"
+              aria-label="Soft-Delete/Delete VLAN"
             ></fa>
           </td>
         </tr>
@@ -175,5 +175,5 @@
   ></app-import-export>
 </div> -->
 
-
+<app-subnet-modal></app-subnet-modal>
 <app-yes-no-modal></app-yes-no-modal>

@@ -61,11 +61,15 @@ export class SubnetsVlansComponent
       });
   }
 
-  getVlans() {
+  getVlans(getSubnets = false) {
     this.tierService
       .v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' })
       .subscribe(data => {
         this.vlans = data.vlans;
+
+        if (getSubnets) {
+          this.getSubnets();
+        }
       });
   }
 
@@ -78,6 +82,7 @@ export class SubnetsVlansComponent
 
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
+    dto.Vlans = this.vlans;
 
     if (modalMode === ModalMode.Edit) {
       dto.Subnet = subnet;
@@ -116,6 +121,7 @@ export class SubnetsVlansComponent
         this.getSubnets();
         this.ngx.resetModalData('subnetModal');
         this.datacenterService.unlockDatacenter();
+        this.subnetModalSubscription.unsubscribe();
       });
   }
 
@@ -126,6 +132,7 @@ export class SubnetsVlansComponent
         this.getVlans();
         this.ngx.resetModalData('vlanModal');
         this.datacenterService.unlockDatacenter();
+        this.vlanModalSubscription.unsubscribe();
       });
   }
 
@@ -249,6 +256,17 @@ export class SubnetsVlansComponent
     }
   }
 
+  getVlanName = (id: string) => {
+    return this.getObjectName(id, this.vlans);
+    // tslint:disable-next-line: semicolon
+  };
+
+  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
+    if (objects && objects.length) {
+      return objects.find(o => o.id === id).name || 'N/A';
+    }
+  }
+
   private unsubAll() {
     [
       this.subnetModalSubscription,
@@ -276,7 +294,7 @@ export class SubnetsVlansComponent
 
           if (cd.tiers.length) {
             this.currentTier = cd.tiers[0];
-            this.getObjectsForNavIndex();
+            this.getVlans(true);
           }
         }
       },

@@ -7,7 +7,7 @@ import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { ComponentCanDeactivate } from 'src/app/guards/pending-changes.guard';
 import { Observable } from 'rxjs';
-import { NetworkCreateHelpText } from 'src/app/helptext/help-text-networking';
+import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-create-network',
@@ -41,7 +41,7 @@ export class CreateNetworkComponent implements OnInit, ComponentCanDeactivate {
     private toastr: ToastrService,
     private router: Router,
     private ipService: IpAddressService,
-    public helpText: NetworkCreateHelpText,
+    public helpText: SubnetModalHelpText,
   ) {
     this.subnet = new Subnet();
   }
