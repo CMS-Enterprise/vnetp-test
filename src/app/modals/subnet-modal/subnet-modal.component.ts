@@ -5,6 +5,10 @@ import { V1NetworkSubnetsService, Subnet, Vlan } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
+import {
+  ValidateIpv4CidrAddress,
+  ValidateIpv4Address,
+} from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-subnet-modal',
@@ -31,17 +35,17 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const modalServiceObject = {} as Subnet;
-    modalServiceObject.name = this.form.value.name;
-    modalServiceObject.network = this.form.value.network;
-    modalServiceObject.gateway = this.form.value.gateway;
+    const modalSubnetObject = {} as Subnet;
+    modalSubnetObject.name = this.form.value.name;
+    modalSubnetObject.network = this.form.value.network;
+    modalSubnetObject.gateway = this.form.value.gateway;
 
     if (this.ModalMode === ModalMode.Create) {
-      modalServiceObject.tierId = this.TierId;
-      modalServiceObject.vlanId = this.form.value.vlan;
+      modalSubnetObject.tierId = this.TierId;
+      modalSubnetObject.vlanId = this.form.value.vlan;
       this.subnetService
         .v1NetworkSubnetsPost({
-          subnet: modalServiceObject,
+          subnet: modalSubnetObject,
         })
         .subscribe(
           data => {
@@ -50,15 +54,15 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
-      modalServiceObject.name = null;
-      modalServiceObject.network = null;
-      modalServiceObject.gateway = null;
-      modalServiceObject.tierId = null;
-      modalServiceObject.vlanId = null;
+      modalSubnetObject.name = null;
+      modalSubnetObject.network = null;
+      modalSubnetObject.gateway = null;
+      modalSubnetObject.tierId = null;
+      modalSubnetObject.vlanId = null;
       this.subnetService
         .v1NetworkSubnetsIdPut({
           id: this.SubnetId,
-          subnet: modalServiceObject,
+          subnet: modalSubnetObject,
         })
         .subscribe(
           data => {
@@ -129,9 +133,15 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      network: ['', Validators.required],
-      gateway: ['', Validators.compose([Validators.required])],
-      vlan: ['', Validators.required],
+      network: [
+        '',
+        Validators.compose([Validators.required, ValidateIpv4CidrAddress]),
+      ],
+      gateway: [
+        '',
+        Validators.compose([Validators.required, ValidateIpv4Address]),
+      ],
+      vlan: ['', Validators.compose([Validators.min(1), Validators.max(4094)])],
     });
   }
 
