@@ -21,12 +21,12 @@
   </div>
 
   <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getNetworkObjects()">
+    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
         >Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip
       ></a>
     </li>
-    <li class="nav-item" (click)="navIndex = 1; getNetworkObjectGroups()">
+    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
         >Network Object Groups
         <tooltip [message]="helpText.NetworkObjects"></tooltip
