@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NetworksComponent } from './components/networks/networks.component';
 import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
@@ -26,32 +23,18 @@ import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
-import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 
 // tslint:disable: max-line-length
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'networks',
-    component: NetworksComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Subnets' },
-  },
-  {
-    path: 'networks/create',
-    component: CreateNetworkComponent,
+    path: 'subnets-vlans',
+    component: SubnetsVlansComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Create Subnet' },
-  },
-  {
-    path: 'networks/edit/:id',
-    component: NetworksDetailComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Subnet' },
+    data: { breadcrumb: 'Subnets & VLANs' },
   },
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {
