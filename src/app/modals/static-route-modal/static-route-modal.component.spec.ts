@@ -1,3 +1,4 @@
+// FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import {
@@ -7,14 +8,15 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
+import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { LogicalInterfaceModalComponent } from './logical-interface-modal.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('LogicalInterfaceModalComponent', () => {
-  let component: LogicalInterfaceModalComponent;
-  let fixture: ComponentFixture<LogicalInterfaceModalComponent>;
+describe('ServiceObjectModalComponent', () => {
+  let component: ServiceObjectModalComponent;
+  let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
@@ -25,10 +27,10 @@ describe('LogicalInterfaceModalComponent', () => {
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
-        AngularFontAwesomeModule,
         NgxMaskModule.forRoot(),
+        HttpClientTestingModule,
       ],
-      declarations: [LogicalInterfaceModalComponent, TooltipComponent],
+      declarations: [ServiceObjectModalComponent, TooltipComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         FormBuilder,
@@ -37,13 +39,13 @@ describe('LogicalInterfaceModalComponent', () => {
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(LogicalInterfaceModalComponent);
+        fixture = TestBed.createComponent(ServiceObjectModalComponent);
         component = fixture.componentInstance;
       });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogicalInterfaceModalComponent);
+    fixture = TestBed.createComponent(ServiceObjectModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -52,15 +54,8 @@ describe('LogicalInterfaceModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('user should not be able to add native vlan as tagged vlan', () => {
-    const nativeSubnet = component.form.controls.nativeSubnet;
-    nativeSubnet.setValue('Test1');
-
-    const selectedTaggedSubnet = component.form.controls.selectedTaggedSubnet;
-    selectedTaggedSubnet.setValue('Test1');
-    component.selectSubnet();
-
-    expect(component.selectedSubnets.length).toBeFalsy();
+  it('should have service object form', () => {
+    expect(component.form).toBeTruthy();
   });
 
   // Initial Form State
@@ -69,8 +64,18 @@ describe('LogicalInterfaceModalComponent', () => {
     expect(name.valid).toBeFalsy();
   });
 
-  it('native vlan should be required', () => {
-    const nativeSubnet = component.form.controls.nativeSubnet;
-    expect(nativeSubnet.valid).toBeFalsy();
+  it('type should be required', () => {
+    const protocol = component.form.controls.protocol;
+    expect(protocol.valid).toBeFalsy();
+  });
+
+  it('destinationPort should be required', () => {
+    const destinationPort = component.form.controls.destinationPorts;
+    expect(destinationPort.valid).toBeFalsy();
+  });
+
+  it('sourcePort should be required', () => {
+    const sourcePort = component.form.controls.sourcePorts;
+    expect(sourcePort.valid).toBeFalsy();
   });
 });

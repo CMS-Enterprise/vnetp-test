@@ -20,7 +20,6 @@ import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
@@ -53,13 +52,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Subnet' },
-  },
-  {
-    path: 'network-interfaces',
-    component: NetworkInterfacesComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Network Interfaces' },
   },
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {

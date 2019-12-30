@@ -1,5 +1,5 @@
 <div>
-  <h1>Tier: {{ vrf?.name }}</h1>
+  <h4>Tier: {{ tier?.name }}</h4>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm">
@@ -17,23 +17,23 @@
       <button
         type="button"
         class="btn btn-success mr-1"
-        (click)="addStaticRoute()"
+        (click)="createStaticRoute()"
       >
         <fa name="plus"></fa>
         Add Static Route
       </button>
 
-      <app-import-export
+      <!-- <app-import-export
         [exportObject]="staticRoutes"
         exportFileName="staticRoutes-{{ vrf.name }}"
         (import)="insertStaticRoutes($event)"
         disableExport="true"
-      ></app-import-export>
+      ></app-import-export> -->
 
       <button
         type="button"
         class="btn btn-info mr-1"
-        (click)="getNetwork()"
+        (click)="getStaticRoutes()"
         *ngIf="!dirty"
       >
         <fa name="refresh"></fa>
@@ -45,55 +45,47 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Interface Name</th>
-        <th scope="col">CIDR Address</th>
+        <th scope="col">Name</th>
+        <th scope="col">Destination Network</th>
         <th scope="col">Next Hop</th>
+        <th scope="col">Metric</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let route of staticRoutes">
+      <tr *ngFor="let staticRoute of staticRoutes">
         <td>
-          <p [hidden]="route.Edit">{{ getInterfaceUiName(route.Interface) }}</p>
-          <select
-          name="interface"
-          class="form-control"
-          [(ngModel)]="route.Interface"
-          [hidden]="!route.Edit">
-          <option value="inside">Intra-VRF</option>
-          <option value="outside">Inter-VRF</option>
-          <option value="extranet">External</option>
-          </select>
+          <span>{{ staticRoute?.name }}</span>
         </td>
         <td>
-          <p [hidden]="route.Edit">{{ route.CidrAddress }}</p>
-          <input
-            class="form-control"
-            placeholder="any"
-            [(ngModel)]="route.CidrAddress"
-            [hidden]="!route.Edit"
-            [dropSpecialCharacters]="false"
-            mask="099.099.099.099/09"
-          />
+          <span>{{ staticRoute?.destinationNetwork }}</span>
         </td>
         <td>
-          <p [hidden]="route.Edit">{{ route.NextHop }}</p>
-          <input
-            class="form-control"
-            placeholder="any"
-            [(ngModel)]="route.NextHop"
-            [hidden]="!route.Edit"
-            [dropSpecialCharacters]="false"
-            mask="099.099.099.099"
-          />
+          <span>{{ staticRoute?.nextHop }}</span>
+        </td>
+        <td>
+          <span>{{ staticRoute?.metric }}</span>
         </td>
         <td class="item-actions">
           <fa
-            name="floppy-o"
-            (click)="route.Edit = !route.Edit"
-            [hidden]="!route.Edit"
+            name="pencil"
+            *ngIf="!staticRoute?.deletedAt"
+            (click)="openStaticRouteModal('Edit', staticRoute)"
+            aria-label="Edit Static Route"
           ></fa>
-          <fa name="trash" (click)="deleteStaticRoute(route)"></fa>
+          <fa
+            name="undo"
+            *ngIf="staticRoute?.deletedAt"
+            class="fg-success"
+            (click)="restoreStaticRoute(staticRoute)"
+            aria-label="Restore Static Route"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': staticRoute?.deletedAt }"
+            (click)="deleteStaticRoute(staticRoute)"
+            aria-label="Soft-Delete/Delete Static Route"
+          ></fa>
         </td>
       </tr>
       <tr *ngIf="!staticRoutes?.length" class="text-center">
@@ -108,12 +100,15 @@
     role="toolbar"
   >
     <div class="btn-group-sm">
-      <app-import-export
+      <!-- <app-import-export
         [exportObject]="staticRoutes"
         exportFileName="staticRoutes-{{ vrf.name }}"
         (import)="insertStaticRoutes($event)"
         disableImport="true"
-      ></app-import-export>
+      ></app-import-export> -->
     </div>
   </div>
 </div>
+
+<app-static-route-modal></app-static-route-modal>
+<app-yes-no-modal></app-yes-no-modal>
