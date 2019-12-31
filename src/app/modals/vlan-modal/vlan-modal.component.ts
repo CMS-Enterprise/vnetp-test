@@ -15,7 +15,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
   submitted: boolean;
   ModalMode: ModalMode;
   TierId: string;
-  SubnetId: string;
+  VlanId: string;
   vlans: Array<Vlan>;
 
   constructor(
@@ -31,15 +31,16 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const modalSubnetObject = {} as Vlan;
-    modalSubnetObject.name = this.form.value.name;
+    const modalVlanObject = {} as Vlan;
+    modalVlanObject.name = this.form.value.name;
+    modalVlanObject.description = this.form.value.description;
 
     if (this.ModalMode === ModalMode.Create) {
-      modalSubnetObject.vlanNumber = this.form.value.vlanNumber;
-      modalSubnetObject.tierId = this.TierId;
+      modalVlanObject.vlanNumber = this.form.value.vlanNumber;
+      modalVlanObject.tierId = this.TierId;
       this.vlanService
         .v1NetworkVlansPost({
-          vlan: modalSubnetObject,
+          vlan: modalVlanObject,
         })
         .subscribe(
           data => {
@@ -48,12 +49,12 @@ export class VlanModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
-      modalSubnetObject.name = null;
-      modalSubnetObject.vlanNumber = null;
+      modalVlanObject.name = null;
+      modalVlanObject.vlanNumber = null;
       this.vlanService
         .v1NetworkVlansIdPut({
-          id: this.SubnetId,
-          vlan: modalSubnetObject,
+          id: this.VlanId,
+          vlan: modalVlanObject,
         })
         .subscribe(
           data => {
@@ -96,19 +97,20 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       this.ModalMode = dto.ModalMode;
 
       if (this.ModalMode === ModalMode.Edit) {
-        this.SubnetId = dto.Vlan.id;
+        this.VlanId = dto.Vlan.id;
       } else {
         this.form.controls.name.enable();
         this.form.controls.vlanNumber.enable();
       }
     }
 
-    const subnet = dto.Vlan;
+    const vlan = dto.Vlan;
 
-    if (subnet !== undefined) {
-      this.form.controls.name.setValue(subnet.name);
+    if (vlan !== undefined) {
+      this.form.controls.name.setValue(vlan.name);
       this.form.controls.name.disable();
-      this.form.controls.vlanNumber.setValue(subnet.vlanNumber);
+      this.form.controls.description.setValue(vlan.description);
+      this.form.controls.vlanNumber.setValue(vlan.vlanNumber);
       this.form.controls.vlanNumber.disable();
     }
     this.ngx.resetModalData('vlanModal');
@@ -120,6 +122,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([Validators.required, Validators.minLength(3)]),
       ],
+      description: ['', Validators.minLength(3)],
       vlanNumber: [
         '',
         Validators.compose([Validators.min(1), Validators.max(4094)]),

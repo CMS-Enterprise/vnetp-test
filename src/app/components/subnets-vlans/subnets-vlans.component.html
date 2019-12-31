@@ -51,6 +51,7 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
+          <th scope="col">Description</th>
           <th scope="col">VLAN</th>
           <th scope="col">Network</th>
           <th scope="col">Gateway</th>
@@ -61,6 +62,9 @@
         <tr *ngFor="let subnet of subnets">
           <td>
             <span>{{ subnet?.name }}</span>
+          </td>
+          <td>
+            <span>{{ subnet?.description }}</span>
           </td>
           <td>
             <span>{{ subnet?.vlanId | resolve: getVlanName }}</span>
@@ -119,8 +123,8 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Members</th>
+          <th scope="col">Description</th>
+          <th scope="col">VLAN Number</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -130,10 +134,10 @@
             <span>{{ vlan?.name }}</span>
           </td>
           <td>
-            <span>{{ vlan?.vlanNumber }}</span>
+            <span>{{ vlan?.description }}</span>
           </td>
           <td>
-            <span>{{ vlan?.description }}</span>
+            <span>{{ vlan?.vlanNumber }}</span>
           </td>
           <td class="item-actions">
             <fa

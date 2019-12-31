@@ -27,6 +27,7 @@ export class SubnetsVlansHelpText {
 })
 export class SubnetModalHelpText {
   Name = `Name of the Subnet.`;
+  Description = 'Description of the Subnet.';
   Vrf = `Tier (VRF) that the subnet will be created within.`;
   Protocol = `IP Protocol of the Subnet.`;
   Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
@@ -39,6 +40,7 @@ export class SubnetModalHelpText {
 })
 export class VlanModalHelpText {
   Name = 'Name of the VLAN.';
+  Description = 'Description of the VLAN.';
   Vlan = `VLAN Number.`;
 }
 
