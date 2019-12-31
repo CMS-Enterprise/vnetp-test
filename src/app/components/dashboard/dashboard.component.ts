@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     private datacenterService: V1DatacentersService,
     private tierService: V1TiersService,
     private vmwareService: V1VmwareVirtualMachinesService,
-    private helpText: DashboardHelpText,
+    public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
   ) {}
 
@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
   vmwareVirtualMachines: Array<VmwareVirtualMachine>;
   loadBalancerVirtualServers: Array<LoadBalancerVirtualServer>;
 
+  status: any;
   jobs: any;
   failedJobs = 0;
   successfulJobs = 0;
