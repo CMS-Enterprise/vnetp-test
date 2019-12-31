@@ -35,7 +35,11 @@ export class DashboardComponent implements OnInit {
   vmwareVirtualMachines: Array<VmwareVirtualMachine>;
   loadBalancerVirtualServers: Array<LoadBalancerVirtualServer>;
 
-  status: any;
+  status = [
+    { name: 'User Interface', status: 'green' },
+    { name: 'API', status: 'red' },
+    { name: 'Infrastructure', status: 'green' },
+  ];
   jobs: any;
   failedJobs = 0;
   successfulJobs = 0;
@@ -60,6 +64,9 @@ export class DashboardComponent implements OnInit {
   getDatacenters() {
     this.datacenterService.v1DatacentersGet({}).subscribe(data => {
       this.datacenters = data;
+      try {
+        this.status[1].status = 'green';
+      } catch {}
     });
   }
 

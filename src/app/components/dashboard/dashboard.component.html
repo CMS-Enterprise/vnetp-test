@@ -4,7 +4,7 @@
   <div class="card mt-3 mb-5">
     <div class="row p-3">
       <div
-        *ngFor="let service of status?.service_status"
+        *ngFor="let service of status"
         class="col-md-4 status-item"
       >
         <span>
@@ -68,7 +68,7 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header text-center">
-          <h4 class="mb-0">Environment</h4>
+          <h4 class="mb-0">Overall Environment</h4>
         </div>
 
         <div class="p-3">
@@ -81,6 +81,9 @@
               <span class="inline-block ml-auto">
                 {{ datacenters?.length || 0 }}
               </span>
+              <a>
+                <fa name="chevron-right"></fa>
+              </a>
             </li>
             <li>
               <span>
