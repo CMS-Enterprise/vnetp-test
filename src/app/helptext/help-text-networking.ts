@@ -47,6 +47,14 @@ export class VlanModalHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class TierModalHelpText {
+  Name = 'Name of the Tier.';
+  Description = 'Description of the Tier.';
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class LoadBalancersHelpText {
   wikiBase: string = environment.wikiBase;
 
