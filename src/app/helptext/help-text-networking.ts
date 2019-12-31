@@ -241,3 +241,18 @@ export class ContractModalHelpText {
   Description = 'Contract Description.';
   FilterEntries = 'Filter Entries to allow specific traffic.';
 }
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DashboardHelpText {
+  Datacenters = 'Total Datacenters within the current tenant.';
+  Tiers = 'Total Tiers within the current tenant.';
+  Vlans = 'Total Vlans within the current tenant.';
+  Subnets = 'Total Subnets within the current tenant.';
+  LbVirtualServers =
+    'Total Load Balancer Virtual Servers within the current tenant.';
+  VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
+  ZvmLpars = 'Total z/VM LPARs within the current tenant.';
+  ZosLpars = 'Total z/OS LPARs within the current tenant.';
+}

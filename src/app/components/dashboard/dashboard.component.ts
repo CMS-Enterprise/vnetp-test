@@ -1,6 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
+import {
+  Vlan,
+  Datacenter,
+  Tier,
+  V1DatacentersService,
+  V1TiersService,
+  Subnet,
+  V1VmwareVirtualMachinesService,
+  VmwareVirtualMachine,
+  V1LoadBalancerVirtualServersService,
+  LoadBalancerVirtualServer,
+} from 'api_client';
+import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,25 +20,30 @@ import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private automationApiService: AutomationApiService) {
-    this.ips = { ips: [] };
-    this.devices = { Devices: [] };
-    this.jobs = { results: [] };
-  }
+  constructor(
+    private datacenterService: V1DatacentersService,
+    private tierService: V1TiersService,
+    private vmwareService: V1VmwareVirtualMachinesService,
+    private helpText: DashboardHelpText,
+    private loadBalancerService: V1LoadBalancerVirtualServersService,
+  ) {}
 
-  ips: any;
-  subnets: any;
-  devices: any;
+  datacenters: Array<Datacenter>;
+  tiers: Array<Tier>;
+  vlans: Array<Vlan>;
+  subnets: Array<Subnet>;
+  vmwareVirtualMachines: Array<VmwareVirtualMachine>;
+  loadBalancerVirtualServers: Array<LoadBalancerVirtualServer>;
+
   jobs: any;
   failedJobs = 0;
   successfulJobs = 0;
   pendingJobs = 0;
   cancelledJobs = 0;
   runningJobs = 0;
-  status: any;
   pieChartData: Array<PieChartData>;
 
-  // dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 60);
+  dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
   ngOnInit() {
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
@@ -34,21 +51,42 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboard() {
-    // this.getDevices();
-    // this.getNetworks();
-    // this.getIps();
-    // this.getStatus();
-    // this.getJobs();
+    this.getDatacenters();
+    this.getTiers();
+    this.getVmwareVirtualMachines();
   }
 
-  getIps() {
-    this.automationApiService.getIps().subscribe(data => (this.ips = data));
+  getDatacenters() {
+    this.datacenterService.v1DatacentersGet({}).subscribe(data => {
+      this.datacenters = data;
+    });
   }
 
-  getDevices() {
-    this.automationApiService
-      .getDevices()
-      .subscribe(data => (this.devices = data));
+  getTiers() {
+    this.tierService.v1TiersGet({ join: 'vlans,subnets' }).subscribe(data => {
+      this.tiers = data;
+      this.vlans = [];
+      this.subnets = [];
+
+      this.tiers.forEach(tier => {
+        this.vlans = this.vlans.concat(tier.vlans);
+        this.subnets = this.subnets.concat(tier.subnets);
+      });
+    });
+  }
+
+  getVmwareVirtualMachines() {
+    this.vmwareService.v1VmwareVirtualMachinesGet({}).subscribe(data => {
+      this.vmwareVirtualMachines = data;
+    });
+  }
+
+  getLoadBalancerVirtualServers() {
+    this.loadBalancerService
+      .v1LoadBalancerVirtualServersGet({})
+      .subscribe(data => {
+        this.loadBalancerVirtualServers = data;
+      });
   }
 
   getJobs() {
@@ -57,20 +95,18 @@ export class DashboardComponent implements OnInit {
     // TODO: Refactor this to provide a more accurate count
     // by showing failed jobs in the last day based on local
     // timezone vs UTC.
-    this.automationApiService
-      .getJobs(
-        `?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`,
-      )
-      .subscribe(
-        data => (this.jobs = data),
-        error => {},
-        () => this.sortJobs(),
-      );
+    // this.automationApiService
+    //   .getJobs(
+    //     `?created__gte=${date}T00:00&created__lte=${date}T23:59&page_size=50`,
+    //   )
+    //   .subscribe(
+    //     data => (this.jobs = data),
+    //     error => {},
+    //     () => this.sortJobs(),
+    //   );
   }
 
   sortJobs() {
-    // TODO: Get cancelled and pending jobs.
-
     const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
     this.failedJobs = this.jobs.results.filter(
       job => job.failed && job.status !== 'canceled',
@@ -120,11 +156,5 @@ export class DashboardComponent implements OnInit {
     if (!this.pieChartData.length) {
       this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     }
-  }
-
-  getStatus() {
-    this.automationApiService.getSystemStatus().subscribe(data => {
-      this.status = data;
-    });
   }
 }
