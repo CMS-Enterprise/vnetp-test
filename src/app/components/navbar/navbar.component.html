@@ -1,5 +1,10 @@
 <nav class="navbar navbar-expand-lg" *ngIf="currentUser">
-  <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
+  <a
+    class="navbar-brand"
+    routerLink="dashboard"
+    queryParamsHandling="merge"
+    title="DRaaS"
+  >
     <fa name="bolt"></fa>
   </a>
 
@@ -28,15 +33,45 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
+          <a
+            class="dropdown-item"
+            routerLink="subnets-vlans"
+            queryParamsHandling="merge"
+            >Subnets & VLANs</a
+          >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
+          <a
+            class="dropdown-item"
+            routerLink="static-routes"
+            queryParamsHandling="merge"
+            >Routing</a
+          >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge"
+          <a
+            class="dropdown-item"
+            routerLink="firewall-rules"
+            queryParamsHandling="merge"
             >Firewall Rules</a
           >
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge"
+          <a
+            class="dropdown-item"
+            routerLink="network-objects-groups"
+            queryParamsHandling="merge"
+            >Network Objects/Groups</a
+          >
+
+          <a
+            class="dropdown-item"
+            routerLink="service-objects-groups"
+            queryParamsHandling="merge"
+            >Service Objects/Groups</a
+          >
+          <div class="dropdown-divider"></div>
+          <a
+            class="dropdown-item"
+            routerLink="load-balancers"
+            queryParamsHandling="merge"
             >Load Balancers</a
           >
         </div>
@@ -53,10 +88,28 @@
           >Systems
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="solaris" queryParamsHandling="merge">Solaris Summary</a>
-          <a class="dropdown-item" routerLink="solaris/cdom/list" queryParamsHandling="merge">CDOM List</a>
-          <a class="dropdown-item" routerLink="solaris/ldom/list" queryParamsHandling="merge">LDOM List</a>
-          <a class="dropdown-item" routerLink="solaris/imagerepository" queryParamsHandling="merge"
+          <a
+            class="dropdown-item"
+            routerLink="solaris"
+            queryParamsHandling="merge"
+            >Solaris Summary</a
+          >
+          <a
+            class="dropdown-item"
+            routerLink="solaris/cdom/list"
+            queryParamsHandling="merge"
+            >CDOM List</a
+          >
+          <a
+            class="dropdown-item"
+            routerLink="solaris/ldom/list"
+            queryParamsHandling="merge"
+            >LDOM List</a
+          >
+          <a
+            class="dropdown-item"
+            routerLink="solaris/imagerepository"
+            queryParamsHandling="merge"
             >Solaris Image Respository</a
           >
           <div class="dropdown-divider"></div>
@@ -65,51 +118,42 @@
           >
         </div>
       </li>
-
-      <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          >IPAM
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge"
-            >Network Objects/Groups</a
-          >
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge"
-            >Service Objects/Groups</a
-          >
-        </div>
-      </li>
     </ul>
-    
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
+      <li class="nav-item dropdown">
+        <a
+          [ngClass]="{ 'text-danger': !currentDatacenter }"
+          class="text-bold"
+          >{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a
+        >
+      </li>
 
-        <li class="nav-item dropdown">
-          <a [ngClass]="{'text-danger': !currentDatacenter }" class="text-bold">{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
-        </li>
-    
-        <li class="nav-item">        
-          <button class="btn btn-sm btn-info" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">   
-            {{ currentDatacenter ? 'Switch' : 'Select'}} Datacenter
-          </button>
-        </li>
-  
       <li class="nav-item">
-        <a class="nav-link disabled" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
+        <button
+          class="btn btn-sm btn-info"
+          [disabled]="lockCurrentDatacenter"
+          (click)="ngx.getModal('datacenterSwitchModal').open()"
+        >
+          {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
+        </button>
+      </li>
+
+      <li class="nav-item">
+        <a
+          class="nav-link disabled"
+          [routerLinkActive]="['active']"
+          routerLink="jobs"
+          queryParamsHandling="merge"
+        >
           <fa
             name="spinner fa-spin"
             style="padding-right:5px;"
             [hidden]="!activeJobs.length"
           ></fa>
           <span class="badge badge-success" [hidden]="!activeJobs.length">
-            {{ activeJobs.length }}</span>
+            {{ activeJobs.length }}</span
+          >
           Jobs</a
         >
       </li>
@@ -141,7 +185,11 @@
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button class="btn btn-sm btn-danger" routerLink="deploy" queryParamsHandling="merge">
+        <button
+          class="btn btn-sm btn-danger"
+          routerLink="deploy"
+          queryParamsHandling="merge"
+        >
           Deploy
         </button>
       </li>
@@ -171,11 +219,15 @@
     ></button>
   </div>
 
-  <div>Current Datacenter: {{ currentDatacenter?.name || 'No Datacenter Selected'}}
+  <div>
+    Current Datacenter:
+    {{ currentDatacenter?.name || 'No Datacenter Selected' }}
 
     <select [(ngModel)]="selectedDatacenter" class="form-control">
       <option></option>
-      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
+      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{
+        datacenter.name
+      }}</option>
     </select>
   </div>
 

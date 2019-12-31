@@ -15,25 +15,9 @@
     </div>
   </div>
 
-  <h2>Customer Status</h2>
-
-  <div class="card mt-3 mb-5">
-    <div class="row p-3">
-      <div
-        *ngFor="let customer of status?.customer_status"
-        class="col-md-4 status-item status-item--large"
-      >
-        <span>
-          {{ customer.name }}
-        </span>
-        <div class="status-light" [ngClass]="customer.status"></div>
-      </div>
-    </div>
-  </div>
-
   <h2>Job Status Today</h2>
   <div class="row p-3">
-    <div class="chart-wrap col-md-8">
+    <div class="chart-wrap col-md-6">
       <app-d3-pie-chart
         [data]="pieChartData"
         *ngIf="pieChartData"
@@ -81,7 +65,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header text-center">
           <h4 class="mb-0">Environment</h4>
@@ -90,31 +74,95 @@
         <div class="p-3">
           <ul class="dash-card">
             <li>
-              <span>Networks</span>
-              <span class="inline-block ml-auto">
-                {{ subnets.total_count || 0 }}
+              <span>
+                Datacenters
+                <tooltip [message]="helpText.Datacenters"></tooltip>
               </span>
-              <a routerLink="/networks">
+              <span class="inline-block ml-auto">
+                {{ datacenters?.length || 0 }}
+              </span>
+            </li>
+            <li>
+              <span>
+                Tiers
+                <tooltip [message]="helpText.Tiers"></tooltip>
+              </span>
+              <span class="inline-block ml-auto">
+                {{ tiers?.length || 0 }}
+              </span>
+              <a routerLink="/tiers" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>
               </a>
             </li>
-
             <li>
-              <span>Devices</span>
-              <span class="inline-block ml-auto">
-                {{ devices.total_count || 0 }}
+              <span>
+                VLANs
+                <tooltip [message]="helpText.Vlans"></tooltip>
               </span>
-              <a routerLink="/solaris">
+              <span class="inline-block ml-auto">
+                {{ vlans?.length || 0 }}
+              </span>
+              <a routerLink="/subnets-vlans" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>
               </a>
             </li>
-
             <li>
-              <span>IP Addresses</span>
-              <span class="inline-block ml-auto">
-                {{ ips.ips.length || 0 }}
+              <span>
+                Subnets
+                <tooltip [message]="helpText.Subnets"></tooltip>
               </span>
-              <a routerLink="/ipaddresses">
+              <span class="inline-block ml-auto">
+                {{ subnets?.length || 0 }}
+              </span>
+              <a routerLink="/subnets-vlans" queryParamsHandling="merge">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+            <li>
+              <span>
+                Load Balancer Virtual Servers
+                <tooltip [message]="helpText.LbVirtualServers"></tooltip>
+              </span>
+              <span class="inline-block ml-auto">
+                {{ loadBalancerVirtualServers?.length || 0 }}
+              </span>
+              <a routerLink="/vmware" queryParamsHandling="merge">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+            <li>
+              <span>
+                VMware Virtual Machines
+                <tooltip [message]="helpText.VMwareVms"></tooltip
+              ></span>
+              <span class="inline-block ml-auto">
+              {{ vmwareVirtualMachines?.length || 0 }}
+              </span>
+              <a routerLink="/vmware" queryParamsHandling="merge">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+            <li>
+              <span>
+                z/VM LPARs
+                <tooltip [message]="helpText.ZvmLpars"></tooltip>
+              </span>
+              <span class="inline-block ml-auto">
+                0
+              </span>
+              <a routerLink="/vmware" queryParamsHandling="merge">
+                <fa name="chevron-right"></fa>
+              </a>
+            </li>
+            <li>
+              <span>
+                z/OS LPARs
+                <tooltip [message]="helpText.ZosLpars"></tooltip>
+              </span>
+              <span class="inline-block ml-auto">
+                0
+              </span>
+              <a routerLink="/vmware" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>
               </a>
             </li>

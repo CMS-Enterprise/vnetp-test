@@ -245,6 +245,10 @@ export class ServiceObjectsGroupsComponent
   }
 
   getObjectsForNavIndex() {
+    if (!this.currentTier) {
+      return;
+    }
+
     if (this.navIndex === 0) {
       this.getServiceObjects();
     } else {
@@ -289,6 +293,7 @@ export class ServiceObjectsGroupsComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
+          this.currentTier = null;
           this.serviceObjects = [];
           this.serviceObjectGroups = [];
 

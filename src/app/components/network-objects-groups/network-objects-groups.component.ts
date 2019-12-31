@@ -246,6 +246,10 @@ export class NetworkObjectsGroupsComponent
   }
 
   getObjectsForNavIndex() {
+    if (!this.currentTier) {
+      return;
+    }
+
     if (this.navIndex === 0) {
       this.getNetworkObjects();
     } else {
@@ -290,6 +294,7 @@ export class NetworkObjectsGroupsComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
+          this.currentTier = null;
           this.networkObjects = [];
           this.networkObjectGroups = [];
 
