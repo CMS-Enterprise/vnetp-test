@@ -1,5 +1,5 @@
 // tslint:disable: max-line-length
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -16,12 +16,32 @@ export class NetworkDetailHelpText {
 @Injectable({
   providedIn: 'root',
 })
-export class NetworkCreateHelpText {
+export class SubnetsVlansHelpText {
+  Subnets = `IPv4/IPv6 Subnets within the selected Tier.`;
+  Vlans = `Vlans within the selected Tier.`;
+  Tier = `Tier that Subnets and VLANs are created within.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SubnetModalHelpText {
   Name = `Name of the Subnet.`;
+  Description = 'Description of the Subnet.';
   Vrf = `Tier (VRF) that the subnet will be created within.`;
   Protocol = `IP Protocol of the Subnet.`;
-  CidrAddress = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
-  VlanId = `VLAN ID associated with the Subnet.`;
+  Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
+  Gateway = `Gateway Address of the Subnet.`;
+  Vlan = `VLAN associated with the Subnet.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class VlanModalHelpText {
+  Name = 'Name of the VLAN.';
+  Description = 'Description of the VLAN.';
+  Vlan = `VLAN Number.`;
 }
 
 @Injectable({

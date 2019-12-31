@@ -1,0 +1,131 @@
+<ngx-smart-modal
+  #subnetModal
+  identifier="subnetModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Subnet</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <tooltip [message]="helpText?.Name"></tooltip>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <tooltip [message]="helpText?.Description"></tooltip>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.required">Description is required</div>
+          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="protocol">VLAN</label>
+        <tooltip [message]="helpText?.Vlan"></tooltip>
+        <select
+          name="vlan"
+          formControlName="vlan"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.vlan.errors }"
+          aria-label="VLAN"
+        >
+          <option></option>
+          <option *ngFor="let vlan of vlans" [ngValue]="vlan?.id">{{ vlan?.name }} ({{vlan?.vlanNumber}})</option>
+        </select>
+        <div *ngIf="submitted && f.vlan.errors" class="invalid-feedback">
+          <div *ngIf="f.vlan.errors.required">VLAN is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Network</label>
+        <tooltip [message]="helpText?.Network"></tooltip>
+        <input
+          type="text"
+          name="name"
+          formControlName="network"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.network.errors }"
+          aria-label="Network"
+        />
+        <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
+          <div *ngIf="f.network.errors.required">
+            Network required.
+          </div>
+          <div *ngIf="f.network.errors.validIpv4Address">
+            IP Address is invalid
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+          <label for="name">Gateway</label>
+          <tooltip [message]="helpText?.Gateway"></tooltip>
+          <input
+            type="text"
+            name="name"
+            formControlName="gateway"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.gateway.errors }"
+            aria-label="Gateway"
+          />
+          <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
+            <div *ngIf="f.gateway.errors.required">
+              Gateway required.
+            </div>
+            <div *ngIf="f.gateway.errors.validIpv4Address">
+              IP Address is invalid
+            </div>
+          </div>
+        </div>
+    </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-link"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
+        </button>
+    </div>
+  </form>
+</ngx-smart-modal>
