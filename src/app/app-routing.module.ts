@@ -24,6 +24,7 @@ import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.comp
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
+import { TiersComponent } from './components/tiers/tiers.component';
 
 // tslint:disable: max-line-length
 
@@ -35,6 +36,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Subnets & VLANs' },
+  },
+  {
+    path: 'tiers',
+    component: TiersComponent,
+    canActivate: [AuthGuard],
+    canDeactivate: [PendingChangesGuard],
+    data: { breadcrumb: 'Tiers' },
   },
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {

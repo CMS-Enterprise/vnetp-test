@@ -69,6 +69,8 @@ import { StaticRouteModalComponent } from './modals/static-route-modal/static-ro
 import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.component';
 import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
+import { TiersComponent } from './components/tiers/tiers.component';
+import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -127,6 +129,8 @@ export function apiConfigFactory(): Configuration {
     SubnetsVlansComponent,
     SubnetModalComponent,
     VlanModalComponent,
+    TiersComponent,
+    TierModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

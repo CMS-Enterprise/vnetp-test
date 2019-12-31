@@ -37,6 +37,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
 
     const modalSubnetObject = {} as Subnet;
     modalSubnetObject.name = this.form.value.name;
+    modalSubnetObject.description = this.form.value.description;
     modalSubnetObject.network = this.form.value.network;
     modalSubnetObject.gateway = this.form.value.gateway;
 
@@ -120,6 +121,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
     if (subnet !== undefined) {
       this.form.controls.name.setValue(subnet.name);
       this.form.controls.name.disable();
+      this.form.controls.description.setValue(subnet.description);
       this.form.controls.vlan.setValue(subnet.vlanId);
       this.form.controls.vlan.disable();
       this.form.controls.network.setValue(subnet.network);
@@ -133,6 +135,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
+      description: ['', Validators.minLength(3)],
       network: [
         '',
         Validators.compose([Validators.required, ValidateIpv4CidrAddress]),

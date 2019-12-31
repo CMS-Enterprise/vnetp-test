@@ -1,28 +1,27 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Vlan, V1NetworkVlansService } from 'api_client';
+import { Tier, V1TiersService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
-import { VlanModalHelpText } from 'src/app/helptext/help-text-networking';
+import { TierModalHelpText } from 'src/app/helptext/help-text-networking';
+import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 
 @Component({
-  selector: 'app-vlan-modal',
-  templateUrl: './vlan-modal.component.html',
+  selector: 'app-tier-modal',
+  templateUrl: './tier-modal.component.html',
 })
-export class VlanModalComponent implements OnInit, OnDestroy {
+export class TierModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
+  DatacenterId: string;
   TierId: string;
-  VlanId: string;
-  vlans: Array<Vlan>;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public helpText: VlanModalHelpText,
-    private vlanService: V1NetworkVlansService,
+    public helpText: TierModalHelpText,
+    private vlanService: V1TiersService,
   ) {}
 
   save() {
@@ -31,16 +30,15 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const modalVlanObject = {} as Vlan;
-    modalVlanObject.name = this.form.value.name;
-    modalVlanObject.description = this.form.value.description;
+    const modalTierObject = {} as Tier;
+    modalTierObject.name = this.form.value.name;
+    modalTierObject.description = this.form.value.description;
+    modalTierObject.datacenterId = this.DatacenterId;
 
     if (this.ModalMode === ModalMode.Create) {
-      modalVlanObject.vlanNumber = this.form.value.vlanNumber;
-      modalVlanObject.tierId = this.TierId;
       this.vlanService
-        .v1NetworkVlansPost({
-          vlan: modalVlanObject,
+        .v1TiersPost({
+          tier: modalTierObject,
         })
         .subscribe(
           data => {
@@ -49,12 +47,12 @@ export class VlanModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
-      modalVlanObject.name = null;
-      modalVlanObject.vlanNumber = null;
+      modalTierObject.name = null;
+      modalTierObject.datacenterId = null;
       this.vlanService
-        .v1NetworkVlansIdPut({
-          id: this.VlanId,
-          vlan: modalVlanObject,
+        .v1TiersIdPut({
+          id: this.TierId,
+          tier: modalTierObject,
         })
         .subscribe(
           data => {
@@ -66,12 +64,12 @@ export class VlanModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.close('vlanModal');
+    this.ngx.close('tierModal');
     this.reset();
   }
 
   cancel() {
-    this.ngx.close('vlanModal');
+    this.ngx.close('tierModal');
     this.reset();
   }
 
@@ -84,11 +82,11 @@ export class VlanModalComponent implements OnInit, OnDestroy {
   getData() {
     const dto = Object.assign(
       {},
-      this.ngx.getModalData('vlanModal') as VlanModalDto,
+      this.ngx.getModalData('tierModal') as TierModalDto,
     );
 
-    if (dto.TierId) {
-      this.TierId = dto.TierId;
+    if (dto.DatacenterId) {
+      this.DatacenterId = dto.DatacenterId;
     }
 
     if (!dto.ModalMode) {
@@ -97,23 +95,20 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       this.ModalMode = dto.ModalMode;
 
       if (this.ModalMode === ModalMode.Edit) {
-        this.VlanId = dto.Vlan.id;
+        this.TierId = dto.Tier.id;
       } else {
         this.form.controls.name.enable();
-        this.form.controls.vlanNumber.enable();
       }
     }
 
-    const vlan = dto.Vlan;
+    const tier = dto.Tier;
 
-    if (vlan !== undefined) {
-      this.form.controls.name.setValue(vlan.name);
+    if (tier !== undefined) {
+      this.form.controls.name.setValue(tier.name);
       this.form.controls.name.disable();
-      this.form.controls.description.setValue(vlan.description);
-      this.form.controls.vlanNumber.setValue(vlan.vlanNumber);
-      this.form.controls.vlanNumber.disable();
+      this.form.controls.description.setValue(tier.description);
     }
-    this.ngx.resetModalData('vlanModal');
+    this.ngx.resetModalData('tierModal');
   }
 
   private buildForm() {
@@ -123,17 +118,13 @@ export class VlanModalComponent implements OnInit, OnDestroy {
         Validators.compose([Validators.required, Validators.minLength(3)]),
       ],
       description: ['', Validators.minLength(3)],
-      vlanNumber: [
-        '',
-        Validators.compose([Validators.min(1), Validators.max(4094)]),
-      ],
     });
   }
 
   private reset() {
     this.submitted = false;
-    this.TierId = '';
-    this.ngx.resetModalData('vlanModal');
+    this.DatacenterId = '';
+    this.ngx.resetModalData('tierModal');
     this.buildForm();
   }
 

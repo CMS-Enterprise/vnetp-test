@@ -32,7 +32,14 @@
           aria-expanded="false"
           >Networking
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
+        <a
+          class="dropdown-item"
+          routerLink="tiers"
+          queryParamsHandling="merge"
+          >Tiers</a
+        >
+        <div class="dropdown-divider"></div>
           <a
             class="dropdown-item"
             routerLink="subnets-vlans"

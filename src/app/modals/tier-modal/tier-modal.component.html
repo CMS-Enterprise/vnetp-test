@@ -1,11 +1,11 @@
 <ngx-smart-modal
-  #vlanModal
-  identifier="vlanModal"
+  #tierModal
+  identifier="tierModal"
   [dismissable]="false"
   (onOpen)="getData()"
 >
   <div class="modal-header">
-    <h4 class="modal-title">VLAN</h4>
+    <h4 class="modal-title">Tier</h4>
     <button
       type="button"
       class="close"
@@ -50,30 +50,6 @@
           <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
         </div>
       </div>
-
-      <div class="form-group">
-          <label for="name">VLAN Number</label>
-          <tooltip [message]="helpText?.Vlan"></tooltip>
-          <input
-            type="number"
-            name="name"
-            formControlName="vlanNumber"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.vlanNumber.errors }"
-            aria-label="vlanNumber"
-          />
-          <div *ngIf="submitted && f.vlanNumber.errors" class="invalid-feedback">
-            <div *ngIf="f.vlanNumber.errors.required">
-                  VLAN Number Required.
-            </div>
-            <div *ngIf="f.vlanNumber.errors.min">
-                  VLAN Number must be greater than 0.
-            </div>
-            <div *ngIf="f.vlanNumber.errors.max">
-                  VLAN Number must be less than 4094
-            </div>
-          </div>
-        </div>
     </div>
 
       <div class="modal-footer">
