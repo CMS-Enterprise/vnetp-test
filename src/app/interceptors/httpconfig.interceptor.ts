@@ -95,6 +95,9 @@ export class HttpConfigInterceptor {
 
         if (!isLogin) {
           switch (error.status) {
+            case 400:
+              toastrMessage = 'Bad Request';
+              break;
             case 401:
               this.auth.logout();
               return;
