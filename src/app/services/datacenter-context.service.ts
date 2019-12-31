@@ -43,6 +43,7 @@ export class DatacenterContextService {
   > = this.lockCurrentDatacenterSubject.asObservable();
 
   private _datacenters: Datacenter[] = new Array<Datacenter>();
+  ignoreNextQueryParamEvent: boolean;
 
   constructor(
     private authService: AuthService,
@@ -69,6 +70,11 @@ export class DatacenterContextService {
     // datacenter param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
       if (!this.authService.currentUserValue) {
+        return;
+      }
+
+      if (this.ignoreNextQueryParamEvent) {
+        this.ignoreNextQueryParamEvent = false;
         return;
       }
 
@@ -147,6 +153,8 @@ export class DatacenterContextService {
     if (datacenter) {
       // Update Subject
       this.currentDatacenterSubject.next(datacenter);
+
+      this.ignoreNextQueryParamEvent = true;
 
       // Update Query Params
       this.router.navigate([], {

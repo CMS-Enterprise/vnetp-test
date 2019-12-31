@@ -123,6 +123,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  filterDatacenters = (datacenter: Datacenter) => {
+    if (!this.currentDatacenter) {
+      return;
+    }
+    return datacenter.id !== this.currentDatacenter.id;
+    // Using arrow function to pass execution context.
+    // tslint:disable-next-line: semicolon
+  };
+
   closeJobModal() {
     this.ngx.getModal('jobLaunchModal').close();
     this.modalJob = null;
