@@ -95,6 +95,22 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
+  addHealthMonitor() {
+    this.poolService
+      .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
+        poolId: this.PoolId,
+        healthMonitorId: this.selectedHealthMonitors[0].id,
+      })
+      .subscribe(
+        data => {
+          this.getPools();
+        },
+        error => {
+          this.selectedHealthMonitors = null;
+        },
+      );
+  }
+
   removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
     const modalDto = new YesNoModalDto('Remove Health Monitor', '');
     this.ngx.setModalData(modalDto, 'yesNoModal');
@@ -107,8 +123,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         modal.removeData();
         if (data && data.modalYes) {
           this.poolService
-            .v1LoadBalancerPoolsIdDelete({ id: healthMonitor.id })
+            .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
+              poolId: this.PoolId,
+              healthMonitorId: healthMonitor.id,
+            })
             .subscribe(() => {
+              this.selectedHealthMonitors = null;
               this.getPools();
             });
         }
@@ -119,7 +139,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   private getPools() {
     this.poolService
       .v1LoadBalancerPoolsIdGet({
-        id: this.Pool.id,
+        id: this.PoolId,
         join: 'LoadBalancerNodes,LoadBalancerHealthMonitors',
       })
       .subscribe(data => {
@@ -251,7 +271,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     if (!healthMonitor) {
       return;
     }
-
     this.selectedHealthMonitors.push(healthMonitor);
     const availableIndex = this.availableHealthMonitors.indexOf(healthMonitor);
     if (availableIndex > -1) {
@@ -259,14 +278,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
     this.form.controls.selectedHealthMonitor.setValue(null);
     this.form.controls.selectedHealthMonitor.updateValueAndValidity();
+    this.addHealthMonitor();
   }
 
-  unselectHealthMonitor(healthMonitor) {
+  unselectHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
     this.availableHealthMonitors.push(healthMonitor);
     const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
     if (selectedIndex > -1) {
       this.selectedHealthMonitors.splice(selectedIndex, 1);
     }
+    this.removeHealthMonitor(healthMonitor);
   }
 
   private buildForm() {

@@ -135,10 +135,10 @@
             <span>{{ pool?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ pool?.Members?.length }}</span>
+            <span>{{ pool?.nodes?.length }}</span>
           </td>
           <td>
-            <span>{{ pool?.HealthMonitors?.length }}</span>
+            <span>{{ pool?.healthMonitors?.length }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool">

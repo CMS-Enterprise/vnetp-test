@@ -60,8 +60,7 @@ export class LoadBalancersComponent
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return;
-    // return !this.datacenterService.datacenterLockValue;
+    return !this.datacenterService.datacenterLockValue;
   }
 
   constructor(
@@ -92,14 +91,13 @@ export class LoadBalancersComponent
   }
 
   getPools() {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerPools,loadBalancerNodes,loadBalancerHealthMonitors',
+    this.poolsService
+      .v1LoadBalancerPoolsGet({
+        join: 'nodes,healthMonitors',
+        filter: `tierId||eq||${this.currentTier.id}`,
       })
       .subscribe(data => {
-        this.pools = data.loadBalancerPools;
-        this.healthMonitors = data.loadBalancerHealthMonitors;
+        this.pools = data;
       });
   }
 

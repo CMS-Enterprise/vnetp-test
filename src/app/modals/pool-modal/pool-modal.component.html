@@ -149,14 +149,14 @@
               <option
                 *ngFor="let healthMonitor of availableHealthMonitors"
                 [ngValue]="healthMonitor"
-                >{{ healthMonitor }}</option
+                >{{ healthMonitor.name }}</option
               >
             </select>
 
             <button
               type="button"
               class="btn btn-sm btn-info"
-              (click)="selectHealthMonitor()"
+              (click)="selectHealthMonitor();"
             >
               Select Health Monitor
             </button>
@@ -176,7 +176,7 @@
             <tbody>
               <tr *ngFor="let healthMonitor of selectedHealthMonitors">
                 <td>
-                  {{ healthMonitor }}
+                  {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
                   <fa

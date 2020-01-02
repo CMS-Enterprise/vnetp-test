@@ -25,6 +25,7 @@ export interface LoadBalancerNode {
     ipAddress: string;
     fqdn: string;
     autoPopulate: boolean;
+    servicePort: number;
     tierId: string;
 }
 export enum LoadBalancerNodeType {
