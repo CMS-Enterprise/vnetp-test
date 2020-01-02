@@ -125,7 +125,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       description: ['', Validators.minLength(3)],
       vlanNumber: [
         '',
-        Validators.compose([Validators.min(1), Validators.max(4094)]),
+        Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)]),
       ],
     });
   }
