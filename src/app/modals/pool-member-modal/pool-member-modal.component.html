@@ -44,17 +44,17 @@
           aria-label="Type"
         >
           <option></option>
-          <option value="ipaddress">IP Address</option>
-          <option value="fqdn">FQDN</option>
+          <option value="IpAddress">IP Address</option>
+          <option value="Fqdn">FQDN</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
           <div *ngIf="f.type.errors.required">Type is required</div>
         </div>
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'ipaddress'">
+      <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
         <label for="ipAddress">IP Address</label>
-        <tooltip  *ngIf="f.type.value == 'ipaddress'" [message]="helpText.IpAddress"></tooltip>
+        <tooltip  *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
         <input
           name="ipAddress"
           formControlName="ipAddress"
@@ -66,9 +66,9 @@
         />
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+      <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
         <label for="fqdn">FQDN</label>
-        <tooltip  *ngIf="f.type.value == 'fqdn'" [message]="helpText.Fqdn"></tooltip>
+        <tooltip  *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
         <input
           name="fqdn"
           formControlName="fqdn"
@@ -78,7 +78,7 @@
         />
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'fqdn'">
+      <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
         <div class="form-check form-check-inline">
           <input
             type="checkbox"

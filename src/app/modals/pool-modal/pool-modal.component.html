@@ -110,10 +110,10 @@
               <p>{{ poolMember?.type }}</p>
             </td>
             <td>
-              <p *ngIf="poolMember.Type == 'IpAddress'">
+              <p *ngIf="poolMember.type == 'IpAddress'">
                 {{ poolMember?.IpAddress }}
               </p>
-              <p *ngIf="poolMember.Type == 'Fqdn'">{{ poolMember?.Fqdn }}</p>
+              <p *ngIf="poolMember.type == 'Fqdn'">{{ poolMember?.fqdn }}</p>
             </td>
             <td>
               <p>{{ poolMember?.servicePort }}</p>
@@ -152,14 +152,18 @@
                 >{{ healthMonitor.name }}</option
               >
             </select>
-
             <button
-              type="button"
-              class="btn btn-sm btn-info"
-              (click)="selectHealthMonitor();"
+            type="button"
+            class="btn btn-sm btn-info"
+            (click)="selectHealthMonitor();"
+            [disabled]="ModalMode === 'Create'"
             >
-              Select Health Monitor
-            </button>
+            Select Health Monitor
+          </button>
+          <tooltip
+            *ngIf="ModalMode === 'Create'"
+            [message]="'Must create Pool and edit to add Health Monitor'">
+          </tooltip>
           </div>
         </div>
 

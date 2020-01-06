@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { GeneratedLoadBalancerPoolBulkDto } from '../model/generatedLoadBalancerPoolBulkDto';
+import { LoadBalancerHealthMonitor } from '../model/loadBalancerHealthMonitor';
 import { LoadBalancerNode } from '../model/loadBalancerNode';
 import { LoadBalancerPool } from '../model/loadBalancerPool';
 
@@ -86,6 +87,16 @@ export interface V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequ
 export interface V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams {
     poolId: string;
     healthMonitorId: string;
+}
+
+export interface V1LoadBalancerPoolsPoolIdNodeNodeIdDeleteRequestParams {
+    poolId: string;
+    nodeId: string;
+}
+
+export interface V1LoadBalancerPoolsPoolIdNodeNodeIdPostRequestParams {
+    poolId: string;
+    nodeId: string;
 }
 
 export interface V1LoadBalancerPoolsPostRequestParams {
@@ -581,9 +592,9 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerHealthMonitor>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
     public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
@@ -606,7 +617,7 @@ export class V1LoadBalancerPoolsService {
         }
 
 
-        return this.httpClient.delete<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
+        return this.httpClient.delete<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -622,9 +633,9 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerHealthMonitor>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
     public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
@@ -647,7 +658,90 @@ export class V1LoadBalancerPoolsService {
         }
 
 
-        return this.httpClient.post<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
+        return this.httpClient.post<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove Node to Load Balancer Pool
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const poolId = requestParameters.poolId;
+        if (poolId === null || poolId === undefined) {
+            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdDelete.');
+        }
+        const nodeId = requestParameters.nodeId;
+        if (nodeId === null || nodeId === undefined) {
+            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdDelete.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.delete<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add Node to Load Balancer Pool
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const poolId = requestParameters.poolId;
+        if (poolId === null || poolId === undefined) {
+            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdPost.');
+        }
+        const nodeId = requestParameters.nodeId;
+        if (nodeId === null || nodeId === undefined) {
+            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.post<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}`,
             null,
             {
                 withCredentials: this.configuration.withCredentials,

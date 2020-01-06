@@ -10,6 +10,7 @@ import {
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
   V1LoadBalancerPoolsService,
+  V1LoadBalancerNodesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
@@ -38,6 +39,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private poolService: V1LoadBalancerPoolsService,
+    private nodeService: V1LoadBalancerNodesService,
     public helpText: PoolModalHelpText,
   ) {}
 
@@ -152,10 +154,31 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   deletePoolMember(poolMember: LoadBalancerNode) {
-    const index = this.poolMembers.indexOf(poolMember);
-    if (index > -1) {
-      this.poolMembers.splice(index, 1);
-    }
+    const modalDto = new YesNoModalDto('Remove Node', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.poolService
+            .v1LoadBalancerPoolsPoolIdNodeNodeIdDelete({
+              poolId: this.PoolId,
+              nodeId: poolMember.id,
+            })
+            .subscribe(() => {
+              const selectedIndex = this.poolMembers.indexOf(poolMember);
+              if (selectedIndex > -1) {
+                this.poolMembers.splice(selectedIndex, 1);
+              }
+              this.getPools();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   savePoolMember(poolMember: LoadBalancerNode) {
@@ -171,15 +194,24 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   createPoolMember() {
+    const poolMember = {
+      TierId: this.TierId,
+      PoolId: this.PoolId,
+      ModalMode: ModalMode.Create,
+    };
     this.subscribeToPoolMemberModal();
     this.poolMemberModalMode = ModalMode.Create;
+    this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
     this.ngx.getModal('poolMemberModal').toggle();
   }
 
   editPoolMember(poolMember: LoadBalancerNode) {
+    const poolMemberDto = {} as any;
+    poolMemberDto.node = poolMember;
+    poolMemberDto.poolId = this.PoolId;
+    poolMemberDto.ModalMode = ModalMode.Edit;
     this.subscribeToPoolMemberModal();
-    this.poolMemberModalMode = ModalMode.Edit;
-    this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
+    this.ngx.setModalData(Object.assign({}, poolMemberDto), 'poolMemberModal');
     this.editPoolMemberIndex = this.poolMembers.indexOf(poolMember);
     this.ngx.getModal('poolMemberModal').toggle();
   }
