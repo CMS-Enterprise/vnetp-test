@@ -8,14 +8,14 @@
 //   ReactiveFormsModule,
 // } from '@angular/forms';
 // import { NgxMaskModule } from 'ngx-mask';
-// import { PoolMemberModalComponent } from './pool-member-modal.component';
+// import { NodeModalComponent } from './node-modal.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 // import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 // import { NgxSmartModalServiceStub } from '../modal-mock';
 
-// describe('PoolMemberModalComponent', () => {
-//   let component: PoolMemberModalComponent;
-//   let fixture: ComponentFixture<PoolMemberModalComponent>;
+// describe('NodeModalComponent', () => {
+//   let component: NodeModalComponent;
+//   let fixture: ComponentFixture<NodeModalComponent>;
 
 //   const ngx = new NgxSmartModalServiceStub();
 
@@ -28,7 +28,7 @@
 //         ReactiveFormsModule,
 //         NgxMaskModule.forRoot(),
 //       ],
-//       declarations: [PoolMemberModalComponent, TooltipComponent],
+//       declarations: [NodeModalComponent, TooltipComponent],
 //       providers: [
 //         { provide: NgxSmartModalService, useValue: ngx },
 //         FormBuilder,
@@ -37,13 +37,13 @@
 //     })
 //       .compileComponents()
 //       .then(() => {
-//         fixture = TestBed.createComponent(PoolMemberModalComponent);
+//         fixture = TestBed.createComponent(NodeModalComponent);
 //         component = fixture.componentInstance;
 //       });
 //   }));
 
 //   beforeEach(() => {
-//     fixture = TestBed.createComponent(PoolMemberModalComponent);
+//     fixture = TestBed.createComponent(NodeModalComponent);
 //     component = fixture.componentInstance;
 //     fixture.detectChanges();
 //   });

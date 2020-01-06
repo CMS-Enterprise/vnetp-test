@@ -3,7 +3,7 @@
 // import { LoadBalancersComponent } from './load-balancers.component';
 // import { VirtualServerModalComponent } from 'src/app/modals/virtual-server-modal/virtual-server-modal.component';
 // import { PoolModalComponent } from 'src/app/modals/pool-modal/pool-modal.component';
-// import { PoolMemberModalComponent } from 'src/app/modals/pool-member-modal/pool-member-modal.component';
+// import { NodeModalComponent } from 'src/app/modals/node-modal/node-modal.component';
 // import { IRuleModalComponent } from 'src/app/modals/irule-modal/irule-modal.component';
 // import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 // import { NgxMaskModule } from 'ngx-mask';
@@ -41,7 +41,7 @@
 //         VirtualServerModalComponent,
 //         PoolModalComponent,
 //         IRuleModalComponent,
-//         PoolMemberModalComponent,
+//         NodeModalComponent,
 //         HealthMonitorModalComponent,
 //         ImportExportComponent,
 //         TooltipComponent,

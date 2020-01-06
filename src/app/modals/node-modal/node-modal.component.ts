@@ -1,38 +1,35 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  ValidateIpv4Any,
-  ValidateIpv4Address,
-} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
-import { PoolMemberModalHelpText } from 'src/app/helptext/help-text-networking';
-import { PoolMember } from 'src/app/models/loadbalancer/pool-member';
+import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerNode,
   V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 
 @Component({
-  selector: 'app-pool-member-modal',
-  templateUrl: './pool-member-modal.component.html',
+  selector: 'app-node-modal',
+  templateUrl: './node-modal.component.html',
 })
-export class PoolMemberModalComponent implements OnInit, OnDestroy {
+export class NodeModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   typeSubscription: Subscription;
   TierId: string;
   PoolId: string;
-  NodeId: string;
+  Node: LoadBalancerNode;
   ModalMode: ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     public poolService: V1LoadBalancerPoolsService,
-    public helpText: PoolMemberModalHelpText,
+    public helpText: NodeModalHelpText,
     public nodeService: V1LoadBalancerNodesService,
   ) {}
 
@@ -42,31 +39,32 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const poolMember = {} as LoadBalancerNode;
-    poolMember.name = this.form.value.name;
-    poolMember.type = this.form.value.type;
-    if (poolMember.type === 'IpAddress') {
-      poolMember.ipAddress = this.form.value.ipAddress;
+    const node = {} as LoadBalancerNode;
+    node.name = this.form.value.name;
+    node.type = this.form.value.type;
+    if (node.type === 'IpAddress') {
+      node.ipAddress = this.form.value.ipAddress;
+      node.autoPopulate = null;
     } else {
-      poolMember.fqdn = this.form.value.fqdn;
+      if (this.form.value.autoPopulate) {
+        node.autoPopulate = this.form.value.autoPopulate;
+      } else {
+        node.autoPopulate = false;
+      }
+      node.fqdn = this.form.value.fqdn;
     }
-    if (this.form.value.autoPopulate) {
-      poolMember.autoPopulate = this.form.value.autoPopulate;
-    } else {
-      poolMember.autoPopulate = false;
-    }
-    poolMember.servicePort = this.form.value.servicePort;
+    node.servicePort = this.form.value.servicePort;
 
     if (this.ModalMode === ModalMode.Create) {
-      poolMember.tierId = this.TierId;
+      node.tierId = this.TierId;
       this.nodeService
         .v1LoadBalancerNodesPost({
-          loadBalancerNode: poolMember,
+          loadBalancerNode: node,
         })
         .subscribe(
           data => {
-            this.NodeId = data.id;
-            this.savePoolMember(data.id);
+            this.Node = data;
+            this.saveNode(data.id);
             this.closeModal();
           },
           error => {},
@@ -74,20 +72,20 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
     } else {
       this.nodeService
         .v1LoadBalancerNodesIdPut({
-          id: this.NodeId,
-          loadBalancerNode: poolMember,
+          id: this.Node.id,
+          loadBalancerNode: node,
         })
         .subscribe(data => {
-          this.NodeId = data.id;
+          this.Node = data;
         });
     }
-    this.ngx.resetModalData('poolMemberModal');
-    this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
-    this.ngx.close('poolMemberModal');
+    this.ngx.resetModalData('nodeModal');
+    this.ngx.setModalData(Object.assign({}, node), 'nodeModal');
+    this.ngx.close('nodeModal');
     this.reset();
   }
 
-  savePoolMember(nodeId: string) {
+  saveNode(nodeId: string) {
     this.poolService
       .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
         poolId: this.PoolId,
@@ -97,12 +95,12 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.close('poolMemberModal');
+    this.ngx.close('nodeModal');
     this.reset();
   }
 
   cancel() {
-    this.ngx.close('poolMemberModal');
+    this.ngx.close('nodeModal');
     this.reset();
   }
 
@@ -144,32 +142,33 @@ export class PoolMemberModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const poolMember = Object.assign(
+    const nodeDto = Object.assign(
       {},
-      this.ngx.getModalData('poolMemberModal') as any,
+      this.ngx.getModalData('nodeModal') as NodeModalDto,
     );
-    this.TierId = poolMember.TierId;
-    this.PoolId = poolMember.PoolId;
-
-    if (!poolMember.ModalMode) {
+    this.TierId = nodeDto.TierId;
+    this.PoolId = nodeDto.PoolId;
+    const node = nodeDto.node;
+    if (!nodeDto.ModalMode) {
       throw Error('Modal Mode not Set.');
     } else {
-      this.ModalMode = poolMember.ModalMode;
-      if (poolMember.ModalMode === ModalMode.Edit) {
-        this.NodeId = poolMember.node.id;
-        this.PoolId = poolMember.poolId;
+      this.ModalMode = nodeDto.ModalMode;
+      if (nodeDto.ModalMode === ModalMode.Edit) {
+        console.log('here', node, nodeDto);
+        this.Node = node;
+        this.PoolId = nodeDto.PoolId;
       }
     }
 
-    if (poolMember !== undefined) {
-      this.form.controls.name.setValue(poolMember.node.name);
-      this.form.controls.type.setValue(poolMember.node.type);
-      this.form.controls.ipAddress.setValue(poolMember.node.ipAddress);
-      this.form.controls.fqdn.setValue(poolMember.node.fqdn);
-      this.form.controls.autoPopulate.setValue(poolMember.node.autoPopulate);
-      this.form.controls.servicePort.setValue(poolMember.node.servicePort);
+    if (node !== undefined) {
+      this.form.controls.name.setValue(node.name);
+      this.form.controls.type.setValue(node.type);
+      this.form.controls.ipAddress.setValue(node.ipAddress);
+      this.form.controls.fqdn.setValue(node.fqdn);
+      this.form.controls.autoPopulate.setValue(node.autoPopulate);
+      this.form.controls.servicePort.setValue(node.servicePort);
     }
-    this.ngx.resetModalData('poolMemberModal');
+    this.ngx.resetModalData('nodeModal');
   }
 
   private buildForm() {

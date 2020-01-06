@@ -47,7 +47,7 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
 import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
-import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { NodeModalComponent } from './modals/node-modal/node-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
 import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
@@ -108,7 +108,7 @@ export function apiConfigFactory(): Configuration {
     VirtualServerModalComponent,
     LoadBalancersComponent,
     PoolModalComponent,
-    PoolMemberModalComponent,
+    NodeModalComponent,
     IRuleModalComponent,
     HealthMonitorModalComponent,
     NetworkInterfacesComponent,

@@ -28,13 +28,18 @@
         Pools <tooltip [message]="helpText.Pools"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 2; getIrules()">
+    <li class="nav-item" (click)="navIndex = 2; getNodes()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">
+        Nodes <tooltip [message]="helpText.Nodes"></tooltip>
+      </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 3; getIrules()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
         iRules <tooltip [message]="helpText.IRules"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 3; getHealthMonitors()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
+    <li class="nav-item" (click)="navIndex = 4; getHealthMonitors()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 4 }">
         Health Monitors <tooltip [message]="helpText.HealthMonitors"></tooltip>
       </a>
     </li>
@@ -118,7 +123,7 @@
           <th scope="col">Name</th>
           <th scope="col">LB Method</th>
           <th scope="col">Service Port</th>
-          <th scope="col">Pool Members</th>
+          <th scope="col">Nodes</th>
           <th scope="col">Health Monitors</th>
           <th scope="col"></th>
         </tr>
@@ -148,13 +153,71 @@
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="5">No Pools in this VRF</td>
+          <td colspan="5">No Pools in this tier</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div *ngIf="navIndex == 2">
+    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="openNodeModal('Create')"
+        aria-label="Create Node"
+      >
+        <fa name="plus"></fa>
+        Create Node
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Ip Address</th>
+          <th scope="col">FQDN</th>
+          <th scope="col">Autopopulate</th>
+          <th scope="col">Service Port</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let node of nodes">
+          <td>
+            <span>{{ node?.name }}</span>
+          </td>
+          <td>
+            <span>{{ node?.type }}</span>
+          </td>
+          <td>
+            <span>{{ node?.ipAddress }}</span>
+          </td>
+          <td>
+            <span>{{ node?.fqdn }}</span>
+          </td>
+          <td>
+            <span>{{ node?.autoPopulate }}</span>
+          </td>
+          <td>
+            <span>{{ node?.servicePort }}</span>
+          </td>
+          <td class="item-actions">
+            <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node">
+            </fa>
+            <fa name="undo" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': node?.deletedAt }" (click)="deleteNode(node)" aria-label="Soft-Delete/Delete Node"></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!nodes?.length" class="text-center">
+          <td colspan="5">No Nodes in this tier</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex == 3">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button
         type="button"
@@ -200,7 +263,7 @@
     </table>
   </div>
 
-  <div *ngIf="navIndex == 3">
+  <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button
         type="button"
@@ -272,7 +335,7 @@
 
   <app-virtual-server-modal></app-virtual-server-modal>
   <app-pool-modal></app-pool-modal>
-  <app-pool-member-modal></app-pool-member-modal>
+  <app-node-modal></app-node-modal>
   <app-irule-modal></app-irule-modal>
   <app-health-monitor-modal></app-health-monitor-modal>
 </div>

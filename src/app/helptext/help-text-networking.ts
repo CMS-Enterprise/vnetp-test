@@ -1,5 +1,5 @@
 // tslint:disable: max-line-length
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -32,7 +32,8 @@ export class LoadBalancersHelpText {
 
   Tier = `Tier that Load Balancer configurations are created within.`;
   VirtualServers = `Manage Virtual Servers.`;
-  Pools = `Manage Pools and Pool Members.`;
+  Pools = `Manage Pools and Nodes.`;
+  Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
 }
@@ -174,7 +175,7 @@ export class VirtualServerModalHelpText {
 export class PoolModalHelpText {
   Name = `Name of Pool.`;
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
-  PoolMembers = `Members of the Pool.`;
+  Nodes = `Nodes of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
   ServicePort = `Service Port of the Pool.`;
@@ -183,12 +184,13 @@ export class PoolModalHelpText {
 @Injectable({
   providedIn: 'root',
 })
-export class PoolMemberModalHelpText {
-  Name = `Name of Pool Member.`;
-  Type = `Pool Member Type (FQDN, IP Address).`;
-  IpAddress = `IP Address of Pool Member.`;
-  Fqdn = `FQDN of Pool Member.`;
-  ServicePort = `Port that the Pool Member is listening for requests on.`;
+export class NodeModalHelpText {
+  Name = `Name of Node.`;
+  Type = `Node Type (FQDN, IP Address).`;
+  IpAddress = `IP Address of Node.`;
+  Fqdn = `FQDN of Node.`;
+  ServicePort = `Port that the Node is listening for requests on.`;
+  Priority = `Priority of node.`;
 }
 
 @Injectable({

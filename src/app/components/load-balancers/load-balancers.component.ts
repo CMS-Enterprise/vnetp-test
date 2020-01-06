@@ -3,10 +3,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
-import { ToastrService } from 'ngx-toastr';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -22,8 +20,10 @@ import {
   V1LoadBalancerPoolsService,
   V1LoadBalancerHealthMonitorsService,
   LoadBalancerNode,
+  V1LoadBalancerNodesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -38,11 +38,13 @@ export class LoadBalancersComponent
 
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];
+  nodes: LoadBalancerNode[];
   irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
 
   editVirtualServerIndex: number;
   editPoolIndex: number;
+  editNodeIndex: number;
   editIRuleIndex: number;
   editHealthMonitorIndex: number;
 
@@ -52,6 +54,7 @@ export class LoadBalancersComponent
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
+  nodeModalSubscription: Subscription;
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
 
@@ -71,9 +74,8 @@ export class LoadBalancersComponent
     private irulesService: V1LoadBalancerIrulesService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
     private poolsService: V1LoadBalancerPoolsService,
+    private nodeService: V1LoadBalancerNodesService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
-    private hs: HelpersService,
-    private toastr: ToastrService,
     public helpText: LoadBalancersHelpText,
   ) {}
 
@@ -98,6 +100,16 @@ export class LoadBalancersComponent
       })
       .subscribe(data => {
         this.pools = data;
+      });
+  }
+
+  getNodes() {
+    this.nodeService
+      .v1LoadBalancerNodesGet({
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
+      .subscribe(data => {
+        this.nodes = data;
       });
   }
 
@@ -127,8 +139,10 @@ export class LoadBalancersComponent
     } else if (this.navIndex === 1) {
       this.getPools();
     } else if (this.navIndex === 2) {
-      this.getIrules();
+      this.getNodes();
     } else if (this.navIndex === 3) {
+      this.getIrules();
+    } else if (this.navIndex === 4) {
       this.getHealthMonitors();
     }
   }
@@ -172,6 +186,25 @@ export class LoadBalancersComponent
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'poolModal');
     this.ngx.getModal('poolModal').open();
+  }
+
+  openNodeModal(modalMode: ModalMode, node?: LoadBalancerNode) {
+    if (modalMode === ModalMode.Edit && !node) {
+      throw new Error('Node required.');
+    }
+    const dto = new NodeModalDto();
+    dto.node = node;
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
+
+    if (modalMode === ModalMode.Edit) {
+      this.editNodeIndex = this.nodes.indexOf(node);
+    }
+
+    this.subscribeToNodeModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'nodeModal');
+    this.ngx.getModal('nodeModal').open();
   }
 
   openIRuleModal(modalMode: ModalMode, irule?: LoadBalancerIrule) {
@@ -233,6 +266,17 @@ export class LoadBalancersComponent
         this.getPools();
         this.ngx.resetModalData('poolModal');
         this.poolModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
+      });
+  }
+
+  subscribeToNodeModal() {
+    this.nodeModalSubscription = this.ngx
+      .getModal('nodeModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getNodes();
+        this.ngx.resetModalData('nodeModal');
+        this.nodeModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
       });
   }
@@ -387,6 +431,37 @@ export class LoadBalancersComponent
     );
   }
 
+  deleteNode(node: LoadBalancerNode) {
+    if (node.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = node.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!node.deletedAt) {
+        this.nodeService
+          .v1LoadBalancerNodesIdSoftDelete({ id: node.id })
+          .subscribe(data => {
+            this.getNodes();
+          });
+      } else {
+        this.nodeService
+          .v1LoadBalancerNodesIdDelete({ id: node.id })
+          .subscribe(data => {
+            this.getNodes();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Node?`,
+        `Do you want to ${deleteDescription} node "${node.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
   restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {
     if (virtualServer.deletedAt) {
       this.virtualServersService
@@ -400,6 +475,14 @@ export class LoadBalancersComponent
       this.poolsService
         .v1LoadBalancerPoolsIdRestorePatch({ id: pool.id })
         .subscribe(data => this.getPools());
+    }
+  }
+
+  restoreNode(node: LoadBalancerNode) {
+    if (node.deletedAt) {
+      this.nodeService
+        .v1LoadBalancerNodesIdRestorePatch({ id: node.id })
+        .subscribe(data => this.getNodes());
     }
   }
 

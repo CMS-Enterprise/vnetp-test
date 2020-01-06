@@ -77,17 +77,17 @@
 
       <hr />
 
-      <label>Pool Members </label>
-      <tooltip [message]="helpText.PoolMembers"></tooltip>
+      <label>Nodes </label>
+      <tooltip [message]="helpText.Nodes"></tooltip>
       <div class="btn-group-sm mb-2 pull-right" role="group">
         <button
           type="button"
           class="btn btn-info"
-          (click)="createPoolMember()"
-          aria-label="Create Pool Member"
+          (click)="createNode()"
+          aria-label="Create Node"
         >
           <fa name="plus"></fa>
-          Add Pool Member
+          Add Node
         </button>
       </div>
 
@@ -102,32 +102,32 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let poolMember of poolMembers">
+          <tr *ngFor="let node of nodes">
             <td>
-              <p>{{ poolMember?.name }}</p>
+              <p>{{ node?.name }}</p>
             </td>
             <td>
-              <p>{{ poolMember?.type }}</p>
+              <p>{{ node?.type }}</p>
             </td>
             <td>
-              <p *ngIf="poolMember.type == 'IpAddress'">
-                {{ poolMember?.IpAddress }}
+              <p *ngIf="node.type == 'IpAddress'">
+                {{ node?.IpAddress }}
               </p>
-              <p *ngIf="poolMember.type == 'Fqdn'">{{ poolMember?.fqdn }}</p>
+              <p *ngIf="node.type == 'Fqdn'">{{ node?.fqdn }}</p>
             </td>
             <td>
-              <p>{{ poolMember?.servicePort }}</p>
+              <p>{{ node?.servicePort }}</p>
             </td>
             <td>
-              <p>{{ poolMember?.autoPopulate }}</p>
+              <p>{{ node?.autoPopulate }}</p>
             </td>
             <td>
-              <fa name="pencil" (click)="editPoolMember(poolMember)"> </fa>
-              <fa name="trash" (click)="deletePoolMember(poolMember)"> </fa>
+              <fa *ngIf="node.id" name="pencil" (click)="editNode(node)"> </fa>
+              <fa *ngIf="node.id" name="trash" (click)="deleteNode(node)"> </fa>
             </td>
           </tr>
-          <tr *ngIf="!poolMembers?.length" class="text-center">
-            <td colspan="5">No Pool Members</td>
+          <tr *ngIf="!nodes?.length" class="text-center">
+            <td colspan="5">No Nodes</td>
           </tr>
         </tbody>
       </table>
@@ -160,10 +160,6 @@
             >
             Select Health Monitor
           </button>
-          <tooltip
-            *ngIf="ModalMode === 'Create'"
-            [message]="'Must create Pool and edit to add Health Monitor'">
-          </tooltip>
           </div>
         </div>
 

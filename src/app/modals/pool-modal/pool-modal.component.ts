@@ -10,9 +10,9 @@ import {
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
   V1LoadBalancerPoolsService,
-  V1LoadBalancerNodesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 
 @Component({
   selector: 'app-pool-modal',
@@ -22,10 +22,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-  poolMembers: LoadBalancerNode[];
-  poolMemberModalMode: ModalMode;
-  editPoolMemberIndex: any;
-  poolMemberModalSubscription: Subscription;
+  nodes: LoadBalancerNode[];
+  nodesModalMode: ModalMode;
+  editNodeIndex: number;
+  nodeModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
   TierId: string;
@@ -39,7 +39,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private poolService: V1LoadBalancerPoolsService,
-    private nodeService: V1LoadBalancerNodesService,
     public helpText: PoolModalHelpText,
   ) {}
 
@@ -153,8 +152,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   private setFormValidators() {}
 
-  deletePoolMember(poolMember: LoadBalancerNode) {
-    const modalDto = new YesNoModalDto('Remove Node', '');
+  deleteNode(node: LoadBalancerNode) {
+    const modalDto = new YesNoModalDto(
+      'Remove Node',
+      `Are you sure you would like to delete "${node.name}" node?`,
+    );
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
@@ -162,17 +164,19 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       .getModal('yesNoModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         const data = modal.getData() as YesNoModalDto;
+        console.log(data);
+        console.log(node);
         modal.removeData();
         if (data && data.modalYes) {
           this.poolService
             .v1LoadBalancerPoolsPoolIdNodeNodeIdDelete({
               poolId: this.PoolId,
-              nodeId: poolMember.id,
+              nodeId: node.id,
             })
             .subscribe(() => {
-              const selectedIndex = this.poolMembers.indexOf(poolMember);
+              const selectedIndex = this.nodes.indexOf(node);
               if (selectedIndex > -1) {
-                this.poolMembers.splice(selectedIndex, 1);
+                this.nodes.splice(selectedIndex, 1);
               }
               this.getPools();
             });
@@ -181,53 +185,51 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       });
   }
 
-  savePoolMember(poolMember: LoadBalancerNode) {
-    if (!this.poolMembers) {
-      this.poolMembers = new Array<LoadBalancerNode>();
+  saveNode(node: LoadBalancerNode) {
+    if (!this.nodes) {
+      this.nodes = new Array<LoadBalancerNode>();
     }
-
-    if (this.poolMemberModalMode === ModalMode.Create) {
-      this.poolMembers.push(poolMember);
+    if (this.ModalMode === ModalMode.Create) {
+      this.nodes.push(node);
     } else {
-      this.poolMembers[this.editPoolMemberIndex] = poolMember;
+      this.nodes[this.editNodeIndex] = node;
     }
   }
 
-  createPoolMember() {
-    const poolMember = {
+  createNode() {
+    const node = {
       TierId: this.TierId,
       PoolId: this.PoolId,
       ModalMode: ModalMode.Create,
     };
-    this.subscribeToPoolMemberModal();
-    this.poolMemberModalMode = ModalMode.Create;
-    this.ngx.setModalData(Object.assign({}, poolMember), 'poolMemberModal');
-    this.ngx.getModal('poolMemberModal').toggle();
+    this.subscribeToNodeModal();
+    this.ModalMode = ModalMode.Create;
+    this.ngx.setModalData(Object.assign({}, node), 'nodeModal');
+    this.ngx.getModal('nodeModal').toggle();
   }
 
-  editPoolMember(poolMember: LoadBalancerNode) {
-    const poolMemberDto = {} as any;
-    poolMemberDto.node = poolMember;
-    poolMemberDto.poolId = this.PoolId;
-    poolMemberDto.ModalMode = ModalMode.Edit;
-    this.subscribeToPoolMemberModal();
-    this.ngx.setModalData(Object.assign({}, poolMemberDto), 'poolMemberModal');
-    this.editPoolMemberIndex = this.poolMembers.indexOf(poolMember);
-    this.ngx.getModal('poolMemberModal').toggle();
+  editNode(node: LoadBalancerNode) {
+    const nodeDto = {} as NodeModalDto;
+    nodeDto.node = node;
+    nodeDto.PoolId = this.PoolId;
+    nodeDto.ModalMode = ModalMode.Edit;
+    this.subscribeToNodeModal();
+    this.ngx.setModalData(Object.assign({}, nodeDto), 'nodeModal');
+    this.editNodeIndex = this.nodes.indexOf(node);
+    this.ngx.getModal('nodeModal').toggle();
   }
 
-  subscribeToPoolMemberModal() {
-    this.poolMemberModalSubscription = this.ngx
-      .getModal('poolMemberModal')
+  subscribeToNodeModal() {
+    this.nodeModalSubscription = this.ngx
+      .getModal('nodeModal')
       .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
         let data = modal.getData() as LoadBalancerNode;
-
         if (data !== undefined) {
           data = Object.assign({}, data);
-          this.savePoolMember(data);
+          this.saveNode(data);
         }
-        this.ngx.resetModalData('poolMemberModal');
-        this.poolMemberModalSubscription.unsubscribe();
+        this.ngx.resetModalData('nodeModal');
+        this.nodeModalSubscription.unsubscribe();
       });
   }
 
@@ -265,9 +267,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       }
 
       if (pool.nodes) {
-        this.poolMembers = pool.nodes;
+        this.nodes = pool.nodes;
       } else {
-        this.poolMembers = new Array<LoadBalancerNode>();
+        this.nodes = new Array<LoadBalancerNode>();
       }
     }
 
@@ -337,7 +339,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
-    this.poolMembers = new Array<LoadBalancerNode>();
+    this.nodes = new Array<LoadBalancerNode>();
     this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
     this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
   }
