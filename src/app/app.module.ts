@@ -19,14 +19,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
-import { NetworksComponent } from './components/networks/networks.component';
 import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
@@ -50,8 +47,6 @@ import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { NodeModalComponent } from './modals/node-modal/node-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
-import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
@@ -68,6 +63,14 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
 import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { ResolvePipe } from './pipes/resolve.pipe';
+import { StaticRouteModalComponent } from './modals/static-route-modal/static-route-modal.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
+import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.component';
+import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
+import { TiersComponent } from './components/tiers/tiers.component';
+import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -81,12 +84,9 @@ export function apiConfigFactory(): Configuration {
     AppComponent,
     DashboardComponent,
     LoginComponent,
-    NetworksComponent,
-    NetworksDetailComponent,
     FirewallRulesComponent,
     FirewallRulesDetailComponent,
     JobsComponent,
-    CreateNetworkComponent,
     NavbarComponent,
     NotfoundComponent,
     BreadcrumbComponent,
@@ -111,8 +111,6 @@ export function apiConfigFactory(): Configuration {
     NodeModalComponent,
     IRuleModalComponent,
     HealthMonitorModalComponent,
-    NetworkInterfacesComponent,
-    LogicalInterfaceModalComponent,
     SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
@@ -125,6 +123,14 @@ export function apiConfigFactory(): Configuration {
     IntraVrfRulesComponent,
     ContractModalComponent,
     YesNoModalComponent,
+    FilterPipe,
+    ResolvePipe,
+    StaticRouteModalComponent,
+    SubnetsVlansComponent,
+    SubnetModalComponent,
+    VlanModalComponent,
+    TiersComponent,
+    TierModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

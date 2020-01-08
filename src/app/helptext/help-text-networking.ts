@@ -16,12 +16,40 @@ export class NetworkDetailHelpText {
 @Injectable({
   providedIn: 'root',
 })
-export class NetworkCreateHelpText {
+export class SubnetsVlansHelpText {
+  Subnets = `IPv4/IPv6 Subnets within the selected Tier.`;
+  Vlans = `Vlans within the selected Tier.`;
+  Tier = `Tier that Subnets and VLANs are created within.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SubnetModalHelpText {
   Name = `Name of the Subnet.`;
+  Description = 'Description of the Subnet.';
   Vrf = `Tier (VRF) that the subnet will be created within.`;
   Protocol = `IP Protocol of the Subnet.`;
-  CidrAddress = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
-  VlanId = `VLAN ID associated with the Subnet.`;
+  Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
+  Gateway = `Gateway Address of the Subnet.`;
+  Vlan = `VLAN associated with the Subnet.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class VlanModalHelpText {
+  Name = 'Name of the VLAN.';
+  Description = 'Description of the VLAN.';
+  Vlan = `VLAN Number.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TierModalHelpText {
+  Name = 'Name of the Tier.';
+  Description = 'Description of the Tier.';
 }
 
 @Injectable({
@@ -70,7 +98,7 @@ export class FirewallRuleModalHelpText {
   Action = `Action that the firewall will take on traffic that matches this rule.`;
   Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
-  Log = `Indicates whether traffic that matches this rule should be logged.`;
+  Logging = `Indicates whether traffic that matches this rule should be logged.`;
   SourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
@@ -81,6 +109,7 @@ export class FirewallRuleModalHelpText {
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
   ServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
   ServiceObjectGroupType = `Service Object Group created under IPAM.`;
+  RuleIndex = `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`;
 }
 
 @Injectable({
@@ -225,4 +254,19 @@ export class ContractModalHelpText {
   Name = `Contract Name.`;
   Description = 'Contract Description.';
   FilterEntries = 'Filter Entries to allow specific traffic.';
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DashboardHelpText {
+  Datacenters = 'Total Datacenters within the current tenant.';
+  Tiers = 'Total Tiers within the current tenant.';
+  Vlans = 'Total Vlans within the current tenant.';
+  Subnets = 'Total Subnets within the current tenant.';
+  LbVirtualServers =
+    'Total Load Balancer Virtual Servers within the current tenant.';
+  VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
+  ZvmLpars = 'Total z/VM LPARs within the current tenant.';
+  ZosLpars = 'Total z/OS LPARs within the current tenant.';
 }

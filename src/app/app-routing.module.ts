@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NetworksComponent } from './components/networks/networks.component';
 import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
@@ -20,46 +17,32 @@ import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
-import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
+import { TiersComponent } from './components/tiers/tiers.component';
 
 // tslint:disable: max-line-length
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'networks',
-    component: NetworksComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Subnets' },
-  },
-  {
-    path: 'networks/create',
-    component: CreateNetworkComponent,
+    path: 'subnets-vlans',
+    component: SubnetsVlansComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Create Subnet' },
+    data: { breadcrumb: 'Subnets & VLANs' },
   },
   {
-    path: 'networks/edit/:id',
-    component: NetworksDetailComponent,
+    path: 'tiers',
+    component: TiersComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Subnet' },
-  },
-  {
-    path: 'network-interfaces',
-    component: NetworkInterfacesComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Network Interfaces' },
+    data: { breadcrumb: 'Tiers' },
   },
   // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {
@@ -95,25 +78,11 @@ const routes: Routes = [
     data: { breadcrumb: 'Firewall Rules' },
   },
   {
-    path: 'firewall-rules/intravrf/edit/:id',
-    component: IntraVrfRulesComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Intra-VRF Rules' },
-  },
-  {
-    path: 'firewall-rules/intervrf/edit/:id',
+    path: 'firewall-rule-group/edit/:id',
     component: FirewallRulesDetailComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'Inter-VRF Firewall Rules' },
-  },
-  {
-    path: 'firewall-rules/external/edit/:id',
-    component: FirewallRulesDetailComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'External Firewall Rules' },
+    data: { breadcrumb: 'Firewall Rule Group' },
   },
   {
     path: 'load-balancers',

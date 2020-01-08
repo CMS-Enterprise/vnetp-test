@@ -53,6 +53,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     } else {
+      modalServiceObject.protocol = null;
       this.serviceObjectService
         .v1NetworkSecurityServiceObjectsIdPut({
           id: this.ServiceObjectId,

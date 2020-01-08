@@ -1,0 +1,65 @@
+<div>
+  <h4>Tiers <span class="badge badge-primary">{{ currentDatacenter?.name }}</span></h4>
+
+  <div *ngIf="navIndex == 0">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="openTierModal('Create')"
+        aria-label="Create Tier"
+      >
+        <fa name="plus"></fa>
+        Create Tier
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tier of tiers">
+          <td>
+            <span>{{ tier?.name }}</span>
+          </td>
+          <td>
+            <span>{{ tier?.description }}</span>
+          </td>
+          <td class="item-actions">
+            <fa
+              name="pencil"
+              *ngIf="!tier?.deletedAt"
+              (click)="openTierModal('Edit', tier)"
+              aria-label="Edit Tier"
+            >
+            </fa>
+            <fa
+              name="undo"
+              *ngIf="tier?.deletedAt"
+              class="fg-success"
+              (click)="restoreTier(tier)"
+              aria-label="Restore Tier"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': tier.deletedAt }"
+              (click)="deleteTier(tier)"
+              aria-label="Soft-Delete/Delete Tier"
+            >
+            </fa>
+          </td>
+        </tr>
+        <tr *ngIf="!tiers?.length" class="text-center">
+          <td colspan="9">No Tiers in this Datacenter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<app-tier-modal></app-tier-modal>
+<app-yes-no-modal></app-yes-no-modal>
