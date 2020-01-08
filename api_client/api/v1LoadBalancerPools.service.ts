@@ -617,7 +617,7 @@ export class V1LoadBalancerPoolsService {
         }
 
 
-        return this.httpClient.delete<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
+        return this.httpClient.delete<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/health-monitor/${encodeURIComponent(String(healthMonitorId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -658,7 +658,7 @@ export class V1LoadBalancerPoolsService {
         }
 
 
-        return this.httpClient.post<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/healthMonitor/${encodeURIComponent(String(healthMonitorId))}`,
+        return this.httpClient.post<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/health-monitor/${encodeURIComponent(String(healthMonitorId))}`,
             null,
             {
                 withCredentials: this.configuration.withCredentials,

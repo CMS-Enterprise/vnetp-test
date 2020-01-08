@@ -5,7 +5,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IpaddressesComponent } from '../../ipaddresses/ipaddresses.component';
+// import { IpaddressesComponent } from '../../ipaddresses/ipaddresses.component';
 import { TooltipComponent } from '../../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
@@ -27,7 +27,7 @@ describe('NetworksDetailComponent', () => {
       ],
       declarations: [
         NetworksDetailComponent,
-        IpaddressesComponent,
+        // IpaddressesComponent,
         TooltipComponent,
       ],
       providers: [

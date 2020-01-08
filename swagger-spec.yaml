@@ -7083,7 +7083,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/load-balancer/pools/{poolId}/healthMonitor/{healthMonitorId}':
+  '/v1/load-balancer/pools/{poolId}/health-monitor/{healthMonitorId}':
     post:
       summary: Add Health Monitor to Load Balancer Pool
       parameters:
