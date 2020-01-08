@@ -84,7 +84,7 @@
             <span>{{ virtualServer?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ virtualServer?.defaultPoolId }}</span>
+            <span>{{ virtualServer?.defaultPoolId | resolve: getPoolName}}</span>
           </td>
           <td class="item-actions">
             <fa

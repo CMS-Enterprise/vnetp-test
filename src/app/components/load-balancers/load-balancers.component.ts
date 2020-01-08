@@ -68,7 +68,7 @@ export class LoadBalancersComponent
 
   constructor(
     private ngx: NgxSmartModalService,
-    private datacenterService: DatacenterContextService,
+    public datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
     private irulesService: V1LoadBalancerIrulesService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
@@ -89,7 +89,7 @@ export class LoadBalancersComponent
       });
   }
 
-  getPools() {
+  getPools(getVirtualServers = false) {
     this.poolsService
       .v1LoadBalancerPoolsGet({
         join: 'nodes,healthMonitors',
@@ -97,6 +97,10 @@ export class LoadBalancersComponent
       })
       .subscribe(data => {
         this.pools = data;
+
+        if (getVirtualServers) {
+          this.getVirtualServers();
+        }
       });
   }
 
@@ -133,8 +137,7 @@ export class LoadBalancersComponent
 
   getObjectsForNavIndex() {
     if (this.navIndex === 0) {
-      this.getVirtualServers();
-      this.getPools();
+      this.getPools(true);
       this.getIrules();
     } else if (this.navIndex === 1) {
       this.getPools();
@@ -148,6 +151,11 @@ export class LoadBalancersComponent
       this.getHealthMonitors();
     }
   }
+
+  getPoolName = (poolId: string) => {
+    return this.pools.find(p => p.id === poolId).name || 'Error Resolving Name';
+    // tslint:disable-next-line: semicolon
+  };
 
   openVirtualServerModal(
     modalMode: ModalMode,
