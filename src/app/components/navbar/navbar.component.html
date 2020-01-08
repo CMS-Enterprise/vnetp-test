@@ -232,7 +232,7 @@
 
     <select [(ngModel)]="selectedDatacenter" class="form-control">
       <option></option>
-      <option *ngFor="let datacenter of datacenters | filter: filterDatacenters" [ngValue]="datacenter">{{
+      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{
         datacenter.name
       }}</option>
     </select>
