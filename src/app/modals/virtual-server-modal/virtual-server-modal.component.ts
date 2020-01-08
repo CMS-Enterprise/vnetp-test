@@ -53,7 +53,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     virtualServer.sourceIpAddress = this.form.value.sourceAddress;
     virtualServer.destinationIpAddress = this.form.value.destinationAddress;
     virtualServer.servicePort = this.form.value.servicePort;
-    virtualServer.defaultPool = this.form.value.pool;
+    virtualServer.defaultPoolId = this.form.value.pool;
     virtualServer.sourceAddressTranslation = this.form.value.sourceAddressTranslation;
 
     if (this.ModalMode === ModalMode.Create) {
@@ -152,14 +152,14 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.form.controls.sourceAddressTranslation.setValue(
         virtualServer.sourceAddressTranslation,
       );
-      this.form.controls.pool.setValue(virtualServer.defaultPool);
+      this.form.controls.pool.setValue(virtualServer.defaultPoolId);
 
       if (dto.VirtualServer.irules) {
         this.selectedIRules = dto.VirtualServer.irules;
       }
     }
 
-    this.getAvailableIRules(dto.IRules.map(i => i));
+    this.getAvailableIRules(dto.IRules);
     this.ngx.resetModalData('virtualServerModal');
   }
 

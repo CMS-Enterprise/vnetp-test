@@ -68,7 +68,6 @@ export class LoadBalancersComponent
 
   constructor(
     private ngx: NgxSmartModalService,
-    private api: AutomationApiService,
     private datacenterService: DatacenterContextService,
     private tierService: V1TiersService,
     private irulesService: V1LoadBalancerIrulesService,
@@ -80,15 +79,13 @@ export class LoadBalancersComponent
   ) {}
 
   getVirtualServers() {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerVirtualServers,loadBalancerPools,loadBalancerIrules',
+    this.virtualServersService
+      .v1LoadBalancerVirtualServersGet({
+        join: 'irules',
+        filter: `tierId||eq||${this.currentTier.id}`,
       })
       .subscribe(data => {
-        this.virtualServers = data.loadBalancerVirtualServers;
-        this.pools = data.loadBalancerPools;
-        this.irules = data.loadBalancerIrules;
+        this.virtualServers = data;
       });
   }
 
@@ -128,16 +125,19 @@ export class LoadBalancersComponent
         id: this.currentTier.id,
         join: 'loadBalancerHealthMonitors',
       })
-      .subscribe(
-        data => (this.healthMonitors = data.loadBalancerHealthMonitors),
-      );
+      .subscribe(data => {
+        this.healthMonitors = data.loadBalancerHealthMonitors;
+      });
   }
 
   getObjectsForNavIndex() {
     if (this.navIndex === 0) {
       this.getVirtualServers();
+      this.getPools();
+      this.getIrules();
     } else if (this.navIndex === 1) {
       this.getPools();
+      this.getHealthMonitors();
     } else if (this.navIndex === 2) {
       this.getNodes();
     } else if (this.navIndex === 3) {
@@ -264,6 +264,7 @@ export class LoadBalancersComponent
       .getModal('poolModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getPools();
+        this.getHealthMonitors();
         this.ngx.resetModalData('poolModal');
         this.poolModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();

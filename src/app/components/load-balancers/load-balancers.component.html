@@ -18,12 +18,12 @@
   </div>
 
   <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getVirtualServers()">
+    <li class="nav-item" (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
         Virtual Servers <tooltip [message]="helpText.VirtualServers"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 1; getPools()">
+    <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors();">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
         Pools <tooltip [message]="helpText.Pools"></tooltip>
       </a>
@@ -181,6 +181,7 @@
           <th scope="col">FQDN</th>
           <th scope="col">Autopopulate</th>
           <th scope="col">Service Port</th>
+          <th scope="col">Priority</th>
         </tr>
       </thead>
       <tbody>
@@ -203,6 +204,9 @@
           <td>
             <span>{{ node?.servicePort }}</span>
           </td>
+          <td>
+            <span>{{ node?.priority }}</span>
+          </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node">
             </fa>
@@ -211,7 +215,7 @@
           </td>
         </tr>
         <tr *ngIf="!nodes?.length" class="text-center">
-          <td colspan="5">No Nodes in this tier</td>
+          <td colspan="7">No Nodes in this tier</td>
         </tr>
       </tbody>
     </table>

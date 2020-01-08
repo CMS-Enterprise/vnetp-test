@@ -9343,6 +9343,10 @@ definitions:
         type: number
         minimum: 1
         maximum: 65535
+      priority:
+        type: number
+        minimum: 1
+        maximum: 100
       tierId:
         type: string
     required:
@@ -9352,6 +9356,7 @@ definitions:
       - fqdn
       - autoPopulate
       - servicePort
+      - priority
       - tierId
   LoadBalancerHealthMonitor:
     type: object

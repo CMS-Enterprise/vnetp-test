@@ -84,6 +84,7 @@
           type="button"
           class="btn btn-info"
           (click)="createNode()"
+          [disabled]="ModalMode === 'Create'"
           aria-label="Create Node"
         >
           <fa name="plus"></fa>
@@ -96,9 +97,10 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
-            <th scope="col">FQDN/Address</th>
-            <th scope="col">Service Port</th>
+            <th scope="col">FQDN/IP</th>
+            <th scope="col">Port</th>
             <th scope="col">Auto Populate</th>
+            <th scope="col">Priority</th>
           </tr>
         </thead>
         <tbody>
@@ -122,12 +124,15 @@
               <p>{{ node?.autoPopulate }}</p>
             </td>
             <td>
+              <p>{{ node?.priority }}</p>
+            </td>
+            <td>
               <fa *ngIf="node.id" name="pencil" (click)="editNode(node)"> </fa>
               <fa *ngIf="node.id" name="trash" (click)="deleteNode(node)"> </fa>
             </td>
           </tr>
           <tr *ngIf="!nodes?.length" class="text-center">
-            <td colspan="5">No Nodes</td>
+            <td colspan="6">No Nodes</td>
           </tr>
         </tbody>
       </table>

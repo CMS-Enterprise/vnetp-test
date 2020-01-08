@@ -54,6 +54,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       node.fqdn = this.form.value.fqdn;
     }
     node.servicePort = this.form.value.servicePort;
+    node.priority = this.form.value.priority;
 
     if (this.ModalMode === ModalMode.Create) {
       node.tierId = this.TierId;
@@ -86,12 +87,14 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   saveNode(nodeId: string) {
-    this.poolService
-      .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
-        poolId: this.PoolId,
-        nodeId,
-      })
-      .subscribe(data => {});
+    if (this.PoolId) {
+      this.poolService
+        .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
+          poolId: this.PoolId,
+          nodeId,
+        })
+        .subscribe(data => {});
+    }
   }
 
   private closeModal() {
@@ -154,7 +157,6 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     } else {
       this.ModalMode = nodeDto.ModalMode;
       if (nodeDto.ModalMode === ModalMode.Edit) {
-        console.log('here', node, nodeDto);
         this.Node = node;
         this.PoolId = nodeDto.PoolId;
       }
@@ -167,6 +169,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       this.form.controls.fqdn.setValue(node.fqdn);
       this.form.controls.autoPopulate.setValue(node.autoPopulate);
       this.form.controls.servicePort.setValue(node.servicePort);
+      this.form.controls.priority.setValue(node.priority);
     }
     this.ngx.resetModalData('nodeModal');
   }
@@ -184,6 +187,14 @@ export class NodeModalComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.min(1),
           Validators.max(65535),
+        ]),
+      ],
+      priority: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(100),
         ]),
       ],
     });
