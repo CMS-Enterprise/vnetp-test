@@ -139,6 +139,100 @@
 
       <div class="form-row">
         <div class="form-group col-md-12">
+          <label for="availableClientSslProfiles">Available Client SSL Profiles</label>
+          <tooltip [message]="helpText.AvailableClientSslProfiles"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availableClientSslProfiles" formControlName="selectedClientSslProfiles">
+              <option></option>
+              <ng-container *ngFor="let clientSslProfile of availableClientSslProfiles[0] | keyvalue">
+                <option *ngIf="!selectedClientSslProfiles.includes(clientSslProfile.value)" [ngValue]="clientSslProfile.value">
+                {{ clientSslProfile.key }}</option>
+              </ng-container>
+            </select>
+            <button type="button" class="btn btn-sm btn-info" (click)="selectClientSslProfile();">
+              Select Client SSL Profile
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedClientSslProfiles">Selected Client SSL Profiles</label>
+          <tooltip [message]="helpText.SelectedClientSslProfiles"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let clientSslProfile of selectedClientSslProfiles">
+                <td>
+                  {{ clientSslProfile }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="unselectClientSslProfile(clientSslProfile)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedClientSslProfiles?.length" class="text-center">
+                <td colspan="2">No Client SSL Profiles Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="availableServerSslProfiles">Available Server SSL Profiles</label>
+          <tooltip [message]="helpText.AvailableServerSslProfiles"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availableServerSslProfiles" formControlName="selectedServerSslProfiles">
+              <option></option>
+              <ng-container *ngFor="let serverSslProfile of availableServerSslProfiles[0] | keyvalue">
+                <option *ngIf="!selectedServerSslProfiles.includes(serverSslProfile.value)" [ngValue]="serverSslProfile.value">
+                {{ serverSslProfile.key }}</option>
+              </ng-container>
+            </select>
+            <button type="button" class="btn btn-sm btn-info" (click)="selectServerSslProfile();">
+              Select Server SSL Profile
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedServerSslProfiles">Selected Server SSL Profiles</label>
+          <tooltip [message]="helpText.SelectedServerSslProfiles"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let serverSslProfile of selectedServerSslProfiles">
+                <td>
+                  {{ serverSslProfile }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="unselectServerSslProfile(serverSslProfile)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedServerSslProfiles?.length" class="text-center">
+                <td colspan="2">No Server SSL Profiles Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
           <label>iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">

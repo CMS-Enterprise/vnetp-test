@@ -196,6 +196,10 @@ export class VirtualServerModalHelpText {
   ServicePort = `Port that the Virtual Server listens on.`;
   Pool = `Pool that the Virtual Server forwards the request to.`;
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
+  AvailableClientSslProfiles = `Client SSL profiles available (can select multiple).`;
+  SelectedClientSslProfiles = `Selected Client SSL profiles.`;
+  AvailableServerSslProfiles = `Server SSL profiles available (can select multiple).`;
+  SelectedServerSslProfiles = `Selected Server SSL profiles.`;
 }
 
 @Injectable({
