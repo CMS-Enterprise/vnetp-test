@@ -5,4 +5,5 @@ export class VirtualMachineModalDto {
   VmwareVirtualMachine: VmwareVirtualMachine;
   ModalMode: ModalMode;
   DatacenterId: string;
+  VirtualMachineId: string;
 }

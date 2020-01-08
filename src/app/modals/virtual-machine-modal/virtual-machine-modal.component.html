@@ -125,21 +125,124 @@
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
+      <div *ngIf="this.ModalMode === 'Edit'">
+        <hr />
 
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
-          Save
-        </button>
+        <div class="form-group">
+          <label>Virtual Disks</label>
+          <button
+            type="button"
+            name="modalVirtualDisk"
+            class="btn btn-sm btn-info pull-right mb-2"
+            (click)="openVirtualDiskModal()"
+          >
+            <fa name="plus"></fa>
+            Add Virtual Disk
+          </button>
+          <table name="vSwitchTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Disk Size</th>
+                <th>Raw LUN</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of virtualDisks">
+                <td>{{ v.name }}</td>
+                <td>{{ v.diskSize }} GB</td>
+                <td>{{ v.rawLun }}</td>
+                <td class="item-actions">
+                  <fa
+                    name="undo"
+                    *ngIf="v?.deletedAt"
+                    class="fg-success"
+                    (click)="restoreVirtualDisk(v)"
+                    aria-label="Restore Virtual Disk"
+                  ></fa>
+                  <fa
+                    name="trash"
+                    [ngClass]="{ 'fg-danger': v.deletedAt }"
+                    (click)="deleteVirtualDisk(v)"
+                    aria-label="Soft-Delete/Delete Virtual Disk"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!virtualDisks?.length" class="text-center">
+                <td colspan="4">No Virtual Disks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+          <label>Network Adapters</label>
+          <button
+            type="button"
+            name="modalVswitch"
+            class="btn btn-sm btn-info pull-right mb-2"
+            (click)="openNetworkAdapterModal()"
+          >
+            <fa name="plus"></fa>
+            Add Network Adapter
+          </button>
+          <table name="networkAdapterTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>VLAN</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let n of networkAdapters">
+                <td>{{ n.name }}</td>
+                <td>{{ n.vlanId }}</td>
+                <td class="item-actions">
+                  <fa
+                    name="undo"
+                    *ngIf="v?.deletedAt"
+                    class="fg-success"
+                    (click)="restoreNetworkAdapter(n)"
+                    aria-label="Restore Network Adapter"
+                  ></fa>
+                  <fa
+                    name="trash"
+                    [ngClass]="{ 'fg-danger': v.deletedAt }"
+                    (click)="deleteNetworkAdapter(n)"
+                    aria-label="Soft-Delete/Delete Network Adapter"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!networkAdapters?.length" class="text-center">
+                <td colspan="3">No Network Adapters</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+      <!-- end edit conditional -->
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
     </div>
   </form>
 </ngx-smart-modal>

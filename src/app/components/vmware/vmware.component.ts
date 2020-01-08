@@ -95,8 +95,8 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
     this.confirmDeleteObject(
       new YesNoModalDto(
-        `${deleteDescription} Network Object?`,
-        `Do you want to ${deleteDescription} network object "${vm.name}"?`,
+        `${deleteDescription} Virtual Machine?`,
+        `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`,
       ),
       deleteFunction,
     );

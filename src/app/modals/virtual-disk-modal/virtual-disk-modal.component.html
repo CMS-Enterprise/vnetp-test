@@ -1,0 +1,90 @@
+<ngx-smart-modal
+  #virtualDiskModal
+  identifier="virtualDiskModal"
+  (onOpen)="getData()"
+  [dismissable]="false"
+  customClass="small-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Virtual Disk</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          required
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          aria-label="Description"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="diskSize">Disk Size (GB)</label>
+        <input
+          type="number"
+          formControlName="diskSize"
+          class="form-control"
+          max="62000"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="rawLun">Raw LUN</label>
+        <select
+          name="rawLun"
+          formControlName="rawLun"
+          class="form-control"
+          required
+        >
+          <option></option>
+          <option *ngFor="let opt of [true, false]">
+            {{ opt }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>

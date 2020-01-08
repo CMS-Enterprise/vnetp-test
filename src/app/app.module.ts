@@ -74,6 +74,8 @@ import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
 import { TiersComponent } from './components/tiers/tiers.component';
 import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
+import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
+import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -137,6 +139,8 @@ export function apiConfigFactory(): Configuration {
     VmwareComponent,
     VirtualMachineModalComponent,
     VmwareDetailComponent,
+    VirtualDiskModalComponent,
+    NetworkAdapterModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

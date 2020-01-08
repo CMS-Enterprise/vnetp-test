@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   V1VmwareVirtualMachinesService,
   VmwareVirtualMachine,
+  VmwareVirtualDisk,
+  VmwareNetworkAdapter,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
@@ -15,6 +17,8 @@ import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 export class VmwareDetailComponent implements OnInit {
   Id: string;
   VirtualMachine: VmwareVirtualMachine;
+  virtualDisks: Array<VmwareVirtualDisk>;
+  networkAdapters: Array<VmwareNetworkAdapter>;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,9 +31,12 @@ export class VmwareDetailComponent implements OnInit {
     this.virtualMachineService
       .v1VmwareVirtualMachinesIdGet({
         id: this.Id,
+        join: 'virtualDisks,networkAdapters',
       })
       .subscribe(data => {
         this.VirtualMachine = data;
+        this.virtualDisks = data.virtualDisks;
+        this.networkAdapters = data.networkAdapters;
       });
   }
 
@@ -101,7 +108,6 @@ export class VmwareDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
-    console.log(this.Id);
 
     this.getVirtualMachine();
   }
