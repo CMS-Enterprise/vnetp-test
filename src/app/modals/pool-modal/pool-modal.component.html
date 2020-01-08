@@ -77,71 +77,57 @@
 
       <hr />
 
-      <label>Nodes </label>
-      <tooltip [message]="helpText.Nodes"></tooltip>
-      <div class="btn-group-sm mb-2 pull-right" role="group">
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="createNode()"
-          [disabled]="ModalMode === 'Create'"
-          aria-label="Create Node"
-        >
-          <fa name="plus"></fa>
-          Add Node
-        </button>
-      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="availableNodes">Available Nodes</label>
+          <tooltip [message]="helpText.AvailableNodes"></tooltip>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">FQDN/IP</th>
-            <th scope="col">Port</th>
-            <th scope="col">Auto Populate</th>
-            <th scope="col">Priority</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let node of nodes">
-            <td>
-              <p>{{ node?.name }}</p>
-            </td>
-            <td>
-              <p>{{ node?.type }}</p>
-            </td>
-            <td>
-              <p *ngIf="node.type == 'IpAddress'">
-                {{ node?.IpAddress }}
-              </p>
-              <p *ngIf="node.type == 'Fqdn'">{{ node?.fqdn }}</p>
-            </td>
-            <td>
-              <p>{{ node?.servicePort }}</p>
-            </td>
-            <td>
-              <p>{{ node?.autoPopulate }}</p>
-            </td>
-            <td>
-              <p>{{ node?.priority }}</p>
-            </td>
-            <td>
-              <fa *ngIf="node.id" name="pencil" (click)="editNode(node)"> </fa>
-              <fa *ngIf="node.id" name="trash" (click)="deleteNode(node)"> </fa>
-            </td>
-          </tr>
-          <tr *ngIf="!nodes?.length" class="text-center">
-            <td colspan="6">No Nodes</td>
-          </tr>
-        </tbody>
-      </table>
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availableNodes" formControlName="selectedNode">
+              <option></option>
+              <option *ngFor="let node of availableNodes" [ngValue]="node">
+                {{ node.name }}</option>
+            </select>
+            <button type="button" class="btn btn-sm btn-info" (click)="selectNode();"
+              [disabled]="ModalMode === 'Create'">
+              Select Node
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedNodes">Selected Nodes</label>
+          <tooltip [message]="helpText.SelectedNodes"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let node of selectedNodes">
+                <td>
+                  {{ node.name }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="unselectNode(node)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedNodes?.length" class="text-center">
+                <td colspan="2">No Nodes Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <hr />
 
       <div class="form-row">
         <div class="form-group col-md-12">
-          <label for="availableHealthMonitors">Available Health Monitors</label>
+          <label for="availableNodes">Available Health Monitors</label>
           <tooltip [message]="helpText.AvailableHealthMonitors"></tooltip>
 
           <div class="input-group align-items-center">

@@ -10,12 +10,8 @@ import {
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
   V1LoadBalancerPoolsService,
-  V1LoadBalancerHealthMonitorsService,
-  V1TiersService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
-import { HealthMonitor } from 'src/app/models/loadbalancer/health-monitor';
 
 @Component({
   selector: 'app-pool-modal',
@@ -31,6 +27,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   nodeModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
+  selectedNodes: LoadBalancerNode[];
+  availableNodes: LoadBalancerNode[];
   TierId: string;
   Pool: LoadBalancerPool;
   Nodes: LoadBalancerNode[];
@@ -153,7 +151,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   private setFormValidators() {}
 
-  deleteNode(node: LoadBalancerNode) {
+  removeNode(node: LoadBalancerNode) {
     const modalDto = new YesNoModalDto(
       'Remove Node',
       `Are you sure you would like to delete "${node.name}" node?`,
@@ -173,10 +171,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
               nodeId: node.id,
             })
             .subscribe(() => {
-              const selectedIndex = this.nodes.indexOf(node);
-              if (selectedIndex > -1) {
-                this.nodes.splice(selectedIndex, 1);
-              }
               this.getPools();
             });
         }
@@ -184,52 +178,20 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       });
   }
 
-  saveNode(node: LoadBalancerNode) {
-    if (!this.nodes) {
-      this.nodes = new Array<LoadBalancerNode>();
-    }
-    if (this.ModalMode === ModalMode.Create) {
-      this.nodes.push(node);
-    } else {
-      this.nodes[this.editNodeIndex] = node;
-    }
-  }
-
-  createNode() {
-    const node = {
-      TierId: this.TierId,
-      PoolId: this.PoolId,
-      ModalMode: ModalMode.Create,
-    };
-    this.subscribeToNodeModal();
-    this.ModalMode = ModalMode.Create;
-    this.ngx.setModalData(Object.assign({}, node), 'nodeModal');
-    this.ngx.getModal('nodeModal').toggle();
-  }
-
-  editNode(node: LoadBalancerNode) {
-    const nodeDto = {} as NodeModalDto;
-    nodeDto.node = node;
-    nodeDto.PoolId = this.PoolId;
-    nodeDto.ModalMode = ModalMode.Edit;
-    this.subscribeToNodeModal();
-    this.ngx.setModalData(Object.assign({}, nodeDto), 'nodeModal');
-    this.editNodeIndex = this.nodes.indexOf(node);
-    this.ngx.getModal('nodeModal').toggle();
-  }
-
-  subscribeToNodeModal() {
-    this.nodeModalSubscription = this.ngx
-      .getModal('nodeModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        let data = modal.getData() as LoadBalancerNode;
-        if (data !== undefined) {
-          data = Object.assign({}, data);
-          this.saveNode(data);
-        }
-        this.ngx.resetModalData('nodeModal');
-        this.nodeModalSubscription.unsubscribe();
-      });
+  addNode(node: LoadBalancerNode) {
+    this.poolService
+      .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
+        poolId: this.PoolId,
+        nodeId: node.id,
+      })
+      .subscribe(
+        data => {
+          this.getPools();
+        },
+        error => {
+          this.selectedNodes = null;
+        },
+      );
   }
 
   getData() {
@@ -244,6 +206,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
     const pool = dto.pool;
     this.availableHealthMonitors = dto.healthMonitors;
+    this.availableNodes = dto.nodes;
+
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
     } else {
@@ -263,15 +227,17 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       } else {
         this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
       }
-
-      if (pool.nodes) {
-        this.nodes = pool.nodes;
+      if (dto.pool && dto.pool.nodes) {
+        this.selectedNodes = pool.nodes;
       } else {
-        this.nodes = new Array<LoadBalancerNode>();
+        this.selectedNodes = new Array<LoadBalancerNode>();
       }
     }
     if (pool && pool.healthMonitors) {
       this.getAvailableHealthMonitors(pool.healthMonitors);
+    }
+    if (pool && pool.nodes) {
+      this.getAvailableNodes(pool.nodes);
     }
     this.ngx.resetModalData('poolModal');
   }
@@ -329,11 +295,59 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.removeHealthMonitor(healthMonitor);
   }
 
+  private getAvailableNodes(nodes: Array<LoadBalancerNode>) {
+    if (!this.selectedNodes) {
+      this.selectedNodes = new Array<LoadBalancerNode>();
+    }
+
+    if (!this.availableNodes) {
+      this.availableNodes = new Array<LoadBalancerNode>();
+    }
+    nodes.forEach(node => {
+      this.availableNodes = this.availableNodes.filter(n => n.id !== node.id);
+      if (!this.selectedNodes.includes(node)) {
+        this.availableNodes.push(node);
+      }
+    });
+  }
+
+  selectNode() {
+    const node = this.form.value.selectedNode;
+    if (!node) {
+      return;
+    }
+    if (!this.selectedNodes) {
+      this.selectedNodes = new Array<LoadBalancerNode>();
+    }
+    this.selectedNodes.push(node);
+    const availableIndex = this.availableNodes.indexOf(node);
+    if (availableIndex > -1) {
+      this.availableNodes.splice(availableIndex, 1);
+    }
+    this.form.controls.selectedNode.setValue(null);
+    this.form.controls.selectedNode.updateValueAndValidity();
+    this.addNode(node);
+  }
+
+  unselectNode(node: LoadBalancerNode) {
+    if (!this.availableNodes) {
+      this.availableNodes = new Array<LoadBalancerNode>();
+    }
+
+    this.availableNodes.push(node);
+    const selectedIndex = this.selectedNodes.indexOf(node);
+    if (selectedIndex > -1) {
+      this.selectedNodes.splice(selectedIndex, 1);
+    }
+    this.removeNode(node);
+  }
+
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
+      selectedNode: [''],
       servicePort: [''],
     });
   }
@@ -347,6 +361,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.nodes = new Array<LoadBalancerNode>();
     this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
     this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+    this.selectedNodes = new Array<LoadBalancerNode>();
+    this.availableNodes = new Array<LoadBalancerNode>();
   }
 
   ngOnInit() {

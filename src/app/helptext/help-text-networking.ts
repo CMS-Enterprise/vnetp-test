@@ -207,6 +207,8 @@ export class PoolModalHelpText {
   Nodes = `Nodes of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
+  AvailableNodes = `Nodes that can be added to the Pool.`;
+  SelectedNodes = `Nodes that have been added to the Pool.`;
   ServicePort = `Service Port of the Pool.`;
 }
 

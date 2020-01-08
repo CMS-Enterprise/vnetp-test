@@ -101,12 +101,13 @@ export class LoadBalancersComponent
   }
 
   getNodes() {
-    this.nodeService
-      .v1LoadBalancerNodesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+    this.tierService
+      .v1TiersIdGet({
+        id: this.currentTier.id,
+        join: 'loadBalancerNodes',
       })
       .subscribe(data => {
-        this.nodes = data;
+        this.nodes = data.loadBalancerNodes;
       });
   }
 
@@ -138,6 +139,7 @@ export class LoadBalancersComponent
     } else if (this.navIndex === 1) {
       this.getPools();
       this.getHealthMonitors();
+      this.getNodes();
     } else if (this.navIndex === 2) {
       this.getNodes();
     } else if (this.navIndex === 3) {
@@ -175,6 +177,7 @@ export class LoadBalancersComponent
     const dto = new PoolModalDto();
     dto.pool = pool;
     dto.healthMonitors = this.healthMonitors;
+    dto.nodes = this.nodes;
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
 
@@ -265,6 +268,7 @@ export class LoadBalancersComponent
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getPools();
         this.getHealthMonitors();
+        this.getNodes();
         this.ngx.resetModalData('poolModal');
         this.poolModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();

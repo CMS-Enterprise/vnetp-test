@@ -58,7 +58,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   save() {
     this.submitted = true;
     if (this.form.invalid) {
-      console.log(this.form);
       return;
     }
 
