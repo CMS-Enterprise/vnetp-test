@@ -1,0 +1,145 @@
+<ngx-smart-modal
+  #virtualMachineModal
+  identifier="virtualMachineModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Virtual Machine</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          required
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          aria-label="Description"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label>CPU Cores</label>
+          <select
+            name="cpuCount"
+            formControlName="cpuCount"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ cpuCount }}</option
+            >
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>Cores Per Socket</label>
+          <select
+            name="coreCount"
+            formControlName="coreCount"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <!-- TO DO: get correct options -->
+            <option *ngFor="let cores of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ cores }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>CPU Reserved?</label>
+          <select
+            name="cpuReserved"
+            formControlName="cpuReserved"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Memory (GB)</label>
+          <select
+            name="memorySize"
+            formControlName="memorySize"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let memory of [1, 2, 4, 8, 16, 32]">
+              {{ memory }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Memory Reserved?</label>
+          <select
+            name="memoryReserved"
+            formControlName="memoryReserved"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-link"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>
