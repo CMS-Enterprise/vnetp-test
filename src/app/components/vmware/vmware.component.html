@@ -1,0 +1,78 @@
+<div>
+  <h1>Virtual Machines</h1>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <button
+      type="button"
+      class="btn btn-success mr-1"
+      (click)="createVirtualMachine()"
+    >
+      <fa name="plus"></fa>
+      Create Virtual Machine
+    </button>
+
+    <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
+      <fa name="refresh"></fa>
+      Refresh
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">CPUs</th>
+        <th scope="col">Cores per Socket</th>
+        <th scope="col">Memory</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vm of virtualMachines">
+        <td>
+          <a routerLink="/vmware/{{ vm.id }}" queryParamsHandling="merge">{{
+            vm.name
+          }}</a>
+        </td>
+        <td>
+          {{ vm.cpuCores }}
+        </td>
+        <td>
+          {{ vm.cpuCoresPerSocket }}
+        </td>
+        <td>{{ vm.memorySize }} GB</td>
+        <td>
+          <fa
+            name="pencil"
+            *ngIf="!vm?.deletedAt"
+            (click)="openVirtualMachineModal('Edit', vm)"
+            aria-label="Edit Virtual Machine"
+          >
+          </fa>
+          <fa
+            name="undo"
+            *ngIf="vm?.deletedAt"
+            class="fg-success"
+            (click)="restoreVirtualMachine(vm)"
+            aria-label="Restore Virtual Machine"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': vm.deletedAt }"
+            (click)="deleteVirtualMachine(vm)"
+            aria-label="Soft-Delete/Delete Virtual Machine"
+          >
+          </fa>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualMachines?.length" class="text-center">
+        <td colspan="9">No Virtual Machines</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-virtual-machine-modal></app-virtual-machine-modal>
+<app-virtual-disk-modal></app-virtual-disk-modal>
+<app-network-adapter-modal></app-network-adapter-modal>
+<app-yes-no-modal></app-yes-no-modal>

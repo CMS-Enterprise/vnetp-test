@@ -1,0 +1,248 @@
+<ngx-smart-modal
+  #virtualMachineModal
+  identifier="virtualMachineModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Virtual Machine</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          required
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          aria-label="Description"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label>CPU Cores</label>
+          <select
+            name="cpuCount"
+            formControlName="cpuCount"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ cpuCount }}</option
+            >
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>Cores Per Socket</label>
+          <select
+            name="coreCount"
+            formControlName="coreCount"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <!-- TO DO: get correct options -->
+            <option *ngFor="let cores of [1, 2, 3, 4, 5, 6, 7, 8]">
+              {{ cores }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label>CPU Reserved?</label>
+          <select
+            name="cpuReserved"
+            formControlName="cpuReserved"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Memory (GB)</label>
+          <select
+            name="memorySize"
+            formControlName="memorySize"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let memory of [1, 2, 4, 8, 16, 32]">
+              {{ memory }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Memory Reserved?</label>
+          <select
+            name="memoryReserved"
+            formControlName="memoryReserved"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="this.ModalMode === 'Edit'">
+        <hr />
+
+        <div class="form-group">
+          <label>Virtual Disks</label>
+          <button
+            type="button"
+            name="modalVirtualDisk"
+            class="btn btn-sm btn-info pull-right mb-2"
+            (click)="openVirtualDiskModal()"
+          >
+            <fa name="plus"></fa>
+            Add Virtual Disk
+          </button>
+          <table name="vSwitchTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Disk Size</th>
+                <th>Raw LUN</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of virtualDisks">
+                <td>{{ v.name }}</td>
+                <td>{{ v.diskSize }} GB</td>
+                <td>{{ v.rawLun }}</td>
+                <td class="item-actions">
+                  <fa
+                    name="undo"
+                    *ngIf="v?.deletedAt"
+                    class="fg-success"
+                    (click)="restoreVirtualDisk(v)"
+                    aria-label="Restore Virtual Disk"
+                  ></fa>
+                  <fa
+                    name="trash"
+                    [ngClass]="{ 'fg-danger': v.deletedAt }"
+                    (click)="deleteVirtualDisk(v)"
+                    aria-label="Soft-Delete/Delete Virtual Disk"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!virtualDisks?.length" class="text-center">
+                <td colspan="4">No Virtual Disks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+          <label>Network Adapters</label>
+          <button
+            type="button"
+            name="modalVswitch"
+            class="btn btn-sm btn-info pull-right mb-2"
+            (click)="openNetworkAdapterModal()"
+          >
+            <fa name="plus"></fa>
+            Add Network Adapter
+          </button>
+          <table name="networkAdapterTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>VLAN</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let n of networkAdapters">
+                <td>{{ n.name }}</td>
+                <td>{{ n.vlanId }}</td>
+                <td class="item-actions">
+                  <fa
+                    name="undo"
+                    *ngIf="v?.deletedAt"
+                    class="fg-success"
+                    (click)="restoreNetworkAdapter(n)"
+                    aria-label="Restore Network Adapter"
+                  ></fa>
+                  <fa
+                    name="trash"
+                    [ngClass]="{ 'fg-danger': v.deletedAt }"
+                    (click)="deleteNetworkAdapter(n)"
+                    aria-label="Soft-Delete/Delete Network Adapter"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!networkAdapters?.length" class="text-center">
+                <td colspan="3">No Network Adapters</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- end edit conditional -->
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>
