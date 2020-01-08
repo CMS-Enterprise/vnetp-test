@@ -41,6 +41,10 @@ export class VmwareComponent implements OnInit, OnDestroy {
       });
   }
 
+  createVirtualMachine() {
+    this.openVirtualMachineModal(ModalMode.Create);
+  }
+
   openVirtualMachineModal(modalMode: ModalMode, vm?: VmwareVirtualMachine) {
     if (modalMode === ModalMode.Edit && !vm) {
       throw new Error('VM required.');

@@ -19,6 +19,7 @@ export class NetworkAdapterModalComponent implements OnInit {
   VirtualMachineId: string;
   Vlans: Array<Vlan>;
   DatacenterId: string;
+  submitted: boolean;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -77,6 +78,10 @@ export class NetworkAdapterModalComponent implements OnInit {
 
   cancel() {
     this.closeModal();
+  }
+
+  get f() {
+    return this.form.controls;
   }
 
   private buildForm() {

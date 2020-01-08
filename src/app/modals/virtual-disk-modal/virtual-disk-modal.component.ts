@@ -12,6 +12,7 @@ import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-mo
 export class VirtualDiskModalComponent implements OnInit {
   form: FormGroup;
   VirtualMachineId: string;
+  submitted: boolean;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -56,6 +57,10 @@ export class VirtualDiskModalComponent implements OnInit {
 
   cancel() {
     this.closeModal();
+  }
+
+  get f() {
+    return this.form.controls;
   }
 
   private buildForm() {
