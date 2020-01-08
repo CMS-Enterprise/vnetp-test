@@ -1,11 +1,18 @@
-import { Pool } from './pool';
-import { VirtualServer } from './virtual-server';
-import { IRule } from './irule';
+import {
+  LoadBalancerPool,
+  LoadBalancerIrule,
+  LoadBalancerVirtualServer,
+} from 'api_client';
+import { ModalMode } from '../other/modal-mode';
 
 export class VirtualServerModalDto {
-  Pools: Array<Pool>;
+  Pools: LoadBalancerPool[];
 
-  IRules: Array<IRule>;
+  IRules: LoadBalancerIrule[];
 
-  VirtualServer: VirtualServer;
+  VirtualServer: LoadBalancerVirtualServer;
+
+  TierId: string;
+
+  ModalMode: ModalMode;
 }

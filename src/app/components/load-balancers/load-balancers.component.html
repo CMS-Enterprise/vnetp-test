@@ -3,61 +3,43 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Vrf"></tooltip>
+      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip>
       </span>
       <select
-        name="vrf"
+        name="tier"
         class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentVrf"
-        (ngModelChange)="getVrfObjects(currentVrf)"
-        [disabled]="dirty"
-      >
-        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
+        [(ngModel)]="currentTier"
+        (ngModelChange)="getObjectsForNavIndex()"
+        [disabled]="datacenterService.datacenterLockValue"
+        >
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
-
-      <div class="button-group btn-group-sm ml-auto">
-        <button
-          type="button"
-          class="btn btn-success mr-1"
-          aria-label="Save Changes to Current VRF"
-          (click)="saveAll()"
-          [hidden]="!dirty"
-        >
-          <fa name="save"></fa>
-          Save Changes to Current Tier (VRF)
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger mr-1"
-          aria-label="Clear Changes to Current VRF"
-          (click)="getVrfs()"
-          [hidden]="!dirty"
-        >
-          <fa name="trash"></fa>
-          Clear Changes to Current Tier (VRF)
-        </button>
-      </div>
     </div>
   </div>
 
   <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0">
+    <li class="nav-item" (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools();">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
         Virtual Servers <tooltip [message]="helpText.VirtualServers"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 1">
+    <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes();">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
-        Pools <tooltip [message]="helpText.Pools"></tooltip> 
+        Pools <tooltip [message]="helpText.Pools"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 2">
+    <li class="nav-item" (click)="navIndex = 2; getNodes()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">
+        Nodes <tooltip [message]="helpText.Nodes"></tooltip>
+      </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 3; getIrules()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
         iRules <tooltip [message]="helpText.IRules"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 3">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
+    <li class="nav-item" (click)="navIndex = 4; getHealthMonitors()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 4 }">
         Health Monitors <tooltip [message]="helpText.HealthMonitors"></tooltip>
       </a>
     </li>
@@ -68,7 +50,7 @@
       <button
         type="button"
         class="btn btn-success"
-        (click)="createVirtualServer()"
+        (click)="openVirtualServerModal('Create')"
         aria-label="Create Virtual Server"
       >
         <fa name="plus"></fa>
@@ -90,32 +72,33 @@
       <tbody>
         <tr *ngFor="let virtualServer of virtualServers">
           <td>
-            <span>{{ virtualServer.Name }}</span>
+            <span>{{ virtualServer?.name }}</span>
           </td>
           <td>
-            <span>{{ virtualServer.Type }}</span>
+            <span>{{ virtualServer?.type }}</span>
           </td>
           <td>
-            <span>{{ virtualServer.DestinationAddress }}</span>
+            <span>{{ virtualServer?.destinationIpAddress }}</span>
           </td>
           <td>
-            <span>{{ virtualServer.ServicePort }}</span>
+            <span>{{ virtualServer?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ virtualServer.Pool }}</span>
+            <span>{{ virtualServer?.defaultPoolId | resolve: getPoolName}}</span>
           </td>
           <td class="item-actions">
             <fa
               name="pencil"
-              (click)="editVirtualServer(virtualServer)"
+              (click)="openVirtualServerModal('Edit', virtualServer)"
               aria-label="Edit Virtual Server"
             >
             </fa>
-            <fa name="trash" (click)="deleteVirtualServer(virtualServer)"> </fa>
+            <fa name="undo" *ngIf="virtualServer?.deletedAt" class="fg-success" (click)="restoreVirtualServer(virtualServer)" aria-label="Restore Virtual Server"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': virtualServer?.deletedAt }" (click)="deleteVirtualServer(virtualServer)" aria-label="Soft-Delete/Delete Virtual Server"></fa>
           </td>
         </tr>
         <tr *ngIf="virtualServers?.length === 0" class="text-center">
-          <td colspan="6">No Virtual Servers in this VRF.</td>
+          <td colspan="6">No Virtual Servers in this Tier.</td>
         </tr>
       </tbody>
     </table>
@@ -126,7 +109,7 @@
       <button
         type="button"
         class="btn btn-success"
-        (click)="createPool()"
+        (click)="openPoolModal('Create')"
         aria-label="Create Pool"
       >
         <fa name="plus"></fa>
@@ -139,7 +122,8 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">LB Method</th>
-          <th scope="col">Pool Members</th>
+          <th scope="col">Service Port</th>
+          <th scope="col">Nodes</th>
           <th scope="col">Health Monitors</th>
           <th scope="col"></th>
         </tr>
@@ -147,30 +131,29 @@
       <tbody>
         <tr *ngFor="let pool of pools">
           <td>
-            <span>{{ pool.Name }}</span>
+            <span>{{ pool?.name }}</span>
           </td>
           <td>
-            <span>{{ pool.LoadBalancingMethod }}</span>
+            <span>{{ pool?.loadBalancingMethod }}</span>
           </td>
           <td>
-            <span>{{ pool.Members?.length }}</span>
+            <span>{{ pool?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ pool.HealthMonitors?.length }}</span>
+            <span>{{ pool?.nodes?.length }}</span>
+          </td>
+          <td>
+            <span>{{ pool?.healthMonitors?.length }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="editPool(pool)" aria-label="Edit Pool">
+            <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool">
             </fa>
-            <fa
-              name="trash"
-              (click)="deletePool(pool)"
-              aria-label="Delete Pool"
-            >
-            </fa>
+            <fa name="undo" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': pool?.deletedAt }" (click)="deletePool(pool)" aria-label="Soft-Delete/Delete Pool"></fa>
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="5">No Pools in this VRF</td>
+          <td colspan="5">No Pools in this tier</td>
         </tr>
       </tbody>
     </table>
@@ -181,7 +164,69 @@
       <button
         type="button"
         class="btn btn-success"
-        (click)="createIRule()"
+        (click)="openNodeModal('Create')"
+        aria-label="Create Node"
+      >
+        <fa name="plus"></fa>
+        Create Node
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Ip Address</th>
+          <th scope="col">FQDN</th>
+          <th scope="col">Autopopulate</th>
+          <th scope="col">Service Port</th>
+          <th scope="col">Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let node of nodes">
+          <td>
+            <span>{{ node?.name }}</span>
+          </td>
+          <td>
+            <span>{{ node?.type }}</span>
+          </td>
+          <td>
+            <span>{{ node?.ipAddress }}</span>
+          </td>
+          <td>
+            <span>{{ node?.fqdn }}</span>
+          </td>
+          <td>
+            <span>{{ node?.autoPopulate }}</span>
+          </td>
+          <td>
+            <span>{{ node?.servicePort }}</span>
+          </td>
+          <td>
+            <span>{{ node?.priority }}</span>
+          </td>
+          <td class="item-actions">
+            <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node">
+            </fa>
+            <fa name="undo" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': node?.deletedAt }" (click)="deleteNode(node)" aria-label="Soft-Delete/Delete Node"></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!nodes?.length" class="text-center">
+          <td colspan="7">No Nodes in this tier</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex == 3">
+    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="openIRuleModal('Create')"
         aria-label="Create iRule"
       >
         <fa name="plus"></fa>
@@ -193,42 +238,41 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col"></th>
+          <th scope="col">Content</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let irule of irules">
           <td>
-            <span>{{ irule.Name }}</span>
+            <span>{{ irule?.name }}</span>
+          </td>
+          <td>
+            <span>{{ irule?.content }}</span>
           </td>
           <td class="item-actions">
             <fa
               name="pencil"
-              (click)="editIRule(irule)"
+              (click)="openIRuleModal('Edit',irule)"
               aria-label="Edit iRule"
             >
             </fa>
-            <fa
-              name="trash"
-              (click)="deleteIRule(irule)"
-              aria-label="Delete iRule"
-            >
-            </fa>
+            <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore Irule"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': irule?.deletedAt }" (click)="deleteIrule(irule)" aria-label="Soft-Delete/Delete Irule"></fa>
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">
-          <td colspan="2">No iRules in this VRF</td>
+          <td colspan="2">No iRules in this Tier</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div *ngIf="navIndex == 3">
+  <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button
         type="button"
         class="btn btn-success"
-        (click)="createHealthMonitor()"
+        (click)="openHealthMonitorModal('Create')"
         aria-label="Create Health Monitor"
       >
         <fa name="plus"></fa>
@@ -250,54 +294,53 @@
       <tbody>
         <tr *ngFor="let healthMonitor of healthMonitors">
           <td>
-            <span>{{ healthMonitor.Name }}</span>
+            <span>{{ healthMonitor?.name }}</span>
           </td>
           <td>
-            <span>{{ healthMonitor.Type }}</span>
+            <span>{{ healthMonitor?.type }}</span>
           </td>
           <td>
-            <span>{{ healthMonitor.ServicePort }}</span>
+            <span>{{ healthMonitor?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ healthMonitor.Interval }}</span>
+            <span>{{ healthMonitor?.interval }}</span>
           </td>
           <td>
-            <span>{{ healthMonitor.Timeout }}</span>
+            <span>{{ healthMonitor?.timeout }}</span>
           </td>
           <td class="item-actions">
             <fa
               name="pencil"
               (click)="editHealthMonitor(healthMonitor)"
+              (click)="openHealthMonitorModal('Edit', healthMonitor)"
               aria-label="Edit Health Monitor"
             >
             </fa>
-            <fa
-              name="trash"
-              (click)="deleteHealthMonitor(healthMonitor)"
-              aria-label="Delete Health Monitor"
-            >
-            </fa>
+            <fa name="undo" *ngIf="healthMonitor?.deletedAt" class="fg-success" (click)="restoreHealthMonitor(healthMonitor)" aria-label="Restore Health Monitor"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': healthMonitor?.deletedAt }" (click)="deleteHealthMonitor(healthMonitor)"
+              aria-label="Soft-Delete/Delete Health Monitor"></fa>
           </td>
         </tr>
         <tr *ngIf="!healthMonitors?.length" class="text-center">
-          <td colspan="6">No Health Monitors in this VRF</td>
+          <td colspan="6">No Health Monitors in this Tier</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div *ngIf="currentVrf" class="pull-right">
-    <app-import-export
+  <div *ngIf="currentTier" class="pull-right">
+    <!-- <app-import-export
       [exportObject]="exportLoadBalancerConfig()"
-      exportFileName="loadBalancers-{{ currentVrf.name }}"
+      exportFileName="loadBalancers-{{ currentTier.name }}"
       disableCsv="true"
       (import)="importLoadBalancerConfig($event)"
-    ></app-import-export>
+    ></app-import-export> -->
   </div>
 
   <app-virtual-server-modal></app-virtual-server-modal>
   <app-pool-modal></app-pool-modal>
-  <app-pool-member-modal></app-pool-member-modal>
+  <app-node-modal></app-node-modal>
   <app-irule-modal></app-irule-modal>
   <app-health-monitor-modal></app-health-monitor-modal>
 </div>
+<app-yes-no-modal></app-yes-no-modal>

@@ -1,5 +1,9 @@
-export class IRule {
-  Name: string;
+import { Tier } from 'api_client';
 
-  Content: string;
+export class IRule {
+  name: string;
+  description: string;
+  content: string;
+  tierId: string;
+  tier: Tier;
 }

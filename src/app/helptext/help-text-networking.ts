@@ -58,9 +58,10 @@ export class TierModalHelpText {
 export class LoadBalancersHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Vrf = `Tier (VRF) that Load Balancer configurations are created within.`;
+  Tier = `Tier that Load Balancer configurations are created within.`;
   VirtualServers = `Manage Virtual Servers.`;
-  Pools = `Manage Pools and Pool Members.`;
+  Pools = `Manage Pools and Nodes.`;
+  Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
 }
@@ -190,10 +191,15 @@ export class VirtualServerModalHelpText {
   Name = `Name of Virtual Server.`;
   Type = `Type of Virtual Server.`;
   SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
+  SourceAddressTranslation = `Source Address type.`;
   DestinationAddress = `Address that the Virtual Server accepts traffic at.`;
   ServicePort = `Port that the Virtual Server listens on.`;
   Pool = `Pool that the Virtual Server forwards the request to.`;
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
+  AvailableClientSslProfiles = `Client SSL profiles available (can select multiple).`;
+  SelectedClientSslProfiles = `Selected Client SSL profiles.`;
+  AvailableServerSslProfiles = `Server SSL profiles available (can select multiple).`;
+  SelectedServerSslProfiles = `Selected Server SSL profiles.`;
 }
 
 @Injectable({
@@ -202,20 +208,24 @@ export class VirtualServerModalHelpText {
 export class PoolModalHelpText {
   Name = `Name of Pool.`;
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
-  PoolMembers = `Members of the Pool.`;
+  Nodes = `Nodes of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
+  AvailableNodes = `Nodes that can be added to the Pool.`;
+  SelectedNodes = `Nodes that have been added to the Pool.`;
+  ServicePort = `Service Port of the Pool.`;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class PoolMemberModalHelpText {
-  Name = `Name of Pool Member.`;
-  Type = `Pool Member Type (FQDN, IP Address).`;
-  IpAddress = `IP Address of Pool Member.`;
-  Fqdn = `FQDN of Pool Member.`;
-  ServicePort = `Port that the Pool Member is listening for requests on.`;
+export class NodeModalHelpText {
+  Name = `Name of Node.`;
+  Type = `Node Type (FQDN, IP Address).`;
+  IpAddress = `IP Address of Node.`;
+  Fqdn = `FQDN of Node.`;
+  ServicePort = `Port that the Node is listening for requests on.`;
+  Priority = `Priority of node.`;
 }
 
 @Injectable({

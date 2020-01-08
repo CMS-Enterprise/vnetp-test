@@ -1,14 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
-import {
-  ValidateIpv4CidrAddress,
-  ValidateIpv4Any,
-} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Any } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
-import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
+import {
+  LoadBalancerPool,
+  LoadBalancerIrule,
+  LoadBalancerVirtualServer,
+  V1LoadBalancerVirtualServersService,
+  LoadBalancerVirtualServerClientSslProfiles,
+  LoadBalancerVirtualServerServerSslProfiles,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -17,13 +22,23 @@ import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networkin
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
-  pools: Array<Pool>;
-  availableIRules: Array<string>;
-  selectedIRules: Array<string>;
+  pools: LoadBalancerPool[];
+  availableIRules: LoadBalancerIrule[];
+  selectedIRules: LoadBalancerIrule[];
+  TierId: string;
+  VirtualServer: LoadBalancerVirtualServer;
+  ModalMode: ModalMode;
+  VirtualServerId: string;
+  Pools: LoadBalancerPool[];
+  availableClientSslProfiles: LoadBalancerVirtualServerClientSslProfiles[];
+  availableServerSslProfiles: LoadBalancerVirtualServerServerSslProfiles[];
+  selectedClientSslProfiles: LoadBalancerVirtualServerClientSslProfiles[];
+  selectedServerSslProfiles: LoadBalancerVirtualServerServerSslProfiles[];
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private virtualServerService: V1LoadBalancerVirtualServersService,
     public helpText: VirtualServerModalHelpText,
   ) {}
 
@@ -33,20 +48,66 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const virtualServer = new VirtualServer();
-    virtualServer.Name = this.form.value.name;
-    virtualServer.Type = this.form.value.type;
-    virtualServer.SourceAddress = this.form.value.sourceAddress;
-    virtualServer.DestinationAddress = this.form.value.destinationAddress;
-    virtualServer.ServicePort = this.form.value.servicePort;
-    virtualServer.Pool = this.form.value.pool;
-    virtualServer.IRules = Object.assign([], this.selectedIRules);
+    const virtualServer = {} as LoadBalancerVirtualServer;
+    virtualServer.name = this.form.value.name;
+    virtualServer.type = this.form.value.type;
+    virtualServer.sourceIpAddress = this.form.value.sourceAddress;
+    virtualServer.destinationIpAddress = this.form.value.destinationAddress;
+    virtualServer.servicePort = this.form.value.servicePort;
+    virtualServer.defaultPoolId = this.form.value.pool;
+    virtualServer.sourceAddressTranslation = this.form.value.sourceAddressTranslation;
+    virtualServer.clientSslProfiles = this.selectedClientSslProfiles;
+    virtualServer.serverSslProfiles = this.selectedServerSslProfiles;
 
-    const dto = new VirtualServerModalDto();
-    dto.VirtualServer = virtualServer;
+    if (this.ModalMode === ModalMode.Create) {
+      virtualServer.tierId = this.TierId;
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersPost({
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersIdPut({
+          id: this.VirtualServerId,
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+  }
 
-    this.ngx.resetModalData('virtualServerModal');
-    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
+  removeVirtualServer(virtualServer: LoadBalancerVirtualServer) {
+    const modalDto = new YesNoModalDto('Remove Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.virtualServerService
+            .v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id })
+            .subscribe(() => {
+              this.getVirtualServers();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  private closeModal() {
     this.ngx.close('virtualServerModal');
     this.reset();
   }
@@ -69,44 +130,110 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     );
 
     this.pools = dto.Pools;
-
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
     const virtualServer = dto.VirtualServer;
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
 
-    if (virtualServer !== undefined) {
-      this.form.controls.name.setValue(virtualServer.Name);
-      this.form.controls.type.setValue(virtualServer.Type);
-      this.form.controls.sourceAddress.setValue(virtualServer.SourceAddress);
-      this.form.controls.destinationAddress.setValue(
-        virtualServer.DestinationAddress,
-      );
-      this.form.controls.servicePort.setValue(virtualServer.ServicePort);
-      this.form.controls.pool.setValue(virtualServer.Pool);
-
-      if (dto.VirtualServer.IRules) {
-        this.selectedIRules = dto.VirtualServer.IRules;
-      } else {
-        this.selectedIRules = new Array<string>();
+      if (this.ModalMode === ModalMode.Edit) {
+        this.VirtualServerId = dto.VirtualServer.id;
       }
     }
 
-    this.getAvailableIRules(dto.IRules.map(i => i.Name));
+    if (virtualServer !== undefined) {
+      this.form.controls.name.setValue(virtualServer.name);
+      this.form.controls.type.setValue(virtualServer.type);
+      this.form.controls.sourceAddress.setValue(virtualServer.sourceIpAddress);
+      this.form.controls.destinationAddress.setValue(
+        virtualServer.destinationIpAddress,
+      );
+      this.form.controls.servicePort.setValue(virtualServer.servicePort);
+      this.form.controls.sourceAddressTranslation.setValue(
+        virtualServer.sourceAddressTranslation,
+      );
+      this.form.controls.pool.setValue(virtualServer.defaultPoolId);
+
+      if (dto.VirtualServer.irules) {
+        this.selectedIRules = dto.VirtualServer.irules;
+      }
+      if (dto.VirtualServer.clientSslProfiles) {
+        this.selectedClientSslProfiles = dto.VirtualServer.clientSslProfiles;
+      }
+      if (dto.VirtualServer.serverSslProfiles) {
+        this.selectedServerSslProfiles = dto.VirtualServer.serverSslProfiles;
+      }
+    }
+
+    this.getAvailableIRules(dto.IRules);
+    const clientSslProfilesEnum = [LoadBalancerVirtualServerClientSslProfiles];
+    this.getAvailableClientSslProfiles(clientSslProfilesEnum);
+    const serverSslProfilesEnum = [LoadBalancerVirtualServerServerSslProfiles];
+    this.getAvailableServerSslProfiles(serverSslProfilesEnum);
     this.ngx.resetModalData('virtualServerModal');
   }
 
-  private getAvailableIRules(irules: Array<string>) {
-    if (!this.selectedIRules) {
-      this.selectedIRules = new Array<string>();
-    }
-
-    if (!this.availableIRules) {
-      this.availableIRules = new Array<string>();
-    }
-
+  private getAvailableIRules(irules: LoadBalancerIrule[]) {
     irules.forEach(irule => {
       if (!this.selectedIRules.includes(irule)) {
         this.availableIRules.push(irule);
       }
     });
+  }
+
+  private getAvailableClientSslProfiles(cSslProfiles) {
+    cSslProfiles.forEach(clientSslProfile => {
+      if (!this.selectedClientSslProfiles.includes(clientSslProfile)) {
+        this.availableClientSslProfiles.push(clientSslProfile);
+      }
+    });
+  }
+
+  private getAvailableServerSslProfiles(sSslProfiles) {
+    sSslProfiles.forEach(serverSslProfile => {
+      if (!this.selectedServerSslProfiles.includes(serverSslProfile)) {
+        this.availableServerSslProfiles.push(serverSslProfile);
+      }
+    });
+  }
+
+  selectClientSslProfile() {
+    const clientSslProfile = this.form.value.selectedClientSslProfiles;
+    if (!clientSslProfile) {
+      return;
+    }
+
+    this.selectedClientSslProfiles.push(clientSslProfile);
+    this.form.controls.selectedClientSslProfiles.setValue(null);
+    this.form.controls.selectedClientSslProfiles.updateValueAndValidity();
+  }
+
+  unselectClientSslProfile(cSslProfile) {
+    const selectedIndex = this.selectedClientSslProfiles.indexOf(cSslProfile);
+    if (selectedIndex > -1) {
+      this.selectedClientSslProfiles.splice(selectedIndex, 1);
+    }
+  }
+
+  selectServerSslProfile() {
+    const serverSslProfile = this.form.value.selectedServerSslProfiles;
+    if (!serverSslProfile) {
+      return;
+    }
+
+    this.selectedServerSslProfiles.push(serverSslProfile);
+    this.form.controls.selectedServerSslProfiles.setValue(null);
+    this.form.controls.selectedServerSslProfiles.updateValueAndValidity();
+  }
+
+  unselectServerSslProfile(sSslProfile) {
+    const selectedIndex = this.selectedServerSslProfiles.indexOf(sSslProfile);
+    if (selectedIndex > -1) {
+      this.selectedServerSslProfiles.splice(selectedIndex, 1);
+    }
   }
 
   selectIRule() {
@@ -167,6 +294,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       description: [''],
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
+      sourceAddressTranslation: [''],
       destinationAddress: [
         '',
         Validators.compose([Validators.required, ValidateIpv4Any]),
@@ -181,10 +309,32 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       ],
       pool: ['', Validators.required],
       selectedIRule: [''],
+      selectedClientSslProfiles: [''],
+      selectedServerSslProfiles: [''],
     });
 
-    this.availableIRules = new Array<string>();
-    this.selectedIRules = new Array<string>();
+    this.availableIRules = new Array<LoadBalancerIrule>();
+    this.selectedIRules = new Array<LoadBalancerIrule>();
+    this.availableClientSslProfiles = new Array<
+      LoadBalancerVirtualServerClientSslProfiles
+    >();
+    this.availableServerSslProfiles = new Array<
+      LoadBalancerVirtualServerServerSslProfiles
+    >();
+    this.selectedClientSslProfiles = new Array<
+      LoadBalancerVirtualServerClientSslProfiles
+    >();
+    this.selectedServerSslProfiles = new Array<
+      LoadBalancerVirtualServerServerSslProfiles
+    >();
+  }
+
+  private getVirtualServers() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersIdGet({ id: this.VirtualServer.id })
+      .subscribe(data => {
+        this.VirtualServer = data;
+      });
   }
 
   private unsubAll() {}

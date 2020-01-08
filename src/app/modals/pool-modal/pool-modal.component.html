@@ -47,10 +47,10 @@
         >
           <!--TODO: Do we want to expose all LB methods to users?-->
           <option></option>
-          <option value="round-robin">Round Robin</option>
-          <option value="least-sessions">Least Sessions</option>
-          <option value="fastest-node">Fastest Node</option>
-          <option value="fastest-app-response">Fastest App Response</option>
+          <option value="RoundRobin">Round Robin</option>
+          <option value="LeastSessions">Least Sessions</option>
+          <option value="FastestNode">Fastest Node</option>
+          <option value="FastestAppResponse">Fastest App Response</option>
         </select>
         <div
           *ngIf="submitted && f.loadBalancingMethod.errors"
@@ -60,68 +60,74 @@
         </div>
       </div>
 
-      <hr />
-
-      <label>Pool Members </label>
-      <tooltip [message]="helpText.PoolMembers"></tooltip>
-      <div class="btn-group-sm mb-2 pull-right" role="group">
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="createPoolMember()"
-          aria-label="Create Pool Member"
-        >
-          <fa name="plus"></fa>
-          Add Pool Member
-        </button>
+      <div class="form-group">
+        <label for="servicePort">Service Port</label>
+        <tooltip [message]="helpText.ServicePort"></tooltip>
+        <input
+          type="text"
+          formControlName="servicePort"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+          aria-label="Service Port"
+        />
+        <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+          <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
+        </div>
       </div>
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">FQDN/Address</th>
-            <th scope="col">Service Port</th>
-            <th scope="col">Auto Populate</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let poolMember of poolMembers">
-            <td>
-              <p>{{ poolMember.Name }}</p>
-            </td>
-            <td>
-              <p>{{ poolMember.Type }}</p>
-            </td>
-            <td>
-              <p *ngIf="poolMember.Type == 'ipaddress'">
-                {{ poolMember.IpAddress }}
-              </p>
-              <p *ngIf="poolMember.Type == 'fqdn'">{{ poolMember.Fqdn }}</p>
-            </td>
-            <td>
-              <p>{{ poolMember.ServicePort }}</p>
-            </td>
-            <td>
-              <p>{{ poolMember.AutoPopulate }}</p>
-            </td>
-            <td>
-              <fa name="pencil" (click)="editPoolMember(poolMember)"> </fa>
-              <fa name="trash" (click)="deletePoolMember(poolMember)"> </fa>
-            </td>
-          </tr>
-          <tr *ngIf="!poolMembers?.length" class="text-center">
-            <td colspan="5">No Pool Members</td>
-          </tr>
-        </tbody>
-      </table>
 
       <hr />
 
       <div class="form-row">
         <div class="form-group col-md-12">
-          <label for="availableHealthMonitors">Available Health Monitors</label>
+          <label for="availableNodes">Available Nodes</label>
+          <tooltip [message]="helpText.AvailableNodes"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availableNodes" formControlName="selectedNode">
+              <option></option>
+              <option *ngFor="let node of availableNodes" [ngValue]="node">
+                {{ node.name }}</option>
+            </select>
+            <button type="button" class="btn btn-sm btn-info" (click)="selectNode();"
+              [disabled]="ModalMode === 'Create'">
+              Select Node
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedNodes">Selected Nodes</label>
+          <tooltip [message]="helpText.SelectedNodes"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let node of selectedNodes">
+                <td>
+                  {{ node.name }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="unselectNode(node)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedNodes?.length" class="text-center">
+                <td colspan="2">No Nodes Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="availableNodes">Available Health Monitors</label>
           <tooltip [message]="helpText.AvailableHealthMonitors"></tooltip>
 
           <div class="input-group align-items-center">
@@ -134,17 +140,17 @@
               <option
                 *ngFor="let healthMonitor of availableHealthMonitors"
                 [ngValue]="healthMonitor"
-                >{{ healthMonitor }}</option
+                >{{ healthMonitor.name }}</option
               >
             </select>
-
             <button
-              type="button"
-              class="btn btn-sm btn-info"
-              (click)="selectHealthMonitor()"
+            type="button"
+            class="btn btn-sm btn-info"
+            (click)="selectHealthMonitor();"
+            [disabled]="ModalMode === 'Create'"
             >
-              Select Health Monitor
-            </button>
+            Select Health Monitor
+          </button>
           </div>
         </div>
 
@@ -161,7 +167,7 @@
             <tbody>
               <tr *ngFor="let healthMonitor of selectedHealthMonitors">
                 <td>
-                  {{ healthMonitor }}
+                  {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
                   <fa
