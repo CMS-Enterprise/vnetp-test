@@ -29,9 +29,8 @@ export interface FirewallRule {
     logging: boolean;
     ruleIndex: number;
     sourceAddressType: FirewallRuleSourceAddressType;
-    sourceServiceType: FirewallRuleSourceServiceType;
     destinationAddressType: FirewallRuleDestinationAddressType;
-    destinationServiceType: FirewallRuleDestinationServiceType;
+    serviceType: FirewallRuleServiceType;
     sourceIpAddress?: string;
     sourceNetworkObjectId?: string;
     sourceNetworkObjectGroupId?: string;
@@ -39,20 +38,16 @@ export interface FirewallRule {
     destinationNetworkObjectId?: string;
     destinationNetworkObjectGroupId?: string;
     sourcePorts?: string;
-    sourceServiceObjectId?: string;
-    sourceServiceObjectGroupId?: string;
     destinationPorts?: string;
-    destinationServiceObjectId?: string;
-    destinationServiceObjectGroupId?: string;
+    serviceObjectId?: string;
+    serviceObjectGroupId?: string;
     firewallRuleGroupId: string;
     sourceNetworkObject?: NetworkObject & object;
     sourceNetworkObjectGroup?: NetworkObjectGroup & object;
     destinationNetworkObject?: NetworkObject & object;
     destinationNetworkObjectGroup?: NetworkObjectGroup & object;
-    sourceServiceObject?: ServiceObject & object;
-    sourceServiceObjectGroup?: ServiceObjectGroup & object;
-    destinationServiceObject?: ServiceObject & object;
-    destinationServiceObjectGroup?: ServiceObjectGroup & object;
+    serviceObject?: ServiceObject & object;
+    serviceObjectGroup?: ServiceObjectGroup & object;
 }
 export enum FirewallRuleDirection {
     In = 'In',
@@ -72,17 +67,12 @@ export enum FirewallRuleSourceAddressType {
     NetworkObject = 'NetworkObject',
     NetworkObjectGroup = 'NetworkObjectGroup'
 };
-export enum FirewallRuleSourceServiceType {
-    Port = 'Port',
-    ServiceObject = 'ServiceObject',
-    ServiceObjectGroup = 'ServiceObjectGroup'
-};
 export enum FirewallRuleDestinationAddressType {
     IpAddress = 'IpAddress',
     NetworkObject = 'NetworkObject',
     NetworkObjectGroup = 'NetworkObjectGroup'
 };
-export enum FirewallRuleDestinationServiceType {
+export enum FirewallRuleServiceType {
     Port = 'Port',
     ServiceObject = 'ServiceObject',
     ServiceObjectGroup = 'ServiceObjectGroup'
