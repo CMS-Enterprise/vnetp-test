@@ -9,8 +9,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

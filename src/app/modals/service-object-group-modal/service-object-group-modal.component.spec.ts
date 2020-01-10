@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
