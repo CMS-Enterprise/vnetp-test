@@ -245,9 +245,8 @@ describe('FirewallRuleModalComponent', () => {
 
   // Destination Service Type
   it('destinationPort should be required if destination service type is port', () => {
-    const destinationServiceType =
-      component.form.controls.destinationServiceType;
-    destinationServiceType.setValue('Port');
+    const serviceType = component.form.controls.serviceType;
+    serviceType.setValue('Port');
     const destinationPorts = component.form.controls.destinationPorts;
     expect(destinationPorts.valid).toBeFalsy();
   });
