@@ -8,15 +8,15 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { VlanModalComponent } from './vlan-modal.component';
 
-describe('ServiceObjectModalComponent', () => {
-  let component: ServiceObjectModalComponent;
-  let fixture: ComponentFixture<ServiceObjectModalComponent>;
+describe('VlanModalComponent', () => {
+  let component: VlanModalComponent;
+  let fixture: ComponentFixture<VlanModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
@@ -30,7 +30,7 @@ describe('ServiceObjectModalComponent', () => {
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],
-      declarations: [ServiceObjectModalComponent, TooltipComponent],
+      declarations: [VlanModalComponent, TooltipComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         FormBuilder,
@@ -39,13 +39,13 @@ describe('ServiceObjectModalComponent', () => {
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(ServiceObjectModalComponent);
+        fixture = TestBed.createComponent(VlanModalComponent);
         component = fixture.componentInstance;
       });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ServiceObjectModalComponent);
+    fixture = TestBed.createComponent(VlanModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
