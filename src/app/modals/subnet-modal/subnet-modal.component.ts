@@ -144,7 +144,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([Validators.required, ValidateIpv4Address]),
       ],
-      vlan: ['', Validators.compose([Validators.min(1), Validators.max(4094)])],
+      vlan: ['', Validators.required],
     });
   }
 
