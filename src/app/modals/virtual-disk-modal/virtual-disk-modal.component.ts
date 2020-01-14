@@ -28,7 +28,7 @@ export class VirtualDiskModalComponent implements OnInit {
     const virtualDisk = {} as VmwareVirtualDisk;
     virtualDisk.name = this.form.value.name;
     virtualDisk.description = this.form.value.description;
-    virtualDisk.diskSize = this.form.value.diskSize;
+    virtualDisk.diskSize = this.convertGbToBytes(this.form.value.diskSize);
     virtualDisk.rawLun = this.form.value.rawLun;
     virtualDisk.virtualMachineId = this.VirtualMachineId;
 
@@ -57,6 +57,12 @@ export class VirtualDiskModalComponent implements OnInit {
 
   cancel() {
     this.closeModal();
+  }
+
+  private convertGbToBytes(val) {
+    let convertedVal = val * 1000000000;
+
+    return convertedVal;
   }
 
   get f() {

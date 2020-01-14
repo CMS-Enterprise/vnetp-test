@@ -34,7 +34,12 @@ export class NetworkAdapterModalComponent implements OnInit {
         datacenterId: this.DatacenterId,
         join: 'vlans',
       })
-      .subscribe(data => console.log(data));
+      .subscribe(data => {
+        this.Vlans = [];
+        data.forEach(tier => {
+          this.Vlans.push(...tier.vlans);
+        });
+      });
   }
 
   save() {

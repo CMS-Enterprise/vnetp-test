@@ -1,5 +1,7 @@
 <div>
-  <h4>Tiers <span class="badge badge-primary">{{ currentDatacenter?.name }}</span></h4>
+  <h4>
+    Tiers <span class="badge badge-primary">{{ currentDatacenter?.name }}</span>
+  </h4>
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
@@ -55,11 +57,12 @@
           </td>
         </tr>
         <tr *ngIf="!tiers?.length" class="text-center">
-          <td colspan="9">No Tiers in this Datacenter</td>
+          <td colspan="3">No Tiers in this Datacenter</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-<app-tier-modal></app-tier-modal>
-<app-yes-no-modal></app-yes-no-modal>
+  <app-tier-modal></app-tier-modal>
+  <app-yes-no-modal></app-yes-no-modal>
+</div>

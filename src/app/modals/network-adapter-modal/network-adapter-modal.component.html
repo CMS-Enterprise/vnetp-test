@@ -49,7 +49,9 @@
         <label for="vlanId">VLAN</label>
         <select name="vlanId" formControlName="vlanId" class="form-control">
           <option></option>
-          <option *ngFor="let vlan of Vlans">{{ vlan.id }}</option>
+          <option *ngFor="let vlan of Vlans" [ngValue]="vlan.id">
+            {{ vlan.name }}
+          </option>
         </select>
       </div>
 

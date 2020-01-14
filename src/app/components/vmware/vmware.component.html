@@ -40,7 +40,7 @@
         <td>
           {{ vm.cpuCoresPerSocket }}
         </td>
-        <td>{{ vm.memorySize }} GB</td>
+        <td>{{ convertBytesToGb(vm.memorySize) }} GB</td>
         <td>
           <fa
             name="pencil"
