@@ -60,7 +60,7 @@ export class VirtualDiskModalComponent implements OnInit {
   }
 
   private convertGbToBytes(val) {
-    let convertedVal = val * 1000000000;
+    const convertedVal = val * 1000000000;
 
     return convertedVal;
   }

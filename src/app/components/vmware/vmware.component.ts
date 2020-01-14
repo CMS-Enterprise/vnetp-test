@@ -119,7 +119,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
   }
 
   convertBytesToGb(val) {
-    let convertedVal = val / 1000000000;
+    const convertedVal = val / 1000000000;
 
     return convertedVal;
   }

@@ -89,7 +89,7 @@ export class VmwareDetailComponent implements OnInit {
   }
 
   convertBytesToGb(val) {
-    let convertedVal = val / 1000000000;
+    const convertedVal = val / 1000000000;
 
     return convertedVal;
   }
