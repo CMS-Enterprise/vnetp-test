@@ -184,14 +184,14 @@
   </div>
 </div>
 
-<div *ngIf="currentTier" class="pull-right">
+<!-- <div *ngIf="currentTier" class="pull-right">
   <app-import-export
     [exportObject]="exportNetworkObjectConfig()"
     exportFileName="networkObjects-{{ currentTier.name }}"
     disableCsv="true"
     (import)="importNetworkObjectConfig($event)"
   ></app-import-export>
-</div>
+</div> -->
 
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>

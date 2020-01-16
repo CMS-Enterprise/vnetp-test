@@ -58,6 +58,7 @@ export class ImportExportComponent implements OnInit {
             throw new Error('Invalid File Type');
           }
           const options = {
+            skipEmptyLines: true,
             header: true,
             complete: results => {
               importCallback(results.data);
@@ -78,9 +79,13 @@ export class ImportExportComponent implements OnInit {
   }
 
   private Export(exportObject: any, exportType: string): SafeUrl {
+    console.log(exportObject);
+    console.log(exportType);
+    console.log(this.disableJson);
     switch (exportType) {
       case 'csv':
         if (this.disableJson) {
+          console.log(this.disableJson);
           throw new Error('Invalid File Type');
         }
         const exportCsv = this.papa.unparse(exportObject);

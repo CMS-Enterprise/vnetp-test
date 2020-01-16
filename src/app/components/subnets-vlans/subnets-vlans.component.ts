@@ -244,6 +244,38 @@ export class SubnetsVlansComponent
       });
   }
 
+  importSubnetConfig(event: Subnet[]) {
+    this.subnetService
+      .v1NetworkSubnetsBulkPost({ generatedSubnetBulkDto: { bulk: event } })
+      .subscribe(
+        data => {
+          this.getVlans(true);
+        },
+        error => console.log(error),
+      );
+  }
+
+  importVlansConfig(event: Vlan[]) {
+    const dto = this.sanitizeData(event);
+
+    this.vlanService
+      .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
+      .subscribe(
+        data => {
+          this.getVlans();
+        },
+        error => console.log(error),
+      );
+  }
+
+  // Need to sanatize data for types that are not strings.
+  sanitizeData(vlans: Vlan[]) {
+    return vlans.map(vlan => {
+      vlan.vlanNumber = Number(vlan.vlanNumber);
+      return vlan;
+    });
+  }
+
   getObjectsForNavIndex() {
     if (!this.currentTier) {
       return;
