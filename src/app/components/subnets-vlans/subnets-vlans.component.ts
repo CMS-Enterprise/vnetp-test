@@ -260,9 +260,10 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
+          const dto = this.sanitizeData(event);
           this.subnetService
             .v1NetworkSubnetsBulkPost({
-              generatedSubnetBulkDto: { bulk: event },
+              generatedSubnetBulkDto: { bulk: dto },
             })
             .subscribe(data => {
               this.getVlans(true);
@@ -288,6 +289,7 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
+          const dto = this.sanitizeData(event);
           this.vlanService
             .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
             .subscribe(data => {
@@ -296,13 +298,17 @@ export class SubnetsVlansComponent
         }
         yesNoModalSubscription.unsubscribe();
       });
-    const dto = this.sanitizeData(event);
   }
 
-  sanitizeData(vlans: Vlan[]) {
-    return vlans.map(vlan => {
-      vlan.vlanNumber = Number(vlan.vlanNumber);
-      return vlan;
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      if (entity.vlanNumber) {
+        entity.vlanNumber = Number(entity.vlanNumber);
+      }
+      if (!entity.tierId) {
+        entity.tierId = this.currentTier.id;
+      }
+      return entity;
     });
   }
 
