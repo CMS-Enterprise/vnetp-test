@@ -82,7 +82,6 @@ export class ImportExportComponent implements OnInit {
     switch (exportType) {
       case 'csv':
         if (this.disableJson) {
-          console.log(this.disableJson);
           throw new Error('Invalid File Type');
         }
         const exportCsv = this.papa.unparse(exportObject);

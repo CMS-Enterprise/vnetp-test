@@ -264,12 +264,9 @@ export class SubnetsVlansComponent
             .v1NetworkSubnetsBulkPost({
               generatedSubnetBulkDto: { bulk: event },
             })
-            .subscribe(
-              data => {
-                this.getVlans(true);
-              },
-              error => console.log(error),
-            );
+            .subscribe(data => {
+              this.getVlans(true);
+            });
         }
         yesNoModalSubscription.unsubscribe();
       });
@@ -293,19 +290,15 @@ export class SubnetsVlansComponent
         if (modalData && modalData.modalYes) {
           this.vlanService
             .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
-            .subscribe(
-              data => {
-                this.getVlans();
-              },
-              error => console.log(error),
-            );
+            .subscribe(data => {
+              this.getVlans();
+            });
         }
         yesNoModalSubscription.unsubscribe();
       });
     const dto = this.sanitizeData(event);
   }
 
-  // Need to sanatize data for types that are not strings.
   sanitizeData(vlans: Vlan[]) {
     return vlans.map(vlan => {
       vlan.vlanNumber = Number(vlan.vlanNumber);
