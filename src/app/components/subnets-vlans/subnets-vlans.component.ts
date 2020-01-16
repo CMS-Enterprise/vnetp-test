@@ -245,27 +245,64 @@ export class SubnetsVlansComponent
   }
 
   importSubnetConfig(event: Subnet[]) {
-    this.subnetService
-      .v1NetworkSubnetsBulkPost({ generatedSubnetBulkDto: { bulk: event } })
-      .subscribe(
-        data => {
-          this.getVlans(true);
-        },
-        error => console.log(error),
-      );
+    const modalDto = new YesNoModalDto(
+      'Import Subnets',
+      `Are you sure you would like to import ${event.length} subnet${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          this.subnetService
+            .v1NetworkSubnetsBulkPost({
+              generatedSubnetBulkDto: { bulk: event },
+            })
+            .subscribe(
+              data => {
+                this.getVlans(true);
+              },
+              error => console.log(error),
+            );
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   importVlansConfig(event: Vlan[]) {
-    const dto = this.sanitizeData(event);
+    const modalDto = new YesNoModalDto(
+      'Import Vlans',
+      `Are you sure you would like to import ${event.length} vlan${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
 
-    this.vlanService
-      .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
-      .subscribe(
-        data => {
-          this.getVlans();
-        },
-        error => console.log(error),
-      );
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          this.vlanService
+            .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
+            .subscribe(
+              data => {
+                this.getVlans();
+              },
+              error => console.log(error),
+            );
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+    const dto = this.sanitizeData(event);
   }
 
   // Need to sanatize data for types that are not strings.

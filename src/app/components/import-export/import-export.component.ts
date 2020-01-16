@@ -79,9 +79,6 @@ export class ImportExportComponent implements OnInit {
   }
 
   private Export(exportObject: any, exportType: string): SafeUrl {
-    console.log(exportObject);
-    console.log(exportType);
-    console.log(this.disableJson);
     switch (exportType) {
       case 'csv':
         if (this.disableJson) {
