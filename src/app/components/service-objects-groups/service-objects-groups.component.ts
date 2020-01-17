@@ -30,6 +30,7 @@ export class ServiceObjectsGroupsComponent
   serviceObjectGroups: Array<ServiceObjectGroup>;
 
   navIndex = 0;
+  showRadio = false;
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
@@ -271,6 +272,93 @@ export class ServiceObjectsGroupsComponent
       }
     });
   }
+
+  importServiceObjectsConfig(event: ServiceObject[]) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Service Objects',
+      `Are you sure you would like to import ${event.length} service object${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.serviceObjectService
+            .v1NetworkSecurityServiceObjectsBulkPost({
+              generatedServiceObjectBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getServiceObjects();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  importServiceObjectGroupsConfig(event) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Service Object Groups',
+      `Are you sure you would like to import ${
+        event.length
+      } service object group${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.serviceObjectGroupService
+            .v1NetworkSecurityServiceObjectGroupsBulkPost({
+              generatedServiceObjectGroupBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getServiceObjectGroups();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      if (!entity.tierId) {
+        entity.tierId = this.currentTier.id;
+      }
+      this.removeEmpty(entity);
+      return entity;
+    });
+  }
+
+  removeEmpty = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
 
   importServiceObjectConfig(config) {
     // TODO: Import Validation
