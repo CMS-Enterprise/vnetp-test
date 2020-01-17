@@ -309,12 +309,37 @@ export class NetworkObjectsGroupsComponent
   }
 
   importNetworkObjectGroupsConfig(event) {
-    // TODO: Import Validation
-    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    // this.networkObjects = config.NetworkObjects;
-    // this.networkObjectGroups = config.NetworkObjectGroups;
-    // this.dirty = true;
-    console.log(event);
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Network Object Groups',
+      `Are you sure you would like to import ${
+        event.length
+      } network object group${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.networkObjectGroupService
+            .v1NetworkSecurityNetworkObjectGroupsBulkPost({
+              generatedNetworkObjectGroupBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getNetworkObjectGroups();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
   }
 
   sanitizeData(entities: any) {
