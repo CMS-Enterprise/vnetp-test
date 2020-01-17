@@ -170,7 +170,7 @@
 </div>
 
 
-<div *ngIf="navIndex === 0"class="pull-right">
+<div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export
     [exportObject]="subnets"
     exportFileName="subnets-{{ currentTier?.name }}"
@@ -179,7 +179,7 @@
   ></app-import-export>
 </div>
 
-<div *ngIf="navIndex === 1"class="pull-right">
+<div *ngIf="navIndex === 1" class="pull-right">
   <app-import-export
     [exportObject]="vlans"
     exportFileName="vlans-{{ currentTier?.name }}"

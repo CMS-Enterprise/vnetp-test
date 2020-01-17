@@ -31,6 +31,7 @@ export class NetworkObjectsGroupsComponent
   networkObjectGroups: Array<NetworkObjectGroup>;
 
   navIndex = 0;
+  showRadio = false;
 
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
@@ -273,21 +274,73 @@ export class NetworkObjectsGroupsComponent
     });
   }
 
-  importNetworkObjectConfig(config) {
+  importNetworkObjectsConfig(event: NetworkObject[]) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Network Objects',
+      `Are you sure you would like to import ${event.length} network object${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.networkObjectService
+            .v1NetworkSecurityNetworkObjectsBulkPost({
+              generatedNetworkObjectBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getNetworkObjects();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  importNetworkObjectGroupsConfig(event) {
     // TODO: Import Validation
     // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
     // this.networkObjects = config.NetworkObjects;
     // this.networkObjectGroups = config.NetworkObjectGroups;
     // this.dirty = true;
+    console.log(event);
   }
 
-  exportNetworkObjectConfig() {
-    // const dto = new NetworkObjectDto();
-    // dto.NetworkObjects = this.networkObjects;
-    // dto.NetworkObjectGroups = this.networkObjectGroups;
-    // dto.VrfId = this.currentVrf.id;
-    // return dto;
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      if (!entity.tierId) {
+        entity.tierId = this.currentTier.id;
+      }
+      this.removeEmpty(entity);
+      return entity;
+    });
   }
+
+  removeEmpty = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false') {
+        obj[key] = false;
+      }
+      if (val === 'true') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
