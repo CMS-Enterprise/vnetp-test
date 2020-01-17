@@ -30,7 +30,7 @@ export class SubnetsVlansComponent
   vlans: Array<Vlan>;
 
   navIndex = 0;
-
+  showRadio = false;
   subnetModalSubscription: Subscription;
   vlanModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
@@ -245,6 +245,7 @@ export class SubnetsVlansComponent
   }
 
   importSubnetConfig(event: Subnet[]) {
+    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Subnets',
       `Are you sure you would like to import ${event.length} subnet${
@@ -260,7 +261,10 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          const dto = this.sanitizeData(event);
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
           this.subnetService
             .v1NetworkSubnetsBulkPost({
               generatedSubnetBulkDto: { bulk: dto },
@@ -269,11 +273,13 @@ export class SubnetsVlansComponent
               this.getVlans(true);
             });
         }
+        this.showRadio = false;
         yesNoModalSubscription.unsubscribe();
       });
   }
 
   importVlansConfig(event: Vlan[]) {
+    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Vlans',
       `Are you sure you would like to import ${event.length} vlan${
@@ -289,13 +295,17 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          const dto = this.sanitizeData(event);
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
           this.vlanService
             .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
             .subscribe(data => {
               this.getVlans();
             });
         }
+        this.showRadio = false;
         yesNoModalSubscription.unsubscribe();
       });
   }

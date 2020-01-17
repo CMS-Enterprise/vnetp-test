@@ -9,4 +9,6 @@ export class YesNoModalDto {
   modalBody: string;
 
   modalYes: boolean;
+
+  allowTierChecked: boolean;
 }
