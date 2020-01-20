@@ -76,6 +76,8 @@ import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
+import { ZvmComponent } from './zvm/zvm.component';
+import { ZosComponent } from './zos/zos.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -141,6 +143,8 @@ export function apiConfigFactory(): Configuration {
     VmwareDetailComponent,
     VirtualDiskModalComponent,
     NetworkAdapterModalComponent,
+    ZvmComponent,
+    ZosComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

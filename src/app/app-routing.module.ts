@@ -29,6 +29,8 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { VmwareComponent } from './components/vmware/vmware.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
+import { ZvmComponent } from './zvm/zvm.component';
+import { ZosComponent } from './zos/zos.component';
 
 // tslint:disable: max-line-length
 
@@ -130,6 +132,18 @@ const routes: Routes = [
     component: VmwareDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'VMWare Detail' },
+  },
+  {
+    path: 'zvm',
+    component: ZvmComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/VM' },
+  },
+  {
+    path: 'zos',
+    component: ZosComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/OS' },
   },
   {
     path: 'solaris',
