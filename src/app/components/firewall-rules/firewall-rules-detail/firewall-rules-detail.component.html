@@ -12,14 +12,6 @@
         <fa name="plus"></fa>
         Add Firewall Rule
       </button>
-
-      <app-import-export
-        [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
-        (import)="insertFirewallRules($event)"
-        disableExport="true"
-      ></app-import-export>
-
       <button
         type="button"
         class="btn btn-info mr-1"
@@ -154,7 +146,7 @@
           [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
           (click)="deleteFirewallRule(firewallRule)"
           aria-label="Soft-Delete/Delete Firewall Rule"
-        ></fa> 
+        ></fa>
         <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
         </td>
       </tr>
@@ -168,9 +160,9 @@
     <div class="btn-group-sm" role="group">
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ vrf?.name }}-{{ scope == 0 ? 'external' : 'intervrf' }}"
-        (import)="insertFirewallRules($event)"
-        disableImport="true"
+        exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
+        (import)="importFirewallRulesConfig($event)"
+        [disableJson]="false"
       ></app-import-export>
     </div>
   </div>

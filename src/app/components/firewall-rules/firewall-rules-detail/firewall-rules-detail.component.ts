@@ -30,7 +30,7 @@ export class FirewallRulesDetailComponent
   TierName = '';
 
   dirty: boolean;
-
+  showRadio = false;
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
 
@@ -251,15 +251,58 @@ export class FirewallRulesDetailComponent
       });
   }
 
-  insertFirewallRules(rules) {
-    // if (this.firewallRules == null) {
-    //   this.firewallRules = new Array<FirewallRule>();
-    // }
-    // rules.forEach(rule => {
-    //   if (rule.Name !== '') {
-    //     this.firewallRules.push(rule);
-    //   }
-    // });
-    // this.dirty = true;
+  importFirewallRulesConfig(event) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Firewall Rule',
+      `Are you sure you would like to import ${event.length} firewall rule${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+          this.firewallRuleService
+            .v1NetworkSecurityFirewallRulesBulkPost({
+              generatedFirewallRuleBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getFirewallRules();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
   }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      entity.ruleIndex = Number(entity.ruleIndex);
+      this.removeEmpty(entity);
+      return entity;
+    });
+  }
+
+  removeEmpty = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false') {
+        obj[key] = false;
+      }
+      if (val === 'true') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
 }
