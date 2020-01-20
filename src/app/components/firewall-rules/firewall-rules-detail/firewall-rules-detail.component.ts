@@ -30,7 +30,6 @@ export class FirewallRulesDetailComponent
   TierName = '';
 
   dirty: boolean;
-  showRadio = false;
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
 
@@ -252,7 +251,6 @@ export class FirewallRulesDetailComponent
   }
 
   importFirewallRulesConfig(event) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Firewall Rule',
       `Are you sure you would like to import ${event.length} firewall rule${
@@ -278,7 +276,6 @@ export class FirewallRulesDetailComponent
               this.getFirewallRules();
             });
         }
-        this.showRadio = false;
         yesNoModalSubscription.unsubscribe();
       });
   }
