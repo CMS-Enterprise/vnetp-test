@@ -16,6 +16,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 })
 export class FirewallRulesComponent implements OnInit {
   navIndex = FirewallRuleGroupType.External;
+  currentFirewallRulePage = 1;
 
   tiers: Array<Tier>;
   currentDatacenterSubscription: Subscription;

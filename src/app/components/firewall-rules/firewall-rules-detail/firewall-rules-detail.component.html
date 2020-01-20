@@ -42,7 +42,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let firewallRule of firewallRules">
+      <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: 10, currentPage: currentFirewallRulePage }">
         <td>
           <p>{{ firewallRule?.name }}</p>
         </td>
@@ -155,6 +155,7 @@
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
 
   <div *ngIf="firewallRules?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm" role="group">

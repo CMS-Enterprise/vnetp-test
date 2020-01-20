@@ -16,6 +16,7 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   tiers: Tier[];
 
+  currentTierPage = 1;
   navIndex = 0;
 
   tierModalSubscription: Subscription;

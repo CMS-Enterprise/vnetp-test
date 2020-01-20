@@ -26,6 +26,9 @@ export class SubnetsVlansComponent
   tiers: Tier[];
   currentTier: Tier;
 
+  currentSubnetsPage = 1;
+  currentVlansPage = 1;
+
   subnets: Array<Subnet>;
   vlans: Array<Vlan>;
 

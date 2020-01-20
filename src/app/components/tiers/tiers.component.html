@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tier of tiers">
+        <tr *ngFor="let tier of tiers | paginate: { itemsPerPage: 10, currentPage: currentTiersPage }">
           <td>
             <span>{{ tier?.name }}</span>
           </td>
@@ -59,6 +59,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentSubnetsPage = $event"></pagination-controls>
   </div>
 
 <app-tier-modal></app-tier-modal>

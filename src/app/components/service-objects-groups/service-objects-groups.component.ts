@@ -26,6 +26,9 @@ export class ServiceObjectsGroupsComponent
   tiers: Tier[];
   currentTier: Tier;
 
+  currentServiceObjectsPage = 1;
+  currentServiceObjectGroupsPage = 1;
+
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
 

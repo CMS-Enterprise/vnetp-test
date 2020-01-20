@@ -28,6 +28,7 @@ export class FirewallRulesDetailComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
   TierName = '';
+  currentFirewallRulePage = 1;
 
   dirty: boolean;
   firewallRuleGroup: FirewallRuleGroup;

@@ -36,6 +36,12 @@ export class LoadBalancersComponent
   tiers: Tier[];
   currentTier: Tier;
 
+  currentIrulePage = 1;
+  currentVSPage = 1;
+  currentNodePage = 1;
+  currentPoolPage = 1;
+  currentHMPage = 1;
+
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];
   nodes: LoadBalancerNode[];
