@@ -27,6 +27,7 @@ export interface FirewallRule {
     action: FirewallRuleAction;
     protocol: FirewallRuleProtocol;
     logging: boolean;
+    enabled: boolean;
     ruleIndex: number;
     sourceAddressType: FirewallRuleSourceAddressType;
     destinationAddressType: FirewallRuleDestinationAddressType;

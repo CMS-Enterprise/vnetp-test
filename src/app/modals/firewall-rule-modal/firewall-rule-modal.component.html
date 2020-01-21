@@ -108,6 +108,21 @@
         </div>
 
         <div class="form-group col-md-2">
+          <label for="type">Enabled</label>
+          <tooltip [message]="helpText.Enabled"></tooltip>
+          <select
+            name="enabled"
+            formControlName="enabled"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
+            aria-label="Logging"
+          >
+            <option [ngValue]="false">False</option>
+            <option [ngValue]="true">True</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-2">
           <label for="type">Rule Index</label>
           <tooltip [message]="helpText.RuleIndex"></tooltip>
           <input

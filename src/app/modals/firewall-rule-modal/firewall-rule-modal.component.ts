@@ -79,6 +79,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     modalFirewallRule.protocol = this.form.controls.protocol.value;
     modalFirewallRule.direction = this.form.controls.direction.value;
     modalFirewallRule.logging = this.form.controls.logging.value;
+    modalFirewallRule.enabled = this.form.controls.enabled.value;
     modalFirewallRule.ruleIndex = this.form.controls.ruleIndex.value;
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
@@ -206,10 +207,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.protocol.setValue(firewallRule.protocol);
       this.form.controls.direction.setValue(firewallRule.direction);
       this.form.controls.ruleIndex.setValue(firewallRule.ruleIndex);
-
-      if (firewallRule.logging) {
-        this.form.controls.logging.setValue(firewallRule.logging);
-      }
+      this.form.controls.logging.setValue(firewallRule.logging);
+      this.form.controls.enabled.setValue(firewallRule.enabled);
 
       if (
         firewallRule.sourceAddressType ===
@@ -490,6 +489,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       serviceObjectGroup: [''],
 
       logging: [false],
+      enabled: [true],
     });
   }
 

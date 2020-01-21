@@ -23,6 +23,7 @@ export * from './generatedVlanBulkDto';
 export * from './generatedVmwareNetworkAdapterBulkDto';
 export * from './generatedVmwareVirtualDiskBulkDto';
 export * from './generatedVmwareVirtualMachineBulkDto';
+export * from './job';
 export * from './loadBalancerHealthMonitor';
 export * from './loadBalancerIrule';
 export * from './loadBalancerNode';

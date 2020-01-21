@@ -44,6 +44,7 @@
         <th scope="col">Destination Address</th>
         <th scope="col">Service</th>
         <th scope="col">Log</th>
+        <th scope="col">Enabled</th>
         <th scope="col">Rule Index</th>
         <th></th>
       </tr>
@@ -118,6 +119,9 @@
         </td>
         <td>
           <p>{{ firewallRule?.logging }}</p>
+        </td>
+        <td>
+          <p>{{ firewallRule?.enabled }}</p>
         </td>
         <td>
           <span>{{ firewallRule?.ruleIndex }}</span>
