@@ -138,6 +138,8 @@
         </div>
       </div>
 
+      <hr />
+
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="name">Source Network Type</label>
@@ -231,48 +233,6 @@
           </div>
         </div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="name">Service Type</label>
-          <tooltip [message]="helpText.SourceServiceType"></tooltip>
-          <select
-            name="serviceType"
-            formControlName="serviceType"
-            class="form-control"
-            aria-label="Source Service Type"
-          >
-            <option value="Port">Port</option>
-            <option value="ServiceObject">Service Object</option>
-            <option value="ServiceObjectGroup">Service Object Group</option>
-          </select>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="name" *ngIf="f.serviceType.value === 'Port'"
-            >Source Port</label
-          >
-          <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
-          <input
-            type="text"
-            formControlName="sourcePorts"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
-            aria-label="Name"
-            *ngIf="f.serviceType.value === 'Port'"
-          />
-          <div
-            *ngIf="submitted && f.sourcePorts.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.sourcePorts.errors.required">
-              Source Port is required
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr />
 
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -373,20 +333,48 @@
         </div>
       </div>
 
+      <hr />
+      
       <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
           <label for="name">Service Type</label>
-          <tooltip [message]="helpText.DestinationServiceType"></tooltip>
+          <tooltip [message]="helpText.SourceServiceType"></tooltip>
           <select
             name="serviceType"
             formControlName="serviceType"
             class="form-control"
-            aria-label="Destination Service Type"
+            aria-label="Source Service Type"
           >
             <option value="Port">Port</option>
             <option value="ServiceObject">Service Object</option>
             <option value="ServiceObjectGroup">Service Object Group</option>
           </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6" *ngIf="f.serviceType.value === 'Port'">
+          <label for="name" *ngIf="f.serviceType.value === 'Port'"
+            >Source Port</label
+          >
+          <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
+          <input
+            type="text"
+            formControlName="sourcePorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+            aria-label="Name"
+            *ngIf="f.serviceType.value === 'Port'"
+          />
+          <div
+            *ngIf="submitted && f.sourcePorts.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourcePorts.errors.required">
+              Source Port is required
+            </div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">

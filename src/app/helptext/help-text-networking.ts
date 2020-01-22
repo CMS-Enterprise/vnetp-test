@@ -103,7 +103,7 @@ export class FirewallRuleModalHelpText {
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  IpNetworkType = `IP address of a single host (X.X.X.X), subnet (X.X.X.X/YY), or 'any' to match any IP Address.`;
+  IpNetworkType = `IP address of a single host (X.X.X.X) or subnet (X.X.X.X/YY).`;
   NetworkObjectType = `Network Object created under IPAM.`;
   NetworkObjectGroupType = `Network Object Group created under IPAM.`;
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;

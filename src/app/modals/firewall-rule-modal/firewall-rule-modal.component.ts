@@ -276,6 +276,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       if (firewallRule.serviceType === FirewallRuleServiceType.Port) {
         this.form.controls.serviceType.setValue(FirewallRuleServiceType.Port);
+        this.form.controls.sourcePorts.setValue(firewallRule.sourcePorts);
         this.form.controls.destinationPorts.setValue(
           firewallRule.destinationPorts,
         );
