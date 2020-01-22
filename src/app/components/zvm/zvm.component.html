@@ -1,0 +1,36 @@
+<div>
+  <h1>z/VM</h1>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <!-- TO DO: show only if customer -->
+    <button class="btn btn-success">
+      <fa name="upload"></fa>
+      Upload z/VM request
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Request sent</th>
+        <th scope="col">Configuration</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let z of zvmRequest">
+        <td>{{ z.uploadedAt }}</td>
+        <td>{{ z.respondedAt }}</td>
+        <td>
+          <!-- TO DO: admin and customer need different download functions -->
+          <fa name="download"></fa>
+          <!-- TO DO: if admin -->
+          <fa name="upload"></fa>
+        </td>
+      </tr>
+      <tr *ngIf="!zosRequest?.length" class="text-center">
+        <td colspan="3">No z/VM Requests have been sent</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

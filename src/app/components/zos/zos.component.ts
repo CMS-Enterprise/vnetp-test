@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./zos.component.css'],
 })
 export class ZosComponent implements OnInit {
+  zosRequest: any;
   constructor() {}
 
   ngOnInit() {}
