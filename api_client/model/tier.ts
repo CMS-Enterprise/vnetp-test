@@ -35,6 +35,7 @@ export interface Tier {
     name: string;
     description?: string;
     datacenterId: string;
+    tierGroupId: string;
     readonly vlans?: Array<Vlan>;
     readonly subnets?: Array<Subnet>;
     readonly staticRoutes?: Array<StaticRoute>;
