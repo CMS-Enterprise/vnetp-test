@@ -58,10 +58,11 @@
         formControlName="tierGroup"
         class="form-control"
         aria-label="Tier Group">
+        <option></option>
         <option
           *ngFor="let tierGroup of tierGroups"
           [ngValue]="tierGroup.id"
-          >{{ tierGroup.name }}</option
+          >{{ tierGroup.name }}</option>
         >
       </select>
       </div>

@@ -41,7 +41,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
     modalTierObject.name = this.form.value.name;
     modalTierObject.description = this.form.value.description;
     modalTierObject.datacenterId = this.DatacenterId;
-    modalTierObject.tierGroupId = this.form.value.tierGroup;
+    modalTierObject.tierGroupId = this.form.value.tierGroup || null;
 
     if (this.ModalMode === ModalMode.Create) {
       this.tierService
@@ -137,7 +137,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
         Validators.compose([Validators.required, Validators.minLength(3)]),
       ],
       description: ['', Validators.minLength(3)],
-      tierGroup: [''],
+      tierGroup: [null],
     });
   }
 
