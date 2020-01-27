@@ -8,10 +8,6 @@ export function ValidateIpv4Any(control: FormControl) {
     return null;
   }
 
-  if (control.value === 'any') {
-    return null;
-  }
-
   const ipArray = control.value.split('/');
   if (ipArray.length < 1 || ipArray.length > 2) {
     return { validIpv4Any: true };
