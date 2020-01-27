@@ -9848,6 +9848,8 @@ definitions:
         maxLength: 500
       datacenterId:
         type: string
+      tierGroupId:
+        type: string
       vlans:
         type: array
         readOnly: true
@@ -9916,6 +9918,48 @@ definitions:
     required:
       - name
       - datacenterId
+      - tierGroupId
+  TierGroup:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      datacenterId:
+        type: string
+      tiers:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/TierGroup'
+    required:
+      - name
+      - datacenterId
   Datacenter:
     type: object
     properties:
@@ -9967,6 +10011,11 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/Tier'
+      tierGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/TierGroup'
     required:
       - name
   GeneratedTierBulkDto:

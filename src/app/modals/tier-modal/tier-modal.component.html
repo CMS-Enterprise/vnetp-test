@@ -50,6 +50,21 @@
           <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="tierGroup">Tier Group</label>
+        <tooltip [message]="helpText?.Description"></tooltip>
+        <select
+        formControlName="tierGroup"
+        class="form-control"
+        aria-label="Tier Group">
+        <option
+          *ngFor="let tierGroup of tierGroups"
+          [ngValue]="tierGroup.id"
+          >{{ tierGroup.name }}</option
+        >
+      </select>
+      </div>
     </div>
 
       <div class="modal-footer">

@@ -50,6 +50,7 @@ export class VlanModalHelpText {
 export class TierModalHelpText {
   Name = 'Name of the Tier.';
   Description = 'Description of the Tier.';
+  TierGroup = 'Tier Group that the Tier belongs to.';
 }
 
 @Injectable({

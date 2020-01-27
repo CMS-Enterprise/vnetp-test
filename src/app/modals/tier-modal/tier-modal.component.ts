@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Tier, V1TiersService } from 'api_client';
+import {
+  Tier,
+  V1TiersService,
+  V1TierGroupsService,
+  TierGroup,
+} from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalHelpText } from 'src/app/helptext/help-text-networking';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
@@ -16,12 +21,14 @@ export class TierModalComponent implements OnInit, OnDestroy {
   ModalMode: ModalMode;
   DatacenterId: string;
   TierId: string;
+  tierGroups: Array<TierGroup>;
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     public helpText: TierModalHelpText,
-    private vlanService: V1TiersService,
+    private tierService: V1TiersService,
+    private tierGroupService: V1TierGroupsService,
   ) {}
 
   save() {
@@ -34,9 +41,10 @@ export class TierModalComponent implements OnInit, OnDestroy {
     modalTierObject.name = this.form.value.name;
     modalTierObject.description = this.form.value.description;
     modalTierObject.datacenterId = this.DatacenterId;
+    modalTierObject.tierGroupId = this.form.value.tierGroup;
 
     if (this.ModalMode === ModalMode.Create) {
-      this.vlanService
+      this.tierService
         .v1TiersPost({
           tier: modalTierObject,
         })
@@ -49,7 +57,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
     } else {
       modalTierObject.name = null;
       modalTierObject.datacenterId = null;
-      this.vlanService
+      this.tierService
         .v1TiersIdPut({
           id: this.TierId,
           tier: modalTierObject,
@@ -89,6 +97,8 @@ export class TierModalComponent implements OnInit, OnDestroy {
       this.DatacenterId = dto.DatacenterId;
     }
 
+    this.getTierGroups();
+
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
     } else {
@@ -107,8 +117,17 @@ export class TierModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(tier.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(tier.description);
+      this.form.controls.tierGroup.setValue(tier.tierGroupId);
     }
     this.ngx.resetModalData('tierModal');
+  }
+
+  private getTierGroups() {
+    this.tierGroupService
+      .v1TierGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}` })
+      .subscribe(data => {
+        this.tierGroups = data;
+      });
   }
 
   private buildForm() {
@@ -118,12 +137,14 @@ export class TierModalComponent implements OnInit, OnDestroy {
         Validators.compose([Validators.required, Validators.minLength(3)]),
       ],
       description: ['', Validators.minLength(3)],
+      tierGroup: [''],
     });
   }
 
   private reset() {
     this.submitted = false;
     this.DatacenterId = '';
+    this.tierGroups = [];
     this.ngx.resetModalData('tierModal');
     this.buildForm();
   }

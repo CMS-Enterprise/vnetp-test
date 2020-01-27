@@ -36,6 +36,8 @@ export * from './v1NetworkVlans.service';
 import { V1NetworkVlansService } from './v1NetworkVlans.service';
 export * from './v1PhysicalServers.service';
 import { V1PhysicalServersService } from './v1PhysicalServers.service';
+export * from './v1TierGroups.service';
+import { V1TierGroupsService } from './v1TierGroups.service';
 export * from './v1Tiers.service';
 import { V1TiersService } from './v1Tiers.service';
 export * from './v1Vlans.service';
