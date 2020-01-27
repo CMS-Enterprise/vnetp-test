@@ -79,7 +79,7 @@
                 <tooltip [message]="helpText.Datacenters"></tooltip>
               </span>
               <span class="inline-block ml-auto">
-                {{ datacenters?.length || 0 }}
+                {{ datacenters || 0 }}
               </span>
               <a>
                 <fa name="chevron-right"></fa>
@@ -91,33 +91,9 @@
                 <tooltip [message]="helpText.Tiers"></tooltip>
               </span>
               <span class="inline-block ml-auto">
-                {{ tiers?.length || 0 }}
+                {{ tiers || 0 }}
               </span>
               <a routerLink="/tiers" queryParamsHandling="merge">
-                <fa name="chevron-right"></fa>
-              </a>
-            </li>
-            <li>
-              <span>
-                VLANs
-                <tooltip [message]="helpText.Vlans"></tooltip>
-              </span>
-              <span class="inline-block ml-auto">
-                {{ vlans?.length || 0 }}
-              </span>
-              <a routerLink="/subnets-vlans" queryParamsHandling="merge">
-                <fa name="chevron-right"></fa>
-              </a>
-            </li>
-            <li>
-              <span>
-                Subnets
-                <tooltip [message]="helpText.Subnets"></tooltip>
-              </span>
-              <span class="inline-block ml-auto">
-                {{ subnets?.length || 0 }}
-              </span>
-              <a routerLink="/subnets-vlans" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>
               </a>
             </li>
@@ -127,7 +103,7 @@
                 <tooltip [message]="helpText.LbVirtualServers"></tooltip>
               </span>
               <span class="inline-block ml-auto">
-                {{ loadBalancerVirtualServers?.length || 0 }}
+                {{ loadBalancerVirtualServers || 0 }}
               </span>
               <a routerLink="/vmware" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>
@@ -139,31 +115,7 @@
                 <tooltip [message]="helpText.VMwareVms"></tooltip
               ></span>
               <span class="inline-block ml-auto">
-              {{ vmwareVirtualMachines?.length || 0 }}
-              </span>
-              <a routerLink="/vmware" queryParamsHandling="merge">
-                <fa name="chevron-right"></fa>
-              </a>
-            </li>
-            <li>
-              <span>
-                z/VM LPARs
-                <tooltip [message]="helpText.ZvmLpars"></tooltip>
-              </span>
-              <span class="inline-block ml-auto">
-                0
-              </span>
-              <a routerLink="/vmware" queryParamsHandling="merge">
-                <fa name="chevron-right"></fa>
-              </a>
-            </li>
-            <li>
-              <span>
-                z/OS LPARs
-                <tooltip [message]="helpText.ZosLpars"></tooltip>
-              </span>
-              <span class="inline-block ml-auto">
-                0
+              {{ vmwareVirtualMachines || 0 }}
               </span>
               <a routerLink="/vmware" queryParamsHandling="merge">
                 <fa name="chevron-right"></fa>

@@ -50,6 +50,7 @@ export class VlanModalHelpText {
 export class TierModalHelpText {
   Name = 'Name of the Tier.';
   Description = 'Description of the Tier.';
+  TierGroup = 'Tier Group that the Tier belongs to.';
 }
 
 @Injectable({
@@ -98,6 +99,7 @@ export class FirewallRuleModalHelpText {
   Action = `Action that the firewall will take on traffic that matches this rule.`;
   Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
+  Enabled = 'Indicates whether the firewall rule is enabled.';
   Logging = `Indicates whether traffic that matches this rule should be logged.`;
   SourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
