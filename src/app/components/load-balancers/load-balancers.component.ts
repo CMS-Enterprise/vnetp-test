@@ -21,6 +21,8 @@ import {
   V1LoadBalancerHealthMonitorsService,
   LoadBalancerNode,
   V1LoadBalancerNodesService,
+  V1LoadBalancerProfilesService,
+  LoadBalancerProfile,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -41,6 +43,7 @@ export class LoadBalancersComponent
   nodes: LoadBalancerNode[];
   irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
+  profiles: LoadBalancerProfile[];
 
   editVirtualServerIndex: number;
   editPoolIndex: number;
@@ -75,6 +78,7 @@ export class LoadBalancersComponent
     private poolsService: V1LoadBalancerPoolsService,
     private nodeService: V1LoadBalancerNodesService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private profilesService: V1LoadBalancerProfilesService,
     public helpText: LoadBalancersHelpText,
   ) {}
 
@@ -133,6 +137,15 @@ export class LoadBalancersComponent
       .subscribe(data => {
         this.healthMonitors = data.loadBalancerHealthMonitors;
       });
+  }
+
+  getProfiles() {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.currentTier.id,
+        join: 'loadBalancerProfiles',
+      })
+      .subscribe(data => {});
   }
 
   getObjectsForNavIndex() {

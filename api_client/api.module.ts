@@ -10,7 +10,9 @@ import { V1JobsService } from './api/v1Jobs.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
 import { V1LoadBalancerIrulesService } from './api/v1LoadBalancerIrules.service';
 import { V1LoadBalancerNodesService } from './api/v1LoadBalancerNodes.service';
+import { V1LoadBalancerPoliciesService } from './api/v1LoadBalancerPolicies.service';
 import { V1LoadBalancerPoolsService } from './api/v1LoadBalancerPools.service';
+import { V1LoadBalancerProfilesService } from './api/v1LoadBalancerProfiles.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
@@ -41,7 +43,9 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
     V1LoadBalancerHealthMonitorsService,
     V1LoadBalancerIrulesService,
     V1LoadBalancerNodesService,
+    V1LoadBalancerPoliciesService,
     V1LoadBalancerPoolsService,
+    V1LoadBalancerProfilesService,
     V1LoadBalancerVirtualServersService,
     V1NetworkSecurityFirewallRuleGroupsService,
     V1NetworkSecurityFirewallRulesService,
