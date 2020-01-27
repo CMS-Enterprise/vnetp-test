@@ -45,12 +45,6 @@ export class LoadBalancersComponent
   healthMonitors: LoadBalancerHealthMonitor[];
   profiles: LoadBalancerProfile[];
 
-  editVirtualServerIndex: number;
-  editPoolIndex: number;
-  editNodeIndex: number;
-  editIRuleIndex: number;
-  editHealthMonitorIndex: number;
-
   virtualServerModalMode: ModalMode;
   iruleModalMode: ModalMode;
   healthMonitorModalMode: ModalMode;
@@ -145,7 +139,9 @@ export class LoadBalancersComponent
         id: this.currentTier.id,
         join: 'loadBalancerProfiles',
       })
-      .subscribe(data => {});
+      .subscribe(data => {
+        this.profiles = data.loadBalancerProfiles;
+      });
   }
 
   getObjectsForNavIndex() {
@@ -181,10 +177,6 @@ export class LoadBalancersComponent
     dto.IRules = this.irules;
     dto.ModalMode = modalMode;
 
-    if (modalMode === ModalMode.Edit && !virtualServer) {
-      this.editVirtualServerIndex = this.virtualServers.indexOf(virtualServer);
-    }
-
     this.subscribeToVirtualServerModal();
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'virtualServerModal');
@@ -202,10 +194,6 @@ export class LoadBalancersComponent
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
 
-    if (modalMode === ModalMode.Edit) {
-      this.editPoolIndex = this.pools.indexOf(pool);
-    }
-
     this.subscribeToPoolModal();
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'poolModal');
@@ -220,10 +208,6 @@ export class LoadBalancersComponent
     dto.node = node;
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
-
-    if (modalMode === ModalMode.Edit) {
-      this.editNodeIndex = this.nodes.indexOf(node);
-    }
 
     this.subscribeToNodeModal();
     this.datacenterService.lockDatacenter();
@@ -241,9 +225,6 @@ export class LoadBalancersComponent
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
 
-    if (modalMode === ModalMode.Edit) {
-      this.editIRuleIndex = this.irules.indexOf(irule);
-    }
     this.subscribeToIRuleModal();
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'iruleModal');
@@ -263,9 +244,6 @@ export class LoadBalancersComponent
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
 
-    if (modalMode === ModalMode.Edit) {
-      this.editHealthMonitorIndex = this.healthMonitors.indexOf(healthMonitor);
-    }
     this.subscribeToHealthMonitorModal();
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'healthMonitorModal');
@@ -526,26 +504,6 @@ export class LoadBalancersComponent
         .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
         .subscribe(data => this.getHealthMonitors());
     }
-  }
-
-  importLoadBalancerConfig(importObject) {
-    //   // TODO: Import Validation.
-    //   // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    //   this.virtualServers = importObject.VirtualServers;
-    //   this.pools = importObject.Pools;
-    //   this.irules = importObject.IRules;
-    //   this.healthMonitors = importObject.HealthMonitors;
-    //   this.dirty = true;
-  }
-
-  exportLoadBalancerConfig() {
-    //   const dto = new LoadBalancerDto();
-    //   dto.VirtualServers = this.virtualServers;
-    //   dto.Pools = this.pools;
-    //   dto.IRules = this.irules;
-    //   dto.HealthMonitors = this.healthMonitors;
-    //   dto.VrfId = this.currentTier.id;
-    //   return dto;
   }
 
   private confirmDeleteObject(
