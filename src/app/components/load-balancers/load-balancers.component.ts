@@ -26,6 +26,7 @@ import {
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
+import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -54,6 +55,7 @@ export class LoadBalancersComponent
   nodeModalSubscription: Subscription;
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
+  profileModalSubscription: Subscription;
 
   currentDatacenterSubscription: Subscription;
 
@@ -250,6 +252,22 @@ export class LoadBalancersComponent
     this.ngx.getModal('healthMonitorModal').open();
   }
 
+  openProfileModal(modalMode: ModalMode, profile: LoadBalancerProfile) {
+    if (modalMode === ModalMode.Edit && !profile) {
+      throw new Error('Profile Required');
+    }
+
+    const dto = new ProfileModalDto();
+    dto.TierId = this.currentTier.id;
+    dto.Profile = profile;
+    dto.ModalMode = modalMode;
+
+    this.subscribeToProfileModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'loadBalancerProfileModal');
+    this.ngx.getModal('loadBalancerProfileModal').open();
+  }
+
   subscribeToVirtualServerModal() {
     this.virtualServerModalSubscription = this.ngx
       .getModal('virtualServerModal')
@@ -303,6 +321,17 @@ export class LoadBalancersComponent
         this.getHealthMonitors();
         this.ngx.resetModalData('healthMonitorModal');
         this.healthMonitorModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
+      });
+  }
+
+  subscribeToProfileModal() {
+    this.profileModalSubscription = this.ngx
+      .getModal('loadBalancerProfileModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getProfiles();
+        this.ngx.resetModalData('loadBalancerProfileModal');
+        this.profileModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
       });
   }
@@ -525,17 +554,22 @@ export class LoadBalancersComponent
   }
 
   private unsubAll() {
-    [this.virtualServerModalSubscription, this.poolModalSubscription].forEach(
-      sub => {
-        try {
-          if (sub) {
-            sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
+    [
+      this.virtualServerModalSubscription,
+      this.poolModalSubscription,
+      this.healthMonitorModalSubscription,
+      this.nodeModalSubscription,
+      this.profileModalSubscription,
+      this.iruleModalSubscription,
+    ].forEach(sub => {
+      try {
+        if (sub) {
+          sub.unsubscribe();
         }
-      },
-    );
+      } catch (e) {
+        console.error(e);
+      }
+    });
   }
 
   ngOnInit() {

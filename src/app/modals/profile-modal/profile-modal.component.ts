@@ -18,12 +18,13 @@ export class ProfileModalComponent implements OnInit {
   Profile: LoadBalancerProfile;
   ProfileId: string;
 
+  // TODO: Helptext
+
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private profileService: V1LoadBalancerProfilesService,
-  ) // public helpText: ProfileModalHelpText,
-  {}
+  ) {}
 
   save() {
     this.submitted = true;
