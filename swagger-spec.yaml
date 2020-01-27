@@ -846,6 +846,22 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/network-security/firewall-rule-groups/{id}/rules':
+    get:
+      parameters:
+        - type: uuidParam
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: &ref_3
+        - v1/network-security/firewall-rule-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/network-security/firewall-rule-groups:
     get:
       summary: Retrieve many FirewallRuleGroup
@@ -986,8 +1002,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: &ref_3
-        - v1/network-security/firewall-rule-groups
+      tags: *ref_3
       produces:
         - application/json
       consumes:
@@ -9356,6 +9371,8 @@ definitions:
       serviceObjectId:
         type: string
       serviceObjectGroupId:
+        type: string
+      serviceObjectGroupName:
         type: string
       firewallRuleGroupId:
         type: string

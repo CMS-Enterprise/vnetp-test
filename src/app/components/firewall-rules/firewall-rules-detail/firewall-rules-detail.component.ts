@@ -268,6 +268,32 @@ export class FirewallRulesDetailComponent
         if (modalData && modalData.modalYes) {
           let dto = event;
           dto = this.sanitizeData(event);
+          // dto = [
+          //   {
+          //     name: 'firewall22335',
+          //     description: null,
+          //     direction: 'Out',
+          //     action: 'Permit',
+          //     protocol: 'UDP',
+          //     logging: false,
+          //     enabled: true,
+          //     ruleIndex: 23,
+          //     sourceAddressType: 'IpAddress',
+          //     destinationAddressType: 'IpAddress',
+          //     serviceType: 'ServiceObjectGroup',
+          //     sourceIpAddress: '198.168.20.0/26',
+          //     sourceNetworkObjectId: null,
+          //     sourceNetworkObjectGroupId: null,
+          //     destinationIpAddress: '198.168.20.0/26',
+          //     destinationNetworkObjectId: null,
+          //     destinationNetworkObjectGroupId: null,
+          //     sourcePorts: null,
+          //     destinationPorts: null,
+          //     serviceObjectId: null,
+          //     serviceObjectGroupName: 'newobjGroup',
+          //     firewallRuleGroupId: 'f748a3c2-a54d-45c3-82de-89b6258e8e18',
+          //   },
+          // ];
           this.firewallRuleService
             .v1NetworkSecurityFirewallRulesBulkPost({
               generatedFirewallRuleBulkDto: { bulk: dto },
@@ -281,6 +307,7 @@ export class FirewallRulesDetailComponent
   }
 
   sanitizeData(entities: any) {
+    console.log(entities);
     return entities.map(entity => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.removeEmpty(entity);

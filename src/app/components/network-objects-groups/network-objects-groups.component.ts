@@ -64,10 +64,13 @@ export class NetworkObjectsGroupsComponent
   }
 
   getNetworkObjectGroups() {
-    this.tierService
-      .v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjectGroups' })
+    this.networkObjectGroupService
+      .v1NetworkSecurityNetworkObjectGroupsGet({
+        join: 'networkObjects',
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
       .subscribe(data => {
-        this.networkObjectGroups = data.networkObjectGroups;
+        this.networkObjectGroups = data;
       });
   }
 
