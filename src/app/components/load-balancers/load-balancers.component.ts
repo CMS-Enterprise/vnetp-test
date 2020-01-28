@@ -650,8 +650,18 @@ export class LoadBalancersComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
-          this.currentTier = cd.tiers[0];
-          this.getObjectsForNavIndex();
+          this.currentTier = null;
+          this.virtualServers = [];
+          this.pools = [];
+          this.nodes = [];
+          this.healthMonitors = [];
+          this.policies = [];
+          this.profiles = [];
+
+          if (cd.tiers.length) {
+            this.currentTier = cd.tiers[0];
+            this.getObjectsForNavIndex();
+          }
         }
       },
     );
