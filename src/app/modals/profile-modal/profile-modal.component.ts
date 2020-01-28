@@ -49,6 +49,14 @@ export class ProfileModalComponent implements OnInit {
       }
       profile.key = this.privateKeyCipher;
       profile.certificate = this.form.controls.certificate.value;
+
+      if (
+        this.isUnencryptedPrivateKey(profile.key) ||
+        this.isUnencryptedPrivateKey(profile.certificate)
+      ) {
+        this.toastr.error('Unencrypted Private Key not Allowed.');
+        return;
+      }
     }
 
     if (this.ModalMode === ModalMode.Create) {
@@ -132,17 +140,29 @@ export class ProfileModalComponent implements OnInit {
     reader.onload = () => {
       const result = reader.result.toString();
 
+      if (!this.isUnencryptedPrivateKey(result)) {
+        this.privateKeyCipher = result;
+      } else {
+        this.toastr.error('Unencrypted Private Key not Allowed.');
+        return;
+      }
+    };
+  }
+
+  private isUnencryptedPrivateKey(result: string) {
+    try {
       if (
         result.toUpperCase().includes('KEY') ||
         atob(result)
           .toUpperCase()
           .includes('KEY')
       ) {
-        this.toastr.error('Unecrypted Private Key not Allowed.');
+        return true;
       }
-
-      this.privateKeyCipher = result;
-    };
+      return false;
+    } catch {
+      return false;
+    }
   }
 
   getData() {
