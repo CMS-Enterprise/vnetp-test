@@ -309,10 +309,16 @@ export class FirewallRulesDetailComponent
       if (key === 'serviceObjectId') {
         obj[key] = this.getObjectId(val, this.serviceObjects);
       }
-      if (key === 'networkObjectGroupId') {
+      if (
+        key === 'sourceNetworkObjectGroupId' ||
+        key === 'destinationNetworkObjectGroupId'
+      ) {
         obj[key] = this.getObjectId(val, this.networkObjectGroups);
       }
-      if (key === 'networkObjectId') {
+      if (
+        key === 'sourceNetworkObjectId' ||
+        key === 'destinationNetworkObjectId'
+      ) {
         obj[key] = this.getObjectId(val, this.networkObjects);
       }
     });
