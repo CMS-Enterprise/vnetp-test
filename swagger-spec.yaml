@@ -10991,6 +10991,62 @@ definitions:
       - type
       - servicePort
       - tierId
+  LoadBalancerPolicy:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      type:
+        type: string
+        enum:
+          - ASM
+          - APM
+      asmContent:
+        type: string
+      apmContent:
+        type: string
+      tierId:
+        type: string
+    required:
+      - name
+      - type
+      - asmContent
+      - apmContent
+      - tierId
   Tier:
     type: object
     properties:
@@ -11108,7 +11164,7 @@ definitions:
         type: array
         readOnly: true
         items:
-          $ref: '#/definitions/LoadBalancerProfile'
+          $ref: '#/definitions/LoadBalancerPolicy'
     required:
       - name
       - datacenterId
@@ -11452,62 +11508,6 @@ definitions:
           $ref: '#/definitions/LoadBalancerNode'
     required:
       - bulk
-  LoadBalancerPolicy:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      type:
-        type: string
-        enum:
-          - ASM
-          - APM
-      asmContent:
-        type: string
-      apmContent:
-        type: string
-      tierId:
-        type: string
-    required:
-      - name
-      - type
-      - asmContent
-      - apmContent
-      - tierId
   GeneratedLoadBalancerPolicyBulkDto:
     type: object
     properties:

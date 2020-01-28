@@ -126,7 +126,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
               virtualServerId: this.VirtualServerId,
               iruleId: irule.id,
             })
-            .subscribe(data => {
+            .subscribe(result => {
               this.getVirtualServerIRulesProfiles();
             });
         }
@@ -167,7 +167,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
                 profileId: profile.id,
               },
             )
-            .subscribe(data => {
+            .subscribe(result => {
               this.getVirtualServerIRulesProfiles();
             });
         }

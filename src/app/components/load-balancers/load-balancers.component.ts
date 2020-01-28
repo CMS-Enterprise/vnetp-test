@@ -22,10 +22,12 @@ import {
   V1LoadBalancerNodesService,
   V1LoadBalancerProfilesService,
   LoadBalancerProfile,
+  LoadBalancerPolicy,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
+import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -44,10 +46,7 @@ export class LoadBalancersComponent
   irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
   profiles: LoadBalancerProfile[];
-
-  virtualServerModalMode: ModalMode;
-  iruleModalMode: ModalMode;
-  healthMonitorModalMode: ModalMode;
+  policies: LoadBalancerPolicy[];
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
@@ -57,6 +56,7 @@ export class LoadBalancersComponent
   profileModalSubscription: Subscription;
 
   currentDatacenterSubscription: Subscription;
+  policyModalSubscription: any;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -145,6 +145,17 @@ export class LoadBalancersComponent
       });
   }
 
+  getPolicies() {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.currentTier.id,
+        join: 'loadBalancerPolicies',
+      })
+      .subscribe(data => {
+        this.policies = data.loadBalancerPolicies;
+      });
+  }
+
   getObjectsForNavIndex() {
     if (this.navIndex === 0) {
       this.getPools(true);
@@ -161,6 +172,8 @@ export class LoadBalancersComponent
       this.getHealthMonitors();
     } else if (this.navIndex === 5) {
       this.getProfiles();
+    } else if (this.navIndex === 6) {
+      this.getPolicies();
     }
   }
 
@@ -269,6 +282,22 @@ export class LoadBalancersComponent
     this.ngx.getModal('loadBalancerProfileModal').open();
   }
 
+  openPolicyModal(modalMode: ModalMode, policy: LoadBalancerPolicy) {
+    if (modalMode === ModalMode.Edit && !policy) {
+      throw new Error('Profile Required');
+    }
+
+    const dto = new PolicyModalDto();
+    dto.TierId = this.currentTier.id;
+    dto.Policy = policy;
+    dto.ModalMode = modalMode;
+
+    this.subscribeToPolicyModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'loadBalancerPolicyModal');
+    this.ngx.getModal('loadBalancerPolicyModal').open();
+  }
+
   subscribeToVirtualServerModal() {
     this.virtualServerModalSubscription = this.ngx
       .getModal('virtualServerModal')
@@ -333,6 +362,17 @@ export class LoadBalancersComponent
         this.getProfiles();
         this.ngx.resetModalData('loadBalancerProfileModal');
         this.profileModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
+      });
+  }
+
+  subscribeToPolicyModal() {
+    this.policyModalSubscription = this.ngx
+      .getModal('loadBalancerPolicyModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getPolicies();
+        this.ngx.resetModalData('loadBalancerPolicyModal');
+        this.policyModalSubscription.unsubscribe();
         this.datacenterService.unlockDatacenter();
       });
   }
@@ -592,6 +632,7 @@ export class LoadBalancersComponent
       this.healthMonitorModalSubscription,
       this.nodeModalSubscription,
       this.profileModalSubscription,
+      this.policyModalSubscription,
       this.iruleModalSubscription,
     ].forEach(sub => {
       try {

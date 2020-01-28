@@ -23,6 +23,7 @@ import { LoadBalancerProfile } from './loadBalancerProfile';
 import { NetworkObjectGroup } from './networkObjectGroup';
 import { FirewallRuleGroup } from './firewallRuleGroup';
 import { Subnet } from './subnet';
+import { LoadBalancerPolicy } from './loadBalancerPolicy';
 
 
 export interface Tier { 
@@ -51,6 +52,6 @@ export interface Tier {
     readonly loadBalancerHealthMonitors?: Array<LoadBalancerHealthMonitor>;
     readonly loadBalancerVirtualServers?: Array<LoadBalancerVirtualServer>;
     readonly loadBalancerProfiles?: Array<LoadBalancerProfile>;
-    readonly loadBalancerPolicies?: Array<LoadBalancerProfile>;
+    readonly loadBalancerPolicies?: Array<LoadBalancerPolicy>;
 }
 
