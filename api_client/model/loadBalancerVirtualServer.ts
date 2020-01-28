@@ -28,30 +28,11 @@ export interface LoadBalancerVirtualServer {
     defaultPoolId?: string;
     defaultPool?: LoadBalancerPool & object;
     readonly irules?: Array<LoadBalancerIrule>;
-    clientSslProfiles?: Array<LoadBalancerVirtualServerClientSslProfiles>;
-    serverSslProfiles?: Array<LoadBalancerVirtualServerServerSslProfiles>;
     sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation;
     type: LoadBalancerVirtualServerType;
     servicePort: number;
     tierId: string;
 }
-export enum LoadBalancerVirtualServerClientSslProfiles {
-    Clientssl = 'clientssl',
-    ClientsslSecure = 'clientssl-secure',
-    ClientsslInsecureCompatible = 'clientssl-insecure-compatible',
-    CryptoServerDefaultClientssl = 'crypto-server-default-clientssl',
-    SplitsessionDefaultClientssl = 'splitsession-default-clientssl',
-    WomDefaultClientssl = 'wom-default-clientssl'
-};
-export enum LoadBalancerVirtualServerServerSslProfiles {
-    Serverssl = 'serverssl',
-    ServersslInsecureIncompatbile = 'serverssl-insecure-incompatbile',
-    SplitsessionDefaultServerssl = 'splitsession-default-serverssl',
-    ApmDefaultServerssl = 'apm-default-serverssl',
-    CryptoClientDefaultServerssl = 'crypto-client-default-serverssl',
-    PcoipDefaultServerssl = 'pcoip-default-serverssl',
-    WomDefaultServerssl = 'wom-default-serverssl'
-};
 export enum LoadBalancerVirtualServerSourceAddressTranslation {
     None = 'None',
     AutoMap = 'AutoMap',

@@ -10805,29 +10805,6 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerIrule'
-      clientSslProfiles:
-        type: array
-        items:
-          type: string
-          enum:
-            - clientssl
-            - clientssl-secure
-            - clientssl-insecure-compatible
-            - crypto-server-default-clientssl
-            - splitsession-default-clientssl
-            - wom-default-clientssl
-      serverSslProfiles:
-        type: array
-        items:
-          type: string
-          enum:
-            - serverssl
-            - serverssl-insecure-incompatbile
-            - splitsession-default-serverssl
-            - apm-default-serverssl
-            - crypto-client-default-serverssl
-            - pcoip-default-serverssl
-            - wom-default-serverssl
       sourceAddressTranslation:
         type: string
         enum:
