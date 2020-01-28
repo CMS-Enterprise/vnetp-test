@@ -5,6 +5,8 @@ import { LoadBalancerProfile, V1LoadBalancerProfilesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-load-balancer-profile-modal',
@@ -18,12 +20,17 @@ export class ProfileModalComponent implements OnInit {
   Profile: LoadBalancerProfile;
   ProfileId: string;
 
+  privateKeyCipher: string;
+  publicKey: string;
+  typeSubscription: Subscription;
+
   // TODO: Helptext
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private profileService: V1LoadBalancerProfilesService,
+    private toastr: ToastrService,
   ) {}
 
   save() {
@@ -33,8 +40,16 @@ export class ProfileModalComponent implements OnInit {
     }
 
     const profile = {} as LoadBalancerProfile;
-    profile.name = this.form.value.name;
-    profile.profileType = this.form.value.type;
+    profile.name = this.form.controls.name.value;
+    profile.profileType = this.form.controls.type.value;
+
+    if (profile.profileType === 'ClientSSL') {
+      if (!this.privateKeyCipher) {
+        return;
+      }
+      profile.key = this.privateKeyCipher;
+      profile.certificate = this.form.controls.certificate.value;
+    }
 
     if (this.ModalMode === ModalMode.Create) {
       profile.tierId = this.TierId;
@@ -108,14 +123,32 @@ export class ProfileModalComponent implements OnInit {
       });
   }
 
+  importPrivateKeyCipher(evt: any) {
+    const files = evt.target.files;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = () => {
+      const result = reader.result.toString();
+
+      if (
+        result.toUpperCase().includes('KEY') ||
+        atob(result)
+          .toUpperCase()
+          .includes('KEY')
+      ) {
+        this.toastr.error('Unecrypted Private Key not Allowed.');
+      }
+
+      this.privateKeyCipher = result;
+    };
+  }
+
   getData() {
     const dto = this.ngx.getModalData(
       'loadBalancerProfileModal',
     ) as ProfileModalDto;
-
-    if (dto.TierId) {
-      this.TierId = dto.TierId;
-    }
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
@@ -127,26 +160,63 @@ export class ProfileModalComponent implements OnInit {
       }
     }
 
-    if (dto !== undefined) {
+    this.TierId = dto.TierId;
+    const profile = dto.Profile;
+
+    if (profile !== undefined) {
+      this.form.controls.type.disable();
+      this.form.controls.name.disable();
       this.form.controls.name.setValue(dto.Profile.name);
       this.form.controls.type.setValue(dto.Profile.profileType);
+
+      if (dto.Profile.profileType === 'ClientSSL') {
+        this.privateKeyCipher = dto.Profile.key || null;
+        this.form.controls.certificate.setValue(dto.Profile.certificate);
+      }
     }
     this.ngx.resetModalData('loadBalancerProfileModal');
+  }
+
+  private setFormValidators() {
+    const certificate = this.form.controls.certificate;
+    const ciphers = this.form.controls.ciphers;
+
+    this.typeSubscription = this.form.controls.type.valueChanges.subscribe(
+      type => {
+        switch (type) {
+          case 'ClientSSL':
+            certificate.setValidators(Validators.required);
+            certificate.setValue(null);
+            break;
+          case 'Http':
+            certificate.setValidators(null);
+            certificate.setValue(null);
+            break;
+        }
+
+        certificate.updateValueAndValidity();
+        ciphers.updateValueAndValidity();
+      },
+    );
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
+      certificate: [null],
     });
   }
 
   private reset() {
     this.submitted = false;
+    this.privateKeyCipher = null;
     this.buildForm();
+    this.setFormValidators();
   }
 
   ngOnInit() {
     this.buildForm();
+    this.setFormValidators();
   }
 }

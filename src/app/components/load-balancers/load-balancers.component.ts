@@ -160,6 +160,8 @@ export class LoadBalancersComponent
       this.getIrules();
     } else if (this.navIndex === 4) {
       this.getHealthMonitors();
+    } else if (this.navIndex === 5) {
+      this.getProfiles();
     }
   }
 

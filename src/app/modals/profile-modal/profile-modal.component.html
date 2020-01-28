@@ -3,7 +3,7 @@
   identifier="loadBalancerProfileModal"
   [dismissable]="false"
   (onOpen)="getData()"
-  customClass="medium-modal"
+  customClass="large-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Profile</h4>
@@ -50,6 +50,49 @@
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
           </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
+        <div class="form-group col-md-12">
+          <label for="publicKey">Certificate</label>
+          <textarea
+          rows="8"
+          formControlName="certificate"
+          class="form-control"
+          aria-label="Certificate"
+          placeholder="Paste Public Certificate Here"
+          >
+          </textarea>
+        </div>
+        <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
+          <div *ngIf="f.certificate.errors.required">Public Certificate is required</div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
+        <div class="form-group col-md-6">
+
+          <button
+          class="btn btn-warning btn-sm mr-1"
+          (click)="privateKeyCipherUploader.click()"
+          type="button"
+          *ngIf="!disableImport"
+        >
+          <fa name="upload"></fa>
+          <span>{{ privateKeyCipher ? 'Replace' : 'Upload' }} Encrypted Private Key</span>
+        </button>
+
+          <input
+          hidden
+          type="file"
+          #privateKeyCipherUploader
+          (change)="importPrivateKeyCipher($event)"
+          [(ngModel)]="privateKeyCipherInput" 
+          [ngModelOptions]="{standalone: true}"
+        />
         </div>
       </div>
 
