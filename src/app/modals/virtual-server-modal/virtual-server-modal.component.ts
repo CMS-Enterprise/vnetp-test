@@ -223,7 +223,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.tierService
       .v1TiersIdGet({
         id: this.TierId,
-        join: 'loadBalancerIrules,loadBalancerProfiles',
+        join: 'loadBalancerIrules,loadBalancerProfiles,loadBalancerPolicies',
       })
       .subscribe(data => {
         this.availableIRules = data.loadBalancerIrules;
@@ -235,7 +235,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.virtualServerService
       .v1LoadBalancerVirtualServersIdGet({
         id: this.VirtualServerId,
-        join: 'irules,profiles',
+        join: 'irules,profiles,policies',
       })
       .subscribe(data => {
         this.selectedIRules = data.irules;

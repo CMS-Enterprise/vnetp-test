@@ -11,6 +11,7 @@
  */
 import { LoadBalancerIrule } from './loadBalancerIrule';
 import { LoadBalancerProfile } from './loadBalancerProfile';
+import { LoadBalancerPolicy } from './loadBalancerPolicy';
 import { LoadBalancerPool } from './loadBalancerPool';
 
 
@@ -29,6 +30,7 @@ export interface LoadBalancerVirtualServer {
     defaultPoolId?: string;
     defaultPool?: LoadBalancerPool & object;
     readonly profiles?: Array<LoadBalancerProfile>;
+    readonly policies?: Array<LoadBalancerPolicy>;
     readonly irules?: Array<LoadBalancerIrule>;
     sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation;
     type: LoadBalancerVirtualServerType;
