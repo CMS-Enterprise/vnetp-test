@@ -9694,8 +9694,6 @@ definitions:
         type: string
       serviceObjectGroupId:
         type: string
-      serviceObjectGroupName:
-        type: string
       firewallRuleGroupId:
         type: string
       sourceNetworkObject:

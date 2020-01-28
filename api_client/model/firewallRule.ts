@@ -42,7 +42,6 @@ export interface FirewallRule {
     destinationPorts?: string;
     serviceObjectId?: string;
     serviceObjectGroupId?: string;
-    serviceObjectGroupName?: string;
     firewallRuleGroupId: string;
     sourceNetworkObject?: NetworkObject & object;
     sourceNetworkObjectGroup?: NetworkObjectGroup & object;
