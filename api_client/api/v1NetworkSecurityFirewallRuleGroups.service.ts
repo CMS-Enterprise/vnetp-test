@@ -74,7 +74,7 @@ export interface V1NetworkSecurityFirewallRuleGroupsIdRestorePatchRequestParams 
 }
 
 export interface V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams {
-    id: object;
+    id: string;
 }
 
 export interface V1NetworkSecurityFirewallRuleGroupsIdSoftDeleteRequestParams {

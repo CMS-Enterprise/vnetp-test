@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
@@ -492,6 +491,37 @@ export class LoadBalancersComponent
       new YesNoModalDto(
         `${deleteDescription} Node?`,
         `Do you want to ${deleteDescription} node "${node.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  deleteProfile(profile: LoadBalancerProfile) {
+    if (profile.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = profile.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!profile.deletedAt) {
+        this.profilesService
+          .v1LoadBalancerProfilesIdSoftDelete({ id: profile.id })
+          .subscribe(data => {
+            this.getProfiles();
+          });
+      } else {
+        this.profilesService
+          .v1LoadBalancerProfilesIdDelete({ id: profile.id })
+          .subscribe(data => {
+            this.getProfiles();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Profile?`,
+        `Do you want to ${deleteDescription} Profile "${profile.name}"?`,
       ),
       deleteFunction,
     );

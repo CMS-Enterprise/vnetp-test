@@ -849,10 +849,11 @@ paths:
   '/v1/network-security/firewall-rule-groups/{id}/rules':
     get:
       parameters:
-        - type: uuidParam
+        - type: string
           name: id
           required: true
           in: path
+          description: UUID.
       responses:
         '200':
           description: ''

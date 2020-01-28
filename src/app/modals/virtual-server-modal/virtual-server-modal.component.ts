@@ -84,27 +84,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    const modalDto = new YesNoModalDto('Remove Virtual Server', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.virtualServerService
-            .v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id })
-            .subscribe(() => {
-              this.getVirtualServers();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
-  }
-
   private closeModal() {
     this.ngx.close('virtualServerModal');
     this.reset();
@@ -119,13 +98,82 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  addIRule() {}
+  addIRule() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdPost({
+        virtualServerId: this.VirtualServerId,
+        iruleId: this.f.selectedIRule.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfiles();
+        this.f.selectedIRule.setValue('');
+      });
+  }
 
-  removeIRule(irule: LoadBalancerIrule) {}
+  removeIRule(irule: LoadBalancerIrule) {
+    const modalDto = new YesNoModalDto('Remove IRule from Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
 
-  addProfile() {}
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.virtualServerService
+            .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
+              virtualServerId: this.VirtualServerId,
+              iruleId: irule.id,
+            })
+            .subscribe(data => {
+              this.getVirtualServerIRulesProfiles();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
 
-  removeProfile(profile: LoadBalancerProfile) {}
+  addProfile() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdPost({
+        virtualServerId: this.VirtualServerId,
+        profileId: this.f.selectedProfile.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfiles();
+        this.f.selectedProfile.setValue('');
+      });
+  }
+
+  removeProfile(profile: LoadBalancerProfile) {
+    const modalDto = new YesNoModalDto(
+      'Remove Profile from Virtual Server',
+      '',
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.virtualServerService
+            .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete(
+              {
+                virtualServerId: this.VirtualServerId,
+                profileId: profile.id,
+              },
+            )
+            .subscribe(data => {
+              this.getVirtualServerIRulesProfiles();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
 
   private setFormValidators() {}
 
@@ -200,7 +248,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
+      sourceAddress: ['', Validators.compose([ValidateIpv4Any])],
       sourceAddressTranslation: [''],
       destinationAddress: [
         '',
@@ -216,21 +264,13 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       ],
       pool: ['', Validators.required],
       selectedIRule: [''],
-      selectedProfiles: [''],
+      selectedProfile: [''],
     });
 
     this.availableIRules = new Array<LoadBalancerIrule>();
     this.selectedIRules = new Array<LoadBalancerIrule>();
     this.availableProfiles = new Array<LoadBalancerProfile>();
     this.selectedProfiles = new Array<LoadBalancerProfile>();
-  }
-
-  private getVirtualServers() {
-    this.virtualServerService
-      .v1LoadBalancerVirtualServersIdGet({ id: this.VirtualServer.id })
-      .subscribe(data => {
-        this.VirtualServer = data;
-      });
   }
 
   private unsubAll() {}
