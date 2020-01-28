@@ -848,6 +848,7 @@ paths:
         - application/json
   '/v1/network-security/firewall-rule-groups/{id}/rules':
     get:
+      summary: Get Firewall Rules w/ Object Relations for Firewall Rule Group.
       parameters:
         - type: string
           name: id
@@ -855,7 +856,7 @@ paths:
           in: path
           description: UUID.
       responses:
-        '200':
+        '201':
           description: ''
       tags: &ref_3
         - v1/network-security/firewall-rule-groups
@@ -10886,7 +10887,7 @@ definitions:
       description:
         type: string
         maxLength: 500
-      profileType:
+      type:
         type: string
         enum:
           - ClientSSL
@@ -10901,7 +10902,7 @@ definitions:
         type: string
     required:
       - name
-      - profileType
+      - type
       - properties
       - key
       - certificate
@@ -11490,19 +11491,22 @@ definitions:
       description:
         type: string
         maxLength: 500
-      policyType:
+      type:
         type: string
         enum:
           - ASM
           - APM
-      content:
+      asmContent:
+        type: string
+      apmContent:
         type: string
       tierId:
         type: string
     required:
       - name
-      - policyType
-      - content
+      - type
+      - asmContent
+      - apmContent
       - tierId
   GeneratedLoadBalancerPolicyBulkDto:
     type: object

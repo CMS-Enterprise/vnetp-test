@@ -21,13 +21,13 @@ export interface LoadBalancerProfile {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    profileType: LoadBalancerProfileProfileType;
+    type: LoadBalancerProfileType;
     properties: object;
     key: string;
     certificate: string;
     tierId: string;
 }
-export enum LoadBalancerProfileProfileType {
+export enum LoadBalancerProfileType {
     ClientSSL = 'ClientSSL',
     Http = 'Http'
 };

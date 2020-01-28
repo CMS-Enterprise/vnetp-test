@@ -41,9 +41,9 @@ export class ProfileModalComponent implements OnInit {
 
     const profile = {} as LoadBalancerProfile;
     profile.name = this.form.controls.name.value;
-    profile.profileType = this.form.controls.type.value;
+    profile.type = this.form.controls.type.value;
 
-    if (profile.profileType === 'ClientSSL') {
+    if (profile.type === 'ClientSSL') {
       if (!this.privateKeyCipher) {
         return;
       }
@@ -167,9 +167,9 @@ export class ProfileModalComponent implements OnInit {
       this.form.controls.type.disable();
       this.form.controls.name.disable();
       this.form.controls.name.setValue(dto.Profile.name);
-      this.form.controls.type.setValue(dto.Profile.profileType);
+      this.form.controls.type.setValue(dto.Profile.type);
 
-      if (dto.Profile.profileType === 'ClientSSL') {
+      if (dto.Profile.type === 'ClientSSL') {
         this.privateKeyCipher = dto.Profile.key || null;
         this.form.controls.certificate.setValue(dto.Profile.certificate);
       }

@@ -21,11 +21,12 @@ export interface LoadBalancerPolicy {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    policyType: LoadBalancerPolicyPolicyType;
-    content: string;
+    type: LoadBalancerPolicyType;
+    asmContent: string;
+    apmContent: string;
     tierId: string;
 }
-export enum LoadBalancerPolicyPolicyType {
+export enum LoadBalancerPolicyType {
     ASM = 'ASM',
     APM = 'APM'
 };
