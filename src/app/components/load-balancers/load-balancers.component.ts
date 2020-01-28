@@ -23,6 +23,7 @@ import {
   V1LoadBalancerProfilesService,
   LoadBalancerProfile,
   LoadBalancerPolicy,
+  V1LoadBalancerPoliciesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -74,6 +75,7 @@ export class LoadBalancersComponent
     private nodeService: V1LoadBalancerNodesService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private profilesService: V1LoadBalancerProfilesService,
+    private policiesService: V1LoadBalancerPoliciesService,
     public helpText: LoadBalancersHelpText,
   ) {}
 
@@ -567,6 +569,37 @@ export class LoadBalancersComponent
     );
   }
 
+  deletePolicy(policy: LoadBalancerPolicy) {
+    if (policy.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = policy.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!policy.deletedAt) {
+        this.policiesService
+          .v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id })
+          .subscribe(data => {
+            this.getPolicies();
+          });
+      } else {
+        this.policiesService
+          .v1LoadBalancerPoliciesIdDelete({ id: policy.id })
+          .subscribe(data => {
+            this.getPolicies();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Policy?`,
+        `Do you want to ${deleteDescription} Policy "${policy.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
   restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {
     if (virtualServer.deletedAt) {
       this.virtualServersService
@@ -604,6 +637,22 @@ export class LoadBalancersComponent
       this.healthMonitorsService
         .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
         .subscribe(data => this.getHealthMonitors());
+    }
+  }
+
+  restoreProfile(profile: LoadBalancerProfile) {
+    if (profile.deletedAt) {
+      this.profilesService
+        .v1LoadBalancerProfilesIdRestorePatch({ id: profile.id })
+        .subscribe(data => this.getProfiles());
+    }
+  }
+
+  restorePolicy(policy: LoadBalancerPolicy) {
+    if (policy.deletedAt) {
+      this.policiesService
+        .v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id })
+        .subscribe(data => this.getPolicies());
     }
   }
 
