@@ -16,6 +16,7 @@ import {
   ServiceObjectGroup,
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityServiceObjectGroupsService,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -37,6 +38,8 @@ export class FirewallRulesDetailComponent
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
+
+  currentServiceObjectGroup: any;
 
   firewallRuleModalSubscription: Subscription;
 
@@ -61,6 +64,7 @@ export class FirewallRulesDetailComponent
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   ngOnInit() {
@@ -268,32 +272,6 @@ export class FirewallRulesDetailComponent
         if (modalData && modalData.modalYes) {
           let dto = event;
           dto = this.sanitizeData(event);
-          // dto = [
-          //   {
-          //     name: 'firewall22335',
-          //     description: null,
-          //     direction: 'Out',
-          //     action: 'Permit',
-          //     protocol: 'UDP',
-          //     logging: false,
-          //     enabled: true,
-          //     ruleIndex: 23,
-          //     sourceAddressType: 'IpAddress',
-          //     destinationAddressType: 'IpAddress',
-          //     serviceType: 'ServiceObjectGroup',
-          //     sourceIpAddress: '198.168.20.0/26',
-          //     sourceNetworkObjectId: null,
-          //     sourceNetworkObjectGroupId: null,
-          //     destinationIpAddress: '198.168.20.0/26',
-          //     destinationNetworkObjectId: null,
-          //     destinationNetworkObjectGroupId: null,
-          //     sourcePorts: null,
-          //     destinationPorts: null,
-          //     serviceObjectId: null,
-          //     serviceObjectGroupName: 'newobjGroup',
-          //     firewallRuleGroupId: 'f748a3c2-a54d-45c3-82de-89b6258e8e18',
-          //   },
-          // ];
           this.firewallRuleService
             .v1NetworkSecurityFirewallRulesBulkPost({
               generatedFirewallRuleBulkDto: { bulk: dto },
@@ -307,7 +285,6 @@ export class FirewallRulesDetailComponent
   }
 
   sanitizeData(entities: any) {
-    console.log(entities);
     return entities.map(entity => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.removeEmpty(entity);
@@ -326,7 +303,28 @@ export class FirewallRulesDetailComponent
       if (val === null || val === '') {
         delete obj[key];
       }
+      if (key === 'serviceObjectGroupId') {
+        obj[key] = this.getObjectId(val, this.serviceObjectGroups);
+      }
+      if (key === 'serviceObjectId') {
+        obj[key] = this.getObjectId(val, this.serviceObjects);
+      }
+      if (key === 'networkObjectGroupId') {
+        obj[key] = this.getObjectId(val, this.networkObjectGroups);
+      }
+      if (key === 'networkObjectId') {
+        obj[key] = this.getObjectId(val, this.networkObjects);
+      }
     });
     return obj;
   };
+
+  getObjectId(name, array) {
+    const serviceObjectGroupArray = array.filter(group => group.name === name);
+    if (serviceObjectGroupArray.length === 1) {
+      return serviceObjectGroupArray[0].id;
+    } else {
+      return null;
+    }
+  }
 }
