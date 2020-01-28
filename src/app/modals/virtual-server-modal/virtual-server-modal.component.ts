@@ -9,8 +9,8 @@ import {
   LoadBalancerIrule,
   LoadBalancerVirtualServer,
   V1LoadBalancerVirtualServersService,
-  LoadBalancerVirtualServerClientSslProfiles,
-  LoadBalancerVirtualServerServerSslProfiles,
+  LoadBalancerProfile,
+  V1TiersService,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -23,21 +23,21 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   pools: LoadBalancerPool[];
-  availableIRules: LoadBalancerIrule[];
-  selectedIRules: LoadBalancerIrule[];
   TierId: string;
   VirtualServer: LoadBalancerVirtualServer;
   ModalMode: ModalMode;
   VirtualServerId: string;
   Pools: LoadBalancerPool[];
-  availableClientSslProfiles: LoadBalancerVirtualServerClientSslProfiles[];
-  availableServerSslProfiles: LoadBalancerVirtualServerServerSslProfiles[];
-  selectedClientSslProfiles: LoadBalancerVirtualServerClientSslProfiles[];
-  selectedServerSslProfiles: LoadBalancerVirtualServerServerSslProfiles[];
+
+  availableIRules: LoadBalancerIrule[];
+  selectedIRules: LoadBalancerIrule[];
+  availableProfiles: LoadBalancerProfile[];
+  selectedProfiles: LoadBalancerProfile[];
 
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private tierService: V1TiersService,
     private virtualServerService: V1LoadBalancerVirtualServersService,
     public helpText: VirtualServerModalHelpText,
   ) {}
@@ -56,8 +56,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     virtualServer.servicePort = this.form.value.servicePort;
     virtualServer.defaultPoolId = this.form.value.pool;
     virtualServer.sourceAddressTranslation = this.form.value.sourceAddressTranslation;
-    virtualServer.clientSslProfiles = this.selectedClientSslProfiles;
-    virtualServer.serverSslProfiles = this.selectedServerSslProfiles;
 
     if (this.ModalMode === ModalMode.Create) {
       virtualServer.tierId = this.TierId;
@@ -121,6 +119,14 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
+  addIRule() {}
+
+  removeIRule(irule: LoadBalancerIrule) {}
+
+  addProfile() {}
+
+  removeProfile(profile: LoadBalancerProfile) {}
+
   private setFormValidators() {}
 
   getData() {
@@ -133,7 +139,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     if (dto.TierId) {
       this.TierId = dto.TierId;
     }
-    const virtualServer = dto.VirtualServer;
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
     } else {
@@ -143,6 +148,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
         this.VirtualServerId = dto.VirtualServer.id;
       }
     }
+
+    const virtualServer = dto.VirtualServer;
 
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.name);
@@ -157,135 +164,35 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       );
       this.form.controls.pool.setValue(virtualServer.defaultPoolId);
 
-      if (dto.VirtualServer.irules) {
-        this.selectedIRules = dto.VirtualServer.irules;
-      }
-      if (dto.VirtualServer.clientSslProfiles) {
-        this.selectedClientSslProfiles = dto.VirtualServer.clientSslProfiles;
-      }
-      if (dto.VirtualServer.serverSslProfiles) {
-        this.selectedServerSslProfiles = dto.VirtualServer.serverSslProfiles;
-      }
-    }
-
-    this.getAvailableIRules(dto.IRules);
-    const clientSslProfilesEnum = [LoadBalancerVirtualServerClientSslProfiles];
-    this.getAvailableClientSslProfiles(clientSslProfilesEnum);
-    const serverSslProfilesEnum = [LoadBalancerVirtualServerServerSslProfiles];
-    this.getAvailableServerSslProfiles(serverSslProfilesEnum);
-    this.ngx.resetModalData('virtualServerModal');
-  }
-
-  private getAvailableIRules(irules: LoadBalancerIrule[]) {
-    irules.forEach(irule => {
-      if (!this.selectedIRules.includes(irule)) {
-        this.availableIRules.push(irule);
-      }
-    });
-  }
-
-  private getAvailableClientSslProfiles(cSslProfiles) {
-    cSslProfiles.forEach(clientSslProfile => {
-      if (!this.selectedClientSslProfiles.includes(clientSslProfile)) {
-        this.availableClientSslProfiles.push(clientSslProfile);
-      }
-    });
-  }
-
-  private getAvailableServerSslProfiles(sSslProfiles) {
-    sSslProfiles.forEach(serverSslProfile => {
-      if (!this.selectedServerSslProfiles.includes(serverSslProfile)) {
-        this.availableServerSslProfiles.push(serverSslProfile);
-      }
-    });
-  }
-
-  selectClientSslProfile() {
-    const clientSslProfile = this.form.value.selectedClientSslProfiles;
-    if (!clientSslProfile) {
-      return;
-    }
-
-    this.selectedClientSslProfiles.push(clientSslProfile);
-    this.form.controls.selectedClientSslProfiles.setValue(null);
-    this.form.controls.selectedClientSslProfiles.updateValueAndValidity();
-  }
-
-  unselectClientSslProfile(cSslProfile) {
-    const selectedIndex = this.selectedClientSslProfiles.indexOf(cSslProfile);
-    if (selectedIndex > -1) {
-      this.selectedClientSslProfiles.splice(selectedIndex, 1);
+      this.getTierIRulesProfiles();
+      this.getVirtualServerIRulesProfiles();
+      // TODO: Get Policies
+      this.ngx.resetModalData('virtualServerModal');
     }
   }
 
-  selectServerSslProfile() {
-    const serverSslProfile = this.form.value.selectedServerSslProfiles;
-    if (!serverSslProfile) {
-      return;
-    }
-
-    this.selectedServerSslProfiles.push(serverSslProfile);
-    this.form.controls.selectedServerSslProfiles.setValue(null);
-    this.form.controls.selectedServerSslProfiles.updateValueAndValidity();
+  private getTierIRulesProfiles() {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.TierId,
+        join: 'loadBalancerIrules,loadBalancerProfiles',
+      })
+      .subscribe(data => {
+        this.availableIRules = data.loadBalancerIrules;
+        this.availableProfiles = data.loadBalancerProfiles;
+      });
   }
 
-  unselectServerSslProfile(sSslProfile) {
-    const selectedIndex = this.selectedServerSslProfiles.indexOf(sSslProfile);
-    if (selectedIndex > -1) {
-      this.selectedServerSslProfiles.splice(selectedIndex, 1);
-    }
-  }
-
-  selectIRule() {
-    const irule = this.form.value.selectedIRule;
-
-    if (!irule) {
-      return;
-    }
-
-    this.selectedIRules.push(irule);
-    const availableIndex = this.availableIRules.indexOf(irule);
-    if (availableIndex > -1) {
-      this.availableIRules.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedIRule.setValue(null);
-    this.form.controls.selectedIRule.updateValueAndValidity();
-  }
-
-  unselectIRule(irule) {
-    this.availableIRules.push(irule);
-    const selectedIndex = this.selectedIRules.indexOf(irule);
-    if (selectedIndex > -1) {
-      this.selectedIRules.splice(selectedIndex, 1);
-    }
-  }
-
-  moveIRule(value: number, rule) {
-    const ruleIndex = this.selectedIRules.indexOf(rule);
-
-    // If the rule isn't in the array, is at the start of the array and requested to move up
-    // or if the rule is at the end of the array, return.
-    if (
-      ruleIndex === -1 ||
-      (ruleIndex === 0 && value === -1) ||
-      ruleIndex + value === this.selectedIRules.length
-    ) {
-      return;
-    }
-
-    const nextRule = this.selectedIRules[ruleIndex + value];
-
-    // If the next rule doesn't exist, return.
-    if (nextRule === null) {
-      return;
-    }
-
-    const nextRuleIndex = this.selectedIRules.indexOf(nextRule);
-
-    [this.selectedIRules[ruleIndex], this.selectedIRules[nextRuleIndex]] = [
-      this.selectedIRules[nextRuleIndex],
-      this.selectedIRules[ruleIndex],
-    ];
+  private getVirtualServerIRulesProfiles() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersIdGet({
+        id: this.VirtualServerId,
+        join: 'irules,profiles',
+      })
+      .subscribe(data => {
+        this.selectedIRules = data.irules;
+        this.selectedProfiles = data.profiles;
+      });
   }
 
   private buildForm() {
@@ -309,24 +216,13 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       ],
       pool: ['', Validators.required],
       selectedIRule: [''],
-      selectedClientSslProfiles: [''],
-      selectedServerSslProfiles: [''],
+      selectedProfiles: [''],
     });
 
     this.availableIRules = new Array<LoadBalancerIrule>();
     this.selectedIRules = new Array<LoadBalancerIrule>();
-    this.availableClientSslProfiles = new Array<
-      LoadBalancerVirtualServerClientSslProfiles
-    >();
-    this.availableServerSslProfiles = new Array<
-      LoadBalancerVirtualServerServerSslProfiles
-    >();
-    this.selectedClientSslProfiles = new Array<
-      LoadBalancerVirtualServerClientSslProfiles
-    >();
-    this.selectedServerSslProfiles = new Array<
-      LoadBalancerVirtualServerServerSslProfiles
-    >();
+    this.availableProfiles = new Array<LoadBalancerProfile>();
+    this.selectedProfiles = new Array<LoadBalancerProfile>();
   }
 
   private getVirtualServers() {

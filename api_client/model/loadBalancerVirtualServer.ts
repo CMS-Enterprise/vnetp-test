@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { LoadBalancerIrule } from './loadBalancerIrule';
+import { LoadBalancerProfile } from './loadBalancerProfile';
 import { LoadBalancerPool } from './loadBalancerPool';
 
 
@@ -27,6 +28,7 @@ export interface LoadBalancerVirtualServer {
     destinationIpAddress: string;
     defaultPoolId?: string;
     defaultPool?: LoadBalancerPool & object;
+    readonly profiles?: Array<LoadBalancerProfile>;
     readonly irules?: Array<LoadBalancerIrule>;
     sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation;
     type: LoadBalancerVirtualServerType;

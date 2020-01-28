@@ -6744,1160 +6744,98 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/load-balancer/pools:
-    get:
-      summary: Retrieve many LoadBalancerPool
+  '/v1/load-balancer/virtual-servers/{virtualServerId}/irules/{iruleId}':
+    post:
+      summary: Add iRule to Load Balancer Virtual Server
       parameters:
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: filter
-          description: >-
-            <h4>Adds fields request condition (multiple conditions) to the
-            request.</h4><i>Syntax:</i>
-            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
-            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
-            (multiple filters are treated as a combination of AND type of
-            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
-            conditions accept multiple values separated by
-            commas)</li><li><strong>?filter=power||isnull</strong> (some
-            conditions don't accept value)</li></ul><br/>Filter
-            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
-            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
-            not equal)</li><li><strong><code>gt</code></strong>
-            (<code>&gt;</code>, greater
-            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
-            lower that)</li><li><strong><code>gte</code></strong>
-            (<code>&gt;=</code>, greater than or
-            equal)</li><li><strong><code>lte</code></strong>
-            (<code>&lt;=</code>, lower than or
-            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
-            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
-            (<code>LIKE %val</code>, ends
-            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
-            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
-            (<code>NOT LIKE %val%</code>, not
-            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
-            in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>notin</code></strong>
-            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>isnull</code></strong>
-            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>notnull</code></strong>
-            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>between</code></strong>
-            (<code>BETWEEN</code>, between, <strong><em>accepts two
-            values</em></strong>)</li></ul>
-          required: false
-          in: query
-          type: string
-        - name: or
-          description: >-
-            <h4>Adds <code>OR</code> conditions to the
-            request.</h4><i>Syntax:</i>
-            <strong>?or=field||condition||value</strong><br/>It uses the same
-            conditions as the filter parameter<br/><i>Rules and
-            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
-            <code>or</code> present (without <code>filter</code>) then it will
-            be interpreted as simple
-            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
-            there are <strong>multiple</strong> <code>or</code> present (without
-            <code>filter</code>) then it will be interpreted as a compination of
-            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
-            OR
-            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            there are <strong>one</strong> <code>or</code> and
-            <strong>one</strong> <code>filter</code> then it will be interpreted
-            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
-            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            present <strong>both</strong> <code>or</code> and
-            <code>filter</code> in any amount (<strong>one</strong> or
-            <strong>miltiple</strong> each) then both interpreted as a
-            combitation of <code>AND</code> conditions and compared with each
-            other by <code>OR</code> condition, as follows:<br><code>WHERE
-            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
-            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
-          required: false
-          in: query
-          type: string
-        - name: sort
-          description: >-
-            <h4>Adds sort by field (by multiple fields) and order to query
-            result.</h4><i>Syntax:</i>
-            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: per_page
-          description: >-
-            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?per_page=number</strong><br/><i>Example:</i>
-            <strong>?per_page=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: offset
-          description: >-
-            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?offset=number</strong><br/><i>Example:</i>
-            <strong>?offset=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: page
-          description: >-
-            <h4>Receive a portion of <code>limit</code> entities (alternative to
-            <code>offset</code>). Will be applied if <code>limit</code> is set
-            up.</h4><i>Syntax:</i>
-            <strong>?page=number</strong><br/><i>Example:</i>
-            <strong>?page=2</strong>
-          required: false
-          in: query
-          type: number
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
+        - type: string
+          name: virtualServerId
+          required: true
+          in: path
+          description: Virtual Server that the iRule is being added to/removed from.
+        - type: string
+          name: iruleId
+          required: true
+          in: path
+          description: iRule that is being added or removed from Virtual Server.
       responses:
-        '200':
+        '201':
           description: ''
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
+            $ref: '#/definitions/LoadBalancerVirtualServer'
       tags: &ref_24
-        - v1/load-balancer/pools
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    post:
-      summary: Create one LoadBalancerPool
-      parameters:
-        - name: LoadBalancerPool
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{id}':
-    get:
-      summary: Retrieve one LoadBalancerPool
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    patch:
-      summary: Update one LoadBalancerPool
-      parameters:
-        - name: LoadBalancerPool
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    put:
-      summary: Replace one LoadBalancerPool
-      parameters:
-        - name: LoadBalancerPool
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_24
+        - v1/load-balancer/virtual-servers
       produces:
         - application/json
       consumes:
         - application/json
     delete:
-      summary: Delete one LoadBalancerPool
+      summary: Remove iRule from Load Balancer Virtual Server
       parameters:
-        - name: id
+        - type: string
+          name: virtualServerId
           required: true
           in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/pools/bulk:
-    post:
-      summary: Create many LoadBalancerPool
-      parameters:
-        - name: GeneratedLoadBalancerPoolBulkDto
+          description: Virtual Server that the iRule is being added to/removed from.
+        - type: string
+          name: iruleId
           required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
+          in: path
+          description: iRule that is being added or removed from Virtual Server.
       responses:
         '201':
           description: ''
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
+            $ref: '#/definitions/LoadBalancerVirtualServer'
       tags: *ref_24
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/load-balancer/pools/{id}/provision':
-    put:
-      summary: Provisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{id}/deprovision':
-    patch:
-      summary: Deprovisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{id}/soft':
-    delete:
-      summary: Soft deletes an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{id}/restore':
-    patch:
-      summary: Restores a Soft-Deleted Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_24
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{poolId}/health-monitor/{healthMonitorId}':
+  '/v1/load-balancer/virtual-servers/{virtualServerId}/profiles/{profileId}':
     post:
-      summary: Add Health Monitor to Load Balancer Pool
+      summary: Add Profile to Load Balancer Virtual Server
       parameters:
         - type: string
-          name: poolId
+          name: virtualServerId
           required: true
           in: path
-          description: Pool that the Health Monitor is being added to/removed from.
+          description: Virtual Server that the Profile is being added to/removed from.
         - type: string
-          name: healthMonitorId
+          name: profileId
           required: true
           in: path
-          description: Health Monitor that is being added or removed from Pool.
+          description: Profile that is being added or removed from Virtual Server.
       responses:
         '201':
           description: ''
           schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
+            $ref: '#/definitions/LoadBalancerVirtualServer'
       tags: &ref_25
-        - v1/load-balancer/pools
+        - v1/load-balancer/virtual-servers
       produces:
         - application/json
       consumes:
         - application/json
     delete:
-      summary: Remove Health Monitor to Load Balancer Pool
+      summary: Remove Profile from Load Balancer Virtual Server
       parameters:
         - type: string
-          name: poolId
+          name: virtualServerId
           required: true
           in: path
-          description: Pool that the Health Monitor is being added to/removed from.
+          description: Virtual Server that the Profile is being added to/removed from.
         - type: string
-          name: healthMonitorId
+          name: profileId
           required: true
           in: path
-          description: Health Monitor that is being added or removed from Pool.
+          description: Profile that is being added or removed from Virtual Server.
       responses:
         '201':
           description: ''
           schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
+            $ref: '#/definitions/LoadBalancerVirtualServer'
       tags: *ref_25
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/pools/{poolId}/node/{nodeId}':
-    post:
-      summary: Add Node to Load Balancer Pool
-      parameters:
-        - type: string
-          name: poolId
-          required: true
-          in: path
-          description: Pool that the Node is being added to/removed from.
-        - type: string
-          name: nodeId
-          required: true
-          in: path
-          description: Node that is being added or removed from Pool.
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_26
-        - v1/load-balancer/pools
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: Remove Node to Load Balancer Pool
-      parameters:
-        - type: string
-          name: poolId
-          required: true
-          in: path
-          description: Pool that the Node is being added to/removed from.
-        - type: string
-          name: nodeId
-          required: true
-          in: path
-          description: Node that is being added or removed from Pool.
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_26
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/health-monitors:
-    get:
-      summary: Retrieve many LoadBalancerHealthMonitor
-      parameters:
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: filter
-          description: >-
-            <h4>Adds fields request condition (multiple conditions) to the
-            request.</h4><i>Syntax:</i>
-            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
-            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
-            (multiple filters are treated as a combination of AND type of
-            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
-            conditions accept multiple values separated by
-            commas)</li><li><strong>?filter=power||isnull</strong> (some
-            conditions don't accept value)</li></ul><br/>Filter
-            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
-            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
-            not equal)</li><li><strong><code>gt</code></strong>
-            (<code>&gt;</code>, greater
-            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
-            lower that)</li><li><strong><code>gte</code></strong>
-            (<code>&gt;=</code>, greater than or
-            equal)</li><li><strong><code>lte</code></strong>
-            (<code>&lt;=</code>, lower than or
-            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
-            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
-            (<code>LIKE %val</code>, ends
-            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
-            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
-            (<code>NOT LIKE %val%</code>, not
-            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
-            in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>notin</code></strong>
-            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>isnull</code></strong>
-            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>notnull</code></strong>
-            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>between</code></strong>
-            (<code>BETWEEN</code>, between, <strong><em>accepts two
-            values</em></strong>)</li></ul>
-          required: false
-          in: query
-          type: string
-        - name: or
-          description: >-
-            <h4>Adds <code>OR</code> conditions to the
-            request.</h4><i>Syntax:</i>
-            <strong>?or=field||condition||value</strong><br/>It uses the same
-            conditions as the filter parameter<br/><i>Rules and
-            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
-            <code>or</code> present (without <code>filter</code>) then it will
-            be interpreted as simple
-            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
-            there are <strong>multiple</strong> <code>or</code> present (without
-            <code>filter</code>) then it will be interpreted as a compination of
-            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
-            OR
-            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            there are <strong>one</strong> <code>or</code> and
-            <strong>one</strong> <code>filter</code> then it will be interpreted
-            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
-            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            present <strong>both</strong> <code>or</code> and
-            <code>filter</code> in any amount (<strong>one</strong> or
-            <strong>miltiple</strong> each) then both interpreted as a
-            combitation of <code>AND</code> conditions and compared with each
-            other by <code>OR</code> condition, as follows:<br><code>WHERE
-            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
-            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
-          required: false
-          in: query
-          type: string
-        - name: sort
-          description: >-
-            <h4>Adds sort by field (by multiple fields) and order to query
-            result.</h4><i>Syntax:</i>
-            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: per_page
-          description: >-
-            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?per_page=number</strong><br/><i>Example:</i>
-            <strong>?per_page=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: offset
-          description: >-
-            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?offset=number</strong><br/><i>Example:</i>
-            <strong>?offset=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: page
-          description: >-
-            <h4>Receive a portion of <code>limit</code> entities (alternative to
-            <code>offset</code>). Will be applied if <code>limit</code> is set
-            up.</h4><i>Syntax:</i>
-            <strong>?page=number</strong><br/><i>Example:</i>
-            <strong>?page=2</strong>
-          required: false
-          in: query
-          type: number
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_27
-        - v1/load-balancer/health-monitors
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    post:
-      summary: Create one LoadBalancerHealthMonitor
-      parameters:
-        - name: LoadBalancerHealthMonitor
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/health-monitors/{id}':
-    get:
-      summary: Retrieve one LoadBalancerHealthMonitor
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    patch:
-      summary: Update one LoadBalancerHealthMonitor
-      parameters:
-        - name: LoadBalancerHealthMonitor
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    put:
-      summary: Replace one LoadBalancerHealthMonitor
-      parameters:
-        - name: LoadBalancerHealthMonitor
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: Delete one LoadBalancerHealthMonitor
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/health-monitors/bulk:
-    post:
-      summary: Create many LoadBalancerHealthMonitor
-      parameters:
-        - name: GeneratedLoadBalancerHealthMonitorBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerHealthMonitorBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/health-monitors/{id}/provision':
-    put:
-      summary: Provisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/health-monitors/{id}/deprovision':
-    patch:
-      summary: Deprovisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/health-monitors/{id}/soft':
-    delete:
-      summary: Soft deletes an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/health-monitors/{id}/restore':
-    patch:
-      summary: Restores a Soft-Deleted Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_27
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/nodes:
-    get:
-      summary: Retrieve many LoadBalancerNode
-      parameters:
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: filter
-          description: >-
-            <h4>Adds fields request condition (multiple conditions) to the
-            request.</h4><i>Syntax:</i>
-            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
-            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
-            (multiple filters are treated as a combination of AND type of
-            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
-            conditions accept multiple values separated by
-            commas)</li><li><strong>?filter=power||isnull</strong> (some
-            conditions don't accept value)</li></ul><br/>Filter
-            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
-            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
-            not equal)</li><li><strong><code>gt</code></strong>
-            (<code>&gt;</code>, greater
-            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
-            lower that)</li><li><strong><code>gte</code></strong>
-            (<code>&gt;=</code>, greater than or
-            equal)</li><li><strong><code>lte</code></strong>
-            (<code>&lt;=</code>, lower than or
-            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
-            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
-            (<code>LIKE %val</code>, ends
-            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
-            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
-            (<code>NOT LIKE %val%</code>, not
-            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
-            in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>notin</code></strong>
-            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>isnull</code></strong>
-            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>notnull</code></strong>
-            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>between</code></strong>
-            (<code>BETWEEN</code>, between, <strong><em>accepts two
-            values</em></strong>)</li></ul>
-          required: false
-          in: query
-          type: string
-        - name: or
-          description: >-
-            <h4>Adds <code>OR</code> conditions to the
-            request.</h4><i>Syntax:</i>
-            <strong>?or=field||condition||value</strong><br/>It uses the same
-            conditions as the filter parameter<br/><i>Rules and
-            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
-            <code>or</code> present (without <code>filter</code>) then it will
-            be interpreted as simple
-            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
-            there are <strong>multiple</strong> <code>or</code> present (without
-            <code>filter</code>) then it will be interpreted as a compination of
-            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
-            OR
-            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            there are <strong>one</strong> <code>or</code> and
-            <strong>one</strong> <code>filter</code> then it will be interpreted
-            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
-            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            present <strong>both</strong> <code>or</code> and
-            <code>filter</code> in any amount (<strong>one</strong> or
-            <strong>miltiple</strong> each) then both interpreted as a
-            combitation of <code>AND</code> conditions and compared with each
-            other by <code>OR</code> condition, as follows:<br><code>WHERE
-            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
-            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
-          required: false
-          in: query
-          type: string
-        - name: sort
-          description: >-
-            <h4>Adds sort by field (by multiple fields) and order to query
-            result.</h4><i>Syntax:</i>
-            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: per_page
-          description: >-
-            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?per_page=number</strong><br/><i>Example:</i>
-            <strong>?per_page=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: offset
-          description: >-
-            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?offset=number</strong><br/><i>Example:</i>
-            <strong>?offset=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: page
-          description: >-
-            <h4>Receive a portion of <code>limit</code> entities (alternative to
-            <code>offset</code>). Will be applied if <code>limit</code> is set
-            up.</h4><i>Syntax:</i>
-            <strong>?page=number</strong><br/><i>Example:</i>
-            <strong>?page=2</strong>
-          required: false
-          in: query
-          type: number
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_28
-        - v1/load-balancer/nodes
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    post:
-      summary: Create one LoadBalancerNode
-      parameters:
-        - name: LoadBalancerNode
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/nodes/{id}':
-    get:
-      summary: Retrieve one LoadBalancerNode
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    patch:
-      summary: Update one LoadBalancerNode
-      parameters:
-        - name: LoadBalancerNode
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    put:
-      summary: Replace one LoadBalancerNode
-      parameters:
-        - name: LoadBalancerNode
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: Delete one LoadBalancerNode
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/nodes/bulk:
-    post:
-      summary: Create many LoadBalancerNode
-      parameters:
-        - name: GeneratedLoadBalancerNodeBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerNodeBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/nodes/{id}/provision':
-    put:
-      summary: Provisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/nodes/{id}/deprovision':
-    patch:
-      summary: Deprovisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/nodes/{id}/soft':
-    delete:
-      summary: Soft deletes an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_28
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/nodes/{id}/restore':
-    patch:
-      summary: Restores a Soft-Deleted Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -8042,7 +6980,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: &ref_29
+      tags: &ref_26
         - v1/load-balancer/irules
       produces:
         - application/json
@@ -8061,7 +6999,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8105,7 +7043,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8127,7 +7065,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8149,7 +7087,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8166,7 +7104,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8187,7 +7125,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8203,7 +7141,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8219,7 +7157,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8235,7 +7173,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8251,361 +7189,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/policies:
-    get:
-      summary: Retrieve many LoadBalancerPolicy
-      parameters:
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: filter
-          description: >-
-            <h4>Adds fields request condition (multiple conditions) to the
-            request.</h4><i>Syntax:</i>
-            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
-            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
-            (multiple filters are treated as a combination of AND type of
-            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
-            conditions accept multiple values separated by
-            commas)</li><li><strong>?filter=power||isnull</strong> (some
-            conditions don't accept value)</li></ul><br/>Filter
-            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
-            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
-            not equal)</li><li><strong><code>gt</code></strong>
-            (<code>&gt;</code>, greater
-            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
-            lower that)</li><li><strong><code>gte</code></strong>
-            (<code>&gt;=</code>, greater than or
-            equal)</li><li><strong><code>lte</code></strong>
-            (<code>&lt;=</code>, lower than or
-            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
-            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
-            (<code>LIKE %val</code>, ends
-            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
-            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
-            (<code>NOT LIKE %val%</code>, not
-            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
-            in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>notin</code></strong>
-            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>isnull</code></strong>
-            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>notnull</code></strong>
-            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>between</code></strong>
-            (<code>BETWEEN</code>, between, <strong><em>accepts two
-            values</em></strong>)</li></ul>
-          required: false
-          in: query
-          type: string
-        - name: or
-          description: >-
-            <h4>Adds <code>OR</code> conditions to the
-            request.</h4><i>Syntax:</i>
-            <strong>?or=field||condition||value</strong><br/>It uses the same
-            conditions as the filter parameter<br/><i>Rules and
-            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
-            <code>or</code> present (without <code>filter</code>) then it will
-            be interpreted as simple
-            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
-            there are <strong>multiple</strong> <code>or</code> present (without
-            <code>filter</code>) then it will be interpreted as a compination of
-            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
-            OR
-            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            there are <strong>one</strong> <code>or</code> and
-            <strong>one</strong> <code>filter</code> then it will be interpreted
-            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
-            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            present <strong>both</strong> <code>or</code> and
-            <code>filter</code> in any amount (<strong>one</strong> or
-            <strong>miltiple</strong> each) then both interpreted as a
-            combitation of <code>AND</code> conditions and compared with each
-            other by <code>OR</code> condition, as follows:<br><code>WHERE
-            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
-            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
-          required: false
-          in: query
-          type: string
-        - name: sort
-          description: >-
-            <h4>Adds sort by field (by multiple fields) and order to query
-            result.</h4><i>Syntax:</i>
-            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: per_page
-          description: >-
-            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?per_page=number</strong><br/><i>Example:</i>
-            <strong>?per_page=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: offset
-          description: >-
-            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?offset=number</strong><br/><i>Example:</i>
-            <strong>?offset=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: page
-          description: >-
-            <h4>Receive a portion of <code>limit</code> entities (alternative to
-            <code>offset</code>). Will be applied if <code>limit</code> is set
-            up.</h4><i>Syntax:</i>
-            <strong>?page=number</strong><br/><i>Example:</i>
-            <strong>?page=2</strong>
-          required: false
-          in: query
-          type: number
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPolicy'
-      tags: &ref_30
-        - v1/load-balancer/policies
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    post:
-      summary: Create one LoadBalancerPolicy
-      parameters:
-        - name: LoadBalancerPolicy
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      responses:
-        '201':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/policies/{id}':
-    get:
-      summary: Retrieve one LoadBalancerPolicy
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    patch:
-      summary: Update one LoadBalancerPolicy
-      parameters:
-        - name: LoadBalancerPolicy
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    put:
-      summary: Replace one LoadBalancerPolicy
-      parameters:
-        - name: LoadBalancerPolicy
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: Delete one LoadBalancerPolicy
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/policies/bulk:
-    post:
-      summary: Create many LoadBalancerPolicy
-      parameters:
-        - name: GeneratedLoadBalancerPolicyBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerPolicyBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/policies/{id}/provision':
-    put:
-      summary: Provisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/policies/{id}/deprovision':
-    patch:
-      summary: Deprovisions an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/policies/{id}/soft':
-    delete:
-      summary: Soft deletes an Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/load-balancer/policies/{id}/restore':
-    patch:
-      summary: Restores a Soft-Deleted Entity.
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_30
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -8750,7 +7334,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: &ref_31
+      tags: &ref_27
         - v1/load-balancer/profiles
       produces:
         - application/json
@@ -8769,7 +7353,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8813,7 +7397,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8835,7 +7419,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8857,7 +7441,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8874,7 +7458,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8895,7 +7479,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8911,7 +7495,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8927,7 +7511,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8943,7 +7527,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -8959,7 +7543,1519 @@ paths:
       responses:
         '200':
           description: ''
+      tags: *ref_27
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/pools:
+    get:
+      summary: Retrieve many LoadBalancerPool
+      parameters:
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: filter
+          description: >-
+            <h4>Adds fields request condition (multiple conditions) to the
+            request.</h4><i>Syntax:</i>
+            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
+            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
+            (multiple filters are treated as a combination of AND type of
+            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
+            conditions accept multiple values separated by
+            commas)</li><li><strong>?filter=power||isnull</strong> (some
+            conditions don't accept value)</li></ul><br/>Filter
+            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
+            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
+            not equal)</li><li><strong><code>gt</code></strong>
+            (<code>&gt;</code>, greater
+            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
+            lower that)</li><li><strong><code>gte</code></strong>
+            (<code>&gt;=</code>, greater than or
+            equal)</li><li><strong><code>lte</code></strong>
+            (<code>&lt;=</code>, lower than or
+            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
+            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
+            (<code>LIKE %val</code>, ends
+            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
+            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
+            (<code>NOT LIKE %val%</code>, not
+            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
+            in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>notin</code></strong>
+            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>isnull</code></strong>
+            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>notnull</code></strong>
+            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>between</code></strong>
+            (<code>BETWEEN</code>, between, <strong><em>accepts two
+            values</em></strong>)</li></ul>
+          required: false
+          in: query
+          type: string
+        - name: or
+          description: >-
+            <h4>Adds <code>OR</code> conditions to the
+            request.</h4><i>Syntax:</i>
+            <strong>?or=field||condition||value</strong><br/>It uses the same
+            conditions as the filter parameter<br/><i>Rules and
+            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
+            <code>or</code> present (without <code>filter</code>) then it will
+            be interpreted as simple
+            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
+            there are <strong>multiple</strong> <code>or</code> present (without
+            <code>filter</code>) then it will be interpreted as a compination of
+            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
+            OR
+            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            there are <strong>one</strong> <code>or</code> and
+            <strong>one</strong> <code>filter</code> then it will be interpreted
+            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
+            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            present <strong>both</strong> <code>or</code> and
+            <code>filter</code> in any amount (<strong>one</strong> or
+            <strong>miltiple</strong> each) then both interpreted as a
+            combitation of <code>AND</code> conditions and compared with each
+            other by <code>OR</code> condition, as follows:<br><code>WHERE
+            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
+            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
+          required: false
+          in: query
+          type: string
+        - name: sort
+          description: >-
+            <h4>Adds sort by field (by multiple fields) and order to query
+            result.</h4><i>Syntax:</i>
+            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: per_page
+          description: >-
+            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: offset
+          description: >-
+            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?offset=number</strong><br/><i>Example:</i>
+            <strong>?offset=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: page
+          description: >-
+            <h4>Receive a portion of <code>limit</code> entities (alternative to
+            <code>offset</code>). Will be applied if <code>limit</code> is set
+            up.</h4><i>Syntax:</i>
+            <strong>?page=number</strong><br/><i>Example:</i>
+            <strong>?page=2</strong>
+          required: false
+          in: query
+          type: number
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerPool'
+      tags: &ref_28
+        - v1/load-balancer/pools
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one LoadBalancerPool
+      parameters:
+        - name: LoadBalancerPool
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}':
+    get:
+      summary: Retrieve one LoadBalancerPool
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    patch:
+      summary: Update one LoadBalancerPool
+      parameters:
+        - name: LoadBalancerPool
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Replace one LoadBalancerPool
+      parameters:
+        - name: LoadBalancerPool
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one LoadBalancerPool
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/pools/bulk:
+    post:
+      summary: Create many LoadBalancerPool
+      parameters:
+        - name: GeneratedLoadBalancerPoolBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{poolId}/health-monitor/{healthMonitorId}':
+    post:
+      summary: Add Health Monitor to Load Balancer Pool
+      parameters:
+        - type: string
+          name: poolId
+          required: true
+          in: path
+          description: Pool that the Health Monitor is being added to/removed from.
+        - type: string
+          name: healthMonitorId
+          required: true
+          in: path
+          description: Health Monitor that is being added or removed from Pool.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: &ref_29
+        - v1/load-balancer/pools
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove Health Monitor to Load Balancer Pool
+      parameters:
+        - type: string
+          name: poolId
+          required: true
+          in: path
+          description: Pool that the Health Monitor is being added to/removed from.
+        - type: string
+          name: healthMonitorId
+          required: true
+          in: path
+          description: Health Monitor that is being added or removed from Pool.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_29
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}':
+    post:
+      summary: Add Node to Load Balancer Pool
+      parameters:
+        - type: string
+          name: poolId
+          required: true
+          in: path
+          description: Pool that the Node is being added to/removed from.
+        - type: string
+          name: nodeId
+          required: true
+          in: path
+          description: Node that is being added or removed from Pool.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: &ref_30
+        - v1/load-balancer/pools
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove Node to Load Balancer Pool
+      parameters:
+        - type: string
+          name: poolId
+          required: true
+          in: path
+          description: Pool that the Node is being added to/removed from.
+        - type: string
+          name: nodeId
+          required: true
+          in: path
+          description: Node that is being added or removed from Pool.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_30
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/health-monitors:
+    get:
+      summary: Retrieve many LoadBalancerHealthMonitor
+      parameters:
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: filter
+          description: >-
+            <h4>Adds fields request condition (multiple conditions) to the
+            request.</h4><i>Syntax:</i>
+            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
+            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
+            (multiple filters are treated as a combination of AND type of
+            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
+            conditions accept multiple values separated by
+            commas)</li><li><strong>?filter=power||isnull</strong> (some
+            conditions don't accept value)</li></ul><br/>Filter
+            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
+            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
+            not equal)</li><li><strong><code>gt</code></strong>
+            (<code>&gt;</code>, greater
+            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
+            lower that)</li><li><strong><code>gte</code></strong>
+            (<code>&gt;=</code>, greater than or
+            equal)</li><li><strong><code>lte</code></strong>
+            (<code>&lt;=</code>, lower than or
+            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
+            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
+            (<code>LIKE %val</code>, ends
+            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
+            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
+            (<code>NOT LIKE %val%</code>, not
+            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
+            in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>notin</code></strong>
+            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>isnull</code></strong>
+            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>notnull</code></strong>
+            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>between</code></strong>
+            (<code>BETWEEN</code>, between, <strong><em>accepts two
+            values</em></strong>)</li></ul>
+          required: false
+          in: query
+          type: string
+        - name: or
+          description: >-
+            <h4>Adds <code>OR</code> conditions to the
+            request.</h4><i>Syntax:</i>
+            <strong>?or=field||condition||value</strong><br/>It uses the same
+            conditions as the filter parameter<br/><i>Rules and
+            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
+            <code>or</code> present (without <code>filter</code>) then it will
+            be interpreted as simple
+            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
+            there are <strong>multiple</strong> <code>or</code> present (without
+            <code>filter</code>) then it will be interpreted as a compination of
+            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
+            OR
+            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            there are <strong>one</strong> <code>or</code> and
+            <strong>one</strong> <code>filter</code> then it will be interpreted
+            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
+            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            present <strong>both</strong> <code>or</code> and
+            <code>filter</code> in any amount (<strong>one</strong> or
+            <strong>miltiple</strong> each) then both interpreted as a
+            combitation of <code>AND</code> conditions and compared with each
+            other by <code>OR</code> condition, as follows:<br><code>WHERE
+            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
+            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
+          required: false
+          in: query
+          type: string
+        - name: sort
+          description: >-
+            <h4>Adds sort by field (by multiple fields) and order to query
+            result.</h4><i>Syntax:</i>
+            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: per_page
+          description: >-
+            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: offset
+          description: >-
+            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?offset=number</strong><br/><i>Example:</i>
+            <strong>?offset=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: page
+          description: >-
+            <h4>Receive a portion of <code>limit</code> entities (alternative to
+            <code>offset</code>). Will be applied if <code>limit</code> is set
+            up.</h4><i>Syntax:</i>
+            <strong>?page=number</strong><br/><i>Example:</i>
+            <strong>?page=2</strong>
+          required: false
+          in: query
+          type: number
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: &ref_31
+        - v1/load-balancer/health-monitors
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one LoadBalancerHealthMonitor
+      parameters:
+        - name: LoadBalancerHealthMonitor
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
       tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/health-monitors/{id}':
+    get:
+      summary: Retrieve one LoadBalancerHealthMonitor
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    patch:
+      summary: Update one LoadBalancerHealthMonitor
+      parameters:
+        - name: LoadBalancerHealthMonitor
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Replace one LoadBalancerHealthMonitor
+      parameters:
+        - name: LoadBalancerHealthMonitor
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one LoadBalancerHealthMonitor
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/health-monitors/bulk:
+    post:
+      summary: Create many LoadBalancerHealthMonitor
+      parameters:
+        - name: GeneratedLoadBalancerHealthMonitorBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedLoadBalancerHealthMonitorBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerHealthMonitor'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/health-monitors/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/health-monitors/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/health-monitors/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/health-monitors/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/nodes:
+    get:
+      summary: Retrieve many LoadBalancerNode
+      parameters:
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: filter
+          description: >-
+            <h4>Adds fields request condition (multiple conditions) to the
+            request.</h4><i>Syntax:</i>
+            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
+            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
+            (multiple filters are treated as a combination of AND type of
+            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
+            conditions accept multiple values separated by
+            commas)</li><li><strong>?filter=power||isnull</strong> (some
+            conditions don't accept value)</li></ul><br/>Filter
+            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
+            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
+            not equal)</li><li><strong><code>gt</code></strong>
+            (<code>&gt;</code>, greater
+            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
+            lower that)</li><li><strong><code>gte</code></strong>
+            (<code>&gt;=</code>, greater than or
+            equal)</li><li><strong><code>lte</code></strong>
+            (<code>&lt;=</code>, lower than or
+            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
+            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
+            (<code>LIKE %val</code>, ends
+            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
+            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
+            (<code>NOT LIKE %val%</code>, not
+            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
+            in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>notin</code></strong>
+            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>isnull</code></strong>
+            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>notnull</code></strong>
+            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>between</code></strong>
+            (<code>BETWEEN</code>, between, <strong><em>accepts two
+            values</em></strong>)</li></ul>
+          required: false
+          in: query
+          type: string
+        - name: or
+          description: >-
+            <h4>Adds <code>OR</code> conditions to the
+            request.</h4><i>Syntax:</i>
+            <strong>?or=field||condition||value</strong><br/>It uses the same
+            conditions as the filter parameter<br/><i>Rules and
+            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
+            <code>or</code> present (without <code>filter</code>) then it will
+            be interpreted as simple
+            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
+            there are <strong>multiple</strong> <code>or</code> present (without
+            <code>filter</code>) then it will be interpreted as a compination of
+            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
+            OR
+            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            there are <strong>one</strong> <code>or</code> and
+            <strong>one</strong> <code>filter</code> then it will be interpreted
+            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
+            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            present <strong>both</strong> <code>or</code> and
+            <code>filter</code> in any amount (<strong>one</strong> or
+            <strong>miltiple</strong> each) then both interpreted as a
+            combitation of <code>AND</code> conditions and compared with each
+            other by <code>OR</code> condition, as follows:<br><code>WHERE
+            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
+            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
+          required: false
+          in: query
+          type: string
+        - name: sort
+          description: >-
+            <h4>Adds sort by field (by multiple fields) and order to query
+            result.</h4><i>Syntax:</i>
+            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: per_page
+          description: >-
+            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: offset
+          description: >-
+            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?offset=number</strong><br/><i>Example:</i>
+            <strong>?offset=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: page
+          description: >-
+            <h4>Receive a portion of <code>limit</code> entities (alternative to
+            <code>offset</code>). Will be applied if <code>limit</code> is set
+            up.</h4><i>Syntax:</i>
+            <strong>?page=number</strong><br/><i>Example:</i>
+            <strong>?page=2</strong>
+          required: false
+          in: query
+          type: number
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerNode'
+      tags: &ref_32
+        - v1/load-balancer/nodes
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one LoadBalancerNode
+      parameters:
+        - name: LoadBalancerNode
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}':
+    get:
+      summary: Retrieve one LoadBalancerNode
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    patch:
+      summary: Update one LoadBalancerNode
+      parameters:
+        - name: LoadBalancerNode
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Replace one LoadBalancerNode
+      parameters:
+        - name: LoadBalancerNode
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one LoadBalancerNode
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/nodes/bulk:
+    post:
+      summary: Create many LoadBalancerNode
+      parameters:
+        - name: GeneratedLoadBalancerNodeBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedLoadBalancerNodeBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerNode'
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_32
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/policies:
+    get:
+      summary: Retrieve many LoadBalancerPolicy
+      parameters:
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: filter
+          description: >-
+            <h4>Adds fields request condition (multiple conditions) to the
+            request.</h4><i>Syntax:</i>
+            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
+            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
+            (multiple filters are treated as a combination of AND type of
+            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
+            conditions accept multiple values separated by
+            commas)</li><li><strong>?filter=power||isnull</strong> (some
+            conditions don't accept value)</li></ul><br/>Filter
+            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
+            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
+            not equal)</li><li><strong><code>gt</code></strong>
+            (<code>&gt;</code>, greater
+            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
+            lower that)</li><li><strong><code>gte</code></strong>
+            (<code>&gt;=</code>, greater than or
+            equal)</li><li><strong><code>lte</code></strong>
+            (<code>&lt;=</code>, lower than or
+            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
+            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
+            (<code>LIKE %val</code>, ends
+            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
+            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
+            (<code>NOT LIKE %val%</code>, not
+            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
+            in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>notin</code></strong>
+            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>isnull</code></strong>
+            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>notnull</code></strong>
+            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>between</code></strong>
+            (<code>BETWEEN</code>, between, <strong><em>accepts two
+            values</em></strong>)</li></ul>
+          required: false
+          in: query
+          type: string
+        - name: or
+          description: >-
+            <h4>Adds <code>OR</code> conditions to the
+            request.</h4><i>Syntax:</i>
+            <strong>?or=field||condition||value</strong><br/>It uses the same
+            conditions as the filter parameter<br/><i>Rules and
+            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
+            <code>or</code> present (without <code>filter</code>) then it will
+            be interpreted as simple
+            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
+            there are <strong>multiple</strong> <code>or</code> present (without
+            <code>filter</code>) then it will be interpreted as a compination of
+            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
+            OR
+            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            there are <strong>one</strong> <code>or</code> and
+            <strong>one</strong> <code>filter</code> then it will be interpreted
+            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
+            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            present <strong>both</strong> <code>or</code> and
+            <code>filter</code> in any amount (<strong>one</strong> or
+            <strong>miltiple</strong> each) then both interpreted as a
+            combitation of <code>AND</code> conditions and compared with each
+            other by <code>OR</code> condition, as follows:<br><code>WHERE
+            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
+            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
+          required: false
+          in: query
+          type: string
+        - name: sort
+          description: >-
+            <h4>Adds sort by field (by multiple fields) and order to query
+            result.</h4><i>Syntax:</i>
+            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: per_page
+          description: >-
+            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: offset
+          description: >-
+            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?offset=number</strong><br/><i>Example:</i>
+            <strong>?offset=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: page
+          description: >-
+            <h4>Receive a portion of <code>limit</code> entities (alternative to
+            <code>offset</code>). Will be applied if <code>limit</code> is set
+            up.</h4><i>Syntax:</i>
+            <strong>?page=number</strong><br/><i>Example:</i>
+            <strong>?page=2</strong>
+          required: false
+          in: query
+          type: number
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerPolicy'
+      tags: &ref_33
+        - v1/load-balancer/policies
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one LoadBalancerPolicy
+      parameters:
+        - name: LoadBalancerPolicy
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/policies/{id}':
+    get:
+      summary: Retrieve one LoadBalancerPolicy
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    patch:
+      summary: Update one LoadBalancerPolicy
+      parameters:
+        - name: LoadBalancerPolicy
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Replace one LoadBalancerPolicy
+      parameters:
+        - name: LoadBalancerPolicy
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one LoadBalancerPolicy
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/policies/bulk:
+    post:
+      summary: Create many LoadBalancerPolicy
+      parameters:
+        - name: GeneratedLoadBalancerPolicyBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedLoadBalancerPolicyBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerPolicy'
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/policies/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/policies/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/policies/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_33
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/policies/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -9104,7 +9200,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Job'
-      tags: &ref_32
+      tags: &ref_34
         - v1/jobs
       produces:
         - application/json
@@ -9123,7 +9219,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_32
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9167,7 +9263,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_32
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9189,7 +9285,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_32
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9334,7 +9430,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: &ref_33
+      tags: &ref_35
         - v1/tier-groups
       produces:
         - application/json
@@ -9353,7 +9449,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9397,7 +9493,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9419,7 +9515,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9441,7 +9537,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9458,7 +9554,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9479,7 +9575,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9495,7 +9591,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9511,7 +9607,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -10750,85 +10846,6 @@ definitions:
       - loadBalancingMethod
       - servicePort
       - tierId
-  LoadBalancerVirtualServer:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      sourceIpAddress:
-        type: string
-      destinationIpAddress:
-        type: string
-      defaultPoolId:
-        type: string
-      defaultPool:
-        title: LoadBalancerPool
-        allOf:
-          - $ref: '#/definitions/LoadBalancerPool'
-          - readOnly: true
-      irules:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/LoadBalancerIrule'
-      sourceAddressTranslation:
-        type: string
-        enum:
-          - None
-          - AutoMap
-          - SNAT
-      type:
-        type: string
-        enum:
-          - Standard
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      tierId:
-        type: string
-    required:
-      - name
-      - sourceIpAddress
-      - destinationIpAddress
-      - sourceAddressTranslation
-      - type
-      - servicePort
-      - tierId
   LoadBalancerProfile:
     type: object
     properties:
@@ -10887,6 +10904,90 @@ definitions:
       - properties
       - key
       - certificate
+      - tierId
+  LoadBalancerVirtualServer:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      sourceIpAddress:
+        type: string
+      destinationIpAddress:
+        type: string
+      defaultPoolId:
+        type: string
+      defaultPool:
+        title: LoadBalancerPool
+        allOf:
+          - $ref: '#/definitions/LoadBalancerPool'
+          - readOnly: true
+      profiles:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerProfile'
+      irules:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerIrule'
+      sourceAddressTranslation:
+        type: string
+        enum:
+          - None
+          - AutoMap
+          - SNAT
+      type:
+        type: string
+        enum:
+          - Standard
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      tierId:
+        type: string
+    required:
+      - name
+      - sourceIpAddress
+      - destinationIpAddress
+      - sourceAddressTranslation
+      - type
+      - servicePort
       - tierId
   Tier:
     type: object
@@ -11304,6 +11405,24 @@ definitions:
           $ref: '#/definitions/LoadBalancerVirtualServer'
     required:
       - bulk
+  GeneratedLoadBalancerIruleBulkDto:
+    type: object
+    properties:
+      bulk:
+        type: array
+        items:
+          $ref: '#/definitions/LoadBalancerIrule'
+    required:
+      - bulk
+  GeneratedLoadBalancerProfileBulkDto:
+    type: object
+    properties:
+      bulk:
+        type: array
+        items:
+          $ref: '#/definitions/LoadBalancerProfile'
+    required:
+      - bulk
   GeneratedLoadBalancerPoolBulkDto:
     type: object
     properties:
@@ -11329,15 +11448,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerNode'
-    required:
-      - bulk
-  GeneratedLoadBalancerIruleBulkDto:
-    type: object
-    properties:
-      bulk:
-        type: array
-        items:
-          $ref: '#/definitions/LoadBalancerIrule'
     required:
       - bulk
   LoadBalancerPolicy:
@@ -11400,15 +11510,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerPolicy'
-    required:
-      - bulk
-  GeneratedLoadBalancerProfileBulkDto:
-    type: object
-    properties:
-      bulk:
-        type: array
-        items:
-          $ref: '#/definitions/LoadBalancerProfile'
     required:
       - bulk
   Job:
