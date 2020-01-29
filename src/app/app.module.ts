@@ -77,6 +77,8 @@ import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-
 import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
+import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -143,6 +145,8 @@ export function apiConfigFactory(): Configuration {
     VirtualDiskModalComponent,
     NetworkAdapterModalComponent,
     ApplianceComponent,
+    ApplianceModalComponent,
+    NetworkPortsModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
