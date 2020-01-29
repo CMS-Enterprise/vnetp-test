@@ -17,9 +17,14 @@ import {
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  Tier,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -38,6 +43,13 @@ export class FirewallRulesDetailComponent
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
+
+  allNetworkObjects: Array<NetworkObject>;
+  allNetworkObjectGroups: Array<NetworkObjectGroup>;
+  allServiceObjects: Array<ServiceObject>;
+  allServiceObjectGroups: Array<ServiceObjectGroup>;
+  allFirewallRuleGroups: Array<FirewallRuleGroup>;
+  allTiers: Array<Tier>;
 
   currentServiceObjectGroup: any;
 
@@ -64,7 +76,11 @@ export class FirewallRulesDetailComponent
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
-    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private bulkUploadService: BulkUploadService,
+    private networkObjectsService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupsService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectsService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupsService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   ngOnInit() {
@@ -122,12 +138,57 @@ export class FirewallRulesDetailComponent
         this.networkObjectGroups = data.networkObjectGroups;
         this.serviceObjects = data.serviceObjects;
         this.serviceObjectGroups = data.serviceObjectGroups;
+        this.getNetworkObjects();
+        this.getNetworkObjectGroups();
+        this.getServiceObjects();
+        this.getServiceObjectGroups();
+        this.getFirewallRuleGroups();
         this.TierName = data.name;
 
         // Only set the firewall rules after object arrays
         // have been populated, this allows us to use a pure
         // pipe to resolve id's to names.
         this.firewallRules = sortedFirewallRules;
+      });
+  }
+
+  getFirewallRuleGroups() {
+    this.firewallRuleGroupService
+      .v1NetworkSecurityFirewallRuleGroupsGet({})
+      .subscribe(data => {
+        this.allFirewallRuleGroups = data;
+      });
+  }
+
+  getNetworkObjects() {
+    this.networkObjectsService
+      .v1NetworkSecurityNetworkObjectsGet({})
+      .subscribe(data => {
+        this.allNetworkObjects = data;
+      });
+  }
+
+  getNetworkObjectGroups() {
+    this.networkObjectGroupsService
+      .v1NetworkSecurityNetworkObjectGroupsGet({})
+      .subscribe(data => {
+        this.allNetworkObjectGroups = data;
+      });
+  }
+
+  getServiceObjects() {
+    this.serviceObjectsService
+      .v1NetworkSecurityServiceObjectsGet({})
+      .subscribe(data => {
+        this.allServiceObjects = data;
+      });
+  }
+
+  getServiceObjectGroups() {
+    this.serviceObjectGroupsService
+      .v1NetworkSecurityServiceObjectGroupsGet({})
+      .subscribe(data => {
+        this.allServiceObjectGroups = data;
       });
   }
 
@@ -287,52 +348,79 @@ export class FirewallRulesDetailComponent
   sanitizeData(entities: any) {
     return entities.map(entity => {
       entity.ruleIndex = Number(entity.ruleIndex);
-      this.removeEmpty(entity);
+      this.mapCsv(entity);
       return entity;
     });
   }
 
-  removeEmpty = obj => {
+  mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false') {
+      if (val === 'false' || val === 'f') {
         obj[key] = false;
       }
-      if (val === 'true') {
+      if (val === 'true' || val === 't') {
         obj[key] = true;
       }
       if (val === null || val === '') {
         delete obj[key];
       }
-      if (key === 'serviceObjectGroupId') {
-        obj[key] = this.getObjectId(val, this.serviceObjectGroups);
+      if (key === 'serviceObjectGroup') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allServiceObjectGroups,
+        );
+        obj.serviceObjectGroupId = obj[key];
+        delete obj[key];
       }
-      if (key === 'serviceObjectId') {
-        obj[key] = this.getObjectId(val, this.serviceObjects);
+      if (key === 'serviceObject') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allServiceObjects,
+        );
+        obj.serviceObjectId = obj[key];
+        delete obj[key];
       }
-      if (
-        key === 'sourceNetworkObjectGroupId' ||
-        key === 'destinationNetworkObjectGroupId'
-      ) {
-        obj[key] = this.getObjectId(val, this.networkObjectGroups);
+      if (key === 'firewallRuleGroup') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allFirewallRuleGroups,
+        );
+        obj.firewallRuleGroupId = obj[key];
+        delete obj[key];
       }
-      if (
-        key === 'sourceNetworkObjectId' ||
-        key === 'destinationNetworkObjectId'
-      ) {
-        obj[key] = this.getObjectId(val, this.networkObjects);
+      if (key === 'sourceNetworkObject') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allNetworkObjectGroups,
+        );
+        obj.sourceNetworkObjectGroupId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'destinationNetworkObject') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allNetworkObjectGroups,
+        );
+        obj.destinationNetworkObjectGroupId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'sourceNetworkObject') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allNetworkObjects,
+        );
+        obj.sourceNetworkObjectId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'destinationNetworkObject') {
+        obj[key] = this.bulkUploadService.getObjectId(
+          val,
+          this.allNetworkObjects,
+        );
+        obj.destinationNetworkObjectId = obj[key];
+        delete obj[key];
       }
     });
     return obj;
   };
-
-  getObjectId(name, array) {
-    const serviceObjectGroupArray = array.filter(
-      group => group.name === name || group.id === name,
-    );
-    if (serviceObjectGroupArray.length === 1) {
-      return serviceObjectGroupArray[0].id;
-    } else {
-      return null;
-    }
-  }
 }
