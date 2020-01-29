@@ -253,8 +253,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
       this.getTierIRulesProfilesPolicies();
       this.getVirtualServerIRulesProfilesPolicies();
-      this.ngx.resetModalData('virtualServerModal');
     }
+    this.ngx.resetModalData('virtualServerModal');
   }
 
   private getTierIRulesProfilesPolicies() {
@@ -321,6 +321,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   private reset() {
     this.unsubAll();
     this.submitted = false;
+    this.VirtualServerId = null;
     this.buildForm();
   }
 

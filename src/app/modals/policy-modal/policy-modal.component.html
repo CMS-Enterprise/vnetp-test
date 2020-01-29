@@ -3,17 +3,11 @@
   identifier="loadBalancerPolicyModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="large-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Load Balancer Policy</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
