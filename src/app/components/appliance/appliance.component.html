@@ -59,7 +59,7 @@
           <fa
             name="trash"
             [ngClass]="{ 'fg-danger': a.deletedAt }"
-            (click)="deleteAppliance(vm)"
+            (click)="deleteAppliance(a)"
             aria-label="Soft-Delete/Delete Appliance"
           >
           </fa>
@@ -73,5 +73,5 @@
 </div>
 
 <app-appliance-modal></app-appliance-modal>
-<app-network-ports-modal></app-network-ports-modal>
+<!-- <app-network-ports-modal></app-network-ports-modal> -->
 <app-yes-no-modal></app-yes-no-modal>

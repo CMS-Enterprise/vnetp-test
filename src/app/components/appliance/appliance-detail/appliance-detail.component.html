@@ -5,15 +5,12 @@
     <button
       *ngIf="Appliance?.deletedAt"
       class="btn btn-sm btn-success"
-      (click)="restoreVirtualMachine(VirtualMachine)"
+      (click)="restoreAppliance(Appliance)"
     >
       <fa name="undo"></fa>
       Restore Appliance
     </button>
-    <button
-      class="btn btn-sm btn-danger"
-      (click)="deleteVirtualMachine(Appliance)"
-    >
+    <button class="btn btn-sm btn-danger" (click)="deleteAppliance(Appliance)">
       <fa name="trash"></fa>
       Delete Appliance
     </button>
@@ -74,3 +71,30 @@
     </div>
   </div>
 </div>
+
+<div class="p-3">
+  <h3>Network Ports</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of networkPorts">
+        <td>
+          <span>{{ n.name }}</span>
+        </td>
+        <td>
+          <!-- actions? -->
+        </td>
+      </tr>
+      <tr *ngIf="!networkPorts?.length" class="text-center">
+        <td colspan="2">No Network Ports</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-yes-no-modal></app-yes-no-modal>
