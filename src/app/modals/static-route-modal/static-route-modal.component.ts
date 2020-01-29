@@ -143,7 +143,7 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.TierId = '';
     this.StaticRouteId = '';

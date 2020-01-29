@@ -303,7 +303,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.buildForm();
   }

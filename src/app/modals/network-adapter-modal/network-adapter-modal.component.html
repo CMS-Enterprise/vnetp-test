@@ -2,18 +2,12 @@
   #networkAdapterModal
   identifier="networkAdapterModal"
   (onOpen)="getData()"
+  (onClose)="reset()"
   [dismissable]="false"
   customClass="small-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Network Adapter</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">

@@ -125,12 +125,16 @@ export class VlanModalComponent implements OnInit, OnDestroy {
       description: ['', Validators.minLength(3)],
       vlanNumber: [
         '',
-        Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)]),
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(4094),
+        ]),
       ],
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.TierId = '';
     this.ngx.resetModalData('vlanModal');

@@ -510,7 +510,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.TierId = null;
     this.submitted = false;

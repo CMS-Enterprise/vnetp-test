@@ -199,7 +199,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.serviceObjects = new Array<ServiceObject>();
     this.buildForm();

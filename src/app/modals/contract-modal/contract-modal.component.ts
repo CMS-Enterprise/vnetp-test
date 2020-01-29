@@ -125,7 +125,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
   private unsubAll() {}
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
     this.filterEntryFormSubmitted = false;

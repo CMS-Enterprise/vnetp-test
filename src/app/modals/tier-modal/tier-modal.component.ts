@@ -141,7 +141,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.DatacenterId = '';
     this.tierGroups = [];
