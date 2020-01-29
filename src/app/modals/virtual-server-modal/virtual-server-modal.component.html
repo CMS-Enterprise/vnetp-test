@@ -187,6 +187,54 @@
 
       <div class="form-row" *ngIf="ModalMode === 'Edit'">
         <div class="form-group col-md-12">
+          <label for="availablePolicies">Policies</label>
+          <tooltip [message]="helpText.AvailablePolicies"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availablePolicies" formControlName="selectedPolicy">
+              <option></option>
+              <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
+            </select>
+            <button type="button" class="btn btn-sm btn-info" (click)="addPolicy();">
+              Add Policy
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedPolicies">Selected Policies</label>
+          <tooltip [message]="helpText.SelectedPolicies"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Policy</th>
+                <th>Type</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let policy of selectedPolicies">
+                <td>
+                  {{ policy?.name }}
+                </td>
+                <td>
+                  {{ policy?.policyType }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="removePolicy(policy)">
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedPolicies?.length" class="text-center">
+                <td colspan="3">No Policies Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="ModalMode === 'Edit'">
+        <div class="form-group col-md-12">
           <label>iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">

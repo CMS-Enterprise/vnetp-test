@@ -6842,6 +6842,54 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/load-balancer/virtual-servers/{virtualServerId}/policies/{policyId}':
+    post:
+      summary: Add Policy to Load Balancer Virtual Server
+      parameters:
+        - type: string
+          name: virtualServerId
+          required: true
+          in: path
+          description: Virtual Server that the Policy is being added to/removed from.
+        - type: string
+          name: policyId
+          required: true
+          in: path
+          description: Policy that is being added or removed from Virtual Server.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerVirtualServer'
+      tags: &ref_26
+        - v1/load-balancer/virtual-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove Policy from Load Balancer Virtual Server
+      parameters:
+        - type: string
+          name: virtualServerId
+          required: true
+          in: path
+          description: Virtual Server that the Policy is being added to/removed from.
+        - type: string
+          name: policyId
+          required: true
+          in: path
+          description: Policy that is being added or removed from Virtual Server.
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoadBalancerVirtualServer'
+      tags: *ref_26
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/irules:
     get:
       summary: Retrieve many LoadBalancerIrule
@@ -6982,7 +7030,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: &ref_26
+      tags: &ref_27
         - v1/load-balancer/irules
       produces:
         - application/json
@@ -7001,7 +7049,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7045,7 +7093,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7067,7 +7115,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7089,7 +7137,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7106,7 +7154,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7127,7 +7175,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7143,7 +7191,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7159,7 +7207,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7175,7 +7223,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7191,7 +7239,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7336,7 +7384,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: &ref_27
+      tags: &ref_28
         - v1/load-balancer/profiles
       produces:
         - application/json
@@ -7355,7 +7403,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7399,7 +7447,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7421,7 +7469,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7443,7 +7491,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7460,7 +7508,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7481,7 +7529,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7497,7 +7545,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7513,7 +7561,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7529,7 +7577,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7545,7 +7593,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7690,7 +7738,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: &ref_28
+      tags: &ref_29
         - v1/load-balancer/policies
       produces:
         - application/json
@@ -7709,7 +7757,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7753,7 +7801,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7775,7 +7823,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7797,7 +7845,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7814,7 +7862,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7835,7 +7883,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7851,7 +7899,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7867,7 +7915,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7883,7 +7931,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7899,7 +7947,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -8044,7 +8092,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: &ref_29
+      tags: &ref_30
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8063,7 +8111,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8107,7 +8155,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8129,7 +8177,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8151,7 +8199,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8168,7 +8216,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8189,7 +8237,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8205,7 +8253,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8221,7 +8269,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8237,7 +8285,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8253,7 +8301,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8277,7 +8325,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_30
+      tags: &ref_31
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8301,7 +8349,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8325,7 +8373,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_31
+      tags: &ref_32
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8349,7 +8397,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8494,7 +8542,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_32
+      tags: &ref_33
         - v1/load-balancer/health-monitors
       produces:
         - application/json
@@ -8513,7 +8561,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8557,7 +8605,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8579,7 +8627,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8601,7 +8649,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8618,7 +8666,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8639,7 +8687,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8655,7 +8703,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8671,7 +8719,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8687,7 +8735,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8703,7 +8751,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8848,7 +8896,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_33
+      tags: &ref_34
         - v1/load-balancer/nodes
       produces:
         - application/json
@@ -8867,7 +8915,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8911,7 +8959,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8933,7 +8981,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8955,7 +9003,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8972,7 +9020,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8993,7 +9041,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9009,7 +9057,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9025,7 +9073,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9041,7 +9089,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9057,7 +9105,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9202,7 +9250,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Job'
-      tags: &ref_34
+      tags: &ref_35
         - v1/jobs
       produces:
         - application/json
@@ -9221,7 +9269,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9265,7 +9313,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9287,7 +9335,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9432,7 +9480,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: &ref_35
+      tags: &ref_36
         - v1/tier-groups
       produces:
         - application/json
@@ -9451,7 +9499,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9495,7 +9543,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9517,7 +9565,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9539,7 +9587,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9556,7 +9604,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9577,7 +9625,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9593,7 +9641,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9609,7 +9657,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:

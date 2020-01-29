@@ -199,7 +199,6 @@ export class ProfileModalComponent implements OnInit {
 
   private setFormValidators() {
     const certificate = this.form.controls.certificate;
-    const ciphers = this.form.controls.ciphers;
 
     this.typeSubscription = this.form.controls.type.valueChanges.subscribe(
       type => {
@@ -215,7 +214,6 @@ export class ProfileModalComponent implements OnInit {
         }
 
         certificate.updateValueAndValidity();
-        ciphers.updateValueAndValidity();
       },
     );
   }

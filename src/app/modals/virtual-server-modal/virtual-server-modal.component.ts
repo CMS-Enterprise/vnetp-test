@@ -11,6 +11,7 @@ import {
   V1LoadBalancerVirtualServersService,
   LoadBalancerProfile,
   V1TiersService,
+  LoadBalancerPolicy,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -33,6 +34,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   selectedIRules: LoadBalancerIrule[];
   availableProfiles: LoadBalancerProfile[];
   selectedProfiles: LoadBalancerProfile[];
+  availablePolicies: LoadBalancerPolicy[];
+  selectedPolicies: LoadBalancerPolicy[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -105,7 +108,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
         iruleId: this.f.selectedIRule.value,
       })
       .subscribe(data => {
-        this.getVirtualServerIRulesProfiles();
+        this.getVirtualServerIRulesProfilesPolicies();
         this.f.selectedIRule.setValue('');
       });
   }
@@ -127,7 +130,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
               iruleId: irule.id,
             })
             .subscribe(result => {
-              this.getVirtualServerIRulesProfiles();
+              this.getVirtualServerIRulesProfilesPolicies();
             });
         }
         yesNoModalSubscription.unsubscribe();
@@ -141,7 +144,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
         profileId: this.f.selectedProfile.value,
       })
       .subscribe(data => {
-        this.getVirtualServerIRulesProfiles();
+        this.getVirtualServerIRulesProfilesPolicies();
         this.f.selectedProfile.setValue('');
       });
   }
@@ -168,7 +171,43 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
               },
             )
             .subscribe(result => {
-              this.getVirtualServerIRulesProfiles();
+              this.getVirtualServerIRulesProfilesPolicies();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  addPolicy() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost({
+        virtualServerId: this.VirtualServerId,
+        policyId: this.f.selectedPolicy.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfilesPolicies();
+        this.f.selectedPolicy.setValue('');
+      });
+  }
+
+  removePolicy(policy: LoadBalancerPolicy) {
+    const modalDto = new YesNoModalDto('Remove Policy from Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          this.virtualServerService
+            .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
+              virtualServerId: this.VirtualServerId,
+              policyId: policy.id,
+            })
+            .subscribe(result => {
+              this.getVirtualServerIRulesProfilesPolicies();
             });
         }
         yesNoModalSubscription.unsubscribe();
@@ -212,14 +251,13 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       );
       this.form.controls.pool.setValue(virtualServer.defaultPoolId);
 
-      this.getTierIRulesProfiles();
-      this.getVirtualServerIRulesProfiles();
-      // TODO: Get Policies
+      this.getTierIRulesProfilesPolicies();
+      this.getVirtualServerIRulesProfilesPolicies();
       this.ngx.resetModalData('virtualServerModal');
     }
   }
 
-  private getTierIRulesProfiles() {
+  private getTierIRulesProfilesPolicies() {
     this.tierService
       .v1TiersIdGet({
         id: this.TierId,
@@ -228,10 +266,11 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.availableIRules = data.loadBalancerIrules;
         this.availableProfiles = data.loadBalancerProfiles;
+        this.availablePolicies = data.loadBalancerPolicies;
       });
   }
 
-  private getVirtualServerIRulesProfiles() {
+  private getVirtualServerIRulesProfilesPolicies() {
     this.virtualServerService
       .v1LoadBalancerVirtualServersIdGet({
         id: this.VirtualServerId,
@@ -240,6 +279,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.selectedIRules = data.irules;
         this.selectedProfiles = data.profiles;
+        this.selectedPolicies = data.policies;
       });
   }
 
@@ -265,12 +305,15 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       pool: ['', Validators.required],
       selectedIRule: [''],
       selectedProfile: [''],
+      selectedPolicy: [''],
     });
 
     this.availableIRules = new Array<LoadBalancerIrule>();
     this.selectedIRules = new Array<LoadBalancerIrule>();
     this.availableProfiles = new Array<LoadBalancerProfile>();
     this.selectedProfiles = new Array<LoadBalancerProfile>();
+    this.availablePolicies = new Array<LoadBalancerPolicy>();
+    this.selectedPolicies = new Array<LoadBalancerPolicy>();
   }
 
   private unsubAll() {}

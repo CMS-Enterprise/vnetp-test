@@ -91,6 +91,16 @@ export interface V1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdPostReq
     iruleId: string;
 }
 
+export interface V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDeleteRequestParams {
+    virtualServerId: string;
+    policyId: string;
+}
+
+export interface V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPostRequestParams {
+    virtualServerId: string;
+    policyId: string;
+}
+
 export interface V1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDeleteRequestParams {
     virtualServerId: string;
     profileId: string;
@@ -704,6 +714,89 @@ export class V1LoadBalancerVirtualServersService {
 
 
         return this.httpClient.post<LoadBalancerVirtualServer>(`${this.configuration.basePath}/v1/load-balancer/virtual-servers/${encodeURIComponent(String(virtualServerId))}/irules/${encodeURIComponent(String(iruleId))}`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove Policy from Load Balancer Virtual Server
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerVirtualServer>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerVirtualServer>>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerVirtualServer>>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const virtualServerId = requestParameters.virtualServerId;
+        if (virtualServerId === null || virtualServerId === undefined) {
+            throw new Error('Required parameter virtualServerId was null or undefined when calling v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete.');
+        }
+        const policyId = requestParameters.policyId;
+        if (policyId === null || policyId === undefined) {
+            throw new Error('Required parameter policyId was null or undefined when calling v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.delete<LoadBalancerVirtualServer>(`${this.configuration.basePath}/v1/load-balancer/virtual-servers/${encodeURIComponent(String(virtualServerId))}/policies/${encodeURIComponent(String(policyId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add Policy to Load Balancer Virtual Server
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerVirtualServer>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerVirtualServer>>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerVirtualServer>>;
+    public v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost(requestParameters: V1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const virtualServerId = requestParameters.virtualServerId;
+        if (virtualServerId === null || virtualServerId === undefined) {
+            throw new Error('Required parameter virtualServerId was null or undefined when calling v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost.');
+        }
+        const policyId = requestParameters.policyId;
+        if (policyId === null || policyId === undefined) {
+            throw new Error('Required parameter policyId was null or undefined when calling v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.post<LoadBalancerVirtualServer>(`${this.configuration.basePath}/v1/load-balancer/virtual-servers/${encodeURIComponent(String(virtualServerId))}/policies/${encodeURIComponent(String(policyId))}`,
             null,
             {
                 withCredentials: this.configuration.withCredentials,

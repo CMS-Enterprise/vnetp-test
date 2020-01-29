@@ -68,8 +68,8 @@
           >
           </textarea>
         </div>
-        <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
-          <div *ngIf="f.certificate.errors.required">
+        <div *ngIf="submitted && f.asmContent.errors" class="invalid-feedback">
+          <div *ngIf="f.asmContent.errors.required">
             ASM Policy XML is Required.
           </div>
         </div>
@@ -93,8 +93,6 @@
             type="file"
             #policyContentUploader
             (change)="importPolicyContent($event)"
-            [(ngModel)]="policyContentInput"
-            [ngModelOptions]="{ standalone: true }"
           />
         </div>
       </div>
