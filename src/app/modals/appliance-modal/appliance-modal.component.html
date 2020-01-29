@@ -1,0 +1,132 @@
+<ngx-smart-modal
+  #applianceModal
+  identifier="applianceModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Appliance</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          required
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          aria-label="Description"
+        />
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="rackUnits">Rack Units</label>
+          <input type="number" name="rackUnits" class="form-control" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="serialNumber">Serial Number</label>
+          <input type="text" name="serialNumber" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="deliveryDate">Delivery Date</label>
+        <input type="date" name="deliveryDate" class="form-control" />
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="localStorageType">Local Storage Type</label>
+          <select
+            name="localStorageType"
+            formControlName="localStorageType"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageRequired">Local Storage Required?</label>
+          <select
+            name="localStorageRequired"
+            formControlName="localStorageRequired"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageSize">Local Storage Size (GB)</label>
+          <input type="number" name="localStorageSize" class="form-control" />
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- SAN -->
+
+      <hr />
+
+      <!-- power supply -->
+
+      <hr />
+
+      <!-- network ports table -->
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>
