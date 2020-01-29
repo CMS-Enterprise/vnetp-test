@@ -3,16 +3,10 @@
   identifier="serviceObjectModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
 >
   <div class="modal-header">
     <h4 class="modal-title">Service Object</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
