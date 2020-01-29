@@ -30,6 +30,7 @@ import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-ru
 import { VmwareComponent } from './components/vmware/vmware.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 
 // tslint:disable: max-line-length
 
@@ -137,6 +138,12 @@ const routes: Routes = [
     component: ApplianceComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Appliance as a Service' },
+  },
+  {
+    path: 'appliance/:id',
+    component: ApplianceDetailComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Appliance Detail' },
   },
   {
     path: 'solaris',

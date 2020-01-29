@@ -79,6 +79,7 @@ import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/net
 import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
 import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -147,6 +148,7 @@ export function apiConfigFactory(): Configuration {
     ApplianceComponent,
     ApplianceModalComponent,
     NetworkPortsModalComponent,
+    ApplianceDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
