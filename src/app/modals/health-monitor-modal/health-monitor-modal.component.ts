@@ -175,7 +175,7 @@ export class HealthMonitorModalComponent implements OnInit {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.buildForm();
   }

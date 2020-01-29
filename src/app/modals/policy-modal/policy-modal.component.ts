@@ -168,7 +168,7 @@ export class PolicyModalComponent implements OnInit {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.privateKeyCipher = null;
     this.buildForm();

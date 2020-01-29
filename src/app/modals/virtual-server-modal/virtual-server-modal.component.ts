@@ -318,7 +318,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
   private unsubAll() {}
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
     this.VirtualServerId = null;
