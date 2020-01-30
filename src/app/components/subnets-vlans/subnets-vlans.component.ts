@@ -28,6 +28,7 @@ export class SubnetsVlansComponent
 
   currentSubnetsPage = 1;
   currentVlansPage = 1;
+  perPage = 20;
 
   subnets: Array<Subnet>;
   vlans: Array<Vlan>;

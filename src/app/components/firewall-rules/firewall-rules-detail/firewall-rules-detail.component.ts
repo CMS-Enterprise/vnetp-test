@@ -28,11 +28,12 @@ export class FirewallRulesDetailComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
   TierName = '';
-  currentFirewallRulePage = 1;
 
   dirty: boolean;
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
+
+  perPage = 50;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;

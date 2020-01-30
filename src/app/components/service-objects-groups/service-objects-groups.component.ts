@@ -28,6 +28,7 @@ export class ServiceObjectsGroupsComponent
 
   currentServiceObjectsPage = 1;
   currentServiceObjectGroupsPage = 1;
+  perPage = 20;
 
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;

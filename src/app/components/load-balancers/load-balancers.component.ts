@@ -42,6 +42,8 @@ export class LoadBalancersComponent
   currentPoolPage = 1;
   currentHMPage = 1;
 
+  perPage = 20;
+
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];
   nodes: LoadBalancerNode[];

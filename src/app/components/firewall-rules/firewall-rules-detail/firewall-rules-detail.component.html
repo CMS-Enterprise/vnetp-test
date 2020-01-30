@@ -42,7 +42,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: 10, currentPage: currentFirewallRulePage }">
+      <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }">
         <td>
           <p>{{ firewallRule?.name }}</p>
         </td>
@@ -156,6 +156,15 @@
     </tbody>
   </table>
   <pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
+
+<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+    Entities per page
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    <button type="button" value="100" (click)="perPage = $event.target.value" class="btn btn-light">100</button>
+    <button type="button" value="200" (click)="perPage = $event.target.value" class="btn btn-light">200</button>
+  </div>
+</div>
 
   <div *ngIf="firewallRules?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm" role="group">

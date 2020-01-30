@@ -23,6 +23,8 @@ export class FirewallRulesComponent implements OnInit {
   firewallRuleGroups: Array<FirewallRuleGroup>;
   DatacenterId: string;
 
+  perPage = 20;
+
   constructor(
     public helpText: FirewallRulesHelpText,
     private datacenterContextService: DatacenterContextService,
