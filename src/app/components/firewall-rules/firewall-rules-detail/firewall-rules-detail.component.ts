@@ -34,6 +34,7 @@ export class FirewallRulesDetailComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
   TierName = '';
+  currentTierIds: Array<string>;
 
   dirty: boolean;
   firewallRuleGroup: FirewallRuleGroup;
@@ -90,6 +91,7 @@ export class FirewallRulesDetailComponent
           // This component locks the datacenter for the entire edit lifecycle.
           this.datacenterService.lockDatacenter();
           this.Id += this.route.snapshot.paramMap.get('id');
+          this.currentTierIds = this.datacenterService.currentTiersValue;
           this.getFirewallRules();
         }
       },
@@ -154,7 +156,9 @@ export class FirewallRulesDetailComponent
 
   getFirewallRuleGroups() {
     this.firewallRuleGroupService
-      .v1NetworkSecurityFirewallRuleGroupsGet({})
+      .v1NetworkSecurityFirewallRuleGroupsGet({
+        filter: `tierId||eq||${this.currentTierIds[0]}||tierId||eq||${this.currentTierIds[1]}`,
+      })
       .subscribe(data => {
         this.allFirewallRuleGroups = data;
       });

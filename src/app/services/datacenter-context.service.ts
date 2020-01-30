@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
-import { Datacenter, V1DatacentersService } from 'api_client';
+import { Datacenter, V1DatacentersService, Tier } from 'api_client';
 import { query } from '@angular/animations';
 
 /** Service to store and expose the Current Datacenter Context. */
@@ -85,6 +85,11 @@ export class DatacenterContextService {
   /** Current Datacenter */
   public get currentDatacenterValue(): Datacenter {
     return this.currentDatacenterSubject.value;
+  }
+
+  /** Array of Tier Ids in current Datacenter */
+  public get currentTiersValue(): Array<string> {
+    return this.currentDatacenterSubject.value.tiers.map(tier => tier.id);
   }
 
   /** Datacenters available within the Tenant. */
