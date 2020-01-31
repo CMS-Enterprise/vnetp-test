@@ -23,6 +23,9 @@ export class VmwareComponent implements OnInit, OnDestroy {
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
 
+  currentVMWarePage = 1;
+  perPage = 20;
+
   constructor(
     private ngxSmartModalService: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,

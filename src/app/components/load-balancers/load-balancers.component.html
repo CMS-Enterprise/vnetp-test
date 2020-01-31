@@ -89,7 +89,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let virtualServer of virtualServers">
+        <tr
+          *ngFor="let virtualServer of virtualServers | paginate: { itemsPerPage: perPage, currentPage: currentVSPage }">
           <td>
             <span>{{ virtualServer?.name }}</span>
           </td>
@@ -134,6 +135,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentVSPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 1">
@@ -161,7 +163,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let pool of pools">
+        <tr *ngFor="let pool of pools | paginate: { itemsPerPage: perPage, currentPage: currentPoolPage }">
           <td>
             <span>{{ pool?.name }}</span>
           </td>
@@ -204,6 +206,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentPoolPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 2">
@@ -233,7 +236,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let node of nodes">
+        <tr *ngFor="let node of nodes | paginate: { itemsPerPage: perPage, currentPage: currentNodePage }">
           <td>
             <span>{{ node?.name }}</span>
           </td>
@@ -282,6 +285,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentNodePage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 3">
@@ -306,7 +310,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let irule of irules">
+        <tr *ngFor="let irule of irules | paginate: { itemsPerPage: perPage, currentPage: currentIrulePage }">
           <td>
             <span>{{ irule?.name }}</span>
           </td>
@@ -340,6 +344,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentIrulePage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 4">
@@ -367,7 +372,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let healthMonitor of healthMonitors">
+        <tr
+          *ngFor="let healthMonitor of healthMonitors | paginate: { itemsPerPage: perPage, currentPage: currentHMPage }">
           <td>
             <span>{{ healthMonitor?.name }}</span>
           </td>
@@ -410,6 +416,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentHMPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 5">
@@ -434,7 +441,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let profile of profiles">
+        <tr *ngFor="let profile of profiles | paginate: { itemsPerPage: perPage, currentPage: currentProfilePage }">
           <td>
             <span>{{ profile?.name }}</span>
           </td>
@@ -458,6 +465,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentProfilesPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 6">
@@ -482,7 +490,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let policy of policies">
+        <tr *ngFor="let policy of policies | paginate: { itemsPerPage: perPage, currentPage: currentPoliciesPage }">
           <td>
             <span>{{ policy?.name }}</span>
           </td>
@@ -506,6 +514,16 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentPoliciesPage = $event"></pagination-controls>
+  </div>
+
+  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
   </div>
 
   <div *ngIf="currentTier" class="pull-right">

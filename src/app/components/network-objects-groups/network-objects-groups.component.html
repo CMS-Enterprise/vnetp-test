@@ -62,7 +62,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let netObj of networkObjects">
+        <tr
+          *ngFor="let netObj of networkObjects | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectsPage }">
           <td>
             <span>{{ netObj?.name }}</span>
           </td>
@@ -123,6 +124,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentNetworkObjectsPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 1">
@@ -147,7 +149,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let netObjGroup of networkObjectGroups">
+        <tr
+          *ngFor="let netObjGroup of networkObjectGroups | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectGroupsPage }">
           <td>
             <span>{{ netObjGroup.name }}</span>
           </td>
@@ -181,8 +184,18 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentNetworkObjectGroupsPage = $event"></pagination-controls>
+  </div>
+  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
   </div>
 </div>
+
 
 <div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export

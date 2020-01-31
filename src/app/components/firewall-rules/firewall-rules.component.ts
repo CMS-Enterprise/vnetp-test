@@ -20,11 +20,14 @@ import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 })
 export class FirewallRulesComponent implements OnInit {
   navIndex = FirewallRuleGroupType.External;
+  currentFirewallRulePage = 1;
 
   tiers: Array<Tier>;
   currentDatacenterSubscription: Subscription;
   firewallRuleGroups: Array<FirewallRuleGroup>;
   DatacenterId: string;
+
+  perPage = 20;
 
   constructor(
     public helpText: FirewallRulesHelpText,

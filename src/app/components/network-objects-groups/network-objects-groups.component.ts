@@ -27,6 +27,9 @@ export class NetworkObjectsGroupsComponent
   implements OnInit, OnDestroy, PendingChangesGuard {
   tiers: Tier[];
   currentTier: Tier;
+  currentNetworkObjectsPage = 1;
+  currentNetworkObjectGroupsPage = 1;
+  perPage = 20;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;

@@ -41,6 +41,8 @@ export class FirewallRulesDetailComponent
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
 
+  perPage = 50;
+
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;

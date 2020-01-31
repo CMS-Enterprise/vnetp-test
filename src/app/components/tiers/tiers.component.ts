@@ -6,7 +6,6 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1TiersService, Tier, Datacenter } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 
 @Component({
@@ -16,6 +15,8 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   tiers: Tier[];
 
+  perPage = 20;
+  currentTierPage = 1;
   navIndex = 0;
 
   tierModalSubscription: Subscription;
