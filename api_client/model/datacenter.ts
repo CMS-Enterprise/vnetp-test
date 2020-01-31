@@ -12,6 +12,7 @@
 import { VmwareVirtualMachine } from './vmwareVirtualMachine';
 import { Appliance } from './appliance';
 import { Tier } from './tier';
+import { TierGroup } from './tierGroup';
 import { PhysicalServer } from './physicalServer';
 
 
@@ -27,5 +28,6 @@ export interface Datacenter {
     readonly physicalServers?: Array<PhysicalServer>;
     readonly vmwareVirtualMachines?: Array<VmwareVirtualMachine>;
     readonly tiers?: Array<Tier>;
+    readonly tierGroups?: Array<TierGroup>;
 }
 

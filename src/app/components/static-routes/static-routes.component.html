@@ -8,7 +8,7 @@
         class="btn btn-sm btn-info"
         (click)="getTiers()"
         aria-label="Refresh Static Routes"
-        >
+      >
         <fa name="refresh"></fa>
         Refresh
       </button>
@@ -27,13 +27,16 @@
             {{ tier.name }}
           </td>
           <td>
-            <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge">
+            <a
+              routerLink="/static-routes/edit/{{ tier?.id }}"
+              queryParamsHandling="merge"
+            >
               {{ tier.name }}
             </a>
           </td>
-          <td>
+          <!-- <td>
 
-          </td>
+          </td> -->
         </tr>
         <tr *ngIf="!tiers?.length" class="text-center">
           <td colspan="4">No Tiers</td>

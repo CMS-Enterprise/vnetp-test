@@ -197,7 +197,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.networkObjects = new Array<NetworkObject>();
     this.Subnets = new Array<Subnet>();

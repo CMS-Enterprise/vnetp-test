@@ -3,17 +3,11 @@
   identifier="firewallRuleModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Firewall Rule</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -108,6 +102,21 @@
         </div>
 
         <div class="form-group col-md-2">
+          <label for="type">Enabled</label>
+          <tooltip [message]="helpText.Enabled"></tooltip>
+          <select
+            name="enabled"
+            formControlName="enabled"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
+            aria-label="Logging"
+          >
+            <option [ngValue]="false">False</option>
+            <option [ngValue]="true">True</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-2">
           <label for="type">Rule Index</label>
           <tooltip [message]="helpText.RuleIndex"></tooltip>
           <input
@@ -122,6 +131,8 @@
           </div>
         </div>
       </div>
+
+      <hr />
 
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -216,104 +227,6 @@
           </div>
         </div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="name">Source Service Type</label>
-          <tooltip [message]="helpText.SourceServiceType"></tooltip>
-          <select
-            name="sourceServiceType"
-            formControlName="sourceServiceType"
-            class="form-control"
-            aria-label="Source Service Type"
-          >
-            <option value="Port">Port</option>
-            <option value="ServiceObject">Service Object</option>
-            <option value="ServiceObjectGroup">Service Object Group</option>
-          </select>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="name" *ngIf="f.sourceServiceType.value === 'Port'"
-            >Source Port</label
-          >
-          <tooltip *ngIf="f.sourceServiceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
-          <input
-            type="text"
-            formControlName="sourcePorts"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
-            aria-label="Name"
-            *ngIf="f.sourceServiceType.value === 'Port'"
-          />
-          <div
-            *ngIf="submitted && f.sourcePorts.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.sourcePorts.errors.required">
-              Source Port is required
-            </div>
-          </div>
-
-          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceObject'"
-            >Source Service Object
-          </label>
-          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
-          <select
-            formControlName="sourceServiceObject"
-            class="form-control"
-            [ngClass]="{
-              'is-invalid': submitted && f.sourceServiceObject.errors
-            }"
-            aria-label="Name"
-            *ngIf="f.sourceServiceType.value === 'ServiceObject'"
-          >
-            <option
-              *ngFor="let serviceObject of serviceObjects"
-              [ngValue]="serviceObject.id"
-              >{{ serviceObject.name }}</option
-            >
-          </select>
-          <div
-            *ngIf="submitted && f.sourceServiceObject.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.sourceServiceObject.errors.required">
-              Source Service Object is required
-            </div>
-          </div>
-
-          <label for="name" *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'"
-            >Source Service Object Group</label
-          >
-          <tooltip *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
-          <select
-            formControlName="sourceServiceObjectGroup"
-            class="form-control"
-            [ngClass]="{
-              'is-invalid': submitted && f.sourceServiceObjectGroup.errors
-            }"
-            aria-label="Name"
-            *ngIf="f.sourceServiceType.value === 'ServiceObjectGroup'"
-          >
-            <option
-              *ngFor="let serviceObjectGroup of serviceObjectGroups"
-              [ngValue]="serviceObjectGroup.id"
-              >{{ serviceObjectGroup.name }}</option
-            >
-          </select>
-          <div
-            *ngIf="submitted && f.sourceServiceObjectGroup.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.sourceServiceObjectGroup.errors.required">
-              Source Service Object Group is required
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr />
 
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -414,36 +327,64 @@
         </div>
       </div>
 
+      <hr />
+      
       <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="name">Destination Service Type</label>
-          <tooltip [message]="helpText.DestinationServiceType"></tooltip>
+        <div class="form-group col-md-12">
+          <label for="name">Service Type</label>
+          <tooltip [message]="helpText.SourceServiceType"></tooltip>
           <select
-            name="destinationServiceType"
-            formControlName="destinationServiceType"
+            name="serviceType"
+            formControlName="serviceType"
             class="form-control"
-            aria-label="Destination Service Type"
+            aria-label="Source Service Type"
           >
             <option value="Port">Port</option>
             <option value="ServiceObject">Service Object</option>
             <option value="ServiceObjectGroup">Service Object Group</option>
           </select>
         </div>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6" *ngIf="f.serviceType.value === 'Port'">
+          <label for="name" *ngIf="f.serviceType.value === 'Port'"
+            >Source Port</label
+          >
+          <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
+          <input
+            type="text"
+            formControlName="sourcePorts"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+            aria-label="Name"
+            *ngIf="f.serviceType.value === 'Port'"
+          />
+          <div
+            *ngIf="submitted && f.sourcePorts.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.sourcePorts.errors.required">
+              Source Port is required
+            </div>
+          </div>
+        </div>
 
         <div class="form-group col-md-6">
           <label
             for="destinationPorts"
-            *ngIf="f.destinationServiceType.value === 'Port'"
+            *ngIf="f.serviceType.value === 'Port'"
             >Destination Port</label
           >
-          <tooltip *ngIf="f.destinationServiceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
+          <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
           <input
             type="text"
             formControlName="destinationPorts"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
             aria-label="Name"
-            *ngIf="f.destinationServiceType.value === 'Port'"
+            *ngIf="f.serviceType.value === 'Port'"
           />
           <div
             *ngIf="submitted && f.destinationPorts.errors"
@@ -454,18 +395,18 @@
             </div>
           </div>
 
-          <label for="name" *ngIf="f.destinationServiceType.value === 'ServiceObject'"
-            >Destination Service Object
+          <label for="name" *ngIf="f.serviceType.value === 'ServiceObject'"
+            >Service Object
           </label>
-          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
+          <tooltip *ngIf="f.serviceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
           <select
-            formControlName="destinationServiceObject"
+            formControlName="serviceObject"
             class="form-control"
             [ngClass]="{
-              'is-invalid': submitted && f.destinationServiceObject.errors
+              'is-invalid': submitted && f.serviceObject.errors
             }"
             aria-label="Name"
-            *ngIf="f.destinationServiceType.value === 'ServiceObject'"
+            *ngIf="f.serviceType.value === 'ServiceObject'"
           >
             <option
               *ngFor="let serviceObject of serviceObjects"
@@ -474,28 +415,28 @@
             >
           </select>
           <div
-            *ngIf="submitted && f.destinationServiceObject.errors"
+            *ngIf="submitted && f.serviceObject.errors"
             class="invalid-feedback"
           >
-            <div *ngIf="f.destinationServiceObject.errors.required">
-              Destination Service Object is required
+            <div *ngIf="f.serviceObject.errors.required">
+              Service Object is required
             </div>
           </div>
 
           <label
             for="name"
-            *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'"
-            >Destination Service Object Group</label
+            *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
+            >Service Object Group</label
           >
-          <tooltip *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
+          <tooltip *ngIf="f.serviceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
           <select
-            formControlName="destinationServiceObjectGroup"
+            formControlName="serviceObjectGroup"
             class="form-control"
             [ngClass]="{
-              'is-invalid': submitted && f.destinationServiceObjectGroup.errors
+              'is-invalid': submitted && f.serviceObjectGroup.errors
             }"
             aria-label="Name"
-            *ngIf="f.destinationServiceType.value === 'ServiceObjectGroup'"
+            *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
           >
             <option
               *ngFor="let serviceObjectGroup of serviceObjectGroups"
@@ -504,11 +445,11 @@
             >
           </select>
           <div
-            *ngIf="submitted && f.destinationServiceObjectGroup.errors"
+            *ngIf="submitted && f.serviceObjectGroup.errors"
             class="invalid-feedback"
           >
-            <div *ngIf="f.destinationServiceObjectGroup.errors.required">
-              Destination Service Object Group is required
+            <div *ngIf="f.serviceObjectGroup.errors.required">
+              Service Object Group is required
             </div>
           </div>
         </div>

@@ -1,0 +1,274 @@
+<ngx-smart-modal
+  #applianceModal
+  identifier="applianceModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  customClass="medium-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Appliance</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          required
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          appIsAlphanumeric
+          formControlName="description"
+          class="form-control"
+          aria-label="Description"
+        />
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="rackUnits">Rack Units</label>
+          <input
+            type="number"
+            formControlName="rackUnits"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="serialNumber">Serial Number</label>
+          <input
+            type="text"
+            formControlName="serialNumber"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="deliveryDate">Delivery Date</label>
+        <input
+          type="date"
+          formControlName="deliveryDate"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="localStorageType">Local Storage Type</label>
+          <select
+            formControlName="localStorageType"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageRequired">Local Storage Required?</label>
+          <select
+            formControlName="localStorageRequired"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageSize">Local Storage Size (GB)</label>
+          <input
+            type="number"
+            formControlName="localStorageSize"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="sanType">SAN Type</label>
+          <select formControlName="sanType" class="form-control" required>
+            <option></option>
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanRequired">SAN Required?</label>
+          <select formControlName="sanRequired" class="form-control" required>
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanStorageSize">SAN Storage Size (GB)</label>
+          <input
+            type="number"
+            formControlName="sanStorageSize"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="powerSupplyVoltage">Power Supply Voltage</label>
+          <input
+            type="number"
+            formControlName="powerSupplyVoltage"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="powerSupplyWattage">Power Supply Wattage</label>
+          <input
+            type="number"
+            formControlName="powerSupplyWattage"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="powerSupplyConnectionType"
+            >Power Supply Connection Type</label
+          >
+          <select
+            formControlName="powerSupplyConnectionType"
+            class="form-control"
+            required
+          >
+            <option></option>
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="powerSupplyCount">Power Supply Count</label>
+          <input
+            type="number"
+            formControlName="powerSupplyCount"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+
+      <div *ngIf="this.ModalMode === 'Edit'">
+        <hr />
+
+        <div class="form-group">
+          <label>Network Ports</label>
+          <button
+            type="button"
+            name="modalVirtualDisk"
+            class="btn btn-sm btn-info pull-right mb-2"
+            (click)="openVirtualDiskModal()"
+          >
+            <fa name="plus"></fa>
+            Add Network Port
+          </button>
+          <table name="vSwitchTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let n of networkPorts">
+                <td>{{ n.name }}</td>
+                <td class="item-actions">
+                  <!-- TO DO: add edit -->
+                  <fa
+                    name="undo"
+                    *ngIf="n?.deletedAt"
+                    class="fg-success"
+                    (click)="restoreNetworkPort(n)"
+                    aria-label="Restore Network Port"
+                  ></fa>
+                  <fa
+                    name="trash"
+                    [ngClass]="{ 'fg-danger': n.deletedAt }"
+                    (click)="deleteNetworkPort(n)"
+                    aria-label="Soft-Delete/Delete Network Port"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!networkPorts?.length" class="text-center">
+                <td colspan="2">No Network Ports</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-dismiss="modal"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>

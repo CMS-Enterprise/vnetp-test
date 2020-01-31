@@ -30,7 +30,10 @@
     <strong>Cores per Socket:</strong> {{ VirtualMachine.cpuCoresPerSocket }}
   </p>
   <p><strong>CPU Reserved?</strong> {{ VirtualMachine.cpuReserved }}</p>
-  <p><strong>Memory Size:</strong> {{ VirtualMachine.memorySize }} GB</p>
+  <p>
+    <strong>Memory Size:</strong>
+    {{ convertBytesToGb(VirtualMachine.memorySize) }} GB
+  </p>
   <p><strong>Memory Reserved?</strong> {{ VirtualMachine.memoryReserved }}</p>
 </div>
 
@@ -51,7 +54,7 @@
           <span>{{ v.name }}</span>
         </td>
         <td>
-          <span>{{ v.diskSize }}</span>
+          <span>{{ convertBytesToGb(v.diskSize) }} GB</span>
         </td>
         <td>
           <span>{{ v.rawLun }}</span>

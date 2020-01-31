@@ -16,8 +16,7 @@ import {
   NetworkObject,
   FirewallRuleSourceAddressType,
   FirewallRuleDestinationAddressType,
-  FirewallRuleSourceServiceType,
-  FirewallRuleDestinationServiceType,
+  FirewallRuleServiceType,
   FirewallRule,
   V1NetworkSecurityFirewallRulesService,
 } from 'api_client';
@@ -34,9 +33,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   vrf: Vrf;
 
   sourceNetworkTypeSubscription: Subscription;
-  sourceServiceTypeSubscription: Subscription;
   destinationNetworkTypeSubscription: Subscription;
-  destinationServiceTypeSubscription: Subscription;
+  serviceTypeSubscription: Subscription;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -68,14 +66,12 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       sourceNetworkObjectId: null,
       sourceNetworkObjectGroupId: null,
       sourcePorts: null,
-      sourceServiceObjectId: null,
-      sourceServiceObjectGroupId: null,
       destinationIpAddress: null,
       destinationNetworkObjectId: null,
       destinationNetworkObjectGroupId: null,
       destinationPorts: null,
-      destinationServiceObjectId: null,
-      destinationServiceObjectGroupId: null,
+      serviceObjectId: null,
+      serviceObjectGroupId: null,
     } as FirewallRule;
 
     modalFirewallRule.name = this.form.controls.name.value;
@@ -83,6 +79,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     modalFirewallRule.protocol = this.form.controls.protocol.value;
     modalFirewallRule.direction = this.form.controls.direction.value;
     modalFirewallRule.logging = this.form.controls.logging.value;
+    modalFirewallRule.enabled = this.form.controls.enabled.value;
     modalFirewallRule.ruleIndex = this.form.controls.ruleIndex.value;
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
@@ -104,24 +101,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       modalFirewallRule.sourceNetworkObjectGroupId = this.form.controls.sourceNetworkObjectGroup.value;
     }
 
-    modalFirewallRule.sourceServiceType = this.form.controls.sourceServiceType.value;
-
-    if (
-      modalFirewallRule.sourceServiceType === FirewallRuleSourceServiceType.Port
-    ) {
-      modalFirewallRule.sourcePorts = this.form.controls.sourcePorts.value;
-    } else if (
-      modalFirewallRule.sourceServiceType ===
-      FirewallRuleSourceServiceType.ServiceObject
-    ) {
-      modalFirewallRule.sourceServiceObjectId = this.form.controls.sourceServiceObject.value;
-    } else if (
-      modalFirewallRule.sourceServiceType ===
-      FirewallRuleSourceServiceType.ServiceObjectGroup
-    ) {
-      modalFirewallRule.sourceServiceObjectGroupId = this.form.controls.sourceServiceObjectGroup.value;
-    }
-
     modalFirewallRule.destinationAddressType = this.form.controls.destinationNetworkType.value;
 
     if (
@@ -141,23 +120,20 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       modalFirewallRule.destinationNetworkObjectGroupId = this.form.controls.destinationNetworkObjectGroup.value;
     }
 
-    modalFirewallRule.destinationServiceType = this.form.controls.destinationServiceType.value;
+    modalFirewallRule.serviceType = this.form.controls.serviceType.value;
 
-    if (
-      modalFirewallRule.destinationServiceType ===
-      FirewallRuleDestinationServiceType.Port
-    ) {
+    if (modalFirewallRule.serviceType === FirewallRuleServiceType.Port) {
+      modalFirewallRule.sourcePorts = this.form.controls.sourcePorts.value;
       modalFirewallRule.destinationPorts = this.form.controls.destinationPorts.value;
     } else if (
-      modalFirewallRule.destinationServiceType ===
-      FirewallRuleDestinationServiceType.ServiceObject
+      modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObject
     ) {
-      modalFirewallRule.destinationServiceObjectId = this.form.controls.destinationServiceObject.value;
+      modalFirewallRule.serviceObjectId = this.form.controls.serviceObject.value;
     } else if (
-      modalFirewallRule.destinationServiceType ===
-      FirewallRuleDestinationServiceType.ServiceObjectGroup
+      modalFirewallRule.serviceType ===
+      FirewallRuleServiceType.ServiceObjectGroup
     ) {
-      modalFirewallRule.destinationServiceObjectGroupId = this.form.controls.destinationServiceObjectGroup.value;
+      modalFirewallRule.serviceObjectGroupId = this.form.controls.serviceObjectGroup.value;
     }
 
     if (this.ModalMode === ModalMode.Create) {
@@ -231,10 +207,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.protocol.setValue(firewallRule.protocol);
       this.form.controls.direction.setValue(firewallRule.direction);
       this.form.controls.ruleIndex.setValue(firewallRule.ruleIndex);
-
-      if (firewallRule.logging) {
-        this.form.controls.logging.setValue(firewallRule.logging);
-      }
+      this.form.controls.logging.setValue(firewallRule.logging);
+      this.form.controls.enabled.setValue(firewallRule.enabled);
 
       if (
         firewallRule.sourceAddressType ===
@@ -265,35 +239,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         );
         this.form.controls.sourceNetworkObjectGroup.setValue(
           firewallRule.sourceNetworkObjectGroupId,
-        );
-      }
-
-      if (
-        firewallRule.sourceServiceType === FirewallRuleSourceServiceType.Port
-      ) {
-        this.form.controls.sourceServiceType.setValue(
-          FirewallRuleSourceServiceType.Port,
-        );
-        this.form.controls.sourcePorts.setValue(firewallRule.sourcePorts);
-      } else if (
-        firewallRule.sourceServiceType ===
-        FirewallRuleSourceServiceType.ServiceObject
-      ) {
-        this.form.controls.sourceServiceType.setValue(
-          FirewallRuleSourceServiceType.ServiceObject,
-        );
-        this.form.controls.sourceServiceObject.setValue(
-          firewallRule.sourceServiceObjectId,
-        );
-      } else if (
-        firewallRule.sourceServiceType ===
-        FirewallRuleSourceServiceType.ServiceObjectGroup
-      ) {
-        this.form.controls.sourceServiceType.setValue(
-          FirewallRuleSourceServiceType.ServiceObjectGroup,
-        );
-        this.form.controls.sourceServiceObjectGroup.setValue(
-          firewallRule.sourceServiceObjectGroupId,
         );
       }
 
@@ -329,35 +274,27 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         );
       }
 
-      if (
-        firewallRule.destinationServiceType ===
-        FirewallRuleDestinationServiceType.Port
-      ) {
-        this.form.controls.destinationServiceType.setValue(
-          FirewallRuleDestinationServiceType.Port,
-        );
+      if (firewallRule.serviceType === FirewallRuleServiceType.Port) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceType.Port);
+        this.form.controls.sourcePorts.setValue(firewallRule.sourcePorts);
         this.form.controls.destinationPorts.setValue(
           firewallRule.destinationPorts,
         );
       } else if (
-        firewallRule.destinationServiceType ===
-        FirewallRuleDestinationServiceType.ServiceObject
+        firewallRule.serviceType === FirewallRuleServiceType.ServiceObject
       ) {
-        this.form.controls.destinationServiceType.setValue(
-          FirewallRuleDestinationServiceType.ServiceObject,
+        this.form.controls.serviceType.setValue(
+          FirewallRuleServiceType.ServiceObject,
         );
-        this.form.controls.destinationServiceObject.setValue(
-          firewallRule.destinationServiceObjectId,
-        );
+        this.form.controls.serviceObject.setValue(firewallRule.serviceObjectId);
       } else if (
-        firewallRule.destinationServiceType ===
-        FirewallRuleDestinationServiceType.ServiceObjectGroup
+        firewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup
       ) {
-        this.form.controls.destinationServiceType.setValue(
-          FirewallRuleDestinationServiceType.ServiceObjectGroup,
+        this.form.controls.serviceType.setValue(
+          FirewallRuleServiceType.ServiceObjectGroup,
         );
-        this.form.controls.destinationServiceObjectGroup.setValue(
-          firewallRule.destinationServiceObjectGroupId,
+        this.form.controls.serviceObjectGroup.setValue(
+          firewallRule.serviceObjectGroupId,
         );
       }
 
@@ -408,51 +345,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       },
     );
 
-    const sourcePorts = this.form.controls.sourcePorts;
-    const sourceServiceObject = this.form.controls.sourceServiceObject;
-    const sourceServiceObjectGroup = this.form.controls
-      .sourceServiceObjectGroup;
-
-    this.sourceServiceTypeSubscription = this.form.controls.sourceServiceType.valueChanges.subscribe(
-      sourceServiceType => {
-        switch (sourceServiceType) {
-          case 'Port':
-            sourcePorts.setValidators(
-              Validators.compose([Validators.required, ValidatePortRange]),
-            );
-            sourceServiceObject.setValue(null);
-            sourceServiceObject.setValidators(null);
-            sourceServiceObjectGroup.setValue(null);
-            sourceServiceObjectGroup.setValidators(null);
-            break;
-          case 'ServiceObject':
-            sourcePorts.setValue(null);
-            sourcePorts.setValidators(null);
-            sourceServiceObject.setValidators(
-              Validators.compose([Validators.required]),
-            );
-            sourceServiceObjectGroup.setValue(null);
-            sourceServiceObjectGroup.setValidators(null);
-            break;
-          case 'ServiceObjectGroup':
-            sourcePorts.setValue(null);
-            sourcePorts.setValidators(null);
-            sourceServiceObject.setValue(null);
-            sourceServiceObject.setValidators(null);
-            sourceServiceObjectGroup.setValidators(
-              Validators.compose([Validators.required]),
-            );
-            break;
-          default:
-            break;
-        }
-
-        sourcePorts.updateValueAndValidity();
-        sourceServiceObject.updateValueAndValidity();
-        sourceServiceObjectGroup.updateValueAndValidity();
-      },
-    );
-
     const destinationIpAddress = this.form.controls.destinationIpAddress;
     const destinationNetworkObject = this.form.controls
       .destinationNetworkObject;
@@ -495,39 +387,45 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       },
     );
 
+    const sourcePorts = this.form.controls.sourcePorts;
     const destinationPorts = this.form.controls.destinationPorts;
-    const destinationServiceObject = this.form.controls
-      .destinationServiceObject;
-    const destinationServiceObjectGroup = this.form.controls
-      .destinationServiceObjectGroup;
+    const serviceObject = this.form.controls.serviceObject;
+    const serviceObjectGroup = this.form.controls.serviceObjectGroup;
 
-    this.destinationServiceTypeSubscription = this.form.controls.destinationServiceType.valueChanges.subscribe(
-      destinationServiceType => {
-        switch (destinationServiceType) {
+    this.serviceTypeSubscription = this.form.controls.serviceType.valueChanges.subscribe(
+      serviceType => {
+        switch (serviceType) {
           case 'Port':
             destinationPorts.setValidators(
               Validators.compose([Validators.required, ValidatePortRange]),
             );
-            destinationServiceObject.setValue(null);
-            destinationServiceObject.setValidators(null);
-            destinationServiceObjectGroup.setValue(null);
-            destinationServiceObjectGroup.setValidators(null);
+            sourcePorts.setValidators(
+              Validators.compose([Validators.required, ValidatePortRange]),
+            );
+            serviceObject.setValue(null);
+            serviceObject.setValidators(null);
+            serviceObjectGroup.setValue(null);
+            serviceObjectGroup.setValidators(null);
             break;
           case 'ServiceObject':
+            sourcePorts.setValue(null);
+            sourcePorts.setValidators(null);
             destinationPorts.setValue(null);
             destinationPorts.setValidators(null);
-            destinationServiceObject.setValidators(
+            serviceObject.setValidators(
               Validators.compose([Validators.required]),
             );
-            destinationServiceObjectGroup.setValue(null);
-            destinationServiceObjectGroup.setValidators(null);
+            serviceObjectGroup.setValue(null);
+            serviceObjectGroup.setValidators(null);
             break;
           case 'ServiceObjectGroup':
+            sourcePorts.setValue(null);
+            sourcePorts.setValidators(null);
             destinationPorts.setValue(null);
             destinationPorts.setValidators(null);
-            destinationServiceObject.setValue(null);
-            destinationServiceObject.setValidators(null);
-            destinationServiceObjectGroup.setValidators(
+            serviceObject.setValue(null);
+            serviceObject.setValidators(null);
+            serviceObjectGroup.setValidators(
               Validators.compose([Validators.required]),
             );
             break;
@@ -535,9 +433,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             break;
         }
 
+        sourcePorts.updateValueAndValidity();
         destinationPorts.updateValueAndValidity();
-        destinationServiceObject.updateValueAndValidity();
-        destinationServiceObjectGroup.updateValueAndValidity();
+        serviceObject.updateValueAndValidity();
+        serviceObjectGroup.updateValueAndValidity();
       },
     );
   }
@@ -567,13 +466,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       sourceNetworkObjectGroup: [''],
 
       // Source Service Info
-      sourceServiceType: ['Port'],
       sourcePorts: [
         '',
         Validators.compose([Validators.required, ValidatePortRange]),
       ],
-      sourceServiceObject: [''],
-      sourceServiceObjectGroup: [''],
 
       // Destination Network Info
       destinationNetworkType: ['IpAddress'],
@@ -585,24 +481,24 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       destinationNetworkObjectGroup: [''],
 
       // Destination Service Info
-      destinationServiceType: ['Port'],
+      serviceType: ['Port'],
       destinationPorts: [
         '',
         Validators.compose([Validators.required, ValidatePortRange]),
       ],
-      destinationServiceObject: [''],
-      destinationServiceObjectGroup: [''],
+      serviceObject: [''],
+      serviceObjectGroup: [''],
 
       logging: [false],
+      enabled: [true],
     });
   }
 
   private unsubAll() {
     [
       this.sourceNetworkTypeSubscription,
-      this.sourceServiceTypeSubscription,
       this.destinationNetworkTypeSubscription,
-      this.destinationServiceTypeSubscription,
+      this.serviceTypeSubscription,
     ].forEach(sub => {
       try {
         if (sub) {
@@ -614,7 +510,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.TierId = null;
     this.submitted = false;

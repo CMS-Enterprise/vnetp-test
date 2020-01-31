@@ -88,6 +88,12 @@ export class VmwareDetailComponent implements OnInit {
     }
   }
 
+  convertBytesToGb(val) {
+    const convertedVal = val / 1000000000;
+
+    return convertedVal;
+  }
+
   private confirmDeleteObject(
     modalDto: YesNoModalDto,
     deleteFunction: () => void,

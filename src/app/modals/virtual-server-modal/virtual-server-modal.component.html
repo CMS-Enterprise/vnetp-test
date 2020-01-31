@@ -1,19 +1,13 @@
 <ngx-smart-modal
-  #networkObjectModal
+  #virtualServerModal
   identifier="virtualServerModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Virtual Server</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -137,101 +131,103 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="ModalMode === 'Edit'">
         <div class="form-group col-md-12">
-          <label for="availableClientSslProfiles">Available Client SSL Profiles</label>
-          <tooltip [message]="helpText.AvailableClientSslProfiles"></tooltip>
+          <label for="availableProfiles">Profiles</label>
+          <tooltip [message]="helpText.AvailableProfiles"></tooltip>
 
           <div class="input-group align-items-center">
-            <select class="form-control" id="availableClientSslProfiles" formControlName="selectedClientSslProfiles">
+            <select class="form-control" id="availableProfiles" formControlName="selectedProfile">
               <option></option>
-              <ng-container *ngFor="let clientSslProfile of availableClientSslProfiles[0] | keyvalue">
-                <option *ngIf="!selectedClientSslProfiles.includes(clientSslProfile.value)" [ngValue]="clientSslProfile.value">
-                {{ clientSslProfile.key }}</option>
-              </ng-container>
+              <option *ngFor="let profile of availableProfiles" [ngValue]="profile.id">{{ profile.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectClientSslProfile();">
-              Select Client SSL Profile
+            <button type="button" class="btn btn-sm btn-info" (click)="addProfile();">
+              Add Profile
             </button>
           </div>
         </div>
 
         <div class="form-group col-md-12">
-          <label for="selectedClientSslProfiles">Selected Client SSL Profiles</label>
-          <tooltip [message]="helpText.SelectedClientSslProfiles"></tooltip>
+          <label for="selectedProfiles">Selected Profiles</label>
+          <tooltip [message]="helpText.SelectedProfiles"></tooltip>
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>Profile</th>
+                <th>Type</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let clientSslProfile of selectedClientSslProfiles">
+              <tr *ngFor="let profile of selectedProfiles">
                 <td>
-                  {{ clientSslProfile }}
+                  {{ profile?.name }}
+                </td>
+                <td>
+                  {{ profile?.profileType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectClientSslProfile(clientSslProfile)">
+                  <fa name="trash" (click)="removeProfile(profile)">
                   </fa>
                 </td>
               </tr>
-              <tr *ngIf="!selectedClientSslProfiles?.length" class="text-center">
-                <td colspan="2">No Client SSL Profiles Selected</td>
+              <tr *ngIf="!selectedProfiles?.length" class="text-center">
+                <td colspan="3">No Profiles Selected</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="ModalMode === 'Edit'">
         <div class="form-group col-md-12">
-          <label for="availableServerSslProfiles">Available Server SSL Profiles</label>
-          <tooltip [message]="helpText.AvailableServerSslProfiles"></tooltip>
+          <label for="availablePolicies">Policies</label>
+          <tooltip [message]="helpText.AvailablePolicies"></tooltip>
 
           <div class="input-group align-items-center">
-            <select class="form-control" id="availableServerSslProfiles" formControlName="selectedServerSslProfiles">
+            <select class="form-control" id="availablePolicies" formControlName="selectedPolicy">
               <option></option>
-              <ng-container *ngFor="let serverSslProfile of availableServerSslProfiles[0] | keyvalue">
-                <option *ngIf="!selectedServerSslProfiles.includes(serverSslProfile.value)" [ngValue]="serverSslProfile.value">
-                {{ serverSslProfile.key }}</option>
-              </ng-container>
+              <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectServerSslProfile();">
-              Select Server SSL Profile
+            <button type="button" class="btn btn-sm btn-info" (click)="addPolicy();">
+              Add Policy
             </button>
           </div>
         </div>
 
         <div class="form-group col-md-12">
-          <label for="selectedServerSslProfiles">Selected Server SSL Profiles</label>
-          <tooltip [message]="helpText.SelectedServerSslProfiles"></tooltip>
+          <label for="selectedPolicies">Selected Policies</label>
+          <tooltip [message]="helpText.SelectedPolicies"></tooltip>
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Profile</th>
+                <th>Policy</th>
+                <th>Type</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let serverSslProfile of selectedServerSslProfiles">
+              <tr *ngFor="let policy of selectedPolicies">
                 <td>
-                  {{ serverSslProfile }}
+                  {{ policy?.name }}
+                </td>
+                <td>
+                  {{ policy?.policyType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectServerSslProfile(serverSslProfile)">
+                  <fa name="trash" (click)="removePolicy(policy)">
                   </fa>
                 </td>
               </tr>
-              <tr *ngIf="!selectedServerSslProfiles?.length" class="text-center">
-                <td colspan="2">No Server SSL Profiles Selected</td>
+              <tr *ngIf="!selectedPolicies?.length" class="text-center">
+                <td colspan="3">No Policies Selected</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="ModalMode === 'Edit'">
         <div class="form-group col-md-12">
           <label>iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
@@ -242,45 +238,46 @@
               formControlName="selectedIRule"
             >
               <option></option>
-              <option *ngFor="let irule of availableIRules" [ngValue]="irule">{{
+              <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{
                 irule.name
               }}</option>
             </select>
             <button
               type="button"
               class="btn btn-sm btn-info"
-              (click)="selectIRule()"
+              (click)="addIRule()"
             >
-              <fa name="plus" size="1x"></fa>
               Add iRule
             </button>
           </div>
         </div>
-      </div>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let irule of selectedIRules">
-            <td>
-              {{ irule.name }}
-            </td>
-            <td class="item-actions">
-              <fa name="trash" (click)="unselectIRule(irule)"> </fa>
-              <fa name="chevron-up" (click)="moveIRule(-1, irule)"> </fa>
-              <fa name="chevron-down" (click)="moveIRule(1, irule)"> </fa>
-            </td>
-          </tr>
-          <tr *ngIf="!selectedIRules?.length" class="text-center">
-            <td colspan="2">No iRules Selected</td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="form-group col-md-12">
+          <label for="selectedProfiles">Selected IRules</label>
+          <tooltip [message]="helpText.SelectedProfiles"></tooltip>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let irule of selectedIRules">
+                <td>
+                  {{ irule.name }}
+                </td>
+                <td class="item-actions">
+                  <fa name="trash" (click)="removeIRule(irule)"> </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedIRules?.length" class="text-center">
+                <td colspan="2">No iRules Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div class="modal-footer">
         <button

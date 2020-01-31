@@ -206,7 +206,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();

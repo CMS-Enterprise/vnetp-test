@@ -77,6 +77,12 @@ import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
+import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
+import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
+import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
+import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -142,6 +148,12 @@ export function apiConfigFactory(): Configuration {
     VmwareDetailComponent,
     VirtualDiskModalComponent,
     NetworkAdapterModalComponent,
+    ProfileModalComponent,
+    PolicyModalComponent,
+    ApplianceComponent,
+    ApplianceModalComponent,
+    NetworkPortsModalComponent,
+    ApplianceDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

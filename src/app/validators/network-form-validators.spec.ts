@@ -13,9 +13,6 @@ describe('Network Form Validators', () => {
   it('should be valid ip addresses (any)', () => {
     const formControl = new FormControl();
 
-    formControl.setValue('any');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
-
     formControl.setValue('255.255.255.255');
     expect(ValidateIpv4Any(formControl)).toBeNull();
 

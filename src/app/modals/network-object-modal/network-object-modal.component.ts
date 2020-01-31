@@ -296,7 +296,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
     this.TierId = '';

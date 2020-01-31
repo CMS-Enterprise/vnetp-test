@@ -6,10 +6,13 @@ import { HttpClient } from '@angular/common/http';
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuthService } from './api/v1Auth.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
+import { V1JobsService } from './api/v1Jobs.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
 import { V1LoadBalancerIrulesService } from './api/v1LoadBalancerIrules.service';
 import { V1LoadBalancerNodesService } from './api/v1LoadBalancerNodes.service';
+import { V1LoadBalancerPoliciesService } from './api/v1LoadBalancerPolicies.service';
 import { V1LoadBalancerPoolsService } from './api/v1LoadBalancerPools.service';
+import { V1LoadBalancerProfilesService } from './api/v1LoadBalancerProfiles.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
@@ -21,6 +24,7 @@ import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.servic
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1PhysicalServersService } from './api/v1PhysicalServers.service';
+import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
 import { V1VlansService } from './api/v1Vlans.service';
 import { V1VmwareNetworkAdapterService } from './api/v1VmwareNetworkAdapter.service';
@@ -35,10 +39,13 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
     V1AppliancesService,
     V1AuthService,
     V1DatacentersService,
+    V1JobsService,
     V1LoadBalancerHealthMonitorsService,
     V1LoadBalancerIrulesService,
     V1LoadBalancerNodesService,
+    V1LoadBalancerPoliciesService,
     V1LoadBalancerPoolsService,
+    V1LoadBalancerProfilesService,
     V1LoadBalancerVirtualServersService,
     V1NetworkSecurityFirewallRuleGroupsService,
     V1NetworkSecurityFirewallRulesService,
@@ -50,6 +57,7 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
     V1NetworkSubnetsService,
     V1NetworkVlansService,
     V1PhysicalServersService,
+    V1TierGroupsService,
     V1TiersService,
     V1VlansService,
     V1VmwareNetworkAdapterService,

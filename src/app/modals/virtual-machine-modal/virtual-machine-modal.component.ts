@@ -42,7 +42,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     this.virtualMachineService
       .v1VmwareVirtualMachinesIdGet({
         id: this.VirtualMachineId,
-        join: 'virtualDisks',
+        join: 'virtualDisks,networkAdapters',
       })
       .subscribe(data => {
         this.virtualDisks = data.virtualDisks;
@@ -197,7 +197,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.cpuCores = this.form.value.cpuCount;
     virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount, 10); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
-    virtualMachine.memorySize = parseInt(this.form.value.memorySize, 10); // TO DO - convert to bytes, figure out type problem
+    virtualMachine.memorySize = this.convertGbToBytes(
+      this.form.value.memorySize,
+    );
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
 
     this.ngx.resetModalData('virtualMachineModal');
@@ -259,9 +261,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.VirtualMachineId = dto.VmwareVirtualMachine.id;
     }
 
-    this.getVirtualDisks();
-    this.getNetworkAdapters();
-
     if (!dto.ModalMode) {
       throw Error('Modal Mode not set.');
     } else {
@@ -269,21 +268,40 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.VirtualMachineId = dto.VmwareVirtualMachine.id;
+
+        this.getVirtualDisks();
+        this.getNetworkAdapters();
       }
     }
 
     const virtualMachine = dto.VmwareVirtualMachine;
 
     if (virtualMachine !== undefined) {
+      const convertedMemorySize = this.convertBytesToGb(
+        virtualMachine.memorySize,
+      );
+
       this.form.controls.name.setValue(virtualMachine.name);
       this.form.controls.description.setValue(virtualMachine.description);
       this.form.controls.cpuCount.setValue(virtualMachine.cpuCores);
       this.form.controls.coreCount.setValue(virtualMachine.cpuCoresPerSocket);
       this.form.controls.cpuReserved.setValue(virtualMachine.cpuReserved);
-      this.form.controls.memorySize.setValue(virtualMachine.memorySize);
+      this.form.controls.memorySize.setValue(convertedMemorySize);
       this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
     }
     this.ngx.resetModalData('virtualMachineModal');
+  }
+
+  private convertGbToBytes(val) {
+    const convertedVal = val * 1000000000;
+
+    return convertedVal;
+  }
+
+  private convertBytesToGb(val) {
+    const convertedVal = val / 1000000000;
+
+    return convertedVal;
   }
 
   private buildForm() {
@@ -303,7 +321,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.buildForm();
   }
