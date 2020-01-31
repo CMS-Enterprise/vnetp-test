@@ -1,5 +1,7 @@
 <div>
-    <h4 aria-label="Tier Name">{{ TierName }} Tier - {{ FirewallRuleGroup?.name }} Firewall Rules</h4>
+  <h4 aria-label="Tier Name">
+    {{ TierName }} Tier - {{ FirewallRuleGroup?.name }} Firewall Rules
+  </h4>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm" role="group">
@@ -15,7 +17,9 @@
 
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
+        exportFileName="firewallRules-{{ TierName }}-{{
+          FirewallRuleGroup?.name
+        }}"
         (import)="insertFirewallRules($event)"
         disableExport="true"
       ></app-import-export>
@@ -64,20 +68,31 @@
           <p>{{ firewallRule?.direction }}</p>
         </td>
         <td>
-          <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
+          <p
+            *ngIf="firewallRule.sourceAddressType === 'IpAddress'"
+            aria-label="Source IP"
+          >
             {{ firewallRule?.sourceIpAddress }}
           </p>
           <p
             *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
             aria-label="Source Network Object"
           >
-            {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }} (Object)
+            {{
+              firewallRule?.sourceNetworkObjectId
+                | resolve: getNetworkObjectName
+            }}
+            (Object)
           </p>
           <p
             *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
             aria-label="Source Network Object Group"
           >
-            {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} (Object Group)
+            {{
+              firewallRule?.sourceNetworkObjectGroupId
+                | resolve: getNetworkObjectGroupName
+            }}
+            (Object Group)
           </p>
         </td>
         <td>
@@ -85,16 +100,24 @@
             {{ firewallRule?.destinationIpAddress }}
           </p>
           <p
-          *ngIf="firewallRule.destinationAddressType === 'NetworkObject'"
-          aria-label="Destination Network Object"
+            *ngIf="firewallRule.destinationAddressType === 'NetworkObject'"
+            aria-label="Destination Network Object"
           >
-            {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }} (Object)
+            {{
+              firewallRule?.destinationNetworkObjectId
+                | resolve: getNetworkObjectName
+            }}
+            (Object)
           </p>
           <p
             *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
             aria-label="Destination Network Object Group"
           >
-            {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} (Object Group)
+            {{
+              firewallRule?.destinationNetworkObjectGroupId
+                | resolve: getNetworkObjectGroupName
+            }}
+            (Object Group)
           </p>
         </td>
         <td>
@@ -127,34 +150,45 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa name="pencil" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal('Edit', firewallRule)"> </fa>
-        <fa
-          name="undo"
-          *ngIf="firewallRule?.deletedAt"
-          class="fg-success"
-          (click)="restoreFirewallRule(firewallRule)"
-          aria-label="Restore Network Object Group"
-        ></fa>
-        <fa
-          name="trash"
-          [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
-          (click)="deleteFirewallRule(firewallRule)"
-          aria-label="Soft-Delete/Delete Firewall Rule"
-        ></fa> 
-        <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
+          <fa
+            name="pencil"
+            *ngIf="!firewallRule.deletedAt"
+            (click)="openFirewallRuleModal('Edit', firewallRule)"
+          >
+          </fa>
+          <fa
+            name="undo"
+            *ngIf="firewallRule?.deletedAt"
+            class="fg-success"
+            (click)="restoreFirewallRule(firewallRule)"
+            aria-label="Restore Network Object Group"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
+            (click)="deleteFirewallRule(firewallRule)"
+            aria-label="Soft-Delete/Delete Firewall Rule"
+          ></fa>
+          <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
         </td>
       </tr>
       <tr *ngIf="firewallRules?.length === 0" class="text-center">
-        <td colspan="10">No Firewall Rules</td>
+        <td colspan="11">No Firewall Rules</td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="firewallRules?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
+  <div
+    *ngIf="firewallRules?.length"
+    class="btn-toolbar mb-2 pull-right"
+    role="toolbar"
+  >
     <div class="btn-group-sm" role="group">
       <app-import-export
         [exportObject]="firewallRules"
-        exportFileName="firewallRules-{{ vrf?.name }}-{{ scope == 0 ? 'external' : 'intervrf' }}"
+        exportFileName="firewallRules-{{ vrf?.name }}-{{
+          scope == 0 ? 'external' : 'intervrf'
+        }}"
         (import)="insertFirewallRules($event)"
         disableImport="true"
       ></app-import-export>
