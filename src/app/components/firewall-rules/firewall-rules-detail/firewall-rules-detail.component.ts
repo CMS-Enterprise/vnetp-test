@@ -35,6 +35,7 @@ export class FirewallRulesDetailComponent
   Id = '';
   TierName = '';
   currentTierIds: Array<string>;
+  tiers: Tier[];
 
   dirty: boolean;
   firewallRuleGroup: FirewallRuleGroup;
@@ -88,7 +89,7 @@ export class FirewallRulesDetailComponent
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
       cd => {
         if (cd) {
-          // This component locks the datacenter for the entire edit lifecycle.
+          this.tiers = cd.tiers;
           this.datacenterService.lockDatacenter();
           this.Id += this.route.snapshot.paramMap.get('id');
           this.currentTierIds = this.datacenterService.currentTiersValue;
@@ -422,6 +423,11 @@ export class FirewallRulesDetailComponent
           this.allNetworkObjects,
         );
         obj.destinationNetworkObjectId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'vrf_name') {
+        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj.tierId = obj[key];
         delete obj[key];
       }
     });

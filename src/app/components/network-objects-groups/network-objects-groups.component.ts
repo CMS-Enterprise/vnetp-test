@@ -17,6 +17,7 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -49,6 +50,7 @@ export class NetworkObjectsGroupsComponent
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private bulkUploadService: BulkUploadService,
     public helpText: NetworkObjectsGroupsHelpText,
   ) {
     this.networkObjects = new Array<NetworkObject>();
@@ -278,7 +280,6 @@ export class NetworkObjectsGroupsComponent
   }
 
   importNetworkObjectsConfig(event: NetworkObject[]) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Network Objects',
       `Are you sure you would like to import ${event.length} network object${
@@ -295,9 +296,7 @@ export class NetworkObjectsGroupsComponent
         modal.removeData();
         if (modalData && modalData.modalYes) {
           let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
+          dto = this.sanitizeData(event);
           this.networkObjectService
             .v1NetworkSecurityNetworkObjectsBulkPost({
               generatedNetworkObjectBulkDto: { bulk: dto },
@@ -312,7 +311,6 @@ export class NetworkObjectsGroupsComponent
   }
 
   importNetworkObjectGroupsConfig(event) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Network Object Groups',
       `Are you sure you would like to import ${
@@ -329,9 +327,7 @@ export class NetworkObjectsGroupsComponent
         modal.removeData();
         if (modalData && modalData.modalYes) {
           let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
+          dto = this.sanitizeData(event);
           this.networkObjectGroupService
             .v1NetworkSecurityNetworkObjectGroupsBulkPost({
               generatedNetworkObjectGroupBulkDto: { bulk: dto },
@@ -347,23 +343,28 @@ export class NetworkObjectsGroupsComponent
 
   sanitizeData(entities: any) {
     return entities.map(entity => {
-      if (!entity.tierId) {
-        entity.tierId = this.currentTier.id;
-      }
-      this.removeEmpty(entity);
+      this.mapToCsv(entity);
       return entity;
     });
   }
 
-  removeEmpty = obj => {
+  mapToCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false') {
+      if (val === 'false' || val === 'f') {
         obj[key] = false;
       }
-      if (val === 'true') {
+      if (val === 'true' || val === 't') {
         obj[key] = true;
       }
       if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'ipAddress') {
+        obj[key] = String(val).trim();
+      }
+      if (key === 'vrf_name') {
+        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj.tierId = obj[key];
         delete obj[key];
       }
     });

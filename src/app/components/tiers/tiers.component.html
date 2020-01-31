@@ -60,6 +60,14 @@
       </tbody>
     </table>
   </div>
+  <div class="pull-right">
+    <app-import-export
+      [exportObject]="tiers"
+      exportFileName="tiers-{{ currentDatacenter?.name }}"
+      [disableJson]="false"
+      (import)="importTiersConfig($event)">
+    </app-import-export>
+  </div>
 
 <app-tier-modal></app-tier-modal>
 <app-yes-no-modal></app-yes-no-modal>

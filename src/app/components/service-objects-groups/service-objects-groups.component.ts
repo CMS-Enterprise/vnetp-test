@@ -16,6 +16,7 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -48,6 +49,7 @@ export class ServiceObjectsGroupsComponent
     private tierService: V1TiersService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private bulkUploadService: BulkUploadService,
     public helpText: ServiceObjectsGroupsHelpText,
   ) {
     this.serviceObjects = new Array<ServiceObject>();
@@ -277,7 +279,6 @@ export class ServiceObjectsGroupsComponent
   }
 
   importServiceObjectsConfig(event: ServiceObject[]) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Service Objects',
       `Are you sure you would like to import ${event.length} service object${
@@ -294,9 +295,7 @@ export class ServiceObjectsGroupsComponent
         modal.removeData();
         if (modalData && modalData.modalYes) {
           let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
+          dto = this.sanitizeData(event);
           this.serviceObjectService
             .v1NetworkSecurityServiceObjectsBulkPost({
               generatedServiceObjectBulkDto: { bulk: dto },
@@ -311,7 +310,6 @@ export class ServiceObjectsGroupsComponent
   }
 
   importServiceObjectGroupsConfig(event) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Service Object Groups',
       `Are you sure you would like to import ${
@@ -328,9 +326,7 @@ export class ServiceObjectsGroupsComponent
         modal.removeData();
         if (modalData && modalData.modalYes) {
           let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
+          dto = this.sanitizeData(event);
           this.serviceObjectGroupService
             .v1NetworkSecurityServiceObjectGroupsBulkPost({
               generatedServiceObjectGroupBulkDto: { bulk: dto },
@@ -346,17 +342,22 @@ export class ServiceObjectsGroupsComponent
 
   sanitizeData(entities: any) {
     return entities.map(entity => {
-      if (!entity.tierId) {
-        entity.tierId = this.currentTier.id;
-      }
-      this.removeEmpty(entity);
+      this.mapToCsv(entity);
       return entity;
     });
   }
 
-  removeEmpty = obj => {
+  mapToCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
       if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'type' || key === 'protocol') {
+        obj[key] = String(val).toUpperCase();
+      }
+      if (key === 'vrf_name') {
+        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj.tierId = obj[key];
         delete obj[key];
       }
     });
