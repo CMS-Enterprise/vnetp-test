@@ -74,7 +74,7 @@ export interface V1NetworkSecurityFirewallRuleGroupsIdRestorePatchRequestParams 
 }
 
 export interface V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams {
-    id: object;
+    id: string;
 }
 
 export interface V1NetworkSecurityFirewallRuleGroupsIdSoftDeleteRequestParams {
@@ -533,6 +533,7 @@ export class V1NetworkSecurityFirewallRuleGroupsService {
     }
 
     /**
+     * Get Firewall Rules w/ Object Relations for Firewall Rule Group.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

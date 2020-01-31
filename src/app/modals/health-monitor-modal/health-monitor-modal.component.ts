@@ -134,11 +134,11 @@ export class HealthMonitorModalComponent implements OnInit {
     }
 
     if (dto !== undefined) {
-      this.form.controls.name.setValue(dto.name);
-      this.form.controls.type.setValue(dto.type);
-      this.form.controls.servicePort.setValue(dto.servicePort);
-      this.form.controls.interval.setValue(dto.interval);
-      this.form.controls.timeout.setValue(dto.timeout);
+      this.form.controls.name.setValue(dto.healthMonitor.name);
+      this.form.controls.type.setValue(dto.healthMonitor.type);
+      this.form.controls.servicePort.setValue(dto.healthMonitor.servicePort);
+      this.form.controls.interval.setValue(dto.healthMonitor.interval);
+      this.form.controls.timeout.setValue(dto.healthMonitor.timeout);
     }
     this.ngx.resetModalData('healthMonitorModal');
   }
@@ -175,7 +175,7 @@ export class HealthMonitorModalComponent implements OnInit {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.buildForm();
   }

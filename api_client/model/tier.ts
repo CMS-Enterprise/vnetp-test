@@ -19,9 +19,11 @@ import { LoadBalancerPool } from './loadBalancerPool';
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
 import { ServiceObject } from './serviceObject';
+import { LoadBalancerProfile } from './loadBalancerProfile';
 import { NetworkObjectGroup } from './networkObjectGroup';
 import { FirewallRuleGroup } from './firewallRuleGroup';
 import { Subnet } from './subnet';
+import { LoadBalancerPolicy } from './loadBalancerPolicy';
 
 
 export interface Tier { 
@@ -49,5 +51,7 @@ export interface Tier {
     readonly loadBalancerPools?: Array<LoadBalancerPool>;
     readonly loadBalancerHealthMonitors?: Array<LoadBalancerHealthMonitor>;
     readonly loadBalancerVirtualServers?: Array<LoadBalancerVirtualServer>;
+    readonly loadBalancerProfiles?: Array<LoadBalancerProfile>;
+    readonly loadBalancerPolicies?: Array<LoadBalancerPolicy>;
 }
 

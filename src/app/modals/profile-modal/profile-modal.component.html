@@ -1,20 +1,20 @@
 <ngx-smart-modal
-  #healthMonitorModal
-  identifier="healthMonitorModal"
+  #loadBalancerProfileModal
+  identifier="loadBalancerProfileModal"
   [dismissable]="false"
   (onOpen)="getData()"
   (onClose)="reset()"
-  customClass="medium-modal"
+  customClass="large-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Health Monitor</h4>
+    <h4 class="modal-title">Load Balancer Profile</h4>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip [message]="helpText.Name"></tooltip>
+        <tooltip message="todo"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -31,61 +31,62 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="type">Type</label>
-          <tooltip [message]="helpText.Type"></tooltip>
+          <tooltip message="todo"></tooltip>
           <select
             formControlName="type"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
             aria-label="Type"
           >
-            <option value="TCP">TCP</option>
-            <option value="HTTP">HTTP</option>
-            <option value="HTTPS">HTTPS</option>
+            <option value="ClientSSL">ClientSSL</option>
+            <option value="Http">HTTP</option>
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
           </div>
         </div>
+      </div>
 
-        <div class="form-group col-md-6">
-          <label for="servicePort">Service Port</label>
-          <tooltip [message]="helpText.ServicePort"></tooltip>
-          <input
-            class="form-control"
-            name="servicePort"
-            formControlName="servicePort"
-            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-            mask="09999"
-            aria-label="Service Port"
-          />
+      <hr />
+
+      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
+        <div class="form-group col-md-12">
+          <label for="publicKey">Certificate</label>
+          <textarea
+          rows="8"
+          formControlName="certificate"
+          class="form-control"
+          aria-label="Certificate"
+          placeholder="Paste Public Certificate Here"
+          >
+          </textarea>
+        </div>
+        <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
+          <div *ngIf="f.certificate.errors.required">Public Certificate is required</div>
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
         <div class="form-group col-md-6">
-          <label for="interval">Interval</label>
-          <tooltip [message]="helpText.Interval"></tooltip>
-          <input
-            class="form-control"
-            name="interval"
-            formControlName="interval"
-            [ngClass]="{ 'is-invalid': submitted && f.interval.errors }"
-            mask="099"
-            aria-label="Interval"
-          />
-        </div>
 
-        <div class="form-group col-md-6">
-          <label for="timeout">Timeout</label>
-          <tooltip [message]="helpText.Timeout"></tooltip>
+          <button
+          class="btn btn-warning btn-sm mr-1"
+          (click)="privateKeyCipherUploader.click()"
+          type="button"
+          *ngIf="!disableImport"
+        >
+          <fa name="upload"></fa>
+          <span>{{ privateKeyCipher ? 'Replace' : 'Upload' }} Encrypted Private Key</span>
+        </button>
+
           <input
-            class="form-control"
-            name="timeout"
-            formControlName="timeout"
-            [ngClass]="{ 'is-invalid': submitted && f.timeout.errors }"
-            mask="099"
-            aria-label="Interval"
-          />
+          hidden
+          type="file"
+          #privateKeyCipherUploader
+          (change)="importPrivateKeyCipher($event)"
+          [(ngModel)]="privateKeyCipherInput" 
+          [ngModelOptions]="{standalone: true}"
+        />
         </div>
       </div>
 
