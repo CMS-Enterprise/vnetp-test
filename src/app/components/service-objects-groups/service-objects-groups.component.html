@@ -165,15 +165,16 @@
   </div>
 </div>
 
-<div *ngIf="currentTier" class="pull-right">
-  <app-import-export
-    [exportObject]="exportServiceObjectConfig()"
-    exportFileName="serviceObjects-{{ currentTier.name }}"
-    disableCsv="true"
-    (import)="importServiceObjectConfig($event)"
-  ></app-import-export>
+<div *ngIf="navIndex === 0" class="pull-right">
+  <app-import-export [exportObject]="serviceObjects" exportFileName="serviceObjects-{{ currentTier?.name }}"
+    [disableJson]="false" (import)="importServiceObjectsConfig($event)"></app-import-export>
+</div>
+
+<div *ngIf="navIndex === 1" class="pull-right">
+  <app-import-export [exportObject]="serviceObjectGroups" exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
+    [disableJson]="false" (import)="importServiceObjectGroupsConfig($event)"></app-import-export>
 </div>
 
 <app-service-object-group-modal></app-service-object-group-modal>
 <app-service-object-modal></app-service-object-modal>
-<app-yes-no-modal></app-yes-no-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

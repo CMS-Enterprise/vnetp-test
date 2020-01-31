@@ -169,16 +169,25 @@
   </div>
 </div>
 
-<!-- 
-<div *ngIf="currentTier" class="pull-right">
+
+<div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export
-    [exportObject]="exportSubnetConfig()"
-    exportFileName="subnets-{{ currentTier.name }}"
-    disableCsv="true"
+    [exportObject]="subnets"
+    exportFileName="subnets-{{ currentTier?.name }}"
+    [disableJson]="false"
     (import)="importSubnetConfig($event)"
   ></app-import-export>
-</div> -->
+</div>
+
+<div *ngIf="navIndex === 1" class="pull-right">
+  <app-import-export
+    [exportObject]="vlans"
+    exportFileName="vlans-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importVlansConfig($event)"
+  ></app-import-export>
+</div>
 
 <app-subnet-modal></app-subnet-modal>
 <app-vlan-modal></app-vlan-modal>
-<app-yes-no-modal></app-yes-no-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

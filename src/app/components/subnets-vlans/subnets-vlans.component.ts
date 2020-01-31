@@ -30,7 +30,7 @@ export class SubnetsVlansComponent
   vlans: Array<Vlan>;
 
   navIndex = 0;
-
+  showRadio = false;
   subnetModalSubscription: Subscription;
   vlanModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
@@ -242,6 +242,84 @@ export class SubnetsVlansComponent
         }
         yesNoModalSubscription.unsubscribe();
       });
+  }
+
+  importSubnetConfig(event: Subnet[]) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Subnets',
+      `Are you sure you would like to import ${event.length} subnet${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.subnetService
+            .v1NetworkSubnetsBulkPost({
+              generatedSubnetBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getVlans(true);
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  importVlansConfig(event: Vlan[]) {
+    this.showRadio = true;
+    const modalDto = new YesNoModalDto(
+      'Import Vlans',
+      `Are you sure you would like to import ${event.length} vlan${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          if (modalData.allowTierChecked) {
+            dto = this.sanitizeData(event);
+          }
+          this.vlanService
+            .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
+            .subscribe(data => {
+              this.getVlans();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      if (entity.vlanNumber) {
+        entity.vlanNumber = Number(entity.vlanNumber);
+      }
+      if (!entity.tierId) {
+        entity.tierId = this.currentTier.id;
+      }
+      return entity;
+    });
   }
 
   getObjectsForNavIndex() {

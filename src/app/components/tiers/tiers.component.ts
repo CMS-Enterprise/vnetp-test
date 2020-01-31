@@ -142,6 +142,59 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
     }
   }
 
+  importTiersConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Tiers',
+      `Are you sure you would like to import ${event.length} tier${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+          this.datacenterTierService
+            .v1TiersBulkPost({
+              generatedTierBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getTiers();
+            });
+        }
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapCsv(entity);
+      return entity;
+    });
+  }
+
+  mapCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+    });
+    return obj;
+    // tslint:disable-next-line: semicolon
+  };
+
   private unsubAll() {
     [this.tierModalSubscription, this.currentDatacenterSubscription].forEach(
       sub => {

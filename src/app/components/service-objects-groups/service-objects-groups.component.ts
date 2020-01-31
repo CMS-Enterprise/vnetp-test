@@ -16,6 +16,7 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -30,6 +31,7 @@ export class ServiceObjectsGroupsComponent
   serviceObjectGroups: Array<ServiceObjectGroup>;
 
   navIndex = 0;
+  showRadio = false;
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
@@ -47,6 +49,7 @@ export class ServiceObjectsGroupsComponent
     private tierService: V1TiersService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private bulkUploadService: BulkUploadService,
     public helpText: ServiceObjectsGroupsHelpText,
   ) {
     this.serviceObjects = new Array<ServiceObject>();
@@ -62,10 +65,13 @@ export class ServiceObjectsGroupsComponent
   }
 
   getServiceObjectGroups() {
-    this.tierService
-      .v1TiersIdGet({ id: this.currentTier.id, join: 'serviceObjectGroups' })
+    this.serviceObjectGroupService
+      .v1NetworkSecurityServiceObjectGroupsGet({
+        join: 'serviceObjects',
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
       .subscribe(data => {
-        this.serviceObjectGroups = data.serviceObjectGroups;
+        this.serviceObjectGroups = data;
       });
   }
 
@@ -271,6 +277,93 @@ export class ServiceObjectsGroupsComponent
       }
     });
   }
+
+  importServiceObjectsConfig(event: ServiceObject[]) {
+    const modalDto = new YesNoModalDto(
+      'Import Service Objects',
+      `Are you sure you would like to import ${event.length} service object${
+        event.length > 1 ? 's' : ''
+      }?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+          this.serviceObjectService
+            .v1NetworkSecurityServiceObjectsBulkPost({
+              generatedServiceObjectBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getServiceObjects();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  importServiceObjectGroupsConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Service Object Groups',
+      `Are you sure you would like to import ${
+        event.length
+      } service object group${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+          this.serviceObjectGroupService
+            .v1NetworkSecurityServiceObjectGroupsBulkPost({
+              generatedServiceObjectGroupBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getServiceObjectGroups();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'type' || key === 'protocol') {
+        obj[key] = String(val).toUpperCase();
+      }
+      if (key === 'vrf_name') {
+        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj.tierId = obj[key];
+        delete obj[key];
+      }
+    });
+    return obj;
+    // tslint:disable-next-line: semicolon
+  };
 
   importServiceObjectConfig(config) {
     // TODO: Import Validation

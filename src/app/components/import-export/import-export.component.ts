@@ -58,6 +58,7 @@ export class ImportExportComponent implements OnInit {
             throw new Error('Invalid File Type');
           }
           const options = {
+            skipEmptyLines: true,
             header: true,
             complete: results => {
               importCallback(results.data);
