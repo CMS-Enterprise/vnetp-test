@@ -102,7 +102,7 @@ export class NetworkAdapterModalComponent implements OnInit {
     this.reset();
   }
 
-  private reset() {
+  public reset() {
     this.buildForm();
   }
 

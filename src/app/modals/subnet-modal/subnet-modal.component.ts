@@ -148,7 +148,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.TierId = '';
     this.SubnetId = '';

@@ -83,7 +83,7 @@ export class VirtualDiskModalComponent implements OnInit {
     this.reset();
   }
 
-  private reset() {
+  public reset() {
     this.buildForm();
   }
 
