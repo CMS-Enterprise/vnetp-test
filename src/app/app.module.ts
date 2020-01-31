@@ -78,6 +78,10 @@ import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-d
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
 import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
 import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
+import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
+import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -145,6 +149,10 @@ export function apiConfigFactory(): Configuration {
     NetworkAdapterModalComponent,
     ProfileModalComponent,
     PolicyModalComponent,
+    ApplianceComponent,
+    ApplianceModalComponent,
+    NetworkPortsModalComponent,
+    ApplianceDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),

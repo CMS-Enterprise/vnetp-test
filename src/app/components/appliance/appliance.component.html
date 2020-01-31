@@ -1,0 +1,77 @@
+<div>
+  <h1>Appliance as a Service</h1>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <button
+      type="button"
+      class="btn btn-success mr-1"
+      (click)="createAppliance()"
+    >
+      <fa name="plus"></fa>
+      Create Appliance
+    </button>
+
+    <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
+      <fa name="refresh"></fa>
+      Refresh
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Rack Units</th>
+        <th scope="col">Serial Number</th>
+        <th scope="col">Delivery Date</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of appliances">
+        <td>
+          <a routerLink="/appliance/{{ a.id }}" queryParamsHandling="merge">{{
+            a.name
+          }}</a>
+        </td>
+        <td>
+          {{ a.rackUnits }}
+        </td>
+        <td>
+          {{ a.serialNumber }}
+        </td>
+        <td>{{ a.deliveryDate | date: 'shortDate' }}</td>
+        <td>
+          <fa
+            name="pencil"
+            *ngIf="!a?.deletedAt"
+            (click)="openApplianceModal('Edit', a)"
+            aria-label="Edit Appliance"
+          >
+          </fa>
+          <fa
+            name="undo"
+            *ngIf="a?.deletedAt"
+            class="fg-success"
+            (click)="restoreAppliance(a)"
+            aria-label="Restore Appliance"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': a.deletedAt }"
+            (click)="deleteAppliance(a)"
+            aria-label="Soft-Delete/Delete Appliance"
+          >
+          </fa>
+        </td>
+      </tr>
+      <tr *ngIf="!appliances?.length" class="text-center">
+        <td colspan="5">No Appliances</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-appliance-modal></app-appliance-modal>
+<!-- <app-network-ports-modal></app-network-ports-modal> -->
+<app-yes-no-modal></app-yes-no-modal>
