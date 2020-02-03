@@ -3,7 +3,7 @@
 
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <!-- TO DO: show only if customer -->
-    <button class="btn btn-success">
+    <button class="btn btn-success" (click)="openRequestModal('zos')">
       <fa name="upload"></fa>
       Upload z/OS request
     </button>
@@ -34,3 +34,6 @@
     </tbody>
   </table>
 </div>
+
+<!-- modal -->
+<app-zos-zvm-request-modal></app-zos-zvm-request-modal>

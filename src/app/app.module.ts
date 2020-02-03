@@ -78,6 +78,7 @@ import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-d
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
 import { ZvmComponent } from './components/zvm/zvm.component';
 import { ZosComponent } from './components/zos/zos.component';
+import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -145,6 +146,7 @@ export function apiConfigFactory(): Configuration {
     NetworkAdapterModalComponent,
     ZvmComponent,
     ZosComponent,
+    ZosZvmRequestModalComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
