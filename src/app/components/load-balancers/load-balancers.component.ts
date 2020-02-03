@@ -169,23 +169,93 @@ export class LoadBalancersComponent
   }
 
   getObjectsForNavIndex() {
-    if (this.navIndex === 0) {
-      this.getPools(true);
-      this.getIrules();
-    } else if (this.navIndex === 1) {
-      this.getPools();
-      this.getHealthMonitors();
-      this.getNodes();
-    } else if (this.navIndex === 2) {
-      this.getNodes();
-    } else if (this.navIndex === 3) {
-      this.getIrules();
-    } else if (this.navIndex === 4) {
-      this.getHealthMonitors();
-    } else if (this.navIndex === 5) {
-      this.getProfiles();
-    } else if (this.navIndex === 6) {
-      this.getPolicies();
+    switch (this.navIndex) {
+      case 0:
+        this.getPools(true);
+        this.getIrules();
+        break;
+      case 1:
+        this.getPools();
+        this.getHealthMonitors();
+        this.getNodes();
+        break;
+      case 2:
+        this.getNodes();
+        break;
+      case 3:
+        this.getIrules();
+        break;
+      case 4:
+        this.getHealthMonitors();
+        break;
+      case 5:
+        this.getProfiles();
+        break;
+      case 6:
+        this.getPolicies();
+        break;
+    }
+  }
+
+  importLoadBalancerConfig(data) {
+    // TODO: Display modal indicating the number of entities that will
+    // be imported.
+
+    // TODO: Display more descriptive error message when import fails.
+
+    // Choose Datatype to Import based on navindex.
+    switch (this.navIndex) {
+      case 2:
+        this.nodeService
+          .v1LoadBalancerNodesBulkPost({
+            generatedLoadBalancerNodeBulkDto: { bulk: data },
+          })
+          .subscribe(result => {
+            this.getHealthMonitors();
+          });
+        break;
+      case 3:
+        this.irulesService
+          .v1LoadBalancerIrulesBulkPost({
+            generatedLoadBalancerIruleBulkDto: { bulk: data },
+          })
+          .subscribe(result => {
+            this.getIrules();
+          });
+        break;
+      case 4:
+        this.healthMonitorsService
+          .v1LoadBalancerHealthMonitorsBulkPost({
+            generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
+          })
+          .subscribe(result => {
+            this.getHealthMonitors();
+          });
+        break;
+      default:
+        break;
+    }
+  }
+
+  exportLoadBalancerConfig() {
+    // TODO: Export Relationships
+    switch (this.navIndex) {
+      case 0:
+        return this.virtualServers;
+      case 1:
+        return this.pools;
+      case 2:
+        return this.nodes;
+      case 3:
+        return this.irules;
+      case 4:
+        return this.healthMonitors;
+      case 5:
+        return this.profiles;
+      case 6:
+        return this.policies;
+      default:
+        break;
     }
   }
 
