@@ -156,6 +156,8 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
+      } else {
+        this.form.controls.name.enable();
       }
     }
 
@@ -163,6 +165,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
     if (networkObjectGroup !== undefined) {
       this.form.controls.name.setValue(networkObjectGroup.name);
+      this.form.controls.name.disable();
       this.form.controls.description.setValue(networkObjectGroup.description);
 
       this.getGroupNetworkObjects();

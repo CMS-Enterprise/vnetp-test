@@ -154,6 +154,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
       if (this.ModalMode === ModalMode.Edit) {
         this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
       } else {
+        this.form.controls.name.enable();
         this.form.controls.type.enable();
       }
     }
@@ -162,6 +163,7 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
     if (serviceObjectGroup !== undefined) {
       this.form.controls.name.setValue(serviceObjectGroup.name);
+      this.form.controls.name.disable();
       this.form.controls.description.setValue(serviceObjectGroup.description);
       this.form.controls.type.setValue(serviceObjectGroup.type);
       this.form.controls.type.disable();
