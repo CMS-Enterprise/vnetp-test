@@ -91,11 +91,14 @@ export class IRuleModalComponent implements OnInit {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.IruleId = dto.irule.id;
+      } else {
+        this.form.controls.name.enable();
       }
     }
 
     if (dto !== undefined) {
       this.form.controls.name.setValue(dto.irule.name);
+      this.form.controls.name.disable();
       this.form.controls.content.setValue(dto.irule.content);
     }
     this.ngx.resetModalData('iruleModal');
