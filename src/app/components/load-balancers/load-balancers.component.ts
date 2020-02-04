@@ -205,6 +205,16 @@ export class LoadBalancersComponent
 
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
+      case 0:
+        this.virtualServersService.v1LoadBalancerVirtualServersBulkPost({
+          generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
+        });
+        break;
+      case 1:
+        this.poolsService.v1LoadBalancerPoolsBulkPost({
+          generatedLoadBalancerPoolBulkDto: { bulk: data },
+        });
+        break;
       case 2:
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
@@ -234,6 +244,8 @@ export class LoadBalancersComponent
         break;
       default:
         break;
+
+      // TODO: Bulk Import of Policies and Profiles
     }
   }
 
