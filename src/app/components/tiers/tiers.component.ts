@@ -4,7 +4,13 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1TiersService, Tier, Datacenter } from 'api_client';
+import {
+  V1TiersService,
+  Tier,
+  Datacenter,
+  V1TierGroupsService,
+  TierGroup,
+} from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 
@@ -14,6 +20,7 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 })
 export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   tiers: Tier[];
+  tierGroups: TierGroup[];
 
   perPage = 20;
   currentTiersPage = 1;
@@ -34,7 +41,22 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
     private datacenterTierService: V1TiersService,
+    private tierGroupService: V1TierGroupsService,
   ) {}
+
+  getTierGroups(getTiers = false) {
+    this.tierGroupService
+      .v1TierGroupsGet({
+        filter: `datacenterId||eq||${this.currentDatacenter.id}`,
+      })
+      .subscribe(data => {
+        this.tierGroups = data;
+
+        if (getTiers) {
+          this.getTiers();
+        }
+      });
+  }
 
   getTiers() {
     this.datacenterTierService
@@ -137,12 +159,6 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
       });
   }
 
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
-    }
-  }
-
   importTiersConfig(event) {
     const modalDto = new YesNoModalDto(
       'Import Tiers',
@@ -196,6 +212,17 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
     // tslint:disable-next-line: semicolon
   };
 
+  getTierGroupName = (id: string) => {
+    return this.getObjectName(id, this.tierGroups);
+    // tslint:disable-next-line: semicolon
+  };
+
+  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
+    if (objects && objects.length) {
+      return objects.find(o => o.id === id).name || 'N/A';
+    }
+  }
+
   private unsubAll() {
     [this.tierModalSubscription, this.currentDatacenterSubscription].forEach(
       sub => {
@@ -215,7 +242,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
       cd => {
         if (cd) {
           this.currentDatacenter = cd;
-          this.getTiers();
+          this.getTierGroups(true);
         }
       },
     );
