@@ -10105,6 +10105,47 @@ definitions:
       - memorySize
       - memoryReserved
       - datacenterId
+  TierGroup:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      datacenterId:
+        type: string
+      tiers:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/TierGroup'
+    required:
+      - name
+      - datacenterId
   Subnet:
     type: object
     properties:
@@ -11143,6 +11184,21 @@ definitions:
         type: string
       tierGroupId:
         type: string
+      tierGroup:
+        title: TierGroup
+        allOf:
+          - $ref: '#/definitions/TierGroup'
+          - readOnly: true
+      tierType:
+        type: string
+        enum:
+          - Presentation
+          - Application
+          - Database
+          - Security
+          - Management
+          - Backup
+          - Other
       vlans:
         type: array
         readOnly: true
@@ -11218,48 +11274,6 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerPolicy'
-    required:
-      - name
-      - datacenterId
-      - tierGroupId
-  TierGroup:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      description:
-        type: string
-        maxLength: 500
-      datacenterId:
-        type: string
-      tiers:
-        type: array
-        readOnly: true
-        items:
-          $ref: '#/definitions/TierGroup'
     required:
       - name
       - datacenterId
