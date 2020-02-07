@@ -116,6 +116,9 @@ export class PolicyModalComponent implements OnInit {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.PolicyId = dto.Policy.id;
+      } else {
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
       }
     }
 
@@ -123,10 +126,10 @@ export class PolicyModalComponent implements OnInit {
     const profile = dto.Policy;
 
     if (profile !== undefined) {
-      this.form.controls.type.disable();
-      this.form.controls.name.disable();
       this.form.controls.name.setValue(dto.Policy.name);
+      this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.Policy.type);
+      this.form.controls.type.disable();
       this.form.controls.apmContent.setValue(dto.Policy.apmContent);
       this.form.controls.asmContent.setValue(dto.Policy.asmContent);
     }

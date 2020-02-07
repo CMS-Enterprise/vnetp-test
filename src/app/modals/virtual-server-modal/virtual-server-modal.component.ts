@@ -233,6 +233,9 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.VirtualServerId = dto.VirtualServer.id;
+      } else {
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
       }
     }
 
@@ -240,7 +243,9 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
     if (virtualServer !== undefined) {
       this.form.controls.name.setValue(virtualServer.name);
+      this.form.controls.name.disable();
       this.form.controls.type.setValue(virtualServer.type);
+      this.form.controls.type.disable();
       this.form.controls.sourceAddress.setValue(virtualServer.sourceIpAddress);
       this.form.controls.destinationAddress.setValue(
         virtualServer.destinationIpAddress,

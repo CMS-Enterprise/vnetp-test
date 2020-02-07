@@ -159,11 +159,14 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       if (nodeDto.ModalMode === ModalMode.Edit) {
         this.Node = node;
         this.PoolId = nodeDto.PoolId;
+      } else {
+        this.form.controls.name.enable();
       }
     }
 
     if (node !== undefined) {
       this.form.controls.name.setValue(node.name);
+      this.form.controls.name.disable();
       this.form.controls.type.setValue(node.type);
       this.form.controls.ipAddress.setValue(node.ipAddress);
       this.form.controls.fqdn.setValue(node.fqdn);

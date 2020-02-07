@@ -177,6 +177,9 @@ export class ProfileModalComponent implements OnInit {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.ProfileId = dto.Profile.id;
+      } else {
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
       }
     }
 
@@ -184,10 +187,10 @@ export class ProfileModalComponent implements OnInit {
     const profile = dto.Profile;
 
     if (profile !== undefined) {
-      this.form.controls.type.disable();
-      this.form.controls.name.disable();
       this.form.controls.name.setValue(dto.Profile.name);
+      this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.Profile.type);
+      this.form.controls.type.disable();
 
       if (dto.Profile.type === 'ClientSSL') {
         this.privateKeyCipher = dto.Profile.key || null;
@@ -229,6 +232,7 @@ export class ProfileModalComponent implements OnInit {
   public reset() {
     this.submitted = false;
     this.privateKeyCipher = null;
+    this.ProfileId = null;
     this.buildForm();
     this.setFormValidators();
   }

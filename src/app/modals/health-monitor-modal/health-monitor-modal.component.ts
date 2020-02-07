@@ -130,12 +130,17 @@ export class HealthMonitorModalComponent implements OnInit {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.HealthMonitorId = dto.healthMonitor.id;
+      } else {
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
       }
     }
 
     if (dto !== undefined) {
       this.form.controls.name.setValue(dto.healthMonitor.name);
+      this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.healthMonitor.type);
+      this.form.controls.type.disable();
       this.form.controls.servicePort.setValue(dto.healthMonitor.servicePort);
       this.form.controls.interval.setValue(dto.healthMonitor.interval);
       this.form.controls.timeout.setValue(dto.healthMonitor.timeout);
