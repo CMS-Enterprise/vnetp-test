@@ -42,6 +42,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
     modalTierObject.description = this.form.value.description;
     modalTierObject.datacenterId = this.DatacenterId;
     modalTierObject.tierGroupId = this.form.value.tierGroup || null;
+    modalTierObject.tierType = this.form.value.tierType || null;
 
     if (this.ModalMode === ModalMode.Create) {
       this.tierService
@@ -118,6 +119,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(tier.description);
       this.form.controls.tierGroup.setValue(tier.tierGroupId);
+      this.form.controls.tierType.setValue(tier.tierType);
     }
     this.ngx.resetModalData('tierModal');
   }
@@ -138,6 +140,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
       ],
       description: ['', Validators.minLength(3)],
       tierGroup: [null],
+      tierType: [null],
     });
   }
 
