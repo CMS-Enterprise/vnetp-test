@@ -18,22 +18,26 @@
           <th scope="col">Deploy</th>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
+          <th scope="col">Tier Group</th>
           <th scope="col">State</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let tier of tiers">
           <td>
-            <input type="checkbox"/>
+            <input type="checkbox" [(ngModel)]="tier.isSelected"/>
           </td>
           <td>
-            {{ tier?.name }}
+            {{ tier?.item?.name }}
           </td>
           <td>
-            {{ tier?.tierType }}
+            {{ tier?.item?.tierType }}
           </td>
           <td>
-            {{ tier?.provisionedAt ? "Provisioned" : "Not Provisioned" }}
+            {{ tier?.item?.tierGroupId | resolve: getTierGroupName }}
+          </td>
+          <td>
+            {{ tier?.item?.provisionedAt ? "Provisioned" : "Not Provisioned" }}
           </td>
         </tr>
         <tr *ngIf="!tiers?.length" class="text-center">
@@ -45,9 +49,10 @@
     <button
       class="btn btn-danger pull-right"
       (click)="deployTiers()"
-      *ngIf="tiers?.length"
     >
       Deploy Selected Tiers
     </button>
   </div>
 </div>
+
+<app-yes-no-modal></app-yes-no-modal>
