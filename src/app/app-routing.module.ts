@@ -18,7 +18,7 @@ import { NetworkObjectsGroupsComponent } from './components/network-objects-grou
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
-import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
@@ -31,6 +31,7 @@ import { VmwareComponent } from './components/vmware/vmware.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
+import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 
 // tslint:disable: max-line-length
 
@@ -120,6 +121,12 @@ const routes: Routes = [
     component: PhysicalServerComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Physical Servers' },
+  },
+  {
+    path: 'physical-server/:id',
+    component: PhysicalServerDetailComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Physical Server Detail' },
   },
   {
     path: 'vmware',

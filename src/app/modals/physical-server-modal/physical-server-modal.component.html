@@ -28,97 +28,112 @@
       </div>
 
       <div class="form-group">
-        <label>Hardware Platform</label>
-        <select
-          name="hardwarePlatform"
-          formControlName="hardwarePlatform"
-          class="form-control"
-        >
-          <option></option>
-          <option value="x86">x86</option>
-          <option value="sparc">SPARC</option>
-          <option value="pseries">P-Series</option>
-        </select>
+        <label for="description">Description</label>
+        <input type="text" class="form-control" formControlName="description" />
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label>CPU Cores</label>
-          <select
-            name="cpuCount"
-            formControlName="cpuCount"
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="serialNumber">Serial Number</label>
+          <input
+            type="text"
             class="form-control"
-          >
-            <option></option>
-            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
-              {{ cpuCount }}</option
-            >
-          </select>
+            formControlName="serialNumber"
+            required
+          />
         </div>
 
-        <div class="form-group col-md-4">
-          <label>Memory</label>
-          <select
-            name="ramCount"
-            formControlName="ramCount"
+        <div class="form-group col-md-6">
+          <label for="deliveryDate">Delivery Date</label>
+          <input
+            type="date"
             class="form-control"
+            formControlName="deliveryDate"
+            required
+          />
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="localStorageType">Local Storage Type</label>
+          <!-- TO DO: get actual options -->
+          <select
+            formControlName="localStorageType"
+            class="form-control"
+            required
           >
             <option></option>
-            <option *ngFor="let ramCount of [1, 2, 4, 8, 16, 32]">
-              {{ ramCount }} GB
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
             </option>
           </select>
         </div>
 
         <div class="form-group col-md-4">
-          <label>NICs</label>
+          <label for="localStorageRequired">Local Storage Required?</label>
           <select
-            name="nicCount"
-            formControlName="nicCount"
+            formControlName="localStorageRequired"
             class="form-control"
+            required
           >
             <option></option>
-            <option *ngFor="let nicCount of [1, 2, 3, 4, 5, 6, 7, 8]">
-              {{ nicCount }}</option
-            >
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
           </select>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label>Local Storage</label>
+        <div class="form-group col-md-4">
+          <label for="localStorageSize">Local Storage Size (GB)</label>
           <input
-            name="localStorage"
-            formControlName="localStorage"
+            type="number"
             class="form-control"
-          />
-        </div>
-        <div class="form-group col-md-6">
-          <label>SAN Storage</label>
-          <input
-            name="sanStorage"
-            formControlName="sanStorage"
-            class="form-control"
+            formControlName="localStorageSize"
+            required
           />
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <label>OS</label>
-          <select name="os" formControlName="os" class="form-control">
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="sanType">SAN Type</label>
+          <!-- TO DO: get actual options -->
+          <select formControlName="sanType" class="form-control" required>
             <option></option>
-            <option value="redhat">RedHat</option>
-            <option value="solaris">Solaris</option>
-            <option value="windows">Windows</option>
-            <option value="vmware">VMware</option>
-            <option value="kvm">KVM</option>
-            <option value="rhev">RHEV</option>
-            <option value="oracle">Oracle</option>
-            <option value="xenserver">XenServer</option>
+            <option *ngFor="let opt of ['one', 'two', 'three']">
+              {{ opt }}
+            </option>
           </select>
         </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanRequired">SAN Required?</label>
+          <select formControlName="sanRequired" class="form-control" required>
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanStorageSize">SAN Size (GB)</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="sanStorageSize"
+            required
+          />
+        </div>
+      </div>
+
+      <div *ngIf="this.ModalMode === 'Edit'">
+        <hr />
       </div>
 
       <div class="modal-footer">

@@ -51,7 +51,7 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
-import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
@@ -83,6 +83,7 @@ import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
 import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
+import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -154,6 +155,7 @@ export function apiConfigFactory(): Configuration {
     ApplianceModalComponent,
     NetworkPortsModalComponent,
     ApplianceDetailComponent,
+    PhysicalServerDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
