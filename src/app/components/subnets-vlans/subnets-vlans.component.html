@@ -55,6 +55,7 @@
           <th scope="col">VLAN</th>
           <th scope="col">Network</th>
           <th scope="col">Gateway</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -74,6 +75,9 @@
           </td>
           <td>
             <span>{{ subnet?.gateway }}</span>
+          </td>
+          <td>
+            <span>{{ subnet?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
           </td>
           <td class="item-actions">
             <fa
@@ -126,6 +130,7 @@
           <th scope="col">Name</th>
           <th scope="col">Description</th>
           <th scope="col">VLAN Number</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -139,6 +144,9 @@
           </td>
           <td>
             <span>{{ vlan?.vlanNumber }}</span>
+          </td>
+          <td>
+            <span>{{ vlan?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
           </td>
           <td class="item-actions">
             <fa
