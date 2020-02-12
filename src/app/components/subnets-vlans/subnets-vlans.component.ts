@@ -16,6 +16,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -38,6 +39,7 @@ export class SubnetsVlansComponent
   subnetModalSubscription: Subscription;
   vlanModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -48,6 +50,7 @@ export class SubnetsVlansComponent
   constructor(
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
+    public tierContextService: TierContextService,
     public helpText: SubnetsVlansHelpText,
     private tierService: V1TiersService,
     private vlanService: V1NetworkVlansService,
@@ -354,6 +357,7 @@ export class SubnetsVlansComponent
       this.subnetModalSubscription,
       this.vlanModalSubscription,
       this.currentDatacenterSubscription,
+      this.currentTierSubscription,
     ].forEach(sub => {
       try {
         if (sub) {
@@ -370,14 +374,21 @@ export class SubnetsVlansComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
-          this.currentTier = null;
           this.subnets = [];
           this.vlans = [];
 
           if (cd.tiers.length) {
-            this.currentTier = cd.tiers[0];
             this.getVlans(true);
           }
+        }
+      },
+    );
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(
+      ct => {
+        if (ct) {
+          this.currentTier = ct;
+          this.getObjectsForNavIndex();
         }
       },
     );

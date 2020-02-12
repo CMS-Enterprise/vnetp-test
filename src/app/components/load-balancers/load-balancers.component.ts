@@ -29,6 +29,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-load-balancers',
@@ -68,6 +69,7 @@ export class LoadBalancersComponent
 
   currentDatacenterSubscription: Subscription;
   policyModalSubscription: any;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -78,6 +80,7 @@ export class LoadBalancersComponent
   constructor(
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
+    private tierContextService: TierContextService,
     private tierService: V1TiersService,
     private irulesService: V1LoadBalancerIrulesService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
@@ -775,6 +778,8 @@ export class LoadBalancersComponent
       this.profileModalSubscription,
       this.policyModalSubscription,
       this.iruleModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
     ].forEach(sub => {
       try {
         if (sub) {
@@ -791,7 +796,6 @@ export class LoadBalancersComponent
       cd => {
         if (cd) {
           this.tiers = cd.tiers;
-          this.currentTier = null;
           this.virtualServers = [];
           this.pools = [];
           this.nodes = [];
@@ -800,9 +804,18 @@ export class LoadBalancersComponent
           this.profiles = [];
 
           if (cd.tiers.length) {
-            this.currentTier = cd.tiers[0];
             this.getObjectsForNavIndex();
           }
+          this.getObjectsForNavIndex();
+        }
+      },
+    );
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(
+      ct => {
+        if (ct) {
+          this.currentTier = ct;
+          this.getObjectsForNavIndex();
         }
       },
     );

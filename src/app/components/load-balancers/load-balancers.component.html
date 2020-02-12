@@ -1,21 +1,6 @@
 <div>
   <h4>Load Balancers</h4>
 
-  <div class="mt-3 mb-3">
-    <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip> </span>
-      <select
-        name="tier"
-        class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentTier"
-        (ngModelChange)="getObjectsForNavIndex()"
-        [disabled]="datacenterService.datacenterLockValue"
-      >
-        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
-      </select>
-    </div>
-  </div>
-
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
@@ -422,9 +407,15 @@
   <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
     <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
       Entities per page
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">
+        10
+      </button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">
+        20
+      </button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">
+        50
+      </button>
     </div>
   </div>
 
