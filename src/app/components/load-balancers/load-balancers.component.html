@@ -527,12 +527,11 @@
   </div>
 
   <div *ngIf="currentTier" class="pull-right">
-    <!-- <app-import-export
+    <app-import-export
       [exportObject]="exportLoadBalancerConfig()"
       exportFileName="loadBalancers-{{ currentTier.name }}"
-      disableCsv="true"
       (import)="importLoadBalancerConfig($event)"
-    ></app-import-export> -->
+    ></app-import-export>
   </div>
 
   <app-virtual-server-modal></app-virtual-server-modal>
