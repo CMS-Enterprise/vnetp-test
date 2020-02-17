@@ -11277,6 +11277,40 @@ definitions:
     required:
       - name
       - datacenterId
+  Job:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      towerId:
+        type: number
+        readOnly: true
+      jobType:
+        type: string
+      definition:
+        type: object
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      completedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      datacenterId:
+        type: string
+    required:
+      - jobType
+      - definition
+      - datacenterId
   Datacenter:
     type: object
     properties:
@@ -11333,6 +11367,11 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/TierGroup'
+      jobs:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/Job'
     required:
       - name
   GeneratedTierBulkDto:
@@ -11584,37 +11623,6 @@ definitions:
           $ref: '#/definitions/LoadBalancerNode'
     required:
       - bulk
-  Job:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      towerId:
-        type: number
-        readOnly: true
-      jobType:
-        type: string
-      definition:
-        type: object
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      completedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-    required:
-      - jobType
-      - definition
   GeneratedTierGroupBulkDto:
     type: object
     properties:
