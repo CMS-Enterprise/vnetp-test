@@ -115,9 +115,9 @@ export class DeployComponent implements OnInit, OnDestroy {
     tiersToDeploy.forEach(tier => {
       const tierProvisionJob = {} as Job;
 
+      tierProvisionJob.datacenterId = this.currentDatacenter.id;
       tierProvisionJob.jobType = 'provision-tier';
       tierProvisionJob.definition = {
-        datacenterId: this.currentDatacenter.id,
         tierId: tier.id,
       };
 

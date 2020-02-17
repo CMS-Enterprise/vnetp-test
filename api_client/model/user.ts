@@ -16,7 +16,7 @@ export interface User {
     username: string;
     password: string;
     email: string;
-    readonly roles: Array<UserRoles>;
+    readonly roles?: Array<UserRoles>;
     createdAt?: object;
     updatedAt?: object;
 }
