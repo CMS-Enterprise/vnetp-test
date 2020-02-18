@@ -5,12 +5,7 @@
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openTierModal('Create')"
-        aria-label="Create Tier"
-      >
+      <button type="button" class="btn btn-success" (click)="openTierModal('Create')" aria-label="Create Tier">
         <fa name="plus"></fa>
         Create Tier
       </button>
@@ -41,26 +36,9 @@
             <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              *ngIf="!tier?.deletedAt"
-              (click)="openTierModal('Edit', tier)"
-              aria-label="Edit Tier"
-            >
-            </fa>
-            <fa
-              name="undo"
-              *ngIf="tier?.deletedAt"
-              class="fg-success"
-              (click)="restoreTier(tier)"
-              aria-label="Restore Tier"
-            ></fa>
-            <fa
-              name="trash"
-              [ngClass]="{ 'fg-danger': tier.deletedAt }"
-              (click)="deleteTier(tier)"
-              aria-label="Soft-Delete/Delete Tier"
-            >
+            <fa name="pencil" *ngIf="!tier?.deletedAt" (click)="openTierModal('Edit', tier)" aria-label="Edit Tier"> </fa>
+            <fa name="undo" *ngIf="tier?.deletedAt" class="fg-success" (click)="restoreTier(tier)" aria-label="Restore Tier"></fa>
+            <fa name="trash" [ngClass]="{ 'fg-danger': tier.deletedAt }" (click)="deleteTier(tier)" aria-label="Soft-Delete/Delete Tier">
             </fa>
           </td>
         </tr>
@@ -71,7 +49,7 @@
     </table>
     <pagination-controls (pageChange)="currentTiersPage = $event"></pagination-controls>
     <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-      <div class="btn-group mr-2" role="group" aria-label="First group">
+      <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
         Entities per page
         <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
         <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
@@ -84,7 +62,8 @@
       [exportObject]="tiers"
       exportFileName="tiers-{{ currentDatacenter?.name }}"
       [disableJson]="false"
-      (import)="importTiersConfig($event)">
+      (import)="importTiersConfig($event)"
+    >
     </app-import-export>
   </div>
 

@@ -3,9 +3,7 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2"
-        >Tier <tooltip [message]="helpText.Tier"></tooltip>
-      </span>
+      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip> </span>
       <select
         name="tier"
         class="form-control col-md-3 mr-1"
@@ -13,39 +11,25 @@
         (ngModelChange)="getObjectsForNavIndex()"
         [disabled]="datacenterService.datacenterLockValue"
       >
-        <option *ngFor="let tier of tiers" [ngValue]="tier">{{
-          tier.name
-        }}</option>
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
     </div>
   </div>
 
   <ul class="nav nav-tabs">
-    <li
-      class="nav-item"
-      (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools()"
-    >
+    <li class="nav-item" (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
         Virtual Servers <tooltip [message]="helpText.VirtualServers"></tooltip>
       </a>
     </li>
-    <li
-      class="nav-item"
-      (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes()"
-    >
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
-        Pools <tooltip [message]="helpText.Pools"></tooltip>
-      </a>
+    <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Pools <tooltip [message]="helpText.Pools"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 2; getNodes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">
-        Nodes <tooltip [message]="helpText.Nodes"></tooltip>
-      </a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"> Nodes <tooltip [message]="helpText.Nodes"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 3; getIrules()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
-        iRules <tooltip [message]="helpText.IRules"></tooltip>
-      </a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"> iRules <tooltip [message]="helpText.IRules"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 4; getHealthMonitors()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 4 }">
@@ -53,25 +37,16 @@
       </a>
     </li>
     <li class="nav-item" (click)="navIndex = 5; getProfiles()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 5 }">
-        Profiles <tooltip [message]="helpText.HealthMonitors"></tooltip>
-      </a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 5 }"> Profiles <tooltip [message]="helpText.HealthMonitors"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 6; getPolicies()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 6 }">
-        Policies <tooltip [message]="helpText.HealthMonitors"></tooltip>
-      </a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 6 }"> Policies <tooltip [message]="helpText.HealthMonitors"></tooltip> </a>
     </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openVirtualServerModal('Create')"
-        aria-label="Create Virtual Server"
-      >
+      <button type="button" class="btn btn-success" (click)="openVirtualServerModal('Create')" aria-label="Create Virtual Server">
         <fa name="plus"></fa>
         Create Virtual Server
       </button>
@@ -89,8 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let virtualServer of virtualServers | paginate: { itemsPerPage: perPage, currentPage: currentVSPage }">
+        <tr *ngFor="let virtualServer of virtualServers | paginate: { itemsPerPage: perPage, currentPage: currentVSPage }">
           <td>
             <span>{{ virtualServer?.name }}</span>
           </td>
@@ -104,17 +78,10 @@
             <span>{{ virtualServer?.servicePort }}</span>
           </td>
           <td>
-            <span>{{
-              virtualServer?.defaultPoolId | resolve: getPoolName
-            }}</span>
+            <span>{{ virtualServer?.defaultPoolId | resolve: getPoolName }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openVirtualServerModal('Edit', virtualServer)"
-              aria-label="Edit Virtual Server"
-            >
-            </fa>
+            <fa name="pencil" (click)="openVirtualServerModal('Edit', virtualServer)" aria-label="Edit Virtual Server"> </fa>
             <fa
               name="undo"
               *ngIf="virtualServer?.deletedAt"
@@ -140,12 +107,7 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openPoolModal('Create')"
-        aria-label="Create Pool"
-      >
+      <button type="button" class="btn btn-success" (click)="openPoolModal('Create')" aria-label="Create Pool">
         <fa name="plus"></fa>
         Create Pool
       </button>
@@ -180,19 +142,8 @@
             <span>{{ pool?.healthMonitors?.length }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openPoolModal('Edit', pool)"
-              aria-label="Edit Pool"
-            >
-            </fa>
-            <fa
-              name="undo"
-              *ngIf="pool?.deletedAt"
-              class="fg-success"
-              (click)="restorePool(pool)"
-              aria-label="Restore Pool"
-            ></fa>
+            <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool"> </fa>
+            <fa name="undo" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': pool?.deletedAt }"
@@ -211,12 +162,7 @@
 
   <div *ngIf="navIndex == 2">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openNodeModal('Create')"
-        aria-label="Create Node"
-      >
+      <button type="button" class="btn btn-success" (click)="openNodeModal('Create')" aria-label="Create Node">
         <fa name="plus"></fa>
         Create Node
       </button>
@@ -259,19 +205,8 @@
             <span>{{ node?.priority }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openNodeModal('Edit', node)"
-              aria-label="Edit Node"
-            >
-            </fa>
-            <fa
-              name="undo"
-              *ngIf="node?.deletedAt"
-              class="fg-success"
-              (click)="restoreNode(node)"
-              aria-label="Restore Node"
-            ></fa>
+            <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node"> </fa>
+            <fa name="undo" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': node?.deletedAt }"
@@ -290,12 +225,7 @@
 
   <div *ngIf="navIndex == 3">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openIRuleModal('Create')"
-        aria-label="Create iRule"
-      >
+      <button type="button" class="btn btn-success" (click)="openIRuleModal('Create')" aria-label="Create iRule">
         <fa name="plus"></fa>
         Create iRule
       </button>
@@ -318,19 +248,8 @@
             <span>{{ irule?.content }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openIRuleModal('Edit', irule)"
-              aria-label="Edit iRule"
-            >
-            </fa>
-            <fa
-              name="undo"
-              *ngIf="irule?.deletedAt"
-              class="fg-success"
-              (click)="restoreIrule(irule)"
-              aria-label="Restore Irule"
-            ></fa>
+            <fa name="pencil" (click)="openIRuleModal('Edit', irule)" aria-label="Edit iRule"> </fa>
+            <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore Irule"></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': irule?.deletedAt }"
@@ -349,12 +268,7 @@
 
   <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openHealthMonitorModal('Create')"
-        aria-label="Create Health Monitor"
-      >
+      <button type="button" class="btn btn-success" (click)="openHealthMonitorModal('Create')" aria-label="Create Health Monitor">
         <fa name="plus"></fa>
         Create Health Monitor
       </button>
@@ -372,8 +286,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let healthMonitor of healthMonitors | paginate: { itemsPerPage: perPage, currentPage: currentHMPage }">
+        <tr *ngFor="let healthMonitor of healthMonitors | paginate: { itemsPerPage: perPage, currentPage: currentHMPage }">
           <td>
             <span>{{ healthMonitor?.name }}</span>
           </td>
@@ -390,12 +303,7 @@
             <span>{{ healthMonitor?.timeout }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openHealthMonitorModal('Edit', healthMonitor)"
-              aria-label="Edit Health Monitor"
-            >
-            </fa>
+            <fa name="pencil" (click)="openHealthMonitorModal('Edit', healthMonitor)" aria-label="Edit Health Monitor"> </fa>
             <fa
               name="undo"
               *ngIf="healthMonitor?.deletedAt"
@@ -421,12 +329,7 @@
 
   <div *ngIf="navIndex == 5">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openProfileModal('Create')"
-        aria-label="Create Profile"
-      >
+      <button type="button" class="btn btn-success" (click)="openProfileModal('Create')" aria-label="Create Profile">
         <fa name="plus"></fa>
         Create Profile
       </button>
@@ -449,15 +352,20 @@
             <span>{{ profile?.type }}</span>
           </td>
           <td class="item-actions">
+            <fa name="pencil" (click)="openProfileModal('Edit', profile)" aria-label="Edit Profile"> </fa>
             <fa
-              name="pencil"
-              (click)="openProfileModal('Edit', profile)"
-              aria-label="Edit Profile"
-            >
-            </fa>
-            <fa name="undo" *ngIf="profile?.deletedAt" class="fg-success" (click)="restoreProfile(profile)" aria-label="Restore Profile"></fa>
-            <fa name="trash" [ngClass]="{ 'fg-danger': profile?.deletedAt }" (click)="deleteProfile(profile)"
-              aria-label="Soft-Delete/Delete Profile"></fa>
+              name="undo"
+              *ngIf="profile?.deletedAt"
+              class="fg-success"
+              (click)="restoreProfile(profile)"
+              aria-label="Restore Profile"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': profile?.deletedAt }"
+              (click)="deleteProfile(profile)"
+              aria-label="Soft-Delete/Delete Profile"
+            ></fa>
           </td>
         </tr>
         <tr *ngIf="!profiles?.length" class="text-center">
@@ -470,12 +378,7 @@
 
   <div *ngIf="navIndex == 6">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openPolicyModal('Create')"
-        aria-label="Create Policy"
-      >
+      <button type="button" class="btn btn-success" (click)="openPolicyModal('Create')" aria-label="Create Policy">
         <fa name="plus"></fa>
         Create Policy
       </button>
@@ -498,15 +401,14 @@
             <span>{{ policy?.type }}</span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="openPolicyModal('Edit', policy)"
-              aria-label="Edit Policy"
-            >
-            </fa>
+            <fa name="pencil" (click)="openPolicyModal('Edit', policy)" aria-label="Edit Policy"> </fa>
             <fa name="undo" *ngIf="policy?.deletedAt" class="fg-success" (click)="restorePolicy(policy)" aria-label="Restore Policy"></fa>
-            <fa name="trash" [ngClass]="{ 'fg-danger': policy?.deletedAt }" (click)="deletePolicy(policy)"
-              aria-label="Soft-Delete/Delete Policy"></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': policy?.deletedAt }"
+              (click)="deletePolicy(policy)"
+              aria-label="Soft-Delete/Delete Policy"
+            ></fa>
           </td>
         </tr>
         <tr *ngIf="!policies?.length" class="text-center">
@@ -518,7 +420,7 @@
   </div>
 
   <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
+    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
       Entities per page
       <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
       <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>

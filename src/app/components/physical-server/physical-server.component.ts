@@ -3,11 +3,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import {
-  V1DatacentersService,
-  V1PhysicalServersService,
-  PhysicalServer,
-} from 'api_client';
+import { V1DatacentersService, V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
@@ -21,6 +17,9 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   physicalServerModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
+
+  currentPhysicalServersPage = 1;
+  perPage = 20;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -78,25 +77,18 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!ps.deletedAt) {
-        this.physicalServerService
-          .v1PhysicalServersIdSoftDelete({ id: ps.id })
-          .subscribe(data => {
-            this.getPhysicalServers();
-          });
+        this.physicalServerService.v1PhysicalServersIdSoftDelete({ id: ps.id }).subscribe(data => {
+          this.getPhysicalServers();
+        });
       } else {
-        this.physicalServerService
-          .v1PhysicalServersIdDelete({ id: ps.id })
-          .subscribe(data => {
-            this.getPhysicalServers();
-          });
+        this.physicalServerService.v1PhysicalServersIdDelete({ id: ps.id }).subscribe(data => {
+          this.getPhysicalServers();
+        });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Physical Server?`,
-        `Do you want to ${deleteDescription} physical server "${ps.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${ps.name}"?`),
       deleteFunction,
     );
   }
@@ -113,29 +105,21 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private unsubAll() {
-    [
-      this.physicalServerModalSubscription,
-      this.currentDatacenterSubscription,
-    ].forEach(sub => {
+    [this.physicalServerModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -147,14 +131,12 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.datacenterId = cd.id;
-          this.getPhysicalServers();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+        this.getPhysicalServers();
+      }
+    });
   }
 
   ngOnDestroy() {
