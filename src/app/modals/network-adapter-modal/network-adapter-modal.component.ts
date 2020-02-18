@@ -39,6 +39,7 @@ export class NetworkAdapterModalComponent implements OnInit {
         data.forEach(tier => {
           this.Vlans.push(...tier.vlans);
         });
+        this.Vlans = this.Vlans.filter(v => !v.deletedAt);
       });
   }
 
