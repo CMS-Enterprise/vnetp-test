@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import { PhysicalServer } from 'src/app/models/physical-server/physical-server';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
@@ -24,6 +24,7 @@ export class PhysicalServerModalComponent implements OnInit {
   ) {}
 
   save() {
+    this.submitted = true;
     if (this.form.invalid) {
       return;
     }
@@ -127,16 +128,16 @@ export class PhysicalServerModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
-      description: [''],
-      serialNumber: [''],
-      deliveryDate: [''],
-      localStorageType: [''],
-      localStorageRequired: [''],
-      localStorageSize: [''],
-      sanType: [''],
-      sanRequired: [''],
-      sanStorageSize: [''],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      deliveryDate: ['', Validators.required],
+      localStorageType: ['', Validators.required],
+      localStorageRequired: ['', Validators.required],
+      localStorageSize: ['', Validators.required],
+      sanType: ['', Validators.required],
+      sanRequired: ['', Validators.required],
+      sanStorageSize: ['', Validators.required],
     });
   }
 
@@ -146,6 +147,7 @@ export class PhysicalServerModalComponent implements OnInit {
   }
 
   public reset() {
+    this.submitted = false;
     this.buildForm();
   }
 
