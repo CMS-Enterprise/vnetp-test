@@ -10,21 +10,11 @@
     <h4 class="modal-title">Physical Server</h4>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="save()">
+  <form [formGroup]="form" (ngSubmit)="save()" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <input
-          type="text"
-          appIsAlphanumeric
-          formControlName="name"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-          aria-label="Name"
-        />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-        </div>
+        <input type="text" appIsAlphanumeric formControlName="name" class="form-control" aria-label="Name" required />
       </div>
 
       <div class="form-group">
@@ -35,22 +25,12 @@
       <div class="row">
         <div class="form-group col-md-6">
           <label for="serialNumber">Serial Number</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="serialNumber"
-            required
-          />
+          <input type="text" class="form-control" formControlName="serialNumber" required />
         </div>
 
         <div class="form-group col-md-6">
           <label for="deliveryDate">Delivery Date</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="deliveryDate"
-            required
-          />
+          <input type="date" class="form-control" formControlName="deliveryDate" required />
         </div>
       </div>
 
@@ -60,11 +40,7 @@
         <div class="form-group col-md-4">
           <label for="localStorageType">Local Storage Type</label>
           <!-- TO DO: get actual options -->
-          <select
-            formControlName="localStorageType"
-            class="form-control"
-            required
-          >
+          <select formControlName="localStorageType" class="form-control" required>
             <option></option>
             <option *ngFor="let opt of ['one', 'two', 'three']">
               {{ opt }}
@@ -74,11 +50,7 @@
 
         <div class="form-group col-md-4">
           <label for="localStorageRequired">Local Storage Required?</label>
-          <select
-            formControlName="localStorageRequired"
-            class="form-control"
-            required
-          >
+          <select formControlName="localStorageRequired" class="form-control" required>
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
@@ -88,12 +60,7 @@
 
         <div class="form-group col-md-4">
           <label for="localStorageSize">Local Storage Size (GB)</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="localStorageSize"
-            required
-          />
+          <input type="number" class="form-control" formControlName="localStorageSize" required />
         </div>
       </div>
 
@@ -123,12 +90,7 @@
 
         <div class="form-group col-md-4">
           <label for="sanStorageSize">SAN Size (GB)</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="sanStorageSize"
-            required
-          />
+          <input type="number" class="form-control" formControlName="sanStorageSize" required />
         </div>
       </div>
 
@@ -137,12 +99,7 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
+        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
           Cancel
         </button>
 

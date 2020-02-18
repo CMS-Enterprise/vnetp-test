@@ -34,21 +34,14 @@ export class PhysicalServerModalComponent implements OnInit {
     physicalServer.serialNumber = this.form.value.serialNumber;
     physicalServer.deliveryDate = this.form.value.deliveryDate;
     physicalServer.localStorageType = this.form.value.localStorageType;
-    physicalServer.localStorageSize = this.convertGbToBytes(
-      this.form.value.localStorageSize,
-    );
+    physicalServer.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
     physicalServer.localStorageRequired = this.form.value.localStorageRequired;
     physicalServer.sanType = this.form.value.sanType;
     physicalServer.sanRequired = this.form.value.sanRequired;
-    physicalServer.sanStorageSize = this.convertGbToBytes(
-      this.form.value.sanStorageSize,
-    );
+    physicalServer.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
 
     this.ngx.resetModalData('physicalServerModal');
-    this.ngx.setModalData(
-      Object.assign({}, physicalServer),
-      'physicalServerModal',
-    );
+    this.ngx.setModalData(Object.assign({}, physicalServer), 'physicalServerModal');
 
     if (this.ModalMode === ModalMode.Create) {
       physicalServer.datacenterId = this.DatacenterId;
@@ -87,10 +80,7 @@ export class PhysicalServerModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('physicalServerModal') as PhysicalServerModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('physicalServerModal') as PhysicalServerModalDto);
 
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
@@ -113,20 +103,12 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
       // TO DO: date not showing up in edit form, displaying one day off
       this.form.controls.deliveryDate.setValue(physicalServer.deliveryDate);
-      this.form.controls.localStorageType.setValue(
-        physicalServer.localStorageType,
-      );
-      this.form.controls.localStorageRequired.setValue(
-        physicalServer.localStorageRequired,
-      );
-      this.form.controls.localStorageSize.setValue(
-        this.convertBytesToGb(physicalServer.localStorageSize),
-      );
+      this.form.controls.localStorageType.setValue(physicalServer.localStorageType);
+      this.form.controls.localStorageRequired.setValue(physicalServer.localStorageRequired);
+      this.form.controls.localStorageSize.setValue(this.convertBytesToGb(physicalServer.localStorageSize));
       this.form.controls.sanType.setValue(physicalServer.sanType);
       this.form.controls.sanRequired.setValue(physicalServer.sanRequired);
-      this.form.controls.sanStorageSize.setValue(
-        this.convertBytesToGb(physicalServer.sanStorageSize),
-      );
+      this.form.controls.sanStorageSize.setValue(this.convertBytesToGb(physicalServer.sanStorageSize));
     }
     this.ngx.resetModalData('physicalServerModal');
   }
