@@ -115,7 +115,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.vlans = dto.Vlans;
+    this.vlans = dto.Vlans.filter(v => !v.deletedAt);
     const subnet = dto.Subnet;
 
     if (subnet !== undefined) {
