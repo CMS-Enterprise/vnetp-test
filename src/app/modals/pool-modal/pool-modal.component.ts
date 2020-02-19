@@ -50,7 +50,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     const pool = {} as LoadBalancerPool;
-    pool.name = this.form.value.name.trim();
+    if (this.form && this.form.value && this.form.value.name) {
+      pool.name = this.form.value.name.trim();
+    }
     pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
     pool.servicePort = this.form.value.servicePort;
     if (this.ModalMode === ModalMode.Create) {

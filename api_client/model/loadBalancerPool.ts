@@ -24,8 +24,8 @@ export interface LoadBalancerPool {
     name: string;
     description?: string;
     loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
-    readonly nodes?: Array<LoadBalancerNode>;
-    readonly healthMonitors?: Array<LoadBalancerHealthMonitor>;
+    nodes?: Array<LoadBalancerNode>;
+    healthMonitors?: Array<LoadBalancerHealthMonitor>;
     servicePort: number;
     tierId: string;
 }
