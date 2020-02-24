@@ -47,11 +47,21 @@
 
       Network Objects
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
-      <div *ngIf="ModalMode==='Edit'" class="btn-group-sm pull-right mb-2" role="group">
-
-        <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{standalone: true}">
+      <div
+        *ngIf="ModalMode === 'Edit'"
+        class="btn-group-sm pull-right mb-2"
+        role="group"
+      >
+        <select
+          [(ngModel)]="selectedNetworkObject"
+          [ngModelOptions]="{ standalone: true }"
+        >
           <option></option>
-          <option *ngFor="let tierNetworkObject of tierNetworkObjects" [ngValue]="tierNetworkObject">{{ tierNetworkObject?.name }}</option>
+          <option
+            *ngFor="let tierNetworkObject of tierNetworkObjects"
+            [ngValue]="tierNetworkObject"
+            >{{ tierNetworkObject?.name }}</option
+          >
         </select>
 
         <button
@@ -78,19 +88,21 @@
         <tbody>
           <tr *ngFor="let netObj of networkObjects">
             <td>
-              <p>{{ netObj.name }}</p>
+              <span>{{ netObj.name }}</span>
             </td>
             <td>
-              <p>{{ netObj.type }}</p>
+              <span>{{ netObj.type }}</span>
             </td>
             <td>
-              <p *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</p>
-              <p *ngIf="netObj.type === 'Range'">
+              <span *ngIf="netObj.type === 'IpAddress'">{{
+                netObj?.ipAddress
+              }}</span>
+              <span *ngIf="netObj.type === 'Range'">
                 {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }}
-              </p>
+              </span>
             </td>
             <td class="item-actions">
-              <fa name="times" class="fg-danger" (click)="removeNetworkObject(netObj)"> </fa>
+              <fa name="times" (click)="removeNetworkObject(netObj)"> </fa>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">

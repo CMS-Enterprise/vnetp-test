@@ -110,23 +110,19 @@
         <tbody>
           <tr *ngFor="let serviceObject of serviceObjects">
             <td>
-              <p>{{ serviceObject?.name }}</p>
+              <span>{{ serviceObject?.name }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.protocol }}</p>
+              <span>{{ serviceObject?.protocol }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.sourcePorts }}</p>
+              <span>{{ serviceObject?.sourcePorts }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.destinationPorts }}</p>
+              <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
             <td class="item-actions">
-              <fa
-                name="times"
-                class="fg-danger"
-                (click)="removeServiceObject(serviceObject)"
-              >
+              <fa name="times" (click)="removeServiceObject(serviceObject)">
               </fa>
             </td>
           </tr>
