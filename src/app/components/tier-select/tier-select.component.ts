@@ -40,7 +40,7 @@ export class TierSelectComponent implements OnInit, OnDestroy {
         join: 'tiers',
       })
       .subscribe(data => {
-        this.tiers = data.tiers;
+        this.tiers = data.tiers.filter(t => !t.deletedAt);
       });
   }
 
