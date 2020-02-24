@@ -1217,22 +1217,18 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/network-security/firewall-rules/bulk:
+  /v1/network-security/firewall-rules/bulk-import:
     post:
-      summary: Create many FirewallRule
+      summary: Bulk Import Firewall Rules
       parameters:
-        - name: GeneratedFirewallRuleBulkDto
+        - name: FirewallRuleImportCollectionDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/GeneratedFirewallRuleBulkDto'
+            $ref: '#/definitions/FirewallRuleImportCollectionDto'
       responses:
         '201':
           description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/FirewallRule'
       tags: &ref_4
         - v1/network-security/firewall-rules
       produces:
@@ -1503,28 +1499,6 @@ paths:
           schema:
             $ref: '#/definitions/FirewallRule'
       tags: *ref_4
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  undefined:
-    undefined:
-      summary: Create many LoadBalancerPool
-      parameters:
-        - name: GeneratedLoadBalancerPoolBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
-      tags: &ref_30
-        - v1/load-balancer/pools
       produces:
         - application/json
       consumes:
@@ -7974,27 +7948,6 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/load-balancer/pools/bulk:
-    post:
-      summary: Create many LoadBalancerPool
-      parameters:
-        - name: GeneratedLoadBalancerPoolBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
   /v1/load-balancer/pools:
     get:
       summary: Retrieve many LoadBalancerPool
@@ -8135,7 +8088,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_30
+      tags: &ref_30
+        - v1/load-balancer/pools
       produces:
         - application/json
       consumes:
@@ -8258,6 +8212,27 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_30
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/pools/bulk:
+    post:
+      summary: Create many LoadBalancerPool
+      parameters:
+        - name: GeneratedLoadBalancerPoolBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LoadBalancerPool'
       tags: *ref_30
       produces:
         - application/json
@@ -10551,17 +10526,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum:
+        enum: &ref_37
           - In
           - Out
       action:
         type: string
-        enum:
+        enum: &ref_38
           - Permit
           - Deny
       protocol:
         type: string
-        enum:
+        enum: &ref_39
           - ICMP
           - TCP
           - UDP
@@ -10574,19 +10549,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum:
+        enum: &ref_40
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum:
+        enum: &ref_41
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum:
+        enum: &ref_42
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -10892,10 +10867,12 @@ definitions:
           - FastestAppResponse
       nodes:
         type: array
+        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerNode'
       healthMonitors:
         type: array
+        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
       servicePort:
@@ -11377,15 +11354,144 @@ definitions:
           $ref: '#/definitions/FirewallRuleGroup'
     required:
       - bulk
-  GeneratedFirewallRuleBulkDto:
+  FirewallRuleImport:
     type: object
     properties:
-      bulk:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      direction:
+        type: string
+        enum: *ref_37
+      action:
+        type: string
+        enum: *ref_38
+      protocol:
+        type: string
+        enum: *ref_39
+      logging:
+        type: boolean
+      enabled:
+        type: boolean
+      ruleIndex:
+        type: number
+        minimum: 1
+      sourceAddressType:
+        type: string
+        enum: *ref_40
+      destinationAddressType:
+        type: string
+        enum: *ref_41
+      serviceType:
+        type: string
+        enum: *ref_42
+      sourceIpAddress:
+        type: string
+      sourceNetworkObjectId:
+        type: string
+      sourceNetworkObjectGroupId:
+        type: string
+      destinationIpAddress:
+        type: string
+      destinationNetworkObjectId:
+        type: string
+      destinationNetworkObjectGroupId:
+        type: string
+      sourcePorts:
+        type: string
+      destinationPorts:
+        type: string
+      serviceObjectId:
+        type: string
+      serviceObjectGroupId:
+        type: string
+      firewallRuleGroupId:
+        type: string
+      sourceNetworkObject:
+        title: NetworkObject
+        allOf:
+          - $ref: '#/definitions/NetworkObject'
+          - readOnly: true
+      sourceNetworkObjectGroup:
+        title: NetworkObjectGroup
+        allOf:
+          - $ref: '#/definitions/NetworkObjectGroup'
+          - readOnly: true
+      destinationNetworkObject:
+        title: NetworkObject
+        allOf:
+          - $ref: '#/definitions/NetworkObject'
+          - readOnly: true
+      destinationNetworkObjectGroup:
+        title: NetworkObjectGroup
+        allOf:
+          - $ref: '#/definitions/NetworkObjectGroup'
+          - readOnly: true
+      serviceObject:
+        title: ServiceObject
+        allOf:
+          - $ref: '#/definitions/ServiceObject'
+          - readOnly: true
+      serviceObjectGroup:
+        title: ServiceObjectGroup
+        allOf:
+          - $ref: '#/definitions/ServiceObjectGroup'
+          - readOnly: true
+      vrfName:
+        type: string
+      firewallRuleGroupType:
+        type: string
+    required:
+      - name
+      - direction
+      - action
+      - protocol
+      - logging
+      - enabled
+      - ruleIndex
+      - sourceAddressType
+      - destinationAddressType
+      - serviceType
+      - firewallRuleGroupId
+      - vrfName
+      - firewallRuleGroupType
+  FirewallRuleImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      firewallRules:
         type: array
         items:
-          $ref: '#/definitions/FirewallRule'
+          $ref: '#/definitions/FirewallRuleImport'
     required:
-      - bulk
+      - datacenterId
+      - firewallRules
   GeneratedServiceObjectGroupBulkDto:
     type: object
     properties:

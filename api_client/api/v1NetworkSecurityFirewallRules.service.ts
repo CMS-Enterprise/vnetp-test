@@ -18,14 +18,14 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { FirewallRule } from '../model/firewallRule';
-import { GeneratedFirewallRuleBulkDto } from '../model/generatedFirewallRuleBulkDto';
+import { FirewallRuleImportCollectionDto } from '../model/firewallRuleImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1NetworkSecurityFirewallRulesBulkPostRequestParams {
-    generatedFirewallRuleBulkDto: GeneratedFirewallRuleBulkDto;
+export interface V1NetworkSecurityFirewallRulesBulkImportPostRequestParams {
+    firewallRuleImportCollectionDto: FirewallRuleImportCollectionDto;
 }
 
 export interface V1NetworkSecurityFirewallRulesGetRequestParams {
@@ -100,25 +100,24 @@ export class V1NetworkSecurityFirewallRulesService {
 
 
     /**
-     * Create many FirewallRule
+     * Bulk Import Firewall Rules
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesBulkPost(requestParameters: V1NetworkSecurityFirewallRulesBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesBulkPost(requestParameters: V1NetworkSecurityFirewallRulesBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<FirewallRule>>>;
-    public v1NetworkSecurityFirewallRulesBulkPost(requestParameters: V1NetworkSecurityFirewallRulesBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<FirewallRule>>>;
-    public v1NetworkSecurityFirewallRulesBulkPost(requestParameters: V1NetworkSecurityFirewallRulesBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const generatedFirewallRuleBulkDto = requestParameters.generatedFirewallRuleBulkDto;
-        if (generatedFirewallRuleBulkDto === null || generatedFirewallRuleBulkDto === undefined) {
-            throw new Error('Required parameter generatedFirewallRuleBulkDto was null or undefined when calling v1NetworkSecurityFirewallRulesBulkPost.');
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const firewallRuleImportCollectionDto = requestParameters.firewallRuleImportCollectionDto;
+        if (firewallRuleImportCollectionDto === null || firewallRuleImportCollectionDto === undefined) {
+            throw new Error('Required parameter firewallRuleImportCollectionDto was null or undefined when calling v1NetworkSecurityFirewallRulesBulkImportPost.');
         }
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
-            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -135,8 +134,8 @@ export class V1NetworkSecurityFirewallRulesService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<FirewallRule>>(`${this.configuration.basePath}/v1/network-security/firewall-rules/bulk`,
-            generatedFirewallRuleBulkDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/firewall-rules/bulk-import`,
+            firewallRuleImportCollectionDto,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

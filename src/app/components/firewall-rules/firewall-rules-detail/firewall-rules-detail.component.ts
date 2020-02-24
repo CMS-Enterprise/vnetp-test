@@ -17,6 +17,7 @@ import {
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
   Tier,
+  FirewallRuleImportCollectionDto,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -276,11 +277,13 @@ export class FirewallRulesDetailComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          let dto = event;
-          dto = this.sanitizeData(event);
+          const fwDto = {} as FirewallRuleImportCollectionDto;
+          fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+          fwDto.firewallRules = this.sanitizeData(event);
+
           this.firewallRuleService
-            .v1NetworkSecurityFirewallRulesBulkPost({
-              generatedFirewallRuleBulkDto: { bulk: dto },
+            .v1NetworkSecurityFirewallRulesBulkImportPost({
+              firewallRuleImportCollectionDto: fwDto,
             })
             .subscribe(data => {
               this.getFirewallRules();
@@ -309,11 +312,12 @@ export class FirewallRulesDetailComponent
       if (val === null || val === '') {
         delete obj[key];
       }
-      if (key === 'vrf_name') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
-        obj.tierId = obj[key];
-        delete obj[key];
-      }
+
+      // if (key === 'vrf_name') {
+      //   obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+      //   obj.tierId = obj[key];
+      //   delete obj[key];
+      // }
     });
     return obj;
     // tslint:disable-next-line: semicolon
