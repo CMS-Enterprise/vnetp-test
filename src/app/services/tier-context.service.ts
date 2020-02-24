@@ -56,6 +56,9 @@ export class TierContextService {
     // that the component doesn't release the lock
     // before being destroyed.
     this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.getTiers();
+      }
       if (this.lockCurrentTierSubject.value && e instanceof NavigationEnd) {
         this.lockCurrentTierSubject.next(false);
       }
@@ -73,7 +76,7 @@ export class TierContextService {
         return;
       }
 
-      this.getTiers(queryParams.get('tier')); // TO DO: params not coming through
+      this.getTiers(queryParams.get('tier'));
     });
   }
 
@@ -139,8 +142,6 @@ export class TierContextService {
    * @param tier Tier to switch to.
    */
   public switchTier(tierId: string) {
-    console.log(tierId);
-
     if (this.lockCurrentTierSubject.value) {
       throw Error('Current Tier Locked.');
     }
@@ -154,8 +155,6 @@ export class TierContextService {
     }
 
     if (tier) {
-      console.log(tier); // TO DO: not getting to here
-
       // Update Subject
       this.currentTierSubject.next(tier);
 
