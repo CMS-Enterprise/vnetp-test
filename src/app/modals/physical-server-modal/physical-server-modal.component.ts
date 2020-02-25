@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import { PhysicalServer } from 'src/app/models/physical-server/physical-server';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
@@ -24,6 +24,7 @@ export class PhysicalServerModalComponent implements OnInit {
   ) {}
 
   save() {
+    this.submitted = true;
     if (this.form.invalid) {
       return;
     }
@@ -34,21 +35,14 @@ export class PhysicalServerModalComponent implements OnInit {
     physicalServer.serialNumber = this.form.value.serialNumber;
     physicalServer.deliveryDate = this.form.value.deliveryDate;
     physicalServer.localStorageType = this.form.value.localStorageType;
-    physicalServer.localStorageSize = this.convertGbToBytes(
-      this.form.value.localStorageSize,
-    );
+    physicalServer.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
     physicalServer.localStorageRequired = this.form.value.localStorageRequired;
     physicalServer.sanType = this.form.value.sanType;
     physicalServer.sanRequired = this.form.value.sanRequired;
-    physicalServer.sanStorageSize = this.convertGbToBytes(
-      this.form.value.sanStorageSize,
-    );
+    physicalServer.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
 
     this.ngx.resetModalData('physicalServerModal');
-    this.ngx.setModalData(
-      Object.assign({}, physicalServer),
-      'physicalServerModal',
-    );
+    this.ngx.setModalData(Object.assign({}, physicalServer), 'physicalServerModal');
 
     if (this.ModalMode === ModalMode.Create) {
       physicalServer.datacenterId = this.DatacenterId;
@@ -87,10 +81,7 @@ export class PhysicalServerModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('physicalServerModal') as PhysicalServerModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('physicalServerModal') as PhysicalServerModalDto);
 
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
@@ -113,20 +104,12 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
       // TO DO: date not showing up in edit form, displaying one day off
       this.form.controls.deliveryDate.setValue(physicalServer.deliveryDate);
-      this.form.controls.localStorageType.setValue(
-        physicalServer.localStorageType,
-      );
-      this.form.controls.localStorageRequired.setValue(
-        physicalServer.localStorageRequired,
-      );
-      this.form.controls.localStorageSize.setValue(
-        this.convertBytesToGb(physicalServer.localStorageSize),
-      );
+      this.form.controls.localStorageType.setValue(physicalServer.localStorageType);
+      this.form.controls.localStorageRequired.setValue(physicalServer.localStorageRequired);
+      this.form.controls.localStorageSize.setValue(this.convertBytesToGb(physicalServer.localStorageSize));
       this.form.controls.sanType.setValue(physicalServer.sanType);
       this.form.controls.sanRequired.setValue(physicalServer.sanRequired);
-      this.form.controls.sanStorageSize.setValue(
-        this.convertBytesToGb(physicalServer.sanStorageSize),
-      );
+      this.form.controls.sanStorageSize.setValue(this.convertBytesToGb(physicalServer.sanStorageSize));
     }
     this.ngx.resetModalData('physicalServerModal');
   }
@@ -145,16 +128,16 @@ export class PhysicalServerModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
-      description: [''],
-      serialNumber: [''],
-      deliveryDate: [''],
-      localStorageType: [''],
-      localStorageRequired: [''],
-      localStorageSize: [''],
-      sanType: [''],
-      sanRequired: [''],
-      sanStorageSize: [''],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      deliveryDate: ['', Validators.required],
+      localStorageType: ['', Validators.required],
+      localStorageRequired: ['', Validators.required],
+      localStorageSize: ['', Validators.required],
+      sanType: ['', Validators.required],
+      sanRequired: ['', Validators.required],
+      sanStorageSize: ['', Validators.required],
     });
   }
 
@@ -164,6 +147,7 @@ export class PhysicalServerModalComponent implements OnInit {
   }
 
   public reset() {
+    this.submitted = false;
     this.buildForm();
   }
 

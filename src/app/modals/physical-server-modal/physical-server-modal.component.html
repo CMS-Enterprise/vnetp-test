@@ -19,8 +19,8 @@
           appIsAlphanumeric
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
           aria-label="Name"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
@@ -39,8 +39,11 @@
             type="text"
             class="form-control"
             formControlName="serialNumber"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
           />
+          <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
+            <div *ngIf="f.serialNumber.errors.required">Serial Number is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
@@ -49,8 +52,11 @@
             type="date"
             class="form-control"
             formControlName="deliveryDate"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
           />
+          <div *ngIf="submitted && f.deliveryDate.errors" class="invalid-feedback">
+            <div *ngIf="f.deliveryDate.errors.required">Delivery Date is required</div>
+          </div>
         </div>
       </div>
 
@@ -63,13 +69,16 @@
           <select
             formControlName="localStorageType"
             class="form-control"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
           >
             <option></option>
             <option *ngFor="let opt of ['one', 'two', 'three']">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.localStorageType.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageType.errors.required">Local Storage Type is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-4">
@@ -77,13 +86,16 @@
           <select
             formControlName="localStorageRequired"
             class="form-control"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
           >
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.localStorageRequired.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageRequired.errors.required">Local Storage Required? is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-4">
@@ -92,8 +104,11 @@
             type="number"
             class="form-control"
             formControlName="localStorageSize"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
           />
+          <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageSize.errors.required">Local Storage Size is required</div>
+          </div>
         </div>
       </div>
 
@@ -103,22 +118,28 @@
         <div class="form-group col-md-4">
           <label for="sanType">SAN Type</label>
           <!-- TO DO: get actual options -->
-          <select formControlName="sanType" class="form-control" required>
+          <select formControlName="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }">
             <option></option>
             <option *ngFor="let opt of ['one', 'two', 'three']">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.sanType.errors" class="invalid-feedback">
+            <div *ngIf="f.sanType.errors.required">SAN Type is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-4">
           <label for="sanRequired">SAN Required?</label>
-          <select formControlName="sanRequired" class="form-control" required>
+          <select formControlName="sanRequired" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }">
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.sanRequired.errors" class="invalid-feedback">
+            <div *ngIf="f.sanRequired.errors.required">SAN Required? is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-4">
@@ -127,8 +148,11 @@
             type="number"
             class="form-control"
             formControlName="sanStorageSize"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"
           />
+          <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
+            <div *ngIf="f.sanStorageSize.errors.required">SAN Storage Size is required</div>
+          </div>
         </div>
       </div>
 
@@ -137,12 +161,7 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
+        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
           Cancel
         </button>
 
