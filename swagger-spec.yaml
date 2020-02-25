@@ -11485,12 +11485,15 @@ definitions:
     properties:
       datacenterId:
         type: string
+      tierId:
+        type: string
       firewallRules:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
     required:
       - datacenterId
+      - tierId
       - firewallRules
   GeneratedServiceObjectGroupBulkDto:
     type: object

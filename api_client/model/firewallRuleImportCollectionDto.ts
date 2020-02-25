@@ -14,6 +14,7 @@ import { FirewallRuleImport } from './firewallRuleImport';
 
 export interface FirewallRuleImportCollectionDto { 
     datacenterId: string;
+    tierId: string;
     firewallRules: Array<FirewallRuleImport>;
 }
 
