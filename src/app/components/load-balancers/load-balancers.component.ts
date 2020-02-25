@@ -197,97 +197,55 @@ export class LoadBalancersComponent
     }
   }
 
-  importLoadBalancerConfig(event) {
-    // Should map navIndex to name of tab for better messaging here
-    const modalDto = new YesNoModalDto(
-      'Import Load Balancer Configuration',
-      `Are you sure you would like to import ${event.length} configuration${
-        event.length > 1 ? 's' : ''
-      }?`,
-    );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+  importLoadBalancerConfig(data) {
+    // TODO: Display modal indicating the number of entities that will
+    // be imported.
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const modalData = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (modalData && modalData.modalYes) {
-          let dto = event;
-          dto = this.sanitizeData(event);
-          console.log(dto);
-          this.importConfig(dto);
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
-  }
+    // TODO: Display more descriptive error message when import fails.
 
-  sanitizeData(entities: any) {
-    return entities.map(entity => {
-      this.mapCsv(entity);
-      return entity;
-    });
-  }
-
-  mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false' || val === 'f') {
-        obj[key] = false;
-      }
-      if (val === 'true' || val === 't') {
-        obj[key] = true;
-      }
-      if (val === null || val === '') {
-        delete obj[key];
-      }
-    });
-    return obj;
-    // tslint:disable-next-line: semicolon
-  };
-
-  importConfig(data) {
+    // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
-        this.virtualServersService
-          .v1LoadBalancerVirtualServersBulkPost({
-            generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
-          })
-          .subscribe(data => this.getObjectsForNavIndex());
+        this.virtualServersService.v1LoadBalancerVirtualServersBulkPost({
+          generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
+        });
         break;
       case 1:
-        console.log(data);
-        this.poolsService
-          .v1LoadBalancerPoolsBulkPost({
-            generatedLoadBalancerPoolBulkDto: { bulk: data },
-          })
-          .subscribe(data => this.getObjectsForNavIndex());
+        this.poolsService.v1LoadBalancerPoolsBulkPost({
+          generatedLoadBalancerPoolBulkDto: { bulk: data },
+        });
         break;
       case 2:
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
             generatedLoadBalancerNodeBulkDto: { bulk: data },
           })
-          .subscribe(data => this.getObjectsForNavIndex());
-
+          .subscribe(result => {
+            this.getHealthMonitors();
+          });
         break;
       case 3:
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: data },
           })
-          .subscribe(data => this.getObjectsForNavIndex());
-
+          .subscribe(result => {
+            this.getIrules();
+          });
         break;
       case 4:
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
             generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
           })
-          .subscribe(data => this.getObjectsForNavIndex());
+          .subscribe(result => {
+            this.getHealthMonitors();
+          });
         break;
       default:
         break;
+
+      // TODO: Bulk Import of Policies and Profiles
     }
   }
 
