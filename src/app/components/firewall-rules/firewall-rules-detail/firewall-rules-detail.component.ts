@@ -41,6 +41,8 @@ export class FirewallRulesDetailComponent
 
   perPage = 50;
 
+  dirty = false;
+
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
