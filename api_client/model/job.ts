@@ -19,5 +19,6 @@ export interface Job {
     createdAt?: object;
     updatedAt?: object;
     completedAt?: object;
+    datacenterId: string;
 }
 

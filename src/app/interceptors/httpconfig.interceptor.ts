@@ -67,21 +67,6 @@ export class HttpConfigInterceptor {
     }
 
     if (
-      request.params.get('sort') &&
-      request.params.get('sort').split(',').length > 1
-    ) {
-      const queryStingReplacement = request.params
-        .get('sort')
-        .split(',')
-        .join('&sort=');
-      const requestUrl = `${request.url}?sort=${queryStingReplacement}`;
-      request = request.clone({
-        url: requestUrl,
-        params: request.params.delete('sort'),
-      });
-    }
-
-    if (
       request.params.get('filter') &&
       request.params.get('filter').split(',').length > 1
     ) {
