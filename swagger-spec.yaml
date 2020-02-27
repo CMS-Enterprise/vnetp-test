@@ -7948,6 +7948,24 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/load-balancer/pools/bulk-import:
+    post:
+      summary: Bulk Import Firewall Rules
+      parameters:
+        - name: PoolImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/PoolImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_30
+        - v1/load-balancer/pools
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/pools:
     get:
       summary: Retrieve many LoadBalancerPool
@@ -8088,8 +8106,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPool'
-      tags: &ref_30
-        - v1/load-balancer/pools
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8212,27 +8229,6 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_30
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/pools/bulk:
-    post:
-      summary: Create many LoadBalancerPool
-      parameters:
-        - name: GeneratedLoadBalancerPoolBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerPoolBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
       tags: *ref_30
       produces:
         - application/json
@@ -10860,7 +10856,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum:
+        enum: &ref_43
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -11485,15 +11481,12 @@ definitions:
     properties:
       datacenterId:
         type: string
-      tierId:
-        type: string
       firewallRules:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
     required:
       - datacenterId
-      - tierId
       - firewallRules
   GeneratedServiceObjectGroupBulkDto:
     type: object
@@ -11690,15 +11683,94 @@ definitions:
           $ref: '#/definitions/LoadBalancerPolicy'
     required:
       - bulk
-  GeneratedLoadBalancerPoolBulkDto:
+  PoolImport:
     type: object
     properties:
-      bulk:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      loadBalancingMethod:
+        type: string
+        enum: *ref_43
+      nodes:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerNode'
+      healthMonitors:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerHealthMonitor'
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      tierId:
+        type: string
+      vrfName:
+        type: string
+      healthMonitorNames:
         type: array
         items:
-          $ref: '#/definitions/LoadBalancerPool'
+          type: string
+      nodeNames:
+        type: array
+        items:
+          type: string
     required:
-      - bulk
+      - name
+      - loadBalancingMethod
+      - servicePort
+      - tierId
+      - vrfName
+      - healthMonitorNames
+      - nodeNames
+  PoolImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      pools:
+        type: array
+        items:
+          $ref: '#/definitions/PoolImport'
+    required:
+      - datacenterId
+      - pools
   GeneratedLoadBalancerHealthMonitorBulkDto:
     type: object
     properties:
