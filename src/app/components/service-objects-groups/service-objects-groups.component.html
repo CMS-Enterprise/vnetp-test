@@ -32,6 +32,11 @@
         <tooltip [message]="helpText.ServiceObjects"></tooltip
       ></a>
     </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
+        >Service Object Group Relations
+      </a>
+    </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
@@ -167,7 +172,18 @@
     </table>
     <pagination-controls (pageChange)="currentServiceObjectGroupsPage = $event"></pagination-controls>
   </div>
-  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+
+  <div *ngIf="navIndex == 2">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Click the import CSV button to add service object group relations</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex !== 2" class="btn-toolbar" role="toolbar" aria-label="Entities per page">
     <div class="btn-group mr-2" role="group" aria-label="First group">
       Entities per page
       <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
@@ -185,6 +201,10 @@
 <div *ngIf="navIndex === 1" class="pull-right">
   <app-import-export [exportObject]="serviceObjectGroups" exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
     [disableJson]="false" (import)="importServiceObjectGroupsConfig($event)"></app-import-export>
+</div>
+
+<div *ngIf="navIndex === 2" class="pull-right">
+  <app-import-export [disableExport]="true" [disableJson]="false" (import)="importServiceObjectGroupRelationsConfig($event)"></app-import-export>
 </div>
 
 <app-service-object-group-modal></app-service-object-group-modal>

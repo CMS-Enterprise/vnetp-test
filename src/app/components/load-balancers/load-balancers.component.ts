@@ -24,7 +24,6 @@ import {
   LoadBalancerProfile,
   LoadBalancerPolicy,
   V1LoadBalancerPoliciesService,
-  PoolImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -214,14 +213,14 @@ export class LoadBalancersComponent
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 1:
-        const poolDto = {} as PoolImportCollectionDto;
-        poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        poolDto.pools = this.sanitizeData(data);
-        this.poolsService
-          .v1LoadBalancerPoolsBulkImportPost({
-            poolImportCollectionDto: poolDto,
-          })
-          .subscribe(results => this.getObjectsForNavIndex());
+        // const poolDto = {} as PoolImportCollectionDto;
+        // poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        // poolDto.pools = this.sanitizeData(data);
+        // this.poolsService
+        //   .v1LoadBalancerPoolsBulkImportPost({
+        //     poolImportCollectionDto: poolDto,
+        //   })
+        //   .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
         this.nodeService

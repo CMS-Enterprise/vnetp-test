@@ -23,7 +23,7 @@ export interface ServiceObjectGroup {
     name: string;
     description?: string;
     type: ServiceObjectGroupType;
-    readonly serviceObjects?: Array<ServiceObject>;
+    serviceObjects?: Array<ServiceObject>;
     tierId: string;
 }
 export enum ServiceObjectGroupType {
