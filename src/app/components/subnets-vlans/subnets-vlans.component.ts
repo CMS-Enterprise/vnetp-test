@@ -310,15 +310,6 @@ export class SubnetsVlansComponent
       });
   }
 
-  sanitizeData(entities: any) {
-    return entities.map(entity => {
-      if (entity.vlanNumber) {
-        entity.vlanNumber = Number(entity.vlanNumber);
-      }
-      return entity;
-    });
-  }
-
   getObjectsForNavIndex() {
     if (!this.currentTier) {
       return;
