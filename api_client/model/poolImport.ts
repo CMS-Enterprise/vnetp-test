@@ -24,8 +24,8 @@ export interface PoolImport {
     name: string;
     description?: string;
     loadBalancingMethod: PoolImportLoadBalancingMethod;
-    readonly nodes?: Array<LoadBalancerNode>;
-    readonly healthMonitors?: Array<LoadBalancerHealthMonitor>;
+    nodes?: Array<LoadBalancerNode>;
+    healthMonitors?: Array<LoadBalancerHealthMonitor>;
     servicePort: number;
     tierId: string;
     vrfName: string;

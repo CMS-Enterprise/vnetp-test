@@ -283,12 +283,18 @@ export class LoadBalancersComponent
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
       if (key === 'healthMonitorNames') {
-        console.log(val);
+        const stringArray = val as string;
+        obj[key] = this.createHMArray(stringArray);
+        console.log(obj[key]);
       }
     });
     return obj;
     // tslint:disable-next-line: semicolon
   };
+
+  createHMArray(hmNames: string) {
+    return hmNames.replace(/[\[\]']+/g, '').split(',');
+  }
 
   getPoolName = (poolId: string) => {
     return this.pools.find(p => p.id === poolId).name || 'Error Resolving Name';

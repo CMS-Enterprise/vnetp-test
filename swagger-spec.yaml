@@ -10863,12 +10863,10 @@ definitions:
           - FastestAppResponse
       nodes:
         type: array
-        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerNode'
       healthMonitors:
         type: array
-        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
       servicePort:
@@ -11727,12 +11725,10 @@ definitions:
         enum: *ref_43
       nodes:
         type: array
-        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerNode'
       healthMonitors:
         type: array
-        readOnly: true
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
       servicePort:
