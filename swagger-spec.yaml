@@ -4003,6 +4003,24 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/network/subnets/bulk-import:
+    post:
+      summary: Bulk Import Subnets
+      parameters:
+        - name: SubnetImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/SubnetImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_15
+        - v1/network/subnets
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/network/subnets:
     get:
       summary: Retrieve many Subnet
@@ -4143,8 +4161,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: &ref_15
-        - v1/network/subnets
+      tags: *ref_15
       produces:
         - application/json
       consumes:
@@ -4267,27 +4284,6 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_15
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/network/subnets/bulk:
-    post:
-      summary: Create many Subnet
-      parameters:
-        - name: GeneratedSubnetBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedSubnetBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Subnet'
       tags: *ref_15
       produces:
         - application/json
@@ -11485,15 +11481,12 @@ definitions:
     properties:
       datacenterId:
         type: string
-      tierId:
-        type: string
       firewallRules:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
     required:
       - datacenterId
-      - tierId
       - firewallRules
   GeneratedServiceObjectGroupBulkDto:
     type: object
@@ -11540,15 +11533,74 @@ definitions:
           $ref: '#/definitions/Vlan'
     required:
       - bulk
-  GeneratedSubnetBulkDto:
+  SubnetImport:
     type: object
     properties:
-      bulk:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      network:
+        type: string
+      gateway:
+        type: string
+      vlanId:
+        type: string
+      tierId:
+        type: string
+      vrfName:
+        type: string
+    required:
+      - name
+      - network
+      - gateway
+      - vlanId
+      - tierId
+      - vrfName
+  SubnetImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      subnets:
         type: array
         items:
-          $ref: '#/definitions/Subnet'
+          $ref: '#/definitions/SubnetImport'
     required:
-      - bulk
+      - datacenterId
+      - subnets
   GeneratedStaticRouteBulkDto:
     type: object
     properties:

@@ -11,6 +11,8 @@ import {
   Vlan,
   V1NetworkSubnetsService,
   V1NetworkVlansService,
+  SubnetImportCollectionDto,
+  SubnetImport,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
@@ -249,7 +251,6 @@ export class SubnetsVlansComponent
   }
 
   importSubnetConfig(event: Subnet[]) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Subnets',
       `Are you sure you would like to import ${event.length} subnet${
@@ -265,13 +266,13 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
+          const fwDto = {} as SubnetImportCollectionDto;
+          fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+          fwDto.subnets = event as SubnetImport[];
+
           this.subnetService
-            .v1NetworkSubnetsBulkPost({
-              generatedSubnetBulkDto: { bulk: dto },
+            .v1NetworkSubnetsBulkImportPost({
+              subnetImportCollectionDto: fwDto,
             })
             .subscribe(data => {
               this.getVlans(true);
@@ -283,7 +284,6 @@ export class SubnetsVlansComponent
   }
 
   importVlansConfig(event: Vlan[]) {
-    this.showRadio = true;
     const modalDto = new YesNoModalDto(
       'Import Vlans',
       `Are you sure you would like to import ${event.length} vlan${
@@ -299,12 +299,8 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          let dto = event;
-          if (modalData.allowTierChecked) {
-            dto = this.sanitizeData(event);
-          }
           this.vlanService
-            .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: dto } })
+            .v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } })
             .subscribe(data => {
               this.getVlans();
             });
@@ -318,9 +314,6 @@ export class SubnetsVlansComponent
     return entities.map(entity => {
       if (entity.vlanNumber) {
         entity.vlanNumber = Number(entity.vlanNumber);
-      }
-      if (!entity.tierId) {
-        entity.tierId = this.currentTier.id;
       }
       return entity;
     });

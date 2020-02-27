@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FirewallRuleImport } from './firewallRuleImport';
+import { SubnetImport } from './subnetImport';
 
 
-export interface FirewallRuleImportCollectionDto { 
+export interface SubnetImportCollectionDto { 
     datacenterId: string;
-    firewallRules: Array<FirewallRuleImport>;
+    subnets: Array<SubnetImport>;
 }
 
