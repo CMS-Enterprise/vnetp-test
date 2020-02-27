@@ -266,13 +266,13 @@ export class SubnetsVlansComponent
         const modalData = modal.getData() as YesNoModalDto;
         modal.removeData();
         if (modalData && modalData.modalYes) {
-          const fwDto = {} as SubnetImportCollectionDto;
-          fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-          fwDto.subnets = event as SubnetImport[];
+          const subnetsDto = {} as SubnetImportCollectionDto;
+          subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+          subnetsDto.subnets = event as SubnetImport[];
 
           this.subnetService
             .v1NetworkSubnetsBulkImportPost({
-              subnetImportCollectionDto: fwDto,
+              subnetImportCollectionDto: subnetsDto,
             })
             .subscribe(data => {
               this.getVlans(true);
