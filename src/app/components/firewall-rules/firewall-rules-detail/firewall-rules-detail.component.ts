@@ -62,7 +62,7 @@ export class FirewallRulesDetailComponent
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
+    return !this.dirty;
   }
 
   constructor(
