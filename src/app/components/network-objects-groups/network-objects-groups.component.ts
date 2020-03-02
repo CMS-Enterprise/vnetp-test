@@ -402,7 +402,7 @@ export class NetworkObjectsGroupsComponent
       if (key === 'ipAddress') {
         obj[key] = String(val).trim();
       }
-      if (key === 'vrf_name') {
+      if (key === 'vrf_name' || key === 'vrfName') {
         obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];
