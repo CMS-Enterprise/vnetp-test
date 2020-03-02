@@ -19,10 +19,15 @@ import { Observable }                                        from 'rxjs';
 
 import { GeneratedServiceObjectGroupBulkDto } from '../model/generatedServiceObjectGroupBulkDto';
 import { ServiceObjectGroup } from '../model/serviceObjectGroup';
+import { ServiceObjectGroupRelationBulkImportCollectionDto } from '../model/serviceObjectGroupRelationBulkImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
+
+export interface V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams {
+    serviceObjectGroupRelationBulkImportCollectionDto: ServiceObjectGroupRelationBulkImportCollectionDto;
+}
 
 export interface V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams {
     generatedServiceObjectGroupBulkDto: GeneratedServiceObjectGroupBulkDto;
@@ -116,6 +121,52 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
 
+
+    /**
+     * Bulk Import Service Object Group to Service Object Relationships
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const serviceObjectGroupRelationBulkImportCollectionDto = requestParameters.serviceObjectGroupRelationBulkImportCollectionDto;
+        if (serviceObjectGroupRelationBulkImportCollectionDto === null || serviceObjectGroupRelationBulkImportCollectionDto === undefined) {
+            throw new Error('Required parameter serviceObjectGroupRelationBulkImportCollectionDto was null or undefined when calling v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/bulk-import-relations`,
+            serviceObjectGroupRelationBulkImportCollectionDto,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
     /**
      * Create many ServiceObjectGroup

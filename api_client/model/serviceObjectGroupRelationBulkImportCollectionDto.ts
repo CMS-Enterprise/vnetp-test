@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FirewallRuleImport } from './firewallRuleImport';
+import { ServiceObjectGroupRelationBulkImportDto } from './serviceObjectGroupRelationBulkImportDto';
 
 
-export interface FirewallRuleImportCollectionDto { 
+export interface ServiceObjectGroupRelationBulkImportCollectionDto { 
     datacenterId: string;
-    firewallRules: Array<FirewallRuleImport>;
+    serviceObjectRelations: Array<ServiceObjectGroupRelationBulkImportDto>;
 }
 

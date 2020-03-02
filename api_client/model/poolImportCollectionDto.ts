@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FirewallRuleImport } from './firewallRuleImport';
+import { PoolImport } from './poolImport';
 
 
-export interface FirewallRuleImportCollectionDto { 
+export interface PoolImportCollectionDto { 
     datacenterId: string;
-    firewallRules: Array<FirewallRuleImport>;
+    pools: Array<PoolImport>;
 }
 

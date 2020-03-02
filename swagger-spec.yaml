@@ -1941,6 +1941,23 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/network-security/service-object-groups/bulk-import-relations:
+    post:
+      summary: Bulk Import Service Object Group to Service Object Relationships
+      parameters:
+        - name: ServiceObjectGroupRelationBulkImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ServiceObjectGroupRelationBulkImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/network-security/service-objects:
     get:
       summary: Retrieve many ServiceObject
@@ -2696,6 +2713,23 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
+      tags: *ref_9
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/network-security/network-object-groups/bulk-import-relations:
+    post:
+      summary: Bulk Import Network Object Group to Network Object Relationships
+      parameters:
+        - name: NetworkObjectGroupRelationBulkImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/NetworkObjectGroupRelationBulkImportCollectionDto'
+      responses:
+        '201':
+          description: ''
       tags: *ref_9
       produces:
         - application/json
@@ -10484,7 +10518,6 @@ definitions:
           - TCPUDP
       serviceObjects:
         type: array
-        readOnly: true
         items:
           $ref: '#/definitions/ServiceObject'
       tierId:
@@ -11485,15 +11518,12 @@ definitions:
     properties:
       datacenterId:
         type: string
-      tierId:
-        type: string
       firewallRules:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
     required:
       - datacenterId
-      - tierId
       - firewallRules
   GeneratedServiceObjectGroupBulkDto:
     type: object
@@ -11504,6 +11534,35 @@ definitions:
           $ref: '#/definitions/ServiceObjectGroup'
     required:
       - bulk
+  ServiceObjectGroupRelationBulkImportDto:
+    type: object
+    properties:
+      serviceObjectGroupId:
+        type: string
+        description: >-
+          Service Object Group that the Service Object is being added to/removed
+          from.
+      serviceObjectId:
+        type: string
+        description: Service Object that is being added or removed from group membership.
+      vrfName:
+        type: string
+    required:
+      - serviceObjectGroupId
+      - serviceObjectId
+      - vrfName
+  ServiceObjectGroupRelationBulkImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      serviceObjectRelations:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceObjectGroupRelationBulkImportDto'
+    required:
+      - datacenterId
+      - serviceObjectRelations
   GeneratedServiceObjectBulkDto:
     type: object
     properties:
@@ -11522,6 +11581,35 @@ definitions:
           $ref: '#/definitions/NetworkObjectGroup'
     required:
       - bulk
+  NetworkObjectGroupRelationBulkImportDto:
+    type: object
+    properties:
+      networkObjectGroupId:
+        type: string
+        description: >-
+          Network Object Group that the Network Object is being added to/removed
+          from.
+      networkObjectId:
+        type: string
+        description: Network Object that is being added or removed from group membership.
+      vrfName:
+        type: string
+    required:
+      - networkObjectGroupId
+      - networkObjectId
+      - vrfName
+  NetworkObjectGroupRelationBulkImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      networkObjectRelations:
+        type: array
+        items:
+          $ref: '#/definitions/NetworkObjectGroupRelationBulkImportDto'
+    required:
+      - datacenterId
+      - networkObjectRelations
   GeneratedNetworkObjectBulkDto:
     type: object
     properties:

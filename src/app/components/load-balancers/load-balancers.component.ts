@@ -206,41 +206,42 @@ export class LoadBalancersComponent
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
-        this.virtualServersService.v1LoadBalancerVirtualServersBulkPost({
-          generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
-        });
+        this.virtualServersService
+          .v1LoadBalancerVirtualServersBulkPost({
+            generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
+          })
+          .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 1:
-        this.poolsService.v1LoadBalancerPoolsBulkPost({
-          generatedLoadBalancerPoolBulkDto: { bulk: data },
-        });
+        // const poolDto = {} as PoolImportCollectionDto;
+        // poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        // poolDto.pools = this.sanitizeData(data);
+        // this.poolsService
+        //   .v1LoadBalancerPoolsBulkImportPost({
+        //     poolImportCollectionDto: poolDto,
+        //   })
+        //   .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
             generatedLoadBalancerNodeBulkDto: { bulk: data },
           })
-          .subscribe(result => {
-            this.getHealthMonitors();
-          });
+          .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 3:
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: data },
           })
-          .subscribe(result => {
-            this.getIrules();
-          });
+          .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
             generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
           })
-          .subscribe(result => {
-            this.getHealthMonitors();
-          });
+          .subscribe(result => this.getObjectsForNavIndex());
         break;
       default:
         break;
@@ -269,6 +270,29 @@ export class LoadBalancersComponent
       default:
         break;
     }
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapCsv(entity);
+      return entity;
+    });
+  }
+
+  mapCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (key === 'healthMonitorNames') {
+        const stringArray = val as string;
+        obj[key] = this.createHMArray(stringArray);
+        console.log(obj[key]);
+      }
+    });
+    return obj;
+    // tslint:disable-next-line: semicolon
+  };
+
+  createHMArray(hmNames: string) {
+    return hmNames.replace(/[\[\]']+/g, '').split(',');
   }
 
   getPoolName = (poolId: string) => {
