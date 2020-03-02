@@ -37,6 +37,8 @@ export * from './loadBalancerProfile';
 export * from './loadBalancerVirtualServer';
 export * from './networkObject';
 export * from './networkObjectGroup';
+export * from './networkObjectGroupRelationBulkImportCollectionDto';
+export * from './networkObjectGroupRelationBulkImportDto';
 export * from './physicalServer';
 export * from './physicalServerNetworkPort';
 export * from './serviceObject';
