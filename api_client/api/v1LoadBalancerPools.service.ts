@@ -17,17 +17,17 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneratedLoadBalancerPoolBulkDto } from '../model/generatedLoadBalancerPoolBulkDto';
 import { LoadBalancerHealthMonitor } from '../model/loadBalancerHealthMonitor';
 import { LoadBalancerNode } from '../model/loadBalancerNode';
 import { LoadBalancerPool } from '../model/loadBalancerPool';
+import { PoolImportCollectionDto } from '../model/poolImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1LoadBalancerPoolsBulkPostRequestParams {
-    generatedLoadBalancerPoolBulkDto: GeneratedLoadBalancerPoolBulkDto;
+export interface V1LoadBalancerPoolsBulkImportPostRequestParams {
+    poolImportCollectionDto: PoolImportCollectionDto;
 }
 
 export interface V1LoadBalancerPoolsGetRequestParams {
@@ -130,25 +130,24 @@ export class V1LoadBalancerPoolsService {
 
 
     /**
-     * Create many LoadBalancerPool
+     * Bulk Import Pools
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsBulkPost(requestParameters: V1LoadBalancerPoolsBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsBulkPost(requestParameters: V1LoadBalancerPoolsBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LoadBalancerPool>>>;
-    public v1LoadBalancerPoolsBulkPost(requestParameters: V1LoadBalancerPoolsBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LoadBalancerPool>>>;
-    public v1LoadBalancerPoolsBulkPost(requestParameters: V1LoadBalancerPoolsBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const generatedLoadBalancerPoolBulkDto = requestParameters.generatedLoadBalancerPoolBulkDto;
-        if (generatedLoadBalancerPoolBulkDto === null || generatedLoadBalancerPoolBulkDto === undefined) {
-            throw new Error('Required parameter generatedLoadBalancerPoolBulkDto was null or undefined when calling v1LoadBalancerPoolsBulkPost.');
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const poolImportCollectionDto = requestParameters.poolImportCollectionDto;
+        if (poolImportCollectionDto === null || poolImportCollectionDto === undefined) {
+            throw new Error('Required parameter poolImportCollectionDto was null or undefined when calling v1LoadBalancerPoolsBulkImportPost.');
         }
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
-            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -165,8 +164,8 @@ export class V1LoadBalancerPoolsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<LoadBalancerPool>>(`${this.configuration.basePath}/v1/load-balancer/pools/bulk`,
-            generatedLoadBalancerPoolBulkDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/load-balancer/pools/bulk-import`,
+            poolImportCollectionDto,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

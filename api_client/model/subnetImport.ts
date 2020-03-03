@@ -9,10 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
 
 
-export interface LoadBalancerIrule { 
+export interface SubnetImport { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -22,8 +21,10 @@ export interface LoadBalancerIrule {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    content: string;
-    readonly virtualServers?: Array<LoadBalancerVirtualServer>;
+    network: string;
+    gateway: string;
+    vlanId: string;
     tierId: string;
+    vrfName: string;
 }
 

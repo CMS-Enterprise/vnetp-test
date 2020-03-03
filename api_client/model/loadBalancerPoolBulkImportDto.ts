@@ -13,7 +13,7 @@ import { LoadBalancerNode } from './loadBalancerNode';
 import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
 
 
-export interface LoadBalancerPool { 
+export interface LoadBalancerPoolBulkImportDto { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -23,13 +23,16 @@ export interface LoadBalancerPool {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
+    loadBalancingMethod: LoadBalancerPoolBulkImportDtoLoadBalancingMethod;
     nodes?: Array<LoadBalancerNode>;
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
     servicePort: number;
     tierId: string;
+    vrfName: string;
+    healthMonitorNames: Array<string>;
+    nodeNames: Array<string>;
 }
-export enum LoadBalancerPoolLoadBalancingMethod {
+export enum LoadBalancerPoolBulkImportDtoLoadBalancingMethod {
     RoundRobin = 'RoundRobin',
     LeastSessions = 'LeastSessions',
     FastestNode = 'FastestNode',

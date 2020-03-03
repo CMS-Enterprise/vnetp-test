@@ -96,7 +96,7 @@ export class IRuleModalComponent implements OnInit {
       }
     }
 
-    if (dto !== undefined) {
+    if (dto !== undefined && dto.irule) {
       this.form.controls.name.setValue(dto.irule.name);
       this.form.controls.name.disable();
       this.form.controls.content.setValue(dto.irule.content);
@@ -109,28 +109,22 @@ export class IRuleModalComponent implements OnInit {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.iruleService
-            .v1LoadBalancerIrulesIdDelete({ id: irule.id })
-            .subscribe(() => {
-              this.getIrules();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.iruleService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(() => {
+          this.getIrules();
+        });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private getIrules() {
-    this.iruleService
-      .v1LoadBalancerIrulesIdGet({ id: this.IruleId })
-      .subscribe(data => {
-        this.Irule = data;
-      });
+    this.iruleService.v1LoadBalancerIrulesIdGet({ id: this.IruleId }).subscribe(data => {
+      this.Irule = data;
+    });
   }
 
   private buildForm() {
