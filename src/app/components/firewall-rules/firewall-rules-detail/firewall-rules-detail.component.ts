@@ -305,10 +305,10 @@ export class FirewallRulesDetailComponent
 
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'FALSE' || val === 'false' || val === 'f') {
+      if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         obj[key] = false;
       }
-      if (val === 'TRUE' || val === 'true' || val === 't') {
+      if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
         obj[key] = true;
       }
       if (val === null || val === '') {
