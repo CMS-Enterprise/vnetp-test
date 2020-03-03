@@ -96,7 +96,7 @@ export class IRuleModalComponent implements OnInit {
       }
     }
 
-    if (dto !== undefined) {
+    if (dto !== undefined && dto.irule) {
       this.form.controls.name.setValue(dto.irule.name);
       this.form.controls.name.disable();
       this.form.controls.content.setValue(dto.irule.content);

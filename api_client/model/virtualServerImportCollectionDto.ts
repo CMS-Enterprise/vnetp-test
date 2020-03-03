@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerPoolBulkImportDto } from './loadBalancerPoolBulkImportDto';
+import { VirtualServerImportDto } from './virtualServerImportDto';
 
 
-export interface PoolImportCollectionDto { 
+export interface VirtualServerImportCollectionDto { 
     datacenterId: string;
-    pools: Array<LoadBalancerPoolBulkImportDto>;
+    virtualServers: Array<VirtualServerImportDto>;
 }
 

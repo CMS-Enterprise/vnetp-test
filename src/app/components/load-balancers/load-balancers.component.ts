@@ -24,6 +24,8 @@ import {
   LoadBalancerProfile,
   LoadBalancerPolicy,
   V1LoadBalancerPoliciesService,
+  PoolImportCollectionDto,
+  VirtualServerImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -206,21 +208,24 @@ export class LoadBalancersComponent
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
+        const virtualServerDto = {} as VirtualServerImportCollectionDto;
+        virtualServerDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        virtualServerDto.virtualServers = this.sanitizeData(data);
         this.virtualServersService
-          .v1LoadBalancerVirtualServersBulkPost({
-            generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
+          .v1LoadBalancerVirtualServersBulkImportPost({
+            virtualServerImportCollectionDto: virtualServerDto,
           })
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 1:
-        // const poolDto = {} as PoolImportCollectionDto;
-        // poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        // poolDto.pools = this.sanitizeData(data);
-        // this.poolsService
-        //   .v1LoadBalancerPoolsBulkImportPost({
-        //     poolImportCollectionDto: poolDto,
-        //   })
-        //   .subscribe(results => this.getObjectsForNavIndex());
+        const poolDto = {} as PoolImportCollectionDto;
+        poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        poolDto.pools = this.sanitizeData(data);
+        this.poolsService
+          .v1LoadBalancerPoolsBulkImportPost({
+            poolImportCollectionDto: poolDto,
+          })
+          .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
         this.nodeService
@@ -281,18 +286,26 @@ export class LoadBalancersComponent
 
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames') {
+      if (
+        key === 'healthMonitorNames' ||
+        key === 'nodeNames' ||
+        key === 'iruleNames' ||
+        key === 'policyNames' ||
+        key === 'profileNames'
+      ) {
         const stringArray = val as string;
-        obj[key] = this.createHMArray(stringArray);
-        console.log(obj[key]);
+        obj[key] = this.createAndFormatArray(stringArray);
       }
     });
     return obj;
     // tslint:disable-next-line: semicolon
   };
 
-  createHMArray(hmNames: string) {
-    return hmNames.replace(/[\[\]']+/g, '').split(',');
+  createAndFormatArray(names: string) {
+    return names
+      .replace(/[\[\]']+/g, '')
+      .split(',')
+      .map(name => name.trim());
   }
 
   getPoolName = (poolId: string) => {

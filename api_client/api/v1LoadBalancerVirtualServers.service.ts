@@ -17,15 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneratedLoadBalancerVirtualServerBulkDto } from '../model/generatedLoadBalancerVirtualServerBulkDto';
 import { LoadBalancerVirtualServer } from '../model/loadBalancerVirtualServer';
+import { VirtualServerImportCollectionDto } from '../model/virtualServerImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1LoadBalancerVirtualServersBulkPostRequestParams {
-    generatedLoadBalancerVirtualServerBulkDto: GeneratedLoadBalancerVirtualServerBulkDto;
+export interface V1LoadBalancerVirtualServersBulkImportPostRequestParams {
+    virtualServerImportCollectionDto: VirtualServerImportCollectionDto;
 }
 
 export interface V1LoadBalancerVirtualServersGetRequestParams {
@@ -138,25 +138,24 @@ export class V1LoadBalancerVirtualServersService {
 
 
     /**
-     * Create many LoadBalancerVirtualServer
+     * Bulk Import Virtual Servers
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerVirtualServersBulkPost(requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<LoadBalancerVirtualServer>>;
-    public v1LoadBalancerVirtualServersBulkPost(requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LoadBalancerVirtualServer>>>;
-    public v1LoadBalancerVirtualServersBulkPost(requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LoadBalancerVirtualServer>>>;
-    public v1LoadBalancerVirtualServersBulkPost(requestParameters: V1LoadBalancerVirtualServersBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const generatedLoadBalancerVirtualServerBulkDto = requestParameters.generatedLoadBalancerVirtualServerBulkDto;
-        if (generatedLoadBalancerVirtualServerBulkDto === null || generatedLoadBalancerVirtualServerBulkDto === undefined) {
-            throw new Error('Required parameter generatedLoadBalancerVirtualServerBulkDto was null or undefined when calling v1LoadBalancerVirtualServersBulkPost.');
+    public v1LoadBalancerVirtualServersBulkImportPost(requestParameters: V1LoadBalancerVirtualServersBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1LoadBalancerVirtualServersBulkImportPost(requestParameters: V1LoadBalancerVirtualServersBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1LoadBalancerVirtualServersBulkImportPost(requestParameters: V1LoadBalancerVirtualServersBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1LoadBalancerVirtualServersBulkImportPost(requestParameters: V1LoadBalancerVirtualServersBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const virtualServerImportCollectionDto = requestParameters.virtualServerImportCollectionDto;
+        if (virtualServerImportCollectionDto === null || virtualServerImportCollectionDto === undefined) {
+            throw new Error('Required parameter virtualServerImportCollectionDto was null or undefined when calling v1LoadBalancerVirtualServersBulkImportPost.');
         }
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
-            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -173,8 +172,8 @@ export class V1LoadBalancerVirtualServersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<LoadBalancerVirtualServer>>(`${this.configuration.basePath}/v1/load-balancer/virtual-servers/bulk`,
-            generatedLoadBalancerVirtualServerBulkDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/load-balancer/virtual-servers/bulk-import`,
+            virtualServerImportCollectionDto,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
