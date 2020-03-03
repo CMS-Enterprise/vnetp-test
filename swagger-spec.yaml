@@ -1941,6 +1941,23 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/network-security/service-object-groups/bulk-import-relations:
+    post:
+      summary: Bulk Import Service Object Group to Service Object Relationships
+      parameters:
+        - name: ServiceObjectGroupRelationBulkImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ServiceObjectGroupRelationBulkImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/network-security/service-objects:
     get:
       summary: Retrieve many ServiceObject
@@ -2696,6 +2713,23 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
+      tags: *ref_9
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/network-security/network-object-groups/bulk-import-relations:
+    post:
+      summary: Bulk Import Network Object Group to Network Object Relationships
+      parameters:
+        - name: NetworkObjectGroupRelationBulkImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/NetworkObjectGroupRelationBulkImportCollectionDto'
+      responses:
+        '201':
+          description: ''
       tags: *ref_9
       produces:
         - application/json
@@ -6388,6 +6422,24 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/load-balancer/virtual-servers/bulk-import:
+    post:
+      summary: Bulk Import Virtual Servers
+      parameters:
+        - name: VirtualServerImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/VirtualServerImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_23
+        - v1/load-balancer/virtual-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/virtual-servers:
     get:
       summary: Retrieve many LoadBalancerVirtualServer
@@ -6528,8 +6580,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_23
-        - v1/load-balancer/virtual-servers
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6652,27 +6703,6 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_23
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/load-balancer/virtual-servers/bulk:
-    post:
-      summary: Create many LoadBalancerVirtualServer
-      parameters:
-        - name: GeneratedLoadBalancerVirtualServerBulkDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/GeneratedLoadBalancerVirtualServerBulkDto'
-      responses:
-        '201':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerVirtualServer'
       tags: *ref_23
       produces:
         - application/json
@@ -7950,7 +7980,7 @@ paths:
         - application/json
   /v1/load-balancer/pools/bulk-import:
     post:
-      summary: Bulk Import Firewall Rules
+      summary: Bulk Import Pools
       parameters:
         - name: PoolImportCollectionDto
           required: true
@@ -10856,7 +10886,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_43
+        enum: &ref_45
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -11062,13 +11092,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum:
+        enum: &ref_43
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum:
+        enum: &ref_44
           - Standard
       servicePort:
         type: number
@@ -11495,6 +11525,35 @@ definitions:
           $ref: '#/definitions/ServiceObjectGroup'
     required:
       - bulk
+  ServiceObjectGroupRelationBulkImportDto:
+    type: object
+    properties:
+      serviceObjectGroupId:
+        type: string
+        description: >-
+          Service Object Group that the Service Object is being added to/removed
+          from.
+      serviceObjectId:
+        type: string
+        description: Service Object that is being added or removed from group membership.
+      vrfName:
+        type: string
+    required:
+      - serviceObjectGroupId
+      - serviceObjectId
+      - vrfName
+  ServiceObjectGroupRelationBulkImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      serviceObjectRelations:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceObjectGroupRelationBulkImportDto'
+    required:
+      - datacenterId
+      - serviceObjectRelations
   GeneratedServiceObjectBulkDto:
     type: object
     properties:
@@ -11513,6 +11572,35 @@ definitions:
           $ref: '#/definitions/NetworkObjectGroup'
     required:
       - bulk
+  NetworkObjectGroupRelationBulkImportDto:
+    type: object
+    properties:
+      networkObjectGroupId:
+        type: string
+        description: >-
+          Network Object Group that the Network Object is being added to/removed
+          from.
+      networkObjectId:
+        type: string
+        description: Network Object that is being added or removed from group membership.
+      vrfName:
+        type: string
+    required:
+      - networkObjectGroupId
+      - networkObjectId
+      - vrfName
+  NetworkObjectGroupRelationBulkImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      networkObjectRelations:
+        type: array
+        items:
+          $ref: '#/definitions/NetworkObjectGroupRelationBulkImportDto'
+    required:
+      - datacenterId
+      - networkObjectRelations
   GeneratedNetworkObjectBulkDto:
     type: object
     properties:
@@ -11645,15 +11733,121 @@ definitions:
           $ref: '#/definitions/Appliance'
     required:
       - bulk
-  GeneratedLoadBalancerVirtualServerBulkDto:
+  VirtualServerImportDto:
     type: object
     properties:
-      bulk:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      description:
+        type: string
+        maxLength: 500
+      sourceIpAddress:
+        type: string
+      destinationIpAddress:
+        type: string
+      defaultPoolId:
+        type: string
+      defaultPool:
+        title: LoadBalancerPool
+        allOf:
+          - $ref: '#/definitions/LoadBalancerPool'
+          - readOnly: true
+      profiles:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerProfile'
+      policies:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerPolicy'
+      irules:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/LoadBalancerIrule'
+      sourceAddressTranslation:
+        type: string
+        enum: *ref_43
+      type:
+        type: string
+        enum: *ref_44
+      servicePort:
+        type: number
+        minimum: 1
+        maximum: 65535
+      tierId:
+        type: string
+      vrfName:
+        type: string
+      iruleNames:
         type: array
         items:
-          $ref: '#/definitions/LoadBalancerVirtualServer'
+          type: string
+      policyNames:
+        type: array
+        items:
+          type: string
+      profileNames:
+        type: array
+        items:
+          type: string
     required:
-      - bulk
+      - name
+      - sourceIpAddress
+      - destinationIpAddress
+      - sourceAddressTranslation
+      - type
+      - servicePort
+      - tierId
+      - vrfName
+      - iruleNames
+      - policyNames
+      - profileNames
+  VirtualServerImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      virtualServers:
+        type: array
+        items:
+          $ref: '#/definitions/VirtualServerImportDto'
+    required:
+      - datacenterId
+      - virtualServers
   GeneratedLoadBalancerIruleBulkDto:
     type: object
     properties:
@@ -11681,7 +11875,7 @@ definitions:
           $ref: '#/definitions/LoadBalancerPolicy'
     required:
       - bulk
-  PoolImport:
+  LoadBalancerPoolBulkImportDto:
     type: object
     properties:
       id:
@@ -11722,7 +11916,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_43
+        enum: *ref_45
       nodes:
         type: array
         items:
@@ -11763,7 +11957,7 @@ definitions:
       pools:
         type: array
         items:
-          $ref: '#/definitions/PoolImport'
+          $ref: '#/definitions/LoadBalancerPoolBulkImportDto'
     required:
       - datacenterId
       - pools

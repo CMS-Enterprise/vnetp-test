@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerPoolBulkImportDto } from './loadBalancerPoolBulkImportDto';
+import { ServiceObjectGroupRelationBulkImportDto } from './serviceObjectGroupRelationBulkImportDto';
 
 
-export interface PoolImportCollectionDto { 
+export interface ServiceObjectGroupRelationBulkImportCollectionDto { 
     datacenterId: string;
-    pools: Array<LoadBalancerPoolBulkImportDto>;
+    serviceObjectRelations: Array<ServiceObjectGroupRelationBulkImportDto>;
 }
 

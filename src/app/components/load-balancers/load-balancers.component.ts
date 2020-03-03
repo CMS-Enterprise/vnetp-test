@@ -25,6 +25,7 @@ import {
   LoadBalancerPolicy,
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
+  VirtualServerImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -207,9 +208,12 @@ export class LoadBalancersComponent
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
+        const virtualServerDto = {} as VirtualServerImportCollectionDto;
+        virtualServerDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        virtualServerDto.virtualServers = this.sanitizeData(data);
         this.virtualServersService
-          .v1LoadBalancerVirtualServersBulkPost({
-            generatedLoadBalancerVirtualServerBulkDto: { bulk: data },
+          .v1LoadBalancerVirtualServersBulkImportPost({
+            virtualServerImportCollectionDto: virtualServerDto,
           })
           .subscribe(results => this.getObjectsForNavIndex());
         break;
@@ -282,7 +286,13 @@ export class LoadBalancersComponent
 
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames' || key === 'nodeNames') {
+      if (
+        key === 'healthMonitorNames' ||
+        key === 'nodeNames' ||
+        key === 'iruleNames' ||
+        key === 'policyNames' ||
+        key === 'profileNames'
+      ) {
         const stringArray = val as string;
         obj[key] = this.createAndFormatArray(stringArray);
       }
