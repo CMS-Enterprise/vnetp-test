@@ -15,6 +15,7 @@ import {
   V1NetworkSecurityNetworkObjectsService,
   NetworkObjectGroup,
   V1NetworkSecurityNetworkObjectGroupsService,
+  NetworkObjectGroupRelationBulkImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
@@ -303,6 +304,42 @@ export class NetworkObjectsGroupsComponent
           this.networkObjectService
             .v1NetworkSecurityNetworkObjectsBulkPost({
               generatedNetworkObjectBulkDto: { bulk: dto },
+            })
+            .subscribe(data => {
+              this.getNetworkObjects();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
+  importNetworkObjectGroupRelationsConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Network Object Group Relations',
+      `Are you sure you would like to import ${
+        event.length
+      } network object group relation${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+
+          const networkObjectRelationsDto = {} as NetworkObjectGroupRelationBulkImportCollectionDto;
+          networkObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+          networkObjectRelationsDto.networkObjectRelations = event;
+
+          this.networkObjectGroupService
+            .v1NetworkSecurityNetworkObjectGroupsBulkImportRelationsPost({
+              networkObjectGroupRelationBulkImportCollectionDto: networkObjectRelationsDto,
             })
             .subscribe(data => {
               this.getNetworkObjects();

@@ -12,6 +12,7 @@ import {
   V1NetworkSecurityServiceObjectsService,
   ServiceObjectGroup,
   V1NetworkSecurityServiceObjectGroupsService,
+  ServiceObjectGroupRelationBulkImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -313,6 +314,42 @@ export class ServiceObjectsGroupsComponent
       });
   }
 
+  importServiceObjectGroupRelationsConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Service Object Group Relations',
+      `Are you sure you would like to import ${
+        event.length
+      } service object group relation${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx
+      .getModal('yesNoModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        const modalData = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (modalData && modalData.modalYes) {
+          let dto = event;
+          dto = this.sanitizeData(event);
+
+          const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
+          serviceObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+          serviceObjectRelationsDto.serviceObjectRelations = event;
+
+          this.serviceObjectGroupService
+            .v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost({
+              serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
+            })
+            .subscribe(data => {
+              this.getServiceObjects();
+            });
+        }
+        this.showRadio = false;
+        yesNoModalSubscription.unsubscribe();
+      });
+  }
+
   importServiceObjectGroupsConfig(event) {
     const modalDto = new YesNoModalDto(
       'Import Service Object Groups',
@@ -368,22 +405,6 @@ export class ServiceObjectsGroupsComponent
     return obj;
     // tslint:disable-next-line: semicolon
   };
-
-  importServiceObjectConfig(config) {
-    // TODO: Import Validation
-    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    // this.serviceObjects = config.ServiceObjects;
-    // this.serviceObjectGroups = config.ServiceObjectGroups;
-    // this.dirty = true;
-  }
-
-  exportServiceObjectConfig() {
-    // const dto = new ServiceObjectDto();
-    // dto.ServiceObjects = this.serviceObjects;
-    // dto.ServiceObjectGroups = this.serviceObjectGroups;
-    // dto.VrfId = this.currentVrf.id;
-    // return dto;
-  }
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
