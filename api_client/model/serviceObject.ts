@@ -27,6 +27,7 @@ export interface ServiceObject {
     tierId: string;
 }
 export enum ServiceObjectProtocol {
+    IP = 'IP',
     ICMP = 'ICMP',
     TCP = 'TCP',
     UDP = 'UDP'
