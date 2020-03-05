@@ -9,16 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NetworkObjectGroupRelationBulkImportDto } from './networkObjectGroupRelationBulkImportDto';
 
 
-export interface Job { 
-    readonly id?: string;
-    readonly towerId?: number;
-    jobType: string;
-    definition: object;
-    createdAt?: object;
-    updatedAt?: object;
-    completedAt?: object;
+export interface NetworkObjectGroupRelationBulkImportCollectionDto { 
     datacenterId: string;
+    networkObjectRelations: Array<NetworkObjectGroupRelationBulkImportDto>;
 }
 

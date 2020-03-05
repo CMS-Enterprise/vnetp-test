@@ -18,6 +18,7 @@
           <th scope="col">Description</th>
           <th scope="col">Tier Type</th>
           <th scope="col">Tier Group</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -34,6 +35,9 @@
           </td>
           <td>
             <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
+          </td>
+          <td>
+            <span>{{ tier?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" *ngIf="!tier?.deletedAt" (click)="openTierModal('Edit', tier)" aria-label="Edit Tier"> </fa>

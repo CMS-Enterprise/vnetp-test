@@ -4,34 +4,29 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Status</th>
+        <th scope="col">Type</th>
         <th scope="col">Started</th>
         <th scope="col">Finished</th>
-        <th scope="col">Duration</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let job of jobs.results"
-        [ngClass]="{
-          'text-info': job?.status === 'pending',
-          'text-warning': job?.status === 'running',
-          'text-success': job?.status === 'successful',
-          'text-danger': job?.status === 'failed'
-        }"
-      >
-        <td>{{ job.name }}</td>
-        <td>
-          <span>{{ job.status }}</span>
-        </td>
-        <td>{{ job.started | date: "medium" }}</td>
-        <td>{{ job.finished | date: "medium" }}</td>
-        <td>{{ job.elapsed }} seconds</td>
+      <tr *ngFor="let job of jobs | paginate: { itemsPerPage: perPage, currentPage: currentJobsPage }">
+        <td>{{ job?.jobType }}</td>
+        <td>{{ job?.createdAt | date: "medium" }}</td>
+        <td>{{ job?.completedAt | date: "medium" }}</td>
       </tr>
-      <tr *ngIf="!jobs.results?.length" class="text-center">
+      <tr *ngIf="!jobs?.length" class="text-center">
         <td colspan="5">No Jobs</td>
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>
+</div>
+<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+    Entities per page
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
 </div>

@@ -14,6 +14,7 @@ import { Appliance } from './appliance';
 import { Tier } from './tier';
 import { TierGroup } from './tierGroup';
 import { PhysicalServer } from './physicalServer';
+import { Job } from './job';
 
 
 export interface Datacenter { 
@@ -29,5 +30,6 @@ export interface Datacenter {
     readonly vmwareVirtualMachines?: Array<VmwareVirtualMachine>;
     readonly tiers?: Array<Tier>;
     readonly tierGroups?: Array<TierGroup>;
+    readonly jobs?: Array<Job>;
 }
 

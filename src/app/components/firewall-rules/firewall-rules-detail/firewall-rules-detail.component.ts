@@ -16,11 +16,8 @@ import {
   ServiceObjectGroup,
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
-  V1NetworkSecurityServiceObjectGroupsService,
-  V1NetworkSecurityServiceObjectsService,
-  V1NetworkSecurityNetworkObjectGroupsService,
-  V1NetworkSecurityNetworkObjectsService,
   Tier,
+  FirewallRuleImportCollectionDto,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -30,14 +27,12 @@ import { BulkUploadService } from 'src/app/services/bulk-upload.service';
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
-export class FirewallRulesDetailComponent
-  implements OnInit, OnDestroy, PendingChangesGuard {
+export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
   TierName = '';
   currentTierIds: Array<string>;
   tiers: Tier[];
 
-  dirty: boolean;
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
 
@@ -45,19 +40,12 @@ export class FirewallRulesDetailComponent
 
   perPage = 50;
 
+  dirty = false;
+
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
-
-  allNetworkObjects: Array<NetworkObject>;
-  allNetworkObjectGroups: Array<NetworkObjectGroup>;
-  allServiceObjects: Array<ServiceObject>;
-  allServiceObjectGroups: Array<ServiceObjectGroup>;
-  allFirewallRuleGroups: Array<FirewallRuleGroup>;
-  allTiers: Array<Tier>;
-
-  currentServiceObjectGroup: any;
 
   firewallRuleModalSubscription: Subscription;
 
@@ -71,6 +59,7 @@ export class FirewallRulesDetailComponent
   }
 
   @HostListener('window:beforeunload')
+  @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
@@ -83,24 +72,18 @@ export class FirewallRulesDetailComponent
     private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
     private bulkUploadService: BulkUploadService,
-    private networkObjectsService: V1NetworkSecurityNetworkObjectsService,
-    private networkObjectGroupsService: V1NetworkSecurityNetworkObjectGroupsService,
-    private serviceObjectsService: V1NetworkSecurityServiceObjectsService,
-    private serviceObjectGroupsService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.tiers = cd.tiers;
-          this.datacenterService.lockDatacenter();
-          this.Id += this.route.snapshot.paramMap.get('id');
-          this.currentTierIds = this.datacenterService.currentTiersValue;
-          this.getFirewallRules();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.tiers = cd.tiers;
+        this.datacenterService.lockDatacenter();
+        this.Id += this.route.snapshot.paramMap.get('id');
+        this.currentTierIds = this.datacenterService.currentTiersValue;
+        this.getFirewallRules();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -124,9 +107,7 @@ export class FirewallRulesDetailComponent
           type: data.type,
         } as FirewallRuleGroup;
 
-        const sortedFirewallRules = data.firewallRules.sort(
-          (a, b) => a.ruleIndex - b.ruleIndex,
-        );
+        const sortedFirewallRules = data.firewallRules.sort((a, b) => a.ruleIndex - b.ruleIndex);
         this.TierId = data.tierId;
 
         this.getObjects(sortedFirewallRules);
@@ -137,67 +118,19 @@ export class FirewallRulesDetailComponent
     this.tierService
       .v1TiersIdGet({
         id: this.TierId,
-        join:
-          'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
+        join: 'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
       })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;
         this.networkObjectGroups = data.networkObjectGroups;
         this.serviceObjects = data.serviceObjects;
         this.serviceObjectGroups = data.serviceObjectGroups;
-        this.getNetworkObjects();
-        this.getNetworkObjectGroups();
-        this.getServiceObjects();
-        this.getServiceObjectGroups();
-        this.getFirewallRuleGroups();
         this.TierName = data.name;
 
         // Only set the firewall rules after object arrays
         // have been populated, this allows us to use a pure
         // pipe to resolve id's to names.
         this.firewallRules = sortedFirewallRules;
-      });
-  }
-
-  getFirewallRuleGroups() {
-    this.firewallRuleGroupService
-      .v1NetworkSecurityFirewallRuleGroupsGet({
-        filter: `tierId||eq||${this.currentTierIds[0]}||tierId||eq||${this.currentTierIds[1]}`,
-      })
-      .subscribe(data => {
-        this.allFirewallRuleGroups = data;
-      });
-  }
-
-  getNetworkObjects() {
-    this.networkObjectsService
-      .v1NetworkSecurityNetworkObjectsGet({})
-      .subscribe(data => {
-        this.allNetworkObjects = data;
-      });
-  }
-
-  getNetworkObjectGroups() {
-    this.networkObjectGroupsService
-      .v1NetworkSecurityNetworkObjectGroupsGet({})
-      .subscribe(data => {
-        this.allNetworkObjectGroups = data;
-      });
-  }
-
-  getServiceObjects() {
-    this.serviceObjectsService
-      .v1NetworkSecurityServiceObjectsGet({})
-      .subscribe(data => {
-        this.allServiceObjects = data;
-      });
-  }
-
-  getServiceObjectGroups() {
-    this.serviceObjectGroupsService
-      .v1NetworkSecurityServiceObjectGroupsGet({})
-      .subscribe(data => {
-        this.allServiceObjectGroups = data;
       });
   }
 
@@ -272,17 +205,13 @@ export class FirewallRulesDetailComponent
 
     const deleteFunction = () => {
       if (!firewallRule.deletedAt) {
-        this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id })
-          .subscribe(data => {
-            this.getFirewallRules();
-          });
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
       } else {
-        this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id })
-          .subscribe(data => {
-            this.getFirewallRules();
-          });
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
       }
     };
 
@@ -298,60 +227,51 @@ export class FirewallRulesDetailComponent
 
   restoreFirewallRule(firewallRule: FirewallRule) {
     if (firewallRule.deletedAt) {
-      this.firewallRuleService
-        .v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id })
-        .subscribe(data => {
-          this.getFirewallRules();
-        });
+      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(data => {
+        this.getFirewallRules();
+      });
     }
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   importFirewallRulesConfig(event) {
     const modalDto = new YesNoModalDto(
       'Import Firewall Rule',
-      `Are you sure you would like to import ${event.length} firewall rule${
-        event.length > 1 ? 's' : ''
-      }?`,
+      `Are you sure you would like to import ${event.length} firewall rule${event.length > 1 ? 's' : ''}?`,
     );
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const modalData = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (modalData && modalData.modalYes) {
-          let dto = event;
-          dto = this.sanitizeData(event);
-          this.firewallRuleService
-            .v1NetworkSecurityFirewallRulesBulkPost({
-              generatedFirewallRuleBulkDto: { bulk: dto },
-            })
-            .subscribe(data => {
-              this.getFirewallRules();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const fwDto = {} as FirewallRuleImportCollectionDto;
+        fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        fwDto.firewallRules = this.sanitizeData(event);
+
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesBulkImportPost({
+            firewallRuleImportCollectionDto: fwDto,
+          })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   sanitizeData(entities: any) {
@@ -364,74 +284,13 @@ export class FirewallRulesDetailComponent
 
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false' || val === 'f') {
+      if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         obj[key] = false;
       }
-      if (val === 'true' || val === 't') {
+      if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
         obj[key] = true;
       }
       if (val === null || val === '') {
-        delete obj[key];
-      }
-      if (key === 'serviceObjectGroup') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allServiceObjectGroups,
-        );
-        obj.serviceObjectGroupId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'serviceObject') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allServiceObjects,
-        );
-        obj.serviceObjectId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'firewallRuleGroup') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allFirewallRuleGroups,
-        );
-        obj.firewallRuleGroupId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'sourceNetworkObject') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allNetworkObjectGroups,
-        );
-        obj.sourceNetworkObjectGroupId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'destinationNetworkObject') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allNetworkObjectGroups,
-        );
-        obj.destinationNetworkObjectGroupId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'sourceNetworkObject') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allNetworkObjects,
-        );
-        obj.sourceNetworkObjectId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'destinationNetworkObject') {
-        obj[key] = this.bulkUploadService.getObjectId(
-          val,
-          this.allNetworkObjects,
-        );
-        obj.destinationNetworkObjectId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'vrf_name') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
-        obj.tierId = obj[key];
         delete obj[key];
       }
     });

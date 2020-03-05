@@ -17,15 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneratedSubnetBulkDto } from '../model/generatedSubnetBulkDto';
 import { Subnet } from '../model/subnet';
+import { SubnetImportCollectionDto } from '../model/subnetImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1NetworkSubnetsBulkPostRequestParams {
-    generatedSubnetBulkDto: GeneratedSubnetBulkDto;
+export interface V1NetworkSubnetsBulkImportPostRequestParams {
+    subnetImportCollectionDto: SubnetImportCollectionDto;
 }
 
 export interface V1NetworkSubnetsGetRequestParams {
@@ -108,25 +108,24 @@ export class V1NetworkSubnetsService {
 
 
     /**
-     * Create many Subnet
+     * Bulk Import Subnets
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsBulkPost(requestParameters: V1NetworkSubnetsBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<Subnet>>;
-    public v1NetworkSubnetsBulkPost(requestParameters: V1NetworkSubnetsBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Subnet>>>;
-    public v1NetworkSubnetsBulkPost(requestParameters: V1NetworkSubnetsBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Subnet>>>;
-    public v1NetworkSubnetsBulkPost(requestParameters: V1NetworkSubnetsBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const generatedSubnetBulkDto = requestParameters.generatedSubnetBulkDto;
-        if (generatedSubnetBulkDto === null || generatedSubnetBulkDto === undefined) {
-            throw new Error('Required parameter generatedSubnetBulkDto was null or undefined when calling v1NetworkSubnetsBulkPost.');
+    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        const subnetImportCollectionDto = requestParameters.subnetImportCollectionDto;
+        if (subnetImportCollectionDto === null || subnetImportCollectionDto === undefined) {
+            throw new Error('Required parameter subnetImportCollectionDto was null or undefined when calling v1NetworkSubnetsBulkImportPost.');
         }
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
-            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -143,8 +142,8 @@ export class V1NetworkSubnetsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<Subnet>>(`${this.configuration.basePath}/v1/network/subnets/bulk`,
-            generatedSubnetBulkDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network/subnets/bulk-import`,
+            subnetImportCollectionDto,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

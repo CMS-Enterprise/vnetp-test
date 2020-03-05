@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
 
 
 export interface LoadBalancerIrule { 
@@ -22,6 +23,7 @@ export interface LoadBalancerIrule {
     name: string;
     description?: string;
     content: string;
+    readonly virtualServers?: Array<LoadBalancerVirtualServer>;
     tierId: string;
 }
 

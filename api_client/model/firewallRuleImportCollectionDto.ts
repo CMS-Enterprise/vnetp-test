@@ -9,16 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FirewallRuleImport } from './firewallRuleImport';
 
 
-export interface Job { 
-    readonly id?: string;
-    readonly towerId?: number;
-    jobType: string;
-    definition: object;
-    createdAt?: object;
-    updatedAt?: object;
-    completedAt?: object;
+export interface FirewallRuleImportCollectionDto { 
     datacenterId: string;
+    firewallRules: Array<FirewallRuleImport>;
 }
 

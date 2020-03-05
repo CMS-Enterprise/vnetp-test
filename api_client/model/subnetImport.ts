@@ -11,14 +11,20 @@
  */
 
 
-export interface Job { 
+export interface SubnetImport { 
     readonly id?: string;
-    readonly towerId?: number;
-    jobType: string;
-    definition: object;
     createdAt?: object;
     updatedAt?: object;
-    completedAt?: object;
-    datacenterId: string;
+    readonly version?: number;
+    deletedAt?: object;
+    provisionedAt?: object;
+    readonly provisionedVersion?: number;
+    name: string;
+    description?: string;
+    network: string;
+    gateway: string;
+    vlanId: string;
+    tierId: string;
+    vrfName: string;
 }
 
