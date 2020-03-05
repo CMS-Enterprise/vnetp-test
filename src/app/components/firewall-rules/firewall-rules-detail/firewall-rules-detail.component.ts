@@ -61,7 +61,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
+    return !this.dirty;
   }
 
   constructor(
