@@ -61,6 +61,7 @@ export enum FirewallRuleImportAction {
     Deny = 'Deny'
 };
 export enum FirewallRuleImportProtocol {
+    IP = 'IP',
     ICMP = 'ICMP',
     TCP = 'TCP',
     UDP = 'UDP'

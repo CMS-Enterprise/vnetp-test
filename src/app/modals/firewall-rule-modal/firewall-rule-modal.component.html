@@ -75,6 +75,8 @@
             [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
             aria-label="Protocol"
           >
+            <option value="IP">IP</option>
+            <option value="ICMP">ICMP</option>
             <option value="TCP">TCP</option>
             <option value="UDP">UDP</option>
           </select>

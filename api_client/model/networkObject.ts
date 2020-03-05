@@ -48,6 +48,7 @@ export enum NetworkObjectNatType {
     External = 'External'
 };
 export enum NetworkObjectNatProtocol {
+    IP = 'IP',
     ICMP = 'ICMP',
     TCP = 'TCP',
     UDP = 'UDP'
