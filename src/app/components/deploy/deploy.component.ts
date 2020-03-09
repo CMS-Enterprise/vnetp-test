@@ -1,13 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  V1TiersService,
-  Tier,
-  Datacenter,
-  V1TierGroupsService,
-  TierGroup,
-  V1JobsService,
-  Job,
-} from 'api_client';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupType } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
@@ -52,6 +44,7 @@ export class DeployComponent implements OnInit, OnDestroy {
     this.tierService
       .v1DatacentersDatacenterIdTiersGet({
         datacenterId: this.currentDatacenter.id,
+        join: 'firewallRuleGroups',
       })
       .subscribe(data => {
         data.forEach(tier => {
@@ -73,42 +66,33 @@ export class DeployComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.currentDatacenter = cd;
-          this.getTierGroups(true);
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.currentDatacenter = cd;
+        this.getTierGroups(true);
+      }
+    });
   }
 
   deployTiers() {
-    const tiersToDeploy = this.tiers
-      .filter(t => t.isSelected === true)
-      .map(t => t.item);
+    const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item);
 
     if (!tiersToDeploy.length) {
       return;
     }
 
-    const modalDto = new YesNoModalDto(
-      'Deploy Tiers',
-      `Are you sure you would like to deploy ${tiersToDeploy.length} Tiers?`,
-    );
+    const modalDto = new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tiersToDeploy.length} Tiers?`);
 
     this.ngxSmartModal.setModalData(modalDto, 'yesNoModal');
     this.ngxSmartModal.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngxSmartModal
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const modalData = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (modalData && modalData.modalYes) {
-          this.launchTierProvisioningJobs(tiersToDeploy);
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngxSmartModal.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        this.launchTierProvisioningJobs(tiersToDeploy);
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   launchTierProvisioningJobs(tiersToDeploy: Array<Tier>) {
@@ -121,9 +105,19 @@ export class DeployComponent implements OnInit, OnDestroy {
         tierId: tier.id,
       };
 
-      this.jobService
-        .v1JobsPost({ job: tierProvisionJob })
-        .subscribe(data => {});
+      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(data => {});
+
+      const tierNetworkSecurityJob = {} as Job;
+
+      tierNetworkSecurityJob.datacenterId = this.currentDatacenter.id;
+      tierNetworkSecurityJob.jobType = 'provision-tier-network-security';
+      tierNetworkSecurityJob.definition = {
+        tierId: tier.id,
+        intervrfFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.Intervrf).id,
+        externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.External).id,
+      };
+
+      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(data => {});
     });
   }
 
