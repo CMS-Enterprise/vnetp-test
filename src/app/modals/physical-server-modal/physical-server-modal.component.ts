@@ -102,7 +102,6 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.name.setValue(physicalServer.name);
       this.form.controls.description.setValue(physicalServer.description);
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
-      // TO DO: date not showing up in edit form, displaying one day off
       this.form.controls.deliveryDate.setValue(physicalServer.deliveryDate);
       this.form.controls.localStorageType.setValue(physicalServer.localStorageType);
       this.form.controls.localStorageRequired.setValue(physicalServer.localStorageRequired);

@@ -72,7 +72,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
           >
             <option></option>
-            <option *ngFor="let opt of ['one', 'two', 'three']">
+            <option *ngFor="let opt of ['HDD', 'SSD']">
               {{ opt }}
             </option>
           </select>
@@ -120,7 +120,7 @@
           <!-- TO DO: get actual options -->
           <select formControlName="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }">
             <option></option>
-            <option *ngFor="let opt of ['one', 'two', 'three']">
+            <option *ngFor="let opt of ['iSCSI', 'NFS']">
               {{ opt }}
             </option>
           </select>
