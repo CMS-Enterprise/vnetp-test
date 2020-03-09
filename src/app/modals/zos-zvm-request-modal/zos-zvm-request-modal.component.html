@@ -28,18 +28,6 @@
           class="form-control"
           (change)="importFile($event)"
         />
-        <div>
-          <input
-            *ngIf="uploadType === 'configuration'"
-            type="checkbox"
-            name="isConfiguration"
-            class="form-check-input"
-            formControlName="isConfiguration"
-          />
-          <label class="form-check-label" for="isConfiguration">
-            Configure without Upload
-          </label>
-        </div>
       </div>
     </div>
 

@@ -23,7 +23,7 @@ export interface ConfigurationUpload {
     configuredAt?: object;
     type: ConfigurationUploadType;
     file: object;
-    configuration: object;
+    configuration?: object;
 }
 export enum ConfigurationUploadType {
     OS = 'OS',

@@ -23,7 +23,7 @@
         <td>{{ configuration.configuredAt | date: "medium" }}</td>
         <td>
           <!-- TO DO: admin and customer need different download functions -->
-          <fa name="download">   </fa>
+          <fa name="download" (click)="exportFile(configuration.file)"></fa>
           <!-- TO DO: if admin -->
           <fa name="upload" (click)="openRequestModal('configuration', configuration.id)"></fa>
         </td>

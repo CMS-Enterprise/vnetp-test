@@ -36,7 +36,7 @@ export interface V1ConfigurationUploadGetRequestParams {
     cache?: number;
 }
 
-export interface V1ConfigurationUploadIdConfigurePutRequestParams {
+export interface V1ConfigurationUploadIdConfigurePatchRequestParams {
     id: string;
     configurationDto: ConfigurationDto;
 }
@@ -177,17 +177,17 @@ export class V1ConfigurationUploadService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ConfigurationUploadIdConfigurePut(requestParameters: V1ConfigurationUploadIdConfigurePutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1ConfigurationUploadIdConfigurePut(requestParameters: V1ConfigurationUploadIdConfigurePutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1ConfigurationUploadIdConfigurePut(requestParameters: V1ConfigurationUploadIdConfigurePutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1ConfigurationUploadIdConfigurePut(requestParameters: V1ConfigurationUploadIdConfigurePutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1ConfigurationUploadIdConfigurePatch(requestParameters: V1ConfigurationUploadIdConfigurePatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1ConfigurationUploadIdConfigurePatch(requestParameters: V1ConfigurationUploadIdConfigurePatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1ConfigurationUploadIdConfigurePatch(requestParameters: V1ConfigurationUploadIdConfigurePatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1ConfigurationUploadIdConfigurePatch(requestParameters: V1ConfigurationUploadIdConfigurePatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1ConfigurationUploadIdConfigurePut.');
+            throw new Error('Required parameter id was null or undefined when calling v1ConfigurationUploadIdConfigurePatch.');
         }
         const configurationDto = requestParameters.configurationDto;
         if (configurationDto === null || configurationDto === undefined) {
-            throw new Error('Required parameter configurationDto was null or undefined when calling v1ConfigurationUploadIdConfigurePut.');
+            throw new Error('Required parameter configurationDto was null or undefined when calling v1ConfigurationUploadIdConfigurePatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -210,7 +210,7 @@ export class V1ConfigurationUploadService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/configuration-upload/${encodeURIComponent(String(id))}/configure`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/configuration-upload/${encodeURIComponent(String(id))}/configure`,
             configurationDto,
             {
                 withCredentials: this.configuration.withCredentials,

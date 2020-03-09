@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-zos',
@@ -12,7 +13,11 @@ export class ZosComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;
   configurations: ConfigurationUpload[];
 
-  constructor(private ngx: NgxSmartModalService, private configurationService: V1ConfigurationUploadService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private configurationService: V1ConfigurationUploadService,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   getConfigurations() {
     this.configurationService
@@ -39,6 +44,19 @@ export class ZosComponent implements OnInit, OnDestroy {
       this.getConfigurations();
       this.ngx.resetModalData('requestModal');
     });
+  }
+
+  exportFile(requestFile) {
+    console.log(requestFile);
+    const reader = new FileReader();
+    reader.readAsText(requestFile);
+    reader.onload = () => {
+      const exportObject = reader.result.toString();
+      console.log(exportObject);
+    };
+
+    // console.log(exportJson);
+    // return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
   }
 
   private unsubAll() {

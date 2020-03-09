@@ -295,7 +295,7 @@ paths:
       consumes:
         - application/json
   '/v1/configuration-upload/{id}/configure':
-    put:
+    patch:
       summary: Provisions an Entity.
       parameters:
         - name: ConfigurationDto
@@ -11775,7 +11775,6 @@ definitions:
       - requestedAt
       - type
       - file
-      - configuration
   GeneratedTierBulkDto:
     type: object
     properties:

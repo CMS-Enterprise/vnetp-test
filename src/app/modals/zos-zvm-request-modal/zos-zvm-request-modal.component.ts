@@ -32,16 +32,15 @@ export class ZosZvmRequestModalComponent implements OnInit {
         })
         .subscribe(data => this.closeModal());
     } else if (this.uploadType === 'configuration' && this.uploadId) {
-      console.log('cf');
-      this.configure(this.uploadId);
+      this.configure();
     }
   }
 
-  configure(id) {
+  configure() {
     this.configurationService
-      .v1ConfigurationUploadIdConfigurePut({
-        id,
-        configurationDto: { configuration: null },
+      .v1ConfigurationUploadIdConfigurePatch({
+        id: this.uploadId,
+        configurationDto: { configuration: this.file },
       })
       .subscribe(data => this.closeModal());
   }
@@ -83,8 +82,8 @@ export class ZosZvmRequestModalComponent implements OnInit {
   }
 
   public reset() {
-    // this.unsubAll();
-    // this.submitted = false;
+    this.file = null;
+    this.uploadId = null;
     this.buildForm();
   }
 
