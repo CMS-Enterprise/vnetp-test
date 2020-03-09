@@ -42,14 +42,14 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     const appliance = {} as Appliance;
     appliance.name = this.form.value.name;
     appliance.description = this.form.value.description;
-    appliance.rackUnits = this.form.value.rackUnits; // TO DO: not saving, no error
+    appliance.rackUnits = this.form.value.rackUnits;
     appliance.serialNumber = this.form.value.serialNumber;
     appliance.deliveryDate = this.form.value.deliveryDate;
     appliance.localStorageType = this.form.value.localStorageType;
-    appliance.localStorageRequired = this.form.value.localStorageRequired;
+    appliance.localStorageRequired = this.stringToBoolean(this.form.value.localStorageRequired);
     appliance.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
     appliance.sanType = this.form.value.sanType;
-    appliance.sanRequired = this.form.value.sanRequired;
+    appliance.sanRequired = this.stringToBoolean(this.form.value.sanRequired);
     appliance.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
     appliance.powerSupplyVoltage = this.form.value.powerSupplyVoltage;
     appliance.powerSupplyWattage = this.form.value.powerSupplyWattage;
@@ -111,18 +111,21 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.ApplianceId = dto.Appliance.id;
-        console.log(dto.Appliance);
       }
     }
 
     const appliance = dto.Appliance;
 
     if (appliance !== undefined) {
+      // TO DO: type mismatch between API and client model
+      const date = new Date(String(appliance.deliveryDate));
+      const deliveryDate = date.toISOString().substring(0, 10);
+
       this.form.controls.name.setValue(appliance.name);
       this.form.controls.description.setValue(appliance.description);
       this.form.controls.rackUnits.setValue(appliance.rackUnits);
       this.form.controls.serialNumber.setValue(appliance.serialNumber);
-      this.form.controls.deliveryDate.setValue(appliance.deliveryDate);
+      this.form.controls.deliveryDate.setValue(deliveryDate);
       this.form.controls.localStorageType.setValue(appliance.localStorageType);
       this.form.controls.localStorageRequired.setValue(appliance.localStorageRequired);
       this.form.controls.localStorageSize.setValue(this.convertBytesToGb(appliance.localStorageSize));
@@ -147,6 +150,17 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     const convertedVal = val / 1000000000;
 
     return convertedVal;
+  }
+
+  private stringToBoolean(str) {
+    switch (str) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      default:
+        return Boolean(str);
+    }
   }
 
   private buildForm() {

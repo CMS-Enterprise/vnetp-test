@@ -48,10 +48,11 @@ export class ZosZvmRequestModalComponent implements OnInit {
   importFile(event: any) {
     const files = event.target.files;
     const file = files[0];
+    const fileByteArray = [];
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
 
-    reader.onload = () => {
+    reader.onloadend = () => {
       this.file = reader.result;
       this.file = ('\\x' + this.file ? this.file.toString('hex') : '') as any;
     };

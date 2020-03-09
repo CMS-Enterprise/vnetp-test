@@ -36,9 +36,9 @@ export class PhysicalServerModalComponent implements OnInit {
     physicalServer.deliveryDate = this.form.value.deliveryDate;
     physicalServer.localStorageType = this.form.value.localStorageType;
     physicalServer.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
-    physicalServer.localStorageRequired = this.form.value.localStorageRequired;
+    physicalServer.localStorageRequired = this.stringToBoolean(this.form.value.localStorageRequired);
     physicalServer.sanType = this.form.value.sanType;
-    physicalServer.sanRequired = this.form.value.sanRequired;
+    physicalServer.sanRequired = this.stringToBoolean(this.form.value.sanRequired);
     physicalServer.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
 
     this.ngx.resetModalData('physicalServerModal');
@@ -99,11 +99,14 @@ export class PhysicalServerModalComponent implements OnInit {
     const physicalServer = dto.PhysicalServer;
 
     if (physicalServer !== undefined) {
+      // TO DO: type mismatch between API and client model
+      const date = new Date(String(physicalServer.deliveryDate));
+      const deliveryDate = date.toISOString().substring(0, 10);
+
       this.form.controls.name.setValue(physicalServer.name);
       this.form.controls.description.setValue(physicalServer.description);
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
-      // TO DO: date not showing up in edit form, displaying one day off
-      this.form.controls.deliveryDate.setValue(physicalServer.deliveryDate);
+      this.form.controls.deliveryDate.setValue(deliveryDate);
       this.form.controls.localStorageType.setValue(physicalServer.localStorageType);
       this.form.controls.localStorageRequired.setValue(physicalServer.localStorageRequired);
       this.form.controls.localStorageSize.setValue(this.convertBytesToGb(physicalServer.localStorageSize));
@@ -124,6 +127,17 @@ export class PhysicalServerModalComponent implements OnInit {
     const convertedVal = val / 1000000000;
 
     return convertedVal;
+  }
+
+  private stringToBoolean(str) {
+    switch (str) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      default:
+        return Boolean(str);
+    }
   }
 
   private buildForm() {
