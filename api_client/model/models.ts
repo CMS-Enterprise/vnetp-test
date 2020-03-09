@@ -1,5 +1,7 @@
 export * from './appliance';
 export * from './applianceNetworkPort';
+export * from './configurationDto';
+export * from './configurationUpload';
 export * from './datacenter';
 export * from './firewallRule';
 export * from './firewallRuleGroup';

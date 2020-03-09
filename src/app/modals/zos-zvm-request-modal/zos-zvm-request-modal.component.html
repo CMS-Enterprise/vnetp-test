@@ -3,6 +3,8 @@
   identifier="requestModal"
   [dismissable]="false"
   customClass="small-modal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
 >
   <div class="modal-header">
     <h4 class="modal-title">Upload Request</h4>
@@ -18,9 +20,26 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="request">File Upload</label>
+        <label for="file">File Upload</label>
         <!-- TO DO: fix style -->
-        <input type="file" formControlName="request" class="form-control" />
+        <input
+          type="file"
+          formControlName="file"
+          class="form-control"
+          (change)="importFile($event)"
+        />
+        <div>
+          <input
+            *ngIf="uploadType === 'configuration'"
+            type="checkbox"
+            name="isConfiguration"
+            class="form-check-input"
+            formControlName="isConfiguration"
+          />
+          <label class="form-check-label" for="isConfiguration">
+            Configure without Upload
+          </label>
+        </div>
       </div>
     </div>
 

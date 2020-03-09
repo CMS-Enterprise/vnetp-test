@@ -3,7 +3,7 @@
 
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <!-- TO DO: show only if customer -->
-    <button class="btn btn-success" (click)="openRequestModal('zos')">
+    <button class="btn btn-success" (click)="openRequestModal('request', null)">
       <fa name="upload"></fa>
       Upload z/OS request
     </button>
@@ -14,21 +14,21 @@
       <tr>
         <th scope="col">Request sent</th>
         <th scope="col">Configuration</th>
-        <th scope="col"></th>
+        <th scope="col">Download</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let z of zosRequest">
-        <td>{{ z.uploadedAt }}</td>
-        <td>{{ z.respondedAt }}</td>
+      <tr *ngFor="let configuration of configurations">
+        <td>{{ configuration.requestedAt | date: "medium" }}</td>
+        <td>{{ configuration.configuredAt | date: "medium" }}</td>
         <td>
           <!-- TO DO: admin and customer need different download functions -->
-          <fa name="download"></fa>
+          <fa name="download">   </fa>
           <!-- TO DO: if admin -->
-          <fa name="upload"></fa>
+          <fa name="upload" (click)="openRequestModal('configuration', configuration.id)"></fa>
         </td>
       </tr>
-      <tr *ngIf="!zosRequest?.length" class="text-center">
+      <tr *ngIf="!configurations?.length" class="text-center">
         <td colspan="3">No z/OS Requests have been sent</td>
       </tr>
     </tbody>

@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuthService } from './api/v1Auth.service';
+import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1JobsService } from './api/v1Jobs.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
@@ -38,6 +39,7 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
   providers: [
     V1AppliancesService,
     V1AuthService,
+    V1ConfigurationUploadService,
     V1DatacentersService,
     V1JobsService,
     V1LoadBalancerHealthMonitorsService,
