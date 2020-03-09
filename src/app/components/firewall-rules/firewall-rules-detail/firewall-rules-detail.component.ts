@@ -16,23 +16,31 @@ import {
   ServiceObjectGroup,
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
+  Tier,
+  FirewallRuleImportCollectionDto,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
-export class FirewallRulesDetailComponent
-  implements OnInit, OnDestroy, PendingChangesGuard {
+export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingChangesGuard {
   Id = '';
   TierName = '';
-
-  dirty: boolean;
+  currentTierIds: Array<string>;
+  tiers: Tier[];
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
+
+  currentFirewallRulePage = 1;
+
+  perPage = 50;
+
+  dirty = false;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -51,6 +59,7 @@ export class FirewallRulesDetailComponent
   }
 
   @HostListener('window:beforeunload')
+  @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.dirty;
   }
@@ -62,19 +71,19 @@ export class FirewallRulesDetailComponent
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
     private datacenterService: DatacenterContextService,
+    private bulkUploadService: BulkUploadService,
   ) {}
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          // This component locks the datacenter for the entire edit lifecycle.
-          this.datacenterService.lockDatacenter();
-          this.Id += this.route.snapshot.paramMap.get('id');
-          this.getFirewallRules();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.tiers = cd.tiers;
+        this.datacenterService.lockDatacenter();
+        this.Id += this.route.snapshot.paramMap.get('id');
+        this.currentTierIds = this.datacenterService.currentTiersValue;
+        this.getFirewallRules();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -98,9 +107,7 @@ export class FirewallRulesDetailComponent
           type: data.type,
         } as FirewallRuleGroup;
 
-        const sortedFirewallRules = data.firewallRules.sort(
-          (a, b) => a.ruleIndex - b.ruleIndex,
-        );
+        const sortedFirewallRules = data.firewallRules.sort((a, b) => a.ruleIndex - b.ruleIndex);
         this.TierId = data.tierId;
 
         this.getObjects(sortedFirewallRules);
@@ -111,8 +118,7 @@ export class FirewallRulesDetailComponent
     this.tierService
       .v1TiersIdGet({
         id: this.TierId,
-        join:
-          'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
+        join: 'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
       })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;
@@ -199,17 +205,13 @@ export class FirewallRulesDetailComponent
 
     const deleteFunction = () => {
       if (!firewallRule.deletedAt) {
-        this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id })
-          .subscribe(data => {
-            this.getFirewallRules();
-          });
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
       } else {
-        this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id })
-          .subscribe(data => {
-            this.getFirewallRules();
-          });
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
       }
     };
 
@@ -225,41 +227,74 @@ export class FirewallRulesDetailComponent
 
   restoreFirewallRule(firewallRule: FirewallRule) {
     if (firewallRule.deletedAt) {
-      this.firewallRuleService
-        .v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id })
-        .subscribe(data => {
-          this.getFirewallRules();
-        });
+      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(data => {
+        this.getFirewallRules();
+      });
     }
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
-  insertFirewallRules(rules) {
-    // if (this.firewallRules == null) {
-    //   this.firewallRules = new Array<FirewallRule>();
-    // }
-    // rules.forEach(rule => {
-    //   if (rule.Name !== '') {
-    //     this.firewallRules.push(rule);
-    //   }
-    // });
-    // this.dirty = true;
+  importFirewallRulesConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Firewall Rule',
+      `Are you sure you would like to import ${event.length} firewall rule${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const fwDto = {} as FirewallRuleImportCollectionDto;
+        fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        fwDto.firewallRules = this.sanitizeData(event);
+
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesBulkImportPost({
+            firewallRuleImportCollectionDto: fwDto,
+          })
+          .subscribe(data => {
+            this.getFirewallRules();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      entity.ruleIndex = Number(entity.ruleIndex);
+      this.mapCsv(entity);
+      return entity;
+    });
+  }
+
+  mapCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
+        obj[key] = false;
+      }
+      if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+    });
+    return obj;
+    // tslint:disable-next-line: semicolon
+  };
 }

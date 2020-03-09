@@ -1,0 +1,75 @@
+<div>
+  <h4>Physical Servers</h4>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <button type="button" class="btn btn-success mr-1" (click)="createPhysicalServer()">
+      <fa name="plus"></fa>
+      Create Physical Server
+    </button>
+
+    <button type="button" class="btn btn-info mr-1" aria-label="Refresh" (click)="getPhysicalServers()">
+      <fa name="refresh"></fa>
+      Refresh
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Serial Number</th>
+        <th scope="col">Delivery Date</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ps of physicalServers | paginate: { itemsPerPage: perPage, currentPage: currentPhysicalServersPage }">
+        <td>
+          <a routerLink="/physical-server/{{ ps.id }}" queryParamsHandling="merge">
+            {{ ps.name }}
+          </a>
+        </td>
+        <td>
+          {{ ps.serialNumber }}
+        </td>
+        <td>
+          {{ ps.deliveryDate | date: 'shortDate' }}
+        </td>
+        <td>
+          <fa name="pencil" *ngIf="!ps?.deletedAt" (click)="openPhysicalServerModal('Edit', ps)" aria-label="Edit Physical Server"> </fa>
+          <fa
+            name="undo"
+            *ngIf="ps?.deletedAt"
+            class="fg-success"
+            (click)="restorePhysicalServer(ps)"
+            aria-label="Restore Physical Server"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': ps.deletedAt }"
+            (click)="deletePhysicalServer(ps)"
+            aria-label="Soft-Delete/Delete Physical Server"
+          >
+          </fa>
+        </td>
+      </tr>
+      <tr *ngIf="!physicalServers?.length" class="text-center">
+        <td colspan="4">No Physical Servers</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pagination-controls (pageChange)="currentPhysicalServersPage = $event"></pagination-controls>
+
+  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </div>
+</div>
+
+<app-physical-server-modal></app-physical-server-modal>
+<app-yes-no-modal></app-yes-no-modal>

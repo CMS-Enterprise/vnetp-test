@@ -5,12 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  V1NetworkSecurityNetworkObjectGroupsService,
-  NetworkObject,
-  NetworkObjectGroup,
-  V1TiersService,
-} from 'api_client';
+import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
@@ -96,12 +91,10 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   addNetworkObject() {
     this.networkObjectGroupService
-      .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdPost(
-        {
-          networkObjectGroupId: this.NetworkObjectGroupId,
-          networkObjectId: this.selectedNetworkObject.id,
-        },
-      )
+      .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdPost({
+        networkObjectGroupId: this.NetworkObjectGroupId,
+        networkObjectId: this.selectedNetworkObject.id,
+      })
       .subscribe(data => {
         this.selectedNetworkObject = null;
         this.getGroupNetworkObjects();
@@ -109,41 +102,29 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   removeNetworkObject(networkObject: NetworkObject) {
-    const modalDto = new YesNoModalDto(
-      'Remove Network Object from Network Object Group',
-      '',
-    );
+    const modalDto = new YesNoModalDto('Remove Network Object from Network Object Group', '');
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.networkObjectGroupService
-            .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdDelete(
-              {
-                networkObjectGroupId: this.NetworkObjectGroupId,
-                networkObjectId: networkObject.id,
-              },
-            )
-            .subscribe(() => {
-              this.getGroupNetworkObjects();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdDelete({
+            networkObjectGroupId: this.NetworkObjectGroupId,
+            networkObjectId: networkObject.id,
+          })
+          .subscribe(() => {
+            this.getGroupNetworkObjects();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData(
-        'networkObjectGroupModal',
-      ) as NetworkObjectGroupModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('networkObjectGroupModal') as NetworkObjectGroupModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -156,6 +137,8 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
+      } else {
+        this.form.controls.name.enable();
       }
     }
 
@@ -163,6 +146,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
     if (networkObjectGroup !== undefined) {
       this.form.controls.name.setValue(networkObjectGroup.name);
+      this.form.controls.name.disable();
       this.form.controls.description.setValue(networkObjectGroup.description);
 
       this.getGroupNetworkObjects();
@@ -172,11 +156,9 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   private getTierNetworkObjects() {
-    this.tierService
-      .v1TiersIdGet({ id: this.TierId, join: 'networkObjects' })
-      .subscribe(data => {
-        this.tierNetworkObjects = data.networkObjects;
-      });
+    this.tierService.v1TiersIdGet({ id: this.TierId, join: 'networkObjects' }).subscribe(data => {
+      this.tierNetworkObjects = data.networkObjects;
+    });
   }
 
   private getGroupNetworkObjects() {
@@ -197,7 +179,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.networkObjects = new Array<NetworkObject>();
     this.Subnets = new Array<Subnet>();

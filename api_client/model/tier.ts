@@ -18,10 +18,13 @@ import { Vlan } from './vlan';
 import { LoadBalancerPool } from './loadBalancerPool';
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
+import { TierGroup } from './tierGroup';
 import { ServiceObject } from './serviceObject';
+import { LoadBalancerProfile } from './loadBalancerProfile';
 import { NetworkObjectGroup } from './networkObjectGroup';
 import { FirewallRuleGroup } from './firewallRuleGroup';
 import { Subnet } from './subnet';
+import { LoadBalancerPolicy } from './loadBalancerPolicy';
 
 
 export interface Tier { 
@@ -35,6 +38,9 @@ export interface Tier {
     name: string;
     description?: string;
     datacenterId: string;
+    tierGroupId?: string;
+    tierGroup?: TierGroup & object;
+    tierType?: TierTierType;
     readonly vlans?: Array<Vlan>;
     readonly subnets?: Array<Subnet>;
     readonly staticRoutes?: Array<StaticRoute>;
@@ -48,5 +54,18 @@ export interface Tier {
     readonly loadBalancerPools?: Array<LoadBalancerPool>;
     readonly loadBalancerHealthMonitors?: Array<LoadBalancerHealthMonitor>;
     readonly loadBalancerVirtualServers?: Array<LoadBalancerVirtualServer>;
+    readonly loadBalancerProfiles?: Array<LoadBalancerProfile>;
+    readonly loadBalancerPolicies?: Array<LoadBalancerPolicy>;
 }
+export enum TierTierType {
+    Presentation = 'Presentation',
+    Application = 'Application',
+    Database = 'Database',
+    Security = 'Security',
+    Management = 'Management',
+    Backup = 'Backup',
+    Other = 'Other'
+};
+
+
 

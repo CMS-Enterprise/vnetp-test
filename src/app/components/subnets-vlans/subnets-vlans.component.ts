@@ -11,6 +11,8 @@ import {
   Vlan,
   V1NetworkSubnetsService,
   V1NetworkVlansService,
+  SubnetImportCollectionDto,
+  SubnetImport,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
@@ -21,16 +23,19 @@ import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
   selector: 'app-subnets-vlans',
   templateUrl: './subnets-vlans.component.html',
 })
-export class SubnetsVlansComponent
-  implements OnInit, OnDestroy, PendingChangesGuard {
+export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesGuard {
   tiers: Tier[];
   currentTier: Tier;
+
+  currentSubnetsPage = 1;
+  currentVlansPage = 1;
+  perPage = 20;
 
   subnets: Array<Subnet>;
   vlans: Array<Vlan>;
 
   navIndex = 0;
-
+  showRadio = false;
   subnetModalSubscription: Subscription;
   vlanModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
@@ -54,23 +59,19 @@ export class SubnetsVlansComponent
   }
 
   getSubnets() {
-    this.tierService
-      .v1TiersIdGet({ id: this.currentTier.id, join: 'subnets' })
-      .subscribe(data => {
-        this.subnets = data.subnets;
-      });
+    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'subnets' }).subscribe(data => {
+      this.subnets = data.subnets;
+    });
   }
 
   getVlans(getSubnets = false) {
-    this.tierService
-      .v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' })
-      .subscribe(data => {
-        this.vlans = data.vlans;
+    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' }).subscribe(data => {
+      this.vlans = data.vlans;
 
-        if (getSubnets) {
-          this.getSubnets();
-        }
-      });
+      if (getSubnets) {
+        this.getSubnets();
+      }
+    });
   }
 
   openSubnetModal(modalMode: ModalMode, subnet?: Subnet) {
@@ -115,25 +116,21 @@ export class SubnetsVlansComponent
   }
 
   subscribeToSubnetModal() {
-    this.subnetModalSubscription = this.ngx
-      .getModal('subnetModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getSubnets();
-        this.ngx.resetModalData('subnetModal');
-        this.datacenterService.unlockDatacenter();
-        this.subnetModalSubscription.unsubscribe();
-      });
+    this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      this.getSubnets();
+      this.ngx.resetModalData('subnetModal');
+      this.datacenterService.unlockDatacenter();
+      this.subnetModalSubscription.unsubscribe();
+    });
   }
 
   subscribeToVlanModal() {
-    this.vlanModalSubscription = this.ngx
-      .getModal('vlanModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getVlans();
-        this.ngx.resetModalData('vlanModal');
-        this.datacenterService.unlockDatacenter();
-        this.vlanModalSubscription.unsubscribe();
-      });
+    this.vlanModalSubscription = this.ngx.getModal('vlanModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      this.getVlans();
+      this.ngx.resetModalData('vlanModal');
+      this.datacenterService.unlockDatacenter();
+      this.vlanModalSubscription.unsubscribe();
+    });
   }
 
   deleteSubnet(subnet: Subnet) {
@@ -145,36 +142,27 @@ export class SubnetsVlansComponent
 
     const deleteFunction = () => {
       if (!subnet.deletedAt) {
-        this.subnetService
-          .v1NetworkSubnetsIdSoftDelete({ id: subnet.id })
-          .subscribe(data => {
-            this.getSubnets();
-          });
+        this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }).subscribe(data => {
+          this.getSubnets();
+        });
       } else {
-        this.subnetService
-          .v1NetworkSubnetsIdDelete({ id: subnet.id })
-          .subscribe(data => {
-            this.getSubnets();
-          });
+        this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }).subscribe(data => {
+          this.getSubnets();
+        });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Subnet?`,
-        `Do you want to ${deleteDescription} subnet "${subnet.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Subnet?`, `Do you want to ${deleteDescription} subnet "${subnet.name}"?`),
       deleteFunction,
     );
   }
 
   restoreSubnet(subnet: Subnet) {
     if (subnet.deletedAt) {
-      this.subnetService
-        .v1NetworkSubnetsIdRestorePatch({ id: subnet.id })
-        .subscribe(data => {
-          this.getSubnets();
-        });
+      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(data => {
+        this.getSubnets();
+      });
     }
   }
 
@@ -206,10 +194,7 @@ export class SubnetsVlansComponent
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} VLAN`,
-        `Do you want to ${deleteDescription} the VLAN "${vlan.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} VLAN`, `Do you want to ${deleteDescription} the VLAN "${vlan.name}"?`),
       deleteFunction,
     );
   }
@@ -226,22 +211,67 @@ export class SubnetsVlansComponent
     }
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
+
+  importSubnetConfig(event: Subnet[]) {
+    const modalDto = new YesNoModalDto(
+      'Import Subnets',
+      `Are you sure you would like to import ${event.length} subnet${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const subnetsDto = {} as SubnetImportCollectionDto;
+        subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        subnetsDto.subnets = event as SubnetImport[];
+
+        this.subnetService
+          .v1NetworkSubnetsBulkImportPost({
+            subnetImportCollectionDto: subnetsDto,
+          })
+          .subscribe(data => {
+            this.getVlans(true);
+          });
+      }
+      this.showRadio = false;
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
+
+  importVlansConfig(event: Vlan[]) {
+    const modalDto = new YesNoModalDto(
+      'Import Vlans',
+      `Are you sure you would like to import ${event.length} vlan${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(data => {
+          this.getVlans();
+        });
+      }
+      this.showRadio = false;
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   getObjectsForNavIndex() {
@@ -268,11 +298,7 @@ export class SubnetsVlansComponent
   }
 
   private unsubAll() {
-    [
-      this.subnetModalSubscription,
-      this.vlanModalSubscription,
-      this.currentDatacenterSubscription,
-    ].forEach(sub => {
+    [this.subnetModalSubscription, this.vlanModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -284,21 +310,19 @@ export class SubnetsVlansComponent
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.tiers = cd.tiers;
-          this.currentTier = null;
-          this.subnets = [];
-          this.vlans = [];
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.tiers = cd.tiers;
+        this.currentTier = null;
+        this.subnets = [];
+        this.vlans = [];
 
-          if (cd.tiers.length) {
-            this.currentTier = cd.tiers[0];
-            this.getVlans(true);
-          }
+        if (cd.tiers.length) {
+          this.currentTier = cd.tiers[0];
+          this.getVlans(true);
         }
-      },
-    );
+      }
+    });
   }
 
   ngOnDestroy() {

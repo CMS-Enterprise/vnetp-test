@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { FormsModule } from '@angular/forms';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -21,13 +24,12 @@ describe('NavbarComponent', () => {
         RouterTestingModule,
         AngularFontAwesomeModule,
         NgxSmartModalModule,
+        ToastrModule.forRoot({}),
+        FormsModule,
         HttpClientTestingModule,
       ],
-      declarations: [NavbarComponent],
-      providers: [
-        CookieService,
-        { provide: NgxSmartModalService, useValue: ngx },
-      ],
+      declarations: [NavbarComponent, FilterPipe],
+      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 

@@ -1,14 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -21,19 +15,9 @@ describe('ServiceObjectGroupModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        NgxSmartModalModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-      ],
+      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [ServiceObjectGroupModalComponent, TooltipComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     }).compileComponents();
   }));
 

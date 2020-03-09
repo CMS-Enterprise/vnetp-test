@@ -42,7 +42,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     this.virtualMachineService
       .v1VmwareVirtualMachinesIdGet({
         id: this.VirtualMachineId,
-        join: 'virtualDisks',
+        join: 'virtualDisks,networkAdapters',
       })
       .subscribe(data => {
         this.virtualDisks = data.virtualDisks;
@@ -71,12 +71,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVirtualDiskModal() {
-    this.virtualDiskModalSubscription = this.ngx
-      .getModal('virtualDiskModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        this.getVirtualDisks();
-        this.ngx.resetModalData('virtualDiskModal');
-      });
+    this.virtualDiskModalSubscription = this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      this.getVirtualDisks();
+      this.ngx.resetModalData('virtualDiskModal');
+    });
   }
 
   openNetworkAdapterModal() {
@@ -107,25 +105,18 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     const deleteDescription = v.deletedAt ? 'Delete' : 'Soft-Delete';
     const deleteFunction = () => {
       if (!v.deletedAt) {
-        this.virtualDiskService
-          .v1VmwareVirtualDisksIdSoftDelete({ id: v.id })
-          .subscribe(data => {
-            this.getVirtualDisks();
-          });
+        this.virtualDiskService.v1VmwareVirtualDisksIdSoftDelete({ id: v.id }).subscribe(data => {
+          this.getVirtualDisks();
+        });
       } else {
-        this.virtualDiskService
-          .v1VmwareVirtualDisksIdDelete({ id: v.id })
-          .subscribe(data => {
-            this.getVirtualDisks();
-          });
+        this.virtualDiskService.v1VmwareVirtualDisksIdDelete({ id: v.id }).subscribe(data => {
+          this.getVirtualDisks();
+        });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Virtual Disk?`,
-        `Do you want to ${deleteDescription} virtual disk "${v.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Virtual Disk?`, `Do you want to ${deleteDescription} virtual disk "${v.name}"?`),
       deleteFunction,
     );
   }
@@ -150,25 +141,18 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     const deleteDescription = n.deletedAt ? 'Delete' : 'Soft-Delete';
     const deleteFunction = () => {
       if (!n.deletedAt) {
-        this.networkAdapterService
-          .v1VmwareNetworkAdapterIdSoftDelete({ id: n.id })
-          .subscribe(data => {
-            this.getNetworkAdapters();
-          });
+        this.networkAdapterService.v1VmwareNetworkAdapterIdSoftDelete({ id: n.id }).subscribe(data => {
+          this.getNetworkAdapters();
+        });
       } else {
-        this.networkAdapterService
-          .v1VmwareNetworkAdapterIdDelete({ id: n.id })
-          .subscribe(data => {
-            this.getNetworkAdapters();
-          });
+        this.networkAdapterService.v1VmwareNetworkAdapterIdDelete({ id: n.id }).subscribe(data => {
+          this.getNetworkAdapters();
+        });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Network Adapter?`,
-        `Do you want to ${deleteDescription} network adapter "${n.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Network Adapter?`, `Do you want to ${deleteDescription} network adapter "${n.name}"?`),
       deleteFunction,
     );
   }
@@ -197,14 +181,11 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.cpuCores = this.form.value.cpuCount;
     virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount, 10); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
-    virtualMachine.memorySize = parseInt(this.form.value.memorySize, 10); // TO DO - convert to bytes, figure out type problem
+    virtualMachine.memorySize = this.convertGbToBytes(this.form.value.memorySize);
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
 
     this.ngx.resetModalData('virtualMachineModal');
-    this.ngx.setModalData(
-      Object.assign({}, virtualMachine),
-      'virtualMachineModal',
-    );
+    this.ngx.setModalData(Object.assign({}, virtualMachine), 'virtualMachineModal');
 
     if (this.ModalMode === ModalMode.Create) {
       virtualMachine.name = this.form.value.name;
@@ -244,10 +225,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('virtualMachineModal') as VirtualMachineModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('virtualMachineModal') as VirtualMachineModalDto);
 
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
@@ -259,9 +237,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.VirtualMachineId = dto.VmwareVirtualMachine.id;
     }
 
-    this.getVirtualDisks();
-    this.getNetworkAdapters();
-
     if (!dto.ModalMode) {
       throw Error('Modal Mode not set.');
     } else {
@@ -269,21 +244,38 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.VirtualMachineId = dto.VmwareVirtualMachine.id;
+
+        this.getVirtualDisks();
+        this.getNetworkAdapters();
       }
     }
 
     const virtualMachine = dto.VmwareVirtualMachine;
 
     if (virtualMachine !== undefined) {
+      const convertedMemorySize = this.convertBytesToGb(virtualMachine.memorySize);
+
       this.form.controls.name.setValue(virtualMachine.name);
       this.form.controls.description.setValue(virtualMachine.description);
       this.form.controls.cpuCount.setValue(virtualMachine.cpuCores);
       this.form.controls.coreCount.setValue(virtualMachine.cpuCoresPerSocket);
       this.form.controls.cpuReserved.setValue(virtualMachine.cpuReserved);
-      this.form.controls.memorySize.setValue(virtualMachine.memorySize);
+      this.form.controls.memorySize.setValue(convertedMemorySize);
       this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
     }
     this.ngx.resetModalData('virtualMachineModal');
+  }
+
+  private convertGbToBytes(val) {
+    const convertedVal = val * 1000000000;
+
+    return convertedVal;
+  }
+
+  private convertBytesToGb(val) {
+    const convertedVal = val / 1000000000;
+
+    return convertedVal;
   }
 
   private buildForm() {
@@ -303,34 +295,26 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.buildForm();
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private unsubAll() {
-    [
-      this.virtualDiskModalSubscription,
-      this.networkAdapterModalSubscription,
-    ].forEach(sub => {
+    [this.virtualDiskModalSubscription, this.networkAdapterModalSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();

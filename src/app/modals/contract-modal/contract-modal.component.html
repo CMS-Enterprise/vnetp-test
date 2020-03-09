@@ -3,17 +3,11 @@
   identifier="contractModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="xlarge-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Contract</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">

@@ -15,6 +15,8 @@ import { ServiceObjectModalComponent } from './modals/service-object-modal/servi
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from './modals/modal-mock';
+import { FilterPipe } from './pipes/filter.pipe';
+import { ToastrModule } from 'ngx-toastr';
 
 const ngx = new NgxSmartModalServiceStub();
 
@@ -26,6 +28,7 @@ describe('AppComponent', () => {
         AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
+        ToastrModule.forRoot({}),
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
@@ -39,12 +42,9 @@ describe('AppComponent', () => {
         ServiceObjectModalComponent,
         ServiceObjectGroupModalComponent,
         TooltipComponent,
+        FilterPipe,
       ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        CookieService,
-        FormBuilder,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

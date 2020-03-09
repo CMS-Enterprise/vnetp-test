@@ -12,6 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -31,16 +32,8 @@ describe('FirewallRulesComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
       ],
-      declarations: [
-        FirewallRulesComponent,
-        FirewallRuleModalComponent,
-        TooltipComponent,
-      ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        CookieService,
-        FormBuilder,
-      ],
+      declarations: [FirewallRulesComponent, FirewallRuleModalComponent, TooltipComponent, FilterPipe],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

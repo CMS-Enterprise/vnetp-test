@@ -50,6 +50,7 @@ export class VlanModalHelpText {
 export class TierModalHelpText {
   Name = 'Name of the Tier.';
   Description = 'Description of the Tier.';
+  TierGroup = 'Tier Group that the Tier belongs to.';
 }
 
 @Injectable({
@@ -98,12 +99,13 @@ export class FirewallRuleModalHelpText {
   Action = `Action that the firewall will take on traffic that matches this rule.`;
   Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
+  Enabled = 'Indicates whether the firewall rule is enabled.';
   Logging = `Indicates whether traffic that matches this rule should be logged.`;
   SourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
   DestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  IpNetworkType = `IP address of a single host (X.X.X.X), subnet (X.X.X.X/YY), or 'any' to match any IP Address.`;
+  IpNetworkType = `IP address of a single host (X.X.X.X) or subnet (X.X.X.X/YY).`;
   NetworkObjectType = `Network Object created under IPAM.`;
   NetworkObjectGroupType = `Network Object Group created under IPAM.`;
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
@@ -137,8 +139,7 @@ export class NetworkObjectModalHelpText {
     'Type of NAT translation, InterVRF creates a translation between two Tiers, External creates a translation between a Tier and External.';
   NatDirection =
     'Direction of the NAT translation, "In" applies the translation to traffic entering the Tier, "Out" applies the translation to traffic exiting the Tier.';
-  TranslatedIpAddress =
-    'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
+  TranslatedIpAddress = 'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
   NatService = 'Sets whether Network Object should be PATed.';
   NatProtocol = 'Protocol (TCP/UDP) that traffic must match in order to NAT.';
   NatSourcePort = 'Source Port that traffic must match in order to PAT.';
@@ -196,10 +197,8 @@ export class VirtualServerModalHelpText {
   ServicePort = `Port that the Virtual Server listens on.`;
   Pool = `Pool that the Virtual Server forwards the request to.`;
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
-  AvailableClientSslProfiles = `Client SSL profiles available (can select multiple).`;
-  SelectedClientSslProfiles = `Selected Client SSL profiles.`;
-  AvailableServerSslProfiles = `Server SSL profiles available (can select multiple).`;
-  SelectedServerSslProfiles = `Selected Server SSL profiles.`;
+  AvailableProfiles = `Client SSL profiles available (can select multiple).`;
+  SelectedProfiles = `Selected Client SSL profiles.`;
 }
 
 @Injectable({
@@ -270,8 +269,7 @@ export class DashboardHelpText {
   Tiers = 'Total Tiers within the current tenant.';
   Vlans = 'Total Vlans within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
-  LbVirtualServers =
-    'Total Load Balancer Virtual Servers within the current tenant.';
+  LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';

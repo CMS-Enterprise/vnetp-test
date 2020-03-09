@@ -58,6 +58,7 @@ export class ImportExportComponent implements OnInit {
             throw new Error('Invalid File Type');
           }
           const options = {
+            skipEmptyLines: true,
             header: true,
             complete: results => {
               importCallback(results.data);
@@ -84,18 +85,14 @@ export class ImportExportComponent implements OnInit {
           throw new Error('Invalid File Type');
         }
         const exportCsv = this.papa.unparse(exportObject);
-        return this.sanitizer.bypassSecurityTrustUrl(
-          'data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv),
-        );
+        return this.sanitizer.bypassSecurityTrustUrl('data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv));
 
       case 'json':
         if (this.disableJson) {
           throw new Error('Invalid File Type');
         }
         const exportJson = JSON.stringify(exportObject);
-        return this.sanitizer.bypassSecurityTrustUrl(
-          'data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson),
-        );
+        return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
     }
   }
 }

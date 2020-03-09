@@ -82,10 +82,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('vlanModal') as VlanModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('vlanModal') as VlanModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -118,19 +115,13 @@ export class VlanModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [
-        '',
-        Validators.compose([Validators.required, Validators.minLength(3)]),
-      ],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
       description: ['', Validators.minLength(3)],
-      vlanNumber: [
-        '',
-        Validators.compose([Validators.min(1), Validators.max(4094)]),
-      ],
+      vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });
   }
 
-  private reset() {
+  public reset() {
     this.submitted = false;
     this.TierId = '';
     this.ngx.resetModalData('vlanModal');

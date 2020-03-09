@@ -1,10 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  ValidateIpv4Address,
-  ValidateIpv4CidrAddress,
-  ValidatePortRange,
-  ValidateIpv4Any,
-} from './network-form-validators';
+import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange, ValidateIpv4Any } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
 describe('Network Form Validators', () => {
@@ -12,9 +7,6 @@ describe('Network Form Validators', () => {
 
   it('should be valid ip addresses (any)', () => {
     const formControl = new FormControl();
-
-    formControl.setValue('any');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
 
     formControl.setValue('255.255.255.255');
     expect(ValidateIpv4Any(formControl)).toBeNull();

@@ -3,17 +3,11 @@
   identifier="virtualMachineModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Virtual Machine</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -55,6 +49,7 @@
             required
           >
             <option></option>
+            <!-- TO DO: get correct options -->
             <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">
               {{ cpuCount }}</option
             >
@@ -95,18 +90,14 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Memory (GB)</label>
-          <select
+          <label for="memorySize">Memory (GB)</label>
+          <input
+            type="number"
             name="memorySize"
             formControlName="memorySize"
             class="form-control"
             required
-          >
-            <option></option>
-            <option *ngFor="let memory of [1, 2, 4, 8, 16, 32]">
-              {{ memory }}
-            </option>
-          </select>
+          />
         </div>
 
         <div class="form-group col-md-6">
@@ -151,7 +142,7 @@
             <tbody>
               <tr *ngFor="let v of virtualDisks">
                 <td>{{ v.name }}</td>
-                <td>{{ v.diskSize }} GB</td>
+                <td>{{ convertBytesToGb(v.diskSize) }} GB</td>
                 <td>{{ v.rawLun }}</td>
                 <td class="item-actions">
                   <fa
@@ -205,14 +196,14 @@
                 <td class="item-actions">
                   <fa
                     name="undo"
-                    *ngIf="v?.deletedAt"
+                    *ngIf="n?.deletedAt"
                     class="fg-success"
                     (click)="restoreNetworkAdapter(n)"
                     aria-label="Restore Network Adapter"
                   ></fa>
                   <fa
                     name="trash"
-                    [ngClass]="{ 'fg-danger': v.deletedAt }"
+                    [ngClass]="{ 'fg-danger': n.deletedAt }"
                     (click)="deleteNetworkAdapter(n)"
                     aria-label="Soft-Delete/Delete Network Adapter"
                   >

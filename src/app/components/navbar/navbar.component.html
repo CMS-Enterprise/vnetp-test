@@ -95,30 +95,6 @@
           >Systems
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a
-            class="dropdown-item"
-            routerLink="solaris"
-            queryParamsHandling="merge"
-            >Solaris Summary</a
-          >
-          <a
-            class="dropdown-item"
-            routerLink="solaris/cdom/list"
-            queryParamsHandling="merge"
-            >CDOM List</a
-          >
-          <a
-            class="dropdown-item"
-            routerLink="solaris/ldom/list"
-            queryParamsHandling="merge"
-            >LDOM List</a
-          >
-          <a
-            class="dropdown-item"
-            routerLink="solaris/imagerepository"
-            queryParamsHandling="merge"
-            >Solaris Image Respository</a
-          >
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="physical-server"
             >Physical Servers</a
@@ -134,7 +110,13 @@
             >z/VM</a
           >
           <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge"
-            >z/OS</a
+            >z/OS</a>
+          <div class="dropdown-divider"></div>
+          <a
+            class="dropdown-item"
+            routerLink="appliance"
+            queryParamsHandling="merge"
+            >Appliance aaS</a
           >
         </div>
       </li>
@@ -161,7 +143,7 @@
 
       <li class="nav-item">
         <a
-          class="nav-link disabled"
+          class="nav-link"
           [routerLinkActive]="['active']"
           routerLink="jobs"
           queryParamsHandling="merge"
@@ -239,7 +221,7 @@
     ></button>
   </div>
 
-  <div>
+  <div class="modal-body">
     Current Datacenter:
     {{ currentDatacenter?.name || 'No Datacenter Selected' }}
 

@@ -3,9 +3,7 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2"
-        >Tier <tooltip [message]="helpText?.Tier"></tooltip
-      ></span>
+      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText?.Tier"></tooltip></span>
       <select
         name="tier"
         class="form-control col-md-3 mr-1"
@@ -13,35 +11,23 @@
         (ngModelChange)="getObjectsForNavIndex()"
         [disabled]="datacenterService.datacenterLockValue"
       >
-        <option *ngFor="let tier of tiers" [ngValue]="tier">{{
-          tier.name
-        }}</option>
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
     </div>
   </div>
 
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-        >Subnets <tooltip [message]="helpText?.Subnets"></tooltip
-      ></a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Subnets <tooltip [message]="helpText?.Subnets"></tooltip></a>
     </li>
     <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >VLANs
-        <tooltip [message]="helpText?.Vlans"></tooltip
-      ></a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">VLANs <tooltip [message]="helpText?.Vlans"></tooltip></a>
     </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openSubnetModal('Create')"
-        aria-label="Create Subnet"
-      >
+      <button type="button" class="btn btn-success" (click)="openSubnetModal('Create')" aria-label="Create Subnet">
         <fa name="plus"></fa>
         Create Subnet
       </button>
@@ -55,11 +41,12 @@
           <th scope="col">VLAN</th>
           <th scope="col">Network</th>
           <th scope="col">Gateway</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let subnet of subnets">
+        <tr *ngFor="let subnet of subnets | paginate: { itemsPerPage: 10, currentPage: currentSubnetsPage }">
           <td>
             <span>{{ subnet?.name }}</span>
           </td>
@@ -75,21 +62,12 @@
           <td>
             <span>{{ subnet?.gateway }}</span>
           </td>
+          <td>
+            <span>{{ subnet?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
+          </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              *ngIf="!subnet?.deletedAt"
-              (click)="openSubnetModal('Edit', subnet)"
-              aria-label="Edit Subnet"
-            >
-            </fa>
-            <fa
-              name="undo"
-              *ngIf="subnet?.deletedAt"
-              class="fg-success"
-              (click)="restoreSubnet(subnet)"
-              aria-label="Restore Subnet"
-            ></fa>
+            <fa name="pencil" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal('Edit', subnet)" aria-label="Edit Subnet"> </fa>
+            <fa name="undo" *ngIf="subnet?.deletedAt" class="fg-success" (click)="restoreSubnet(subnet)" aria-label="Restore Subnet"></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': subnet.deletedAt }"
@@ -104,16 +82,12 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentSubnetsPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openVlanModal('Create')"
-        aria-label="VLANs"
-      >
+      <button type="button" class="btn btn-success" (click)="openVlanModal('Create')" aria-label="VLANs">
         <fa name="plus"></fa>
         Create VLAN
       </button>
@@ -125,11 +99,12 @@
           <th scope="col">Name</th>
           <th scope="col">Description</th>
           <th scope="col">VLAN Number</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vlan of vlans">
+        <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: 10, currentPage: currentVlansPage }">
           <td>
             <span>{{ vlan?.name }}</span>
           </td>
@@ -139,20 +114,12 @@
           <td>
             <span>{{ vlan?.vlanNumber }}</span>
           </td>
+          <td>
+            <span>{{ vlan?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
+          </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              *ngIf="!vlan?.deletedAt"
-              (click)="openVlanModal('Edit', vlan)"
-              aria-label="Edit VLAN"
-            ></fa>
-            <fa
-              name="undo"
-              *ngIf="vlan?.deletedAt"
-              class="fg-success"
-              (click)="restoreVlan(vlan)"
-              aria-label="Restore VLAN"
-            ></fa>
+            <fa name="pencil" *ngIf="!vlan?.deletedAt" (click)="openVlanModal('Edit', vlan)" aria-label="Edit VLAN"></fa>
+            <fa name="undo" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa>
             <fa
               name="trash"
               [ngClass]="{ 'fg-danger': vlan.deletedAt }"
@@ -166,19 +133,36 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
+  </div>
+  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
   </div>
 </div>
 
-<!-- 
-<div *ngIf="currentTier" class="pull-right">
+<div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export
-    [exportObject]="exportSubnetConfig()"
-    exportFileName="subnets-{{ currentTier.name }}"
-    disableCsv="true"
+    [exportObject]="subnets"
+    exportFileName="subnets-{{ currentTier?.name }}"
+    [disableJson]="false"
     (import)="importSubnetConfig($event)"
   ></app-import-export>
-</div> -->
+</div>
+
+<div *ngIf="navIndex === 1" class="pull-right">
+  <app-import-export
+    [exportObject]="vlans"
+    exportFileName="vlans-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importVlansConfig($event)"
+  ></app-import-export>
+</div>
 
 <app-subnet-modal></app-subnet-modal>
 <app-vlan-modal></app-vlan-modal>
-<app-yes-no-modal></app-yes-no-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

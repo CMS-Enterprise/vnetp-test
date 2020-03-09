@@ -8,10 +8,6 @@ export function ValidateIpv4Any(control: FormControl) {
     return null;
   }
 
-  if (control.value === 'any') {
-    return null;
-  }
-
   const ipArray = control.value.split('/');
   if (ipArray.length < 1 || ipArray.length > 2) {
     return { validIpv4Any: true };
@@ -45,10 +41,7 @@ export function ValidateIpv4CidrAddress(control: FormControl) {
     return { validIpv4Address: true };
   }
 
-  if (
-    !isValidIpAddress(valueArray[0]) ||
-    !isValidNetMask(Number(valueArray[1]))
-  ) {
+  if (!isValidIpAddress(valueArray[0]) || !isValidNetMask(Number(valueArray[1]))) {
     return { validIpv4Address: true };
   }
   return null;

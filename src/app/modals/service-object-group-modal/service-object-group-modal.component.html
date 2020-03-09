@@ -3,17 +3,11 @@
   identifier="serviceObjectGroupModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
   customClass="medium-modal"
 >
   <div class="modal-header">
     <h4 class="modal-title">Service Object Group</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -74,11 +68,21 @@
       Service Objects
       <tooltip [message]="helpText.ServiceObjects"></tooltip>
 
-      <div *ngIf="ModalMode==='Edit'" class="btn-group-sm pull-right mb-2" role="group">
-
-        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{standalone: true}">
+      <div
+        *ngIf="ModalMode === 'Edit'"
+        class="btn-group-sm pull-right mb-2"
+        role="group"
+      >
+        <select
+          [(ngModel)]="selectedServiceObject"
+          [ngModelOptions]="{ standalone: true }"
+        >
           <option></option>
-          <option *ngFor="let tierServiceObject of tierServiceObjects" [ngValue]="tierServiceObject">{{ tierServiceObject?.name }}</option>
+          <option
+            *ngFor="let tierServiceObject of tierServiceObjects"
+            [ngValue]="tierServiceObject"
+            >{{ tierServiceObject?.name }}</option
+          >
         </select>
 
         <button
@@ -106,25 +110,19 @@
         <tbody>
           <tr *ngFor="let serviceObject of serviceObjects">
             <td>
-              <p>{{ serviceObject?.name }}</p>
+              <span>{{ serviceObject?.name }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.protocol }}</p>
+              <span>{{ serviceObject?.protocol }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.sourcePorts }}</p>
+              <span>{{ serviceObject?.sourcePorts }}</span>
             </td>
             <td>
-              <p>{{ serviceObject?.destinationPorts }}</p>
+              <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
             <td class="item-actions">
-              <fa
-                name="pencil"
-                (click)="editServiceObject(serviceObject)"
-                aria-label="Edit Service Object"
-              >
-              </fa>
-              <fa name="times" class="fg-danger" (click)="removeServiceObject(serviceObject)">
+              <fa name="times" (click)="removeServiceObject(serviceObject)">
               </fa>
             </td>
           </tr>

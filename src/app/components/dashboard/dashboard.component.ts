@@ -1,17 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
-import {
-  Vlan,
-  Datacenter,
-  Tier,
-  V1DatacentersService,
-  V1TiersService,
-  Subnet,
-  V1VmwareVirtualMachinesService,
-  VmwareVirtualMachine,
-  V1LoadBalancerVirtualServersService,
-  LoadBalancerVirtualServer,
-} from 'api_client';
+import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
@@ -28,12 +17,10 @@ export class DashboardComponent implements OnInit {
     private loadBalancerService: V1LoadBalancerVirtualServersService,
   ) {}
 
-  datacenters: Array<Datacenter>;
-  tiers: Array<Tier>;
-  vlans: Array<Vlan>;
-  subnets: Array<Subnet>;
-  vmwareVirtualMachines: Array<VmwareVirtualMachine>;
-  loadBalancerVirtualServers: Array<LoadBalancerVirtualServer>;
+  datacenters: number;
+  tiers: number;
+  vmwareVirtualMachines: number;
+  loadBalancerVirtualServers: number;
 
   status = [
     { name: 'User Interface', status: 'green' },
@@ -59,11 +46,13 @@ export class DashboardComponent implements OnInit {
     this.getDatacenters();
     this.getTiers();
     this.getVmwareVirtualMachines();
+    this.getLoadBalancerVirtualServers();
   }
 
   getDatacenters() {
-    this.datacenterService.v1DatacentersGet({}).subscribe(data => {
-      this.datacenters = data;
+    this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.datacenters = paged.total;
       try {
         this.status[1].status = 'green';
       } catch {}
@@ -71,30 +60,24 @@ export class DashboardComponent implements OnInit {
   }
 
   getTiers() {
-    this.tierService.v1TiersGet({ join: 'vlans,subnets' }).subscribe(data => {
-      this.tiers = data;
-      this.vlans = [];
-      this.subnets = [];
-
-      this.tiers.forEach(tier => {
-        this.vlans = this.vlans.concat(tier.vlans);
-        this.subnets = this.subnets.concat(tier.subnets);
-      });
+    this.tierService.v1TiersGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.tiers = paged.total;
     });
   }
 
   getVmwareVirtualMachines() {
-    this.vmwareService.v1VmwareVirtualMachinesGet({}).subscribe(data => {
-      this.vmwareVirtualMachines = data;
+    this.vmwareService.v1VmwareVirtualMachinesGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.vmwareVirtualMachines = paged.total;
     });
   }
 
   getLoadBalancerVirtualServers() {
-    this.loadBalancerService
-      .v1LoadBalancerVirtualServersGet({})
-      .subscribe(data => {
-        this.loadBalancerVirtualServers = data;
-      });
+    this.loadBalancerService.v1LoadBalancerVirtualServersGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.loadBalancerVirtualServers = paged.total;
+    });
   }
 
   getJobs() {
@@ -116,22 +99,12 @@ export class DashboardComponent implements OnInit {
 
   sortJobs() {
     const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
-    this.failedJobs = this.jobs.results.filter(
-      job => job.failed && job.status !== 'canceled',
-    ).length;
-    this.cancelledJobs = this.jobs.results.filter(
-      job => job.failed && job.status === 'canceled',
-    ).length;
+    this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
+    this.cancelledJobs = this.jobs.results.filter(job => job.failed && job.status === 'canceled').length;
 
-    this.successfulJobs = nonFailedJobs.filter(
-      job => job.status === 'successful',
-    ).length;
-    this.runningJobs = nonFailedJobs.filter(
-      job => job.status === 'running',
-    ).length;
-    this.pendingJobs = nonFailedJobs.filter(
-      job => job.status === 'pending',
-    ).length;
+    this.successfulJobs = nonFailedJobs.filter(job => job.status === 'successful').length;
+    this.runningJobs = nonFailedJobs.filter(job => job.status === 'running').length;
+    this.pendingJobs = nonFailedJobs.filter(job => job.status === 'pending').length;
 
     this.pieChartData = new Array<PieChartData>();
 

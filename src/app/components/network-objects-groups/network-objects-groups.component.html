@@ -3,9 +3,7 @@
 
   <div class="mt-3 mb-3">
     <div class="form-row pb-2">
-      <span class="col-form-label mr-2"
-        >Tier <tooltip [message]="helpText.Tier"></tooltip
-      ></span>
+      <span class="col-form-label mr-2">Tier <tooltip [message]="helpText.Tier"></tooltip></span>
       <select
         name="tier"
         class="form-control col-md-3 mr-1"
@@ -13,35 +11,30 @@
         (ngModelChange)="getObjectsForNavIndex()"
         [disabled]="datacenterService.datacenterLockValue"
       >
-        <option *ngFor="let tier of tiers" [ngValue]="tier">{{
-          tier.name
-        }}</option>
+        <option *ngFor="let tier of tiers" [ngValue]="tier">{{ tier.name }}</option>
       </select>
     </div>
   </div>
 
   <ul class="nav nav-tabs">
     <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-        >Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip
-      ></a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip></a>
     </li>
     <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >Network Object Groups
-        <tooltip [message]="helpText.NetworkObjects"></tooltip
+        >Network Object Groups <tooltip [message]="helpText.NetworkObjects"></tooltip
       ></a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"
+        >Network Object Group Relations
+      </a>
     </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openNetworkObjectModal('Create')"
-        aria-label="Create Network Object"
-      >
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal('Create')" aria-label="Create Network Object">
         <fa name="plus"></fa>
         Create Network Object
       </button>
@@ -62,7 +55,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let netObj of networkObjects">
+        <tr *ngFor="let netObj of networkObjects | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectsPage }">
           <td>
             <span>{{ netObj?.name }}</span>
           </td>
@@ -70,12 +63,8 @@
             <span>{{ netObj?.type }}</span>
           </td>
           <td>
-            <span *ngIf="netObj?.type === 'IpAddress'">{{
-              netObj?.ipAddress
-            }}</span>
-            <span *ngIf="netObj?.type === 'Range'">
-              {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }}
-            </span>
+            <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+            <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
           </td>
           <td>
             <span>{{ netObj?.translatedIpAddress }}</span>
@@ -90,17 +79,10 @@
             <span>{{ netObj?.natProtocol }}</span>
           </td>
           <td>
-            <span *ngIf="netObj?.natService">
-              {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }}
-            </span>
+            <span *ngIf="netObj?.natService"> {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }} </span>
           </td>
           <td class="item-actions">
-            <fa
-              name="pencil"
-              *ngIf="!netObj?.deletedAt"
-              (click)="openNetworkObjectModal('Edit', netObj)"
-              aria-label="Edit Network Object"
-            >
+            <fa name="pencil" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal('Edit', netObj)" aria-label="Edit Network Object">
             </fa>
             <fa
               name="undo"
@@ -123,16 +105,12 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentNetworkObjectsPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="openNetworkObjectGroupModal('Create')"
-        aria-label="Network Object Groups"
-      >
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal('Create')" aria-label="Network Object Groups">
         <fa name="plus"></fa>
         Create Network Object Group
       </button>
@@ -147,7 +125,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let netObjGroup of networkObjectGroups">
+        <tr
+          *ngFor="let netObjGroup of networkObjectGroups | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectGroupsPage }"
+        >
           <td>
             <span>{{ netObjGroup.name }}</span>
           </td>
@@ -181,18 +161,54 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentNetworkObjectGroupsPage = $event"></pagination-controls>
+  </div>
+
+  <div *ngIf="navIndex == 2">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Click the import CSV button to add network object group relations</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  
+  <div *ngIf="navIndex !== 2" class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
   </div>
 </div>
 
-<div *ngIf="currentTier" class="pull-right">
+
+
+<div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export
-    [exportObject]="exportNetworkObjectConfig()"
-    exportFileName="networkObjects-{{ currentTier.name }}"
-    disableCsv="true"
-    (import)="importNetworkObjectConfig($event)"
+    [exportObject]="networkObjects"
+    exportFileName="networkObjects-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importNetworkObjectsConfig($event)"
   ></app-import-export>
+</div>
+
+<div *ngIf="navIndex === 1" class="pull-right">
+  <app-import-export
+    [exportObject]="networkObjectGroups"
+    exportFileName="networkObjectGroups-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importNetworkObjectGroupsConfig($event)"
+  ></app-import-export>
+</div>
+
+
+<div *ngIf="navIndex === 2" class="pull-right">
+  <app-import-export [disableExport]="true" [disableJson]="false" (import)="importNetworkObjectGroupRelationsConfig($event)"></app-import-export>
 </div>
 
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
-<app-yes-no-modal></app-yes-no-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

@@ -13,6 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -50,7 +51,7 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
 import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
-import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
@@ -79,6 +80,13 @@ import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/net
 import { ZvmComponent } from './components/zvm/zvm.component';
 import { ZosComponent } from './components/zos/zos.component';
 import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
+import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
+import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
+import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
+import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
+import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -147,6 +155,13 @@ export function apiConfigFactory(): Configuration {
     ZvmComponent,
     ZosComponent,
     ZosZvmRequestModalComponent,
+    ProfileModalComponent,
+    PolicyModalComponent,
+    ApplianceComponent,
+    ApplianceModalComponent,
+    NetworkPortsModalComponent,
+    ApplianceDetailComponent,
+    PhysicalServerDetailComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
@@ -167,6 +182,7 @@ export function apiConfigFactory(): Configuration {
       preventDuplicates: true,
     }),
     NgxSmartModalModule.forRoot(),
+    NgxPaginationModule,
     D3Module,
   ],
   providers: [
