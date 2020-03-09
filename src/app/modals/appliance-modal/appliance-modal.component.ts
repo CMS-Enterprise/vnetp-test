@@ -42,7 +42,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     const appliance = {} as Appliance;
     appliance.name = this.form.value.name;
     appliance.description = this.form.value.description;
-    appliance.rackUnits = this.form.value.rackUnits; // TO DO: not saving, no error
+    appliance.rackUnits = this.form.value.rackUnits;
     appliance.serialNumber = this.form.value.serialNumber;
     appliance.deliveryDate = this.form.value.deliveryDate;
     appliance.localStorageType = this.form.value.localStorageType;
