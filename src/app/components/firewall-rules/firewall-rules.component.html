@@ -20,6 +20,7 @@
     <tr>
       <th scope="col">Tier</th>
       <th scope="col">Firewall Rules</th>
+      <th scope="col">State</th>
     </tr>
   </thead>
   <tbody>
@@ -36,9 +37,10 @@
       <td>
         <a routerLink="/firewall-rule-group/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge">{{ firewallRuleGroup.name }}</a>
       </td>
+      <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
     </tr>
     <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
-      <td colspan="2">No Tiers</td>
+      <td colspan="3">No Tiers</td>
     </tr>
   </tbody>
 </table>

@@ -60,6 +60,7 @@
           <th scope="col">Destination Address</th>
           <th scope="col">Service Port</th>
           <th scope="col">Pool</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -80,6 +81,9 @@
           <td>
             <span>{{ virtualServer?.defaultPoolId | resolve: getPoolName }}</span>
           </td>
+          <td>
+            <span>{{ virtualServer?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+          </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openVirtualServerModal('Edit', virtualServer)" aria-label="Edit Virtual Server"> </fa>
             <fa
@@ -98,7 +102,7 @@
           </td>
         </tr>
         <tr *ngIf="virtualServers?.length === 0" class="text-center">
-          <td colspan="6">No Virtual Servers in this Tier.</td>
+          <td colspan="7">No Virtual Servers in this Tier.</td>
         </tr>
       </tbody>
     </table>
@@ -121,6 +125,7 @@
           <th scope="col">Service Port</th>
           <th scope="col">Nodes</th>
           <th scope="col">Health Monitors</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -141,6 +146,9 @@
           <td>
             <span>{{ pool?.healthMonitors?.length }}</span>
           </td>
+          <td>
+            <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+          </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool"> </fa>
             <fa name="undo" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa>
@@ -153,7 +161,7 @@
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="6">No Pools in this tier</td>
+          <td colspan="7">No Pools in this tier</td>
         </tr>
       </tbody>
     </table>
@@ -173,11 +181,12 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
-          <th scope="col">Ip Address</th>
+          <th scope="col">IP Address</th>
           <th scope="col">FQDN</th>
           <th scope="col">Autopopulate</th>
           <th scope="col">Service Port</th>
           <th scope="col">Priority</th>
+          <th scope="col">State</th>
           <th></th>
         </tr>
       </thead>
@@ -204,6 +213,9 @@
           <td>
             <span>{{ node?.priority }}</span>
           </td>
+          <td>
+            <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+          </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node"> </fa>
             <fa name="undo" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa>
@@ -216,7 +228,7 @@
           </td>
         </tr>
         <tr *ngIf="!nodes?.length" class="text-center">
-          <td colspan="8">No Nodes in this tier</td>
+          <td colspan="9">No Nodes in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -236,6 +248,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Content</th>
+          <th scope="col">State</th>
           <th></th>
         </tr>
       </thead>
@@ -246,6 +259,9 @@
           </td>
           <td>
             <span>{{ irule?.content }}</span>
+          </td>
+          <td>
+            <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openIRuleModal('Edit', irule)" aria-label="Edit iRule"> </fa>
@@ -259,7 +275,7 @@
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">
-          <td colspan="3">No iRules in this Tier</td>
+          <td colspan="4">No iRules in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -282,6 +298,7 @@
           <th scope="col">Service Port</th>
           <th scope="col">Interval</th>
           <th scope="col">Timeout</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -302,6 +319,9 @@
           <td>
             <span>{{ healthMonitor?.timeout }}</span>
           </td>
+          <td>
+            <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+          </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openHealthMonitorModal('Edit', healthMonitor)" aria-label="Edit Health Monitor"> </fa>
             <fa
@@ -320,7 +340,7 @@
           </td>
         </tr>
         <tr *ngIf="!healthMonitors?.length" class="text-center">
-          <td colspan="6">No Health Monitors in this Tier</td>
+          <td colspan="7">No Health Monitors in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -340,6 +360,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -350,6 +371,9 @@
           </td>
           <td>
             <span>{{ profile?.type }}</span>
+          </td>
+          <td>
+            <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openProfileModal('Edit', profile)" aria-label="Edit Profile"> </fa>
@@ -369,7 +393,7 @@
           </td>
         </tr>
         <tr *ngIf="!profiles?.length" class="text-center">
-          <td colspan="6">No Profiles in this Tier</td>
+          <td colspan="4">No Profiles in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -389,6 +413,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -399,6 +424,9 @@
           </td>
           <td>
             <span>{{ policy?.type }}</span>
+          </td>
+          <td>
+            <span>{{ policy?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" (click)="openPolicyModal('Edit', policy)" aria-label="Edit Policy"> </fa>
@@ -412,7 +440,7 @@
           </td>
         </tr>
         <tr *ngIf="!policies?.length" class="text-center">
-          <td colspan="6">No Policies in this Tier</td>
+          <td colspan="4">No Policies in this Tier</td>
         </tr>
       </tbody>
     </table>

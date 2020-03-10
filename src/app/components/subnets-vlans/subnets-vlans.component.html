@@ -63,7 +63,7 @@
             <span>{{ subnet?.gateway }}</span>
           </td>
           <td>
-            <span>{{ subnet?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
+            <span>{{ subnet?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal('Edit', subnet)" aria-label="Edit Subnet"> </fa>
@@ -78,7 +78,7 @@
           </td>
         </tr>
         <tr *ngIf="!subnets?.length" class="text-center">
-          <td colspan="9">No Subnets in this Tier</td>
+          <td colspan="7">No Subnets in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -115,7 +115,7 @@
             <span>{{ vlan?.vlanNumber }}</span>
           </td>
           <td>
-            <span>{{ vlan?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
+            <span>{{ vlan?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" *ngIf="!vlan?.deletedAt" (click)="openVlanModal('Edit', vlan)" aria-label="Edit VLAN"></fa>
@@ -129,7 +129,7 @@
           </td>
         </tr>
         <tr *ngIf="!vlans?.length" class="text-center">
-          <td colspan="4">No VLANs in this Tier</td>
+          <td colspan="5">No VLANs in this Tier</td>
         </tr>
       </tbody>
     </table>

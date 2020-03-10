@@ -37,7 +37,7 @@
             <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
           </td>
           <td>
-            <span>{{ tier?.provisionedAt ? "Provisioned" : "Not Provisioned" }}</span>
+            <span>{{ tier?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa name="pencil" *ngIf="!tier?.deletedAt" (click)="openTierModal('Edit', tier)" aria-label="Edit Tier"> </fa>
@@ -47,7 +47,7 @@
           </td>
         </tr>
         <tr *ngIf="!tiers?.length" class="text-center">
-          <td colspan="5">No Tiers in this Datacenter</td>
+          <td colspan="6">No Tiers in this Datacenter</td>
         </tr>
       </tbody>
     </table>
