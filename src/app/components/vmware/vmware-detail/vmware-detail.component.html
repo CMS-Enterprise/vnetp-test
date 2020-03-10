@@ -1,5 +1,10 @@
 <!-- add back button? -->
 <div class="clearfix">
+  <a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
+    <fa name="arrow-left"></fa>
+    Back
+  </a>
+
   <h1>Virtual Machine: {{ VirtualMachine?.name }}</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
