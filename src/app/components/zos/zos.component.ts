@@ -47,7 +47,6 @@ export class ZosComponent implements OnInit, OnDestroy {
   }
 
   exportFile(requestFile) {
-    console.log(requestFile);
     const reader = new FileReader();
     reader.readAsText(requestFile);
     reader.onload = () => {
