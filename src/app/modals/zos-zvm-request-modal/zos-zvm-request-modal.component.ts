@@ -26,36 +26,43 @@ export class ZosZvmRequestModalComponent implements OnInit {
       const configuration = {} as ConfigurationUpload;
       configuration.type = this.configurationType;
       configuration.file = this.file;
+      console.log(this.file);
       this.configurationService
-        .v1ConfigurationUploadPost({
-          configurationUpload: configuration,
+        .v1ConfigurationUploadUploadConfigPost({
+          requestedAt: new Date(),
+          file: this.file,
+          type: this.configurationType,
         })
         .subscribe(data => this.closeModal());
+      // this.configurationService
+      //   .v1ConfigurationUploadPost({
+      //     configurationUpload: configuration,
+      //   })
+      //   .subscribe(data => this.closeModal());
     } else if (this.uploadType === 'configuration' && this.uploadId) {
-      this.configure();
+      // this.configure();
     }
   }
 
-  configure() {
-    this.configurationService
-      .v1ConfigurationUploadIdConfigurePatch({
-        id: this.uploadId,
-        configurationDto: { configuration: this.file },
-      })
-      .subscribe(data => this.closeModal());
-  }
+  // configure() {
+  //   this.configurationService
+  //     .v1ConfigurationUploadIdConfigurePatch({
+  //       id: this.uploadId,
+  //       configurationDto: { configuration: this.file },
+  //     })
+  //     .subscribe(data => this.closeModal());
+  // }
 
   importFile(event: any) {
     const files = event.target.files;
     const file = files[0];
-    const fileByteArray = [];
     const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
 
-    reader.onloadend = () => {
-      this.file = reader.result;
-      this.file = ('\\x' + this.file ? this.file.toString('hex') : '') as any;
-    };
+    reader.addEventListener('load', (evt: any) => {
+      this.file = evt.target.result;
+    });
+
+    reader.readAsArrayBuffer(file);
   }
 
   private closeModal() {

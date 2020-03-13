@@ -12,6 +12,13 @@
 
 
 export interface ConfigurationDto { 
-    configuration: object;
+    file: object;
+    type: ConfigurationDtoType;
 }
+export enum ConfigurationDtoType {
+    OS = 'OS',
+    VM = 'VM'
+};
+
+
 

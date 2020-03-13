@@ -53,9 +53,6 @@ export class ZosComponent implements OnInit, OnDestroy {
       const exportObject = reader.result.toString();
       console.log(exportObject);
     };
-
-    // console.log(exportJson);
-    // return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
   }
 
   private unsubAll() {

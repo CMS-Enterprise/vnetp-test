@@ -294,6 +294,23 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/configuration-upload/upload-config:
+    post:
+      parameters:
+        - name: file
+          required: true
+          in: formData
+          description: Configuration file.
+          type: file
+      responses:
+        '201':
+          description: ''
+      tags: &ref_1
+        - v1/configuration-upload
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
   '/v1/configuration-upload/{id}/configure':
     patch:
       summary: Provisions an Entity.
@@ -310,8 +327,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_1
-        - v1/configuration-upload
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -11719,10 +11735,16 @@ definitions:
   ConfigurationDto:
     type: object
     properties:
-      configuration:
+      file:
         $ref: '#/definitions/Buffer'
+      type:
+        type: string
+        enum:
+          - OS
+          - VM
     required:
-      - configuration
+      - file
+      - type
   ConfigurationUpload:
     type: object
     properties:
