@@ -29,9 +29,7 @@ export class ZosZvmRequestModalComponent implements OnInit {
       console.log(this.file);
       this.configurationService
         .v1ConfigurationUploadUploadConfigPost({
-          requestedAt: new Date(),
           file: this.file,
-          type: this.configurationType,
         })
         .subscribe(data => this.closeModal());
       // this.configurationService

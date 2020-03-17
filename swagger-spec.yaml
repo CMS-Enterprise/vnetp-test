@@ -299,9 +299,11 @@ paths:
       parameters:
         - name: file
           required: true
-          in: formData
-          description: Configuration file.
-          type: file
+          in: body
+          description: Uploads
+          isArray: false
+          schema:
+            $ref: '#/definitions/ConfigurationDto'
       responses:
         '201':
           description: ''
@@ -11729,22 +11731,17 @@ definitions:
           $ref: '#/definitions/Job'
     required:
       - name
-  Buffer:
-    type: object
-    properties: {}
   ConfigurationDto:
     type: object
     properties:
       file:
-        $ref: '#/definitions/Buffer'
-      type:
         type: string
-        enum:
-          - OS
-          - VM
+        format: binary
     required:
       - file
-      - type
+  Buffer:
+    type: object
+    properties: {}
   ConfigurationUpload:
     type: object
     properties:

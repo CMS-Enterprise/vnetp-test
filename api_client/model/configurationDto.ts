@@ -12,13 +12,6 @@
 
 
 export interface ConfigurationDto { 
-    file: object;
-    type: ConfigurationDtoType;
+    file: Blob;
 }
-export enum ConfigurationDtoType {
-    OS = 'OS',
-    VM = 'VM'
-};
-
-
 
