@@ -55,8 +55,7 @@ export class ZvmComponent implements OnInit, OnDestroy {
 
     const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
     const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
-    console.log('ixXlsm', isXlsm);
-    console.log('isDoc', isDocx);
+
     const date = new Date().toISOString().slice(0, 19);
     if (isXlsm) {
       this.downloadName = `${date}.xlsm`;

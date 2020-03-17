@@ -20,7 +20,15 @@
     <tbody>
       <tr *ngFor="let configuration of configurations">
         <td>{{ configuration.requestedAt | date: "medium" }}</td>
-        <td>{{ configuration.configuredAt | date: "medium" }}</td>
+        <td>
+          {{ configuration.configuredAt | date: "medium" }}
+          <ng-container *ngIf="configuration.configuration">
+            <a class="btn btn-info btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
+              (click)="exportFile(configuration.file)">
+              <fa name="download"></fa>
+            </a>
+          </ng-container>
+        </td>
         <td>
           <a
             class="btn btn-info btn-sm mr-1"
@@ -30,7 +38,6 @@
           >
             <fa name="download"></fa>
           </a>
-          <!-- TO DO: if admin -->
 
           <fa name="upload" (click)="openRequestModal('configuration', configuration.id)"></fa>
         </td>

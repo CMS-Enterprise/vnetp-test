@@ -26,30 +26,24 @@ export class ZosZvmRequestModalComponent implements OnInit {
       const configuration = {} as ConfigurationUpload;
       configuration.type = this.configurationType;
       configuration.file = this.form.get('file').value;
-      console.log(configuration);
       this.configurationService
         .v1ConfigurationUploadPost({
           configurationUpload: configuration,
         })
         .subscribe(data => this.closeModal());
-      // this.configurationService
-      //   .v1ConfigurationUploadPost({
-      //     configurationUpload: configuration,
-      //   })
-      //   .subscribe(data => this.closeModal());
     } else if (this.uploadType === 'configuration' && this.uploadId) {
-      // this.configure();
+      this.configure();
     }
   }
 
-  // configure() {
-  //   this.configurationService
-  //     .v1ConfigurationUploadIdConfigurePatch({
-  //       id: this.uploadId,
-  //       configurationDto: { configuration: this.file },
-  //     })
-  //     .subscribe(data => this.closeModal());
-  // }
+  configure() {
+    this.configurationService
+      .v1ConfigurationUploadIdConfigurePatch({
+        id: this.uploadId,
+        configurationDto: { configuration: this.form.get('file').value },
+      })
+      .subscribe(data => this.closeModal());
+  }
 
   importFile(event: any) {
     const reader = new FileReader();
