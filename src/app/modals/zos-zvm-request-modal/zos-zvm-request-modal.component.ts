@@ -34,13 +34,16 @@ export class ZosZvmRequestModalComponent implements OnInit {
     } else if (this.uploadType === 'configuration' && this.uploadId) {
       this.configure();
     }
+    this.ngx.resetModalData('requestModal');
+    this.file = null;
   }
 
   configure() {
+    const configuration = this.form.get('file').value;
     this.configurationService
       .v1ConfigurationUploadIdConfigurePatch({
         id: this.uploadId,
-        configurationDto: { configuration: this.form.get('file').value },
+        configurationDto: { configuration },
       })
       .subscribe(data => this.closeModal());
   }

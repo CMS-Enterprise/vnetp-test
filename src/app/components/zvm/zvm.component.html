@@ -22,7 +22,7 @@
         <td>{{ configuration.requestedAt | date: "medium" }}</td>
         <td>
           {{ configuration.configuredAt | date: "medium" }}
-          <ng-container *ngIf="configuration.configuration">
+          <ng-container *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
             <a class="btn btn-info btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
               (click)="exportFile(configuration.file)">
               <fa name="download"></fa>
@@ -49,5 +49,4 @@
   </table>
 </div>
 
-<!-- modal -->
 <app-zos-zvm-request-modal></app-zos-zvm-request-modal>

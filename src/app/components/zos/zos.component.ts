@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-zos',
@@ -12,6 +12,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ZosComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;
   configurations: ConfigurationUpload[];
+  downloadHref: SafeUrl;
+  downloadName: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -47,12 +49,21 @@ export class ZosComponent implements OnInit, OnDestroy {
   }
 
   exportFile(requestFile) {
-    const reader = new FileReader();
-    reader.readAsText(requestFile);
-    reader.onload = () => {
-      const exportObject = reader.result.toString();
-      console.log(exportObject);
-    };
+    const utf8decoder = new TextDecoder();
+    const buff = new Uint8Array(requestFile.data);
+    const blob = utf8decoder.decode(buff);
+
+    const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
+    const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
+
+    const date = new Date().toISOString().slice(0, 19);
+    if (isXlsm) {
+      this.downloadName = `${date}.xlsm`;
+    }
+    if (isDocx) {
+      this.downloadName = `${date}.docx`;
+    }
+    this.downloadHref = this.sanitizer.bypassSecurityTrustUrl(blob);
   }
 
   private unsubAll() {
