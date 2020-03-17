@@ -73,10 +73,6 @@ export interface V1ConfigurationUploadPostRequestParams {
     configurationUpload: ConfigurationUpload;
 }
 
-export interface V1ConfigurationUploadUploadConfigPostRequestParams {
-    file: Blob;
-}
-
 
 @Injectable({
   providedIn: 'root'
@@ -101,19 +97,6 @@ export class V1ConfigurationUploadService {
         this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
     }
 
-    /**
-     * @param consumes string[] mime-types
-     * @return true: consumes contains 'multipart/form-data', false: otherwise
-     */
-    private canConsumeForm(consumes: string[]): boolean {
-        const form = 'multipart/form-data';
-        for (const consume of consumes) {
-            if (form === consume) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     /**
@@ -526,64 +509,6 @@ export class V1ConfigurationUploadService {
 
         return this.httpClient.post<ConfigurationUpload>(`${this.configuration.basePath}/v1/configuration-upload`,
             configurationUpload,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1ConfigurationUploadUploadConfigPost(requestParameters: V1ConfigurationUploadUploadConfigPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1ConfigurationUploadUploadConfigPost(requestParameters: V1ConfigurationUploadUploadConfigPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1ConfigurationUploadUploadConfigPost(requestParameters: V1ConfigurationUploadUploadConfigPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1ConfigurationUploadUploadConfigPost(requestParameters: V1ConfigurationUploadUploadConfigPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const file = requestParameters.file;
-        if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling v1ConfigurationUploadUploadConfigPost.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'multipart/form-data'
-        ];
-
-        const canConsumeForm = this.canConsumeForm(consumes);
-
-        let formParams: { append(param: string, value: any): any; };
-        let useForm = false;
-        let convertFormParamsToString = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
-        useForm = canConsumeForm;
-        if (useForm) {
-            formParams = new FormData();
-        } else {
-            formParams = new HttpParams({encoder: this.encoder});
-        }
-
-        if (file !== undefined) {
-            formParams = formParams.append('file', <any>file) as any || formParams;
-        }
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/configuration-upload/upload-config`,
-            convertFormParamsToString ? formParams.toString() : formParams,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

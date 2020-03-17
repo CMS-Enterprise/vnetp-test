@@ -12,6 +12,6 @@
 
 
 export interface ConfigurationDto { 
-    file: Blob;
+    configuration: object;
 }
 

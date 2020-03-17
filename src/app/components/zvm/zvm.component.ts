@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { V1ConfigurationUploadService, ConfigurationUpload, ConfigurationUploadType } from 'api_client';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 export class ZvmComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;
   configurations: ConfigurationUpload[];
+  downloadHref: SafeUrl;
+  downloadName: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -47,15 +49,22 @@ export class ZvmComponent implements OnInit, OnDestroy {
   }
 
   exportFile(requestFile) {
-    const reader = new FileReader();
-    reader.readAsText(requestFile);
-    reader.onload = () => {
-      const exportObject = reader.result.toString();
-      console.log(exportObject);
-    };
+    const utf8decoder = new TextDecoder();
+    const buff = new Uint8Array(requestFile.data);
+    const blob = utf8decoder.decode(buff);
 
-    // console.log(exportJson);
-    // return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
+    const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
+    const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
+    console.log('ixXlsm', isXlsm);
+    console.log('isDoc', isDocx);
+    const date = new Date().toISOString().slice(0, 19);
+    if (isXlsm) {
+      this.downloadName = `${date}.xlsm`;
+    }
+    if (isDocx) {
+      this.downloadName = `${date}.docx`;
+    }
+    this.downloadHref = this.sanitizer.bypassSecurityTrustUrl(blob);
   }
 
   private unsubAll() {

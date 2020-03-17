@@ -25,11 +25,11 @@ export class ZosZvmRequestModalComponent implements OnInit {
     if (this.uploadType === 'request') {
       const configuration = {} as ConfigurationUpload;
       configuration.type = this.configurationType;
-      configuration.file = this.file;
-      console.log(this.file);
+      configuration.file = this.form.get('file').value;
+      console.log(configuration);
       this.configurationService
-        .v1ConfigurationUploadUploadConfigPost({
-          file: this.file,
+        .v1ConfigurationUploadPost({
+          configurationUpload: configuration,
         })
         .subscribe(data => this.closeModal());
       // this.configurationService
@@ -52,15 +52,16 @@ export class ZosZvmRequestModalComponent implements OnInit {
   // }
 
   importFile(event: any) {
-    const files = event.target.files;
-    const file = files[0];
     const reader = new FileReader();
-
-    reader.addEventListener('load', (evt: any) => {
-      this.file = evt.target.result;
-    });
-
-    reader.readAsArrayBuffer(file);
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.form.patchValue({
+          file: reader.result,
+        });
+      };
+    }
   }
 
   private closeModal() {
@@ -76,7 +77,7 @@ export class ZosZvmRequestModalComponent implements OnInit {
     this.ngx.resetModalData('requestModal');
   }
 
-  private buildForm() {
+  public buildForm() {
     this.form = this.formBuilder.group({
       file: ['', Validators.required],
     });
