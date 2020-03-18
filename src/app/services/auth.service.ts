@@ -12,9 +12,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(
-    null,
-  );
+  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   public currentUser: Observable<User> = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private cs: CookieService) {

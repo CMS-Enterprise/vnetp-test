@@ -34,9 +34,7 @@ describe('StaticRouteDetailComponent', () => {
         ReactiveFormsModule,
       ],
       declarations: [StaticRouteDetailComponent, ImportExportComponent, YesNoModalComponent, StaticRouteModalComponent],
-      providers: [CookieService,        { provide: NgxSmartModalService, useValue: ngx },
-
-      ],
+      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 

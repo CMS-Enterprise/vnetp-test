@@ -7,13 +7,8 @@ export interface ComponentCanDeactivate {
 }
 
 @Injectable()
-export class PendingChangesGuard
-  implements CanDeactivate<ComponentCanDeactivate> {
-  canDeactivate(
-    component: ComponentCanDeactivate,
-  ): boolean | Observable<boolean> {
-    return component.canDeactivate()
-      ? true
-      : confirm('WARNING: Unsaved changes will be lost.');
+export class PendingChangesGuard implements CanDeactivate<ComponentCanDeactivate> {
+  canDeactivate(component: ComponentCanDeactivate): boolean | Observable<boolean> {
+    return component.canDeactivate() ? true : confirm('WARNING: Unsaved changes will be lost.');
   }
 }

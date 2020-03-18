@@ -372,7 +372,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       if (key === 'ipAddress') {
         obj[key] = String(val).trim();
       }
-      if (key === 'vrf_name' || key === 'vrfName') {
+      if (key === 'vrf_name') {
         obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

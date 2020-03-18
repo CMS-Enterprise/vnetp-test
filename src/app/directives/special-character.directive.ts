@@ -18,9 +18,7 @@ export class SpecialCharacterDirective {
 
   validateFields(event) {
     setTimeout(() => {
-      this.el.nativeElement.value = this.el.nativeElement.value
-        .replace(/[^A-Za-z ]/g, '')
-        .replace(/\s/g, '');
+      this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^A-Za-z ]/g, '').replace(/\s/g, '');
       event.preventDefault();
     }, 100);
   }

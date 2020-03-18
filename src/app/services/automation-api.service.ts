@@ -14,11 +14,7 @@ import { throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class AutomationApiService {
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private ms: MessageService,
-  ) {}
+  constructor(private http: HttpClient, private auth: AuthService, private ms: MessageService) {}
 
   getJobs(query?: string) {
     if (query == null) {
@@ -35,37 +31,18 @@ export class AutomationApiService {
   launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
-    return this.http
-      .post<any>(
-        environment.apiBase +
-          '/api/v2/job_templates/' +
-          fullJobName +
-          '/launch/',
-        ansibleBody,
-      )
-      .pipe(
-        map(response => {
-          if (sendJobLaunchMessage) {
-            this.ms.sendMessage(
-              new AppMessage(
-                `Job ${response.job} Launched.`,
-                response,
-                AppMessageType.JobLaunchSuccess,
-              ),
-            );
-          }
-          return response;
-        }),
-        catchError(error => {
-          this.ms.sendMessage(
-            new AppMessage(
-              `Error: "${error.statusText}".`,
-              AppMessageType.JobLaunchFail,
-            ),
-          );
-          return throwError(error);
-        }),
-      );
+    return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody).pipe(
+      map(response => {
+        if (sendJobLaunchMessage) {
+          this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
+        }
+        return response;
+      }),
+      catchError(error => {
+        this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
+        return throwError(error);
+      }),
+    );
   }
 
   getAdminGroups() {
@@ -73,12 +50,7 @@ export class AutomationApiService {
   }
 
   doqlQuery(query: string) {
-    return this.http.get(
-      environment.apiBase +
-        '/services/data/v1.0/query/?query=' +
-        query +
-        '&output_type=json',
-    );
+    return this.http.get(environment.apiBase + '/services/data/v1.0/query/?query=' + query + '&output_type=json');
   }
 
   getIps() {
@@ -96,57 +68,33 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
   getDevicesbyName(name: string) {
-    return this.http.get(
-      environment.apiBase + `/api/1.0/devices/?name=${name}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?name=${name}`);
   }
   getCDoms() {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom`);
   }
 
   getLDoms() {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom`);
   }
   getLDomByName(name: string) {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
   getCDomByName(name: string) {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&virtual_host_name=${name}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&virtual_host_name=${name}`);
   }
 
   getLDomsForCDom(name: string) {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
   getCDomByID(id: any) {
-    return this.http.get(
-      environment.apiBase +
-        `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
   getSolarisImages(name: string) {
-    return this.http.get(
-      environment.apiBase + `/api/1.0/parts/?device=${name}`,
-    );
+    return this.http.get(environment.apiBase + `/api/1.0/parts/?device=${name}`);
   }
   getSolarisImageDetail(id: any) {
-    return this.http.get<SolarisImage[]>(
-      environment.apiBase + `/api/1.0/parts/?device_id=${id}`,
-    );
+    return this.http.get<SolarisImage[]>(environment.apiBase + `/api/1.0/parts/?device_id=${id}`);
   }
 
   getVrfs() {

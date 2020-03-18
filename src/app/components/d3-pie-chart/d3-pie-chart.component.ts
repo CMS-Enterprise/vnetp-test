@@ -48,9 +48,7 @@ export class D3PieChartComponent implements OnInit, OnChanges {
       .outerRadius(this.radius - 10)
       .innerRadius(0);
 
-    const x: PieArcDatum<InternalPieChartData>[] = pieChartDataGenerator(
-      this.data,
-    );
+    const x: PieArcDatum<InternalPieChartData>[] = pieChartDataGenerator(this.data);
 
     this.chartdata = x.map(element => {
       return {

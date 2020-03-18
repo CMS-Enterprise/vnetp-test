@@ -13,10 +13,7 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
   DatacenterId: string;
   currentDatacenterSubscription: Subscription;
 
-  constructor(
-    private datacenterContextService: DatacenterContextService,
-    private tierService: V1TiersService,
-  ) {}
+  constructor(private datacenterContextService: DatacenterContextService, private tierService: V1TiersService) {}
 
   getTiers() {
     this.tierService
@@ -29,15 +26,13 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.DatacenterId = cd.id;
-          this.tiers = [];
-          this.getTiers();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.DatacenterId = cd.id;
+        this.tiers = [];
+        this.getTiers();
+      }
+    });
   }
 
   ngOnDestroy() {

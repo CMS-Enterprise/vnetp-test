@@ -21,9 +21,7 @@ describe('LoginComponent', () => {
       imports: [
         AngularFontAwesomeModule,
         FormsModule,
-        RouterTestingModule.withRoutes([
-          { path: 'dashboard', component: DashboardComponent },
-        ]),
+        RouterTestingModule.withRoutes([{ path: 'dashboard', component: DashboardComponent }]),
         ToastrModule.forRoot(),
         HttpClientTestingModule,
       ],

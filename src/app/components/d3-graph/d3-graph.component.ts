@@ -1,13 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterContentInit,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import contextMenuFactory from 'd3-context-menu';
 import * as save_svg_as_png from 'save-svg-as-png';
@@ -51,13 +42,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     if (this.graphObject) {
-      this.graph = new Graph(
-        this.graphObject,
-        this.ignoreArray,
-        this.nameArray,
-        this.contextMenuArray,
-        this.contextMenuItemClicked,
-      );
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray, this.contextMenuItemClicked);
     } else if (!this.graph) {
       this.graph = new Graph({ Name: 'No Data to Graph' }, [''], ['']);
     }
@@ -245,10 +230,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   saveImage() {
-    save_svg_as_png.saveSvgAsPng(
-      document.getElementsByTagName('svg')[0],
-      'graph.png',
-    );
+    save_svg_as_png.saveSvgAsPng(document.getElementsByTagName('svg')[0], 'graph.png');
   }
 
   dragStarted(d) {
@@ -276,9 +258,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     if (!this.clickActionArray || !this.clickActionArray[node.group - 1]) {
       return;
     }
-    this.nodeClicked.emit(
-      new ClickResult(node, this.clickActionArray[node.group - 1]),
-    );
+    this.nodeClicked.emit(new ClickResult(node, this.clickActionArray[node.group - 1]));
   }
 
   OnNodeRightClick(node: GraphNode) {

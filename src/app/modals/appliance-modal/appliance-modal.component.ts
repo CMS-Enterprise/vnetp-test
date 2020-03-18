@@ -25,11 +25,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
   // networkPortsModalSubscription: Subscription;
   // networkPorts: Array<ApplianceNetworkPort>;
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    private applianceService: V1AppliancesService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private applianceService: V1AppliancesService) {}
 
   // getNetworkPorts() {}
   // openNetworkPortsModal() {}
@@ -46,19 +42,15 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     const appliance = {} as Appliance;
     appliance.name = this.form.value.name;
     appliance.description = this.form.value.description;
-    appliance.rackUnits = this.form.value.rackUnits; // TO DO: not saving, no error
+    appliance.rackUnits = this.form.value.rackUnits;
     appliance.serialNumber = this.form.value.serialNumber;
     appliance.deliveryDate = this.form.value.deliveryDate;
     appliance.localStorageType = this.form.value.localStorageType;
-    appliance.localStorageRequired = this.form.value.localStorageRequired;
-    appliance.localStorageSize = this.convertGbToBytes(
-      this.form.value.localStorageSize,
-    );
+    appliance.localStorageRequired = this.stringToBoolean(this.form.value.localStorageRequired);
+    appliance.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
     appliance.sanType = this.form.value.sanType;
-    appliance.sanRequired = this.form.value.sanRequired;
-    appliance.sanStorageSize = this.convertGbToBytes(
-      this.form.value.sanStorageSize,
-    );
+    appliance.sanRequired = this.stringToBoolean(this.form.value.sanRequired);
+    appliance.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
     appliance.powerSupplyVoltage = this.form.value.powerSupplyVoltage;
     appliance.powerSupplyWattage = this.form.value.powerSupplyWattage;
     appliance.powerSupplyConnectionType = this.form.value.powerSupplyConnectionType;
@@ -104,10 +96,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('applianceModal') as ApplianceModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('applianceModal') as ApplianceModalDto);
 
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
@@ -122,39 +111,30 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
 
       if (this.ModalMode === ModalMode.Edit) {
         this.ApplianceId = dto.Appliance.id;
-        console.log(dto.Appliance);
       }
     }
 
     const appliance = dto.Appliance;
 
     if (appliance !== undefined) {
+      // TO DO: type mismatch between API and client model
+      const date = new Date(String(appliance.deliveryDate));
+      const deliveryDate = date.toISOString().substring(0, 10);
+
       this.form.controls.name.setValue(appliance.name);
       this.form.controls.description.setValue(appliance.description);
       this.form.controls.rackUnits.setValue(appliance.rackUnits);
       this.form.controls.serialNumber.setValue(appliance.serialNumber);
-      this.form.controls.deliveryDate.setValue(appliance.deliveryDate);
+      this.form.controls.deliveryDate.setValue(deliveryDate);
       this.form.controls.localStorageType.setValue(appliance.localStorageType);
-      this.form.controls.localStorageRequired.setValue(
-        appliance.localStorageRequired,
-      );
-      this.form.controls.localStorageSize.setValue(
-        this.convertBytesToGb(appliance.localStorageSize),
-      );
+      this.form.controls.localStorageRequired.setValue(appliance.localStorageRequired);
+      this.form.controls.localStorageSize.setValue(this.convertBytesToGb(appliance.localStorageSize));
       this.form.controls.sanType.setValue(appliance.sanType);
       this.form.controls.sanRequired.setValue(appliance.sanRequired);
-      this.form.controls.sanStorageSize.setValue(
-        this.convertBytesToGb(appliance.sanStorageSize),
-      );
-      this.form.controls.powerSupplyVoltage.setValue(
-        appliance.powerSupplyVoltage,
-      );
-      this.form.controls.powerSupplyWattage.setValue(
-        appliance.powerSupplyWattage,
-      );
-      this.form.controls.powerSupplyConnectionType.setValue(
-        appliance.powerSupplyConnectionType,
-      );
+      this.form.controls.sanStorageSize.setValue(this.convertBytesToGb(appliance.sanStorageSize));
+      this.form.controls.powerSupplyVoltage.setValue(appliance.powerSupplyVoltage);
+      this.form.controls.powerSupplyWattage.setValue(appliance.powerSupplyWattage);
+      this.form.controls.powerSupplyConnectionType.setValue(appliance.powerSupplyConnectionType);
       this.form.controls.powerSupplyCount.setValue(appliance.powerSupplyCount);
     }
     this.ngx.resetModalData('virtualMachineModal');
@@ -170,6 +150,17 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     const convertedVal = val / 1000000000;
 
     return convertedVal;
+  }
+
+  private stringToBoolean(str) {
+    switch (str) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      default:
+        return Boolean(str);
+    }
   }
 
   private buildForm() {
@@ -201,22 +192,17 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     this.buildForm();
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private unsubAll() {

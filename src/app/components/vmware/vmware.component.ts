@@ -2,11 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import {
-  VmwareVirtualMachine,
-  V1DatacentersService,
-  V1VmwareVirtualMachinesService,
-} from 'api_client';
+import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -86,25 +82,18 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!vm.deletedAt) {
-        this.virtualMachineService
-          .v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id })
-          .subscribe(data => {
-            this.getVirtualMachines();
-          });
+        this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }).subscribe(data => {
+          this.getVirtualMachines();
+        });
       } else {
-        this.virtualMachineService
-          .v1VmwareVirtualMachinesIdDelete({ id: vm.id })
-          .subscribe(data => {
-            this.getVirtualMachines();
-          });
+        this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }).subscribe(data => {
+          this.getVirtualMachines();
+        });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Virtual Machine?`,
-        `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Virtual Machine?`, `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`),
       deleteFunction,
     );
   }
@@ -127,10 +116,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
     return convertedVal;
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
     this.ngxSmartModalService.getModal('yesNoModal').open();
     const yesNoModalSubscription = this.ngxSmartModalService
@@ -146,10 +132,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [
-      this.virtualMachineModalSubscription,
-      this.currentDatacenterSubscription,
-    ].forEach(sub => {
+    [this.virtualMachineModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -161,14 +144,12 @@ export class VmwareComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.datacenterId = cd.id;
-          this.getVirtualMachines();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+        this.getVirtualMachines();
+      }
+    });
   }
 
   ngOnDestroy() {

@@ -44,11 +44,7 @@ describe('AppComponent', () => {
         TooltipComponent,
         FilterPipe,
       ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        CookieService,
-        FormBuilder,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

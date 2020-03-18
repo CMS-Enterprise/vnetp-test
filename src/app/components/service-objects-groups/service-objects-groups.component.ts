@@ -367,7 +367,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       if (key === 'type' || key === 'protocol') {
         obj[key] = String(val).toUpperCase();
       }
-      if (key === 'vrf_name' || key === 'vrfName') {
+      if (key === 'vrf_name') {
         obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

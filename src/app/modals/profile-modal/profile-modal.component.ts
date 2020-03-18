@@ -50,10 +50,7 @@ export class ProfileModalComponent implements OnInit {
       profile.key = this.privateKeyCipher;
       profile.certificate = this.form.controls.certificate.value;
 
-      if (
-        this.isUnencryptedPrivateKey(profile.key) ||
-        this.isUnencryptedPrivateKey(profile.certificate)
-      ) {
+      if (this.isUnencryptedPrivateKey(profile.key) || this.isUnencryptedPrivateKey(profile.certificate)) {
         this.toastr.error('Unencrypted Private Key not Allowed.');
         return;
       }
@@ -107,28 +104,22 @@ export class ProfileModalComponent implements OnInit {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.profileService
-            .v1LoadBalancerProfilesIdDelete({ id: profile.id })
-            .subscribe(() => {
-              this.getProfiles();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.profileService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
+          this.getProfiles();
+        });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private getProfiles() {
-    this.profileService
-      .v1LoadBalancerProfilesIdGet({ id: this.Profile.id })
-      .subscribe(data => {
-        this.Profile = data;
-      });
+    this.profileService.v1LoadBalancerProfilesIdGet({ id: this.Profile.id }).subscribe(data => {
+      this.Profile = data;
+    });
   }
 
   importPrivateKeyCipher(evt: any) {
@@ -166,9 +157,7 @@ export class ProfileModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = this.ngx.getModalData(
-      'loadBalancerProfileModal',
-    ) as ProfileModalDto;
+    const dto = this.ngx.getModalData('loadBalancerProfileModal') as ProfileModalDto;
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
@@ -203,22 +192,20 @@ export class ProfileModalComponent implements OnInit {
   private setFormValidators() {
     const certificate = this.form.controls.certificate;
 
-    this.typeSubscription = this.form.controls.type.valueChanges.subscribe(
-      type => {
-        switch (type) {
-          case 'ClientSSL':
-            certificate.setValidators(Validators.required);
-            certificate.setValue(null);
-            break;
-          case 'Http':
-            certificate.setValidators(null);
-            certificate.setValue(null);
-            break;
-        }
+    this.typeSubscription = this.form.controls.type.valueChanges.subscribe(type => {
+      switch (type) {
+        case 'ClientSSL':
+          certificate.setValidators(Validators.required);
+          certificate.setValue(null);
+          break;
+        case 'Http':
+          certificate.setValidators(null);
+          certificate.setValue(null);
+          break;
+      }
 
-        certificate.updateValueAndValidity();
-      },
-    );
+      certificate.updateValueAndValidity();
+    });
   }
 
   private buildForm() {

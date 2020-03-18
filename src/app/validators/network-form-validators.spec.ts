@@ -1,10 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  ValidateIpv4Address,
-  ValidateIpv4CidrAddress,
-  ValidatePortRange,
-  ValidateIpv4Any,
-} from './network-form-validators';
+import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange, ValidateIpv4Any } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
 describe('Network Form Validators', () => {

@@ -1,7 +1,4 @@
-import {
-  CustomFieldsObject,
-  CustomField,
-} from '../interfaces/custom-fields-object.interface';
+import { CustomFieldsObject, CustomField } from '../interfaces/custom-fields-object.interface';
 import { Subnet } from './subnet';
 
 export class Vrf implements CustomFieldsObject {

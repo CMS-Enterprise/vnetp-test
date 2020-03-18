@@ -1,9 +1,4 @@
-import {
-  LoadBalancerPool,
-  LoadBalancerVirtualServer,
-  LoadBalancerIrule,
-  LoadBalancerHealthMonitor,
-} from 'api_client';
+import { LoadBalancerPool, LoadBalancerVirtualServer, LoadBalancerIrule, LoadBalancerHealthMonitor } from 'api_client';
 
 export class LoadBalancerDto {
   Pools: LoadBalancerPool[];

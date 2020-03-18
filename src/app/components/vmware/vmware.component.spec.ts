@@ -9,12 +9,7 @@ import { VirtualMachineModalComponent } from 'src/app/modals/virtual-machine-mod
 import { VirtualDiskModalComponent } from 'src/app/modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from 'src/app/modals/network-adapter-modal/network-adapter-modal.component';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
@@ -45,12 +40,7 @@ describe('VmwareComponent', () => {
         NetworkAdapterModalComponent,
         YesNoModalComponent,
       ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        CookieService,
-        Validators,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
     }).compileComponents();
   }));
 

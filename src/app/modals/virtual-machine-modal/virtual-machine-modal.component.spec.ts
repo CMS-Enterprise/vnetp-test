@@ -1,18 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VirtualMachineModalComponent } from './virtual-machine-modal.component';
-import {
-  NgxSmartModalComponent,
-  NgxSmartModalModule,
-  NgxSmartModalService,
-} from 'ngx-smart-modal';
+import { NgxSmartModalComponent, NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -34,11 +25,7 @@ describe('VirtualMachineModalComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [VirtualMachineModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     }).compileComponents();
   }));
 

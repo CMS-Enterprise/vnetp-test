@@ -139,8 +139,7 @@ export class NetworkObjectModalHelpText {
     'Type of NAT translation, InterVRF creates a translation between two Tiers, External creates a translation between a Tier and External.';
   NatDirection =
     'Direction of the NAT translation, "In" applies the translation to traffic entering the Tier, "Out" applies the translation to traffic exiting the Tier.';
-  TranslatedIpAddress =
-    'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
+  TranslatedIpAddress = 'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
   NatService = 'Sets whether Network Object should be PATed.';
   NatProtocol = 'Protocol (TCP/UDP) that traffic must match in order to NAT.';
   NatSourcePort = 'Source Port that traffic must match in order to PAT.';
@@ -270,8 +269,7 @@ export class DashboardHelpText {
   Tiers = 'Total Tiers within the current tenant.';
   Vlans = 'Total Vlans within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
-  LbVirtualServers =
-    'Total Load Balancer Virtual Servers within the current tenant.';
+  LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -18,9 +17,12 @@ export class HttpConfigInterceptor {
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
     if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
-      request = request.clone({
-        headers: request.headers.set('Authorization', `Bearer ${currentUser.Token}`),
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${currentUser.Token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
       });
+      request = request.clone({ headers });
     }
 
     if (!request.headers.has('Accept')) {
