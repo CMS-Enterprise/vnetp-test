@@ -24,14 +24,14 @@
           {{ configuration.configuredAt | date: "medium" }}
           <ng-container
             *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
-            <a class="btn btn-info btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
+            <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
               (click)="exportFile(configuration.file)">
               <fa name="download"></fa>
             </a>
           </ng-container>
         </td>
         <td>
-          <a class="btn btn-info btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
+          <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
             (click)="exportFile(configuration.file)">
             <fa name="download"></fa>
           </a>
