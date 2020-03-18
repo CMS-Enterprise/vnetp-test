@@ -34,25 +34,18 @@ export class LdomListComponent implements OnInit {
         this.Ldoms = result.Devices as Array<SolarisLdom>;
       });
     } else if (this.CdomName) {
-      this.automationApiService
-        .getLDomsForCDom(this.CdomName)
-        .subscribe(data => {
-          const result = data as any;
-          this.Ldoms = result.Devices as Array<SolarisLdom>;
-        });
+      this.automationApiService.getLDomsForCDom(this.CdomName).subscribe(data => {
+        const result = data as any;
+        this.Ldoms = result.Devices as Array<SolarisLdom>;
+      });
     }
   }
   editLdom(device: SolarisLdom) {
-    this.automationApiService
-      .getDevicesbyID(device.device_id)
-      .subscribe(dataLdom => {
-        const resultLdom = dataLdom as SolarisLdom;
-        this.solarisService.currentLdom = this.hs.getJsonCustomField(
-          resultLdom,
-          'Metadata',
-        ) as SolarisLdom;
-        this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
-        this.router.navigate(['/solaris/ldom/create']);
-      });
+    this.automationApiService.getDevicesbyID(device.device_id).subscribe(dataLdom => {
+      const resultLdom = dataLdom as SolarisLdom;
+      this.solarisService.currentLdom = this.hs.getJsonCustomField(resultLdom, 'Metadata') as SolarisLdom;
+      this.solarisService.parentCdom = this.solarisService.currentLdom.associatedcdom;
+      this.router.navigate(['/solaris/ldom/create']);
+    });
   }
 }

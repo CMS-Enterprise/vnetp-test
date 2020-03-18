@@ -3,12 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VmwareDetailComponent } from './vmware-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

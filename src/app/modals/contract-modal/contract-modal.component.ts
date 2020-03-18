@@ -17,11 +17,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   filterEntryFormSubmitted: boolean;
   filterEntries: Array<FilterEntry>;
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    public helpText: ContractModalHelpText,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, public helpText: ContractModalHelpText) {}
 
   save() {
     this.submitted = true;
@@ -56,10 +52,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const contract = Object.assign(
-      {},
-      this.ngx.getModalData('contractModal') as Contract,
-    );
+    const contract = Object.assign({}, this.ngx.getModalData('contractModal') as Contract);
 
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.Name);
@@ -86,14 +79,8 @@ export class ContractModalComponent implements OnInit, OnDestroy {
     this.filterEntryForm = this.formBuilder.group({
       name: ['', Validators.required],
       protocol: ['', Validators.required],
-      sourcePorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
-      destinationPorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
+      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
     });
   }
 

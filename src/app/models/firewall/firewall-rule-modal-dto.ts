@@ -1,10 +1,4 @@
-import {
-  FirewallRule,
-  NetworkObjectGroup,
-  NetworkObject,
-  ServiceObject,
-  ServiceObjectGroup,
-} from 'api_client';
+import { FirewallRule, NetworkObjectGroup, NetworkObject, ServiceObject, ServiceObjectGroup } from 'api_client';
 import { ModalMode } from '../other/modal-mode';
 
 export class FirewallRuleModalDto {

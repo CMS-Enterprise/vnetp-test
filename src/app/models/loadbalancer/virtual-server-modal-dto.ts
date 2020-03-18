@@ -1,8 +1,4 @@
-import {
-  LoadBalancerPool,
-  LoadBalancerIrule,
-  LoadBalancerVirtualServer,
-} from 'api_client';
+import { LoadBalancerPool, LoadBalancerIrule, LoadBalancerVirtualServer } from 'api_client';
 import { ModalMode } from '../other/modal-mode';
 
 export class VirtualServerModalDto {

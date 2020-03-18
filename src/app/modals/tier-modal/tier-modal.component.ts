@@ -1,12 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  Tier,
-  V1TiersService,
-  V1TierGroupsService,
-  TierGroup,
-} from 'api_client';
+import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalHelpText } from 'src/app/helptext/help-text-networking';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
@@ -89,10 +84,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('tierModal') as TierModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('tierModal') as TierModalDto);
 
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
@@ -125,19 +117,14 @@ export class TierModalComponent implements OnInit, OnDestroy {
   }
 
   private getTierGroups() {
-    this.tierGroupService
-      .v1TierGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}` })
-      .subscribe(data => {
-        this.tierGroups = data;
-      });
+    this.tierGroupService.v1TierGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}` }).subscribe(data => {
+      this.tierGroups = data;
+    });
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [
-        '',
-        Validators.compose([Validators.required, Validators.minLength(3)]),
-      ],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
       description: ['', Validators.minLength(3)],
       tierGroup: [null],
       tierType: [null],

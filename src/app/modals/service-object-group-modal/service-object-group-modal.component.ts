@@ -3,12 +3,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  ServiceObject,
-  ServiceObjectGroup,
-  V1NetworkSecurityServiceObjectGroupsService,
-  V1TiersService,
-} from 'api_client';
+import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
@@ -93,12 +88,10 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   addServiceObject() {
     this.serviceObjectGroupService
-      .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(
-        {
-          serviceObjectGroupId: this.ServiceObjectGroupId,
-          serviceObjectId: this.selectedServiceObject.id,
-        },
-      )
+      .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost({
+        serviceObjectGroupId: this.ServiceObjectGroupId,
+        serviceObjectId: this.selectedServiceObject.id,
+      })
       .subscribe(data => {
         this.selectedServiceObject = null;
         this.getGroupServiceObjects();
@@ -106,41 +99,29 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   removeServiceObject(serviceObject: ServiceObject) {
-    const modalDto = new YesNoModalDto(
-      'Remove Service Object from Service Object Group',
-      '',
-    );
+    const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.serviceObjectGroupService
-            .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(
-              {
-                serviceObjectGroupId: this.ServiceObjectGroupId,
-                serviceObjectId: serviceObject.id,
-              },
-            )
-            .subscribe(() => {
-              this.getGroupServiceObjects();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.serviceObjectGroupService
+          .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
+            serviceObjectGroupId: this.ServiceObjectGroupId,
+            serviceObjectId: serviceObject.id,
+          })
+          .subscribe(() => {
+            this.getGroupServiceObjects();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData(
-        'serviceObjectGroupModal',
-      ) as ServiceObjectGroupModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroupModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -175,11 +156,9 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   }
 
   private getTierServiceObjects() {
-    this.tierService
-      .v1TiersIdGet({ id: this.TierId, join: 'serviceObjects' })
-      .subscribe(data => {
-        this.tierServiceObjects = data.serviceObjects;
-      });
+    this.tierService.v1TiersIdGet({ id: this.TierId, join: 'serviceObjects' }).subscribe(data => {
+      this.tierServiceObjects = data.serviceObjects;
+    });
   }
 
   private getGroupServiceObjects() {

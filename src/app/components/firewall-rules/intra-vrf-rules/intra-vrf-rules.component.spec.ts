@@ -19,18 +19,8 @@ describe('IntraVrfRulesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        NgxSmartModalModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-      ],
-      declarations: [
-        IntraVrfRulesComponent,
-        ContractModalComponent,
-        TooltipComponent,
-      ],
+      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [IntraVrfRulesComponent, ContractModalComponent, TooltipComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         {

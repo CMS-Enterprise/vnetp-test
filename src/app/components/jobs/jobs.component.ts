@@ -19,10 +19,8 @@ export class JobsComponent implements OnInit {
   }
 
   getJobs() {
-    this.jobsService
-      .v1JobsGet({ perPage: 100, sort: 'createdAt,DESC' })
-      .subscribe(data => {
-        this.jobs = data;
-      });
+    this.jobsService.v1JobsGet({ perPage: 100, sort: 'createdAt,DESC' }).subscribe(data => {
+      this.jobs = data;
+    });
   }
 }

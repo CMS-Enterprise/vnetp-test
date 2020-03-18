@@ -1,10 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  ValidateIpv4CidrAddress,
-  ValidateIpv4Address,
-} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4CidrAddress, ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 import { StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
@@ -82,10 +79,7 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('staticRouteModal') as StaticRouteModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('staticRouteModal') as StaticRouteModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -112,9 +106,7 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
 
     if (staticRoute !== undefined) {
       this.form.controls.name.setValue(staticRoute.name);
-      this.form.controls.destinationNetwork.setValue(
-        staticRoute.destinationNetwork,
-      );
+      this.form.controls.destinationNetwork.setValue(staticRoute.destinationNetwork);
       this.form.controls.nextHop.setValue(staticRoute.nextHop);
       this.form.controls.metric.setValue(staticRoute.metric);
     }
@@ -124,22 +116,9 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      destinationNetwork: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4CidrAddress]),
-      ],
-      nextHop: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4Address]),
-      ],
-      metric: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(255),
-        ]),
-      ],
+      destinationNetwork: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      nextHop: ['', Validators.compose([Validators.required, ValidateIpv4Address])],
+      metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],
     });
   }
 

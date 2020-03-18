@@ -118,23 +118,21 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.virtualServerService
-            .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
-              virtualServerId: this.VirtualServerId,
-              iruleId: irule.id,
-            })
-            .subscribe(result => {
-              this.getVirtualServerIRulesProfilesPolicies();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
+            virtualServerId: this.VirtualServerId,
+            iruleId: irule.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   addProfile() {
@@ -150,32 +148,25 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
   }
 
   removeProfile(profile: LoadBalancerProfile) {
-    const modalDto = new YesNoModalDto(
-      'Remove Profile from Virtual Server',
-      '',
-    );
+    const modalDto = new YesNoModalDto('Remove Profile from Virtual Server', '');
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.virtualServerService
-            .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete(
-              {
-                virtualServerId: this.VirtualServerId,
-                profileId: profile.id,
-              },
-            )
-            .subscribe(result => {
-              this.getVirtualServerIRulesProfilesPolicies();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete({
+            virtualServerId: this.VirtualServerId,
+            profileId: profile.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   addPolicy() {
@@ -195,32 +186,27 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.virtualServerService
-            .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
-              virtualServerId: this.VirtualServerId,
-              policyId: policy.id,
-            })
-            .subscribe(result => {
-              this.getVirtualServerIRulesProfilesPolicies();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
+            virtualServerId: this.VirtualServerId,
+            policyId: policy.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
 
     this.pools = dto.Pools;
     if (dto.TierId) {
@@ -247,13 +233,9 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       this.form.controls.type.setValue(virtualServer.type);
       this.form.controls.type.disable();
       this.form.controls.sourceAddress.setValue(virtualServer.sourceIpAddress);
-      this.form.controls.destinationAddress.setValue(
-        virtualServer.destinationIpAddress,
-      );
+      this.form.controls.destinationAddress.setValue(virtualServer.destinationIpAddress);
       this.form.controls.servicePort.setValue(virtualServer.servicePort);
-      this.form.controls.sourceAddressTranslation.setValue(
-        virtualServer.sourceAddressTranslation,
-      );
+      this.form.controls.sourceAddressTranslation.setValue(virtualServer.sourceAddressTranslation);
       this.form.controls.pool.setValue(virtualServer.defaultPoolId);
 
       this.getTierIRulesProfilesPolicies();
@@ -295,18 +277,8 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([ValidateIpv4Any])],
       sourceAddressTranslation: [''],
-      destinationAddress: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4Any]),
-      ],
-      servicePort: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(65535),
-        ]),
-      ],
+      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
+      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
       selectedIRule: [''],
       selectedProfile: [''],

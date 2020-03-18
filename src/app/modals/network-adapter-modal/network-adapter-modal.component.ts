@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {
-  V1VmwareNetworkAdapterService,
-  VmwareNetworkAdapter,
-  Vlan,
-  V1TiersService,
-} from 'api_client';
+import { V1VmwareNetworkAdapterService, VmwareNetworkAdapter, Vlan, V1TiersService } from 'api_client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 
 @Component({
@@ -55,10 +50,7 @@ export class NetworkAdapterModalComponent implements OnInit {
     networkAdapter.virtualMachineId = this.VirtualMachineId;
 
     this.ngx.resetModalData('networkAdapterModal');
-    this.ngx.setModalData(
-      Object.assign({}, networkAdapter),
-      'networkAdapterModal',
-    );
+    this.ngx.setModalData(Object.assign({}, networkAdapter), 'networkAdapterModal');
 
     this.networkAdapterService
       .v1VmwareNetworkAdapterPost({
@@ -73,10 +65,7 @@ export class NetworkAdapterModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('networkAdapterModal') as VirtualMachineModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('networkAdapterModal') as VirtualMachineModalDto);
     this.VirtualMachineId = dto.VirtualMachineId;
     this.DatacenterId = dto.DatacenterId;
     this.getVlanList();

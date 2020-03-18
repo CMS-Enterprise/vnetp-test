@@ -23,11 +23,7 @@ export class SolarisCdomListComponent implements OnInit {
   deleteCdomConfirm: string;
   cdomToDelete: SolarisCdom;
 
-  constructor(
-    private automationApiService: AutomationApiService,
-    private solarisService: SolarisService,
-    private router: Router,
-  ) {}
+  constructor(private automationApiService: AutomationApiService, private solarisService: SolarisService, private router: Router) {}
 
   ngOnInit() {
     this.automationApiService.getCDoms().subscribe(data => {

@@ -16,20 +16,13 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   loading: boolean;
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastr: ToastrService,
-  ) {}
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.returnUrl = '/dashboard';
 
     if (this.route.snapshot.queryParams.returnUrl) {
-      this.returnUrl = decodeURIComponent(
-        this.route.snapshot.queryParams.returnUrl,
-      );
+      this.returnUrl = decodeURIComponent(this.route.snapshot.queryParams.returnUrl);
     }
 
     if (!this.auth.currentUser) {

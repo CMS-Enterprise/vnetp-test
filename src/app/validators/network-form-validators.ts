@@ -41,10 +41,7 @@ export function ValidateIpv4CidrAddress(control: FormControl) {
     return { validIpv4Address: true };
   }
 
-  if (
-    !isValidIpAddress(valueArray[0]) ||
-    !isValidNetMask(Number(valueArray[1]))
-  ) {
+  if (!isValidIpAddress(valueArray[0]) || !isValidNetMask(Number(valueArray[1]))) {
     return { validIpv4Address: true };
   }
   return null;

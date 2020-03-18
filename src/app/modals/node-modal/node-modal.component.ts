@@ -4,11 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  LoadBalancerNode,
-  V1LoadBalancerNodesService,
-  V1LoadBalancerPoolsService,
-} from 'api_client';
+import { LoadBalancerNode, V1LoadBalancerNodesService, V1LoadBalancerPoolsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 
@@ -116,39 +112,32 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     const autoPopulate = this.form.get('autoPopulate');
     const ipAddress = this.form.get('ipAddress');
 
-    this.typeSubscription = this.form
-      .get('type')
-      .valueChanges.subscribe(type => {
-        if (type === 'ipaddress') {
-          ipAddress.setValidators(
-            Validators.compose([Validators.required, ValidateIpv4Address]),
-          );
-          ipAddress.setValue(null);
-          fqdn.setValidators(null);
-          fqdn.setValue(null);
-          autoPopulate.setValue(false);
-        }
+    this.typeSubscription = this.form.get('type').valueChanges.subscribe(type => {
+      if (type === 'ipaddress') {
+        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+        ipAddress.setValue(null);
+        fqdn.setValidators(null);
+        fqdn.setValue(null);
+        autoPopulate.setValue(false);
+      }
 
-        if (type === 'fqdn') {
-          // TODO: Write FQDN Validator
-          fqdn.setValidators(Validators.compose([Validators.required]));
-          fqdn.setValue(null);
-          ipAddress.setValidators(null);
-          ipAddress.setValue(null);
-          autoPopulate.setValue(false);
-        }
+      if (type === 'fqdn') {
+        // TODO: Write FQDN Validator
+        fqdn.setValidators(Validators.compose([Validators.required]));
+        fqdn.setValue(null);
+        ipAddress.setValidators(null);
+        ipAddress.setValue(null);
+        autoPopulate.setValue(false);
+      }
 
-        fqdn.updateValueAndValidity();
-        autoPopulate.updateValueAndValidity();
-        ipAddress.updateValueAndValidity();
-      });
+      fqdn.updateValueAndValidity();
+      autoPopulate.updateValueAndValidity();
+      ipAddress.updateValueAndValidity();
+    });
   }
 
   getData() {
-    const nodeDto = Object.assign(
-      {},
-      this.ngx.getModalData('nodeModal') as NodeModalDto,
-    );
+    const nodeDto = Object.assign({}, this.ngx.getModalData('nodeModal') as NodeModalDto);
     this.TierId = nodeDto.TierId;
     this.PoolId = nodeDto.PoolId;
     const node = nodeDto.node;
@@ -184,22 +173,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      servicePort: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(65535),
-        ]),
-      ],
-      priority: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(100),
-        ]),
-      ],
+      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      priority: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
     });
   }
 
