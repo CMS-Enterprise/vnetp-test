@@ -11,7 +11,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 export class ZosZvmRequestModalComponent implements OnInit {
   form: FormGroup;
   configurationType: ConfigurationUploadType;
-  file: any;
   uploadType: string;
   uploadId: string;
 
@@ -35,7 +34,6 @@ export class ZosZvmRequestModalComponent implements OnInit {
       this.configure();
     }
     this.ngx.resetModalData('requestModal');
-    this.file = null;
   }
 
   configure() {
@@ -68,9 +66,9 @@ export class ZosZvmRequestModalComponent implements OnInit {
 
   getData() {
     const configurationDto = this.ngx.getModalData('requestModal');
+    this.uploadId = configurationDto.id;
     this.configurationType = configurationDto.type;
     this.uploadType = configurationDto.uploadType;
-    this.uploadId = configurationDto.id;
     this.ngx.resetModalData('requestModal');
   }
 
@@ -86,7 +84,6 @@ export class ZosZvmRequestModalComponent implements OnInit {
   }
 
   public reset() {
-    this.file = null;
     this.uploadId = null;
     this.buildForm();
   }

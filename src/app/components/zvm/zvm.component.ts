@@ -15,6 +15,9 @@ export class ZvmComponent implements OnInit, OnDestroy {
   downloadHref: SafeUrl;
   downloadName: string;
 
+  currentConfigurationPage = 1;
+  perPage = 20;
+
   constructor(
     private ngx: NgxSmartModalService,
     private configurationService: V1ConfigurationUploadService,

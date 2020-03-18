@@ -18,7 +18,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let configuration of configurations">
+      <tr
+        *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
         <td>{{ configuration.requestedAt | date: "medium" }}</td>
         <td>
           {{ configuration.configuredAt | date: "medium" }}
@@ -47,6 +48,16 @@
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="currentConfigurationPage = $event"></pagination-controls>
+</div>
+
+<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+  <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
+    Entities per page
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
 </div>
 
 <app-zos-zvm-request-modal></app-zos-zvm-request-modal>
