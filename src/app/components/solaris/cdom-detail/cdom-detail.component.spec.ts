@@ -15,13 +15,7 @@ describe('CdomDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        RouterTestingModule.withRoutes([]),
-        NgxSmartModalModule,
-        HttpClientTestingModule,
-      ],
+      imports: [AngularFontAwesomeModule, FormsModule, RouterTestingModule.withRoutes([]), NgxSmartModalModule, HttpClientTestingModule],
       declarations: [CdomDetailComponent, LdomListComponent],
       providers: [CookieService, NgxSmartModalService],
     }).compileComponents();

@@ -14,8 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-intra-vrf-rules',
   templateUrl: './intra-vrf-rules.component.html',
 })
-export class IntraVrfRulesComponent
-  implements OnInit, OnDestroy, PendingChangesGuard {
+export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
   constructor(
     private route: ActivatedRoute,
     private ngxSm: NgxSmartModalService,
@@ -41,10 +40,7 @@ export class IntraVrfRulesComponent
   }
 
   getVrfCustomFields() {
-    const contracts = this.hs.getJsonCustomField(
-      this.vrf,
-      'intravrf_contracts',
-    ) as Array<Contract>;
+    const contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
 
     if (contracts) {
       this.contracts = contracts;
@@ -88,17 +84,15 @@ export class IntraVrfRulesComponent
   }
 
   subscribeToContractModal() {
-    this.contractModalSubscription = this.ngxSm
-      .getModal('contractModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as Contract;
+    this.contractModalSubscription = this.ngxSm.getModal('contractModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as Contract;
 
-        if (data !== undefined) {
-          this.saveContract(data);
-        }
-        this.ngxSm.resetModalData('contractModal');
-        this.contractModalSubscription.unsubscribe();
-      });
+      if (data !== undefined) {
+        this.saveContract(data);
+      }
+      this.ngxSm.resetModalData('contractModal');
+      this.contractModalSubscription.unsubscribe();
+    });
   }
 
   private unsubAll() {

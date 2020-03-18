@@ -1,5 +1,4 @@
 export class User {
-
   Username: string;
   Email: string;
   Token: string;
