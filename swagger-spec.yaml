@@ -9680,6 +9680,37 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/vts/token:
+    post:
+      responses:
+        '201':
+          description: ''
+      tags: &ref_37
+        - v1/vts
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/vts/replication-queue-depth:
+    post:
+      responses:
+        '201':
+          description: ''
+      tags: *ref_37
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/vts/replication-not-completed:
+    post:
+      responses:
+        '201':
+          description: ''
+      tags: *ref_37
+      produces:
+        - application/json
+      consumes:
+        - application/json
 definitions:
   Date:
     type: object
@@ -10550,17 +10581,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_37
+        enum: &ref_38
           - In
           - Out
       action:
         type: string
-        enum: &ref_38
+        enum: &ref_39
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_39
+        enum: &ref_40
           - IP
           - ICMP
           - TCP
@@ -10574,19 +10605,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_40
+        enum: &ref_41
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_41
+        enum: &ref_42
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_42
+        enum: &ref_43
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -10885,7 +10916,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_45
+        enum: &ref_46
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -11091,13 +11122,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_43
+        enum: &ref_44
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_44
+        enum: &ref_45
           - Standard
       servicePort:
         type: number
@@ -11449,13 +11480,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_37
+        enum: *ref_38
       action:
         type: string
-        enum: *ref_38
+        enum: *ref_39
       protocol:
         type: string
-        enum: *ref_39
+        enum: *ref_40
       logging:
         type: boolean
       enabled:
@@ -11465,13 +11496,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_40
+        enum: *ref_41
       destinationAddressType:
         type: string
-        enum: *ref_41
+        enum: *ref_42
       serviceType:
         type: string
-        enum: *ref_42
+        enum: *ref_43
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -11896,10 +11927,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_43
+        enum: *ref_44
       type:
         type: string
-        enum: *ref_44
+        enum: *ref_45
       servicePort:
         type: number
         minimum: 1
@@ -12012,7 +12043,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_45
+        enum: *ref_46
       nodes:
         type: array
         items:

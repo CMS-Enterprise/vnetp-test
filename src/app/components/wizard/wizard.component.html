@@ -128,27 +128,15 @@
             <th>Timestamp</th>
           </thead>
           <tbody>
-            <!-- *ngFor="" -->
-            <tr>
-              <td>Q02400</td>
-              <td>cgx2</td>
-              <td>sp3490</td>
-              <td>Complete</td>
-              <td>2020.03.17 11:17:33 AM EDT</td>
+            <tr *ngFor="let replication of formattedReplicationData">
+              <td>{{ replication.volser }}</td>
+              <td>{{ replication.cgx }}</td>
+              <td>{{ replication.storagePool }}</td>
+              <td>{{ replication.status }}</td>
+              <td>{{ replication.date }}</td>
             </tr>
-            <tr>
-              <td>Q20001-recall@default</td>
-              <td>cgx1</td>
-              <td>spcloud</td>
-              <td>Error</td>
-              <td>2020.03.17 11:17:09 AM EDT</td>
-            </tr>
-            <tr>
-              <td>Q02401</td>
-              <td>cgx2</td>
-              <td>sp3490</td>
-              <td>Write</td>
-              <td>2020.03.17 11:16:27 AM EDT</td>
+            <tr *ngIf="!formattedReplicationData?.length" class="text-center">
+              <td colspan="5">No replication data</td>
             </tr>
           </tbody>
         </table>
