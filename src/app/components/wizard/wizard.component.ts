@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { WizardSection } from 'src/app/models/wizard/wizard-data';
-import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
-import { pieChartData, lineChartData, pieData } from './mockChartData';
 @Component({
   selector: 'app-wizard',
   templateUrl: './wizard.component.html',
@@ -10,52 +8,24 @@ import { pieChartData, lineChartData, pieData } from './mockChartData';
 export class WizardComponent implements OnInit {
   WizardSections = new Array<WizardSection>();
   WizardProgress = 50;
-  pieChartData: any;
-  lineChartData: any;
-
-  // options
-  pieView: any[] = [700, 300];
-  pieShowLegend: boolean = true;
-  pieShowLabels: boolean = true;
-  legendPosition: string = 'below';
-
-  pieColorScheme = {
-    domain: ['#e84d4d', '#5ac4f9', '#ffdf5a'],
-  };
-
-  // line chart options
-  view: any[] = [700, 275];
-  legend: boolean = true;
-  showLabels: boolean = true;
-  animations: boolean = true;
-  xAxis: boolean = true;
-  yAxis: boolean = true;
-  showYAxisLabel: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Time';
-  yAxisLabel: string = 'Number Queued';
-  timeline: boolean = false;
-  yScaleMax = 5;
-  colorScheme = {
-    domain: ['#ffad00'],
-  };
+  currentPanel: string;
 
   constructor() {}
+
+  getSidePanel(param) {
+    console.log(param);
+    if (this.currentPanel === param) {
+      this.currentPanel = '';
+    } else {
+      this.currentPanel = param;
+    }
+  }
 
   getProgressBarPercentage(statusProgress: number) {
     return `${statusProgress}%`;
   }
 
   ngOnInit() {
-    this.pieChartData = pieChartData;
-    this.lineChartData = lineChartData;
-
-    this.lineChartData.map(item => {
-      item.series.map(d => {
-        d.name = new Date(d.name * 1000);
-      });
-    });
-
     this.WizardSections = [
       {
         Name: 'VDC1',

@@ -56,7 +56,7 @@
               <label>
                 <fa
                   name="{{ subcategory?.Expanded ? 'chevron-down' : 'chevron-right' }}"
-                  (click)="subcategory.Expanded = !subcategory.Expanded"
+                  (click)="subcategory.Expanded = !subcategory.Expanded; getSidePanel(subcategory.Name)"
                 ></fa>
 
                 {{ subcategory.Name }}
@@ -88,70 +88,7 @@
       </div>
 
       <div class="col-lg-6 card mb-2">
-        <div class="row mb-3 mt-3">
-          <div class="col-lg-12">
-            <h4>Replication Not Completed</h4>
-            <ngx-charts-pie-chart
-              [view]="pieView"
-              [scheme]="pieColorScheme"
-              [results]="pieChartData"
-              [legend]="pieShowLegend"
-              [labels]="pieShowLabels"
-            >
-            </ngx-charts-pie-chart>
-          </div>
-          <div class="col-lg-12">
-            <h4>Replication Queue Depth</h4>
-            <ngx-charts-line-chart
-              [view]="view"
-              [scheme]="colorScheme"
-              [showXAxisLabel]="showXAxisLabel"
-              [showYAxisLabel]="showYAxisLabel"
-              [xAxis]="xAxis"
-              [yAxis]="yAxis"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              [yScaleMax]="yScaleMax"
-              [timeline]="timeline"
-              [results]="lineChartData"
-            >
-            </ngx-charts-line-chart>
-          </div>
-        </div>
-
-        <table name="" class="table table-striped">
-          <thead>
-            <th>VOLSER</th>
-            <th>CGX</th>
-            <th>Storage Pool</th>
-            <th>Status</th>
-            <th>Timestamp</th>
-          </thead>
-          <tbody>
-            <!-- *ngFor="" -->
-            <tr>
-              <td>Q02400</td>
-              <td>cgx2</td>
-              <td>sp3490</td>
-              <td>Complete</td>
-              <td>2020.03.17 11:17:33 AM EDT</td>
-            </tr>
-            <tr>
-              <td>Q20001-recall@default</td>
-              <td>cgx1</td>
-              <td>spcloud</td>
-              <td>Error</td>
-              <td>2020.03.17 11:17:09 AM EDT</td>
-            </tr>
-            <tr>
-              <td>Q02401</td>
-              <td>cgx2</td>
-              <td>sp3490</td>
-              <td>Write</td>
-              <td>2020.03.17 11:16:27 AM EDT</td>
-            </tr>
-          </tbody>
-        </table>
+        <app-replication-state-panel *ngIf="currentPanel === 'Replication State'"></app-replication-state-panel>
       </div>
     </div>
   </div>
