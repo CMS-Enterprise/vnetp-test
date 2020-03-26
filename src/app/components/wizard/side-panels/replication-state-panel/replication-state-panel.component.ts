@@ -10,8 +10,8 @@ import { pieChartData, lineChartData } from '../../mockChartData';
   styleUrls: ['./replication-state-panel.component.css'],
 })
 export class ReplicationStatePanelComponent implements OnInit {
-  // pieChartData: any;
-  // lineChartData: any;
+  pieChartData: any;
+  lineChartData: any;
   // TO DO: fix these types
   replicationQueueDepth: any;
   replicationsNotCompleted: any;
