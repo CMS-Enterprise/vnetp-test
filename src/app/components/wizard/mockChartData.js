@@ -1,3 +1,4 @@
+// should be able to delete or use for initial state if fetch fails?
 export const pieChartData = [
   {
     name: 'error',
@@ -20,15 +21,42 @@ export const lineChartData = [
   {
     name: 'Replication Queue Depth',
     series: [
-      { name: 1577854800, value: 1 },
-      { name: 1577858400, value: 5 },
-      { name: 1577862000, value: 3 },
-      { name: 1577865600, value: 1 },
-      { name: 1577869200, value: 1 },
-      { name: 1577872800, value: 4 },
-      { name: 1577876400, value: 3 },
-      { name: 1577880000, value: 2 },
-      { name: 1577883600, value: 1 },
+      {
+        name: 1577854800,
+        value: 1,
+      },
+      {
+        name: 1577858400,
+        value: 5,
+      },
+      {
+        name: 1577862000,
+        value: 3,
+      },
+      {
+        name: 1577865600,
+        value: 1,
+      },
+      {
+        name: 1577869200,
+        value: 1,
+      },
+      {
+        name: 1577872800,
+        value: 4,
+      },
+      {
+        name: 1577876400,
+        value: 3,
+      },
+      {
+        name: 1577880000,
+        value: 2,
+      },
+      {
+        name: 1577883600,
+        value: 1,
+      },
     ],
   },
 ];

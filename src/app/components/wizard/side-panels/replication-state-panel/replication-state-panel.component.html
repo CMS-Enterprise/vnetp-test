@@ -36,7 +36,9 @@
     <th>Timestamp</th>
   </thead>
   <tbody>
-    <tr *ngFor="let replication of formattedReplicationData">
+    <tr
+      *ngFor="let replication of formattedReplicationData | paginate: { itemsPerPage: 20, currentPage:
+      currentReplicationPage }">
       <td>{{ replication.volser }}</td>
       <td>{{ replication.cgx }}</td>
       <td>{{ replication.storagePool }}</td>
@@ -48,3 +50,4 @@
     </tr>
   </tbody>
 </table>
+<pagination-controls (pageChange)="currentReplicationPage = $event"></pagination-controls>
