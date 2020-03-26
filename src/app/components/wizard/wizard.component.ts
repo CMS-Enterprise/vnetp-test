@@ -13,7 +13,6 @@ export class WizardComponent implements OnInit {
   constructor() {}
 
   getSidePanel(param) {
-    console.log(param);
     if (this.currentPanel === param) {
       this.currentPanel = '';
     } else {

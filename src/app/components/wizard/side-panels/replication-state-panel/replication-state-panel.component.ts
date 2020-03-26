@@ -31,7 +31,6 @@ export class ReplicationStatePanelComponent implements OnInit {
   showXAxisLabel: boolean = true;
   xAxisLabel: string = 'Time';
   yAxisLabel: string = 'Number Queued';
-  timeline: boolean = false;
   yScaleMax = 5;
   colorScheme = {
     domain: ['#ffad00'],
