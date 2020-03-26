@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultService {
+export class V1VtsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
