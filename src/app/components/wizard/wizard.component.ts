@@ -112,7 +112,6 @@ export class WizardComponent implements OnInit {
       if (this.replicationsNotCompleted) {
         parsedData = JSON.parse(JSON.stringify(this.replicationsNotCompleted));
         papaParsedData = this.papa.parse(parsedData, options);
-        console.log(papaParsedData);
         this.pieChartData = [
           {
             name: 'error',
@@ -147,9 +146,6 @@ export class WizardComponent implements OnInit {
   ngOnInit() {
     this.getReplicationQueueDepth();
     this.getReplicationNotCompleted();
-
-    this.pieChartData = pieChartData;
-    this.lineChartData = lineChartData;
 
     // For all wizard sections remove [0]
     this.WizardSections = [wizardSections[0]];
