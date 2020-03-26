@@ -3,7 +3,7 @@
     <h4>Replication Not Completed</h4>
     <ngx-charts-pie-chart
       [scheme]="pieColorScheme"
-      [results]="pieChartData"
+      [results]="replicationsNotCompleted"
       [legend]="pieShowLegend"
       [legendPosition]="pieLegendPosition"
       [labels]="pieShowLabels"
@@ -21,7 +21,7 @@
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
       [yScaleMax]="yScaleMax"
-      [results]="lineChartData"
+      [results]="replicationQueueDepth"
     >
     </ngx-charts-line-chart>
   </div>
