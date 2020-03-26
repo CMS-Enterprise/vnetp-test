@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultService {
+export class V1VtsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -49,6 +49,7 @@ export class DefaultService {
 
 
     /**
+     * Get Replication Not Completed
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -80,6 +81,7 @@ export class DefaultService {
     }
 
     /**
+     * Get Replication Queue Depth
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -100,37 +102,6 @@ export class DefaultService {
 
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/vts/replication-queue-depth`,
-            null,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1VtsTokenPost(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1VtsTokenPost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1VtsTokenPost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1VtsTokenPost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/vts/token`,
             null,
             {
                 withCredentials: this.configuration.withCredentials,

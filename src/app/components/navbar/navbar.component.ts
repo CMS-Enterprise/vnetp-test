@@ -75,6 +75,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleWizard() {
+    this.messageService.sendMessage(new AppMessage('Wizard', {}, AppMessageType.ToggleWizard));
+  }
+
   getJobs() {
     if (!this.currentUser) {
       return;

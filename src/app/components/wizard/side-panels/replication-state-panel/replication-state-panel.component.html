@@ -1,0 +1,53 @@
+<div class="mb-3 mt-3">
+  <div class="chart-wrapper m-3">
+    <h4>Replication Not Completed</h4>
+    <ngx-charts-pie-chart
+      [scheme]="pieColorScheme"
+      [results]="pieChartData"
+      [legend]="pieShowLegend"
+      [legendPosition]="pieLegendPosition"
+      [labels]="pieShowLabels"
+    >
+    </ngx-charts-pie-chart>
+  </div>
+  <div class="chart-wrapper m-3 pt-3">
+    <h4>Replication Queue Depth</h4>
+    <ngx-charts-line-chart
+      [scheme]="colorScheme"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxis]="xAxis"
+      [yAxis]="yAxis"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [yScaleMax]="yScaleMax"
+      [results]="lineChartData"
+    >
+    </ngx-charts-line-chart>
+  </div>
+</div>
+
+<table name="" class="table table-striped">
+  <thead>
+    <th>VOLSER</th>
+    <th>CGX</th>
+    <th>Storage Pool</th>
+    <th>Status</th>
+    <th>Timestamp</th>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let replication of formattedReplicationData | paginate: { itemsPerPage: 20, currentPage:
+      currentReplicationPage }">
+      <td>{{ replication.volser }}</td>
+      <td>{{ replication.cgx }}</td>
+      <td>{{ replication.storagePool }}</td>
+      <td>{{ replication.status }}</td>
+      <td>{{ replication.date }}</td>
+    </tr>
+    <tr *ngIf="!formattedReplicationData?.length" class="text-center">
+      <td colspan="5">No replication data</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentReplicationPage = $event"></pagination-controls>

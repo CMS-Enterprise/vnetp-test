@@ -31,6 +31,7 @@ import { V1VlansService } from './api/v1Vlans.service';
 import { V1VmwareNetworkAdapterService } from './api/v1VmwareNetworkAdapter.service';
 import { V1VmwareVirtualDisksService } from './api/v1VmwareVirtualDisks.service';
 import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.service';
+import { V1VtsService } from './api/v1Vts.service';
 
 @NgModule({
   imports:      [],
@@ -64,7 +65,8 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
     V1VlansService,
     V1VmwareNetworkAdapterService,
     V1VmwareVirtualDisksService,
-    V1VmwareVirtualMachinesService ]
+    V1VmwareVirtualMachinesService,
+    V1VtsService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
