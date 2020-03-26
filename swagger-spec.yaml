@@ -9680,8 +9680,9 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/vts/token:
+  /v1/vts/replication-queue-depth:
     post:
+      summary: Get Replication Queue Depth
       responses:
         '201':
           description: ''
@@ -9691,18 +9692,9 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/vts/replication-queue-depth:
-    post:
-      responses:
-        '201':
-          description: ''
-      tags: *ref_37
-      produces:
-        - application/json
-      consumes:
-        - application/json
   /v1/vts/replication-not-completed:
     post:
+      summary: Get Replication Not Completed
       responses:
         '201':
           description: ''
