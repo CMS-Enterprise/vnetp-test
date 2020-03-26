@@ -77,6 +77,9 @@ import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
+import { ZvmComponent } from './components/zvm/zvm.component';
+import { ZosComponent } from './components/zos/zos.component';
+import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
 import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
 import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
@@ -149,6 +152,9 @@ export function apiConfigFactory(): Configuration {
     VmwareDetailComponent,
     VirtualDiskModalComponent,
     NetworkAdapterModalComponent,
+    ZvmComponent,
+    ZosComponent,
+    ZosZvmRequestModalComponent,
     ProfileModalComponent,
     PolicyModalComponent,
     ApplianceComponent,
