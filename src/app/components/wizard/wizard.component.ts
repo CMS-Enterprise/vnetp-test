@@ -147,6 +147,9 @@ export class WizardComponent implements OnInit {
     this.getReplicationQueueDepth();
     this.getReplicationNotCompleted();
 
+    this.pieChartData = pieChartData;
+    this.lineChartData = lineChartData;
+
     // For all wizard sections remove [0]
     this.WizardSections = [wizardSections[0]];
   }
