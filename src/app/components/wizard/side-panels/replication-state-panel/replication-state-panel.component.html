@@ -7,6 +7,15 @@
       [legend]="pieShowLegend"
       [legendPosition]="pieLegendPosition"
       [labels]="pieShowLabels"
+      *ngIf="pieChartData"
+    >
+    </ngx-charts-pie-chart>
+    <ngx-charts-pie-chart
+      [scheme]="placeholderColor"
+      [results]="placeholderPie"
+      [labels]="pieShowLabels"
+      [animations]="false"
+      *ngIf="!pieChartData"
     >
     </ngx-charts-pie-chart>
   </div>
@@ -22,8 +31,10 @@
       [yAxisLabel]="yAxisLabel"
       [yScaleMax]="yScaleMax"
       [results]="lineChartData"
+      *ngIf="lineChartData"
     >
     </ngx-charts-line-chart>
+    <p *ngIf="!lineChartData" class="text-center">No replication queue data</p>
   </div>
 </div>
 
@@ -36,9 +47,7 @@
     <th>Timestamp</th>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let replication of formattedReplicationData | paginate: { itemsPerPage: 20, currentPage:
-      currentReplicationPage }">
+    <tr *ngFor="let replication of formattedReplicationData | paginate: { itemsPerPage: 10, currentPage: currentReplicationPage }">
       <td>{{ replication.volser }}</td>
       <td>{{ replication.cgx }}</td>
       <td>{{ replication.storagePool }}</td>

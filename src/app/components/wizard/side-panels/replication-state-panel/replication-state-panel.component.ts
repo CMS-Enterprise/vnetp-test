@@ -9,6 +9,7 @@ import { LineChartDataDto, ChartData, ReplicationTableDataDto } from '../../../.
   styleUrls: ['./replication-state-panel.component.css'],
 })
 export class ReplicationStatePanelComponent implements OnInit {
+  // TO DO: add loading state?
   currentReplicationPage = 1;
   pieChartData: ChartData[];
   lineChartData: LineChartDataDto[];
@@ -19,6 +20,8 @@ export class ReplicationStatePanelComponent implements OnInit {
   pieShowLegend = true;
   pieShowLabels = true;
   pieLegendPosition = 'below';
+  placeholderPie = [{ name: 'no data', value: 1 }];
+  placeholderColor = { domain: ['#7f8084'] };
 
   pieColorScheme = {
     domain: ['#e84d4d', '#5ac4f9', '#ffdf5a'],
