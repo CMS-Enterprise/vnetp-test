@@ -178,7 +178,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     const virtualMachine = {} as VmwareVirtualMachine;
 
     virtualMachine.description = this.form.value.description;
-    virtualMachine.cpuCores = this.form.value.cpuCount;
+    virtualMachine.cpuCores = Number(this.form.value.cpuCount);
     virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount, 10); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
     virtualMachine.memorySize = this.convertGbToBytes(this.form.value.memorySize);
