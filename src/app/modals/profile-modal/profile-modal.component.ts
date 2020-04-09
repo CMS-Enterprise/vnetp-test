@@ -7,6 +7,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { ProfilesHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-load-balancer-profile-modal',
@@ -24,13 +25,12 @@ export class ProfileModalComponent implements OnInit {
   publicKey: string;
   typeSubscription: Subscription;
 
-  // TODO: Helptext
-
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private profileService: V1LoadBalancerProfilesService,
     private toastr: ToastrService,
+    public helpText: ProfilesHelpText,
   ) {}
 
   save() {
@@ -54,6 +54,9 @@ export class ProfileModalComponent implements OnInit {
         this.toastr.error('Unencrypted Private Key not Allowed.');
         return;
       }
+    }
+    if (profile.type === 'Http') {
+      profile.reverseProxy = this.form.controls.reverseProxy.value;
     }
 
     if (this.ModalMode === ModalMode.Create) {
@@ -185,6 +188,9 @@ export class ProfileModalComponent implements OnInit {
         this.privateKeyCipher = dto.Profile.key || null;
         this.form.controls.certificate.setValue(dto.Profile.certificate);
       }
+      if (dto.Profile.type === 'Http') {
+        this.form.controls.reverseProxy.setValue(dto.Profile.reverseProxy);
+      }
     }
     this.ngx.resetModalData('loadBalancerProfileModal');
   }
@@ -213,6 +219,7 @@ export class ProfileModalComponent implements OnInit {
       name: ['', Validators.required],
       type: ['', Validators.required],
       certificate: [null],
+      reverseProxy: null,
     });
   }
 

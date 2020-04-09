@@ -65,6 +65,8 @@ export class LoadBalancersHelpText {
   Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
+  Profiles = `Manage Profiles.`;
+  Policies = `Manage Policies.`;
 }
 
 @Injectable({
@@ -77,6 +79,18 @@ export class FirewallRulesHelpText {
   External = `Firewall Rules between a Tier and CMSnet/Internet.`;
   InterVrf = `Firewall Rules between 2 Tiers.`;
   IntraVrf = `Contracts between Subnets in the same Tier.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProfilesHelpText {
+  wikiBase: string = environment.wikiBase;
+
+  Name = `Name of Profile.`;
+  Type = `Type of Profile (Http or ClientSSL).`;
+  Certificate = `ClientSSL certificate of the profile.`;
+  ReverseProxy = `Reverse Proxy Type of the profile.`;
 }
 
 @Injectable({
