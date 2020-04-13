@@ -1,10 +1,5 @@
 <nav class="navbar navbar-expand-lg" *ngIf="currentUser">
-  <a
-    class="navbar-brand"
-    routerLink="dashboard"
-    queryParamsHandling="merge"
-    title="DRaaS"
-  >
+  <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa name="bolt"></fa>
   </a>
 
@@ -33,54 +28,19 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a
-            class="dropdown-item"
-            routerLink="tiers"
-            queryParamsHandling="merge"
-            >Tiers</a
-          >
+          <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="subnets-vlans"
-            queryParamsHandling="merge"
-            >Subnets & VLANs</a
-          >
+          <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="static-routes"
-            queryParamsHandling="merge"
-            >Routing</a
-          >
+          <a class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="firewall-rules"
-            queryParamsHandling="merge"
-            >Firewall Rules</a
-          >
+          <a class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="network-objects-groups"
-            queryParamsHandling="merge"
-            >Network Objects/Groups</a
-          >
+          <a class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
 
-          <a
-            class="dropdown-item"
-            routerLink="service-objects-groups"
-            queryParamsHandling="merge"
-            >Service Objects/Groups</a
-          >
+          <a class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="load-balancers"
-            queryParamsHandling="merge"
-            >Load Balancers</a
-          >
+          <a class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -96,9 +56,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="physical-server"
-            >Physical Servers</a
-          >
+          <a class="dropdown-item" routerLink="physical-server">Physical Servers</a>
           <div class="dropdown-divider"></div>
           <a
             class="dropdown-item"
@@ -106,54 +64,41 @@
             queryParamsHandling="merge"
             >VMWare</a
           >
-          <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="appliance"
-            queryParamsHandling="merge"
-            >Appliance aaS</a
+          <a class="dropdown-item" routerLink="zvm" queryParamsHandling="merge"
+            >z/VM</a
           >
+          <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge"
+            >z/OS</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
         </div>
       </li>
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item dropdown">
-        <a
-          [ngClass]="{ 'text-danger': !currentDatacenter }"
-          class="text-bold"
-          >{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a
-        >
+        <a [ngClass]="{ 'text-danger': !currentDatacenter }" class="text-bold">{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
       </li>
 
       <li class="nav-item">
-        <button
-          class="btn btn-sm btn-info"
-          [disabled]="lockCurrentDatacenter"
-          (click)="ngx.getModal('datacenterSwitchModal').open()"
-        >
+        <button class="btn btn-sm btn-info" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">
           {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
         </button>
       </li>
 
       <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLinkActive]="['active']"
-          routerLink="jobs"
-          queryParamsHandling="merge"
-        >
-          <fa
-            name="spinner fa-spin"
-            style="padding-right:5px;"
-            [hidden]="!activeJobs.length"
-          ></fa>
-          <span class="badge badge-success" [hidden]="!activeJobs.length">
-            {{ activeJobs.length }}</span
-          >
+        <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
+          <fa name="spinner fa-spin" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa>
+          <span class="badge badge-success" [hidden]="!activeJobs.length"> {{ activeJobs.length }}</span>
           Jobs</a
         >
       </li>
+
+      <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" routerLink="wizard">
+            Wizard
+          </a>
+        </li>
 
       <li class="nav-item dropdown">
         <a
@@ -167,26 +112,16 @@
           {{ currentUser.Username }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a
-            class="dropdown-item"
-            target="_blank"
-            href="https://jiraent.cms.gov/"
-            >Ticketing System</a
-          >
+          <a class="dropdown-item" target="_blank" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item">Documentation</a>
+          <a class="dropdown-item" (click)="toggleWizard()">Configuration Wizard</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()"
-            >Logout</a
-          >
+          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
         </div>
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button
-          class="btn btn-sm btn-danger"
-          routerLink="deploy"
-          queryParamsHandling="merge"
-        >
+        <button class="btn btn-sm btn-danger" routerLink="deploy" queryParamsHandling="merge">
           Deploy
         </button>
       </li>
@@ -200,20 +135,10 @@
   </div>
 </nav>
 
-<ngx-smart-modal
-  #datacenterSwitchModal
-  identifier="datacenterSwitchModal"
-  customClass="'modal-content'"
->
+<ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal" customClass="'modal-content'">
   <div class="modal-header">
     <h4 class="modal-title">Switch Datacenter Context?</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="datacenterSwitchModal.close()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="datacenterSwitchModal.close()"></button>
   </div>
 
   <div class="modal-body">
@@ -222,76 +147,39 @@
 
     <select [(ngModel)]="selectedDatacenter" class="form-control">
       <option></option>
-      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{
-        datacenter.name
-      }}</option>
+      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
     </select>
   </div>
 
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-link"
-      data-dismiss="modal"
-      (click)="datacenterSwitchModal.close()"
-    >
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">
       Cancel
     </button>
 
-    <button
-      type="button"
-      class="btn btn-danger"
-      data-dismiss="modal"
-      (click)="switchDatacenter(); datacenterSwitchModal.close()"
-    >
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="switchDatacenter(); datacenterSwitchModal.close()">
       Yes
     </button>
   </div>
 </ngx-smart-modal>
 
-<ngx-smart-modal
-  #logoutModal
-  identifier="logoutModal"
-  customClass="'modal-content'"
->
+<ngx-smart-modal #logoutModal identifier="logoutModal" customClass="'modal-content'">
   <div class="modal-header">
     <h4 class="modal-title">Logout?</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="logoutModal.close()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logoutModal.close()"></button>
   </div>
 
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-link"
-      data-dismiss="modal"
-      (click)="logoutModal.close()"
-    >
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
       Cancel
     </button>
 
-    <button
-      type="button"
-      class="btn btn-danger"
-      data-dismiss="modal"
-      (click)="logout()"
-    >
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
       Yes
     </button>
   </div>
 </ngx-smart-modal>
 
-<ngx-smart-modal
-  #jobLaunchModal
-  identifier="jobLaunchModal"
-  customClass="'modal-content'"
-  [dismissable]="false"
->
+<ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" customClass="'modal-content'" [dismissable]="false">
   <div class="modal-header">
     <h4
       *ngIf="jobMessage?.Success"
@@ -306,13 +194,7 @@
     <h4 *ngIf="!jobMessage?.Success" class="modal-title text-danger">
       Job Launch Failed
     </h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="closeJobModal()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeJobModal()"></button>
   </div>
 
   <div class="modal-body text-center" *ngIf="!jobMessage?.Success">
@@ -332,9 +214,7 @@
           Status: {{ modalJob?.status }}
         </p>
       </div>
-      <div class="form-group col-md-6 text-center">
-        Elapsed Time: {{ modalJob?.elapsed }}s
-      </div>
+      <div class="form-group col-md-6 text-center">Elapsed Time: {{ modalJob?.elapsed }}s</div>
     </div>
   </div>
 
@@ -351,21 +231,11 @@
       View All Jobs
     </button>
 
-    <a
-      class="btn btn-danger"
-      *ngIf="!jobMessage?.Success || modalJob?.status === 'failed'"
-      target="_blank"
-      href="https://jiraent.cms.gov/"
-    >
+    <a class="btn btn-danger" *ngIf="!jobMessage?.Success || modalJob?.status === 'failed'" target="_blank" href="https://jiraent.cms.gov/">
       Open Ticket
     </a>
 
-    <button
-      type="button"
-      class="btn btn-success"
-      data-dismiss="modal"
-      (click)="closeJobModal()"
-    >
+    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="closeJobModal()">
       Close Dialog
     </button>
   </div>

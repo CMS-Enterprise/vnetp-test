@@ -1,9 +1,4 @@
-import {
-  LoadBalancerHealthMonitor,
-  LoadBalancerPool,
-  Tier,
-  LoadBalancerNode,
-} from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerPool, Tier, LoadBalancerNode } from 'api_client';
 
 export class Pool {
   name: string;

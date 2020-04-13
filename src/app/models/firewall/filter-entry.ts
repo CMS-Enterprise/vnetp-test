@@ -11,12 +11,7 @@ export class FilterEntry {
 
   DestinationPorts: string;
 
-  constructor(
-    name: string,
-    protocol: string,
-    sourcePorts: string,
-    destinationPorts: string,
-  ) {
+  constructor(name: string, protocol: string, sourcePorts: string, destinationPorts: string) {
     this.Name = name;
     this.Protocol = protocol;
     this.SourcePorts = sourcePorts;

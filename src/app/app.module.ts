@@ -14,6 +14,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -77,6 +78,9 @@ import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
 import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
+import { ZvmComponent } from './components/zvm/zvm.component';
+import { ZosComponent } from './components/zos/zos.component';
+import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
 import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
 import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
@@ -84,6 +88,8 @@ import { ApplianceModalComponent } from './modals/appliance-modal/appliance-moda
 import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
+import { WizardComponent } from './components/wizard/wizard.component';
+import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -149,6 +155,9 @@ export function apiConfigFactory(): Configuration {
     VmwareDetailComponent,
     VirtualDiskModalComponent,
     NetworkAdapterModalComponent,
+    ZvmComponent,
+    ZosComponent,
+    ZosZvmRequestModalComponent,
     ProfileModalComponent,
     PolicyModalComponent,
     ApplianceComponent,
@@ -156,6 +165,8 @@ export function apiConfigFactory(): Configuration {
     NetworkPortsModalComponent,
     ApplianceDetailComponent,
     PhysicalServerDetailComponent,
+    WizardComponent,
+    ReplicationStatePanelComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
@@ -178,6 +189,7 @@ export function apiConfigFactory(): Configuration {
     NgxSmartModalModule.forRoot(),
     NgxPaginationModule,
     D3Module,
+    NgxChartsModule,
   ],
   providers: [
     {

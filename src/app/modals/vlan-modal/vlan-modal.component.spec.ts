@@ -1,12 +1,7 @@
 // FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import {
-  FormsModule,
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
@@ -31,11 +26,7 @@ describe('VlanModalComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [VlanModalComponent, TooltipComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {

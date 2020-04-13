@@ -58,9 +58,7 @@ export class FirewallRulesComponent implements OnInit {
         this.firewallRuleGroups = new Array<FirewallRuleGroup>();
 
         this.tiers.forEach(tier => {
-          this.firewallRuleGroups = this.firewallRuleGroups.concat(
-            tier.firewallRuleGroups,
-          );
+          this.firewallRuleGroups = this.firewallRuleGroups.concat(tier.firewallRuleGroups);
         });
       });
   }
@@ -78,31 +76,27 @@ export class FirewallRulesComponent implements OnInit {
   importFirewallRuleGroupsConfig(event) {
     const modalDto = new YesNoModalDto(
       'Import Firewall Rule Groups',
-      `Are you sure you would like to import ${
-        event.length
-      } firewall rule group${event.length > 1 ? 's' : ''}?`,
+      `Are you sure you would like to import ${event.length} firewall rule group${event.length > 1 ? 's' : ''}?`,
     );
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const modalData = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (modalData && modalData.modalYes) {
-          let dto = event;
-          dto = this.sanitizeData(event);
-          this.firewallRuleGroupService
-            .v1NetworkSecurityFirewallRuleGroupsBulkPost({
-              generatedFirewallRuleGroupBulkDto: { bulk: dto },
-            })
-            .subscribe(data => {
-              this.getTiers();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        let dto = event;
+        dto = this.sanitizeData(event);
+        this.firewallRuleGroupService
+          .v1NetworkSecurityFirewallRuleGroupsBulkPost({
+            generatedFirewallRuleGroupBulkDto: { bulk: dto },
+          })
+          .subscribe(data => {
+            this.getTiers();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   sanitizeData(entities: any) {
@@ -131,13 +125,11 @@ export class FirewallRulesComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.DatacenterId = cd.id;
-          this.getTiers();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.DatacenterId = cd.id;
+        this.getTiers();
+      }
+    });
   }
 }

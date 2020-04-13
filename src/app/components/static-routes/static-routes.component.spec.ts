@@ -11,11 +11,7 @@ describe('StaticRoutesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        AngularFontAwesomeModule,
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule, AngularFontAwesomeModule],
       declarations: [StaticRoutesComponent],
       providers: [CookieService],
     }).compileComponents();

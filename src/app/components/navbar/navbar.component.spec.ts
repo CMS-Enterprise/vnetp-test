@@ -29,10 +29,7 @@ describe('NavbarComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [NavbarComponent, FilterPipe],
-      providers: [
-        CookieService,
-        { provide: NgxSmartModalService, useValue: ngx },
-      ],
+      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 

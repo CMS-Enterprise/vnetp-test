@@ -24,11 +24,7 @@ export class PolicyModalComponent implements OnInit {
 
   // TODO: Helptext
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    private policyService: V1LoadBalancerPoliciesService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private policyService: V1LoadBalancerPoliciesService) {}
 
   save() {
     this.submitted = true;
@@ -105,9 +101,7 @@ export class PolicyModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = this.ngx.getModalData(
-      'loadBalancerPolicyModal',
-    ) as PolicyModalDto;
+    const dto = this.ngx.getModalData('loadBalancerPolicyModal') as PolicyModalDto;
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
@@ -140,26 +134,24 @@ export class PolicyModalComponent implements OnInit {
     const apmContent = this.form.controls.apmContent;
     const asmContent = this.form.controls.asmContent;
 
-    this.typeSubscription = this.form.controls.type.valueChanges.subscribe(
-      type => {
-        switch (type) {
-          case 'ASM':
-            asmContent.setValidators(Validators.required);
-            asmContent.setValue(null);
-            apmContent.setValidators(null);
-            apmContent.setValue(null);
-            break;
-          case 'APM':
-            apmContent.setValidators(Validators.required);
-            apmContent.setValue(null);
-            asmContent.setValidators(null);
-            asmContent.setValue(null);
-            break;
-        }
-        apmContent.updateValueAndValidity();
-        asmContent.updateValueAndValidity();
-      },
-    );
+    this.typeSubscription = this.form.controls.type.valueChanges.subscribe(type => {
+      switch (type) {
+        case 'ASM':
+          asmContent.setValidators(Validators.required);
+          asmContent.setValue(null);
+          apmContent.setValidators(null);
+          apmContent.setValue(null);
+          break;
+        case 'APM':
+          apmContent.setValidators(Validators.required);
+          apmContent.setValue(null);
+          asmContent.setValidators(null);
+          asmContent.setValue(null);
+          break;
+      }
+      apmContent.updateValueAndValidity();
+      asmContent.updateValueAndValidity();
+    });
   }
 
   private buildForm() {

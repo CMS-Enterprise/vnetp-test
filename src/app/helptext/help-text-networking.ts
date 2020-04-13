@@ -65,6 +65,8 @@ export class LoadBalancersHelpText {
   Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
+  Profiles = `Manage Profiles.`;
+  Policies = `Manage Policies.`;
 }
 
 @Injectable({
@@ -77,6 +79,18 @@ export class FirewallRulesHelpText {
   External = `Firewall Rules between a Tier and CMSnet/Internet.`;
   InterVrf = `Firewall Rules between 2 Tiers.`;
   IntraVrf = `Contracts between Subnets in the same Tier.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProfilesHelpText {
+  wikiBase: string = environment.wikiBase;
+
+  Name = `Name of Profile.`;
+  Type = `Type of Profile (Http or ClientSSL).`;
+  Certificate = `ClientSSL certificate of the profile.`;
+  ReverseProxy = `Reverse Proxy Type of the profile.`;
 }
 
 @Injectable({
@@ -139,8 +153,7 @@ export class NetworkObjectModalHelpText {
     'Type of NAT translation, InterVRF creates a translation between two Tiers, External creates a translation between a Tier and External.';
   NatDirection =
     'Direction of the NAT translation, "In" applies the translation to traffic entering the Tier, "Out" applies the translation to traffic exiting the Tier.';
-  TranslatedIpAddress =
-    'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
+  TranslatedIpAddress = 'IP address that a network object with NAT enabled will be translated to when it traverses between the two zones.';
   NatService = 'Sets whether Network Object should be PATed.';
   NatProtocol = 'Protocol (TCP/UDP) that traffic must match in order to NAT.';
   NatSourcePort = 'Source Port that traffic must match in order to PAT.';
@@ -270,8 +283,7 @@ export class DashboardHelpText {
   Tiers = 'Total Tiers within the current tenant.';
   Vlans = 'Total Vlans within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
-  LbVirtualServers =
-    'Total Load Balancer Virtual Servers within the current tenant.';
+  LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';

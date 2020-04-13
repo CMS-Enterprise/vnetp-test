@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  PhysicalServer,
-  V1PhysicalServersService,
-  PhysicalServerNetworkPort,
-} from 'api_client';
+import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } from 'api_client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -62,10 +58,7 @@ export class PhysicalServerDetailComponent implements OnInit {
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Physical Server?`,
-        `Do you want to ${deleteDescription} physical server "${ps.name}"?`,
-      ),
+      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${ps.name}"?`),
       deleteFunction,
     );
   }
@@ -88,22 +81,17 @@ export class PhysicalServerDetailComponent implements OnInit {
     return convertedVal;
   }
 
-  private confirmDeleteObject(
-    modalDto: YesNoModalDto,
-    deleteFunction: () => void,
-  ) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   ngOnInit() {

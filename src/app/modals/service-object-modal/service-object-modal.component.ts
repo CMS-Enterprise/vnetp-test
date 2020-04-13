@@ -2,10 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
-import {
-  ServiceObject,
-  V1NetworkSecurityServiceObjectsService,
-} from 'api_client';
+import { ServiceObject, V1NetworkSecurityServiceObjectsService } from 'api_client';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -85,10 +82,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('serviceObjectModal') as ServiceObjectModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('serviceObjectModal') as ServiceObjectModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -114,9 +108,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.disable();
       this.form.controls.protocol.setValue(serviceObject.protocol);
       this.form.controls.protocol.disable();
-      this.form.controls.destinationPorts.setValue(
-        serviceObject.destinationPorts,
-      );
+      this.form.controls.destinationPorts.setValue(serviceObject.destinationPorts);
       this.form.controls.sourcePorts.setValue(serviceObject.sourcePorts);
     }
     this.ngx.resetModalData('serviceObjectModal');
@@ -126,14 +118,8 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       protocol: ['', Validators.required],
-      destinationPorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
-      sourcePorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
+      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
     });
   }
 

@@ -3,12 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkAdapterModalComponent } from './network-adapter-modal.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -30,11 +25,7 @@ describe('NetworkAdapterModalComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [NetworkAdapterModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     }).compileComponents();
   }));
 

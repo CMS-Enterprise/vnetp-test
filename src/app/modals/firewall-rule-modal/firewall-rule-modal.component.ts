@@ -2,10 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import {
-  ValidateIpv4Any,
-  ValidatePortRange,
-} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -84,39 +81,21 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
 
-    if (
-      modalFirewallRule.sourceAddressType ===
-      FirewallRuleSourceAddressType.IpAddress
-    ) {
+    if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.IpAddress) {
       modalFirewallRule.sourceIpAddress = this.form.controls.sourceIpAddress.value;
-    } else if (
-      modalFirewallRule.sourceAddressType ===
-      FirewallRuleSourceAddressType.NetworkObject
-    ) {
+    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObject) {
       modalFirewallRule.sourceNetworkObjectId = this.form.controls.sourceNetworkObject.value;
-    } else if (
-      modalFirewallRule.sourceAddressType ===
-      FirewallRuleSourceAddressType.NetworkObjectGroup
-    ) {
+    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObjectGroup) {
       modalFirewallRule.sourceNetworkObjectGroupId = this.form.controls.sourceNetworkObjectGroup.value;
     }
 
     modalFirewallRule.destinationAddressType = this.form.controls.destinationNetworkType.value;
 
-    if (
-      modalFirewallRule.destinationAddressType ===
-      FirewallRuleDestinationAddressType.IpAddress
-    ) {
+    if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.IpAddress) {
       modalFirewallRule.destinationIpAddress = this.form.controls.destinationIpAddress.value;
-    } else if (
-      modalFirewallRule.destinationAddressType ===
-      FirewallRuleDestinationAddressType.NetworkObject
-    ) {
+    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObject) {
       modalFirewallRule.destinationNetworkObjectId = this.form.controls.destinationNetworkObject.value;
-    } else if (
-      modalFirewallRule.destinationAddressType ===
-      FirewallRuleDestinationAddressType.NetworkObjectGroup
-    ) {
+    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObjectGroup) {
       modalFirewallRule.destinationNetworkObjectGroupId = this.form.controls.destinationNetworkObjectGroup.value;
     }
 
@@ -125,14 +104,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (modalFirewallRule.serviceType === FirewallRuleServiceType.Port) {
       modalFirewallRule.sourcePorts = this.form.controls.sourcePorts.value;
       modalFirewallRule.destinationPorts = this.form.controls.destinationPorts.value;
-    } else if (
-      modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObject
-    ) {
+    } else if (modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObject) {
       modalFirewallRule.serviceObjectId = this.form.controls.serviceObject.value;
-    } else if (
-      modalFirewallRule.serviceType ===
-      FirewallRuleServiceType.ServiceObjectGroup
-    ) {
+    } else if (modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup) {
       modalFirewallRule.serviceObjectGroupId = this.form.controls.serviceObjectGroup.value;
     }
 
@@ -178,9 +152,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const dto = this.ngx.getModalData(
-      'firewallRuleModal',
-    ) as FirewallRuleModalDto;
+    const dto = this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
@@ -210,92 +182,38 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.logging.setValue(firewallRule.logging);
       this.form.controls.enabled.setValue(firewallRule.enabled);
 
-      if (
-        firewallRule.sourceAddressType ===
-        FirewallRuleSourceAddressType.IpAddress
-      ) {
-        this.form.controls.sourceNetworkType.setValue(
-          FirewallRuleSourceAddressType.IpAddress,
-        );
-        this.form.controls.sourceIpAddress.setValue(
-          firewallRule.sourceIpAddress,
-        );
-      } else if (
-        firewallRule.sourceAddressType ===
-        FirewallRuleSourceAddressType.NetworkObject
-      ) {
-        this.form.controls.sourceNetworkType.setValue(
-          FirewallRuleSourceAddressType.NetworkObject,
-        );
-        this.form.controls.sourceNetworkObject.setValue(
-          firewallRule.sourceNetworkObjectId,
-        );
-      } else if (
-        firewallRule.sourceAddressType ===
-        FirewallRuleSourceAddressType.NetworkObjectGroup
-      ) {
-        this.form.controls.sourceNetworkType.setValue(
-          FirewallRuleSourceAddressType.NetworkObjectGroup,
-        );
-        this.form.controls.sourceNetworkObjectGroup.setValue(
-          firewallRule.sourceNetworkObjectGroupId,
-        );
+      if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.IpAddress) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.IpAddress);
+        this.form.controls.sourceIpAddress.setValue(firewallRule.sourceIpAddress);
+      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObject) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.NetworkObject);
+        this.form.controls.sourceNetworkObject.setValue(firewallRule.sourceNetworkObjectId);
+      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObjectGroup) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.NetworkObjectGroup);
+        this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.sourceNetworkObjectGroupId);
       }
 
-      if (
-        firewallRule.destinationAddressType ===
-        FirewallRuleDestinationAddressType.IpAddress
-      ) {
-        this.form.controls.destinationNetworkType.setValue(
-          FirewallRuleDestinationAddressType.IpAddress,
-        );
-        this.form.controls.destinationIpAddress.setValue(
-          firewallRule.destinationIpAddress,
-        );
-      } else if (
-        firewallRule.destinationAddressType ===
-        FirewallRuleDestinationAddressType.NetworkObject
-      ) {
-        this.form.controls.destinationNetworkType.setValue(
-          FirewallRuleDestinationAddressType.NetworkObject,
-        );
-        this.form.controls.destinationNetworkObject.setValue(
-          firewallRule.destinationNetworkObjectId,
-        );
-      } else if (
-        firewallRule.destinationAddressType ===
-        FirewallRuleDestinationAddressType.NetworkObjectGroup
-      ) {
-        this.form.controls.destinationNetworkType.setValue(
-          FirewallRuleDestinationAddressType.NetworkObjectGroup,
-        );
-        this.form.controls.destinationNetworkObjectGroup.setValue(
-          firewallRule.destinationNetworkObjectGroupId,
-        );
+      if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.IpAddress) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.IpAddress);
+        this.form.controls.destinationIpAddress.setValue(firewallRule.destinationIpAddress);
+      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObject) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.NetworkObject);
+        this.form.controls.destinationNetworkObject.setValue(firewallRule.destinationNetworkObjectId);
+      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObjectGroup) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.NetworkObjectGroup);
+        this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.destinationNetworkObjectGroupId);
       }
 
       if (firewallRule.serviceType === FirewallRuleServiceType.Port) {
         this.form.controls.serviceType.setValue(FirewallRuleServiceType.Port);
         this.form.controls.sourcePorts.setValue(firewallRule.sourcePorts);
-        this.form.controls.destinationPorts.setValue(
-          firewallRule.destinationPorts,
-        );
-      } else if (
-        firewallRule.serviceType === FirewallRuleServiceType.ServiceObject
-      ) {
-        this.form.controls.serviceType.setValue(
-          FirewallRuleServiceType.ServiceObject,
-        );
+        this.form.controls.destinationPorts.setValue(firewallRule.destinationPorts);
+      } else if (firewallRule.serviceType === FirewallRuleServiceType.ServiceObject) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceType.ServiceObject);
         this.form.controls.serviceObject.setValue(firewallRule.serviceObjectId);
-      } else if (
-        firewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup
-      ) {
-        this.form.controls.serviceType.setValue(
-          FirewallRuleServiceType.ServiceObjectGroup,
-        );
-        this.form.controls.serviceObjectGroup.setValue(
-          firewallRule.serviceObjectGroupId,
-        );
+      } else if (firewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceType.ServiceObjectGroup);
+        this.form.controls.serviceObjectGroup.setValue(firewallRule.serviceObjectGroupId);
       }
 
       this.form.updateValueAndValidity();
@@ -306,186 +224,147 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {
     const sourceIpAddress = this.form.controls.sourceIpAddress;
     const sourceNetworkObject = this.form.controls.sourceNetworkObject;
-    const sourceNetworkObjectGroup = this.form.controls
-      .sourceNetworkObjectGroup;
+    const sourceNetworkObjectGroup = this.form.controls.sourceNetworkObjectGroup;
 
-    this.sourceNetworkTypeSubscription = this.form.controls.sourceNetworkType.valueChanges.subscribe(
-      sourceNetworkType => {
-        switch (sourceNetworkType) {
-          case 'IpAddress':
-            sourceIpAddress.setValidators(
-              Validators.compose([Validators.required, ValidateIpv4Any]),
-            );
-            sourceNetworkObject.setValue(null);
-            sourceNetworkObject.setValidators(null);
-            sourceNetworkObjectGroup.setValue(null);
-            sourceNetworkObjectGroup.setValidators(null);
-            break;
-          case 'NetworkObject':
-            sourceIpAddress.setValue(null);
-            sourceIpAddress.setValidators(null);
-            sourceNetworkObject.setValidators(Validators.required);
-            sourceNetworkObjectGroup.setValue(null);
-            sourceNetworkObjectGroup.setValidators(null);
-            break;
-          case 'NetworkObjectGroup':
-            sourceIpAddress.setValue(null);
-            sourceIpAddress.setValidators(null);
-            sourceNetworkObject.setValue(null);
-            sourceNetworkObject.setValidators(null);
-            sourceNetworkObjectGroup.setValidators(Validators.required);
-            break;
-          default:
-            break;
-        }
+    this.sourceNetworkTypeSubscription = this.form.controls.sourceNetworkType.valueChanges.subscribe(sourceNetworkType => {
+      switch (sourceNetworkType) {
+        case 'IpAddress':
+          sourceIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+          sourceNetworkObject.setValue(null);
+          sourceNetworkObject.setValidators(null);
+          sourceNetworkObjectGroup.setValue(null);
+          sourceNetworkObjectGroup.setValidators(null);
+          break;
+        case 'NetworkObject':
+          sourceIpAddress.setValue(null);
+          sourceIpAddress.setValidators(null);
+          sourceNetworkObject.setValidators(Validators.required);
+          sourceNetworkObjectGroup.setValue(null);
+          sourceNetworkObjectGroup.setValidators(null);
+          break;
+        case 'NetworkObjectGroup':
+          sourceIpAddress.setValue(null);
+          sourceIpAddress.setValidators(null);
+          sourceNetworkObject.setValue(null);
+          sourceNetworkObject.setValidators(null);
+          sourceNetworkObjectGroup.setValidators(Validators.required);
+          break;
+        default:
+          break;
+      }
 
-        sourceIpAddress.updateValueAndValidity();
-        sourceNetworkObject.updateValueAndValidity();
-        sourceNetworkObjectGroup.updateValueAndValidity();
-      },
-    );
+      sourceIpAddress.updateValueAndValidity();
+      sourceNetworkObject.updateValueAndValidity();
+      sourceNetworkObjectGroup.updateValueAndValidity();
+    });
 
     const destinationIpAddress = this.form.controls.destinationIpAddress;
-    const destinationNetworkObject = this.form.controls
-      .destinationNetworkObject;
-    const destinationNetworkObjectGroup = this.form.controls
-      .destinationNetworkObjectGroup;
+    const destinationNetworkObject = this.form.controls.destinationNetworkObject;
+    const destinationNetworkObjectGroup = this.form.controls.destinationNetworkObjectGroup;
 
-    this.destinationNetworkTypeSubscription = this.form.controls.destinationNetworkType.valueChanges.subscribe(
-      destinationNetworkType => {
-        switch (destinationNetworkType) {
-          case 'IpAddress':
-            destinationIpAddress.setValidators(
-              Validators.compose([Validators.required, ValidateIpv4Any]),
-            );
-            destinationNetworkObject.setValue(null);
-            destinationNetworkObject.setValidators(null);
-            destinationNetworkObjectGroup.setValue(null);
-            destinationNetworkObjectGroup.setValidators(null);
-            break;
-          case 'NetworkObject':
-            destinationIpAddress.setValue(null);
-            destinationIpAddress.setValidators(null);
-            destinationNetworkObject.setValidators(Validators.required);
-            destinationNetworkObjectGroup.setValue(null);
-            destinationNetworkObjectGroup.setValidators(null);
-            break;
-          case 'NetworkObjectGroup':
-            destinationIpAddress.setValue(null);
-            destinationIpAddress.setValidators(null);
-            destinationNetworkObject.setValue(null);
-            destinationNetworkObject.setValidators(null);
-            destinationNetworkObjectGroup.setValidators(Validators.required);
-            break;
-          default:
-            break;
-        }
+    this.destinationNetworkTypeSubscription = this.form.controls.destinationNetworkType.valueChanges.subscribe(destinationNetworkType => {
+      switch (destinationNetworkType) {
+        case 'IpAddress':
+          destinationIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+          destinationNetworkObject.setValue(null);
+          destinationNetworkObject.setValidators(null);
+          destinationNetworkObjectGroup.setValue(null);
+          destinationNetworkObjectGroup.setValidators(null);
+          break;
+        case 'NetworkObject':
+          destinationIpAddress.setValue(null);
+          destinationIpAddress.setValidators(null);
+          destinationNetworkObject.setValidators(Validators.required);
+          destinationNetworkObjectGroup.setValue(null);
+          destinationNetworkObjectGroup.setValidators(null);
+          break;
+        case 'NetworkObjectGroup':
+          destinationIpAddress.setValue(null);
+          destinationIpAddress.setValidators(null);
+          destinationNetworkObject.setValue(null);
+          destinationNetworkObject.setValidators(null);
+          destinationNetworkObjectGroup.setValidators(Validators.required);
+          break;
+        default:
+          break;
+      }
 
-        destinationIpAddress.updateValueAndValidity();
-        destinationNetworkObject.updateValueAndValidity();
-        destinationNetworkObjectGroup.updateValueAndValidity();
-      },
-    );
+      destinationIpAddress.updateValueAndValidity();
+      destinationNetworkObject.updateValueAndValidity();
+      destinationNetworkObjectGroup.updateValueAndValidity();
+    });
 
     const sourcePorts = this.form.controls.sourcePorts;
     const destinationPorts = this.form.controls.destinationPorts;
     const serviceObject = this.form.controls.serviceObject;
     const serviceObjectGroup = this.form.controls.serviceObjectGroup;
 
-    this.serviceTypeSubscription = this.form.controls.serviceType.valueChanges.subscribe(
-      serviceType => {
-        switch (serviceType) {
-          case 'Port':
-            destinationPorts.setValidators(
-              Validators.compose([Validators.required, ValidatePortRange]),
-            );
-            sourcePorts.setValidators(
-              Validators.compose([Validators.required, ValidatePortRange]),
-            );
-            serviceObject.setValue(null);
-            serviceObject.setValidators(null);
-            serviceObjectGroup.setValue(null);
-            serviceObjectGroup.setValidators(null);
-            break;
-          case 'ServiceObject':
-            sourcePorts.setValue(null);
-            sourcePorts.setValidators(null);
-            destinationPorts.setValue(null);
-            destinationPorts.setValidators(null);
-            serviceObject.setValidators(
-              Validators.compose([Validators.required]),
-            );
-            serviceObjectGroup.setValue(null);
-            serviceObjectGroup.setValidators(null);
-            break;
-          case 'ServiceObjectGroup':
-            sourcePorts.setValue(null);
-            sourcePorts.setValidators(null);
-            destinationPorts.setValue(null);
-            destinationPorts.setValidators(null);
-            serviceObject.setValue(null);
-            serviceObject.setValidators(null);
-            serviceObjectGroup.setValidators(
-              Validators.compose([Validators.required]),
-            );
-            break;
-          default:
-            break;
-        }
+    this.serviceTypeSubscription = this.form.controls.serviceType.valueChanges.subscribe(serviceType => {
+      switch (serviceType) {
+        case 'Port':
+          destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+          sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+          serviceObject.setValue(null);
+          serviceObject.setValidators(null);
+          serviceObjectGroup.setValue(null);
+          serviceObjectGroup.setValidators(null);
+          break;
+        case 'ServiceObject':
+          sourcePorts.setValue(null);
+          sourcePorts.setValidators(null);
+          destinationPorts.setValue(null);
+          destinationPorts.setValidators(null);
+          serviceObject.setValidators(Validators.compose([Validators.required]));
+          serviceObjectGroup.setValue(null);
+          serviceObjectGroup.setValidators(null);
+          break;
+        case 'ServiceObjectGroup':
+          sourcePorts.setValue(null);
+          sourcePorts.setValidators(null);
+          destinationPorts.setValue(null);
+          destinationPorts.setValidators(null);
+          serviceObject.setValue(null);
+          serviceObject.setValidators(null);
+          serviceObjectGroup.setValidators(Validators.compose([Validators.required]));
+          break;
+        default:
+          break;
+      }
 
-        sourcePorts.updateValueAndValidity();
-        destinationPorts.updateValueAndValidity();
-        serviceObject.updateValueAndValidity();
-        serviceObjectGroup.updateValueAndValidity();
-      },
-    );
+      sourcePorts.updateValueAndValidity();
+      destinationPorts.updateValueAndValidity();
+      serviceObject.updateValueAndValidity();
+      serviceObjectGroup.updateValueAndValidity();
+    });
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [
-        '',
-        Validators.compose([Validators.required, Validators.maxLength(28)]),
-      ],
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(28)])],
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required],
       direction: ['', Validators.required],
-      ruleIndex: [
-        0,
-        Validators.compose([Validators.required, Validators.min(1)]),
-      ],
+      ruleIndex: [0, Validators.compose([Validators.required, Validators.min(1)])],
 
       // Source Network Info
       sourceNetworkType: ['IpAddress'],
-      sourceIpAddress: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4Any]),
-      ],
+      sourceIpAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
       sourceNetworkObject: [''],
       sourceNetworkObjectGroup: [''],
 
       // Source Service Info
-      sourcePorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
+      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
 
       // Destination Network Info
       destinationNetworkType: ['IpAddress'],
-      destinationIpAddress: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4Any]),
-      ],
+      destinationIpAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
       destinationNetworkObject: [''],
       destinationNetworkObjectGroup: [''],
 
       // Destination Service Info
       serviceType: ['Port'],
-      destinationPorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange]),
-      ],
+      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       serviceObject: [''],
       serviceObjectGroup: [''],
 
@@ -495,11 +374,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [
-      this.sourceNetworkTypeSubscription,
-      this.destinationNetworkTypeSubscription,
-      this.serviceTypeSubscription,
-    ].forEach(sub => {
+    [this.sourceNetworkTypeSubscription, this.destinationNetworkTypeSubscription, this.serviceTypeSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();

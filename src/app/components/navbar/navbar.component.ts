@@ -55,11 +55,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   modalJob: Job;
 
   getMessageServiceSubscription() {
-    this.messageServiceSubscription = this.messageService
-      .listen()
-      .subscribe((m: AppMessage) => {
-        this.messageHandler(m);
-      });
+    this.messageServiceSubscription = this.messageService.listen().subscribe((m: AppMessage) => {
+      this.messageHandler(m);
+    });
   }
 
   private messageHandler(m: AppMessage) {
@@ -77,26 +75,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleWizard() {
+    this.messageService.sendMessage(new AppMessage('Wizard', {}, AppMessageType.ToggleWizard));
+  }
+
   getJobs() {
     if (!this.currentUser) {
       return;
     }
 
-    this.automationApiService
-      .getJobs('?order_by=-created&or__status=running&or__status=pending')
-      .subscribe(data => {
-        const result = data as any;
-        this.activeJobs = result.results as Array<Job>;
-        this.updateModalJob();
-      });
+    this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(data => {
+      const result = data as any;
+      this.activeJobs = result.results as Array<Job>;
+      this.updateModalJob();
+    });
   }
 
   updateModalJob() {
-    if (
-      this.modalJob &&
-      this.modalJob.status !== 'failed' &&
-      this.modalJob.status !== 'successful'
-    ) {
+    if (this.modalJob && this.modalJob.status !== 'failed' && this.modalJob.status !== 'successful') {
       // Try to update the modal job from the activeJobs array.
       const updatedJob = this.activeJobs.find(j => j.id === this.modalJob.id);
 
@@ -114,9 +110,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   switchDatacenter() {
     try {
-      this.datacenterContextService.switchDatacenter(
-        this.selectedDatacenter.id,
-      );
+      this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
       this.toastrService.success('Datacenter Switched');
     } catch (error) {
       this.toastrService.error(error);
@@ -143,20 +137,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [
-      this.currentUserSubscription,
-      this.datacentersSubscription,
-      this.currentUserSubscription,
-      this.datacenterLockSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
+    [this.currentUserSubscription, this.datacentersSubscription, this.currentUserSubscription, this.datacenterLockSubscription].forEach(
+      sub => {
+        try {
+          if (sub) {
+            sub.unsubscribe();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+      },
+    );
 
     if (this.messageServiceSubscription) {
       this.messageServiceSubscription.unsubscribe();
@@ -164,21 +155,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(
-      u => (this.currentUser = u),
-    );
+    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
 
-    this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(
-      datacenters => (this.datacenters = datacenters),
-    );
+    this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(datacenters => (this.datacenters = datacenters));
 
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
       currentDatacenter => (this.currentDatacenter = currentDatacenter),
     );
 
     this.datacenterLockSubscription = this.datacenterContextService.lockCurrentDatacenter.subscribe(
-      lockCurrentDatacenter =>
-        (this.lockCurrentDatacenter = lockCurrentDatacenter),
+      lockCurrentDatacenter => (this.lockCurrentDatacenter = lockCurrentDatacenter),
     );
 
     // this.getMessageServiceSubscription();

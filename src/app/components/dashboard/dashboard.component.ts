@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
-import {
-  V1DatacentersService,
-  V1TiersService,
-  V1VmwareVirtualMachinesService,
-  V1LoadBalancerVirtualServersService,
-} from 'api_client';
+import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
@@ -55,15 +50,13 @@ export class DashboardComponent implements OnInit {
   }
 
   getDatacenters() {
-    this.datacenterService
-      .v1DatacentersGet({ page: 1, perPage: 1 })
-      .subscribe(data => {
-        const paged = data as any;
-        this.datacenters = paged.total;
-        try {
-          this.status[1].status = 'green';
-        } catch {}
-      });
+    this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.datacenters = paged.total;
+      try {
+        this.status[1].status = 'green';
+      } catch {}
+    });
   }
 
   getTiers() {
@@ -74,21 +67,17 @@ export class DashboardComponent implements OnInit {
   }
 
   getVmwareVirtualMachines() {
-    this.vmwareService
-      .v1VmwareVirtualMachinesGet({ page: 1, perPage: 1 })
-      .subscribe(data => {
-        const paged = data as any;
-        this.vmwareVirtualMachines = paged.total;
-      });
+    this.vmwareService.v1VmwareVirtualMachinesGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.vmwareVirtualMachines = paged.total;
+    });
   }
 
   getLoadBalancerVirtualServers() {
-    this.loadBalancerService
-      .v1LoadBalancerVirtualServersGet({ page: 1, perPage: 1 })
-      .subscribe(data => {
-        const paged = data as any;
-        this.loadBalancerVirtualServers = paged.total;
-      });
+    this.loadBalancerService.v1LoadBalancerVirtualServersGet({ page: 1, perPage: 1 }).subscribe(data => {
+      const paged = data as any;
+      this.loadBalancerVirtualServers = paged.total;
+    });
   }
 
   getJobs() {
@@ -110,22 +99,12 @@ export class DashboardComponent implements OnInit {
 
   sortJobs() {
     const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
-    this.failedJobs = this.jobs.results.filter(
-      job => job.failed && job.status !== 'canceled',
-    ).length;
-    this.cancelledJobs = this.jobs.results.filter(
-      job => job.failed && job.status === 'canceled',
-    ).length;
+    this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
+    this.cancelledJobs = this.jobs.results.filter(job => job.failed && job.status === 'canceled').length;
 
-    this.successfulJobs = nonFailedJobs.filter(
-      job => job.status === 'successful',
-    ).length;
-    this.runningJobs = nonFailedJobs.filter(
-      job => job.status === 'running',
-    ).length;
-    this.pendingJobs = nonFailedJobs.filter(
-      job => job.status === 'pending',
-    ).length;
+    this.successfulJobs = nonFailedJobs.filter(job => job.status === 'successful').length;
+    this.runningJobs = nonFailedJobs.filter(job => job.status === 'running').length;
+    this.pendingJobs = nonFailedJobs.filter(job => job.status === 'pending').length;
 
     this.pieChartData = new Array<PieChartData>();
 

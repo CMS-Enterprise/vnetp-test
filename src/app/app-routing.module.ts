@@ -29,9 +29,12 @@ import { NetworkTopologyComponent } from './components/network-topology/network-
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { VmwareComponent } from './components/vmware/vmware.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
+import { ZvmComponent } from './components/zvm/zvm.component';
+import { ZosComponent } from './components/zos/zos.component';
 import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
+import { WizardComponent } from './components/wizard/wizard.component';
 
 // tslint:disable: max-line-length
 
@@ -117,6 +120,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'wizard',
+    component: WizardComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Wizard' },
+  },
+  {
     path: 'physical-server',
     component: PhysicalServerComponent,
     canActivate: [AuthGuard],
@@ -139,6 +148,18 @@ const routes: Routes = [
     component: VmwareDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'VMWare Detail' },
+  },
+  {
+    path: 'zvm',
+    component: ZvmComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/VM' },
+  },
+  {
+    path: 'zos',
+    component: ZosComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/OS' },
   },
   {
     path: 'appliance',

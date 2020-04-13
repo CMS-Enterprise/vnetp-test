@@ -35,22 +35,17 @@ export class SolarisImageRepositoryComponent implements OnInit {
 
   ngOnInit() {
     // Enumerate previously created Images tied to customer
-    this.automationApiService
-      .getSolarisImages(this.solarisService.SolarisImageDeviceName)
-      .subscribe(data => {
-        const response: { [k: string]: any } = {};
-        response.data = data;
-        response.data.parts.forEach(element => {
-          const imgResponse = this.hs.getJsonCustomField(
-            element,
-            'Metadata',
-          ) as SolarisImage;
-          if (imgResponse !== null) {
-            imgResponse.Id = element.part_id;
-            this.SolarisImages.push(imgResponse);
-          }
-        });
+    this.automationApiService.getSolarisImages(this.solarisService.SolarisImageDeviceName).subscribe(data => {
+      const response: { [k: string]: any } = {};
+      response.data = data;
+      response.data.parts.forEach(element => {
+        const imgResponse = this.hs.getJsonCustomField(element, 'Metadata') as SolarisImage;
+        if (imgResponse !== null) {
+          imgResponse.Id = element.part_id;
+          this.SolarisImages.push(imgResponse);
+        }
       });
+    });
     this.newSolarisImage = new SolarisImage();
   }
 
@@ -66,9 +61,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     // Set parent device property to image name stored in solarisService
     this.newSolarisImage.ParentDevice = this.solarisService.SolarisImageDeviceName;
     if (this.editCurrentImage) {
-      this.SolarisImages[this.editImageIndex] = this.hs.deepCopy(
-        this.newSolarisImage,
-      );
+      this.SolarisImages[this.editImageIndex] = this.hs.deepCopy(this.newSolarisImage);
       // Reset edit flag and index
       this.editCurrentImage = false;
       this.editImageIndex = null;
@@ -88,9 +81,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     const extra_vars: { [k: string]: any } = {};
     extra_vars.id = image.Id;
     const body = { extra_vars };
-    this.automationApiService
-      .launchTemplate(`delete-solaris-image`, body, true)
-      .subscribe();
+    this.automationApiService.launchTemplate(`delete-solaris-image`, body, true).subscribe();
 
     const index = this.SolarisImages.indexOf(image);
 
@@ -108,9 +99,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     this.ngxSm.getModal('imageModal').close();
 
     // Launch playbook
-    this.automationApiService
-      .launchTemplate('save-solaris-image', body, true)
-      .subscribe();
+    this.automationApiService.launchTemplate('save-solaris-image', body, true).subscribe();
     this.newSolarisImage = new SolarisImage();
   }
 }

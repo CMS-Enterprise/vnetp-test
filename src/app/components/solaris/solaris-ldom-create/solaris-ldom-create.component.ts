@@ -99,9 +99,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     // verify duplicate of untagged vlan is not entered
     if (this.vnicModalAddTaggedVlan === this.vnicModalUntaggedVlan) {
       this.toastr.error('Cannot use same VLAN as Untagged VLAN.');
-    } else if (
-      this.vnicModalTaggedVlans.indexOf(this.vnicModalAddTaggedVlan) === -1
-    ) {
+    } else if (this.vnicModalTaggedVlans.indexOf(this.vnicModalAddTaggedVlan) === -1) {
       // verify duplicate tagged vlan is not entered
       this.vnicModalTaggedVlans.push(this.vnicModalAddTaggedVlan);
     } else {
@@ -129,33 +127,24 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
     if (this.editLdom) {
-      this.automationApiService
-        .launchTemplate(`save-ldom`, body, true)
-        .subscribe();
+      this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
     } else {
-      this.automationApiService
-        .launchTemplate('save-ldom', body, true)
-        .subscribe();
+      this.automationApiService.launchTemplate('save-ldom', body, true).subscribe();
     }
     this.router.navigate(['/solaris/ldom/list']);
   }
   ngOnInit() {
     // Enumerate previously created Images tied to customer
-    this.automationApiService
-      .getSolarisImages(this.solarisService.SolarisImageDeviceName)
-      .subscribe(data => {
-        const response: { [k: string]: any } = {};
-        response.data = data;
-        response.data.parts.forEach(element => {
-          const imgResponse = this.hs.getJsonCustomField(
-            element,
-            'Metadata',
-          ) as SolarisImage;
-          if (imgResponse !== null) {
-            this.SolarisImages.push(imgResponse);
-          }
-        });
+    this.automationApiService.getSolarisImages(this.solarisService.SolarisImageDeviceName).subscribe(data => {
+      const response: { [k: string]: any } = {};
+      response.data = data;
+      response.data.parts.forEach(element => {
+        const imgResponse = this.hs.getJsonCustomField(element, 'Metadata') as SolarisImage;
+        if (imgResponse !== null) {
+          this.SolarisImages.push(imgResponse);
+        }
       });
+    });
 
     // TODO: Tie to reactive form pristine.
     this.cpuCountArray = this.solarisService.buildNumberArray(2, 128, 2);
@@ -173,38 +162,25 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.CDOMDeviceArray = cdomResponse.Devices;
 
       // first case is for new LDOM within a CDOM
-      if (
-        this.solarisService.parentCdom.device_id != null &&
-        this.solarisService.currentLdom.name == null
-      ) {
-        this.automationApiService
-          .getDevicesbyID(this.solarisService.parentCdom.device_id)
-          .subscribe(dataObj => {
-            const result = dataObj as SolarisCdom;
-            this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(
-              c => c.device_id === result.device_id,
-            )[0];
-            this.solarisService.currentLdom = new SolarisLdom();
-            this.getCdomVswitches();
-          });
+      if (this.solarisService.parentCdom.device_id != null && this.solarisService.currentLdom.name == null) {
+        this.automationApiService.getDevicesbyID(this.solarisService.parentCdom.device_id).subscribe(dataObj => {
+          const result = dataObj as SolarisCdom;
+          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+          this.solarisService.currentLdom = new SolarisLdom();
+          this.getCdomVswitches();
+        });
         this.solarisService.parentCdom = new SolarisCdom();
       }
       // this case is for edit LDOM
       if (this.solarisService.currentLdom.name != null) {
         this.editLdom = true;
         this.LDOM = this.solarisService.currentLdom;
-        this.automationApiService
-          .getDevicesbyID(
-            this.solarisService.currentLdom.associatedcdom.device_id,
-          )
-          .subscribe(dataObj => {
-            const result = dataObj as SolarisCdom;
-            this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(
-              c => c.device_id === result.device_id,
-            )[0];
-            this.solarisService.currentLdom = new SolarisLdom();
-            this.getCdomVswitches();
-          });
+        this.automationApiService.getDevicesbyID(this.solarisService.currentLdom.associatedcdom.device_id).subscribe(dataObj => {
+          const result = dataObj as SolarisCdom;
+          this.LDOM.associatedcdom = this.CDOMDeviceArray.filter(c => c.device_id === result.device_id)[0];
+          this.solarisService.currentLdom = new SolarisLdom();
+          this.getCdomVswitches();
+        });
       }
     });
   }
@@ -213,17 +189,12 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     // Since Devices returned from Device42 don't include custom fields, get the id
     // of the device representing the CDOM and then get it from the API and hydrate
     // the selected CDOM with its custom fields.
-    this.automationApiService
-      .getDevicesbyID(this.LDOM.associatedcdom.device_id)
-      .subscribe(data => {
-        const result = data as SolarisCdom;
-        const cdomFull = this.hs.getJsonCustomField(
-          result,
-          'Metadata',
-        ) as SolarisCdom;
-        this.vnicModalVswitches = cdomFull.vsw;
-        console.log(this.vnicModalVswitches);
-      });
+    this.automationApiService.getDevicesbyID(this.LDOM.associatedcdom.device_id).subscribe(data => {
+      const result = data as SolarisCdom;
+      const cdomFull = this.hs.getJsonCustomField(result, 'Metadata') as SolarisCdom;
+      this.vnicModalVswitches = cdomFull.vsw;
+      console.log(this.vnicModalVswitches);
+    });
   }
 
   openVdsModal() {
@@ -289,10 +260,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
       this.modalVnic = this.solarisService.currentVnic;
       this.vnicModalUntaggedVlan = this.solarisService.currentVnic.UntaggedVlan;
       this.vnicModalTaggedVlans = this.solarisService.currentVnic.TaggedVlans;
-      this.vnicModalVswitch = this.vnicModalVswitches.filter(
-        v =>
-          v.vSwitchName === this.solarisService.currentVnic.VirtualSwitchName,
-      )[0];
+      this.vnicModalVswitch = this.vnicModalVswitches.filter(v => v.vSwitchName === this.solarisService.currentVnic.VirtualSwitchName)[0];
       this.solarisService.currentVnic = null;
     } else {
       this.vnicModalUntaggedVlan = null;

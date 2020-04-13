@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  LoadBalancerHealthMonitor,
-  V1LoadBalancerHealthMonitorsService,
-} from 'api_client';
+import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
@@ -89,35 +86,26 @@ export class HealthMonitorModalComponent implements OnInit {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          this.healthMonitorService
-            .v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id })
-            .subscribe(() => {
-              this.getHealthMonitors();
-            });
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.healthMonitorService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
+          this.getHealthMonitors();
+        });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   private getHealthMonitors() {
-    this.healthMonitorService
-      .v1LoadBalancerHealthMonitorsIdGet({ id: this.HealthMonitor.id })
-      .subscribe(data => {
-        this.HealthMonitor = data;
-      });
+    this.healthMonitorService.v1LoadBalancerHealthMonitorsIdGet({ id: this.HealthMonitor.id }).subscribe(data => {
+      this.HealthMonitor = data;
+    });
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('healthMonitorModal') as any,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('healthMonitorModal') as any);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -153,30 +141,9 @@ export class HealthMonitorModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      servicePort: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(65535),
-        ]),
-      ],
-      interval: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(5),
-          Validators.max(300),
-        ]),
-      ],
-      timeout: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.min(5),
-          Validators.max(300),
-        ]),
-      ],
+      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      interval: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],
+      timeout: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],
     });
   }
 

@@ -32,17 +32,8 @@ describe('FirewallRulesComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
       ],
-      declarations: [
-        FirewallRulesComponent,
-        FirewallRuleModalComponent,
-        TooltipComponent,
-        FilterPipe,
-      ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        CookieService,
-        FormBuilder,
-      ],
+      declarations: [FirewallRulesComponent, FirewallRuleModalComponent, TooltipComponent, FilterPipe],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

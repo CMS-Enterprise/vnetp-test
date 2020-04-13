@@ -1,0 +1,97 @@
+<div class="form-row p-3">
+  <div *ngFor="let wizardSection of WizardSections" class="form-group col-sm-12 col-md-12 col-lg-12 border-secondary mb-5">
+    <div>
+      <h2>
+        {{ wizardSection.Name }}
+      </h2>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="container-fluid mt-4">
+          <ul class="list-unstyled multi-steps">
+            <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Defining' }">
+              Onboarding
+            </li>
+            <li
+              [ngClass]="{
+                'is-active': wizardSection.StatusText == 'ConfiguringDatacenter'
+              }"
+            >
+              Configuring Datacenter
+            </li>
+            <li
+              [ngClass]="{
+                'is-active': wizardSection.StatusText == 'DataProtection'
+              }"
+            >
+              Data Protection
+            </li>
+            <li
+              [ngClass]="{
+                'is-active': wizardSection.StatusText == 'DisasterRecovery'
+              }"
+            >
+              Declaration and Recovery
+            </li>
+            <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Operational' }">
+              Operational
+            </li>
+            <li [ngClass]="{ 'is-active': wizardSection.StatusText == 'Failback' }">
+              Failback
+            </li>
+          </ul>
+        </div>
+
+        <div class="mb-2 card" *ngFor="let category of wizardSection.Categories">
+          <div class="card-header">
+            <label class="m-0">
+              <fa name="{{ category?.Expanded ? 'chevron-down' : 'chevron-right' }}" (click)="category.Expanded = !category.Expanded"></fa>
+              {{ category.Name }}</label
+            >
+          </div>
+
+          <div *ngIf="category?.Expanded">
+            <div class="p-2 pl-5" *ngFor="let subcategory of category.Subcategories">
+              <label>
+                <fa
+                  name="{{ subcategory?.Expanded ? 'chevron-down' : 'chevron-right' }}"
+                  (click)="subcategory.Expanded = !subcategory.Expanded; getSidePanel(subcategory.Name)"
+                ></fa>
+
+                {{ subcategory.Name }}
+              </label>
+
+              <div *ngIf="subcategory?.Expanded" class="mt-1">
+                <div class="p-2 pl-5" *ngFor="let item of subcategory.Items">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span>{{ item.Name }}</span>
+                    <span class="pull-right">
+                      <button
+                        type="button"
+                        class="btn btn-xs"
+                        [ngClass]="{
+                          'btn-success': item.Status === 'Completed',
+                          'btn-info': item.Status === 'In Progress',
+                          'btn-warning': item.Status === 'Not Started'
+                        }"
+                      >
+                        {{ item.Status }}
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 card mb-2">
+        <app-replication-state-panel *ngIf="currentPanel === 'Replication State'"></app-replication-state-panel>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+</div>

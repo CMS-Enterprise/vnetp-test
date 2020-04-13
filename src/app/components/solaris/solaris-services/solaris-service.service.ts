@@ -94,11 +94,7 @@ export class SolarisService {
     const objIndex = objArray.indexOf(obj);
     // If the object isn't in the array, is at the start of the array and requested to move up
     // or if the object is at the end of the array, return.
-    if (
-      objIndex === -1 ||
-      (objIndex === 0 && value === -1) ||
-      objIndex + value === objArray.length
-    ) {
+    if (objIndex === -1 || (objIndex === 0 && value === -1) || objIndex + value === objArray.length) {
       return;
     }
     const nextObj = objArray[objIndex + value];
@@ -107,10 +103,7 @@ export class SolarisService {
       return;
     }
     const nextObjIndex = objArray.indexOf(nextObj);
-    [objArray[objIndex], objArray[nextObjIndex]] = [
-      objArray[nextObjIndex],
-      objArray[objIndex],
-    ];
+    [objArray[objIndex], objArray[nextObjIndex]] = [objArray[nextObjIndex], objArray[objIndex]];
   }
   deleteObject(obj, objArray) {
     const objIndex = objArray.indexOf(obj);

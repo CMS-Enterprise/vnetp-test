@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpResponse,
-  HttpHandler,
-  HttpEvent,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -17,26 +11,19 @@ import { ToastrService } from 'ngx-toastr';
 export class HttpConfigInterceptor {
   constructor(private auth: AuthService, private toastr: ToastrService) {}
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
     const isLogin = request.url.includes('auth/login');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
-    if (
-      !isLogin &&
-      !request.headers.has('Authorization') &&
-      currentUser.Token
-    ) {
-      request = request.clone({
-        headers: request.headers.set(
-          'Authorization',
-          `Bearer ${currentUser.Token}`,
-        ),
+    if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${currentUser.Token}`,
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
       });
+      request = request.clone({ headers });
     }
 
     if (!request.headers.has('Accept')) {
@@ -51,10 +38,7 @@ export class HttpConfigInterceptor {
       });
     }
 
-    if (
-      request.params.get('join') &&
-      request.params.get('join').split(',').length > 1
-    ) {
+    if (request.params.get('join') && request.params.get('join').split(',').length > 1) {
       const queryStingReplacement = request.params
         .get('join')
         .split(',')
@@ -66,10 +50,7 @@ export class HttpConfigInterceptor {
       });
     }
 
-    if (
-      request.params.get('filter') &&
-      request.params.get('filter').split(',').length > 1
-    ) {
+    if (request.params.get('filter') && request.params.get('filter').split(',').length > 1) {
       const queryStingReplacement = request.params
         .get('filter')
         .split(',')

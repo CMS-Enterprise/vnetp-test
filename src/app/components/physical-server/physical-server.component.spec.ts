@@ -15,12 +15,7 @@ describe('PhysicalServerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        NgxSmartModalModule,
-        FormsModule,
-        ReactiveFormsModule,
-      ],
+      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
       declarations: [PhysicalServerComponent, PhysicalServerModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();

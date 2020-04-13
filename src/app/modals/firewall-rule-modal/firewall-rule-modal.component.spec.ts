@@ -1,12 +1,7 @@
 // FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import {
-  FormsModule,
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
 import { CookieService } from 'ngx-cookie-service';
@@ -32,12 +27,7 @@ describe('FirewallRuleModalComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [FirewallRuleModalComponent, TooltipComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-        CookieService,
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, CookieService],
     })
       .compileComponents()
       .then(() => {
@@ -113,8 +103,7 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('sourceNetworkObjectGroup should not be required', () => {
-    const sourceNetworkObjectGroup =
-      component.form.controls.sourceNetworkObjectGroup;
+    const sourceNetworkObjectGroup = component.form.controls.sourceNetworkObjectGroup;
     expect(sourceNetworkObjectGroup.valid).toBeTruthy();
   });
 
@@ -140,8 +129,7 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('destinationNetworkType should not be required and should have default value IpAddress', () => {
-    const destinationNetworkType =
-      component.form.controls.destinationNetworkType;
+    const destinationNetworkType = component.form.controls.destinationNetworkType;
     expect(destinationNetworkType.valid).toBeTruthy();
     expect(destinationNetworkType.value === 'IpAddress').toBeTruthy();
   });
@@ -152,14 +140,12 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('destinationNetworkObject should not be required', () => {
-    const destinationNetworkObject =
-      component.form.controls.destinationNetworkObject;
+    const destinationNetworkObject = component.form.controls.destinationNetworkObject;
     expect(destinationNetworkObject.valid).toBeTruthy();
   });
 
   it('destinationNetworkObjectGroup should not be required', () => {
-    const destinationNetworkObjectGroup =
-      component.form.controls.destinationNetworkObjectGroup;
+    const destinationNetworkObjectGroup = component.form.controls.destinationNetworkObjectGroup;
     expect(destinationNetworkObjectGroup.valid).toBeTruthy();
   });
 
@@ -219,27 +205,23 @@ describe('FirewallRuleModalComponent', () => {
 
   // Destination Network Type
   it('destinationIp should be required if destination network type is ip', () => {
-    const destinationNetworkType =
-      component.form.controls.destinationNetworkType;
+    const destinationNetworkType = component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('IpAddress');
     const destinationIpAddress = component.form.controls.destinationIpAddress;
     expect(destinationIpAddress.valid).toBeFalsy();
   });
 
   it('destinationNetworkObject should be required if destination network type is object', () => {
-    const destinationNetworkType =
-      component.form.controls.destinationNetworkType;
+    const destinationNetworkType = component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('NetworkObject');
     const serviceObject = component.form.controls.destinationNetworkObject;
     expect(serviceObject.valid).toBeFalsy();
   });
 
   it('destinationNetworkObject should be required if destination network type is objectGroup', () => {
-    const destinationNetworkType =
-      component.form.controls.destinationNetworkType;
+    const destinationNetworkType = component.form.controls.destinationNetworkType;
     destinationNetworkType.setValue('NetworkObjectGroup');
-    const serviceObjectGroup =
-      component.form.controls.destinationNetworkObjectGroup;
+    const serviceObjectGroup = component.form.controls.destinationNetworkObjectGroup;
     expect(serviceObjectGroup.valid).toBeFalsy();
   });
 

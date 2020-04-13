@@ -48,10 +48,7 @@ export class VirtualDiskModalComponent implements OnInit {
   }
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('virtualDiskModal') as VirtualMachineModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('virtualDiskModal') as VirtualMachineModalDto);
     this.VirtualMachineId = dto.VirtualMachineId;
   }
 

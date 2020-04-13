@@ -5,10 +5,7 @@ import { V1NetworkSubnetsService, Subnet, Vlan } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  ValidateIpv4CidrAddress,
-  ValidateIpv4Address,
-} from 'src/app/validators/network-form-validators';
+import { ValidateIpv4CidrAddress, ValidateIpv4Address } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-subnet-modal',
@@ -91,10 +88,7 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
   private setFormValidators() {}
 
   getData() {
-    const dto = Object.assign(
-      {},
-      this.ngx.getModalData('subnetModal') as SubnetModalDto,
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('subnetModal') as SubnetModalDto);
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
@@ -136,14 +130,8 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       description: ['', Validators.minLength(3)],
-      network: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4CidrAddress]),
-      ],
-      gateway: [
-        '',
-        Validators.compose([Validators.required, ValidateIpv4Address]),
-      ],
+      network: ['', Validators.compose([Validators.required, ValidateIpv4CidrAddress])],
+      gateway: ['', Validators.compose([Validators.required, ValidateIpv4Address])],
       vlan: ['', Validators.required],
     });
   }

@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  CustomFieldsObject,
-  CustomField,
-} from '../models/interfaces/custom-fields-object.interface';
+import { CustomFieldsObject, CustomField } from '../models/interfaces/custom-fields-object.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +7,14 @@ import {
 export class HelpersService {
   constructor() {}
 
-  private getCustomField(
-    object: CustomFieldsObject,
-    fieldName: string,
-  ): [boolean, CustomField] {
+  private getCustomField(object: CustomFieldsObject, fieldName: string): [boolean, CustomField] {
     // Check to ensure that object has custom fields with at least 1 element.
     if (object.custom_fields == null || object.custom_fields.length === 0) {
       return [false, null];
     }
 
     // Try to find deployed key in the custom_fields array.
-    const customField = object.custom_fields.find(
-      c => c.key === fieldName,
-    ) as CustomField;
+    const customField = object.custom_fields.find(c => c.key === fieldName) as CustomField;
 
     // Check if custom_field exists.
     if (customField == null) {
@@ -32,10 +24,7 @@ export class HelpersService {
     }
   }
 
-  public getBooleanCustomField(
-    object: CustomFieldsObject,
-    fieldName: string,
-  ): boolean {
+  public getBooleanCustomField(object: CustomFieldsObject, fieldName: string): boolean {
     const result = this.getCustomField(object, fieldName);
     if (result[0] === false) {
       return false;
@@ -43,11 +32,7 @@ export class HelpersService {
 
     const customField = result[1];
     // Device42 stores 'booleans' as yes/no strings, read them and convert to boolean.
-    if (
-      customField.value == null ||
-      customField.value === undefined ||
-      customField.value !== 'Yes'
-    ) {
+    if (customField.value == null || customField.value === undefined || customField.value !== 'Yes') {
       return false;
     } else if (customField.value === 'Yes') {
       return true;
@@ -56,10 +41,7 @@ export class HelpersService {
     return false;
   }
 
-  public getStringCustomField(
-    object: CustomFieldsObject,
-    fieldName: string,
-  ): string {
+  public getStringCustomField(object: CustomFieldsObject, fieldName: string): string {
     const result = this.getCustomField(object, fieldName);
     if (result[0] === false) {
       return '';
@@ -73,10 +55,7 @@ export class HelpersService {
     }
   }
 
-  public getNumberCustomField(
-    object: CustomFieldsObject,
-    fieldName: string,
-  ): number {
+  public getNumberCustomField(object: CustomFieldsObject, fieldName: string): number {
     const result = this.getCustomField(object, fieldName);
     if (result[0] === false) {
       return -1;
@@ -96,21 +75,14 @@ export class HelpersService {
     }
   }
 
-  public getJsonCustomField(
-    object: CustomFieldsObject,
-    fieldName: string,
-  ): any {
+  public getJsonCustomField(object: CustomFieldsObject, fieldName: string): any {
     const result = this.getCustomField(object, fieldName);
     if (result[0] === false) {
       return null;
     }
 
     const customField = result[1];
-    if (
-      customField.value == null ||
-      customField.value === undefined ||
-      customField.value === ''
-    ) {
+    if (customField.value == null || customField.value === undefined || customField.value === '') {
       return null;
     } else {
       return JSON.parse(customField.value);
