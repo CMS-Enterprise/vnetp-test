@@ -136,7 +136,6 @@ export class HealthMonitorModalComponent implements OnInit {
     this.ngx.resetModalData('healthMonitorModal');
   }
 
-  // TODO: Confirm min/max on interval and timeout.
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],

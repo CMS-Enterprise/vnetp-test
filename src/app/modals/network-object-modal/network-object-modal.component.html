@@ -62,7 +62,7 @@
           <div *ngIf="f.ipAddress.errors.required">
             IP Address is required
           </div>
-          <div *ngIf="f.ipAddress.errors.validIpv4Address">
+          <div *ngIf="f.ipAddress.errors.invalidIpAddress">
             IP Address is invalid
           </div>
         </div>
@@ -93,7 +93,7 @@
           </div>
           <div
             *ngIf="
-              f.startIpAddress.errors && f.startIpAddress.errors.validIpv4Address
+              f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress
             "
           >
             IP Address is invalid
@@ -115,7 +115,7 @@
           *ngIf="f.type.value == 'Range'"
         />
         <div *ngIf="submitted && f.endIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.endIpAddress.errors.validIpv4Address">
+          <div *ngIf="f.endIpAddress.errors.invalidIpAddress">
             IP Address is invalid
           </div>
           <div *ngIf="f.endIpAddress.errors.required">

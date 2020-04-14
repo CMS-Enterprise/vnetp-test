@@ -76,8 +76,6 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('staticRouteModal') as StaticRouteModalDto);
 
@@ -132,7 +130,6 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {}

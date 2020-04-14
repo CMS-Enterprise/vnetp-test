@@ -21,7 +21,7 @@ export function IpAddressAnyValidator(control: FormControl) {
   if (isValid) {
     return null;
   } else if (!isValid) {
-    return { validIpv4Any: true };
+    return { invalidIpAny: true };
   }
 }
 
@@ -40,7 +40,7 @@ export function IpAddressCidrValidator(control: FormControl) {
   if (isValid) {
     return null;
   } else if (!isValid) {
-    return { validIpv4Address: true };
+    return { invalidIpCidr: true };
   }
 }
 
@@ -59,7 +59,21 @@ export function IpAddressIpValidator(control: FormControl) {
   if (isValid) {
     return null;
   } else if (!isValid) {
-    return { validIpv4Address: true };
+    return { invalidIpAddress: true };
+  }
+}
+
+export function FqdnValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const isValid = validator.isFQDN(control.value);
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidFqdn: true };
   }
 }
 

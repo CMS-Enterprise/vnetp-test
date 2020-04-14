@@ -76,6 +76,10 @@
             [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
             aria-label="Source Address"
           />
+          <div *ngIf="submitted && f.sourceAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceAddress.errors.required">Source Address is required.</div>
+            <div *ngIf="f.sourceAddress.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
@@ -90,6 +94,10 @@
             }"
             aria-label="Destination Address"
           />
+          <div *ngIf="submitted && f.destinationAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationAddress.errors.required">Destination Address is required.</div>
+            <div *ngIf="f.destinationAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.</div>
+          </div>
         </div>
       </div>
 

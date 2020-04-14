@@ -49,8 +49,6 @@ export class ContractModalComponent implements OnInit, OnDestroy {
     return this.filterEntryForm.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
     const contract = Object.assign({}, this.ngx.getModalData('contractModal') as Contract);
 
@@ -123,7 +121,6 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
     this.buildFilterEntryForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {

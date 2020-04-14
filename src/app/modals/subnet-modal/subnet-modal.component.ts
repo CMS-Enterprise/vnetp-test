@@ -85,8 +85,6 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('subnetModal') as SubnetModalDto);
 
@@ -146,7 +144,6 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {}

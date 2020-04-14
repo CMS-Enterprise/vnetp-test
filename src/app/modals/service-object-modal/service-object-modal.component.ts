@@ -79,8 +79,6 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('serviceObjectModal') as ServiceObjectModalDto);
 
@@ -133,7 +131,6 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {}

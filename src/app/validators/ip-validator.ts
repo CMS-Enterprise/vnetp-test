@@ -13,7 +13,7 @@ export default function isIpv6orIpv4(control: FormControl) {
 
   const ipV6orIpv4 = validator(control);
   if (ipV6orIpv4) {
-    return { validIpv4Address: true };
+    return { invalidIpAddress: true };
   }
 
   return null;

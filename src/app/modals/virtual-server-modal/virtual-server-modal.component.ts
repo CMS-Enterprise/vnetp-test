@@ -14,7 +14,7 @@ import {
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import isIpv6orIpv4 from 'src/app/validators/ip-validator';
+import { IpAddressCidrValidator, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -203,8 +203,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setFormValidators() {}
-
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
 
@@ -275,9 +273,9 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      sourceAddress: ['', Validators.compose([isIpv6orIpv4])],
+      sourceAddress: ['', Validators.compose([IpAddressCidrValidator])],
       sourceAddressTranslation: [''],
-      destinationAddress: ['', Validators.compose([Validators.required, isIpv6orIpv4])],
+      destinationAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
       selectedIRule: [''],
@@ -304,7 +302,6 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {
