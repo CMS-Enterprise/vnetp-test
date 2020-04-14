@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ValidateIpv4Any } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
@@ -15,6 +14,7 @@ import {
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import isIpv6orIpv4 from 'src/app/validators/ip-validator';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -275,9 +275,9 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       type: ['', Validators.required],
-      sourceAddress: ['', Validators.compose([ValidateIpv4Any])],
+      sourceAddress: ['', Validators.compose([isIpv6orIpv4])],
       sourceAddressTranslation: [''],
-      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
+      destinationAddress: ['', Validators.compose([Validators.required, isIpv6orIpv4])],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
       selectedIRule: [''],
