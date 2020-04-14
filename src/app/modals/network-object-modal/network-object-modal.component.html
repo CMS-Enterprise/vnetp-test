@@ -55,8 +55,6 @@
           formControlName="ipAddress"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099/09"
           aria-label="IP Address"
           *ngIf="f.type.value == 'IpAddress'"
         />
@@ -82,8 +80,6 @@
           [ngClass]="{
             'is-invalid': submitted && f.startIpAddress.errors
           }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
           aria-label="Start Address"
           *ngIf="f.type.value == 'Range'"
         />
@@ -115,8 +111,6 @@
           class="form-control"
           formControlName="endIpAddress"
           [ngClass]="{ 'is-invalid': submitted && f.endIpAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
           aria-label="End Address"
           *ngIf="f.type.value == 'Range'"
         />
@@ -191,8 +185,6 @@
           formControlName="translatedIpAddress"
           aria-label="Translated IP"
           [ngClass]="{ 'is-invalid': submitted && f.translatedIpAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099/09"
         />
       </div>
 
