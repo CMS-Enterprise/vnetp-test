@@ -3,7 +3,7 @@ import { Directive, HostListener, ElementRef, Input } from '@angular/core';
   selector: '[appIsAlphanumeric]',
 })
 export class SpecialCharacterDirective {
-  regexStr = '^[a-zA-Z0-9_]*$';
+  regexStr = '^[a-zA-Z0-9_ ]*$';
   @Input() isAlphaNumeric: boolean;
 
   constructor(private el: ElementRef) {}
@@ -13,13 +13,6 @@ export class SpecialCharacterDirective {
   }
 
   @HostListener('paste', ['$event']) blockPaste(event: KeyboardEvent) {
-    this.validateFields(event);
-  }
-
-  validateFields(event) {
-    setTimeout(() => {
-      this.el.nativeElement.value = this.el.nativeElement.value.replace(/[^A-Za-z ]/g, '').replace(/\s/g, '');
-      event.preventDefault();
-    }, 100);
+    event.preventDefault();
   }
 }
