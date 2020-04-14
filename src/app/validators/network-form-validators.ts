@@ -14,8 +14,6 @@ export function IpAddressAnyValidator(control: FormControl) {
     isValid = ValidateIpAddress(ipArray[0]);
   } else if (ipArray.length === 2) {
     isValid = ValidateCidrAddress(ipArray);
-  } else {
-    isValid = false;
   }
 
   if (isValid) {
