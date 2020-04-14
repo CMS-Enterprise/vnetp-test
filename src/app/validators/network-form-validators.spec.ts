@@ -1,5 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { IpAddressIpValidator, IpAddressCidrValidator, ValidatePortRange, IpAddressAnyValidator } from './network-form-validators';
+import {
+  IpAddressIpValidator,
+  IpAddressCidrValidator,
+  ValidatePortRange,
+  IpAddressAnyValidator,
+  FqdnValidator,
+} from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
 describe('Network Form Validators', () => {
@@ -134,6 +140,38 @@ describe('Network Form Validators', () => {
 
     formControl.setValue('fe80::7ccc:2a54:aed2:2180/129');
     expect(IpAddressCidrValidator(formControl)).toBeTruthy();
+  });
+
+  it('should be valid fqdn', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('google.com');
+    expect(FqdnValidator(formControl)).toBeNull();
+
+    formControl.setValue('healthcare.gov');
+    expect(FqdnValidator(formControl)).toBeNull();
+
+    formControl.setValue('test.com');
+    expect(FqdnValidator(formControl)).toBeNull();
+
+    formControl.setValue('test.local');
+    expect(FqdnValidator(formControl)).toBeNull();
+
+    formControl.setValue('test.dev');
+    expect(FqdnValidator(formControl)).toBeNull();
+  });
+
+  it('should be invalid fqdn', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('192.168.10.10');
+    expect(FqdnValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('.test.com');
+    expect(FqdnValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('test.com.');
+    expect(FqdnValidator(formControl)).toBeTruthy();
   });
 
   it('should be valid port/port range', () => {
