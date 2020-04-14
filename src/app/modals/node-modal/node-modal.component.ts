@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ValidateIpv4Address } from 'src/app/validators/network-form-validators';
+import { IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, V1LoadBalancerNodesService, V1LoadBalancerPoolsService } from 'api_client';
@@ -114,7 +114,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
 
     this.typeSubscription = this.form.get('type').valueChanges.subscribe(type => {
       if (type === 'ipaddress') {
-        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+        ipAddress.setValidators(Validators.compose([Validators.required, IpAddressIpValidator]));
         ipAddress.setValue(null);
         fqdn.setValidators(null);
         fqdn.setValue(null);

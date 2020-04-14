@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateIpv4Any, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -229,7 +229,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.sourceNetworkTypeSubscription = this.form.controls.sourceNetworkType.valueChanges.subscribe(sourceNetworkType => {
       switch (sourceNetworkType) {
         case 'IpAddress':
-          sourceIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+          sourceIpAddress.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
           sourceNetworkObject.setValue(null);
           sourceNetworkObject.setValidators(null);
           sourceNetworkObjectGroup.setValue(null);
@@ -265,7 +265,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.destinationNetworkTypeSubscription = this.form.controls.destinationNetworkType.valueChanges.subscribe(destinationNetworkType => {
       switch (destinationNetworkType) {
         case 'IpAddress':
-          destinationIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+          destinationIpAddress.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
           destinationNetworkObject.setValue(null);
           destinationNetworkObject.setValidators(null);
           destinationNetworkObjectGroup.setValue(null);
@@ -349,7 +349,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       // Source Network Info
       sourceNetworkType: ['IpAddress'],
-      sourceIpAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
+      sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       sourceNetworkObject: [''],
       sourceNetworkObjectGroup: [''],
 
@@ -358,7 +358,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
       // Destination Network Info
       destinationNetworkType: ['IpAddress'],
-      destinationIpAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       destinationNetworkObject: [''],
       destinationNetworkObjectGroup: [''],
 

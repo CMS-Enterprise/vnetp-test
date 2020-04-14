@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ValidateIpv4Address, ValidateIpv4CidrAddress, ValidatePortRange, ValidateIpv4Any } from './network-form-validators';
+import { IpAddressIpValidator, IpAddressCidrValidator, ValidatePortRange, IpAddressAnyValidator } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
 describe('Network Form Validators', () => {
@@ -9,107 +9,131 @@ describe('Network Form Validators', () => {
     const formControl = new FormControl();
 
     formControl.setValue('255.255.255.255');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
 
     formControl.setValue('1.1.1.1');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
 
     formControl.setValue('255.255.255.255/32');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
 
     formControl.setValue('0.0.0.0/0');
-    expect(ValidateIpv4Any(formControl)).toBeNull();
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
+
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180/128');
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
+
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180');
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
+
+    formControl.setValue('::/0');
+    expect(IpAddressAnyValidator(formControl)).toBeNull();
   });
 
   it('should be invalid ip addresses (any)', () => {
     const formControl = new FormControl();
 
     formControl.setValue('all');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.1.1.');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
 
     formControl.setValue('-1.1.1.1');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
 
     formControl.setValue('255.255.255.255/33');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
 
     formControl.setValue('0.0.0.0/-1');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
 
-    formControl.setValue('0.0.0.0/');
-    expect(ValidateIpv4Any(formControl)).toBeTruthy();
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180/129');
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('fe80::::://');
+    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
   });
 
   it('should be valid ip addresses', () => {
     const formControl = new FormControl();
     formControl.setValue('255.255.255.255');
-    expect(ValidateIpv4Address(formControl)).toBeNull();
+    expect(IpAddressIpValidator(formControl)).toBeNull();
 
     formControl.setValue('1.1.1.1');
-    expect(ValidateIpv4Address(formControl)).toBeNull();
+    expect(IpAddressIpValidator(formControl)).toBeNull();
 
     formControl.setValue('192.168.10.0');
-    expect(ValidateIpv4Address(formControl)).toBeNull();
+    expect(IpAddressIpValidator(formControl)).toBeNull();
 
-    formControl.setValue('127.0.0.1');
-    expect(ValidateIpv4Address(formControl)).toBeNull();
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180');
+    expect(IpAddressIpValidator(formControl)).toBeNull();
   });
 
   it('should be invalid ip addresses', () => {
     const formControl = new FormControl();
     formControl.setValue('1.1.1.');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.1.1.1.1');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
 
     formControl.setValue('-1.1.1.1');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
 
     formControl.setValue('one.two.three.four');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.2.three.four');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.1.1.1///24');
-    expect(ValidateIpv4Address(formControl)).toBeTruthy();
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('fe80:::::');
+    expect(IpAddressIpValidator(formControl)).toBeTruthy();
   });
 
   it('should be valid cidr addresses', () => {
     const formControl = new FormControl();
     formControl.setValue('255.255.255.255/32');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeNull();
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
 
     formControl.setValue('1.1.1.1/32');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeNull();
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
 
     formControl.setValue('192.168.10.0/24');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeNull();
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
 
     formControl.setValue('127.0.0.1/20');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeNull();
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
+
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180/128');
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
+
+    formControl.setValue('::/0');
+    expect(IpAddressCidrValidator(formControl)).toBeNull();
   });
 
   it('should be invalid cidr addresses', () => {
     const formControl = new FormControl();
     formControl.setValue('1.1.1/24');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeTruthy();
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.1.1.1//24');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeTruthy();
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.1.1.1/-24');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeTruthy();
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
 
     formControl.setValue('one.two.three.four/five');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeTruthy();
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
 
     formControl.setValue('1.2.three.four//');
-    expect(ValidateIpv4CidrAddress(formControl)).toBeTruthy();
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('fe80::7ccc:2a54:aed2:2180/129');
+    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
   });
 
   it('should be valid port/port range', () => {
