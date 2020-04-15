@@ -12,6 +12,7 @@ describe('Network Form Validators', () => {
     expect(NameValidator(fcSetter('Test-Name'))).toBeNull();
     expect(NameValidator(fcSetter('Test_Name'))).toBeNull();
     expect(NameValidator(fcSetter('Test99Name'))).toBeNull();
+    expect(NameValidator(fcSetter('Test99.Name'))).toBeNull();
   });
 
   it('should be invalid name', () => {

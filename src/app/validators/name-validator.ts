@@ -5,7 +5,7 @@ export function NameValidator(control: FormControl) {
     return null;
   }
 
-  const validRegex = /^[A-Za-z0-9-_:]*$/;
+  const validRegex = /^[A-Za-z0-9-_:.]*$/;
 
   const isValid = validRegex.test(control.value);
 
