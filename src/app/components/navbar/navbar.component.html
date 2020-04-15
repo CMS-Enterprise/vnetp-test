@@ -20,14 +20,14 @@
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdown"
+          id="networkingNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           >Networking
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
@@ -47,28 +47,20 @@
         <a
           class="nav-link dropdown-toggle"
           href="#"
-          id="navbarDropdown"
+          id="systemsNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           >Systems
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="systemsNavbarDropdown">
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="physical-server">Physical Servers</a>
           <div class="dropdown-divider"></div>
-          <a
-            class="dropdown-item"
-            routerLink="vmware"
-            queryParamsHandling="merge"
-            >VMWare</a
-          >
-          <a class="dropdown-item" routerLink="zvm" queryParamsHandling="merge"
-            >z/VM</a
-          >
-          <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge"
-            >z/OS</a>
+          <a class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
+          <a class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
+          <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
         </div>
@@ -76,16 +68,6 @@
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
-      <li class="nav-item dropdown">
-        <a [ngClass]="{ 'text-danger': !currentDatacenter }" class="text-bold">{{ currentDatacenter?.name || 'No Datacenter Selected' }}</a>
-      </li>
-
-      <li class="nav-item">
-        <button class="btn btn-sm btn-info" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">
-          {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
-        </button>
-      </li>
-
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
           <fa name="spinner fa-spin" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa>
@@ -95,25 +77,26 @@
       </li>
 
       <li class="nav-item">
-          <a class="nav-link" [routerLinkActive]="['active']" routerLink="wizard">
-            Wizard
-          </a>
-        </li>
+        <a class="nav-link" [routerLinkActive]="['active']" routerLink="wizard">
+          Wizard
+        </a>
+      </li>
 
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdown"
+          id="userNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           {{ currentUser.Username }}
+          <span *ngIf="currentUser.CustomerName"> | {{ currentUser.CustomerName }}</span>
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
           <a class="dropdown-item" target="_blank" href="https://jiraent.cms.gov/">Ticketing System</a>
-          <a class="dropdown-item">Documentation</a>
+          <a class="dropdown-item" href="#">Documentation</a>
           <a class="dropdown-item" (click)="toggleWizard()">Configuration Wizard</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
@@ -125,43 +108,11 @@
           Deploy
         </button>
       </li>
-
-      <ul class="navbar-nav customer-name">
-        <li class="nav-item">
-          <a class="nav-link disabled">{{ currentUser.CustomerName }}</a>
-        </li>
-      </ul>
     </ul>
   </div>
 </nav>
 
-<ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal" customClass="'modal-content'">
-  <div class="modal-header">
-    <h4 class="modal-title">Switch Datacenter Context?</h4>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="datacenterSwitchModal.close()"></button>
-  </div>
-
-  <div class="modal-body">
-    Current Datacenter:
-    {{ currentDatacenter?.name || 'No Datacenter Selected' }}
-
-    <select [(ngModel)]="selectedDatacenter" class="form-control">
-      <option></option>
-      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
-    </select>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">
-      Cancel
-    </button>
-
-    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="switchDatacenter(); datacenterSwitchModal.close()">
-      Yes
-    </button>
-  </div>
-</ngx-smart-modal>
-
+<!-- Logout -->
 <ngx-smart-modal #logoutModal identifier="logoutModal" customClass="'modal-content'">
   <div class="modal-header">
     <h4 class="modal-title">Logout?</h4>
@@ -179,6 +130,7 @@
   </div>
 </ngx-smart-modal>
 
+<!-- Job Launch -->
 <ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" customClass="'modal-content'" [dismissable]="false">
   <div class="modal-header">
     <h4

@@ -1,8 +1,8 @@
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/variables';
 
 .navbar {
   background: linear-gradient(170deg, $primary-dark, $primary-main);
-  background-color: $primary-main;
+  background-color: $primary-dark;
   box-shadow: 0 5px 8px rgba($primary-dark, 0.15);
 
   color: $primary-light;
