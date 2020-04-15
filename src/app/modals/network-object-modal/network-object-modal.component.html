@@ -62,8 +62,8 @@
           <div *ngIf="f.ipAddress.errors.required">
             IP Address is required
           </div>
-          <div *ngIf="f.ipAddress.errors.invalidIpAddress">
-            IP Address is invalid
+          <div *ngIf="f.ipAddress.errors.invalidIpAny">
+            IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR.
           </div>
         </div>
       </div>
