@@ -5,6 +5,7 @@ import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-irule-modal',
@@ -129,7 +130,7 @@ export class IRuleModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       content: ['', Validators.required],
     });
   }

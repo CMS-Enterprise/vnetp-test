@@ -7,6 +7,7 @@ import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
 import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-network-object-group-modal',
@@ -174,7 +175,7 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       description: [''],
     });
   }

@@ -5,6 +5,7 @@ import { Vlan, V1NetworkVlansService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { VlanModalHelpText } from 'src/app/helptext/help-text-networking';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-vlan-modal',
@@ -113,7 +114,7 @@ export class VlanModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), NameValidator])],
       description: ['', Validators.minLength(3)],
       vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });

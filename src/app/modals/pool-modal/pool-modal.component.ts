@@ -7,6 +7,7 @@ import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, LoadBalancerPool, LoadBalancerHealthMonitor, V1LoadBalancerPoolsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-pool-modal',
@@ -328,7 +329,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],

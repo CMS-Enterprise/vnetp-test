@@ -8,6 +8,7 @@ import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfilesHelpText } from 'src/app/helptext/help-text-networking';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-load-balancer-profile-modal',
@@ -216,7 +217,7 @@ export class ProfileModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       type: ['', Validators.required],
       certificate: [null],
       reverseProxy: null,

@@ -5,6 +5,7 @@ import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators
 import { StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-static-route-modal',
@@ -113,7 +114,7 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       destinationNetwork: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       nextHop: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],

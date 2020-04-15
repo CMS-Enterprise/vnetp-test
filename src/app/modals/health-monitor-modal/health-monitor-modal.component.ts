@@ -5,6 +5,7 @@ import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networkin
 import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -138,7 +139,7 @@ export class HealthMonitorModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       type: ['', Validators.required],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       interval: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],

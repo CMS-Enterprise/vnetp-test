@@ -7,6 +7,7 @@ import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, V1LoadBalancerNodesService, V1LoadBalancerPoolsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-node-modal',
@@ -167,7 +168,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       type: ['', Validators.required],
       ipAddress: [''],
       fqdn: [''],

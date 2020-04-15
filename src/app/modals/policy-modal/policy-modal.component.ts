@@ -5,6 +5,7 @@ import { LoadBalancerPolicy, V1LoadBalancerPoliciesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-load-balancer-policy-modal',
@@ -156,7 +157,7 @@ export class PolicyModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       type: ['', Validators.required],
       apmContent: [''],
       asmContent: [''],

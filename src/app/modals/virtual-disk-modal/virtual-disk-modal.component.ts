@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VmwareVirtualDisk, V1VmwareVirtualDisksService } from 'api_client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-virtual-disk-modal',
@@ -68,7 +69,7 @@ export class VirtualDiskModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       description: [''],
       diskSize: [''],
       rawLun: [''],

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
@@ -10,6 +10,7 @@ import {
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-appliance-modal',
@@ -165,7 +166,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       description: [''],
       rackUnits: [''],
       serialNumber: [''],

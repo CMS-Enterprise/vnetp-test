@@ -6,6 +6,7 @@ import { ServiceObject, V1NetworkSecurityServiceObjectsService } from 'api_clien
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networking';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-service-object-modal',
@@ -114,7 +115,7 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       protocol: ['', Validators.required],
       destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],

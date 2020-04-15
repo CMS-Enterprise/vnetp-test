@@ -15,6 +15,7 @@ import {
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { IpAddressCidrValidator, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -270,7 +271,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       description: [''],
       type: ['', Validators.required],
       sourceAddress: ['', Validators.compose([IpAddressCidrValidator])],

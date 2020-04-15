@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import {
   V1VmwareVirtualMachinesService,
@@ -13,6 +13,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-virtual-machine-modal',
@@ -280,7 +281,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
+      name: ['', Validators.compose([Validators.required, NameValidator])],
       description: [''],
       cpuCount: [''],
       coreCount: [''],
