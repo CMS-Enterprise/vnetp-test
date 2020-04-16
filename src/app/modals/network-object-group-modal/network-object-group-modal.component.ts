@@ -72,8 +72,6 @@ export class NetworkObjectGroupModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {

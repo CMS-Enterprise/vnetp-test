@@ -64,8 +64,6 @@ export class HealthMonitorModalComponent implements OnInit {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {

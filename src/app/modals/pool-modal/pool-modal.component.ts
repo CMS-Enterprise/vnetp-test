@@ -76,8 +76,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {

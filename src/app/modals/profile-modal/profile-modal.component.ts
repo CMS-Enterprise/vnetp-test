@@ -85,8 +85,6 @@ export class ProfileModalComponent implements OnInit {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {

@@ -61,8 +61,6 @@ export class IRuleModalComponent implements OnInit {
           error => {},
         );
     }
-
-    this.closeModal();
   }
 
   private closeModal() {

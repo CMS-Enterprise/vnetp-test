@@ -61,8 +61,6 @@ export class NodeModalComponent implements OnInit, OnDestroy {
         })
         .subscribe(
           data => {
-            this.Node = data;
-            this.saveNode(data.id);
             this.closeModal();
           },
           error => {},
@@ -74,23 +72,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
           loadBalancerNode: node,
         })
         .subscribe(data => {
-          this.Node = data;
+          this.closeModal();
         });
-    }
-    this.ngx.resetModalData('nodeModal');
-    this.ngx.setModalData(Object.assign({}, node), 'nodeModal');
-    this.ngx.close('nodeModal');
-    this.reset();
-  }
-
-  saveNode(nodeId: string) {
-    if (this.PoolId) {
-      this.poolService
-        .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
-          poolId: this.PoolId,
-          nodeId,
-        })
-        .subscribe(data => {});
     }
   }
 
@@ -147,7 +130,6 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       this.ModalMode = nodeDto.ModalMode;
       if (nodeDto.ModalMode === ModalMode.Edit) {
         this.Node = node;
-        this.PoolId = nodeDto.PoolId;
       } else {
         this.form.controls.name.enable();
       }
@@ -187,6 +169,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   public reset() {
     this.unsubAll();
     this.submitted = false;
+    this.ngx.resetModalData('nodeModal');
     this.buildForm();
     this.setFormValidators();
   }
