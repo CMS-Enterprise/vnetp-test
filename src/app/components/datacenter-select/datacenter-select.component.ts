@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Datacenter } from 'api_client';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './datacenter-select.component.html',
   styleUrls: ['./datacenter-select.component.css'],
 })
-export class DatacenterSelectComponent implements OnInit {
+export class DatacenterSelectComponent implements OnInit, OnDestroy {
   datacenters: Datacenter[];
   currentDatacenter: Datacenter;
   selectedDatacenter: Datacenter;
@@ -21,7 +21,7 @@ export class DatacenterSelectComponent implements OnInit {
 
   constructor(
     private datacenterContextService: DatacenterContextService,
-    private ngx: NgxSmartModalService,
+    public ngx: NgxSmartModalService,
     private toastrService: ToastrService,
   ) {}
 
