@@ -45,6 +45,11 @@
   margin: 0;
 }
 
+.dropdown-menu-reverse {
+  left: unset;
+  right: 0;
+}
+
 .customer-name {
   margin-left: 15px;
   @media (max-width: 991.98px) {
