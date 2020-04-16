@@ -166,7 +166,10 @@
           />
           <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
             <div *ngIf="f.sourceIpAddress.errors.required">
-              Source IP is required
+              Source IP Address is required.
+            </div>
+            <div *ngIf="f.sourceIpAddress.errors.invalidIpAny">
+              Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.
             </div>
           </div>
 
@@ -266,6 +269,9 @@
           >
             <div *ngIf="f.destinationIpAddress.errors.required">
               Destination IP is required
+            </div>
+            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">
+              Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.
             </div>
           </div>
 

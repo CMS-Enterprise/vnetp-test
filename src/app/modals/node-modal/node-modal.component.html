@@ -54,10 +54,12 @@
           formControlName="ipAddress"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
           aria-label="IP Address"
         />
+        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.ipAddress.errors.required">Destination Address is required.</div>
+          <div *ngIf="f.ipAddress.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
+        </div>
       </div>
 
       <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
@@ -68,8 +70,12 @@
           formControlName="fqdn"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.fqdn.errors }"
-          aria-label="IP Address"
+          aria-label="FQDN"
         />
+        <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
+          <div *ngIf="f.fqdn.errors.required">FQDN is required.</div>
+          <div *ngIf="f.fqdn.errors.invalidFqdn">Invalid FQDN.</div>
+        </div>
       </div>
 
       <div class="form-group" *ngIf="f.type.value == 'Fqdn'">

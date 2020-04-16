@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ValidateIpv4Address } from 'src/app/validators/network-form-validators';
+import { IpAddressIpValidator, FqdnValidator } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, V1LoadBalancerNodesService, V1LoadBalancerPoolsService } from 'api_client';
@@ -113,17 +113,16 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     const ipAddress = this.form.get('ipAddress');
 
     this.typeSubscription = this.form.get('type').valueChanges.subscribe(type => {
-      if (type === 'ipaddress') {
-        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+      if (type === 'IpAddress') {
+        ipAddress.setValidators(Validators.compose([Validators.required, IpAddressIpValidator]));
         ipAddress.setValue(null);
         fqdn.setValidators(null);
         fqdn.setValue(null);
         autoPopulate.setValue(false);
       }
 
-      if (type === 'fqdn') {
-        // TODO: Write FQDN Validator
-        fqdn.setValidators(Validators.compose([Validators.required]));
+      if (type === 'Fqdn') {
+        fqdn.setValidators(Validators.compose([Validators.required, FqdnValidator]));
         fqdn.setValue(null);
         ipAddress.setValidators(null);
         ipAddress.setValue(null);
@@ -188,6 +187,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.buildForm();
+    this.setFormValidators();
   }
 
   ngOnInit() {

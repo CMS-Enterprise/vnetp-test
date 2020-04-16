@@ -144,8 +144,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       });
   }
 
-  private setFormValidators() {}
-
   removeNode(node: LoadBalancerNode) {
     const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${node.name}" node?`);
     this.ngx.setModalData(modalDto, 'yesNoModal');
@@ -354,7 +352,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {
