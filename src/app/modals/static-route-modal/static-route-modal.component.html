@@ -39,7 +39,8 @@
           aria-label="Destination Network"
         />
         <div *ngIf="submitted && f.destinationNetwork.errors" class="invalid-feedback">
-          <div *ngIf="f.destinationNetwork.errors.required">Type is required</div>
+          <div *ngIf="f.destinationNetwork.errors.required">Destination Network is required.</div>
+          <div *ngIf="f.destinationNetwork.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
         </div>
       </div>
 
@@ -58,6 +59,7 @@
           <div *ngIf="f.nextHop.errors.required">
             Next Hop required.
           </div>
+            <div *ngIf="f.nextHop.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
         </div>
       </div>
 

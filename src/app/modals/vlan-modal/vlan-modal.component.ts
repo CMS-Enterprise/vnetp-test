@@ -79,8 +79,6 @@ export class VlanModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
     const dto = Object.assign({}, this.ngx.getModalData('vlanModal') as VlanModalDto);
 
@@ -130,7 +128,6 @@ export class VlanModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {}

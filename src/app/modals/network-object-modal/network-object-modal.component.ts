@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateIpv4Address, ValidatePortRange, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
+import { IpAddressIpValidator, ValidatePortRange, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
@@ -113,7 +113,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
     this.networkTypeSubscription = this.form.get('type').valueChanges.subscribe(type => {
       if (type === 'IpAddress') {
-        ipAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+        ipAddress.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
         startIpAddress.setValidators(null);
         startIpAddress.setValue(null);
         endIpAddress.setValidators(null);
@@ -121,9 +121,9 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       }
 
       if (type === 'Range') {
-        startIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+        startIpAddress.setValidators(Validators.compose([Validators.required, IpAddressIpValidator]));
         startIpAddress.setValue(null);
-        endIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Address]));
+        endIpAddress.setValidators(Validators.compose([Validators.required, IpAddressIpValidator]));
         endIpAddress.setValue(null);
 
         ipAddress.setValidators(null);
@@ -141,7 +141,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       if (natValue) {
         this.form.controls.type.setValue('IpAddress');
         this.form.controls.type.updateValueAndValidity();
-        this.form.controls.translatedIpAddress.setValidators(Validators.compose([Validators.required, ValidateIpv4Any]));
+        this.form.controls.translatedIpAddress.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
         this.form.controls.natDirection.setValidators(Validators.compose([Validators.required]));
         this.form.controls.natType.setValidators(Validators.compose([Validators.required]));
       } else if (!natValue) {

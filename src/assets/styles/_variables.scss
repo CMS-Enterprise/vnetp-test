@@ -12,11 +12,26 @@ $secondary-light: #fcf7f0;
 $white: #fff;
 $black: #000; // change to off-black
 $gray-main: #7f8084;
+$gray-darker: #606266;
 $gray-dark: #3d3e3f;
 $gray-medium: #c2c2c6;
 $gray-light: #f6f6f7;
 
 $success: #4eb796;
+$success--dark: #1d8665;
+$success--medium: #99ddc1;
+$success--light: #cdf7e3;
+
 $warning: #ffdf5a;
-$danger: #e84d4d;
+
+$danger: #d33737;
+$danger--dark: #9e2a2a;
+$danger--medium: #ff8a8a;
+$danger--light: #ffcaca;
+
 $info: #5ac4f9;
+$info--dark: #0088a8;
+$info--medium: #95e6f9;
+$info--light: #c5f7ff;
+
+$multistep-success: $success--dark;

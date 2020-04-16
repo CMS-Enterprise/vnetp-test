@@ -1,64 +1,78 @@
 import { FormControl } from '@angular/forms';
+import * as validator from 'validator';
 
-/** Validates an IPv4 address in either address (x.x.x.x) or
- *  CIDR (x.x.x.x/y) format, also accepts 'any'.
- */
-export function ValidateIpv4Any(control: FormControl) {
+export function IpAddressAnyValidator(control: FormControl) {
   if (!control || !control.value) {
     return null;
   }
 
   const ipArray = control.value.split('/');
-  if (ipArray.length < 1 || ipArray.length > 2) {
-    return { validIpv4Any: true };
-  }
 
-  let result;
+  let isValid = false;
+
   if (ipArray.length === 1) {
-    result = ValidateIpv4Address(control);
+    isValid = ValidateIpAddress(ipArray[0]);
   } else if (ipArray.length === 2) {
-    result = ValidateIpv4CidrAddress(control);
+    isValid = ValidateCidrAddress(ipArray);
   }
 
-  if (!result) {
+  if (isValid) {
     return null;
-  } else if (result) {
-    return { validIpv4Any: true };
+  } else if (!isValid) {
+    return { invalidIpAny: true };
   }
 }
 
-export function ValidateIpv4CidrAddress(control: FormControl) {
+export function IpAddressCidrValidator(control: FormControl) {
   if (!control || !control.value) {
     return null;
   }
   const valueArray = control.value.split('/');
 
-  if (valueArray.length !== 2) {
-    return { validIpv4Address: true };
+  let isValid = false;
+
+  if (valueArray.length === 2) {
+    isValid = ValidateCidrAddress(valueArray);
   }
 
-  if (!valueArray[1].length) {
-    return { validIpv4Address: true };
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidIpCidr: true };
   }
-
-  if (!isValidIpAddress(valueArray[0]) || !isValidNetMask(Number(valueArray[1]))) {
-    return { validIpv4Address: true };
-  }
-  return null;
 }
 
-export function ValidateIpv4Address(control: FormControl) {
+export function IpAddressIpValidator(control: FormControl) {
   if (!control || !control.value) {
     return null;
   }
   const valueArray = control.value.split('/');
 
-  if (valueArray.length !== 1) {
-    return { validIpv4Address: true };
-  } else if (!isValidIpAddress(valueArray[0])) {
-    return { validIpv4Address: true };
+  let isValid = false;
+
+  if (valueArray.length === 1) {
+    isValid = ValidateIpAddress(control.value);
   }
-  return null;
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidIpAddress: true };
+  }
+}
+
+export function FqdnValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const isValid = validator.isFQDN(control.value);
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidFqdn: true };
+  }
 }
 
 export function ValidatePortRange(control: FormControl) {
@@ -106,26 +120,32 @@ function isValidPortNumber(portNumber: number): boolean {
   return !isNaN(portNumber) && portNumber > 0 && portNumber <= 65535;
 }
 
-function isValidIpAddress(ipAddress: string): boolean {
-  const ipAddressArray = ipAddress.split('.');
+function ValidateIpAddress(ipAddress: string) {
+  return validator.isIP(ipAddress, 4) || validator.isIP(ipAddress, 6);
+}
 
-  if (ipAddressArray.length !== 4) {
+function ValidateCidrAddress(ipArray: string[]) {
+  // If IP portion after subnet mask is empty.
+  if (!ipArray[1] || !ipArray[1].length) {
     return false;
   }
 
-  for (const o of ipAddressArray) {
-    if (!o || o === '') {
-      return false;
-    }
-
-    const octet = Number(o);
-    if (isNaN(octet) || octet < 0 || octet > 255) {
-      return false;
-    }
+  if (validator.isIP(ipArray[0], 4)) {
+    return ValidateNetMask(Number(ipArray[1]), 4);
+  } else if (validator.isIP(ipArray[0], 6)) {
+    return ValidateNetMask(Number(ipArray[1]), 6);
   }
-  return true;
+
+  return false;
 }
 
-function isValidNetMask(netMask: number): boolean {
-  return !isNaN(netMask) && netMask >= 0 && netMask <= 32;
+function ValidateNetMask(netMask: number, ipVersion: number): boolean {
+  if (netMask < 0) {
+    return false;
+  }
+
+  if (ipVersion === 4) {
+    return netMask <= 32;
+  }
+  return netMask <= 128;
 }

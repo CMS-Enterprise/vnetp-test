@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuthService } from './api/v1Auth.service';
+import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1JobsService } from './api/v1Jobs.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
@@ -30,6 +31,7 @@ import { V1VlansService } from './api/v1Vlans.service';
 import { V1VmwareNetworkAdapterService } from './api/v1VmwareNetworkAdapter.service';
 import { V1VmwareVirtualDisksService } from './api/v1VmwareVirtualDisks.service';
 import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.service';
+import { V1VtsService } from './api/v1Vts.service';
 
 @NgModule({
   imports:      [],
@@ -38,6 +40,7 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
   providers: [
     V1AppliancesService,
     V1AuthService,
+    V1ConfigurationUploadService,
     V1DatacentersService,
     V1JobsService,
     V1LoadBalancerHealthMonitorsService,
@@ -62,7 +65,8 @@ import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.se
     V1VlansService,
     V1VmwareNetworkAdapterService,
     V1VmwareVirtualDisksService,
-    V1VmwareVirtualMachinesService ]
+    V1VmwareVirtualMachinesService,
+    V1VtsService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

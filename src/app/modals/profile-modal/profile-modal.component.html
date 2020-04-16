@@ -14,7 +14,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip message="todo"></tooltip>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
           appIsAlphanumeric
@@ -28,16 +28,14 @@
         </div>
       </div>
 
+      <hr />
+
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="type">Type</label>
-          <tooltip message="todo"></tooltip>
-          <select
-            formControlName="type"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-            aria-label="Type"
-          >
+          <tooltip [message]="helpText.Type"></tooltip>
+          <select formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
+            aria-label="Type">
             <option value="ClientSSL">ClientSSL</option>
             <option value="Http">HTTP</option>
           </select>
@@ -47,11 +45,26 @@
         </div>
       </div>
 
-      <hr />
+      <div class="form-row" *ngIf="f.type.value === 'Http'">
+        <div class="form-group col-md-6">
+          <label for="reverseProxy">Reverse Proxy</label>
+          <tooltip [message]="helpText.ReverseProxy"></tooltip>
+          <select formControlName="reverseProxy" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.reverseProxy.errors }">
+            <option value="Explicit">Explicit</option>
+            <option value="Reverse">Reverse</option>
+            <option value="Transparent">Transparent</option>
+          </select>
+          <div *ngIf="submitted && f.reverseProxy.errors" class="invalid-feedback">
+            <div *ngIf="f.reverseProxy.errors.required">Reverse Proxy is required</div>
+          </div>
+        </div>
+      </div>
 
       <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
         <div class="form-group col-md-12">
           <label for="publicKey">Certificate</label>
+          <tooltip [message]="helpText.Certificate"></tooltip>
           <textarea
           rows="8"
           formControlName="certificate"
@@ -84,7 +97,7 @@
           type="file"
           #privateKeyCipherUploader
           (change)="importPrivateKeyCipher($event)"
-          [(ngModel)]="privateKeyCipherInput" 
+          [(ngModel)]="privateKeyCipherInput"
           [ngModelOptions]="{standalone: true}"
         />
         </div>

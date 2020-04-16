@@ -1,24 +1,19 @@
 <div>
+  <a routerLink="/static-routes" class="btn btn-sm btn-primary mb-2">
+    <fa name="arrow-left"></fa>
+    Back
+  </a>
+
   <h4>Tier: {{ tier?.name }} Static Routes</h4>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm">
-      <button
-        type="button"
-        class="btn btn-success mr-1"
-        aria-label="Save Changes"
-        (click)="updateStaticRoutes()"
-        *ngIf="dirty"
-      >
+      <button type="button" class="btn btn-success mr-1" aria-label="Save Changes" (click)="updateStaticRoutes()" *ngIf="dirty">
         <fa name="save"></fa>
         Save Changes
       </button>
 
-      <button
-        type="button"
-        class="btn btn-success mr-1"
-        (click)="createStaticRoute()"
-      >
+      <button type="button" class="btn btn-success mr-1" (click)="createStaticRoute()">
         <fa name="plus"></fa>
         Add Static Route
       </button>
@@ -30,12 +25,7 @@
         disableExport="true"
       ></app-import-export> -->
 
-      <button
-        type="button"
-        class="btn btn-info mr-1"
-        (click)="getStaticRoutes()"
-        *ngIf="!dirty"
-      >
+      <button type="button" class="btn btn-info mr-1" (click)="getStaticRoutes()" *ngIf="!dirty">
         <fa name="refresh"></fa>
         Refresh
       </button>
@@ -49,6 +39,7 @@
         <th scope="col">Destination Network</th>
         <th scope="col">Next Hop</th>
         <th scope="col">Metric</th>
+        <th scope="col">State</th>
         <th></th>
       </tr>
     </thead>
@@ -65,6 +56,9 @@
         </td>
         <td>
           <span>{{ staticRoute?.metric }}</span>
+        </td>
+        <td>
+          <span>{{ staticRoute?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
         </td>
         <td class="item-actions">
           <fa
@@ -89,16 +83,12 @@
         </td>
       </tr>
       <tr *ngIf="!staticRoutes?.length" class="text-center">
-        <td colspan="5">No Static Routes</td>
+        <td colspan="6">No Static Routes</td>
       </tr>
     </tbody>
   </table>
 
-  <div
-    *ngIf="staticRoutes?.length"
-    class="btn-toolbar mb-2 pull-right"
-    role="toolbar"
-  >
+  <div *ngIf="staticRoutes?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm">
       <!-- <app-import-export
         [exportObject]="staticRoutes"

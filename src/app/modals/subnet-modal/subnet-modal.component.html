@@ -78,8 +78,8 @@
           <div *ngIf="f.network.errors.required">
             Network required.
           </div>
-          <div *ngIf="f.network.errors.validIpv4Address">
-            IP Address is invalid
+          <div *ngIf="f.network.errors.invalidIpCidr">
+            Invalid IP address, must be a valid IPv4/IPv6 CIDR.
           </div>
         </div>
       </div>
@@ -99,8 +99,8 @@
             <div *ngIf="f.gateway.errors.required">
               Gateway required.
             </div>
-            <div *ngIf="f.gateway.errors.validIpv4Address">
-              IP Address is invalid
+            <div *ngIf="f.gateway.errors.invalidIpAddress">
+              IP Address is invalid, must be a valid IPv4/IPv6 address.
             </div>
           </div>
         </div>

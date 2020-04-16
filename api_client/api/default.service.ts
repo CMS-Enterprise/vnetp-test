@@ -22,14 +22,6 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AuthLoginPostRequestParams {
-    user: object;
-}
-
-export interface V1AuthRegisterPostRequestParams {
-    user: object;
-}
-
 
 @Injectable({
   providedIn: 'root'
@@ -57,18 +49,13 @@ export class DefaultService {
 
 
     /**
-     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const user = requestParameters.user;
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling v1AuthLoginPost.');
-        }
+    public v1VtsReplicationNotCompletedPost(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1VtsReplicationNotCompletedPost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1VtsReplicationNotCompletedPost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1VtsReplicationNotCompletedPost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -81,17 +68,8 @@ export class DefaultService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/auth/login`,
-            user,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/vts/replication-not-completed`,
+            null,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -102,18 +80,13 @@ export class DefaultService {
     }
 
     /**
-     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const user = requestParameters.user;
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling v1AuthRegisterPost.');
-        }
+    public v1VtsReplicationQueueDepthPost(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1VtsReplicationQueueDepthPost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1VtsReplicationQueueDepthPost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1VtsReplicationQueueDepthPost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -126,17 +99,39 @@ export class DefaultService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/vts/replication-queue-depth`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1VtsTokenPost(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1VtsTokenPost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1VtsTokenPost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1VtsTokenPost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
         ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/auth/register`,
-            user,
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/vts/token`,
+            null,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
