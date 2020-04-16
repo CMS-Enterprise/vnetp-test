@@ -1,4 +1,4 @@
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/variables';
 
 .status-item {
   display: flex;
@@ -30,15 +30,15 @@
   background-position: center;
   background-repeat: no-repeat;
   &.green {
-    background-image: url("../../../assets/img/status-green.svg");
+    background-image: url('../../../assets/img/status-green.svg');
   }
 
   &.yellow {
-    background-image: url("../../../assets/img/status-yellow.svg");
+    background-image: url('../../../assets/img/status-yellow.svg');
   }
 
   &.red {
-    background-image: url("../../../assets/img/status-red.svg");
+    background-image: url('../../../assets/img/status-red.svg');
   }
 }
 
@@ -103,12 +103,19 @@
     padding: 15px 0;
     font-size: 18px;
   }
-  a {
-    display: inline-block;
-    padding-left: 20px;
+  fa {
     color: $primary-main;
+    padding-left: 20px;
+  }
+  a {
+    display: flex;
+    width: 100%;
+    color: $black;
     &:hover {
-      color: $secondary-main;
+      text-decoration: none;
+      fa {
+        color: $secondary-main;
+      }
     }
   }
 }

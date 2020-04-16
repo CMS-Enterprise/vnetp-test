@@ -20,26 +20,13 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
-
-  lockCurrentDatacenter: boolean;
-
-  datacenters: Datacenter[];
-  currentDatacenter: Datacenter;
-
-  selectedDatacenter: Datacenter;
-
   currentUserSubscription: Subscription;
-  datacentersSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterLockSubscription: Subscription;
 
   constructor(
     private automationApiService: AutomationApiService,
     private messageService: MessageService,
-    private toastrService: ToastrService,
     private ngx: NgxSmartModalService,
     private auth: AuthService,
-    private datacenterContextService: DatacenterContextService,
     private hs: HelpersService,
   ) {
     this.activeJobs = [];
@@ -108,24 +95,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  switchDatacenter() {
-    try {
-      this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
-      this.toastrService.success('Datacenter Switched');
-    } catch (error) {
-      this.toastrService.error(error);
-    }
-  }
-
-  filterDatacenters = (datacenter: Datacenter) => {
-    if (!this.currentDatacenter) {
-      return;
-    }
-    return datacenter.id !== this.currentDatacenter.id;
-    // Using arrow function to pass execution context.
-    // tslint:disable-next-line: semicolon
-  };
-
   closeJobModal() {
     this.ngx.getModal('jobLaunchModal').close();
     this.modalJob = null;
@@ -137,17 +106,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.currentUserSubscription, this.datacentersSubscription, this.currentUserSubscription, this.datacenterLockSubscription].forEach(
-      sub => {
-        try {
-          if (sub) {
-            sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
+    [this.currentUserSubscription, this.currentUserSubscription].forEach(sub => {
+      try {
+        if (sub) {
+          sub.unsubscribe();
         }
-      },
-    );
+      } catch (e) {
+        console.error(e);
+      }
+    });
 
     if (this.messageServiceSubscription) {
       this.messageServiceSubscription.unsubscribe();
@@ -156,16 +123,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
-    this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(datacenters => (this.datacenters = datacenters));
-
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      currentDatacenter => (this.currentDatacenter = currentDatacenter),
-    );
-
-    this.datacenterLockSubscription = this.datacenterContextService.lockCurrentDatacenter.subscribe(
-      lockCurrentDatacenter => (this.lockCurrentDatacenter = lockCurrentDatacenter),
-    );
 
     // this.getMessageServiceSubscription();
   }

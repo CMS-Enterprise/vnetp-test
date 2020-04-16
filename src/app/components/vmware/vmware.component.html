@@ -20,6 +20,7 @@
         <th scope="col">CPUs</th>
         <th scope="col">Cores per Socket</th>
         <th scope="col">Memory</th>
+        <th scope="col">State</th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -35,6 +36,7 @@
           {{ vm.cpuCoresPerSocket }}
         </td>
         <td>{{ convertBytesToGb(vm.memorySize) }} GB</td>
+        <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
           <fa name="pencil" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal('Edit', vm)" aria-label="Edit Virtual Machine"> </fa>
           <fa
@@ -54,7 +56,7 @@
         </td>
       </tr>
       <tr *ngIf="!virtualMachines?.length" class="text-center">
-        <td colspan="5">No Virtual Machines</td>
+        <td colspan="6">No Virtual Machines</td>
       </tr>
     </tbody>
   </table>

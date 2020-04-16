@@ -95,6 +95,7 @@
                 <th>Name</th>
                 <th>Disk Size</th>
                 <th>Raw LUN</th>
+                <th>State</th>
                 <th></th>
               </tr>
             </thead>
@@ -103,6 +104,7 @@
                 <td>{{ v.name }}</td>
                 <td>{{ convertBytesToGb(v.diskSize) }} GB</td>
                 <td>{{ v.rawLun }}</td>
+                <td>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
                   <fa
                     name="undo"
@@ -121,7 +123,7 @@
                 </td>
               </tr>
               <tr *ngIf="!virtualDisks?.length" class="text-center">
-                <td colspan="4">No Virtual Disks</td>
+                <td colspan="5">No Virtual Disks</td>
               </tr>
             </tbody>
           </table>
@@ -140,6 +142,7 @@
               <tr>
                 <th>Name</th>
                 <th>VLAN</th>
+                <th>State</th>
                 <th></th>
               </tr>
             </thead>
@@ -147,6 +150,7 @@
               <tr *ngFor="let n of networkAdapters">
                 <td>{{ n.name }}</td>
                 <td>{{ n.vlanId }}</td>
+                <td>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
                   <fa
                     name="undo"
@@ -165,7 +169,7 @@
                 </td>
               </tr>
               <tr *ngIf="!networkAdapters?.length" class="text-center">
-                <td colspan="3">No Network Adapters</td>
+                <td colspan="4">No Network Adapters</td>
               </tr>
             </tbody>
           </table>

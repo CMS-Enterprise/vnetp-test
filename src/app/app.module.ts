@@ -90,6 +90,7 @@ import { ApplianceDetailComponent } from './components/appliance/appliance-detai
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 import { WizardComponent } from './components/wizard/wizard.component';
 import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
+import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -167,6 +168,7 @@ export function apiConfigFactory(): Configuration {
     PhysicalServerDetailComponent,
     WizardComponent,
     ReplicationStatePanelComponent,
+    DatacenterSelectComponent,
   ],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
