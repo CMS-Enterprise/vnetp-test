@@ -1,66 +1,39 @@
-<div
-  class="form-row pb-2 justify-content-center align-items-center"
-  *ngIf="currentUser"
->
+<div class="form-row pb-2 justify-content-center align-items-center" *ngIf="currentUser">
   <span class="col-form-label mr-2">
     Current Tier:
   </span>
   <strong>{{ currentTier?.name || 'No Tier Selected' }}</strong>
 
-  <button
-    type="button"
-    class="btn btn-sm btn-primary ml-3"
-    (click)="ngx.getModal('tierSwitchModal').open()"
-    [disabled]="!datacenterId"
-  >
+  <button type="button" class="btn btn-sm btn-primary ml-3" (click)="ngx.getModal('tierSwitchModal').open()" [disabled]="!datacenterId">
     Switch Tier
   </button>
 </div>
 
-<ngx-smart-modal
-  #tierSwitchModal
-  identifier="tierSwitchModal"
-  customClass="'modal-content'"
->
+<ngx-smart-modal #tierSwitchModal identifier="tierSwitchModal" customClass="'modal-content'">
   <div class="modal-header">
     <h4 class="modal-title">Switch Tier?</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="tierSwitchModal.close()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="tierSwitchModal.close()"></button>
   </div>
 
   <div class="modal-body">
-    Current Tier:
-    {{ currentTier?.name || 'No Tier Selected' }}
+    <p class="mb-3">Current Tier: {{ currentTier?.name || 'No Tier Selected' }}</p>
 
-    <select [(ngModel)]="selectedTier" class="form-control">
+    <!-- <select [(ngModel)]="selectedTier" class="form-control">
       <option></option>
       <option *ngFor="let tier of tiers" [ngValue]="tier">{{
         tier.name
       }}</option>
-    </select>
+    </select> -->
+
+    <ng-select [items]="tiers" bindLabel="name" bindValue="id" [(ngModel)]="selectedTier"></ng-select>
   </div>
 
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-link"
-      data-dismiss="modal"
-      (click)="tierSwitchModal.close()"
-    >
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="tierSwitchModal.close()">
       Cancel
     </button>
 
-    <button
-      type="button"
-      class="btn btn-success"
-      data-dismiss="modal"
-      (click)="switchTier(); tierSwitchModal.close()"
-    >
+    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="switchTier(); tierSwitchModal.close()">
       Save
     </button>
   </div>

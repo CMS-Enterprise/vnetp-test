@@ -15,7 +15,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 })
 export class TierSelectComponent implements OnInit, OnDestroy {
   tiers: Array<Tier>;
-  selectedTier: Tier;
+  selectedTier: string;
   currentTier: Tier;
   datacenterId: string;
   currentDatacenterSubscription: Subscription;
@@ -45,8 +45,10 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   switchTier() {
+    console.log(this.selectedTier);
+
     try {
-      this.tierContextService.switchTier(this.selectedTier.id);
+      this.tierContextService.switchTier(this.selectedTier);
       this.toastrService.success('Tier Switched');
     } catch (error) {
       this.toastrService.error(error);
@@ -54,11 +56,7 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [
-      this.currentDatacenterSubscription,
-      this.currentUserSubscription,
-      this.currentTierSubscription,
-    ].forEach(sub => {
+    [this.currentDatacenterSubscription, this.currentUserSubscription, this.currentTierSubscription].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -70,22 +68,16 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(
-      u => (this.currentUser = u),
-    );
+    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
 
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
-      cd => {
-        if (cd) {
-          this.datacenterId = cd.id;
-          this.getTiers();
-        }
-      },
-    );
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+        this.getTiers();
+      }
+    });
 
-    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(
-      ct => (this.currentTier = ct),
-    );
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => (this.currentTier = ct));
   }
 
   ngOnDestroy() {
