@@ -114,8 +114,8 @@ export class VlanModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), NameValidator])],
-      description: ['', Validators.minLength(3)],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(100)])],
       vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });
   }
