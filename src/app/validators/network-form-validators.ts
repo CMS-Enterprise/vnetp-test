@@ -75,6 +75,20 @@ export function FqdnValidator(control: FormControl) {
   }
 }
 
+export function MacAddressValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const isValid = validator.isMACAddress(control.value);
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidMacAddress: true };
+  }
+}
+
 export function ValidatePortRange(control: FormControl) {
   if (!control || !control.value) {
     return null;
