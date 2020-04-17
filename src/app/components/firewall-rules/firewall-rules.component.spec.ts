@@ -13,6 +13,9 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ImportExportComponent } from '../import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -31,8 +34,16 @@ describe('FirewallRulesComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        NgxPaginationModule,
       ],
-      declarations: [FirewallRulesComponent, FirewallRuleModalComponent, TooltipComponent, FilterPipe],
+      declarations: [
+        FirewallRulesComponent,
+        FirewallRuleModalComponent,
+        TooltipComponent,
+        FilterPipe,
+        ImportExportComponent,
+        YesNoModalComponent,
+      ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
