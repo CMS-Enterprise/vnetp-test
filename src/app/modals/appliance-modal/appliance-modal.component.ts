@@ -166,7 +166,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, NameValidator])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: [''],
       rackUnits: [''],
       serialNumber: [''],

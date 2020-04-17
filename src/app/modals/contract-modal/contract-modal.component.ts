@@ -76,7 +76,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
   private buildFilterEntryForm() {
     this.filterEntryForm = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, NameValidator])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       protocol: ['', Validators.required],
       sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
