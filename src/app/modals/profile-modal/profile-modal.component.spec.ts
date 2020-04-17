@@ -6,6 +6,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { ProfileModalComponent } from './profile-modal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;
@@ -15,7 +17,15 @@ describe('ProfileModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot()],
+      imports: [
+        AngularFontAwesomeModule,
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot(),
+        NgxMaskModule.forRoot(),
+        HttpClientTestingModule,
+      ],
       declarations: [ProfileModalComponent, TooltipComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
