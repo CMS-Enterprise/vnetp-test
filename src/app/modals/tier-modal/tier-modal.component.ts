@@ -124,7 +124,7 @@ export class TierModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
       tierType: [null],
     });

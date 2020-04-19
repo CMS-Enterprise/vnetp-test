@@ -32,6 +32,10 @@
       <div class="form-group">
         <label for="description">Description</label>
         <input type="text" class="form-control" formControlName="description" />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="row">
