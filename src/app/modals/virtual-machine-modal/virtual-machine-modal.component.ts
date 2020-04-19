@@ -282,12 +282,12 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      description: [''],
-      cpuCount: [''],
-      coreCount: [''],
-      cpuReserved: [''],
-      memorySize: [''],
-      memoryReserved: [''],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      cpuCount: ['', Validators.required],
+      coreCount: ['', Validators.required],
+      cpuReserved: ['', Validators.required],
+      memorySize: ['', Validators.required],
+      memoryReserved: ['', Validators.required],
     });
   }
 
