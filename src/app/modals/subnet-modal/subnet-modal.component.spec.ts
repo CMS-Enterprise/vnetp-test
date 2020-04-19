@@ -69,4 +69,29 @@ describe('SubnetModalComponent', () => {
     const vlan = component.form.controls.vlan;
     expect(vlan.valid).toBeFalsy();
   });
+
+  // Name validity
+  it('name should be valid', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(3));
+    expect(name.valid).toBeTruthy();
+  });
+
+  it('name should be invalid, min length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(2));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, max length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(101));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, invalid characters', () => {
+    const name = component.form.controls.name;
+    name.setValue('invalid/name!');
+    expect(name.valid).toBeFalsy();
+  });
 });
