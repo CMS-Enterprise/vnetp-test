@@ -36,6 +36,7 @@
           <tooltip [message]="helpText.Type"></tooltip>
           <select formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
             aria-label="Type">
+            <option></option>
             <option value="ClientSSL">ClientSSL</option>
             <option value="Http">HTTP</option>
           </select>
@@ -51,6 +52,7 @@
           <tooltip [message]="helpText.ReverseProxy"></tooltip>
           <select formControlName="reverseProxy" class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.reverseProxy.errors }">
+            <option></option>
             <option value="Explicit">Explicit</option>
             <option value="Reverse">Reverse</option>
             <option value="Transparent">Transparent</option>

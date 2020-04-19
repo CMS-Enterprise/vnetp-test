@@ -39,6 +39,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
             aria-label="Type"
           >
+            <option></option>
             <option value="Deny">Deny</option>
             <option value="Permit">Permit</option>
           </select>
@@ -57,6 +58,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
             aria-label="Direction"
           >
+            <option></option>
             <option value="In">In</option>
             <option value="Out">Out</option>
           </select>
@@ -75,6 +77,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
             aria-label="Protocol"
           >
+            <option></option>
             <option value="IP">IP</option>
             <option value="ICMP">ICMP</option>
             <option value="TCP">TCP</option>
@@ -95,6 +98,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
             aria-label="Logging"
           >
+            <option></option>
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
@@ -113,6 +117,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
             aria-label="Logging"
           >
+            <option></option>
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
@@ -146,6 +151,7 @@
             class="form-control"
             aria-label="Source Network Type"
           >
+            <option></option>
             <option value="IpAddress">IP</option>
             <option value="NetworkObject">Network Object</option>
             <option value="NetworkObjectGroup">Network Object Group</option>
@@ -186,6 +192,7 @@
             aria-label="Source Network Object"
             *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
           >
+            <option></option>
             <option
               *ngFor="let networkObject of networkObjects"
               [ngValue]="networkObject.id"
@@ -216,6 +223,7 @@
             aria-label="Name"
             *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
           >
+            <option></option>
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
               [ngValue]="networkObjectGroup.id"
@@ -243,6 +251,7 @@
             class="form-control"
             aria-label="Destination Network Type"
           >
+            <option></option>
             <option value="IpAddress">IP</option>
             <option value="NetworkObject">Network Object</option>
             <option value="NetworkObjectGroup">Network Object Group</option>
@@ -288,6 +297,7 @@
             aria-label="Destination Network Object"
             *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
           >
+            <option></option>
             <option
               *ngFor="let networkObject of networkObjects"
               [ngValue]="networkObject.id"
@@ -318,6 +328,7 @@
             aria-label="Name"
             *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
           >
+            <option></option>
             <option
               *ngFor="let networkObjectGroup of networkObjectGroups"
               [ngValue]="networkObjectGroup.id"
@@ -347,6 +358,7 @@
             class="form-control"
             aria-label="Source Service Type"
           >
+            <option></option>
             <option value="Port">Port</option>
             <option value="ServiceObject">Service Object</option>
             <option value="ServiceObjectGroup">Service Object Group</option>
@@ -416,6 +428,7 @@
             aria-label="Name"
             *ngIf="f.serviceType.value === 'ServiceObject'"
           >
+            <option></option>
             <option
               *ngFor="let serviceObject of serviceObjects"
               [ngValue]="serviceObject.id"
@@ -446,6 +459,7 @@
             aria-label="Name"
             *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
           >
+            <option></option>
             <option
               *ngFor="let serviceObjectGroup of serviceObjectGroups"
               [ngValue]="serviceObjectGroup.id"
