@@ -41,9 +41,8 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">
-            Description is required
-          </div>
+          <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
         </div>
       </div>
 
