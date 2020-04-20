@@ -11290,6 +11290,20 @@ definitions:
           - LeastSessions
           - FastestNode
           - FastestAppResponse
+          - RatioMember
+          - ObservedMember
+          - PredictiveMember
+          - RatioNode
+          - LeastConnectionsNode
+          - ObservedNode
+          - PredictiveNode
+          - DynamicRatioNode
+          - DynamicRatioMember
+          - WeightedLeastConnectionsMember
+          - WeightedLeastConnectionsNode
+          - RatioSession
+          - RatioLeastConnectionsMember
+          - RatioLeastConnectionsNode
       nodes:
         type: array
         items:
