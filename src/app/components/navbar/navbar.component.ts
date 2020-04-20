@@ -9,9 +9,6 @@ import { AppMessage } from 'src/app/models/app-message';
 import { AppMessageType } from 'src/app/models/app-message-type';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Datacenter } from 'api_client/model/datacenter';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -37,8 +34,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User;
   jobMessage: AppMessage;
 
-  // jobPoller = setInterval(() => this.getJobs(), 5000);
-
   modalJob: Job;
 
   getMessageServiceSubscription() {
@@ -60,10 +55,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.jobMessage = m;
         this.ngx.getModal('jobLaunchModal').open();
     }
-  }
-
-  toggleWizard() {
-    this.messageService.sendMessage(new AppMessage('Wizard', {}, AppMessageType.ToggleWizard));
   }
 
   getJobs() {
@@ -123,8 +114,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
-    // this.getMessageServiceSubscription();
   }
 
   ngOnDestroy() {
