@@ -38,6 +38,7 @@
           [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
           aria-label="Type"
         >
+          <option></option>
           <option value="standard">Standard</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
