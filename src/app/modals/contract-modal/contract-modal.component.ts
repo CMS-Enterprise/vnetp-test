@@ -5,6 +5,7 @@ import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { ContractModalHelpText } from 'src/app/helptext/help-text-networking';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-contract-modal',
@@ -75,7 +76,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
   private buildFilterEntryForm() {
     this.filterEntryForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       protocol: ['', Validators.required],
       sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],

@@ -5,6 +5,7 @@ import {
   ValidatePortRange,
   IpAddressAnyValidator,
   FqdnValidator,
+  MacAddressValidator,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -172,6 +173,29 @@ describe('Network Form Validators', () => {
 
     formControl.setValue('test.com.');
     expect(FqdnValidator(formControl)).toBeTruthy();
+  });
+
+  it('should be valid mac address', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('00:50:56:8c:d3:4e');
+    expect(MacAddressValidator(formControl)).toBeNull();
+
+    formControl.setValue('00:50:56:8c:53:f9');
+    expect(MacAddressValidator(formControl)).toBeNull();
+
+    formControl.setValue(null);
+    expect(MacAddressValidator(formControl)).toBeNull();
+  });
+
+  it('should be invalid mac address', () => {
+    const formControl = new FormControl();
+
+    formControl.setValue('ma:ca:dd:re:ss');
+    expect(MacAddressValidator(formControl)).toBeTruthy();
+
+    formControl.setValue('invalid');
+    expect(MacAddressValidator(formControl)).toBeTruthy();
   });
 
   it('should be valid port/port range', () => {

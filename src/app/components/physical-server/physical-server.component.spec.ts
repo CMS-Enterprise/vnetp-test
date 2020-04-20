@@ -6,6 +6,11 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { PhysicalServerModalComponent } from 'src/app/modals/physical-server-modal/physical-server-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { RouterTestingModule } from '@angular/router/testing';
+import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CookieService } from 'ngx-cookie-service';
 
 const ngx = new NgxSmartModalServiceStub();
 
@@ -15,9 +20,17 @@ describe('PhysicalServerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [PhysicalServerComponent, PhysicalServerModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }],
+      imports: [
+        AngularFontAwesomeModule,
+        NgxSmartModalModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxPaginationModule,
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule,
+      ],
+      declarations: [PhysicalServerComponent, PhysicalServerModalComponent, YesNoModalComponent],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService],
     }).compileComponents();
   }));
 

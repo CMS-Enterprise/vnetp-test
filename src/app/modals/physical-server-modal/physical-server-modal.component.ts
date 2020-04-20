@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-physical-server-modal',
@@ -142,8 +143,8 @@ export class PhysicalServerModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       serialNumber: ['', Validators.required],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],

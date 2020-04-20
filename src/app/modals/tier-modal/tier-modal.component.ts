@@ -5,6 +5,7 @@ import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'api_client
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalHelpText } from 'src/app/helptext/help-text-networking';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-tier-modal',
@@ -122,8 +123,8 @@ export class TierModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      description: ['', Validators.minLength(3)],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
       tierType: [null],
     });

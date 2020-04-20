@@ -18,6 +18,7 @@ import {
   V1NetworkSecurityFirewallRulesService,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -340,7 +341,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.maxLength(28)])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(28), NameValidator])],
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required],

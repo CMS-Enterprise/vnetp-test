@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { V1VmwareNetworkAdapterService, VmwareNetworkAdapter, Vlan, V1TiersService } from 'api_client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-network-adapter-modal',
@@ -81,8 +82,8 @@ export class NetworkAdapterModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
-      description: [''],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       vlanId: [''],
     });
   }

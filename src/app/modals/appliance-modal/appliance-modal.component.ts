@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
@@ -10,6 +10,7 @@ import {
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-appliance-modal',
@@ -165,21 +166,21 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [''],
-      description: [''],
-      rackUnits: [''],
-      serialNumber: [''],
-      deliveryDate: [''],
-      localStorageType: [''],
-      localStorageRequired: [''],
-      localStorageSize: [''],
-      sanType: [''],
-      sanRequired: [''],
-      sanStorageSize: [''],
-      powerSupplyVoltage: [''],
-      powerSupplyWattage: [''],
-      powerSupplyConnectionType: [''],
-      powerSupplyCount: [''],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      rackUnits: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      deliveryDate: ['', Validators.required],
+      localStorageType: ['', Validators.required],
+      localStorageRequired: ['', Validators.required],
+      localStorageSize: ['', Validators.required],
+      sanType: ['', Validators.required],
+      sanRequired: ['', Validators.required],
+      sanStorageSize: ['', Validators.required],
+      powerSupplyVoltage: ['', Validators.required],
+      powerSupplyWattage: ['', Validators.required],
+      powerSupplyConnectionType: ['', Validators.required],
+      powerSupplyCount: ['', Validators.required],
     });
   }
 

@@ -16,7 +16,6 @@
         <tooltip [message]="helpText?.Name"></tooltip>
         <input
           type="text"
-          appIsAlphanumeric
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -25,6 +24,8 @@
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
         </div>
       </div>
 
@@ -33,7 +34,6 @@
         <tooltip [message]="helpText?.Description"></tooltip>
         <input
           type="text"
-          appIsAlphanumeric
           formControlName="description"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
@@ -42,6 +42,7 @@
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
           <div *ngIf="f.description.errors.required">Description is required</div>
           <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
 

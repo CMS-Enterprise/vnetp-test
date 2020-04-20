@@ -6,6 +6,7 @@ import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -174,8 +175,8 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       type: ['', Validators.required],
     });
   }

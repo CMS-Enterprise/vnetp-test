@@ -6,6 +6,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
 import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-subnet-modal',
@@ -126,8 +127,8 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: ['', Validators.minLength(3)],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       network: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       gateway: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       vlan: ['', Validators.required],
