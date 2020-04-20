@@ -79,7 +79,7 @@ describe('VirtualServerModalComponent', () => {
     const pool = component.form.controls.pool;
     expect(pool.valid).toBeFalsy();
   });
-
+  
   // Name validity
   it('name should be valid', () => {
     const name = component.form.controls.name;
@@ -129,4 +129,5 @@ describe('VirtualServerModalComponent', () => {
     description.setValue('a'.repeat(501));
     expect(description.valid).toBeFalsy();
   });
+  
 });
