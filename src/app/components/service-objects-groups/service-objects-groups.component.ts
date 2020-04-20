@@ -18,6 +18,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -40,6 +41,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -50,6 +52,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   constructor(
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
+    public tierContextService: TierContextService,
     private tierService: V1TiersService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
@@ -247,7 +250,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [this.serviceObjectModalSubscription, this.serviceObjectGroupModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
+    [
+      this.serviceObjectModalSubscription,
+      this.serviceObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -373,14 +381,19 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.currentTier = null;
         this.serviceObjects = [];
         this.serviceObjectGroups = [];
 
         if (cd.tiers.length) {
-          this.currentTier = cd.tiers[0];
           this.getObjectsForNavIndex();
         }
+      }
+    });
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
+      if (ct) {
+        this.currentTier = ct;
+        this.getObjectsForNavIndex();
       }
     });
   }

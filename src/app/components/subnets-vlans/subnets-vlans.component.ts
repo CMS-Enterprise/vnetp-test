@@ -18,6 +18,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -39,6 +40,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   subnetModalSubscription: Subscription;
   vlanModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -49,6 +51,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   constructor(
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
+    public tierContextService: TierContextService,
     public helpText: SubnetsVlansHelpText,
     private tierService: V1TiersService,
     private vlanService: V1NetworkVlansService,
@@ -298,29 +301,36 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   }
 
   private unsubAll() {
-    [this.subnetModalSubscription, this.vlanModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
+    [this.subnetModalSubscription, this.vlanModalSubscription, this.currentDatacenterSubscription, this.currentTierSubscription].forEach(
+      sub => {
+        try {
+          if (sub) {
+            sub.unsubscribe();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+      },
+    );
   }
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.currentTier = null;
         this.subnets = [];
         this.vlans = [];
 
         if (cd.tiers.length) {
-          this.currentTier = cd.tiers[0];
           this.getVlans(true);
         }
+      }
+    });
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
+      if (ct) {
+        this.currentTier = ct;
+        this.getObjectsForNavIndex();
       }
     });
   }

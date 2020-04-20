@@ -14,6 +14,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // 1st-Party Imports
@@ -88,6 +89,7 @@ import { ApplianceModalComponent } from './modals/appliance-modal/appliance-moda
 import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
+import { TierSelectComponent } from './components/tier-select/tier-select.component';
 import { WizardComponent } from './components/wizard/wizard.component';
 import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
 import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
@@ -166,6 +168,7 @@ export function apiConfigFactory(): Configuration {
     NetworkPortsModalComponent,
     ApplianceDetailComponent,
     PhysicalServerDetailComponent,
+    TierSelectComponent,
     WizardComponent,
     ReplicationStatePanelComponent,
     DatacenterSelectComponent,
@@ -191,6 +194,7 @@ export function apiConfigFactory(): Configuration {
     NgxSmartModalModule.forRoot(),
     NgxPaginationModule,
     D3Module,
+    NgSelectModule,
     NgxChartsModule,
   ],
   providers: [

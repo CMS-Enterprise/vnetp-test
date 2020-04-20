@@ -4,4 +4,5 @@ export enum AppMessageType {
   JobLaunchFail,
   ToggleWizard,
   DatacenterContextSwitch,
+  TierContextSwitch,
 }

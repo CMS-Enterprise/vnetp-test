@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
@@ -19,6 +18,7 @@ import {
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -40,6 +40,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
   @HostListener('window:popstate')
@@ -50,6 +51,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   constructor(
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
+    public tierContextService: TierContextService,
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
@@ -247,7 +249,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [this.networkObjectModalSubscription, this.networkObjectGroupModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
+    [
+      this.networkObjectModalSubscription,
+      this.networkObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -379,14 +386,19 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.currentTier = null;
         this.networkObjects = [];
         this.networkObjectGroups = [];
 
         if (cd.tiers.length) {
-          this.currentTier = cd.tiers[0];
           this.getObjectsForNavIndex();
         }
+      }
+    });
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
+      if (ct) {
+        this.currentTier = ct;
+        this.getObjectsForNavIndex();
       }
     });
   }

@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatacenterSelectComponent } from './datacenter-select.component';
+import { TierSelectComponent } from './tier-select.component';
 
-describe('DatacenterSelectComponent', () => {
-  let component: DatacenterSelectComponent;
-  let fixture: ComponentFixture<DatacenterSelectComponent>;
+describe('TierSelectComponent', () => {
+  let component: TierSelectComponent;
+  let fixture: ComponentFixture<TierSelectComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DatacenterSelectComponent],
+      declarations: [TierSelectComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatacenterSelectComponent);
+    fixture = TestBed.createComponent(TierSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
