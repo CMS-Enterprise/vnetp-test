@@ -686,7 +686,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     }
   }
 
-  restoreIrules(irule: LoadBalancerIrule) {
+  restoreIrule(irule: LoadBalancerIrule) {
     if (irule.deletedAt) {
       this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(data => this.getIrules());
     }
