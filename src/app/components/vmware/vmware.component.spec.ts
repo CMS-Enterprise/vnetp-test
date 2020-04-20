@@ -14,6 +14,7 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 describe('VmwareComponent', () => {
   let component: VmwareComponent;
@@ -29,6 +30,7 @@ describe('VmwareComponent', () => {
         RouterTestingModule.withRoutes([]),
         FormsModule,
         NgxSmartModalModule,
+        NgxPaginationModule,
         ReactiveFormsModule,
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
