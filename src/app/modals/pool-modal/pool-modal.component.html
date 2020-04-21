@@ -156,7 +156,7 @@
             <button
             type="button"
             class="btn btn-sm btn-info"
-            (click)="selectHealthMonitor();"
+            (click)="addHealthMonitor();"
             [disabled]="ModalMode === 'Create'"
             >
             Select Health Monitor
@@ -182,7 +182,7 @@
                 <td class="item-actions">
                   <fa
                     name="trash"
-                    (click)="unselectHealthMonitor(healthMonitor)"
+                    (click)="removeHealthMonitor(healthMonitor)"
                   >
                   </fa>
                 </td>
