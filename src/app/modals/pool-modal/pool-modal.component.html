@@ -95,10 +95,10 @@
           <div class="input-group align-items-center">
             <select class="form-control" id="availableNodes" formControlName="selectedNode">
               <option></option>
-              <option *ngFor="let node of availableNodes" [ngValue]="node">
+              <option *ngFor="let node of availableNodes" [ngValue]="node.id">
                 {{ node.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectNode();"
+            <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
               [disabled]="ModalMode === 'Create'">
               Select Node
             </button>
@@ -121,7 +121,7 @@
                   {{ node.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectNode(node)">
+                  <fa name="trash" (click)="removeNode(node)">
                   </fa>
                 </td>
               </tr>
@@ -149,7 +149,7 @@
               <option></option>
               <option
                 *ngFor="let healthMonitor of availableHealthMonitors"
-                [ngValue]="healthMonitor"
+                [ngValue]="healthMonitor.id"
                 >{{ healthMonitor.name }}</option
               >
             </select>

@@ -92,20 +92,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  addHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+  addHealthMonitor() {
     this.poolService
       .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
         poolId: this.PoolId,
-        healthMonitorId: healthMonitor.id,
+        healthMonitorId: this.f.selectedHealthMonitor.value,
       })
-      .subscribe(
-        data => {
-          this.getPools();
-        },
-        error => {
-          this.selectedHealthMonitors = null;
-        },
-      );
+      .subscribe(data => {
+        this.getPools();
+        this.f.selectedHealthMonitor.setValue('');
+      });
   }
 
   removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
@@ -134,12 +130,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.poolService
       .v1LoadBalancerPoolsIdGet({
         id: this.PoolId,
-        join: 'LoadBalancerNodes,LoadBalancerHealthMonitors',
+        join: 'nodes,healthMonitors',
       })
       .subscribe(data => {
         this.Pool = data;
-        this.HealthMonitors = data.healthMonitors;
-        this.Nodes = data.nodes;
+        this.selectedHealthMonitors = data.healthMonitors;
+        this.selectedNodes = data.nodes;
       });
   }
 
@@ -165,20 +161,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  addNode(node: LoadBalancerNode) {
+  addNode() {
     this.poolService
       .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
         poolId: this.PoolId,
-        nodeId: node.id,
+        nodeId: this.f.selectedNode.value,
       })
-      .subscribe(
-        data => {
-          this.getPools();
-        },
-        error => {
-          this.selectedNodes = null;
-        },
-      );
+      .subscribe(data => {
+        this.getPools();
+        this.f.selectedNode.setValue('');
+      });
   }
 
   getData() {
@@ -220,109 +212,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         this.selectedNodes = new Array<LoadBalancerNode>();
       }
     }
-    if (pool && pool.healthMonitors) {
-      this.getAvailableHealthMonitors(pool.healthMonitors);
-    }
-    if (pool && pool.nodes) {
-      this.getAvailableNodes(pool.nodes);
-    }
+
     this.ngx.resetModalData('poolModal');
-  }
-
-  private getAvailableHealthMonitors(healthMonitors: Array<LoadBalancerHealthMonitor>) {
-    if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    healthMonitors.forEach(healthMonitor => {
-      this.availableHealthMonitors = this.availableHealthMonitors.filter(hm => hm.id !== healthMonitor.id);
-      if (!this.selectedHealthMonitors.includes(healthMonitor)) {
-        this.availableHealthMonitors.push(healthMonitor);
-      }
-    });
-  }
-
-  selectHealthMonitor() {
-    const healthMonitor = this.form.value.selectedHealthMonitor;
-
-    if (!healthMonitor) {
-      return;
-    }
-    if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-    this.selectedHealthMonitors.push(healthMonitor);
-    const availableIndex = this.availableHealthMonitors.indexOf(healthMonitor);
-    if (availableIndex > -1) {
-      this.availableHealthMonitors.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedHealthMonitor.setValue(null);
-    this.form.controls.selectedHealthMonitor.updateValueAndValidity();
-    this.addHealthMonitor(healthMonitor);
-  }
-
-  unselectHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    this.availableHealthMonitors.push(healthMonitor);
-    const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
-    if (selectedIndex > -1) {
-      this.selectedHealthMonitors.splice(selectedIndex, 1);
-    }
-    this.removeHealthMonitor(healthMonitor);
-  }
-
-  private getAvailableNodes(nodes: Array<LoadBalancerNode>) {
-    if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
-    }
-
-    if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
-    }
-    nodes.forEach(node => {
-      this.availableNodes = this.availableNodes.filter(n => n.id !== node.id);
-      if (!this.selectedNodes.includes(node)) {
-        this.availableNodes.push(node);
-      }
-    });
-  }
-
-  selectNode() {
-    const node = this.form.value.selectedNode;
-    if (!node) {
-      return;
-    }
-    if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
-    }
-    this.selectedNodes.push(node);
-    const availableIndex = this.availableNodes.indexOf(node);
-    if (availableIndex > -1) {
-      this.availableNodes.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedNode.setValue(null);
-    this.form.controls.selectedNode.updateValueAndValidity();
-    this.addNode(node);
-  }
-
-  unselectNode(node: LoadBalancerNode) {
-    if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
-    }
-
-    this.availableNodes.push(node);
-    const selectedIndex = this.selectedNodes.indexOf(node);
-    if (selectedIndex > -1) {
-      this.selectedNodes.splice(selectedIndex, 1);
-    }
-    this.removeNode(node);
   }
 
   private buildForm() {
