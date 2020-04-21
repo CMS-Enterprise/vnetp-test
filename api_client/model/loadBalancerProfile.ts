@@ -23,7 +23,6 @@ export interface LoadBalancerProfile {
     description?: string;
     type: LoadBalancerProfileType;
     properties: object;
-    reverseProxy: string;
     key: string;
     certificate: string;
     tierId: string;

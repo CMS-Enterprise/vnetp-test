@@ -26,28 +26,13 @@ export interface LoadBalancerPool {
     loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
     nodes?: Array<LoadBalancerNode>;
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
-    servicePort: number;
     tierId: string;
 }
 export enum LoadBalancerPoolLoadBalancingMethod {
     RoundRobin = 'RoundRobin',
     LeastSessions = 'LeastSessions',
     FastestNode = 'FastestNode',
-    FastestAppResponse = 'FastestAppResponse',
-    RatioMember = 'RatioMember',
-    ObservedMember = 'ObservedMember',
-    PredictiveMember = 'PredictiveMember',
-    RatioNode = 'RatioNode',
-    LeastConnectionsNode = 'LeastConnectionsNode',
-    ObservedNode = 'ObservedNode',
-    PredictiveNode = 'PredictiveNode',
-    DynamicRatioNode = 'DynamicRatioNode',
-    DynamicRatioMember = 'DynamicRatioMember',
-    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
-    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
-    RatioSession = 'RatioSession',
-    RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
-    RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
+    FastestAppResponse = 'FastestAppResponse'
 };
 
 

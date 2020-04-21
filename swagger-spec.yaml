@@ -8687,10 +8687,18 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/load-balancer/pools/{poolId}/node/{nodeId}':
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/priority/{priority}':
     post:
       summary: Add Node to Load Balancer Pool
       parameters:
+        - type: number
+          name: priority
+          required: true
+          in: path
+        - type: number
+          name: servicePort
+          required: true
+          in: path
         - type: string
           name: poolId
           required: true
@@ -8715,6 +8723,14 @@ paths:
     delete:
       summary: Remove Node to Load Balancer Pool
       parameters:
+        - type: number
+          name: priority
+          required: true
+          in: path
+        - type: number
+          name: servicePort
+          required: true
+          in: path
         - type: string
           name: poolId
           required: true
@@ -11290,20 +11306,6 @@ definitions:
           - LeastSessions
           - FastestNode
           - FastestAppResponse
-          - RatioMember
-          - ObservedMember
-          - PredictiveMember
-          - RatioNode
-          - LeastConnectionsNode
-          - ObservedNode
-          - PredictiveNode
-          - DynamicRatioNode
-          - DynamicRatioMember
-          - WeightedLeastConnectionsMember
-          - WeightedLeastConnectionsNode
-          - RatioSession
-          - RatioLeastConnectionsMember
-          - RatioLeastConnectionsNode
       nodes:
         type: array
         items:
@@ -11312,16 +11314,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
       tierId:
         type: string
     required:
       - name
       - loadBalancingMethod
-      - servicePort
       - tierId
   LoadBalancerProfile:
     type: object
@@ -11369,8 +11366,6 @@ definitions:
           - Http
       properties:
         type: object
-      reverseProxy:
-        type: string
       key:
         type: string
       certificate:
@@ -11381,7 +11376,6 @@ definitions:
       - name
       - type
       - properties
-      - reverseProxy
       - key
       - certificate
       - tierId
@@ -12438,10 +12432,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
       tierId:
         type: string
       vrfName:
@@ -12457,7 +12447,6 @@ definitions:
     required:
       - name
       - loadBalancingMethod
-      - servicePort
       - tierId
       - vrfName
       - healthMonitorNames

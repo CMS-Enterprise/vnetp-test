@@ -107,7 +107,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   getPools(getVirtualServers = false) {
     this.poolsService
       .v1LoadBalancerPoolsGet({
-        join: 'nodes,healthMonitors',
+        join: 'healthMonitors',
         filter: `tierId||eq||${this.currentTier.id}`,
       })
       .subscribe(data => {
@@ -123,7 +123,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
-        join: 'loadBalancerNodes',
+        join: 'loadBalancerNodes,pools',
       })
       .subscribe(data => {
         this.nodes = data.loadBalancerNodes;
@@ -183,19 +183,19 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         this.getHealthMonitors();
         this.getNodes();
         break;
-      case 2:
+      case 3:
         this.getNodes();
         break;
-      case 3:
+      case 4:
         this.getIrules();
         break;
-      case 4:
+      case 5:
         this.getHealthMonitors();
         break;
-      case 5:
+      case 6:
         this.getProfiles();
         break;
-      case 6:
+      case 7:
         this.getPolicies();
         break;
     }
@@ -230,20 +230,27 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
+      // this.nodeService
+      //   .v1LoadBalancerNodesBulkPost({
+      //     generatedLoadBalancerNodeBulkDto: { bulk: data },
+      //   })
+      //   .subscribe(result => this.getObjectsForNavIndex());
+      // break;
+      case 3:
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
             generatedLoadBalancerNodeBulkDto: { bulk: data },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
-      case 3:
+      case 4:
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: data },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
-      case 4:
+      case 5:
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
             generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
@@ -264,15 +271,15 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         return this.virtualServers;
       case 1:
         return this.pools;
-      case 2:
-        return this.nodes;
       case 3:
-        return this.irules;
+        return this.nodes;
       case 4:
-        return this.healthMonitors;
+        return this.irules;
       case 5:
-        return this.profiles;
+        return this.healthMonitors;
       case 6:
+        return this.profiles;
+      case 7:
         return this.policies;
       default:
         break;

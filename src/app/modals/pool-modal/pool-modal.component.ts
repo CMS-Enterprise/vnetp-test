@@ -50,7 +50,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       pool.name = this.form.value.name.trim();
     }
     pool.loadBalancingMethod = this.form.value.loadBalancingMethod;
-    pool.servicePort = this.form.value.servicePort;
     if (this.ModalMode === ModalMode.Create) {
       pool.tierId = this.TierId;
       this.poolService
@@ -153,9 +152,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       modal.removeData();
       if (data && data.modalYes) {
         this.poolService
-          .v1LoadBalancerPoolsPoolIdNodeNodeIdDelete({
+          .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete({
             poolId: this.PoolId,
             nodeId: node.id,
+            servicePort: 80,
+            priority: 100,
           })
           .subscribe(() => {
             this.getPools();
@@ -167,9 +168,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   addNode(node: LoadBalancerNode) {
     this.poolService
-      .v1LoadBalancerPoolsPoolIdNodeNodeIdPost({
+      .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost({
         poolId: this.PoolId,
         nodeId: node.id,
+        servicePort: 80,
+        priority: 100,
       })
       .subscribe(
         data => {
@@ -207,7 +210,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(pool.name);
       this.form.controls.name.disable();
       this.form.controls.loadBalancingMethod.setValue(pool.loadBalancingMethod);
-      this.form.controls.servicePort.setValue(pool.servicePort);
 
       if (dto.pool.healthMonitors) {
         this.selectedHealthMonitors = dto.pool.healthMonitors;
@@ -331,7 +333,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],
-      servicePort: [''],
     });
   }
 

@@ -50,8 +50,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       }
       node.fqdn = this.form.value.fqdn;
     }
-    node.servicePort = this.form.value.servicePort;
-    node.priority = this.form.value.priority;
+    // node.servicePort = this.form.value.servicePort;
+    // node.priority = this.form.value.priority;
 
     if (this.ModalMode === ModalMode.Create) {
       node.tierId = this.TierId;
@@ -142,8 +142,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       this.form.controls.ipAddress.setValue(node.ipAddress);
       this.form.controls.fqdn.setValue(node.fqdn);
       this.form.controls.autoPopulate.setValue(node.autoPopulate);
-      this.form.controls.servicePort.setValue(node.servicePort);
-      this.form.controls.priority.setValue(node.priority);
+      // this.form.controls.servicePort.setValue(node.servicePort);
+      // this.form.controls.priority.setValue(node.priority);
     }
     this.ngx.resetModalData('nodeModal');
   }
@@ -155,8 +155,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
-      priority: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
+      // servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
+      // priority: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
     });
   }
 
