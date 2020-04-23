@@ -17,10 +17,11 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { LoadBalancerHealthMonitor } from '../model/loadBalancerHealthMonitor';
-import { LoadBalancerNode } from '../model/loadBalancerNode';
-import { LoadBalancerPool } from '../model/loadBalancerPool';
-import { PoolImportCollectionDto } from '../model/poolImportCollectionDto';
+import { LoadBalancerHealthMonitor } from '../model/models';
+import { LoadBalancerNode } from '../model/models';
+import { LoadBalancerPool } from '../model/models';
+import { NodeImportCollectionDto } from '../model/models';
+import { PoolImportCollectionDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -30,16 +31,8 @@ export interface V1LoadBalancerPoolsBulkImportPostRequestParams {
     poolImportCollectionDto: PoolImportCollectionDto;
 }
 
-export interface V1LoadBalancerPoolsGetRequestParams {
-    fields?: string;
-    filter?: string;
-    or?: string;
-    sort?: string;
-    join?: string;
-    perPage?: number;
-    offset?: number;
-    page?: number;
-    cache?: number;
+export interface V1LoadBalancerPoolsBulkUpdatePostRequestParams {
+    nodeImportCollectionDto: NodeImportCollectionDto;
 }
 
 export interface V1LoadBalancerPoolsIdDeleteRequestParams {
@@ -50,16 +43,14 @@ export interface V1LoadBalancerPoolsIdDeprovisionPatchRequestParams {
     id: string;
 }
 
-export interface V1LoadBalancerPoolsIdGetRequestParams {
-    id: string;
-    fields?: string;
-    join?: string;
-    cache?: number;
-}
-
 export interface V1LoadBalancerPoolsIdPatchRequestParams {
     id: string;
     loadBalancerPool: LoadBalancerPool;
+}
+
+export interface V1LoadBalancerPoolsIdPoolIdGetRequestParams {
+    /** UUID. */
+    id: string;
 }
 
 export interface V1LoadBalancerPoolsIdProvisionPutRequestParams {
@@ -79,27 +70,40 @@ export interface V1LoadBalancerPoolsIdSoftDeleteRequestParams {
     id: string;
 }
 
+export interface V1LoadBalancerPoolsIdTierIdGetRequestParams {
+    /** UUID. */
+    id: string;
+}
+
 export interface V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams {
+    /** Pool that the Health Monitor is being added to/removed from. */
     poolId: string;
+    /** Health Monitor that is being added or removed from Pool. */
     healthMonitorId: string;
 }
 
 export interface V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams {
+    /** Pool that the Health Monitor is being added to/removed from. */
     poolId: string;
+    /** Health Monitor that is being added or removed from Pool. */
     healthMonitorId: string;
 }
 
 export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams {
     priority: number;
     servicePort: number;
+    /** Pool that the Node is being added to/removed from. */
     poolId: string;
+    /** Node that is being added or removed from Pool. */
     nodeId: string;
 }
 
 export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams {
     priority: number;
     servicePort: number;
+    /** Pool that the Node is being added to/removed from. */
     poolId: string;
+    /** Node that is being added or removed from Pool. */
     nodeId: string;
 }
 
@@ -133,16 +137,52 @@ export class V1LoadBalancerPoolsService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Bulk Import Pools
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsBulkImportPost(requestParameters: V1LoadBalancerPoolsBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const poolImportCollectionDto = requestParameters.poolImportCollectionDto;
         if (poolImportCollectionDto === null || poolImportCollectionDto === undefined) {
             throw new Error('Required parameter poolImportCollectionDto was null or undefined when calling v1LoadBalancerPoolsBulkImportPost.');
@@ -150,10 +190,13 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -168,9 +211,15 @@ export class V1LoadBalancerPoolsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/load-balancer/pools/bulk-import`,
             poolImportCollectionDto,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -180,69 +229,52 @@ export class V1LoadBalancerPoolsService {
     }
 
     /**
-     * Retrieve many LoadBalancerPool
+     * Bulk Import Pools
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsGet(requestParameters: V1LoadBalancerPoolsGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsGet(requestParameters: V1LoadBalancerPoolsGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LoadBalancerPool>>>;
-    public v1LoadBalancerPoolsGet(requestParameters: V1LoadBalancerPoolsGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LoadBalancerPool>>>;
-    public v1LoadBalancerPoolsGet(requestParameters: V1LoadBalancerPoolsGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const fields = requestParameters.fields;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
-        const join = requestParameters.join;
-        const perPage = requestParameters.perPage;
-        const offset = requestParameters.offset;
-        const page = requestParameters.page;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
-        }
-        if (filter !== undefined && filter !== null) {
-            queryParameters = queryParameters.set('filter', <any>filter);
-        }
-        if (or !== undefined && or !== null) {
-            queryParameters = queryParameters.set('or', <any>or);
-        }
-        if (sort !== undefined && sort !== null) {
-            queryParameters = queryParameters.set('sort', <any>sort);
-        }
-        if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
-        }
-        if (perPage !== undefined && perPage !== null) {
-            queryParameters = queryParameters.set('per_page', <any>perPage);
-        }
-        if (offset !== undefined && offset !== null) {
-            queryParameters = queryParameters.set('offset', <any>offset);
-        }
-        if (page !== undefined && page !== null) {
-            queryParameters = queryParameters.set('page', <any>page);
-        }
-        if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+    public v1LoadBalancerPoolsBulkUpdatePost(requestParameters: V1LoadBalancerPoolsBulkUpdatePostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsBulkUpdatePost(requestParameters: V1LoadBalancerPoolsBulkUpdatePostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsBulkUpdatePost(requestParameters: V1LoadBalancerPoolsBulkUpdatePostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsBulkUpdatePost(requestParameters: V1LoadBalancerPoolsBulkUpdatePostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const nodeImportCollectionDto = requestParameters.nodeImportCollectionDto;
+        if (nodeImportCollectionDto === null || nodeImportCollectionDto === undefined) {
+            throw new Error('Required parameter nodeImportCollectionDto was null or undefined when calling v1LoadBalancerPoolsBulkUpdatePost.');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        return this.httpClient.get<Array<LoadBalancerPool>>(`${this.configuration.basePath}/v1/load-balancer/pools`,
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/load-balancer/pools/bulk-update`,
+            nodeImportCollectionDto,
             {
-                params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -257,10 +289,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerPool>;
-    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerPool>;
+    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdDelete(requestParameters: V1LoadBalancerPoolsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdDelete.');
@@ -268,18 +300,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<LoadBalancerPool>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -294,10 +335,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdDeprovisionPatch(requestParameters: V1LoadBalancerPoolsIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdDeprovisionPatch.');
@@ -305,70 +346,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
 
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve one LoadBalancerPool
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1LoadBalancerPoolsIdGet(requestParameters: V1LoadBalancerPoolsIdGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerPool>;
-    public v1LoadBalancerPoolsIdGet(requestParameters: V1LoadBalancerPoolsIdGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdGet(requestParameters: V1LoadBalancerPoolsIdGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdGet(requestParameters: V1LoadBalancerPoolsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdGet.');
-        }
-        const fields = requestParameters.fields;
-        const join = requestParameters.join;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
-        }
-        if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
-        }
-        if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        return this.httpClient.get<LoadBalancerPool>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}`,
-            {
-                params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -383,10 +381,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerPool>;
-    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerPool>;
+    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdPatch(requestParameters: V1LoadBalancerPoolsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdPatch.');
@@ -398,11 +396,14 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -417,9 +418,60 @@ export class V1LoadBalancerPoolsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.patch<LoadBalancerPool>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}`,
             loadBalancerPool,
             {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Pool
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerPoolsIdPoolIdGet(requestParameters: V1LoadBalancerPoolsIdPoolIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdPoolIdGet(requestParameters: V1LoadBalancerPoolsIdPoolIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdPoolIdGet(requestParameters: V1LoadBalancerPoolsIdPoolIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdPoolIdGet(requestParameters: V1LoadBalancerPoolsIdPoolIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdPoolIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/poolId`,
+            {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -434,10 +486,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdProvisionPut(requestParameters: V1LoadBalancerPoolsIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdProvisionPut.');
@@ -445,18 +497,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/provision`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -471,10 +532,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerPool>;
-    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerPool>;
+    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsIdPut(requestParameters: V1LoadBalancerPoolsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdPut.');
@@ -486,11 +547,14 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -505,9 +569,15 @@ export class V1LoadBalancerPoolsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<LoadBalancerPool>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}`,
             loadBalancerPool,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -522,10 +592,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdRestorePatch(requestParameters: V1LoadBalancerPoolsIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdRestorePatch.');
@@ -533,18 +603,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/restore`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -559,10 +638,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdSoftDelete(requestParameters: V1LoadBalancerPoolsIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdSoftDelete.');
@@ -570,17 +649,71 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/soft`,
             {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Pools
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerPoolsIdTierIdGet(requestParameters: V1LoadBalancerPoolsIdTierIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerPoolsIdTierIdGet(requestParameters: V1LoadBalancerPoolsIdTierIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerPoolsIdTierIdGet(requestParameters: V1LoadBalancerPoolsIdTierIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerPoolsIdTierIdGet(requestParameters: V1LoadBalancerPoolsIdTierIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerPoolsIdTierIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/tierId`,
+            {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -595,10 +728,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerHealthMonitor>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerHealthMonitor>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
             throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete.');
@@ -610,18 +743,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/health-monitor/${encodeURIComponent(String(healthMonitorId))}`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -636,10 +778,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerHealthMonitor>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
-    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerHealthMonitor>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
+    public v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost(requestParameters: V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
             throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost.');
@@ -651,19 +793,28 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/health-monitor/${encodeURIComponent(String(healthMonitorId))}`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -678,10 +829,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const priority = requestParameters.priority;
         if (priority === null || priority === undefined) {
             throw new Error('Required parameter priority was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete.');
@@ -701,18 +852,27 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}/priority/${encodeURIComponent(String(priority))}`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -727,10 +887,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const priority = requestParameters.priority;
         if (priority === null || priority === undefined) {
             throw new Error('Required parameter priority was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost.');
@@ -750,19 +910,28 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}/priority/${encodeURIComponent(String(priority))}`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -777,10 +946,10 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<LoadBalancerPool>;
-    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadBalancerPool>>;
-    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerPool>;
+    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerPool>>;
+    public v1LoadBalancerPoolsPost(requestParameters: V1LoadBalancerPoolsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const loadBalancerPool = requestParameters.loadBalancerPool;
         if (loadBalancerPool === null || loadBalancerPool === undefined) {
             throw new Error('Required parameter loadBalancerPool was null or undefined when calling v1LoadBalancerPoolsPost.');
@@ -788,11 +957,14 @@ export class V1LoadBalancerPoolsService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -807,9 +979,15 @@ export class V1LoadBalancerPoolsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<LoadBalancerPool>(`${this.configuration.basePath}/v1/load-balancer/pools`,
             loadBalancerPool,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

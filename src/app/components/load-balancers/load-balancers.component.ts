@@ -26,6 +26,7 @@ import {
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
   VirtualServerImportCollectionDto,
+  NodeImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -105,21 +106,23 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPools(getVirtualServers = false) {
-    this.poolsService
-      .v1LoadBalancerPoolsGet({
-        join: 'healthMonitors',
-        filter: `tierId||eq||${this.currentTier.id}`,
-      })
-      .subscribe(data => {
-        this.pools = data;
+    if (this.currentTier && this.currentTier.id) {
+      this.poolsService
+        .v1LoadBalancerPoolsIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.pools = data;
 
-        if (getVirtualServers) {
-          this.getVirtualServers();
-        }
-      });
+          if (getVirtualServers) {
+            this.getVirtualServers();
+          }
+        });
+    }
   }
 
   getNodes() {
+    // make a new EP to return lb node to pool as well
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -131,12 +134,14 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getIrules() {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerIrules',
-      })
-      .subscribe(data => (this.irules = data.loadBalancerIrules));
+    if (this.currentTier && this.currentTier.id) {
+      this.tierService
+        .v1TiersIdGet({
+          id: this.currentTier.id,
+          join: 'loadBalancerIrules',
+        })
+        .subscribe(data => (this.irules = data.loadBalancerIrules));
+    }
   }
 
   getHealthMonitors() {
@@ -223,6 +228,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         const poolDto = {} as PoolImportCollectionDto;
         poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
         poolDto.pools = this.sanitizeData(data);
+        console.log(poolDto);
         this.poolsService
           .v1LoadBalancerPoolsBulkImportPost({
             poolImportCollectionDto: poolDto,
@@ -230,12 +236,15 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
-      // this.nodeService
-      //   .v1LoadBalancerNodesBulkPost({
-      //     generatedLoadBalancerNodeBulkDto: { bulk: data },
-      //   })
-      //   .subscribe(result => this.getObjectsForNavIndex());
-      // break;
+        const nodeDto = {} as NodeImportCollectionDto;
+        nodeDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        nodeDto.nodes = data;
+        this.poolsService
+          .v1LoadBalancerPoolsBulkUpdatePost({
+            nodeImportCollectionDto: nodeDto,
+          })
+          .subscribe(result => this.getObjectsForNavIndex());
+        break;
       case 3:
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
@@ -244,6 +253,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
+        console.log(data);
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: data },
@@ -295,9 +305,14 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames' || key === 'nodeNames' || key === 'iruleNames' || key === 'policyNames' || key === 'profileNames') {
+      if (key === 'healthMonitorNames' || key === 'iruleNames' || key === 'policyNames' || key === 'profileNames') {
         const stringArray = val as string;
         obj[key] = this.createAndFormatArray(stringArray);
+      }
+      if (key === 'nodeNames') {
+        const stringArray = val as string;
+        const res = this.createAndFormatArray(stringArray);
+        obj[key] = [{ name: res[0], servicePort: Number(res[1]), priority: Number(res[2]) }];
       }
     });
     return obj;

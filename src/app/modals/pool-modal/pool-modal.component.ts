@@ -91,20 +91,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     return this.form.controls;
   }
 
-  addHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+  addHealthMonitor() {
     this.poolService
       .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
         poolId: this.PoolId,
-        healthMonitorId: healthMonitor.id,
+        healthMonitorId: this.f.selectedHealthMonitor.value,
       })
-      .subscribe(
-        data => {
-          this.getPools();
-        },
-        error => {
-          this.selectedHealthMonitors = null;
-        },
-      );
+      .subscribe(data => {
+        this.getPool();
+        this.f.selectedHealthMonitor.setValue('');
+      });
   }
 
   removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
@@ -122,28 +118,23 @@ export class PoolModalComponent implements OnInit, OnDestroy {
             healthMonitorId: healthMonitor.id,
           })
           .subscribe(() => {
-            this.getPools();
+            this.getPool();
           });
       }
       yesNoModalSubscription.unsubscribe();
     });
   }
 
-  private getPools() {
-    this.poolService
-      .v1LoadBalancerPoolsIdGet({
-        id: this.PoolId,
-        join: 'LoadBalancerNodes,LoadBalancerHealthMonitors',
-      })
-      .subscribe(data => {
-        this.Pool = data;
-        this.HealthMonitors = data.healthMonitors;
-        this.Nodes = data.nodes;
-      });
+  private getPool() {
+    this.poolService.v1LoadBalancerPoolsIdPoolIdGet({ id: this.PoolId }).subscribe(data => {
+      this.Pool = data[0];
+      this.selectedHealthMonitors = data[0].healthMonitors;
+      this.selectedNodes = data[0].nodes;
+    });
   }
 
-  removeNode(node: LoadBalancerNode) {
-    const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${node.name}" node?`);
+  removeNode(nodeToPool: any) {
+    const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${nodeToPool.loadBalancerNode.name}" node?`);
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
@@ -154,34 +145,30 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         this.poolService
           .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete({
             poolId: this.PoolId,
-            nodeId: node.id,
-            servicePort: 80,
-            priority: 100,
+            nodeId: nodeToPool.loadBalancerNode.id,
+            servicePort: nodeToPool.servicePort,
+            priority: nodeToPool.priority,
           })
           .subscribe(() => {
-            this.getPools();
+            this.getPool();
           });
       }
       yesNoModalSubscription.unsubscribe();
     });
   }
 
-  addNode(node: LoadBalancerNode) {
+  addNode() {
     this.poolService
       .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost({
         poolId: this.PoolId,
-        nodeId: node.id,
-        servicePort: 80,
-        priority: 100,
+        nodeId: this.f.selectedNode.value.id,
+        servicePort: this.f.servicePort.value,
+        priority: this.f.priority.value,
       })
-      .subscribe(
-        data => {
-          this.getPools();
-        },
-        error => {
-          this.selectedNodes = null;
-        },
-      );
+      .subscribe(data => {
+        this.getPool();
+        this.f.selectedNode.setValue('');
+      });
   }
 
   getData() {
@@ -190,7 +177,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     if (dto.TierId) {
       this.TierId = dto.TierId;
     }
-
     const pool = dto.pool;
     this.availableHealthMonitors = dto.healthMonitors;
     this.availableNodes = dto.nodes;
@@ -216,115 +202,19 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       } else {
         this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
       }
-      if (dto.pool && dto.pool.nodes) {
-        this.selectedNodes = pool.nodes;
+      if (dto.pool.nodes) {
+        this.selectedNodes = dto.pool.nodes;
       } else {
         this.selectedNodes = new Array<LoadBalancerNode>();
       }
     }
-    if (pool && pool.healthMonitors) {
-      this.getAvailableHealthMonitors(pool.healthMonitors);
-    }
-    if (pool && pool.nodes) {
-      this.getAvailableNodes(pool.nodes);
-    }
+
     this.ngx.resetModalData('poolModal');
   }
 
-  private getAvailableHealthMonitors(healthMonitors: Array<LoadBalancerHealthMonitor>) {
-    if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    healthMonitors.forEach(healthMonitor => {
-      this.availableHealthMonitors = this.availableHealthMonitors.filter(hm => hm.id !== healthMonitor.id);
-      if (!this.selectedHealthMonitors.includes(healthMonitor)) {
-        this.availableHealthMonitors.push(healthMonitor);
-      }
-    });
-  }
-
-  selectHealthMonitor() {
-    const healthMonitor = this.form.value.selectedHealthMonitor;
-
-    if (!healthMonitor) {
-      return;
-    }
-    if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-    this.selectedHealthMonitors.push(healthMonitor);
-    const availableIndex = this.availableHealthMonitors.indexOf(healthMonitor);
-    if (availableIndex > -1) {
-      this.availableHealthMonitors.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedHealthMonitor.setValue(null);
-    this.form.controls.selectedHealthMonitor.updateValueAndValidity();
-    this.addHealthMonitor(healthMonitor);
-  }
-
-  unselectHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    this.availableHealthMonitors.push(healthMonitor);
-    const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
-    if (selectedIndex > -1) {
-      this.selectedHealthMonitors.splice(selectedIndex, 1);
-    }
-    this.removeHealthMonitor(healthMonitor);
-  }
-
-  private getAvailableNodes(nodes: Array<LoadBalancerNode>) {
-    if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
-    }
-
-    if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
-    }
-    nodes.forEach(node => {
-      this.availableNodes = this.availableNodes.filter(n => n.id !== node.id);
-      if (!this.selectedNodes.includes(node)) {
-        this.availableNodes.push(node);
-      }
-    });
-  }
-
-  selectNode() {
-    const node = this.form.value.selectedNode;
-    if (!node) {
-      return;
-    }
-    if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
-    }
-    this.selectedNodes.push(node);
-    const availableIndex = this.availableNodes.indexOf(node);
-    if (availableIndex > -1) {
-      this.availableNodes.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedNode.setValue(null);
-    this.form.controls.selectedNode.updateValueAndValidity();
-    this.addNode(node);
-  }
-
-  unselectNode(node: LoadBalancerNode) {
-    if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
-    }
-
-    this.availableNodes.push(node);
-    const selectedIndex = this.selectedNodes.indexOf(node);
-    if (selectedIndex > -1) {
-      this.selectedNodes.splice(selectedIndex, 1);
-    }
-    this.removeNode(node);
+  // not currently filtering properly, also need to add this type of logic to virtual servers -> profiles, policies
+  private removeIntersection(all: any[], selected: any[]) {
+    return all.filter(allEntity => !selected.includes(allEntity));
   }
 
   private buildForm() {
@@ -333,6 +223,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],
+      servicePort: [''],
+      priority: [''],
     });
   }
 

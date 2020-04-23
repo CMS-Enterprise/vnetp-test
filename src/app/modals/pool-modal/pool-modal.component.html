@@ -69,11 +69,10 @@
           <div *ngIf="f.name.load.required">Name is required</div>
         </div>
       </div>
-
       <hr />
 
       <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-4">
           <label for="availableNodes">Available Nodes</label>
           <tooltip [message]="helpText.AvailableNodes"></tooltip>
 
@@ -83,11 +82,31 @@
               <option *ngFor="let node of availableNodes" [ngValue]="node">
                 {{ node.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectNode();"
-              [disabled]="ModalMode === 'Create'">
-              Select Node
-            </button>
           </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="servicePort">Service Port</label>
+          <tooltip [message]="helpText.ServicePort"></tooltip>
+          <input type="text" formControlName="servicePort" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }" aria-label="Service Port" />
+          <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+            <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="priority">Priority</label>
+          <tooltip [message]="helpText.Priority"></tooltip>
+          <input type="text" formControlName="priority" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.priority.errors }" aria-label="Priority" />
+          <div *ngIf="submitted && f.priority.errors" class="invalid-feedback">
+            <div *ngIf="f.priority.errors.required">Priority</div>
+          </div>
+        </div>
+        <div [ngStyle]="{'margin-top': '2.2rem'}">
+          <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
+            [disabled]="ModalMode === 'Create'">
+            Select Node
+          </button>
         </div>
 
         <div class="form-group col-md-12">
@@ -103,10 +122,10 @@
             <tbody>
               <tr *ngFor="let node of selectedNodes">
                 <td>
-                  {{ node.name }}
+                  {{ node?.loadBalancerNode?.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectNode(node)">
+                  <fa name="trash" (click)="removeNode(node)">
                   </fa>
                 </td>
               </tr>
@@ -134,14 +153,14 @@
               <option></option>
               <option
                 *ngFor="let healthMonitor of availableHealthMonitors"
-                [ngValue]="healthMonitor"
+                [ngValue]="healthMonitor.id"
                 >{{ healthMonitor.name }}</option
               >
             </select>
             <button
             type="button"
             class="btn btn-sm btn-info"
-            (click)="selectHealthMonitor();"
+            (click)="addHealthMonitor();"
             [disabled]="ModalMode === 'Create'"
             >
             Select Health Monitor
@@ -167,7 +186,7 @@
                 <td class="item-actions">
                   <fa
                     name="trash"
-                    (click)="unselectHealthMonitor(healthMonitor)"
+                    (click)="removeHealthMonitor(healthMonitor)"
                   >
                   </fa>
                 </td>
