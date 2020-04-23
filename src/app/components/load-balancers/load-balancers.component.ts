@@ -228,7 +228,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         const poolDto = {} as PoolImportCollectionDto;
         poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
         poolDto.pools = this.sanitizeData(data);
-        console.log(poolDto);
         this.poolsService
           .v1LoadBalancerPoolsBulkImportPost({
             poolImportCollectionDto: poolDto,
@@ -253,7 +252,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
-        console.log(data);
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: data },
