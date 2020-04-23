@@ -8,6 +8,7 @@ import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, LoadBalancerPool, LoadBalancerHealthMonitor, V1LoadBalancerPoolsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-pool-modal',
@@ -168,6 +169,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.getPool();
         this.f.selectedNode.setValue('');
+        this.f.servicePort.setValue('');
+        this.f.priority.setValue('');
       });
   }
 
@@ -223,8 +226,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],
-      servicePort: [''],
-      priority: [''],
+      servicePort: ['', Validators.compose([Validators.min(1), Validators.max(65535)])],
+      priority: ['', Validators.compose([Validators.min(1), Validators.max(100)])],
     });
   }
 

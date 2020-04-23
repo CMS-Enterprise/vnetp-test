@@ -88,21 +88,26 @@
           <label for="servicePort">Service Port</label>
           <tooltip [message]="helpText.ServicePort"></tooltip>
           <input type="text" formControlName="servicePort" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }" aria-label="Service Port" />
-          <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+            [ngClass]="{ 'is-invalid': f.servicePort.errors }" aria-label="Service Port" />
+          <div *ngIf="f.servicePort.errors" class="invalid-feedback">
             <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
+            <div *ngIf="f.servicePort.errors.min">Service Port must be greater than or equal to 1.</div>
+            <div *ngIf="f.servicePort.errors.max">Service Port must be equal to or less than 65535.</div>
           </div>
         </div>
         <div class="form-group col-md-3">
           <label for="priority">Priority</label>
           <tooltip [message]="helpText.Priority"></tooltip>
           <input type="text" formControlName="priority" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.priority.errors }" aria-label="Priority" />
-          <div *ngIf="submitted && f.priority.errors" class="invalid-feedback">
+            [ngClass]="{ 'is-invalid': f.priority.errors }" aria-label="Priority" />
+          <div *ngIf="f.priority.errors" class="invalid-feedback">
             <div *ngIf="f.priority.errors.required">Priority</div>
+            <div *ngIf="f.priority.errors.min">Priority must be greater than or equal to 1.</div>
+            <div *ngIf="f.priority.errors.max">Priority must be equal to or less than 100.</div>
           </div>
         </div>
         <div [ngStyle]="{'margin-top': '2.2rem'}">
+          <!--TODO: Disable button based on validity of selected node, service port and priority-->
           <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
             [disabled]="ModalMode === 'Create'">
             Select Node
@@ -116,6 +121,8 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Service Port</th>
+                <th>Priority</th>
                 <th></th>
               </tr>
             </thead>
@@ -124,13 +131,19 @@
                 <td>
                   {{ node?.loadBalancerNode?.name }}
                 </td>
+                <td>
+                  {{ node?.servicePort }}
+                </td>
+                <td>
+                  {{ node?.priority }}
+                </td>
                 <td class="item-actions">
                   <fa name="trash" (click)="removeNode(node)">
                   </fa>
                 </td>
               </tr>
               <tr *ngIf="!selectedNodes?.length" class="text-center">
-                <td colspan="2">No Nodes Selected</td>
+                <td colspan="4">No Nodes Selected</td>
               </tr>
             </tbody>
           </table>
