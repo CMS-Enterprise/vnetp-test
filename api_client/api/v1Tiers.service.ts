@@ -17,9 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneratedTierBulkDto } from '../model/generatedTierBulkDto';
-import { Subnet } from '../model/subnet';
-import { Tier } from '../model/tier';
+import { GeneratedTierBulkDto } from '../model/models';
+import { Subnet } from '../model/models';
+import { Tier } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -27,22 +27,34 @@ import { Configuration }                                     from '../configurat
 
 export interface V1DatacentersDatacenterIdTiersGetRequestParams {
     datacenterId: string;
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
     filter?: string;
+    /** &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; */
     or?: string;
+    /** &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt; */
     sort?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt; */
     perPage?: number;
+    /** &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt; */
     offset?: number;
+    /** &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt; */
     page?: number;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
 export interface V1DatacentersDatacenterIdTiersIdGetRequestParams {
     id: string;
     datacenterId: string;
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -51,14 +63,23 @@ export interface V1TiersBulkPostRequestParams {
 }
 
 export interface V1TiersGetRequestParams {
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
     filter?: string;
+    /** &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; */
     or?: string;
+    /** &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt; */
     sort?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt; */
     perPage?: number;
+    /** &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt; */
     offset?: number;
+    /** &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt; */
     page?: number;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -72,8 +93,11 @@ export interface V1TiersIdDeprovisionPatchRequestParams {
 
 export interface V1TiersIdGetRequestParams {
     id: string;
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -105,22 +129,34 @@ export interface V1TiersPostRequestParams {
 
 export interface V1TiersTierIdSubnetsGetRequestParams {
     tierId: string;
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
     filter?: string;
+    /** &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; */
     or?: string;
+    /** &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt; */
     sort?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt; */
     perPage?: number;
+    /** &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt; */
     offset?: number;
+    /** &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt; */
     page?: number;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
 export interface V1TiersTierIdSubnetsIdGetRequestParams {
     id: string;
     tierId: string;
+    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
+    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
+    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -150,16 +186,52 @@ export class V1TiersService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Retrieve many Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<Tier>>;
-    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Tier>>>;
-    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Tier>>>;
-    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tier>>;
+    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tier>>>;
+    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tier>>>;
+    public v1DatacentersDatacenterIdTiersGet(requestParameters: V1DatacentersDatacenterIdTiersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const datacenterId = requestParameters.datacenterId;
         if (datacenterId === null || datacenterId === undefined) {
             throw new Error('Required parameter datacenterId was null or undefined when calling v1DatacentersDatacenterIdTiersGet.');
@@ -176,48 +248,66 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (filter !== undefined && filter !== null) {
-            queryParameters = queryParameters.set('filter', <any>filter);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>filter, 'filter');
         }
         if (or !== undefined && or !== null) {
-            queryParameters = queryParameters.set('or', <any>or);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>or, 'or');
         }
         if (sort !== undefined && sort !== null) {
-            queryParameters = queryParameters.set('sort', <any>sort);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>sort, 'sort');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (perPage !== undefined && perPage !== null) {
-            queryParameters = queryParameters.set('per_page', <any>perPage);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'per_page');
         }
         if (offset !== undefined && offset !== null) {
-            queryParameters = queryParameters.set('offset', <any>offset);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
         }
         if (page !== undefined && page !== null) {
-            queryParameters = queryParameters.set('page', <any>page);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Array<Tier>>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -232,10 +322,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1DatacentersDatacenterIdTiersIdGet(requestParameters: V1DatacentersDatacenterIdTiersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1DatacentersDatacenterIdTiersIdGet.');
@@ -250,30 +340,42 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Tier>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -288,10 +390,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<Tier>>;
-    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Tier>>>;
-    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Tier>>>;
-    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tier>>;
+    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tier>>>;
+    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tier>>>;
+    public v1TiersBulkPost(requestParameters: V1TiersBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const generatedTierBulkDto = requestParameters.generatedTierBulkDto;
         if (generatedTierBulkDto === null || generatedTierBulkDto === undefined) {
             throw new Error('Required parameter generatedTierBulkDto was null or undefined when calling v1TiersBulkPost.');
@@ -299,11 +401,14 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -318,9 +423,15 @@ export class V1TiersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<Array<Tier>>(`${this.configuration.basePath}/v1/tiers/bulk`,
             generatedTierBulkDto,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -335,10 +446,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<Tier>>;
-    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Tier>>>;
-    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Tier>>>;
-    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tier>>;
+    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tier>>>;
+    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tier>>>;
+    public v1TiersGet(requestParameters: V1TiersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const fields = requestParameters.fields;
         const filter = requestParameters.filter;
         const or = requestParameters.or;
@@ -351,48 +462,66 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (filter !== undefined && filter !== null) {
-            queryParameters = queryParameters.set('filter', <any>filter);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>filter, 'filter');
         }
         if (or !== undefined && or !== null) {
-            queryParameters = queryParameters.set('or', <any>or);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>or, 'or');
         }
         if (sort !== undefined && sort !== null) {
-            queryParameters = queryParameters.set('sort', <any>sort);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>sort, 'sort');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (perPage !== undefined && perPage !== null) {
-            queryParameters = queryParameters.set('per_page', <any>perPage);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'per_page');
         }
         if (offset !== undefined && offset !== null) {
-            queryParameters = queryParameters.set('offset', <any>offset);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
         }
         if (page !== undefined && page !== null) {
-            queryParameters = queryParameters.set('page', <any>page);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Array<Tier>>(`${this.configuration.basePath}/v1/tiers`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -407,10 +536,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1TiersIdDelete(requestParameters: V1TiersIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdDelete.');
@@ -418,18 +547,27 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -444,10 +582,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1TiersIdDeprovisionPatch(requestParameters: V1TiersIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdDeprovisionPatch.');
@@ -455,18 +593,27 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -481,10 +628,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1TiersIdGet(requestParameters: V1TiersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdGet.');
@@ -495,30 +642,42 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -533,10 +692,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1TiersIdPatch(requestParameters: V1TiersIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdPatch.');
@@ -548,11 +707,14 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -567,9 +729,15 @@ export class V1TiersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.patch<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             tier,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -584,10 +752,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1TiersIdProvisionPut(requestParameters: V1TiersIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdProvisionPut.');
@@ -595,18 +763,27 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/provision`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -621,10 +798,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1TiersIdPut(requestParameters: V1TiersIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdPut.');
@@ -636,11 +813,14 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -655,9 +835,15 @@ export class V1TiersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             tier,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -672,10 +858,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1TiersIdRestorePatch(requestParameters: V1TiersIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdRestorePatch.');
@@ -683,18 +869,27 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/restore`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -709,10 +904,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1TiersIdSoftDelete(requestParameters: V1TiersIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersIdSoftDelete.');
@@ -720,17 +915,26 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/soft`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -745,10 +949,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Tier>;
-    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Tier>>;
-    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Tier>>;
-    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public v1TiersPost(requestParameters: V1TiersPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const tier = requestParameters.tier;
         if (tier === null || tier === undefined) {
             throw new Error('Required parameter tier was null or undefined when calling v1TiersPost.');
@@ -756,11 +960,14 @@ export class V1TiersService {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -775,9 +982,15 @@ export class V1TiersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<Tier>(`${this.configuration.basePath}/v1/tiers`,
             tier,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -792,10 +1005,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<Subnet>>;
-    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Subnet>>>;
-    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Subnet>>>;
-    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Subnet>>;
+    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Subnet>>>;
+    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Subnet>>>;
+    public v1TiersTierIdSubnetsGet(requestParameters: V1TiersTierIdSubnetsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const tierId = requestParameters.tierId;
         if (tierId === null || tierId === undefined) {
             throw new Error('Required parameter tierId was null or undefined when calling v1TiersTierIdSubnetsGet.');
@@ -812,48 +1025,66 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (filter !== undefined && filter !== null) {
-            queryParameters = queryParameters.set('filter', <any>filter);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>filter, 'filter');
         }
         if (or !== undefined && or !== null) {
-            queryParameters = queryParameters.set('or', <any>or);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>or, 'or');
         }
         if (sort !== undefined && sort !== null) {
-            queryParameters = queryParameters.set('sort', <any>sort);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>sort, 'sort');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (perPage !== undefined && perPage !== null) {
-            queryParameters = queryParameters.set('per_page', <any>perPage);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'per_page');
         }
         if (offset !== undefined && offset !== null) {
-            queryParameters = queryParameters.set('offset', <any>offset);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
         }
         if (page !== undefined && page !== null) {
-            queryParameters = queryParameters.set('page', <any>page);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Array<Subnet>>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(tierId))}/subnets`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -868,10 +1099,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Subnet>;
-    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Subnet>>;
-    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Subnet>>;
-    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
+    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
+    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
+    public v1TiersTierIdSubnetsIdGet(requestParameters: V1TiersTierIdSubnetsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1TiersTierIdSubnetsIdGet.');
@@ -886,30 +1117,42 @@ export class V1TiersService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>fields, 'fields');
         }
         if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join', <any>join);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>join, 'join');
         }
         if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Subnet>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(tierId))}/subnets/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

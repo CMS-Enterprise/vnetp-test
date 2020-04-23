@@ -14,7 +14,10 @@ import { V1LoadBalancerNodesService } from './api/v1LoadBalancerNodes.service';
 import { V1LoadBalancerPoliciesService } from './api/v1LoadBalancerPolicies.service';
 import { V1LoadBalancerPoolsService } from './api/v1LoadBalancerPools.service';
 import { V1LoadBalancerProfilesService } from './api/v1LoadBalancerProfiles.service';
+import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service';
+import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
+import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
 import { V1NetworkSecurityNetworkObjectGroupsService } from './api/v1NetworkSecurityNetworkObjectGroups.service';
@@ -37,39 +40,10 @@ import { V1VtsService } from './api/v1Vts.service';
   imports:      [],
   declarations: [],
   exports:      [],
-  providers: [
-    V1AppliancesService,
-    V1AuthService,
-    V1ConfigurationUploadService,
-    V1DatacentersService,
-    V1JobsService,
-    V1LoadBalancerHealthMonitorsService,
-    V1LoadBalancerIrulesService,
-    V1LoadBalancerNodesService,
-    V1LoadBalancerPoliciesService,
-    V1LoadBalancerPoolsService,
-    V1LoadBalancerProfilesService,
-    V1LoadBalancerVirtualServersService,
-    V1NetworkSecurityFirewallRuleGroupsService,
-    V1NetworkSecurityFirewallRulesService,
-    V1NetworkSecurityNetworkObjectGroupsService,
-    V1NetworkSecurityNetworkObjectsService,
-    V1NetworkSecurityServiceObjectGroupsService,
-    V1NetworkSecurityServiceObjectsService,
-    V1NetworkStaticRoutesService,
-    V1NetworkSubnetsService,
-    V1NetworkVlansService,
-    V1PhysicalServersService,
-    V1TierGroupsService,
-    V1TiersService,
-    V1VlansService,
-    V1VmwareNetworkAdapterService,
-    V1VmwareVirtualDisksService,
-    V1VmwareVirtualMachinesService,
-    V1VtsService ]
+  providers: []
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]

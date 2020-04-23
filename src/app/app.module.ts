@@ -93,6 +93,9 @@ import { TierSelectComponent } from './components/tier-select/tier-select.compon
 import { WizardComponent } from './components/wizard/wizard.component';
 import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
 import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
+import { LoadBalancerVlanModalComponent } from './modals/lb-vlan-modal/lb-vlan-modal.component';
+import { LoadBalancerSelfIpModalComponent } from './modals/lb-self-ip-modal/lb-self-ip-modal.component';
+import { LoadBalancerRouteModalComponent } from './modals/lb-route-modal/lb-route-modal.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -132,6 +135,9 @@ export function apiConfigFactory(): Configuration {
     PoolModalComponent,
     NodeModalComponent,
     IRuleModalComponent,
+    LoadBalancerVlanModalComponent,
+    LoadBalancerSelfIpModalComponent,
+    LoadBalancerRouteModalComponent,
     HealthMonitorModalComponent,
     SolarisImageRepositoryComponent,
     ImportExportComponent,
