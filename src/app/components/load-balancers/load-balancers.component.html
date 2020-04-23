@@ -208,10 +208,10 @@
             <span>{{ node?.autoPopulate }}</span>
           </td>
           <td>
-            <span>{{ node?.servicePort }}</span>
+            <span>{{ node?.pools[0]?.servicePort }}</span>
           </td>
           <td>
-            <span>{{ node?.priority }}</span>
+            <span>{{ node?.pools[0]?.priority }}</span>
           </td>
           <td>
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>

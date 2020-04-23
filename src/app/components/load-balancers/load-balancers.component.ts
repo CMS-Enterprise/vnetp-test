@@ -122,15 +122,15 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getNodes() {
-    // make a new EP to return lb node to pool as well
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerNodes,pools',
-      })
-      .subscribe(data => {
-        this.nodes = data.loadBalancerNodes;
-      });
+    if (this.currentTier && this.currentTier.id) {
+      this.nodeService
+        .v1LoadBalancerNodesIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.nodes = data;
+        });
+    }
   }
 
   getIrules() {

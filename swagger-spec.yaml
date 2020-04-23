@@ -8969,6 +8969,41 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/load-balancer/nodes/{id}/tierId':
+    get:
+      summary: Get Nodes
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '200':
+          description: ''
+      tags: &ref_35
+        - v1/load-balancer/nodes
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/poolId':
+    get:
+      summary: Get Node
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '200':
+          description: ''
+      tags: *ref_35
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/nodes:
     get:
       summary: Retrieve many LoadBalancerNode
@@ -9109,8 +9144,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_35
-        - v1/load-balancer/nodes
+      tags: *ref_35
       produces:
         - application/json
       consumes:
