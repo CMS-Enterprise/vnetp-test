@@ -17,6 +17,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from './modals/modal-mock';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ToastrModule } from 'ngx-toastr';
+import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
 
 const ngx = new NgxSmartModalServiceStub();
 
@@ -35,6 +36,7 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent,
+        DatacenterSelectComponent,
         NavbarComponent,
         BreadcrumbComponent,
         NetworkObjectModalComponent,

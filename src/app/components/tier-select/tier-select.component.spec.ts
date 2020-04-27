@@ -1,14 +1,33 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TierSelectComponent } from './tier-select.component';
+import { FormsModule } from '@angular/forms';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { CookieService } from 'ngx-cookie-service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
   let fixture: ComponentFixture<TierSelectComponent>;
 
+  const ngx = new NgxSmartModalServiceStub();
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        NgxSmartModalModule,
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([]),
+        ToastrModule.forRoot(),
+        NgSelectModule,
+      ],
       declarations: [TierSelectComponent],
+      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 
