@@ -107,9 +107,8 @@
           </div>
         </div>
         <div [ngStyle]="{'margin-top': '2.2rem'}">
-          <!--TODO: Disable button based on validity of selected node, service port and priority-->
           <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
-            [disabled]="ModalMode === 'Create'">
+            [disabled]="ModalMode === 'Create' || f?.servicePort?.errors || f?.priority?.errors">
             Select Node
           </button>
         </div>
