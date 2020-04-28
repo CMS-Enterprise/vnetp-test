@@ -5,6 +5,7 @@ import { LoadBalancerSelfIp, V1LoadBalancerSelfIpsService, V1TiersService, LoadB
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
+import { IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-load-balancer-self-ip-modal',
@@ -70,7 +71,6 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
         filter: `tierId||eq||${this.TierId}`,
       })
       .subscribe(data => {
-        console.log(data);
         this.availableVlans = data;
       });
   }
@@ -118,13 +118,10 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     this.ngx.resetModalData('loadBalancerSelfIpModal');
   }
 
-  //       startIpAddress.setValidators(Validators.compose([Validators.required, IpAddressIpValidator]));
-  //       startIpAddress.setValue(null);
-
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      ipAddress: [''],
+      ipAddress: ['', Validators.compose([IpAddressIpValidator])],
       vlan: [''],
     });
   }

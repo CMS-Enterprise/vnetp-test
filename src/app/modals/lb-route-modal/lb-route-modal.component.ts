@@ -5,6 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'api_client';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
+import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-load-balancer-route-modal',
@@ -104,8 +105,8 @@ export class LoadBalancerRouteModalComponent implements OnInit {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      destination: [''],
-      gateway: [''],
+      destination: ['', Validators.compose([IpAddressCidrValidator])],
+      gateway: ['', Validators.compose([IpAddressIpValidator])],
     });
   }
 

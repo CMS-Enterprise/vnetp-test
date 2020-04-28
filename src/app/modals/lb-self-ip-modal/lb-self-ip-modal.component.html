@@ -45,7 +45,7 @@
             [ngClass]="{ 'is-invalid': submitted && f.vlan.errors }" aria-label="Vlan">
             <option></option>
             <option *ngFor="let vlan of availableVlans" [ngValue]="vlan.id">
-              {{ vlan.name }}
+              {{ vlan.name }} ({{ vlan.tag }})
             </option>
           </select>
         </div>
