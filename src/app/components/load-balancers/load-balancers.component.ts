@@ -26,12 +26,21 @@ import {
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
   VirtualServerImportCollectionDto,
+  LoadBalancerVlan,
+  LoadBalancerSelfIp,
+  LoadBalancerRoute,
+  V1LoadBalancerRoutesService,
+  V1LoadBalancerVlansService,
+  V1LoadBalancerSelfIpsService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
+import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
+import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 
 @Component({
   selector: 'app-load-balancers',
@@ -50,6 +59,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   currentHMPage = 1;
   currentProfilesPage = 1;
   currentPoliciesPage = 1;
+  currentVlansPage = 1;
+  currentSelfIpsPage = 1;
+  currentRoutesPage = 1;
 
   perPage = 20;
 
@@ -60,6 +72,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   healthMonitors: LoadBalancerHealthMonitor[];
   profiles: LoadBalancerProfile[];
   policies: LoadBalancerPolicy[];
+  vlans: LoadBalancerVlan[];
+  selfIps: LoadBalancerSelfIp[];
+  routes: LoadBalancerRoute[];
 
   virtualServerModalSubscription: Subscription;
   poolModalSubscription: Subscription;
@@ -67,6 +82,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   iruleModalSubscription: Subscription;
   healthMonitorModalSubscription: Subscription;
   profileModalSubscription: Subscription;
+  vlanModalSubscription: Subscription;
+  selfIpModalSubscription: Subscription;
+  routeModalSubscription: Subscription;
 
   currentDatacenterSubscription: Subscription;
   policyModalSubscription: any;
@@ -90,6 +108,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private profilesService: V1LoadBalancerProfilesService,
     private policiesService: V1LoadBalancerPoliciesService,
+    private vlansService: V1LoadBalancerVlansService,
+    private selfIpsService: V1LoadBalancerSelfIpsService,
+    private routesService: V1LoadBalancerRoutesService,
     public helpText: LoadBalancersHelpText,
   ) {}
 
@@ -172,6 +193,37 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
       });
   }
 
+  getVlans() {
+    this.vlansService
+      .v1LoadBalancerVlansGet({
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
+      .subscribe(data => {
+        this.vlans = data;
+      });
+  }
+
+  getSelfIps() {
+    this.selfIpsService
+      .v1LoadBalancerSelfIpsGet({
+        filter: `tierId||eq||${this.currentTier.id}`,
+        join: 'loadBalancerVlan',
+      })
+      .subscribe(data => {
+        this.selfIps = data;
+      });
+  }
+
+  getRoutes() {
+    this.routesService
+      .v1LoadBalancerRoutesGet({
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
+      .subscribe(data => {
+        this.routes = data;
+      });
+  }
+
   getObjectsForNavIndex() {
     switch (this.navIndex) {
       case 0:
@@ -197,6 +249,15 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         break;
       case 6:
         this.getPolicies();
+        break;
+      case 7:
+        this.getVlans();
+        break;
+      case 8:
+        this.getSelfIps();
+        break;
+      case 9:
+        this.getRoutes();
         break;
     }
   }
@@ -253,7 +314,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
       default:
         break;
 
-      // TODO: Bulk Import of Policies and Profiles
+      // TODO: Bulk Import of Policies, Profiles, Vlans, SelfIps, Routes
     }
   }
 
@@ -417,6 +478,83 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'loadBalancerPolicyModal');
     this.ngx.getModal('loadBalancerPolicyModal').open();
+  }
+
+  openVlanModal(modalMode: ModalMode, vlan: LoadBalancerVlan) {
+    if (modalMode === ModalMode.Edit && !vlan) {
+      throw new Error('Vlan Required');
+    }
+
+    const dto = new LoadBalancerVlanModalDto();
+    dto.TierId = this.currentTier.id;
+    dto.Vlan = vlan;
+    dto.ModalMode = modalMode;
+
+    this.subscribeToVlanModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'loadBalancerVlanModal');
+    this.ngx.getModal('loadBalancerVlanModal').open();
+  }
+
+  openSelfIpModal(modalMode: ModalMode, selfIp: LoadBalancerSelfIp) {
+    if (modalMode === ModalMode.Edit && !selfIp) {
+      throw new Error('Self IP Required');
+    }
+
+    const dto = new LoadBalancerSelfIpModalDto();
+    dto.TierId = this.currentTier.id;
+    dto.SelfIp = selfIp;
+    dto.ModalMode = modalMode;
+
+    this.subscribeToSelfIpModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'loadBalancerSelfIpModal');
+    this.ngx.getModal('loadBalancerSelfIpModal').open();
+  }
+
+  openRouteModal(modalMode: ModalMode, route: LoadBalancerRoute) {
+    if (modalMode === ModalMode.Edit && !route) {
+      throw new Error('Route Required');
+    }
+
+    const dto = new LoadBalancerRouteModalDto();
+    dto.TierId = this.currentTier.id;
+    dto.Route = route;
+    dto.ModalMode = modalMode;
+
+    this.subscribeToRouteModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'loadBalancerRouteModal');
+    this.ngx.getModal('loadBalancerRouteModal').open();
+  }
+
+  subscribeToVlanModal() {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerVlanModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      this.getVlans();
+      this.ngx.resetModalData('loadBalancerVlanModal');
+      this.vlanModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
+  }
+
+  subscribeToSelfIpModal() {
+    this.selfIpModalSubscription = this.ngx
+      .getModal('loadBalancerSelfIpModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getSelfIps();
+        this.ngx.resetModalData('loadBalancerSelfIpModal');
+        this.selfIpModalSubscription.unsubscribe();
+        this.datacenterService.unlockDatacenter();
+      });
+  }
+
+  subscribeToRouteModal() {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      this.getVirtualServers();
+      this.ngx.resetModalData('loadBalancerRouteModal');
+      this.routeModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToVirtualServerModal() {
@@ -664,6 +802,96 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
       new YesNoModalDto(`${deleteDescription} Policy?`, `Do you want to ${deleteDescription} Policy "${policy.name}"?`),
       deleteFunction,
     );
+  }
+
+  deleteVlan(vlan: LoadBalancerVlan) {
+    if (vlan.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!vlan.deletedAt) {
+        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(data => {
+          this.getVlans();
+        });
+      } else {
+        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(data => {
+          this.getVlans();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Vlan?`, `Do you want to ${deleteDescription} Vlan "${vlan.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  deleteSelfIp(selfIp: LoadBalancerSelfIp) {
+    if (selfIp.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = selfIp.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!selfIp.deletedAt) {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(data => {
+          this.getSelfIps();
+        });
+      } else {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(data => {
+          this.getSelfIps();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Self IP?`, `Do you want to ${deleteDescription} Self IP "${selfIp.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  deleteRoute(route: LoadBalancerRoute) {
+    if (route.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = route.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!route.deletedAt) {
+        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(data => {
+          this.getRoutes();
+        });
+      } else {
+        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(data => {
+          this.getRoutes();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Route?`, `Do you want to ${deleteDescription} Route "${route.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  restoreVlan(vlan: LoadBalancerVlan) {
+    if (vlan.deletedAt) {
+      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(data => this.getVlans());
+    }
+  }
+
+  restoreSelfIp(selfIp: LoadBalancerSelfIp) {
+    if (selfIp.deletedAt) {
+      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(data => this.getSelfIps());
+    }
+  }
+
+  restoreRoute(route: LoadBalancerRoute) {
+    if (route.deletedAt) {
+      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(data => this.getRoutes());
+    }
   }
 
   restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {

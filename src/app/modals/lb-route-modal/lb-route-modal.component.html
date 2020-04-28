@@ -1,0 +1,66 @@
+<ngx-smart-modal
+  #loadBalancerRouteModal
+  identifier="loadBalancerRouteModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  customClass="large-modal"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Load Balancer Route</h4>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <tooltip message="todo"></tooltip>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="destination">Destination Address</label>
+          <tooltip message="todo"></tooltip>
+          <input type="text" formControlName="destination" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.destination.errors }" aria-label="Destination Address" />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="gateway">Gateway</label>
+          <tooltip message="todo"></tooltip>
+          <input type="text" formControlName="gateway" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.gateway.errors }" aria-label="Gateway" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-link"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button class="btn btn-success" data-dismiss="modal">
+          <fa name="save"></fa>
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
+</ngx-smart-modal>

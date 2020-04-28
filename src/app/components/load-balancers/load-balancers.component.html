@@ -29,6 +29,15 @@
     <li class="nav-item" (click)="navIndex = 6; getPolicies()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 6 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
     </li>
+    <li class="nav-item" (click)="navIndex = 7; getVlans()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Vlans <tooltip [message]="helpText.Vlans"></tooltip> </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 8; getSelfIps()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> Self IPs <tooltip [message]="helpText.SelfIps"></tooltip> </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 9; getRoutes()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 9 }"> Routes <tooltip [message]="helpText.Routes"></tooltip> </a>
+    </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
@@ -434,6 +443,143 @@
     <pagination-controls (pageChange)="currentPoliciesPage = $event"></pagination-controls>
   </div>
 
+  <div *ngIf="navIndex == 7">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button type="button" class="btn btn-success" (click)="openVlanModal('Create')" aria-label="Create Vlan">
+        <fa name="plus"></fa>
+        Create Vlan
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Tag</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
+          <td>
+            <span>{{ vlan?.name }}</span>
+          </td>
+          <td>
+            <span>{{ vlan?.tag }}</span>
+          </td>
+          <td class="item-actions">
+            <fa name="pencil" (click)="openVlanModal('Edit', vlan)" aria-label="Edit Vlan"> </fa>
+            <fa name="undo" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': vlan?.deletedAt }"
+              (click)="deleteVlan(vlan)"
+              aria-label="Soft-Delete/Delete Vlan"
+            ></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!vlans?.length" class="text-center">
+          <td colspan="4">No Vlans in this Tier</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
+  </div>
+
+  <div *ngIf="navIndex == 8">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button type="button" class="btn btn-success" (click)="openSelfIpModal('Create')" aria-label="Create Self IP">
+        <fa name="plus"></fa>
+        Create Self IP
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">IP Address</th>
+          <th scope="col">Vlan</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let selfIp of selfIps | paginate: { itemsPerPage: perPage, currentPage: currentSelfIpsPage }">
+          <td>
+            <span>{{ selfIp?.name }}</span>
+          </td>
+          <td>
+            <span>{{ selfIp?.ipAddress }}</span>
+          </td>
+          <td>
+            <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
+          </td>
+          <td class="item-actions">
+            <fa name="pencil" (click)="openSelfIpModal('Edit', selfIp)" aria-label="Edit SelfIp"> </fa>
+            <fa name="undo" *ngIf="selfIp?.deletedAt" class="fg-success" (click)="restoreSelfIp(selfIp)" aria-label="Restore SelfIp"></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': selfIp?.deletedAt }"
+              (click)="deleteSelfIp(selfIp)"
+              aria-label="Soft-Delete/Delete SelfIp"
+            ></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!selfIps?.length" class="text-center">
+          <td colspan="4">No Self IPs in this Tier</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="currentSelfIpsPage = $event"></pagination-controls>
+  </div>
+
+  <div *ngIf="navIndex == 9">
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button type="button" class="btn btn-success" (click)="openRouteModal('Create')" aria-label="Create Route">
+        <fa name="plus"></fa>
+        Create Route
+      </button>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Destination</th>
+          <th scope="col">Gateway</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let route of routes | paginate: { itemsPerPage: perPage, currentPage: currentRoutesPage }">
+          <td>
+            <span>{{ route?.name }}</span>
+          </td>
+          <td>
+            <span>{{ route?.destination }}</span>
+          </td>
+          <td>
+            <span>{{ route?.gateway }}</span>
+          </td>
+          <td class="item-actions">
+            <fa name="pencil" (click)="openRouteModal('Edit', route)" aria-label="Edit Route"> </fa>
+            <fa name="undo" *ngIf="route?.deletedAt" class="fg-success" (click)="restoreRoute(route)" aria-label="Restore Route"></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': route?.deletedAt }"
+              (click)="deleteRoute(route)"
+              aria-label="Soft-Delete/Delete Route"
+            ></fa>
+          </td>
+        </tr>
+        <tr *ngIf="!routes?.length" class="text-center">
+          <td colspan="4">No Routes in this Tier</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="currentRoutesPage = $event"></pagination-controls>
+  </div>
+
   <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
     <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
       Entities per page
@@ -464,5 +610,8 @@
   <app-health-monitor-modal></app-health-monitor-modal>
   <app-load-balancer-profile-modal></app-load-balancer-profile-modal>
   <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
+  <app-load-balancer-vlan-modal></app-load-balancer-vlan-modal>
+  <app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
+  <app-load-balancer-route-modal></app-load-balancer-route-modal>
 </div>
 <app-yes-no-modal></app-yes-no-modal>

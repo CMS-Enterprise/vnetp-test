@@ -17,18 +17,18 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { Subnet } from '../model/models';
-import { SubnetImportCollectionDto } from '../model/models';
+import { GeneratedLoadBalancerRouteBulkDto } from '../model/models';
+import { LoadBalancerRoute } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1NetworkSubnetsBulkImportPostRequestParams {
-    subnetImportCollectionDto: SubnetImportCollectionDto;
+export interface V1LoadBalancerRoutesBulkPostRequestParams {
+    generatedLoadBalancerRouteBulkDto: GeneratedLoadBalancerRouteBulkDto;
 }
 
-export interface V1NetworkSubnetsGetRequestParams {
+export interface V1LoadBalancerRoutesGetRequestParams {
     /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
     /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
@@ -49,15 +49,15 @@ export interface V1NetworkSubnetsGetRequestParams {
     cache?: number;
 }
 
-export interface V1NetworkSubnetsIdDeleteRequestParams {
+export interface V1LoadBalancerRoutesIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1NetworkSubnetsIdDeprovisionPatchRequestParams {
+export interface V1LoadBalancerRoutesIdDeprovisionPatchRequestParams {
     id: string;
 }
 
-export interface V1NetworkSubnetsIdGetRequestParams {
+export interface V1LoadBalancerRoutesIdGetRequestParams {
     id: string;
     /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
@@ -67,37 +67,37 @@ export interface V1NetworkSubnetsIdGetRequestParams {
     cache?: number;
 }
 
-export interface V1NetworkSubnetsIdPatchRequestParams {
+export interface V1LoadBalancerRoutesIdPatchRequestParams {
     id: string;
-    subnet: Subnet;
+    loadBalancerRoute: LoadBalancerRoute;
 }
 
-export interface V1NetworkSubnetsIdProvisionPutRequestParams {
-    id: string;
-}
-
-export interface V1NetworkSubnetsIdPutRequestParams {
-    id: string;
-    subnet: Subnet;
-}
-
-export interface V1NetworkSubnetsIdRestorePatchRequestParams {
+export interface V1LoadBalancerRoutesIdProvisionPutRequestParams {
     id: string;
 }
 
-export interface V1NetworkSubnetsIdSoftDeleteRequestParams {
+export interface V1LoadBalancerRoutesIdPutRequestParams {
+    id: string;
+    loadBalancerRoute: LoadBalancerRoute;
+}
+
+export interface V1LoadBalancerRoutesIdRestorePatchRequestParams {
     id: string;
 }
 
-export interface V1NetworkSubnetsPostRequestParams {
-    subnet: Subnet;
+export interface V1LoadBalancerRoutesIdSoftDeleteRequestParams {
+    id: string;
+}
+
+export interface V1LoadBalancerRoutesPostRequestParams {
+    loadBalancerRoute: LoadBalancerRoute;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1NetworkSubnetsService {
+export class V1LoadBalancerRoutesService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -156,18 +156,18 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Bulk Import Subnets
+     * Create many LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSubnetsBulkImportPost(requestParameters: V1NetworkSubnetsBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const subnetImportCollectionDto = requestParameters.subnetImportCollectionDto;
-        if (subnetImportCollectionDto === null || subnetImportCollectionDto === undefined) {
-            throw new Error('Required parameter subnetImportCollectionDto was null or undefined when calling v1NetworkSubnetsBulkImportPost.');
+    public v1LoadBalancerRoutesBulkPost(requestParameters: V1LoadBalancerRoutesBulkPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesBulkPost(requestParameters: V1LoadBalancerRoutesBulkPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<LoadBalancerRoute>>>;
+    public v1LoadBalancerRoutesBulkPost(requestParameters: V1LoadBalancerRoutesBulkPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<LoadBalancerRoute>>>;
+    public v1LoadBalancerRoutesBulkPost(requestParameters: V1LoadBalancerRoutesBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const generatedLoadBalancerRouteBulkDto = requestParameters.generatedLoadBalancerRouteBulkDto;
+        if (generatedLoadBalancerRouteBulkDto === null || generatedLoadBalancerRouteBulkDto === undefined) {
+            throw new Error('Required parameter generatedLoadBalancerRouteBulkDto was null or undefined when calling v1LoadBalancerRoutesBulkPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -176,6 +176,7 @@ export class V1NetworkSubnetsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -198,8 +199,8 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network/subnets/bulk-import`,
-            subnetImportCollectionDto,
+        return this.httpClient.post<Array<LoadBalancerRoute>>(`${this.configuration.basePath}/v1/load-balancer/routes/bulk`,
+            generatedLoadBalancerRouteBulkDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -211,15 +212,15 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Retrieve many Subnet
+     * Retrieve many LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsGet(requestParameters: V1NetworkSubnetsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Subnet>>;
-    public v1NetworkSubnetsGet(requestParameters: V1NetworkSubnetsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Subnet>>>;
-    public v1NetworkSubnetsGet(requestParameters: V1NetworkSubnetsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Subnet>>>;
-    public v1NetworkSubnetsGet(requestParameters: V1NetworkSubnetsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1LoadBalancerRoutesGet(requestParameters: V1LoadBalancerRoutesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesGet(requestParameters: V1LoadBalancerRoutesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<LoadBalancerRoute>>>;
+    public v1LoadBalancerRoutesGet(requestParameters: V1LoadBalancerRoutesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<LoadBalancerRoute>>>;
+    public v1LoadBalancerRoutesGet(requestParameters: V1LoadBalancerRoutesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const fields = requestParameters.fields;
         const filter = requestParameters.filter;
         const or = requestParameters.or;
@@ -288,7 +289,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<Subnet>>(`${this.configuration.basePath}/v1/network/subnets`,
+        return this.httpClient.get<Array<LoadBalancerRoute>>(`${this.configuration.basePath}/v1/load-balancer/routes`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -301,18 +302,18 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Delete one Subnet
+     * Delete one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdDelete(requestParameters: V1NetworkSubnetsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public v1NetworkSubnetsIdDelete(requestParameters: V1NetworkSubnetsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public v1NetworkSubnetsIdDelete(requestParameters: V1NetworkSubnetsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public v1NetworkSubnetsIdDelete(requestParameters: V1NetworkSubnetsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1LoadBalancerRoutesIdDelete(requestParameters: V1LoadBalancerRoutesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public v1LoadBalancerRoutesIdDelete(requestParameters: V1LoadBalancerRoutesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdDelete(requestParameters: V1LoadBalancerRoutesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdDelete(requestParameters: V1LoadBalancerRoutesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -335,7 +336,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Subnet>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -352,13 +353,13 @@ export class V1NetworkSubnetsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdDeprovisionPatch(requestParameters: V1NetworkSubnetsIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSubnetsIdDeprovisionPatch(requestParameters: V1NetworkSubnetsIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSubnetsIdDeprovisionPatch(requestParameters: V1NetworkSubnetsIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSubnetsIdDeprovisionPatch(requestParameters: V1NetworkSubnetsIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1LoadBalancerRoutesIdDeprovisionPatch(requestParameters: V1LoadBalancerRoutesIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerRoutesIdDeprovisionPatch(requestParameters: V1LoadBalancerRoutesIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerRoutesIdDeprovisionPatch(requestParameters: V1LoadBalancerRoutesIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerRoutesIdDeprovisionPatch(requestParameters: V1LoadBalancerRoutesIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdDeprovisionPatch.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdDeprovisionPatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -380,7 +381,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -393,18 +394,18 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Retrieve one Subnet
+     * Retrieve one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdGet(requestParameters: V1NetworkSubnetsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public v1NetworkSubnetsIdGet(requestParameters: V1NetworkSubnetsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public v1NetworkSubnetsIdGet(requestParameters: V1NetworkSubnetsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public v1NetworkSubnetsIdGet(requestParameters: V1NetworkSubnetsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1LoadBalancerRoutesIdGet(requestParameters: V1LoadBalancerRoutesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public v1LoadBalancerRoutesIdGet(requestParameters: V1LoadBalancerRoutesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdGet(requestParameters: V1LoadBalancerRoutesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdGet(requestParameters: V1LoadBalancerRoutesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdGet.');
         }
         const fields = requestParameters.fields;
         const join = requestParameters.join;
@@ -444,7 +445,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Subnet>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -457,22 +458,22 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Update one Subnet
+     * Update one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdPatch(requestParameters: V1NetworkSubnetsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public v1NetworkSubnetsIdPatch(requestParameters: V1NetworkSubnetsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public v1NetworkSubnetsIdPatch(requestParameters: V1NetworkSubnetsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public v1NetworkSubnetsIdPatch(requestParameters: V1NetworkSubnetsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1LoadBalancerRoutesIdPatch(requestParameters: V1LoadBalancerRoutesIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public v1LoadBalancerRoutesIdPatch(requestParameters: V1LoadBalancerRoutesIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdPatch(requestParameters: V1LoadBalancerRoutesIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdPatch(requestParameters: V1LoadBalancerRoutesIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdPatch.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdPatch.');
         }
-        const subnet = requestParameters.subnet;
-        if (subnet === null || subnet === undefined) {
-            throw new Error('Required parameter subnet was null or undefined when calling v1NetworkSubnetsIdPatch.');
+        const loadBalancerRoute = requestParameters.loadBalancerRoute;
+        if (loadBalancerRoute === null || loadBalancerRoute === undefined) {
+            throw new Error('Required parameter loadBalancerRoute was null or undefined when calling v1LoadBalancerRoutesIdPatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -504,8 +505,8 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<Subnet>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}`,
-            subnet,
+        return this.httpClient.patch<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
+            loadBalancerRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -522,13 +523,13 @@ export class V1NetworkSubnetsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdProvisionPut(requestParameters: V1NetworkSubnetsIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSubnetsIdProvisionPut(requestParameters: V1NetworkSubnetsIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSubnetsIdProvisionPut(requestParameters: V1NetworkSubnetsIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSubnetsIdProvisionPut(requestParameters: V1NetworkSubnetsIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1LoadBalancerRoutesIdProvisionPut(requestParameters: V1LoadBalancerRoutesIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerRoutesIdProvisionPut(requestParameters: V1LoadBalancerRoutesIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerRoutesIdProvisionPut(requestParameters: V1LoadBalancerRoutesIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerRoutesIdProvisionPut(requestParameters: V1LoadBalancerRoutesIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdProvisionPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdProvisionPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -550,7 +551,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -563,22 +564,22 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Replace one Subnet
+     * Replace one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdPut(requestParameters: V1NetworkSubnetsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public v1NetworkSubnetsIdPut(requestParameters: V1NetworkSubnetsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public v1NetworkSubnetsIdPut(requestParameters: V1NetworkSubnetsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public v1NetworkSubnetsIdPut(requestParameters: V1NetworkSubnetsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1LoadBalancerRoutesIdPut(requestParameters: V1LoadBalancerRoutesIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public v1LoadBalancerRoutesIdPut(requestParameters: V1LoadBalancerRoutesIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdPut(requestParameters: V1LoadBalancerRoutesIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesIdPut(requestParameters: V1LoadBalancerRoutesIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdPut.');
         }
-        const subnet = requestParameters.subnet;
-        if (subnet === null || subnet === undefined) {
-            throw new Error('Required parameter subnet was null or undefined when calling v1NetworkSubnetsIdPut.');
+        const loadBalancerRoute = requestParameters.loadBalancerRoute;
+        if (loadBalancerRoute === null || loadBalancerRoute === undefined) {
+            throw new Error('Required parameter loadBalancerRoute was null or undefined when calling v1LoadBalancerRoutesIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -610,8 +611,8 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Subnet>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}`,
-            subnet,
+        return this.httpClient.put<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
+            loadBalancerRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -628,13 +629,13 @@ export class V1NetworkSubnetsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdRestorePatch(requestParameters: V1NetworkSubnetsIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSubnetsIdRestorePatch(requestParameters: V1NetworkSubnetsIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSubnetsIdRestorePatch(requestParameters: V1NetworkSubnetsIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSubnetsIdRestorePatch(requestParameters: V1NetworkSubnetsIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1LoadBalancerRoutesIdRestorePatch(requestParameters: V1LoadBalancerRoutesIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerRoutesIdRestorePatch(requestParameters: V1LoadBalancerRoutesIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerRoutesIdRestorePatch(requestParameters: V1LoadBalancerRoutesIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerRoutesIdRestorePatch(requestParameters: V1LoadBalancerRoutesIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdRestorePatch.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdRestorePatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -656,7 +657,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -674,13 +675,13 @@ export class V1NetworkSubnetsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsIdSoftDelete(requestParameters: V1NetworkSubnetsIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSubnetsIdSoftDelete(requestParameters: V1NetworkSubnetsIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSubnetsIdSoftDelete(requestParameters: V1NetworkSubnetsIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSubnetsIdSoftDelete(requestParameters: V1NetworkSubnetsIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1LoadBalancerRoutesIdSoftDelete(requestParameters: V1LoadBalancerRoutesIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerRoutesIdSoftDelete(requestParameters: V1LoadBalancerRoutesIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerRoutesIdSoftDelete(requestParameters: V1LoadBalancerRoutesIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerRoutesIdSoftDelete(requestParameters: V1LoadBalancerRoutesIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSubnetsIdSoftDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerRoutesIdSoftDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -702,7 +703,7 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -714,18 +715,18 @@ export class V1NetworkSubnetsService {
     }
 
     /**
-     * Create one Subnet
+     * Create one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSubnetsPost(requestParameters: V1NetworkSubnetsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public v1NetworkSubnetsPost(requestParameters: V1NetworkSubnetsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public v1NetworkSubnetsPost(requestParameters: V1NetworkSubnetsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public v1NetworkSubnetsPost(requestParameters: V1NetworkSubnetsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const subnet = requestParameters.subnet;
-        if (subnet === null || subnet === undefined) {
-            throw new Error('Required parameter subnet was null or undefined when calling v1NetworkSubnetsPost.');
+    public v1LoadBalancerRoutesPost(requestParameters: V1LoadBalancerRoutesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public v1LoadBalancerRoutesPost(requestParameters: V1LoadBalancerRoutesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesPost(requestParameters: V1LoadBalancerRoutesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public v1LoadBalancerRoutesPost(requestParameters: V1LoadBalancerRoutesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const loadBalancerRoute = requestParameters.loadBalancerRoute;
+        if (loadBalancerRoute === null || loadBalancerRoute === undefined) {
+            throw new Error('Required parameter loadBalancerRoute was null or undefined when calling v1LoadBalancerRoutesPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -757,8 +758,8 @@ export class V1NetworkSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Subnet>(`${this.configuration.basePath}/v1/network/subnets`,
-            subnet,
+        return this.httpClient.post<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes`,
+            loadBalancerRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
