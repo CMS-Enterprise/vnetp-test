@@ -804,6 +804,96 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     );
   }
 
+  deleteVlan(vlan: LoadBalancerVlan) {
+    if (vlan.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!vlan.deletedAt) {
+        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(data => {
+          this.getVlans();
+        });
+      } else {
+        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(data => {
+          this.getVlans();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Vlan?`, `Do you want to ${deleteDescription} Vlan "${vlan.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  deleteSelfIp(selfIp: LoadBalancerSelfIp) {
+    if (selfIp.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = selfIp.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!selfIp.deletedAt) {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(data => {
+          this.getSelfIps();
+        });
+      } else {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(data => {
+          this.getSelfIps();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Self IP?`, `Do you want to ${deleteDescription} Self IP "${selfIp.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  deleteRoute(route: LoadBalancerRoute) {
+    if (route.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+    const deleteDescription = route.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!route.deletedAt) {
+        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(data => {
+          this.getRoutes();
+        });
+      } else {
+        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(data => {
+          this.getRoutes();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Route?`, `Do you want to ${deleteDescription} Route "${route.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  restoreVlan(vlan: LoadBalancerVlan) {
+    if (vlan.deletedAt) {
+      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(data => this.getVlans());
+    }
+  }
+
+  restoreSelfIp(selfIp: LoadBalancerSelfIp) {
+    if (selfIp.deletedAt) {
+      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(data => this.getSelfIps());
+    }
+  }
+
+  restoreRoute(route: LoadBalancerRoute) {
+    if (route.deletedAt) {
+      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(data => this.getRoutes());
+    }
+  }
+
   restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {
     if (virtualServer.deletedAt) {
       this.virtualServersService
