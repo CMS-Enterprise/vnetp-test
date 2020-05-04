@@ -84,7 +84,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     dto.VirtualMachineId = this.VirtualMachineId;
     dto.DatacenterId = this.DatacenterId;
 
-    this.subscribeToVirtualDiskModal();
+    this.subscribeToNetworkAdapterModal();
     this.ngx.setModalData(dto, 'networkAdapterModal');
     this.ngx.getModal('networkAdapterModal').open();
   }
