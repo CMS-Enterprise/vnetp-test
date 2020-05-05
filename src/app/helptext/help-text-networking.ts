@@ -67,6 +67,9 @@ export class LoadBalancersHelpText {
   HealthMonitors = `Manage Health Monitors.`;
   Profiles = `Manage Profiles.`;
   Policies = `Manage Policies.`;
+  SelfIps = `Manage Load Balancer Self IPs.`;
+  Vlans = `Manage Load Balancer Vlans.`;
+  Routes = `Manage Load Balancer Routes.`;
 }
 
 @Injectable({
