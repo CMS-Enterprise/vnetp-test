@@ -7,7 +7,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-zos',
   templateUrl: './zos.component.html',
-  styleUrls: ['./zos.component.css'],
 })
 export class ZosComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;

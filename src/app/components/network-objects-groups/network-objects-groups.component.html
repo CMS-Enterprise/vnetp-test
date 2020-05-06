@@ -25,7 +25,7 @@
       </button>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="Network Objects table">
       <!-- TO DO: are all of these fields necessary to show on the summary page? -->
       <thead>
         <tr>
@@ -106,7 +106,7 @@
       </button>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="Network Object Groups table">
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -159,7 +159,7 @@
   </div>
 
   <div *ngIf="navIndex == 2">
-    <table class="table table-striped mt-3">
+    <table class="table table-striped mt-3" aria-describedby="Network Object Group Relations">
       <thead>
         <tr>
           <th scope="col">Click the import CSV button to add network object group relations</th>

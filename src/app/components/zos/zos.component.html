@@ -9,7 +9,7 @@
     </button>
   </div>
 
-  <table class="table table-striped">
+  <table class="table table-striped" aria-describedby="z/OS Requests table">
     <thead>
       <tr>
         <th scope="col">Request sent</th>
@@ -18,22 +18,28 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
-        <td>{{ configuration.requestedAt | date: "medium" }}</td>
+      <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
+        <td>{{ configuration.requestedAt | date: 'medium' }}</td>
         <td>
-          {{ configuration.configuredAt | date: "medium" }}
-          <ng-container
-            *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
-            <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
-              (click)="getConfigurationFile($event, configuration.id)">
+          {{ configuration.configuredAt | date: 'medium' }}
+          <ng-container *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
+            <a
+              class="btn btn-sm mr-1"
+              [href]="downloadHref"
+              download="{{ downloadName }}"
+              (click)="getConfigurationFile($event, configuration.id)"
+            >
               <fa name="download"></fa>
             </a>
           </ng-container>
         </td>
         <td>
-          <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
-            (click)="getConfigurationFile($event, configuration.id)">
+          <a
+            class="btn btn-sm mr-1"
+            [href]="downloadHref"
+            download="{{ downloadName }}"
+            (click)="getConfigurationFile($event, configuration.id)"
+          >
             <fa name="download"></fa>
           </a>
 

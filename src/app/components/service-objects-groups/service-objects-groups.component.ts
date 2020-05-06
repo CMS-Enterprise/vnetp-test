@@ -278,8 +278,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        let dto = this.sanitizeData(event);
         this.serviceObjectService
           .v1NetworkSecurityServiceObjectsBulkPost({
             generatedServiceObjectBulkDto: { bulk: dto },
@@ -305,9 +304,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
-
         const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
         serviceObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
         serviceObjectRelationsDto.serviceObjectRelations = event;
@@ -337,8 +333,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        let dto = this.sanitizeData(event);
         this.serviceObjectGroupService
           .v1NetworkSecurityServiceObjectGroupsBulkPost({
             generatedServiceObjectGroupBulkDto: { bulk: dto },

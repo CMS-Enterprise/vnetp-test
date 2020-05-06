@@ -8,7 +8,6 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-virtual-disk-modal',
   templateUrl: './virtual-disk-modal.component.html',
-  styleUrls: ['./virtual-disk-modal.component.css'],
 })
 export class VirtualDiskModalComponent implements OnInit {
   form: FormGroup;

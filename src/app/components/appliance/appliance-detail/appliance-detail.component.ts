@@ -7,7 +7,6 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-appliance-detail',
   templateUrl: './appliance-detail.component.html',
-  styleUrls: ['./appliance-detail.component.css'],
 })
 export class ApplianceDetailComponent implements OnInit {
   Id: string;

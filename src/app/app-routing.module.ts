@@ -9,20 +9,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
-import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
-import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
-import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
-import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
 import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 import { TiersComponent } from './components/tiers/tiers.component';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
@@ -172,56 +164,6 @@ const routes: Routes = [
     component: ApplianceDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Appliance Detail' },
-  },
-  {
-    path: 'solaris',
-    component: SolarisComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Solaris' },
-  },
-  {
-    path: 'solaris/cdom/create',
-    component: SolarisCdomCreateComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'CDOM Create' },
-  },
-  {
-    path: 'solaris/ldom/create',
-    component: SolarisLdomCreateComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
-    data: { breadcrumb: 'LDOM Create' },
-  },
-  {
-    path: 'solaris/cdom/list',
-    component: SolarisCdomListComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'CDOM List' },
-  },
-  {
-    path: 'solaris/imagerepository',
-    component: SolarisImageRepositoryComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Image Repository' },
-  },
-  {
-    path: 'solaris/ldom/list',
-    component: LdomListComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'LDOM List' },
-  },
-  {
-    path: 'solaris/ldom/detail/:id',
-    component: LdomDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'LDOM Detail' },
-  },
-  {
-    path: 'solaris/cdom/detail/:id',
-    component: CdomDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'CDOM Detail' },
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', component: NotfoundComponent, canActivate: [AuthGuard] },

@@ -7,7 +7,6 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-physical-server-detail',
   templateUrl: './physical-server-detail.component.html',
-  styleUrls: ['./physical-server-detail.component.css'],
 })
 export class PhysicalServerDetailComponent implements OnInit {
   Id: string;

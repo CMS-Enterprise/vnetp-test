@@ -102,13 +102,13 @@ export class NetworkTopologyComponent implements OnInit {
           }
           break;
         case 'VRF':
-          switch (actionData.ActionType) {
-            case 'Add Subnet':
-              this.router.navigate(['/networks/create']);
-              break;
-            default:
-              break;
-          }
+          // switch (actionData.ActionType) {
+          //   case 'Add Subnet':
+          this.router.navigate(['/networks/create']);
+          //     break;
+          //   default:
+          //     break;
+          // }
           break;
         case 'Subnet':
           switch (actionData.ActionType) {

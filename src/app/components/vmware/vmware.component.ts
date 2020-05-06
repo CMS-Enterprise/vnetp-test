@@ -10,7 +10,6 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-vmware',
   templateUrl: './vmware.component.html',
-  styleUrls: ['./vmware.component.css'],
 })
 export class VmwareComponent implements OnInit, OnDestroy {
   virtualMachines: Array<VmwareVirtualMachine>;

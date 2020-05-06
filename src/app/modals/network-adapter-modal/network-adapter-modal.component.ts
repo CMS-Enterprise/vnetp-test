@@ -8,7 +8,6 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-network-adapter-modal',
   templateUrl: './network-adapter-modal.component.html',
-  styleUrls: ['./network-adapter-modal.component.css'],
 })
 export class NetworkAdapterModalComponent implements OnInit {
   form: FormGroup;

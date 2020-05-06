@@ -1,10 +1,6 @@
 <!-- add back button? -->
 <div class="clearfix">
-  <a
-    routerLink="/physical-server"
-    queryParamsHandling="merge"
-    class="btn btn-sm btn-primary mb-2"
-  >
+  <a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
     <fa name="arrow-left"></fa>
     Back
   </a>
@@ -12,18 +8,11 @@
   <h1>Physical Server: {{ PhysicalServer?.name }}</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      *ngIf="PhysicalServer?.deletedAt"
-      class="btn btn-sm btn-success"
-      (click)="restorePhysicalServer(PhysicalServer)"
-    >
+    <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-sm btn-success" (click)="restorePhysicalServer(PhysicalServer)">
       <fa name="undo"></fa>
       Restore Physical Server
     </button>
-    <button
-      class="btn btn-sm btn-danger"
-      (click)="deletePhysicalServer(PhysicalServer)"
-    >
+    <button class="btn btn-sm btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
       <fa name="trash"></fa>
       Delete Physical Server
     </button>
@@ -31,9 +20,7 @@
 </div>
 
 <div *ngIf="PhysicalServer">
-  <p *ngIf="PhysicalServer.description">
-    <strong>Description:</strong> {{ PhysicalServer.description }}
-  </p>
+  <p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
   <p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
   <p>
     <strong>Delivery Date:</strong>
@@ -72,7 +59,7 @@
 
 <div class="p-3">
   <h3>Network Ports</h3>
-  <table class="table table-striped">
+  <table class="table table-striped" aria-describedby="Network Ports table">
     <thead>
       <tr>
         <th scope="col">Name</th>

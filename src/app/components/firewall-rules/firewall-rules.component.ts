@@ -85,8 +85,7 @@ export class FirewallRulesComponent implements OnInit {
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.firewallRuleGroupService
           .v1NetworkSecurityFirewallRuleGroupsBulkPost({
             generatedFirewallRuleGroupBulkDto: { bulk: dto },

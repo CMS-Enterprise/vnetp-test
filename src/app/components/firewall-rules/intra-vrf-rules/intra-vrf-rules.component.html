@@ -1,41 +1,23 @@
 <h1 aria-label="VRF Name">VRF: {{ vrf?.name }}</h1>
 
 <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-    <button
-    type="button"
-    class="btn btn-warning mr-1"
-    (click)="saveAll()"
-    aria-label="Update Contracts"
-    *ngIf="dirty"
-  >
+  <button type="button" class="btn btn-warning mr-1" (click)="saveAll()" aria-label="Update Contracts" *ngIf="dirty">
     <fa name="save"></fa>
     Save Changes
   </button>
-  
-  <button
-    type="button"
-    class="btn btn-success"
-    (click)="createContract()"
-    aria-label="Create Contract"
-  >
+
+  <button type="button" class="btn btn-success" (click)="createContract()" aria-label="Create Contract">
     <fa name="plus"></fa>
     Create Contract
   </button>
 
-  
-  <button
-  type="button"
-  class="btn btn-info mr-1"
-  (click)="refresh()"
-  aria-label="Refresh Firewall Rules"
-  *ngIf="!dirty"
->
-  <fa name="refresh"></fa>
-  Refresh
-</button>
+  <button type="button" class="btn btn-info mr-1" (click)="refresh()" aria-label="Refresh Firewall Rules" *ngIf="!dirty">
+    <fa name="refresh"></fa>
+    Refresh
+  </button>
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped" aria-describedby="Intra-VRF Rules table">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -52,12 +34,7 @@
         <span>{{ contract?.FilterEntries?.length }}</span>
       </td>
       <td class="item-actions">
-        <fa
-          name="pencil"
-          (click)="editContract(contract)"
-          aria-label="Edit Contract"
-        >
-        </fa>
+        <fa name="pencil" (click)="editContract(contract)" aria-label="Edit Contract"> </fa>
         <fa name="trash" (click)="deleteContract(contract)"> </fa>
       </td>
     </tr>

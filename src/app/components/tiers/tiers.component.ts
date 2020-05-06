@@ -149,8 +149,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        let dto = this.sanitizeData(event);
         this.datacenterTierService
           .v1TiersBulkPost({
             generatedTierBulkDto: { bulk: dto },

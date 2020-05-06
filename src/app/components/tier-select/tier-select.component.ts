@@ -11,7 +11,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-tier-select',
   templateUrl: './tier-select.component.html',
-  styleUrls: ['./tier-select.component.css'],
 })
 export class TierSelectComponent implements OnInit, OnDestroy {
   tiers: Array<Tier>;
