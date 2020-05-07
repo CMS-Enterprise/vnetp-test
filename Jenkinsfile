@@ -6,7 +6,7 @@ pipeline {
         agent any
         steps {
           script{
-            docker.image('sonarsource/sonar-scanner-cli').run('-u 996:993 -v "$PWD:/usr/src" -e SONAR_HOST_URL=http://10.151.14.60:9000 -e SONAR_TOKEN=b68fdcf3c36a3ecb1151a9c25622600a18a09ef5')
+            docker.image('sonarsource/sonar-scanner-cli').run('-u 996:993 -v "$PWD:/usr/src" -e SONAR_HOST_URL=http://10.151.14.60:9000 -e SONAR_TOKEN=3d607fafa919b878ab4436bc8c415d8f86bdbf8a')
             sh 'env'
             sh 'printenv'
 
