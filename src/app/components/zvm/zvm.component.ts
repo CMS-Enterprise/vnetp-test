@@ -27,10 +27,24 @@ export class ZvmComponent implements OnInit, OnDestroy {
   getConfigurations() {
     this.configurationService
       .v1ConfigurationUploadGet({
+        fields: 'id,requestedAt,configuredAt',
         filter: `type||eq||${ConfigurationUploadType.VM}`,
       })
       .subscribe(data => {
         this.configurations = data;
+      });
+  }
+
+  getConfigurationFile(event, id: string) {
+    event.preventDefault();
+    this.configurationService
+      .v1ConfigurationUploadIdGet({
+        id,
+      })
+      .subscribe(data => {
+        console.log('data', data)
+        const requestFile: any = data.file;
+        this.exportFile(requestFile);
       });
   }
 
@@ -55,10 +69,8 @@ export class ZvmComponent implements OnInit, OnDestroy {
     const utf8decoder = new TextDecoder();
     const buff = new Uint8Array(requestFile.data);
     const blob = utf8decoder.decode(buff);
-
     const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
     const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
-
     const date = new Date().toISOString().slice(0, 19);
     if (isXlsm) {
       this.downloadName = `${date}.xlsm`;
@@ -67,6 +79,12 @@ export class ZvmComponent implements OnInit, OnDestroy {
       this.downloadName = `${date}.docx`;
     }
     this.downloadHref = this.sanitizer.bypassSecurityTrustUrl(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", blob);
+    link.setAttribute("download", this.downloadName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   private unsubAll() {

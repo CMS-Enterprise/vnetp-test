@@ -26,14 +26,14 @@
           <ng-container
             *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
             <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
-              (click)="exportFile(configuration.file)">
+              (click)="getConfigurationFile($event, configuration.id)">
               <fa name="download"></fa>
             </a>
           </ng-container>
         </td>
         <td>
           <a class="btn btn-sm mr-1" [href]="downloadHref" download="{{ downloadName }}"
-            (click)="exportFile(configuration.file)">
+            (click)="getConfigurationFile($event, configuration.id)">
             <fa name="download"></fa>
           </a>
 
