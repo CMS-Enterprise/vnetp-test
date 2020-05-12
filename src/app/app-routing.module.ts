@@ -40,7 +40,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 // tslint:disable: max-line-length
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [AuthGuardService] },
+  { path: 'callback', component: LoginComponent, canActivate: [AuthGuardService] },
   {
     path: 'subnets-vlans',
     component: SubnetsVlansComponent,

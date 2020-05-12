@@ -3,12 +3,16 @@ export const environment = {
   apiBase: 'http://localhost:3000/api',
   wikiBase: 'http://wiki.draas.cdsvdc.lcl/index.php/UI',
   openId: {
-    authority: 'https://10.151.20.115/cfs/oauth/draasui/authorize',
-    client_id: 'IS12GPO6IWGJ8e7Ocjbo0z',
+    authority: 'https://10.151.20.115/cfs/oauth/draasui',
+    client_id: 'lS12GPO6lWGJ8e7Ocjbo0z',
+    client_secret: 'r0Tjc0OZ6Oem4Biw9ZGulD0mY3xzzBD9Q6wuJ4jIgMft',
     redirect_uri: 'http://localhost:4200/callback',
-    post_logout_redirect_uri: 'http://localhost:4200/',
-    response_type: 'id_token token',
+    response_type: 'token',
     scope: 'openid profile',
-    loadUserInfo: true,
+    metadata: {
+      issuer: 'https://10.151.20.115/cfs/oauth/draasui',
+      authorization_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/authorize',
+      userinfo_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/userinfo',
+    },
   },
 };
