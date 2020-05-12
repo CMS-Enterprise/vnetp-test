@@ -44,7 +44,7 @@ export class LdomDetailComponent implements OnInit {
     const extra_vars: { [k: string]: any } = {};
     extra_vars.id = this.Ldom.device_id;
     const body = { extra_vars };
-    this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
+    // this.automationApiService.launchTemplate('delete-device', body, true).subscribe();
     this.router.navigate(['/solaris/ldom/list']);
   }
 }

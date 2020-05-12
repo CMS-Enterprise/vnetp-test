@@ -63,7 +63,7 @@ export class CdomDetailComponent implements OnInit {
         const extra_vars: { [k: string]: any } = {};
         extra_vars.id = id;
         const body = { extra_vars };
-        this.automationApiService.launchTemplate(`delete-device`, body, true).subscribe();
+        // this.automationApiService.launchTemplate(`delete-device`, body, true).subscribe();
       });
       this.router.navigate(['/solaris/cdom/list']);
     });

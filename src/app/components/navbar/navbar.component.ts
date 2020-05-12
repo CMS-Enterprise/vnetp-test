@@ -93,7 +93,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout() {
     this.ngx.close('logoutModal');
-    this.auth.logout();
+    // this.auth.logout();
   }
 
   private unsubAll() {
@@ -113,7 +113,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
+    // this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   ngOnDestroy() {

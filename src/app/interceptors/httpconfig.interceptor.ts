@@ -11,19 +11,19 @@ export class HttpConfigInterceptor {
   constructor(private auth: AuthService, private toastr: ToastrService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const currentUser = this.auth.currentUserValue;
+    // const currentUser = this.auth.currentUserValue;
     const isLogin = request.url.includes('auth/login');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
-    if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${currentUser.Token}`,
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-      });
-      request = request.clone({ headers });
-    }
+    // if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
+    //   const headers = new HttpHeaders({
+    //     Authorization: `Bearer ${currentUser.Token}`,
+    //     'Cache-Control': 'no-cache',
+    //     Pragma: 'no-cache',
+    //   });
+    //   request = request.clone({ headers });
+    // }
 
     if (!request.headers.has('Accept')) {
       request = request.clone({
@@ -79,7 +79,7 @@ export class HttpConfigInterceptor {
               toastrMessage = 'Bad Request';
               break;
             case 401:
-              this.auth.logout();
+              // this.auth.logout();
               return;
             case 403:
               toastrMessage = 'Unauthorized.';

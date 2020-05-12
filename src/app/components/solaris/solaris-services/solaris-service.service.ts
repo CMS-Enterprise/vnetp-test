@@ -30,9 +30,9 @@ export class SolarisService {
   constructor(private auth: AuthService) {
     this.CDOMArray = new Array<any>();
     this.LDOMArray = new Array<any>();
-    this.auth.currentUser.subscribe(u => (this.currentUser = u));
+    // this.auth.currentUser.subscribe(u => (this.currentUser = u));
     this.AllSolaris = new Array<any>();
-    this.SolarisImageDeviceName = `__${this.auth.currentUserValue.CustomerName}_solaris_images__`.toLowerCase();
+    // this.SolarisImageDeviceName = `__${this.auth.currentUserValue.CustomerName}_solaris_images__`.toLowerCase();
   }
   getLDOMDevice(device: any) {
     const LDOMDevice = new SolarisLdom();

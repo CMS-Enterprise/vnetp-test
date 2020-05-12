@@ -114,15 +114,15 @@ export class SolarisCdomCreateComponent implements OnInit, PendingChangesGuard {
     // TODO: Tie to reactive form pristine.
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
-    this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
+    // this.CDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.CDOM.devicetype = 'solaris_cdom';
     extra_vars.CDOM = this.CDOM;
 
     const body = { extra_vars };
     if (this.editCDOM) {
-      this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
+      // this.automationApiService.launchTemplate(`save-cdom`, body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
+      // this.automationApiService.launchTemplate('edit-cdom', body, true).subscribe();
     }
     this.router.navigate(['/solaris/cdom/list']);
   }

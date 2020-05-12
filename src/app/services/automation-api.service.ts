@@ -29,20 +29,19 @@ export class AutomationApiService {
   }
 
   launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
-    const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
-
-    return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody).pipe(
-      map(response => {
-        if (sendJobLaunchMessage) {
-          this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
-        }
-        return response;
-      }),
-      catchError(error => {
-        this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
-        return throwError(error);
-      }),
-    );
+    // const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
+    // return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody).pipe(
+    //   map(response => {
+    //     if (sendJobLaunchMessage) {
+    //       this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
+    //     }
+    //     return response;
+    //   }),
+    //   catchError(error => {
+    //     this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
+    //     return throwError(error);
+    //   }),
+    // );
   }
 
   getAdminGroups() {

@@ -118,7 +118,7 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
     // tslint:disable-next-line: variable-name
     this.dirty = false;
     const extra_vars: { [k: string]: any } = {};
-    this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
+    // this.LDOM.customer_name = this.authService.currentUserValue.CustomerName;
     this.LDOM.devicetype = 'solaris_ldom';
     // FIXME: [jvf] if it's hard coded in the UI, it's better for it to be hardcoded
     // in userland rather than running it across the wire and through the DB.
@@ -127,9 +127,9 @@ export class SolarisLdomCreateComponent implements OnInit, PendingChangesGuard {
 
     const body = { extra_vars };
     if (this.editLdom) {
-      this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
+      // this.automationApiService.launchTemplate(`save-ldom`, body, true).subscribe();
     } else {
-      this.automationApiService.launchTemplate('save-ldom', body, true).subscribe();
+      // this.automationApiService.launchTemplate('save-ldom', body, true).subscribe();
     }
     this.router.navigate(['/solaris/ldom/list']);
   }

@@ -68,7 +68,7 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
+    // this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
 
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {

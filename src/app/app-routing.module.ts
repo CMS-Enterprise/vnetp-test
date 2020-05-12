@@ -5,7 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { AuthGuard } from './guards/auth.guard';
+// import { AuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
@@ -35,196 +35,196 @@ import { ApplianceComponent } from './components/appliance/appliance.component';
 import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 import { WizardComponent } from './components/wizard/wizard.component';
+import { AuthGuardService } from './services/auth-guard.service';
 
 // tslint:disable: max-line-length
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [AuthGuardService] },
   {
     path: 'subnets-vlans',
     component: SubnetsVlansComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Subnets & VLANs' },
   },
   {
     path: 'tiers',
     component: TiersComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Tiers' },
   },
-  // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {
     path: 'deploy',
     component: DeployComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Deploy' },
   },
   {
     path: 'jobs',
     component: JobsComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Jobs' },
   },
   {
     path: 'network-objects-groups',
     component: NetworkObjectsGroupsComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Network Objects' },
   },
   {
     path: 'service-objects-groups',
     component: ServiceObjectsGroupsComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Service Objects' },
   },
   {
     path: 'firewall-rules',
     component: FirewallRulesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Firewall Rules' },
   },
   {
     path: 'firewall-rule-group/edit/:id',
     component: FirewallRulesDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Firewall Rule Group' },
   },
   {
     path: 'load-balancers',
     component: LoadBalancersComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Load Balancers' },
   },
   {
     path: 'static-routes',
     component: StaticRoutesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Static Routes' },
   },
   {
     path: 'static-routes/edit/:id',
     component: StaticRouteDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Edit Static Route' },
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'wizard',
     component: WizardComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Wizard' },
   },
   {
     path: 'physical-server',
     component: PhysicalServerComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Physical Servers' },
   },
   {
     path: 'physical-server/:id',
     component: PhysicalServerDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Physical Server Detail' },
   },
   {
     path: 'vmware',
     component: VmwareComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'VMWare' },
   },
   {
     path: 'vmware/:id',
     component: VmwareDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'VMWare Detail' },
   },
   {
     path: 'zvm',
     component: ZvmComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'z/VM' },
   },
   {
     path: 'zos',
     component: ZosComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'z/OS' },
   },
   {
     path: 'appliance',
     component: ApplianceComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Appliance as a Service' },
   },
   {
     path: 'appliance/:id',
     component: ApplianceDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Appliance Detail' },
   },
   {
     path: 'solaris',
     component: SolarisComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Solaris' },
   },
   {
     path: 'solaris/cdom/create',
     component: SolarisCdomCreateComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'CDOM Create' },
   },
   {
     path: 'solaris/ldom/create',
     component: SolarisLdomCreateComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'LDOM Create' },
   },
   {
     path: 'solaris/cdom/list',
     component: SolarisCdomListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'CDOM List' },
   },
   {
     path: 'solaris/imagerepository',
     component: SolarisImageRepositoryComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'Image Repository' },
   },
   {
     path: 'solaris/ldom/list',
     component: LdomListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'LDOM List' },
   },
   {
     path: 'solaris/ldom/detail/:id',
     component: LdomDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'LDOM Detail' },
   },
   {
     path: 'solaris/cdom/detail/:id',
     component: CdomDetailComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuardService],
     data: { breadcrumb: 'CDOM Detail' },
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', component: NotfoundComponent, canActivate: [AuthGuard] },
+  { path: '**', component: NotfoundComponent, canActivate: [AuthGuardService] },
 ];
 
 @NgModule({

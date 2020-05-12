@@ -118,14 +118,14 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(
-      data => {
-        this.deletedContracts = new Array<Contract>();
-      },
-      error => {
-        this.dirty = true;
-      },
-    );
+    // this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(
+    //   data => {
+    //     this.deletedContracts = new Array<Contract>();
+    //   },
+    //   error => {
+    //     this.dirty = true;
+    //   },
+    // );
   }
 
   refresh() {

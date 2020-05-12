@@ -54,9 +54,9 @@ export class DatacenterContextService {
     // Subscribe to the activatedRoute, validate that the
     // datacenter param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!this.authService.currentUserValue) {
-        return;
-      }
+      // if (!this.authService.currentUserValue) {
+      //   return;
+      // }
 
       if (this.ignoreNextQueryParamEvent) {
         this.ignoreNextQueryParamEvent = false;

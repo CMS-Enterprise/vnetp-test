@@ -81,7 +81,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     const extra_vars: { [k: string]: any } = {};
     extra_vars.id = image.Id;
     const body = { extra_vars };
-    this.automationApiService.launchTemplate(`delete-solaris-image`, body, true).subscribe();
+    // this.automationApiService.launchTemplate(`delete-solaris-image`, body, true).subscribe();
 
     const index = this.SolarisImages.indexOf(image);
 
@@ -99,7 +99,7 @@ export class SolarisImageRepositoryComponent implements OnInit {
     this.ngxSm.getModal('imageModal').close();
 
     // Launch playbook
-    this.automationApiService.launchTemplate('save-solaris-image', body, true).subscribe();
+    // this.automationApiService.launchTemplate('save-solaris-image', body, true).subscribe();
     this.newSolarisImage = new SolarisImage();
   }
 }

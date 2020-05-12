@@ -14,7 +14,7 @@ export class BreadcrumbComponent implements OnInit {
   currentUser: User;
 
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) {
-    this.auth.currentUser.subscribe(u => (this.currentUser = u));
+    // this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   ngOnInit() {
