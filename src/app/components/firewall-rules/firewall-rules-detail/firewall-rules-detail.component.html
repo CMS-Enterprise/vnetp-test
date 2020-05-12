@@ -36,7 +36,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }">
+      <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage, totalItems: totalFirewallRules }">
         <td>
           <p>{{ firewallRule?.name }}</p>
         </td>
@@ -110,7 +110,6 @@
             (click)="deleteFirewallRule(firewallRule)"
             aria-label="Soft-Delete/Delete Firewall Rule"
           ></fa>
-          <!-- <fa name="copy" (click)="duplicateFirewallRule(firewallRule)"></fa> -->
         </td>
       </tr>
       <tr *ngIf="firewallRules?.length === 0" class="text-center">
@@ -118,14 +117,14 @@
       </tr>
     </tbody>
   </table>
-  <pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
+  <pagination-controls (pageChange)="currentFirewallRulePage = $event; getFirewallRules()"></pagination-controls>
 
   <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
     <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
       Entities per page
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-      <button type="button" value="100" (click)="perPage = $event.target.value" class="btn btn-light">100</button>
-      <button type="button" value="200" (click)="perPage = $event.target.value" class="btn btn-light">200</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value; getFirewallRules()" class="btn btn-light">50</button>
+      <button type="button" value="100" (click)="perPage = $event.target.value; getFirewallRules()" class="btn btn-light">100</button>
+      <button type="button" value="200" (click)="perPage = $event.target.value; getFirewallRules()" class="btn btn-light">200</button>
     </div>
   </div>
 
