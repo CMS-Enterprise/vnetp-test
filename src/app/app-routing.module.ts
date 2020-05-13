@@ -36,11 +36,12 @@ import { ApplianceDetailComponent } from './components/appliance/appliance-detai
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 import { WizardComponent } from './components/wizard/wizard.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 // tslint:disable: max-line-length
 
 const routes: Routes = [
-  { path: 'callback', component: LoginComponent, canActivate: [AuthGuardService] },
+  { path: 'callback', component: AuthCallbackComponent },
   {
     path: 'subnets-vlans',
     component: SubnetsVlansComponent,

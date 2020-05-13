@@ -96,6 +96,7 @@ import { DatacenterSelectComponent } from './components/datacenter-select/datace
 import { LoadBalancerVlanModalComponent } from './modals/lb-vlan-modal/lb-vlan-modal.component';
 import { LoadBalancerSelfIpModalComponent } from './modals/lb-self-ip-modal/lb-self-ip-modal.component';
 import { LoadBalancerRouteModalComponent } from './modals/lb-route-modal/lb-route-modal.component';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -108,6 +109,7 @@ export function apiConfigFactory(): Configuration {
   declarations: [
     AppComponent,
     DashboardComponent,
+    AuthCallbackComponent,
     LoginComponent,
     FirewallRulesComponent,
     FirewallRulesDetailComponent,
