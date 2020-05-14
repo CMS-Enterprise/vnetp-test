@@ -41,7 +41,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 // tslint:disable: max-line-length
 
 const routes: Routes = [
-  { path: 'callback', component: AuthCallbackComponent },
+  { path: 'callback', component: DashboardComponent },
   {
     path: 'subnets-vlans',
     component: SubnetsVlansComponent,

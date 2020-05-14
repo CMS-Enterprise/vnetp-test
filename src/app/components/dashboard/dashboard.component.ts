@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
 import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ export class DashboardComponent implements OnInit {
     private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
+    private authService: AuthService,
   ) {}
 
   datacenters: number;
@@ -38,15 +40,16 @@ export class DashboardComponent implements OnInit {
   dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
   ngOnInit() {
+    this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     this.loadDashboard();
   }
 
   loadDashboard() {
-    this.getDatacenters();
-    this.getTiers();
-    this.getVmwareVirtualMachines();
-    this.getLoadBalancerVirtualServers();
+    // this.getDatacenters();
+    // this.getTiers();
+    // this.getVmwareVirtualMachines();
+    // this.getLoadBalancerVirtualServers();
   }
 
   getDatacenters() {
@@ -97,45 +100,45 @@ export class DashboardComponent implements OnInit {
     //   );
   }
 
-  sortJobs() {
-    const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
-    this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
-    this.cancelledJobs = this.jobs.results.filter(job => job.failed && job.status === 'canceled').length;
+  // sortJobs() {
+  //   const nonFailedJobs = this.jobs.results.filter(job => !job.failed);
+  //   this.failedJobs = this.jobs.results.filter(job => job.failed && job.status !== 'canceled').length;
+  //   this.cancelledJobs = this.jobs.results.filter(job => job.failed && job.status === 'canceled').length;
 
-    this.successfulJobs = nonFailedJobs.filter(job => job.status === 'successful').length;
-    this.runningJobs = nonFailedJobs.filter(job => job.status === 'running').length;
-    this.pendingJobs = nonFailedJobs.filter(job => job.status === 'pending').length;
+  //   this.successfulJobs = nonFailedJobs.filter(job => job.status === 'successful').length;
+  //   this.runningJobs = nonFailedJobs.filter(job => job.status === 'running').length;
+  //   this.pendingJobs = nonFailedJobs.filter(job => job.status === 'pending').length;
 
-    this.pieChartData = new Array<PieChartData>();
+  //   this.pieChartData = new Array<PieChartData>();
 
-    // Successful
-    if (this.successfulJobs) {
-      this.pieChartData.push({ value: this.successfulJobs, color: '#4eb796' });
-    }
+  //   // Successful
+  //   if (this.successfulJobs) {
+  //     this.pieChartData.push({ value: this.successfulJobs, color: '#4eb796' });
+  //   }
 
-    // Running
-    if (this.runningJobs) {
-      this.pieChartData.push({ value: this.runningJobs, color: '#ffdf5a' });
-    }
+  //   // Running
+  //   if (this.runningJobs) {
+  //     this.pieChartData.push({ value: this.runningJobs, color: '#ffdf5a' });
+  //   }
 
-    // Failed
-    if (this.failedJobs) {
-      this.pieChartData.push({ value: this.failedJobs, color: '#e84d4d' });
-    }
+  //   // Failed
+  //   if (this.failedJobs) {
+  //     this.pieChartData.push({ value: this.failedJobs, color: '#e84d4d' });
+  //   }
 
-    // Pending
-    if (this.pendingJobs) {
-      this.pieChartData.push({ value: this.pendingJobs, color: '#5ac4f9' });
-    }
+  //   // Pending
+  //   if (this.pendingJobs) {
+  //     this.pieChartData.push({ value: this.pendingJobs, color: '#5ac4f9' });
+  //   }
 
-    // Cancelled Jobs
-    if (this.cancelledJobs) {
-      this.pieChartData.push({ value: this.cancelledJobs, color: '#c2c2c6' });
-    }
+  //   // Cancelled Jobs
+  //   if (this.cancelledJobs) {
+  //     this.pieChartData.push({ value: this.cancelledJobs, color: '#c2c2c6' });
+  //   }
 
-    // Default
-    if (!this.pieChartData.length) {
-      this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-    }
-  }
+  //   // Default
+  //   if (!this.pieChartData.length) {
+  //     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
+  //   }
+  // }
 }

@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg" *ngIf="currentUser">
+<!-- <nav class="navbar navbar-expand-lg" *ngIf="currentUser"> -->
+<nav class="navbar navbar-expand-lg">
   <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa name="bolt"></fa>
   </a>
@@ -91,8 +92,8 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          {{ currentUser.Username }}
-          <span *ngIf="currentUser.CustomerName"> | {{ currentUser.CustomerName }}</span>
+          <!-- {{ currentUser.Username }} -->
+          <!-- <span *ngIf="currentUser.CustomerName"> | {{ currentUser.CustomerName }}</span> -->
         </a>
         <div class="dropdown-menu dropdown-menu-reverse" aria-labelledby="userNavbarDropdown">
           <a class="dropdown-item" target="_blank" href="https://jiraent.cms.gov/">Ticketing System</a>
