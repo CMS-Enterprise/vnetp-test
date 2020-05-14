@@ -12,10 +12,10 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  // userpass = new Userpass();
-  // errorMessage: string;
-  // returnUrl: string;
-  // loading: boolean;
+  userpass = new Userpass();
+  errorMessage: string;
+  returnUrl: string;
+  loading: boolean;
 
   // constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
   response: any;
