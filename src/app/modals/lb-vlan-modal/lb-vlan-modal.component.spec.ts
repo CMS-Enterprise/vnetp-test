@@ -50,11 +50,6 @@ describe('LoadBalancerVlanModalComponent', () => {
     expect(name.valid).toBeFalsy();
   });
 
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
-  });
-
   // Name validity
   it('name should be valid', () => {
     const name = component.form.controls.name;

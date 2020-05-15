@@ -25,6 +25,9 @@ import { ProfileModalComponent } from 'src/app/modals/profile-modal/profile-moda
 import { PolicyModalComponent } from 'src/app/modals/policy-modal/policy-modal.component';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { LoadBalancerVlanModalComponent } from 'src/app/modals/lb-vlan-modal/lb-vlan-modal.component';
+import { LoadBalancerRouteModalComponent } from 'src/app/modals/lb-route-modal/lb-route-modal.component';
+import { LoadBalancerSelfIpModalComponent } from 'src/app/modals/lb-self-ip-modal/lb-self-ip-modal.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -50,6 +53,9 @@ describe('LoadBalancersComponent', () => {
       declarations: [
         LoadBalancersComponent,
         VirtualServerModalComponent,
+        LoadBalancerVlanModalComponent,
+        LoadBalancerRouteModalComponent,
+        LoadBalancerSelfIpModalComponent,
         PoolModalComponent,
         IRuleModalComponent,
         NodeModalComponent,
