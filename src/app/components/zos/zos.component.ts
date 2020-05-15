@@ -42,7 +42,6 @@ export class ZosComponent implements OnInit, OnDestroy {
         id,
       })
       .subscribe(data => {
-        console.log('data', data)
         const requestFile: any = data.file;
         this.exportFile(requestFile);
       });
@@ -79,9 +78,9 @@ export class ZosComponent implements OnInit, OnDestroy {
       this.downloadName = `${date}.docx`;
     }
     this.downloadHref = this.sanitizer.bypassSecurityTrustUrl(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", blob);
-    link.setAttribute("download", this.downloadName);
+    const link = document.createElement('a');
+    link.setAttribute('href', blob);
+    link.setAttribute('download', this.downloadName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
