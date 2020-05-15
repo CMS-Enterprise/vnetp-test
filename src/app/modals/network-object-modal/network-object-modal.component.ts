@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import { IpAddressIpValidator, ValidatePortRange, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
-import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
 
 @Component({
   selector: 'app-network-object-modal',
