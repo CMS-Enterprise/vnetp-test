@@ -277,7 +277,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.networkObjectService
           .v1NetworkSecurityNetworkObjectsBulkPost({
             generatedNetworkObjectBulkDto: { bulk: dto },
@@ -332,7 +332,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.networkObjectGroupService
           .v1NetworkSecurityNetworkObjectGroupsBulkPost({
             generatedNetworkObjectGroupBulkDto: { bulk: dto },
