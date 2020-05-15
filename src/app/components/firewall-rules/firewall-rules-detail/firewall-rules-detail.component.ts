@@ -129,6 +129,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
         page: this.currentFirewallRulePage,
       })
       .subscribe(data => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
         const result = data as any;
         this.firewallRules = result.data;
         this.totalFirewallRules = result.total;
@@ -192,6 +194,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
     this.subscribeToFirewallRuleModal();
     this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
+    this.dirty = true;
   }
 
   subscribeToFirewallRuleModal() {
@@ -200,6 +203,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getFirewallRuleGroup();
         this.ngx.resetModalData('firewallRuleModal');
+        this.dirty = false;
       });
   }
 
