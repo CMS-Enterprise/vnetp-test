@@ -89,8 +89,7 @@ export interface V1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPostReques
     healthMonitorId: string;
 }
 
-export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams {
-    priority: number;
+export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDeleteRequestParams {
     servicePort: number;
     /** Pool that the Node is being added to/removed from. */
     poolId: string;
@@ -98,8 +97,8 @@ export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriori
     nodeId: string;
 }
 
-export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams {
-    priority: number;
+export interface V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPostRequestParams {
+    ratio: number;
     servicePort: number;
     /** Pool that the Node is being added to/removed from. */
     poolId: string;
@@ -829,25 +828,21 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const priority = requestParameters.priority;
-        if (priority === null || priority === undefined) {
-            throw new Error('Required parameter priority was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete.');
-        }
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const servicePort = requestParameters.servicePort;
         if (servicePort === null || servicePort === undefined) {
-            throw new Error('Required parameter servicePort was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete.');
+            throw new Error('Required parameter servicePort was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete.');
         }
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
-            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete.');
+            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete.');
         }
         const nodeId = requestParameters.nodeId;
         if (nodeId === null || nodeId === undefined) {
-            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete.');
+            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -870,7 +865,7 @@ export class V1LoadBalancerPoolsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}/priority/${encodeURIComponent(String(priority))}`,
+        return this.httpClient.delete<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -887,25 +882,25 @@ export class V1LoadBalancerPoolsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
-    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const priority = requestParameters.priority;
-        if (priority === null || priority === undefined) {
-            throw new Error('Required parameter priority was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost.');
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerNode>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerNode>>;
+    public v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost(requestParameters: V1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const ratio = requestParameters.ratio;
+        if (ratio === null || ratio === undefined) {
+            throw new Error('Required parameter ratio was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost.');
         }
         const servicePort = requestParameters.servicePort;
         if (servicePort === null || servicePort === undefined) {
-            throw new Error('Required parameter servicePort was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost.');
+            throw new Error('Required parameter servicePort was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost.');
         }
         const poolId = requestParameters.poolId;
         if (poolId === null || poolId === undefined) {
-            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost.');
+            throw new Error('Required parameter poolId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost.');
         }
         const nodeId = requestParameters.nodeId;
         if (nodeId === null || nodeId === undefined) {
-            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost.');
+            throw new Error('Required parameter nodeId was null or undefined when calling v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -928,7 +923,7 @@ export class V1LoadBalancerPoolsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}/priority/${encodeURIComponent(String(priority))}`,
+        return this.httpClient.post<LoadBalancerNode>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(poolId))}/node/${encodeURIComponent(String(nodeId))}/service-port/${encodeURIComponent(String(servicePort))}/ratio/${encodeURIComponent(String(ratio))}`,
             null,
             {
                 responseType: <any>responseType,

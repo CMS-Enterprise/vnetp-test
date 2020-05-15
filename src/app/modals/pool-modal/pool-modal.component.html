@@ -96,19 +96,19 @@
           </div>
         </div>
         <div class="form-group col-md-3">
-          <label for="priority">Priority</label>
-          <tooltip [message]="helpText.Priority"></tooltip>
-          <input type="text" formControlName="priority" class="form-control"
-            [ngClass]="{ 'is-invalid': f.priority.errors }" aria-label="Priority" />
-          <div *ngIf="f.priority.errors" class="invalid-feedback">
-            <div *ngIf="f.priority.errors.required">Priority</div>
-            <div *ngIf="f.priority.errors.min">Priority must be greater than or equal to 1.</div>
-            <div *ngIf="f.priority.errors.max">Priority must be equal to or less than 100.</div>
+          <label for="ratio">Ratio</label>
+          <tooltip [message]="helpText.Ratio"></tooltip>
+          <input type="text" formControlName="ratio" class="form-control"
+            [ngClass]="{ 'is-invalid': f.ratio.errors }" aria-label="Ratio" />
+          <div *ngIf="f.ratio.errors" class="invalid-feedback">
+            <div *ngIf="f.ratio.errors.required">Ratio</div>
+            <div *ngIf="f.ratio.errors.min">Ratio must be greater than or equal to 1.</div>
+            <div *ngIf="f.ratio.errors.max">Ratio must be equal to or less than 100.</div>
           </div>
         </div>
         <div [ngStyle]="{'margin-top': '2.2rem'}">
           <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
-            [disabled]="ModalMode === 'Create' || f?.servicePort?.errors || f?.priority?.errors">
+            [disabled]="ModalMode === 'Create' || f?.servicePort?.errors || f?.ratio?.errors">
             Select Node
           </button>
         </div>
@@ -121,7 +121,7 @@
               <tr>
                 <th>Name</th>
                 <th>Service Port</th>
-                <th>Priority</th>
+                <th>Ratio</th>
                 <th></th>
               </tr>
             </thead>
@@ -134,7 +134,7 @@
                   {{ node?.servicePort }}
                 </td>
                 <td>
-                  {{ node?.priority }}
+                  {{ node?.ratio }}
                 </td>
                 <td class="item-actions">
                   <fa name="trash" (click)="removeNode(node)">

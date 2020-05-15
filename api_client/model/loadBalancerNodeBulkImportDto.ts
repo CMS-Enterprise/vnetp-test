@@ -29,7 +29,7 @@ export interface LoadBalancerNodeBulkImportDto {
     vrfName: string;
     poolName: string;
     servicePort: number;
-    priority: number;
+    ratio: number;
 }
 export enum LoadBalancerNodeBulkImportDtoType {
     IpAddress = 'IpAddress',

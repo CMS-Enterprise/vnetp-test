@@ -144,11 +144,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       modal.removeData();
       if (data && data.modalYes) {
         this.poolService
-          .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityDelete({
+          .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
             poolId: this.PoolId,
             nodeId: nodeToPool.loadBalancerNode.id,
             servicePort: nodeToPool.servicePort,
-            priority: nodeToPool.priority,
           })
           .subscribe(() => {
             this.getPool();
@@ -160,17 +159,17 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   addNode() {
     this.poolService
-      .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortPriorityPriorityPost({
+      .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost({
         poolId: this.PoolId,
         nodeId: this.f.selectedNode.value.id,
         servicePort: this.f.servicePort.value,
-        priority: this.f.priority.value,
+        ratio: this.f.ratio.value,
       })
       .subscribe(data => {
         this.getPool();
         this.f.selectedNode.setValue('');
         this.f.servicePort.setValue('');
-        this.f.priority.setValue('');
+        this.f.ratio.setValue('');
       });
   }
 
@@ -227,7 +226,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       selectedHealthMonitor: [''],
       selectedNode: [''],
       servicePort: ['', Validators.compose([Validators.min(1), Validators.max(65535)])],
-      priority: ['', Validators.compose([Validators.min(1), Validators.max(100)])],
+      ratio: ['', Validators.compose([Validators.min(1), Validators.max(100)])],
     });
   }
 

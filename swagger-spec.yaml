@@ -8551,12 +8551,12 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/priority/{priority}':
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/ratio/{ratio}':
     post:
       summary: Add Node to Load Balancer Pool
       parameters:
         - type: number
-          name: priority
+          name: ratio
           required: true
           in: path
         - type: number
@@ -8584,13 +8584,10 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}':
     delete:
       summary: Remove Node to Load Balancer Pool
       parameters:
-        - type: number
-          name: priority
-          required: true
-          in: path
         - type: number
           name: servicePort
           required: true
@@ -12405,7 +12402,7 @@ definitions:
         type: string
       servicePort:
         type: number
-      priority:
+      ratio:
         type: number
     required:
       - name
@@ -12418,7 +12415,7 @@ definitions:
       - name
       - poolName
       - servicePort
-      - priority
+      - ratio
   NodeImportCollectionDto:
     type: object
     properties:
