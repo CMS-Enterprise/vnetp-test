@@ -207,11 +207,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   importLoadBalancerConfig(data) {
-    // TODO: Display modal indicating the number of entities that will
-    // be imported.
-
-    // TODO: Display more descriptive error message when import fails.
-
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
@@ -245,23 +240,26 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 3:
+        const nodes = this.sanitizeData(data, true);
         this.nodeService
           .v1LoadBalancerNodesBulkPost({
-            generatedLoadBalancerNodeBulkDto: { bulk: data },
+            generatedLoadBalancerNodeBulkDto: { bulk: nodes },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
+        const irules = this.sanitizeData(data, true);
         this.irulesService
           .v1LoadBalancerIrulesBulkPost({
-            generatedLoadBalancerIruleBulkDto: { bulk: data },
+            generatedLoadBalancerIruleBulkDto: { bulk: irules },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 5:
+        const healtMonitors = this.sanitizeData(data, true);
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
-            generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
+            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healtMonitors },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
@@ -294,34 +292,19 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     }
   }
 
-  sanitizeData(entities: any) {
+  sanitizeData(entities: any, resolveTier = false) {
     return entities.map(entity => {
-      this.mapCsv(entity);
+      this.mapData(entity, resolveTier);
       return entity;
     });
   }
 
-  mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames' || key === 'iruleNames' || key === 'policyNames' || key === 'profileNames') {
-        const stringArray = val as string;
-        obj[key] = this.createAndFormatArray(stringArray);
+  mapData(entity: any, resolveTier: boolean) {
+    if (resolveTier) {
+      if (entity.vrfName) {
+        entity.tierId = this.tiers.find(t => t.name === entity.vrfName).id;
       }
-      if (key === 'nodeNames') {
-        const stringArray = val as string;
-        const res = this.createAndFormatArray(stringArray);
-        obj[key] = [{ name: res[0], servicePort: Number(res[1]), priority: Number(res[2]) }];
-      }
-    });
-    return obj;
-    // tslint:disable-next-line: semicolon
-  };
-
-  createAndFormatArray(names: string) {
-    return names
-      .replace(/[\[\]']+/g, '')
-      .split(',')
-      .map(name => name.trim());
+    }
   }
 
   getPoolName = (poolId: string) => {
