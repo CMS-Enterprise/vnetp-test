@@ -112,7 +112,6 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">LB Method</th>
-          <th scope="col">Service Port</th>
           <th scope="col">Nodes</th>
           <th scope="col">Health Monitors</th>
           <th scope="col">State</th>
@@ -126,9 +125,6 @@
           </td>
           <td>
             <span>{{ pool?.loadBalancingMethod }}</span>
-          </td>
-          <td>
-            <span>{{ pool?.nodes[0]?.servicePort }}</span>
           </td>
           <td>
             <span>{{ pool?.nodes?.length }}</span>
@@ -151,7 +147,7 @@
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="7">No Pools in this tier</td>
+          <td colspan="6">No Pools in this tier</td>
         </tr>
       </tbody>
     </table>
@@ -184,8 +180,6 @@
           <th scope="col">IP Address</th>
           <th scope="col">FQDN</th>
           <th scope="col">Autopopulate</th>
-          <th scope="col">Service Port</th>
-          <th scope="col">Priority</th>
           <th scope="col">State</th>
           <th></th>
         </tr>
@@ -208,12 +202,6 @@
             <span>{{ node?.autoPopulate }}</span>
           </td>
           <td>
-            <span>{{ node?.pools[0]?.servicePort }}</span>
-          </td>
-          <td>
-            <span>{{ node?.pools[0]?.priority }}</span>
-          </td>
-          <td>
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
@@ -228,7 +216,7 @@
           </td>
         </tr>
         <tr *ngIf="!nodes?.length" class="text-center">
-          <td colspan="9">No Nodes in this Tier</td>
+          <td colspan="7">No Nodes in this Tier</td>
         </tr>
       </tbody>
     </table>
