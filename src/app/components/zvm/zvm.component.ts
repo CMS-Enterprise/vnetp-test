@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-zvm',
   templateUrl: './zvm.component.html',
-  styleUrls: ['./zvm.component.css'],
 })
 export class ZvmComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;

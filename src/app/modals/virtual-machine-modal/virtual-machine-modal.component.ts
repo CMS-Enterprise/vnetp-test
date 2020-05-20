@@ -18,7 +18,6 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-virtual-machine-modal',
   templateUrl: './virtual-machine-modal.component.html',
-  styleUrls: ['./virtual-machine-modal.component.css'],
 })
 export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   form: FormGroup;

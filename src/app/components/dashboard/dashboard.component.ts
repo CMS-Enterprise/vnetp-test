@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
 
   getDatacenters() {
     this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
-      const paged = data as any;
+      const paged: any = data;
       this.datacenters = paged.total;
       try {
         this.status[1].status = 'green';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
 
   getTiers() {
     this.tierService.v1TiersGet({ page: 1, perPage: 1 }).subscribe(data => {
-      const paged = data as any;
+      const paged: any = data;
       this.tiers = paged.total;
     });
   }
@@ -81,8 +81,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getJobs() {
-    const date = new Date().toISOString().slice(0, 10);
-
+    // const date = new Date().toISOString().slice(0, 10);
     // TODO: Refactor this to provide a more accurate count
     // by showing failed jobs in the last day based on local
     // timezone vs UTC.

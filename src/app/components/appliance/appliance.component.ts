@@ -10,7 +10,6 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-appliance',
   templateUrl: './appliance.component.html',
-  styleUrls: ['./appliance.component.css'],
 })
 export class ApplianceComponent implements OnInit, OnDestroy {
   appliances: Array<Appliance>;

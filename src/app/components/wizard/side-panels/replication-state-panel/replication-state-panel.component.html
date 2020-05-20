@@ -38,13 +38,13 @@
   </div>
 </div>
 
-<table name="" class="table table-striped">
+<table name="" class="table table-striped" aria-describedby="Replication State table">
   <thead>
-    <th>VOLSER</th>
-    <th>CGX</th>
-    <th>Storage Pool</th>
-    <th>Status</th>
-    <th>Timestamp</th>
+    <th scope="col">VOLSER</th>
+    <th scope="col">CGX</th>
+    <th scope="col">Storage Pool</th>
+    <th scope="col">Status</th>
+    <th scope="col">Timestamp</th>
   </thead>
   <tbody>
     <tr *ngFor="let replication of formattedReplicationData | paginate: { itemsPerPage: 10, currentPage: currentReplicationPage }">

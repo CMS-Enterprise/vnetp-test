@@ -18,13 +18,6 @@
   <div class="modal-body">
     <p class="mb-3">Current Tier: {{ currentTier?.name || 'No Tier Selected' }}</p>
 
-    <!-- <select [(ngModel)]="selectedTier" class="form-control">
-      <option></option>
-      <option *ngFor="let tier of tiers" [ngValue]="tier">{{
-        tier.name
-      }}</option>
-    </select> -->
-
     <ng-select [items]="tiers" bindLabel="name" bindValue="id" [(ngModel)]="selectedTier"></ng-select>
   </div>
 

@@ -7,7 +7,6 @@ import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-vmware-detail',
   templateUrl: './vmware-detail.component.html',
-  styleUrls: ['./vmware-detail.component.css'],
 })
 export class VmwareDetailComponent implements OnInit {
   Id: string;

@@ -15,7 +15,6 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-appliance-modal',
   templateUrl: './appliance-modal.component.html',
-  styleUrls: ['./appliance-modal.component.css'],
 })
 export class ApplianceModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
