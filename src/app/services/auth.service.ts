@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User } from 'oidc-client';
+import { UserManager, User, WebStorageStateStore } from 'oidc-client';
 import * as Oidc from 'oidc-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private manager = new UserManager(environment.openId);
+  private manager = new UserManager({ ...environment.openId, userStore: new WebStorageStateStore({ store: window.localStorage }) });
   private user: User = null;
 
   constructor() {
@@ -33,10 +33,15 @@ export class AuthService {
     return this.manager.signinRedirect();
   }
 
-  completeAuthentication(): Promise<void> {
-    return this.manager.signinRedirectCallback().then(user => {
-      this.user = user;
-    });
+  async completeAuthentication(): Promise<void> {
+    return await this.manager
+      .signinRedirectCallback()
+      .then(user => {
+        this.user = user;
+      })
+      .catch(err => {
+        console.log('error', err);
+      });
   }
 
   // private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);

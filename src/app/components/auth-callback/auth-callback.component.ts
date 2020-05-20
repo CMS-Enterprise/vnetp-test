@@ -19,8 +19,15 @@ export class AuthCallbackComponent implements OnInit {
   // response: Object;
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
-    this.authService.completeAuthentication();
+  async ngOnInit() {
+    await this.authService
+      .completeAuthentication()
+      .then(res => {
+        console.log('res', res);
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
   }
   // ngOnInit() {
   // this.returnUrl = '/dashboard';

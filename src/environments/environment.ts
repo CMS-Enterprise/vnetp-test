@@ -12,7 +12,9 @@ export const environment = {
     metadata: {
       issuer: 'https://10.151.20.115/cfs/oauth/draasui',
       authorization_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/authorize',
-      userinfo_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/userinfo',
+      token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic'],
+      id_token_signing_alg_values_supported: ['RS256'],
+      userinfo_endpoint: 'http://localhost:3000/api/v1/auth/user-info',
     },
   },
 };
