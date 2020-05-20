@@ -3,16 +3,10 @@
   identifier="networkObjectModal"
   [dismissable]="false"
   (onOpen)="getData()"
+  (onClose)="reset()"
 >
   <div class="modal-header">
     <h4 class="modal-title">Network Object</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="cancel()"
-    ></button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -22,7 +16,6 @@
         <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
-          appIsAlphanumeric
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -30,6 +23,9 @@
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
         </div>
       </div>
 
@@ -44,91 +40,62 @@
           aria-label="Type"
         >
           <option></option>
-          <option value="host">Host</option>
-          <option value="range">Range</option>
-          <option value="subnet">Subnet</option>
+          <option value="IpAddress">Ip Address</option>
+          <option value="Range">Range</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
           <div *ngIf="f.type.errors.required">Type is required</div>
         </div>
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'host'">
-        <label for="name">Host Address</label>
-        <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.HostAddress"></tooltip>
+      <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
+        <label for="name">IP Address</label>
+        <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
         <input
           type="text"
           name="name"
-          formControlName="hostAddress"
+          formControlName="ipAddress"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.hostAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
-          aria-label="Host Address"
-          *ngIf="f.type.value == 'host'"
+          [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
+          aria-label="IP Address"
+          *ngIf="f.type.value == 'IpAddress'"
         />
-        <div *ngIf="submitted && f.hostAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.hostAddress.errors.required">
+        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.ipAddress.errors.required">
             IP Address is required
           </div>
-          <div *ngIf="f.hostAddress.errors.validIpv4Address">
-            IP Address is invalid
+          <div *ngIf="f.ipAddress.errors.invalidIpAny">
+            IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR.
           </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="name" *ngIf="f.type.value == 'subnet'">CIDR Address</label>
-        <tooltip *ngIf="f.type.value == 'subnet'" [message]="helpText.CidrAddress"></tooltip>
-        <input
-          type="text"
-          name="name"
-          formControlName="cidrAddress"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.cidrAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099/09"
-          aria-label="CIDR Address"
-          *ngIf="f.type.value == 'subnet'"
-        />
-        <div *ngIf="submitted && f.cidrAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.cidrAddress.errors.required">
-            CIDR Address is required.
-          </div>
-          <div *ngIf="f.cidrAddress.errors.validIpv4Address">
-            CIDR Address is invalid.
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="subnetMask" *ngIf="f.type.value == 'range'"
+        <label for="subnetMask" *ngIf="f.type.value == 'Range'"
           >Start Address</label>
-          <tooltip *ngIf="f.type.value == 'range'" [message]="helpText.StartAddress"></tooltip>
+          <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.StartIpAddress"></tooltip>
         <input
           type="text"
-          name="startAddress"
+          name="startIpAddress"
           class="form-control"
-          formControlName="startAddress"
+          formControlName="startIpAddress"
           [ngClass]="{
-            'is-invalid': submitted && f.startAddress.errors
+            'is-invalid': submitted && f.startIpAddress.errors
           }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
           aria-label="Start Address"
-          *ngIf="f.type.value == 'range'"
+          *ngIf="f.type.value == 'Range'"
         />
 
         <div
-          *ngIf="submitted && f.startAddress.errors"
+          *ngIf="submitted && f.startIpAddress.errors"
           class="invalid-feedback"
         >
-          <div *ngIf="f.startAddress.errors && f.startAddress.errors.required">
+          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.required">
             Start Address is required
           </div>
           <div
             *ngIf="
-              f.startAddress.errors && f.startAddress.errors.validIpv4Address
+              f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress
             "
           >
             IP Address is invalid
@@ -137,31 +104,29 @@
       </div>
 
       <div class="form-group">
-        <label for="subnetMask" *ngIf="f.type.value == 'range'"
+        <label for="subnetMask" *ngIf="f.type.value == 'Range'"
           >End Address</label>
-          <tooltip *ngIf="f.type.value == 'range'" [message]="helpText.EndAddress"></tooltip>
+          <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.EndIpAddress"></tooltip>
         <input
           type="text"
-          name="endAddress"
+          name="endIpAddress"
           class="form-control"
-          formControlName="endAddress"
-          [ngClass]="{ 'is-invalid': submitted && f.endAddress.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
+          formControlName="endIpAddress"
+          [ngClass]="{ 'is-invalid': submitted && f.endIpAddress.errors }"
           aria-label="End Address"
-          *ngIf="f.type.value == 'range'"
+          *ngIf="f.type.value == 'Range'"
         />
-        <div *ngIf="submitted && f.endAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.endAddress.errors.validIpv4Address">
+        <div *ngIf="submitted && f.endIpAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.endIpAddress.errors.invalidIpAddress">
             IP Address is invalid
           </div>
-          <div *ngIf="f.endAddress.errors.required">
+          <div *ngIf="f.endIpAddress.errors.required">
             End Address is required
           </div>
         </div>
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'host'">
+      <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
         <div class="form-check form-check-inline">
           <input
             type="checkbox"
@@ -174,58 +139,54 @@
           <label class="form-check-label" for="nat">
             NAT
           </label>
-          <tooltip *ngIf="f.type.value == 'host'" [message]="helpText.Nat"></tooltip>
+          <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.Nat"></tooltip>
         </div>
       </div>
       
       <div class="form-group" *ngIf="f.nat.value">
-        <label for="sourceSubnet">Source Subnet</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.Source"></tooltip>
+        <label for="natType">NAT Type</label>
+        <tooltip *ngIf="f.nat.value" [message]="helpText.NatType"></tooltip>
         <select
-        name="sourceSubnet"
-        formControlName="sourceSubnet"
+        name="natType"
+        formControlName="natType"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.sourceSubnet.errors }"
-        aria-label="Source Subnet"
+        [ngClass]="{ 'is-invalid': submitted && f.natType.errors }"
+        aria-label="NAT Direction"
         >
         <option></option> 
-        <option value="inside">Inside</option>
-        <option value="outside">Outside</option>
-        <option value="extranet">External</option>
+        <option value="Intervrf">InterVRF</option>
+        <option value="External">External</option>
         </select>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">
-        <label for="destinationSubnet">Destination Subnet</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.Destination"></tooltip>
+        <label for="natDirection">NAT Direction</label>
+        <tooltip *ngIf="f.nat.value" [message]="helpText.NatDirection"></tooltip>
         <select
-          name="destinationSubnet"
-          formControlName="destinationSubnet"
+          name="natDirection"
+          formControlName="natDirection"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationSubnet.errors }"
-          aria-label="Destination Subnet"
+          [ngClass]="{ 'is-invalid': submitted && f.natDirection.errors }"
+          aria-label="NAT Direction"
         >
           <option></option>
-          <option value="inside">Inside</option>
-          <option value="outside">Outside</option>
-          <option value="extranet">External</option>
+          <option value="In">In</option>
+          <option value="Out">Out</option>
         </select>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">
-        <label for="translatedIp">
-          Translated IP
+        <label for="translatedIpAddress">
+          Translated IP Address
         </label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.TranslatedIp"></tooltip>
+        <tooltip *ngIf="f.nat.value" [message]="helpText.TranslatedIpAddress"></tooltip>
         <input
           type="text"
-          name="translatedIp"
+          name="translatedIpAddress"
           class="form-control"
-          formControlName="translatedIp"
+          formControlName="translatedIpAddress"
           aria-label="Translated IP"
-          [ngClass]="{ 'is-invalid': submitted && f.translatedIp.errors }"
-          [dropSpecialCharacters]="false"
-          mask="099.099.099.099"
+          [ngClass]="{ 'is-invalid': submitted && f.translatedIpAddress.errors }"
         />
       </div>
 
@@ -257,8 +218,8 @@
           aria-label="NAT Protocol Type"
         >
           <option></option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
+          <option value="TCP">TCP</option>
+          <option value="UDP">UDP</option>
         </select>
         <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
           <div *ngIf="f.natProtocol.errors.required">
@@ -269,31 +230,31 @@
 
       <div class="form-row" *ngIf="f.natService.value">
         <div class="form-group col-md-6">
-          <label for="sourcePort">
+          <label for="natSourcePort">
             Source Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.SourcePort"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.NatSourcePort"></tooltip>
           <input
             type="text"
-            name="sourcePort"
+            name="natSourcePort"
             class="form-control"
-            formControlName="sourcePort"
-            [ngClass]="{ 'is-invalid': submitted && f.sourcePort.errors }"
+            formControlName="natSourcePort"
+            [ngClass]="{ 'is-invalid': submitted && f.natSourcePort.errors }"
             mask="09999"
           />
         </div>
 
         <div class="form-group col-md-6">
-          <label for="translatedPort">
-            Translated Port
+          <label for="natTranslatedPort">
+            Destination Port
           </label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.TranslatedPort"></tooltip>
+          <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
           <input
             type="text"
-            name="translatedPort"
+            name="natTranslatedPort"
             class="form-control"
-            formControlName="translatedPort"
-            [ngClass]="{ 'is-invalid': submitted && f.translatedPort.errors }"
+            formControlName="natTranslatedPort"
+            [ngClass]="{ 'is-invalid': submitted && f.natTranslatedPort.errors }"
             mask="09999"
           />
         </div>

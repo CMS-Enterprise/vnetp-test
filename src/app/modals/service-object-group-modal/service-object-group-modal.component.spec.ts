@@ -3,23 +3,22 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
   let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ ServiceObjectGroupModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
-    })
-    .compileComponents();
+      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [ServiceObjectGroupModalComponent, TooltipComponent],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -36,24 +35,6 @@ describe('ServiceObjectGroupModalComponent', () => {
     expect(component.form).toBeTruthy();
   });
 
-  it('save should set ngxModal data', () => {
-    component.form.controls.name.setValue('Name');
-    component.form.controls.description.setValue('Description');
-    component.form.controls.type.setValue(true);
-    component.serviceObjects.push({ Name: 'Test'} as ServiceObject);
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('serviceObjectGroupModal');
-    const data = modal.getData() as ServiceObjectGroup;
-
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Name').toBeTruthy();
-    expect(data.Description === 'Description').toBeTruthy();
-    expect(data.ServiceObjects[0].Name === 'Test').toBeTruthy();
-  });
-
   // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;
@@ -68,5 +49,55 @@ describe('ServiceObjectGroupModalComponent', () => {
   it('description should not be required', () => {
     const description = component.form.controls.description;
     expect(description.valid).toBeTruthy();
+  });
+
+  // Name validity
+  it('name should be valid', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(3));
+    expect(name.valid).toBeTruthy();
+  });
+
+  it('name should be invalid, min length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(2));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, max length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(101));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, invalid characters', () => {
+    const name = component.form.controls.name;
+    name.setValue('invalid/name!');
+    expect(name.valid).toBeFalsy();
+  });
+
+  // Description Validity
+  it('description should be valid (null)', () => {
+    const description = component.form.controls.description;
+    description.setValue(null);
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be valid (minlen)', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(3));
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be invalid, min length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(2));
+    expect(description.valid).toBeFalsy();
+  });
+
+  it('description should be invalid, max length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(501));
+    expect(description.valid).toBeFalsy();
   });
 });

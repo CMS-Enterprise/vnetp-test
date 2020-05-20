@@ -3,40 +3,35 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
-import {AngularFontAwesomeModule} from 'angular-font-awesome';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
-import { NetworksComponent } from './components/networks/networks.component';
 import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
-import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
-import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
-import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
@@ -48,47 +43,73 @@ import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewal
 import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
-import { PoolMemberModalComponent } from './modals/pool-member-modal/pool-member-modal.component';
+import { NodeModalComponent } from './modals/node-modal/node-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
-import { LogicalInterfaceModalComponent } from './modals/logical-interface-modal/logical-interface-modal.component';
-import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
-import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
+import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
-import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
-import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { D3Module } from './modules/d3-module/d3-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { ContractModalComponent } from './modals/contract-modal/contract-modal.component';
+import { VmwareComponent } from './components/vmware/vmware.component';
+import { VirtualMachineModalComponent } from './modals/virtual-machine-modal/virtual-machine-modal.component';
+import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
+import { environment } from 'src/environments/environment';
+import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { ResolvePipe } from './pipes/resolve.pipe';
+import { StaticRouteModalComponent } from './modals/static-route-modal/static-route-modal.component';
+import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
+import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.component';
+import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
+import { TiersComponent } from './components/tiers/tiers.component';
+import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
+import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
+import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
+import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
+import { ZvmComponent } from './components/zvm/zvm.component';
+import { ZosComponent } from './components/zos/zos.component';
+import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
+import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
+import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
+import { ApplianceComponent } from './components/appliance/appliance.component';
+import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
+import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
+import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
+import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
+import { TierSelectComponent } from './components/tier-select/tier-select.component';
+import { WizardComponent } from './components/wizard/wizard.component';
+import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
+import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
+import { LoadBalancerVlanModalComponent } from './modals/lb-vlan-modal/lb-vlan-modal.component';
+import { LoadBalancerSelfIpModalComponent } from './modals/lb-self-ip-modal/lb-self-ip-modal.component';
+import { LoadBalancerRouteModalComponent } from './modals/lb-route-modal/lb-route-modal.component';
+
+export function apiConfigFactory(): Configuration {
+  const params: ConfigurationParameters = {
+    basePath: environment.apiBase,
+  };
+  return new Configuration(params);
+}
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     LoginComponent,
-    NetworksComponent,
-    NetworksDetailComponent,
     FirewallRulesComponent,
     FirewallRulesDetailComponent,
     JobsComponent,
-    CreateNetworkComponent,
     NavbarComponent,
-    IpaddressesComponent,
     NotfoundComponent,
     BreadcrumbComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
     SpecialCharacterDirective,
-    SolarisComponent,
-    SolarisCdomCreateComponent,
-    SolarisLdomCreateComponent,
-    SolarisCdomListComponent,
     DeployComponent,
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
@@ -100,24 +121,50 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
     VirtualServerModalComponent,
     LoadBalancersComponent,
     PoolModalComponent,
-    PoolMemberModalComponent,
+    NodeModalComponent,
     IRuleModalComponent,
+    LoadBalancerVlanModalComponent,
+    LoadBalancerSelfIpModalComponent,
+    LoadBalancerRouteModalComponent,
     HealthMonitorModalComponent,
-    NetworkInterfacesComponent,
-    LogicalInterfaceModalComponent,
-    SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
     PhysicalServerModalComponent,
-    CdomDetailComponent,
-    LdomDetailComponent,
-    LdomListComponent,
     NetworkTopologyComponent,
     TooltipComponent,
     IntraVrfRulesComponent,
-    ContractModalComponent
+    ContractModalComponent,
+    YesNoModalComponent,
+    FilterPipe,
+    ResolvePipe,
+    StaticRouteModalComponent,
+    SubnetsVlansComponent,
+    SubnetModalComponent,
+    VlanModalComponent,
+    TiersComponent,
+    TierModalComponent,
+    VmwareComponent,
+    VirtualMachineModalComponent,
+    VmwareDetailComponent,
+    VirtualDiskModalComponent,
+    NetworkAdapterModalComponent,
+    ZvmComponent,
+    ZosComponent,
+    ZosZvmRequestModalComponent,
+    ProfileModalComponent,
+    PolicyModalComponent,
+    ApplianceComponent,
+    ApplianceModalComponent,
+    NetworkPortsModalComponent,
+    ApplianceDetailComponent,
+    PhysicalServerDetailComponent,
+    TierSelectComponent,
+    WizardComponent,
+    ReplicationStatePanelComponent,
+    DatacenterSelectComponent,
   ],
   imports: [
+    ApiModule.forRoot(apiConfigFactory),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -132,13 +179,25 @@ import { ContractModalComponent } from './modals/contract-modal/contract-modal.c
       positionClass: 'toast-bottom-right',
       progressBar: true,
       closeButton: true,
-      preventDuplicates: true
+      preventDuplicates: true,
     }),
     NgxSmartModalModule.forRoot(),
-    D3Module
+    NgxPaginationModule,
+    D3Module,
+    NgSelectModule,
+    NgxChartsModule,
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}, 
-    NgxSmartModalService, CookieService, FormBuilder, PendingChangesGuard],
-  bootstrap: [AppComponent]
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpConfigInterceptor,
+      multi: true,
+    },
+    NgxSmartModalService,
+    CookieService,
+    FormBuilder,
+    PendingChangesGuard,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

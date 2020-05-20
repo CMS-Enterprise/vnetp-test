@@ -13,20 +13,20 @@ import { Job } from 'src/app/models/other/job';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
+  currentUserSubscription: Subscription;
 
   constructor(
     private automationApiService: AutomationApiService,
     private messageService: MessageService,
     private ngx: NgxSmartModalService,
     private auth: AuthService,
-    private hs: HelpersService
+    private hs: HelpersService,
   ) {
     this.activeJobs = [];
-    this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   loggedIn: boolean;
@@ -34,16 +34,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   currentUser: User;
   jobMessage: AppMessage;
 
-  jobPoller = setInterval(() => this.getJobs(), 5000);
-
   modalJob: Job;
 
   getMessageServiceSubscription() {
-    this.messageServiceSubscription = this.messageService
-      .listen()
-      .subscribe((m: AppMessage) => {
-        this.messageHandler(m);
-      });
+    this.messageServiceSubscription = this.messageService.listen().subscribe((m: AppMessage) => {
+      this.messageHandler(m);
+    });
   }
 
   private messageHandler(m: AppMessage) {
@@ -66,21 +62,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.automationApiService
-      .getJobs('?order_by=-created&or__status=running&or__status=pending')
-      .subscribe(data => {
-        const result = data as any;
-        this.activeJobs = result.results as Array<Job>;
-        this.updateModalJob();
-      });
+    this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(data => {
+      const result = data as any;
+      this.activeJobs = result.results as Array<Job>;
+      this.updateModalJob();
+    });
   }
 
   updateModalJob() {
-    if (
-      this.modalJob &&
-      this.modalJob.status !== 'failed' &&
-      this.modalJob.status !== 'successful'
-    ) {
+    if (this.modalJob && this.modalJob.status !== 'failed' && this.modalJob.status !== 'successful') {
       // Try to update the modal job from the activeJobs array.
       const updatedJob = this.activeJobs.find(j => j.id === this.modalJob.id);
 
@@ -107,14 +97,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
+    [this.currentUserSubscription, this.currentUserSubscription].forEach(sub => {
+      try {
+        if (sub) {
+          sub.unsubscribe();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
     if (this.messageServiceSubscription) {
       this.messageServiceSubscription.unsubscribe();
     }
   }
 
   ngOnInit() {
-    this.getJobs();
-    this.getMessageServiceSubscription();
+    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   ngOnDestroy() {

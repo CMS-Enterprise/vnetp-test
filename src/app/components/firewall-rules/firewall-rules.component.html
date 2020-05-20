@@ -1,136 +1,67 @@
 <ul class="nav nav-tabs">
-  <li class="nav-item" (click)="navIndex = 0">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
-      External <tooltip [message]="helpText.External"></tooltip>
-    </a>
+  <li class="nav-item" (click)="showExternal()">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 'External' }"> External <tooltip [message]="helpText.External"></tooltip> </a>
   </li>
-  <li class="nav-item" (click)="navIndex = 1">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Inter-VRF <tooltip [message]="helpText.InterVrf"></tooltip></a>
-  </li>
-  <li class="nav-item" (click)="navIndex = 2">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Intra-VRF <tooltip [message]="helpText.IntraVrf"></tooltip></a>
+  <li class="nav-item" (click)="showIntervrf()">
+    <a class="nav-link" [ngClass]="{ active: navIndex == 'Intervrf' }"> Intervrf <tooltip [message]="helpText.InterVrf"></tooltip></a>
   </li>
 </ul>
 
-<div *ngIf="navIndex == 0">
-  <h1 class="mt-3">External Firewall Rules</h1>
-  <!--TOOLTOIP: These rules are applied to traffic between VRF and External.-->
-
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      type="button"
-      class="btn btn-info btn-sm"
-      (click)="getVrfs()"
-      aria-label="Refresh Networks"
-    >
-      <fa name="refresh"></fa>
-      Refresh
-    </button>
-  </div>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Tier</th>
-        <th scope="col">Firewall Rules</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vrf of vrfs">
-        <td>
-          <a routerLink="/firewall-rules/external/edit/{{ vrf.id }}">{{
-            vrf.name
-          }}</a>
-        </td>
-        <td>
-          {{ getFirewallRulesCount(vrf, "external") }}
-        </td>
-      </tr>
-      <tr *ngIf="vrfs?.length === 0" class="text-center">
-        <td colspan="2">No VRFs</td>
-      </tr>
-    </tbody>
-  </table>
+<h4 class="mt-3">{{ navIndex }} Firewall Rules</h4>
+<div class="btn-toolbar mb-2 pull-right" role="toolbar">
+  <button type="button" class="btn btn-info btn-sm" (click)="getTiers()" aria-label="Refresh Networks">
+    <fa name="refresh"></fa>
+    Refresh
+  </button>
 </div>
 
-<div *ngIf="navIndex == 1">
-  <h1 class="mt-3">Inter-VRF Firewall Rules</h1>
-  <!--TOOLTIP: These rules are applied to traffic between VRFs-->
-
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      type="button"
-      class="btn btn-info btn-sm"
-      (click)="getVrfs()"
-      aria-label="Refresh Networks"
+<table class="table table-striped" aria-describedby="Firewall Rules table">
+  <thead>
+    <tr>
+      <th scope="col">Tier</th>
+      <th scope="col">Firewall Rules</th>
+      <th scope="col">State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="
+        let firewallRuleGroup of firewallRuleGroups
+          | filter: filterFirewallRuleGroup
+          | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
+      "
     >
-      <fa name="refresh"></fa>
-      Refresh
-    </button>
-  </div>
+      <td>
+        {{ getTierName(firewallRuleGroup.tierId) }}
+      </td>
+      <td>
+        <a routerLink="/firewall-rule-group/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge">{{ firewallRuleGroup.name }}</a>
+      </td>
+      <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+    </tr>
+    <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
+      <td colspan="3">No Tiers</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Tier</th>
-        <th scope="col">Firewall Rules</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vrf of vrfs">
-        <td>
-          <a routerLink="/firewall-rules/intervrf/edit/{{ vrf.id }}">{{
-            vrf.name
-          }}</a>
-        </td>
-        <td>
-          {{ getFirewallRulesCount(vrf, "intervrf") }}
-        </td>
-      </tr>
-      <tr *ngIf="vrfs?.length === 0" class="text-center">
-        <td colspan="2">No VRFs</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+  <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
+    Entities per page
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
 </div>
 
-<div *ngIf="navIndex == 2">
-  <h1 class="mt-3">Intra-VRF Firewall Rules</h1>
-  <!--These rules are applied to individual subnets within the VRF-->
-
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      type="button"
-      class="btn btn-info btn-sm"
-      (click)="getVrfs()"
-      aria-label="Refresh Networks"
-    >
-      <fa name="refresh"></fa>
-      Refresh
-    </button>
-  </div>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Tier</th>
-        <th scope="col">Contracts</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vrf of vrfs">
-        <td>
-          <a routerLink="/firewall-rules/intravrf/edit/{{ vrf.id }}">{{
-            vrf.name
-          }}</a>
-        </td>
-        <td>
-          {{ getFirewallRulesCount(vrf, "intravrf") }}
-        </td>
-      </tr>
-      <tr *ngIf="vrfs?.length === 0" class="text-center">
-        <td colspan="4">No VRFs</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="pull-right">
+  <app-import-export
+    [exportObject]="firewallRuleGroups"
+    exportFileName="firewallRuleGroups"
+    [disableJson]="false"
+    (import)="importFirewallRuleGroupsConfig($event)"
+  >
+  </app-import-export>
 </div>
+<app-yes-no-modal></app-yes-no-modal>

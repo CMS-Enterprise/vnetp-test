@@ -2,7 +2,6 @@ import { CanDeactivate } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
 export interface ComponentCanDeactivate {
   canDeactivate: () => boolean | Observable<boolean>;
 }
@@ -10,7 +9,6 @@ export interface ComponentCanDeactivate {
 @Injectable()
 export class PendingChangesGuard implements CanDeactivate<ComponentCanDeactivate> {
   canDeactivate(component: ComponentCanDeactivate): boolean | Observable<boolean> {
-    return component.canDeactivate() ?
-      true : confirm('WARNING: Unsaved changes will be lost.');
+    return component.canDeactivate() ? true : confirm('WARNING: Unsaved changes will be lost.');
   }
 }

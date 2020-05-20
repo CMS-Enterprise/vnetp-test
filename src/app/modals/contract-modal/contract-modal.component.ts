@@ -5,10 +5,11 @@ import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { ContractModalHelpText } from 'src/app/helptext/help-text-networking';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-contract-modal',
-  templateUrl: './contract-modal.component.html'
+  templateUrl: './contract-modal.component.html',
 })
 export class ContractModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -17,11 +18,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   filterEntryFormSubmitted: boolean;
   filterEntries: Array<FilterEntry>;
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    public helpText: ContractModalHelpText
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, public helpText: ContractModalHelpText) {}
 
   save() {
     this.submitted = true;
@@ -53,12 +50,8 @@ export class ContractModalComponent implements OnInit, OnDestroy {
     return this.filterEntryForm.controls;
   }
 
-  private setFormValidators() {}
-
   getData() {
-    const contract = Object.assign({}, this.ngx.getModalData(
-      'contractModal'
-    ) as Contract);
+    const contract = Object.assign({}, this.ngx.getModalData('contractModal') as Contract);
 
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.Name);
@@ -77,23 +70,16 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
     });
-
   }
 
   private buildFilterEntryForm() {
     this.filterEntryForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       protocol: ['', Validators.required],
-      sourcePorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange])
-      ],
-      destinationPorts: [
-        '',
-        Validators.compose([Validators.required, ValidatePortRange])
-      ]
+      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
     });
   }
 
@@ -107,7 +93,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
       this.filterEntryForm.value.name,
       this.filterEntryForm.value.protocol,
       this.filterEntryForm.value.sourcePorts,
-      this.filterEntryForm.value.destinationPorts
+      this.filterEntryForm.value.destinationPorts,
     );
 
     this.filterEntries.push(newFilterEntry);
@@ -125,7 +111,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
 
   private unsubAll() {}
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
     this.filterEntryFormSubmitted = false;
@@ -136,7 +122,6 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
     this.buildFilterEntryForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {

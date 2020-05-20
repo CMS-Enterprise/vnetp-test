@@ -1,26 +1,50 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VirtualServer } from 'src/app/models/loadbalancer/virtual-server';
-import { ValidateIpv4CidrAddress, ValidateIpv4Any } from 'src/app/validators/network-form-validators';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
-import { Pool } from 'src/app/models/loadbalancer/pool';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
+import {
+  LoadBalancerPool,
+  LoadBalancerIrule,
+  LoadBalancerVirtualServer,
+  V1LoadBalancerVirtualServersService,
+  LoadBalancerProfile,
+  V1TiersService,
+  LoadBalancerPolicy,
+} from 'api_client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { IpAddressCidrValidator, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-virtual-server-modal',
-  templateUrl: './virtual-server-modal.component.html'
+  templateUrl: './virtual-server-modal.component.html',
 })
 export class VirtualServerModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
-  pools: Array<Pool>;
-  availableIRules: Array<string>;
-  selectedIRules: Array<string>;
+  pools: LoadBalancerPool[];
+  TierId: string;
+  VirtualServer: LoadBalancerVirtualServer;
+  ModalMode: ModalMode;
+  VirtualServerId: string;
+  Pools: LoadBalancerPool[];
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder,
-    public helpText: VirtualServerModalHelpText) {
-  }
+  availableIRules: LoadBalancerIrule[];
+  selectedIRules: LoadBalancerIrule[];
+  availableProfiles: LoadBalancerProfile[];
+  selectedProfiles: LoadBalancerProfile[];
+  availablePolicies: LoadBalancerPolicy[];
+  selectedPolicies: LoadBalancerPolicy[];
+
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private tierService: V1TiersService,
+    private virtualServerService: V1LoadBalancerVirtualServersService,
+    public helpText: VirtualServerModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -28,20 +52,43 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const virtualServer = new VirtualServer();
-    virtualServer.Name = this.form.value.name;
-    virtualServer.Type = this.form.value.type;
-    virtualServer.SourceAddress = this.form.value.sourceAddress;
-    virtualServer.DestinationAddress = this.form.value.destinationAddress;
-    virtualServer.ServicePort = this.form.value.servicePort;
-    virtualServer.Pool = this.form.value.pool;
-    virtualServer.IRules = Object.assign([], this.selectedIRules);
+    const virtualServer = {} as LoadBalancerVirtualServer;
+    virtualServer.name = this.form.value.name;
+    virtualServer.type = this.form.value.type;
+    virtualServer.sourceIpAddress = this.form.value.sourceAddress;
+    virtualServer.destinationIpAddress = this.form.value.destinationAddress;
+    virtualServer.servicePort = this.form.value.servicePort;
+    virtualServer.defaultPoolId = this.form.value.pool;
+    virtualServer.sourceAddressTranslation = this.form.value.sourceAddressTranslation;
 
-    const dto = new VirtualServerModalDto();
-    dto.VirtualServer = virtualServer;
+    if (this.ModalMode === ModalMode.Create) {
+      virtualServer.tierId = this.TierId;
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersPost({
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersIdPut({
+          id: this.VirtualServerId,
+          loadBalancerVirtualServer: virtualServer,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+  }
 
-    this.ngx.resetModalData('virtualServerModal');
-    this.ngx.setModalData(Object.assign({}, dto), 'virtualServerModal');
+  private closeModal() {
     this.ngx.close('virtualServerModal');
     this.reset();
   }
@@ -51,123 +98,211 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
-  private setFormValidators() {
+  addIRule() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdPost({
+        virtualServerId: this.VirtualServerId,
+        iruleId: this.f.selectedIRule.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfilesPolicies();
+        this.f.selectedIRule.setValue('');
+      });
+  }
+
+  removeIRule(irule: LoadBalancerIrule) {
+    const modalDto = new YesNoModalDto('Remove IRule from Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
+            virtualServerId: this.VirtualServerId,
+            iruleId: irule.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
+
+  addProfile() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdPost({
+        virtualServerId: this.VirtualServerId,
+        profileId: this.f.selectedProfile.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfilesPolicies();
+        this.f.selectedProfile.setValue('');
+      });
+  }
+
+  removeProfile(profile: LoadBalancerProfile) {
+    const modalDto = new YesNoModalDto('Remove Profile from Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete({
+            virtualServerId: this.VirtualServerId,
+            profileId: profile.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
+
+  addPolicy() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost({
+        virtualServerId: this.VirtualServerId,
+        policyId: this.f.selectedPolicy.value,
+      })
+      .subscribe(data => {
+        this.getVirtualServerIRulesProfilesPolicies();
+        this.f.selectedPolicy.setValue('');
+      });
+  }
+
+  removePolicy(policy: LoadBalancerPolicy) {
+    const modalDto = new YesNoModalDto('Remove Policy from Virtual Server', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.virtualServerService
+          .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
+            virtualServerId: this.VirtualServerId,
+            policyId: policy.id,
+          })
+          .subscribe(result => {
+            this.getVirtualServerIRulesProfilesPolicies();
+          });
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   getData() {
-    const dto =  Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
+    const dto = Object.assign({}, this.ngx.getModalData('virtualServerModal') as VirtualServerModalDto);
 
     this.pools = dto.Pools;
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.VirtualServerId = dto.VirtualServer.id;
+      } else {
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
+      }
+    }
 
     const virtualServer = dto.VirtualServer;
 
     if (virtualServer !== undefined) {
-      this.form.controls.name.setValue(virtualServer.Name);
-      this.form.controls.type.setValue(virtualServer.Type);
-      this.form.controls.sourceAddress.setValue(virtualServer.SourceAddress);
-      this.form.controls.destinationAddress.setValue(virtualServer.DestinationAddress);
-      this.form.controls.servicePort.setValue(virtualServer.ServicePort);
-      this.form.controls.pool.setValue(virtualServer.Pool);
+      this.form.controls.name.setValue(virtualServer.name);
+      this.form.controls.name.disable();
+      this.form.controls.type.setValue(virtualServer.type);
+      this.form.controls.type.disable();
+      this.form.controls.sourceAddress.setValue(virtualServer.sourceIpAddress);
+      this.form.controls.destinationAddress.setValue(virtualServer.destinationIpAddress);
+      this.form.controls.servicePort.setValue(virtualServer.servicePort);
+      this.form.controls.sourceAddressTranslation.setValue(virtualServer.sourceAddressTranslation);
+      this.form.controls.pool.setValue(virtualServer.defaultPoolId);
 
-      if (dto.VirtualServer.IRules) {
-        this.selectedIRules = dto.VirtualServer.IRules;
-        } else {
-          this.selectedIRules = new Array<string>();
-        }
-      }
-
-    this.getAvailableIRules(dto.IRules.map(i => i.Name));
+      this.getTierIRulesProfilesPolicies();
+      this.getVirtualServerIRulesProfilesPolicies();
+    }
     this.ngx.resetModalData('virtualServerModal');
   }
 
-  private getAvailableIRules(irules: Array<string>) {
-    if (!this.selectedIRules) {
-      this.selectedIRules = new Array<string>();
-    }
-
-    if (!this.availableIRules) {
-      this.availableIRules = new Array<string>();
-    }
-
-    irules.forEach( irule => {
-      if (!this.selectedIRules.includes(irule)) {
-        this.availableIRules.push(irule);
-      }
-    });
+  private getTierIRulesProfilesPolicies() {
+    this.tierService
+      .v1TiersIdGet({
+        id: this.TierId,
+        join: 'loadBalancerIrules,loadBalancerProfiles,loadBalancerPolicies',
+      })
+      .subscribe(data => {
+        this.availableIRules = data.loadBalancerIrules;
+        this.availableProfiles = data.loadBalancerProfiles;
+        this.availablePolicies = data.loadBalancerPolicies;
+      });
   }
 
-  selectIRule() {
-    const irule = this.form.value.selectedIRule;
-
-    if (!irule) {
-      return;
-    }
-
-    this.selectedIRules.push(irule);
-    const availableIndex = this.availableIRules.indexOf(irule);
-    if (availableIndex > -1) {
-      this.availableIRules.splice(availableIndex, 1);
-    }
-    this.form.controls.selectedIRule.setValue(null);
-    this.form.controls.selectedIRule.updateValueAndValidity();
-  }
-
-  unselectIRule(irule) {
-    this.availableIRules.push(irule);
-    const selectedIndex = this.selectedIRules.indexOf(irule);
-    if (selectedIndex > -1) {
-      this.selectedIRules.splice(selectedIndex, 1);
-    }
-  }
-
-  moveIRule(value: number, rule) {
-    const ruleIndex = this.selectedIRules.indexOf(rule);
-
-    // If the rule isn't in the array, is at the start of the array and requested to move up
-    // or if the rule is at the end of the array, return.
-    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.selectedIRules.length) { return; }
-
-    const nextRule = this.selectedIRules[ruleIndex + value];
-
-    // If the next rule doesn't exist, return.
-    if (nextRule === null) { return; }
-
-    const nextRuleIndex = this.selectedIRules.indexOf(nextRule);
-
-    [this.selectedIRules[ruleIndex], this.selectedIRules[nextRuleIndex]] =
-    [this.selectedIRules[nextRuleIndex], this.selectedIRules[ruleIndex]];
+  private getVirtualServerIRulesProfilesPolicies() {
+    this.virtualServerService
+      .v1LoadBalancerVirtualServersIdGet({
+        id: this.VirtualServerId,
+        join: 'irules,profiles,policies',
+      })
+      .subscribe(data => {
+        this.selectedIRules = data.irules;
+        this.selectedProfiles = data.profiles;
+        this.selectedPolicies = data.policies;
+      });
   }
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       type: ['', Validators.required],
-      sourceAddress: ['', Validators.compose([ValidateIpv4Any])], // TODO: Optional in F5, should it be optional here?
-      destinationAddress: ['', Validators.compose([Validators.required, ValidateIpv4Any])],
+      sourceAddress: ['', Validators.compose([IpAddressCidrValidator])],
+      sourceAddressTranslation: [''],
+      destinationAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       pool: ['', Validators.required],
-      selectedIRule: ['']
+      selectedIRule: [''],
+      selectedProfile: [''],
+      selectedPolicy: [''],
     });
 
-    this.availableIRules = new Array<string>();
-    this.selectedIRules = new Array<string>();
+    this.availableIRules = new Array<LoadBalancerIrule>();
+    this.selectedIRules = new Array<LoadBalancerIrule>();
+    this.availableProfiles = new Array<LoadBalancerProfile>();
+    this.selectedProfiles = new Array<LoadBalancerProfile>();
+    this.availablePolicies = new Array<LoadBalancerPolicy>();
+    this.selectedPolicies = new Array<LoadBalancerPolicy>();
   }
 
-  private unsubAll() {
-  }
+  private unsubAll() {}
 
-  private reset() {
+  public reset() {
     this.unsubAll();
     this.submitted = false;
+    this.VirtualServerId = null;
     this.buildForm();
   }
 
   ngOnInit() {
     this.buildForm();
-    this.setFormValidators();
   }
 
   ngOnDestroy() {

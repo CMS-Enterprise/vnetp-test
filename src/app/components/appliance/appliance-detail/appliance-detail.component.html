@@ -1,0 +1,95 @@
+<div class="clearfix">
+  <a routerLink="/appliance" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
+    <fa name="arrow-left"></fa>
+    Back
+  </a>
+
+  <h1>Appliance: {{ Appliance?.name }}</h1>
+
+  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
+    <button *ngIf="Appliance?.deletedAt" class="btn btn-sm btn-success" (click)="restoreAppliance(Appliance)">
+      <fa name="undo"></fa>
+      Restore Appliance
+    </button>
+    <button class="btn btn-sm btn-danger" (click)="deleteAppliance(Appliance)">
+      <fa name="trash"></fa>
+      Delete Appliance
+    </button>
+  </div>
+</div>
+
+<div *ngIf="Appliance">
+  <p *ngIf="Appliance.description"><strong>Description:</strong> {{ Appliance.description }}</p>
+  <p><strong>Rack Units:</strong> {{ Appliance.rackUnits }}</p>
+  <p><strong>Serial Number:</strong> {{ Appliance.serialNumber }}</p>
+  <p>
+    <strong>Delivery Date:</strong>
+    {{ Appliance.deliveryDate | date: 'shortDate' }}
+  </p>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-md-4">
+      <p><strong>Local Storage Type:</strong> {{ Appliance.localStorageType }}</p>
+      <p>
+        <strong>Local Storage Required?</strong>
+        {{ Appliance.localStorageRequired }}
+      </p>
+      <p>
+        <strong>Local Storage Size:</strong>
+        {{ convertBytesToGb(Appliance.localStorageSize) }} GB
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p><strong>SAN Type:</strong> {{ Appliance.sanType }}</p>
+      <p><strong>SAN Required?</strong> {{ Appliance.sanRequired }}</p>
+      <p>
+        <strong>SAN Storage Size:</strong>
+        {{ convertBytesToGb(Appliance.sanStorageSize) }} GB
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p>
+        <strong>Power Supply Voltage:</strong>
+        {{ Appliance.powerSupplyVoltage }}
+      </p>
+      <p>
+        <strong>Power Supply Wattage:</strong>
+        {{ Appliance.powerSupplyWattage }}
+      </p>
+      <p>
+        <strong>Power Supply Connection Type:</strong>
+        {{ Appliance.powerSupplyConnectionType }}
+      </p>
+      <p><strong>Power Supply Count:</strong> {{ Appliance.powerSupplyCount }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="p-3">
+  <h3>Network Ports</h3>
+  <table class="table table-striped" aria-describedby="Network Ports table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of networkPorts">
+        <td>
+          <span>{{ n.name }}</span>
+        </td>
+        <td>
+          <!-- actions? -->
+        </td>
+      </tr>
+      <tr *ngIf="!networkPorts?.length" class="text-center">
+        <td colspan="2">No Network Ports</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-yes-no-modal></app-yes-no-modal>

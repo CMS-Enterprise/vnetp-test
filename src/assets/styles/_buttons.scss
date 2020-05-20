@@ -3,6 +3,18 @@
   margin-right: 5px;
 }
 
+.btn-primary {
+  color: $white;
+  background-color: $primary-main;
+  border-color: $primary-main;
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $primary-dark;
+    border-color: $primary-dark;
+  }
+}
+
 .btn-info {
   color: $white;
   background-color: $primary-medium;
@@ -17,18 +29,18 @@
 
 .btn-success {
   color: $white;
-  background-color: $success;
-  border-color: $success;
+  background-color: $success--dark;
+  border-color: $success--dark;
   &:hover,
   &:focus,
   &:active {
-    background-color: darken($success, 10%);
-    border-color: darken($success, 10%);
+    background-color: $success;
+    border-color: $success;
   }
 }
 
 .btn-warning {
-  color: $gray-main;
+  color: $gray-darker;
   background-color: $warning;
   border-color: $warning;
   &:hover,

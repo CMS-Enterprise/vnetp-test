@@ -6,23 +6,25 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ContractModalComponent } from './contract-modal.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { ExpectedConditions } from 'protractor';
+import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
   let fixture: ComponentFixture<ContractModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
-      declarations: [ ContractModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
+      declarations: [ContractModalComponent, TooltipComponent],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(ContractModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(ContractModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -37,7 +39,7 @@ describe('ContractModalComponent', () => {
 
   // Initial Form State
 
-  it ('form should not be valid', () => {
+  it('form should not be valid', () => {
     expect(component.form.valid).toBeFalsy();
   });
 
@@ -63,12 +65,12 @@ describe('ContractModalComponent', () => {
     expect(protocol.valid).toBeFalsy();
   });
 
-  it ('source ports should be required', () => {
+  it('source ports should be required', () => {
     const sourcePorts = component.filterEntryForm.controls.sourcePorts;
     expect(sourcePorts.valid).toBeFalsy();
   });
 
-  it ('destination ports should be required', () => {
+  it('destination ports should be required', () => {
     const destinationPorts = component.filterEntryForm.controls.destinationPorts;
     expect(destinationPorts.valid).toBeFalsy();
   });

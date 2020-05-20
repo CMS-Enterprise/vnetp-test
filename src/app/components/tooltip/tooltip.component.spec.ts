@@ -9,10 +9,9 @@ describe('TooltipComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule],
-      declarations: [ TooltipComponent ]
-    })
-    .compileComponents();
+      imports: [AngularFontAwesomeModule],
+      declarations: [TooltipComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

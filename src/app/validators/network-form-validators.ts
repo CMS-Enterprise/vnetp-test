@@ -1,139 +1,165 @@
 import { FormControl } from '@angular/forms';
+import * as validator from 'validator';
 
+export function IpAddressAnyValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
 
-/** Validates an IPv4 address in either address (x.x.x.x) or
- *  CIDR (x.x.x.x/y) format, also accepts 'any'.
- */
-export function ValidateIpv4Any(control: FormControl) {
-    if (!control || !control.value) {
-        return null;
-    }
+  const ipArray = control.value.split('/');
 
-    if (control.value === 'any') {
-        return null;
-    }
+  let isValid = false;
 
-    const ipArray = control.value.split('/');
-    if (ipArray.length < 1 || ipArray.length > 2) {
-        return { validIpv4Any: true };
-    }
+  if (ipArray.length === 1) {
+    isValid = ValidateIpAddress(ipArray[0]);
+  } else if (ipArray.length === 2) {
+    isValid = ValidateCidrAddress(ipArray);
+  }
 
-    let result;
-    if (ipArray.length === 1) {
-        result = ValidateIpv4Address(control);
-    } else if (ipArray.length === 2) {
-        result = ValidateIpv4CidrAddress(control);
-    }
-
-    if (!result) {
-        return null;
-    } else if (result) {
-        return { validIpv4Any: true };
-    }
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidIpAny: true };
+  }
 }
 
-export function ValidateIpv4CidrAddress(control: FormControl) {
-    if (!control || !control.value) {
-       return null;
-    }
-    const valueArray = control.value.split('/');
-
-    if (valueArray.length !== 2) {
-        return {validIpv4Address: true };
-    }
-
-    if (!valueArray[1].length) {
-        return {validIpv4Address: true };
-    }
-
-    if (!isValidIpAddress(valueArray[0]) || !isValidNetMask(Number(valueArray[1]))) {
-        return { validIpv4Address: true };
-    }
+export function IpAddressCidrValidator(control: FormControl) {
+  if (!control || !control.value) {
     return null;
+  }
+  const valueArray = control.value.split('/');
+
+  let isValid = false;
+
+  if (valueArray.length === 2) {
+    isValid = ValidateCidrAddress(valueArray);
+  }
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidIpCidr: true };
+  }
 }
 
-export function ValidateIpv4Address(control: FormControl) {
-    if (!control || !control.value) {
-        return null;
-    }
-    const valueArray = control.value.split('/');
-
-    if (valueArray.length !== 1) {
-        return {validIpv4Address: true };
-    } else if
-         (!isValidIpAddress(valueArray[0])) {
-            return { validIpv4Address : true };
-        }
+export function IpAddressIpValidator(control: FormControl) {
+  if (!control || !control.value) {
     return null;
+  }
+  const valueArray = control.value.split('/');
+
+  let isValid = false;
+
+  if (valueArray.length === 1) {
+    isValid = ValidateIpAddress(control.value);
+  }
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidIpAddress: true };
+  }
+}
+
+export function FqdnValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const isValid = validator.isFQDN(control.value);
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidFqdn: true };
+  }
+}
+
+export function MacAddressValidator(control: FormControl) {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const isValid = validator.isMACAddress(control.value);
+
+  if (isValid) {
+    return null;
+  } else if (!isValid) {
+    return { invalidMacAddress: true };
+  }
 }
 
 export function ValidatePortRange(control: FormControl) {
-    if (!control || !control.value) {
-        return null;
-    }
-
-    if (control.value === 'any') {
-        return null;
-    }
-
-    const value = control.value;
-    const valueArray = value.split('-');
-
-    if (valueArray.length < 1 || valueArray.length > 2) {
-        return { validPortNumber: true };
-    }
-
-    if (valueArray.length === 1) {
-        // Single Number
-        if (!isValidPortNumber(Number(valueArray[0]))) {
-            return { validPortNumber : true };
-        }
-
-    } else if (valueArray.length === 2) {
-        // Range
-        const startPort = Number(valueArray[0]);
-        const endPort = Number(valueArray[1]);
-
-        if (isNaN(startPort) || isNaN(endPort)) {
-            return { validPortNumber: true };
-        }
-
-        if (startPort > endPort || startPort === endPort) {
-            return { validPortRange: true };
-        }
-
-        if (!isValidPortNumber(startPort) ||
-        !isValidPortNumber(endPort)) {
-            return { validPortNumber: true };
-        }
-    }
+  if (!control || !control.value) {
     return null;
+  }
+
+  if (control.value === 'any') {
+    return null;
+  }
+
+  const value = control.value;
+  const valueArray = value.split('-');
+
+  if (valueArray.length < 1 || valueArray.length > 2) {
+    return { validPortNumber: true };
+  }
+
+  if (valueArray.length === 1) {
+    // Single Number
+    if (!isValidPortNumber(Number(valueArray[0]))) {
+      return { validPortNumber: true };
+    }
+  } else if (valueArray.length === 2) {
+    // Range
+    const startPort = Number(valueArray[0]);
+    const endPort = Number(valueArray[1]);
+
+    if (isNaN(startPort) || isNaN(endPort)) {
+      return { validPortNumber: true };
+    }
+
+    if (startPort > endPort || startPort === endPort) {
+      return { validPortRange: true };
+    }
+
+    if (!isValidPortNumber(startPort) || !isValidPortNumber(endPort)) {
+      return { validPortNumber: true };
+    }
+  }
+  return null;
 }
 
 function isValidPortNumber(portNumber: number): boolean {
-   return (!isNaN(portNumber) && portNumber > 0 && portNumber <= 65535);
+  return !isNaN(portNumber) && portNumber > 0 && portNumber <= 65535;
 }
 
-function isValidIpAddress(ipAddress: string): boolean {
-    const ipAddressArray = ipAddress.split('.');
-
-    if (ipAddressArray.length !== 4) {
-        return false;
-    }
-
-    for (const o of ipAddressArray) {
-        if (!o || o === '') {
-            return false;
-        }
-
-        const octet = Number(o);
-        if (isNaN(octet) || octet < 0 || octet > 255) {
-            return false;
-        }
-    }
-    return true;
+function ValidateIpAddress(ipAddress: string) {
+  return validator.isIP(ipAddress, 4) || validator.isIP(ipAddress, 6);
 }
 
-function isValidNetMask(netMask: number): boolean {
-    return (!isNaN(netMask) && netMask >= 0 && netMask <= 32);
+function ValidateCidrAddress(ipArray: string[]) {
+  // If IP portion after subnet mask is empty.
+  if (!ipArray[1] || !ipArray[1].length) {
+    return false;
+  }
+
+  if (validator.isIP(ipArray[0], 4)) {
+    return ValidateNetMask(Number(ipArray[1]), 4);
+  } else if (validator.isIP(ipArray[0], 6)) {
+    return ValidateNetMask(Number(ipArray[1]), 6);
+  }
+
+  return false;
+}
+
+function ValidateNetMask(netMask: number, ipVersion: number): boolean {
+  if (netMask < 0) {
+    return false;
+  }
+
+  if (ipVersion === 4) {
+    return netMask <= 32;
+  }
+  return netMask <= 128;
 }

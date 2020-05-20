@@ -1,8 +1,10 @@
-import { Subnet } from '../d42/subnet';
-import { NetworkObjectGroup } from './network-object-group';
+import { NetworkObjectGroup } from 'api_client';
+import { ModalMode } from '../other/modal-mode';
 
 export class NetworkObjectGroupModalDto {
-    Subnets: Array<Subnet>;
+  TierId: string;
 
-    NetworkObjectGroup: NetworkObjectGroup;
+  NetworkObjectGroup: NetworkObjectGroup;
+
+  ModalMode: ModalMode;
 }

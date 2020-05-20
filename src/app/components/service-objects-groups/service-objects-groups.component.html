@@ -1,172 +1,208 @@
+<app-tier-select></app-tier-select>
+
 <div>
-  <h1>Service Objects & Groups</h1>
-
-  <div class="mt-3 mb-3">
-    <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Vrf"></tooltip></span>
-      <select
-        name="vrf"
-        class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentVrf"
-        (ngModelChange)="getVrfObjects(currentVrf)"
-        [disabled]="dirty"
-      >
-        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
-      </select>
-
-      <div class="button-group btn-group-sm ml-auto">
-        <button
-          type="button"
-          class="btn btn-success mr-1"
-          aria-label="Save Network Objects/Groups"
-          (click)="saveAll()"
-          [hidden]="!dirty"
-        >
-          <fa name="save"></fa>
-          Save Changes to Current Tier (VRF)
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger mr-1"
-          aria-label="Clear Changes"
-          (click)="getVrfs()"
-          [hidden]="!dirty"
-        >
-          <fa name="trash"></fa>
-          Clear Changes to Current TIer (VRF)
-        </button>
-      </div>
-    </div>
-  </div>
+  <h4>Service Objects & Groups</h4>
 
   <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }"
-        >Service Object <tooltip [message]="helpText.ServiceObjects"></tooltip></a>
+    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Service Objects <tooltip [message]="helpText.ServiceObjects"></tooltip></a>
     </li>
-    <li class="nav-item" (click)="navIndex = 1">
+    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >Service Object Groups <tooltip [message]="helpText.ServiceObjectGroups"></tooltip></a >
+        >Service Object Groups <tooltip [message]="helpText.ServiceObjects"></tooltip
+      ></a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 2">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Service Object Group Relations </a>
     </li>
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 mt-3 pull-right" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createServiceObject()"
-        aria-label="Create Service Object"
-      >
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button type="button" class="btn btn-success" (click)="openServiceObjectModal('Create')" aria-label="Create Service Object">
         <fa name="plus"></fa>
         Create Service Object
       </button>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="Service Objects table">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
           <th scope="col">Source Port</th>
           <th scope="col">Destination Port</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let serviceObject of serviceObjects">
+        <tr *ngFor="let svcObj of serviceObjects | paginate: { itemsPerPage: perPage, currentPage: currentServiceObjectsPage }">
           <td>
-            <span>{{ serviceObject.Name }}</span>
+            <span>{{ svcObj?.name }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.Type }}</span>
+            <span>{{ svcObj?.protocol }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.SourcePort }}</span>
+            <span>{{ svcObj?.sourcePorts }}</span>
           </td>
           <td>
-            <span>{{ serviceObject.DestinationPort }}</span>
+            <span>{{ svcObj?.destinationPorts }}</span>
+          </td>
+          <td>
+            <span>{{ svcObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
+            <fa name="pencil" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal('Edit', svcObj)" aria-label="Edit Service Object">
+            </fa>
             <fa
-              name="pencil"
-              (click)="editServiceObject(serviceObject)"
-              aria-label="Edit Service Object"
+              name="undo"
+              *ngIf="svcObj?.deletedAt"
+              class="fg-success"
+              (click)="restoreServiceObject(svcObj)"
+              aria-label="Restore Service Object"
+            ></fa>
+            <fa
+              name="trash"
+              [ngClass]="{ 'fg-danger': svcObj.deletedAt }"
+              (click)="deleteServiceObject(svcObj)"
+              aria-label="Soft-Delete/Delete Service Object"
             >
             </fa>
-            <fa name="trash" (click)="deleteServiceObject(serviceObject)"> </fa>
           </td>
         </tr>
         <tr *ngIf="!serviceObjects?.length" class="text-center">
-          <td colspan="5">No Service Objects in this Tier (VRF)</td>
+          <td colspan="6">No Service Objects in this Tier</td>
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentServiceObjectsPage = $event"></pagination-controls>
   </div>
 
   <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 mt-3 pull-right" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createServiceObjectGroup()"
-        aria-label="Service Object Groups"
-      >
+    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal('Create')" aria-label="Service Object Groups">
         <fa name="plus"></fa>
         Create Service Object Group
       </button>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="Service Object Groups table">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
           <th scope="col">Members</th>
+          <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let serviceObjectGroup of serviceObjectGroups">
+        <tr
+          *ngFor="
+            let svcObjGroup of serviceObjectGroups
+              | paginate
+                : {
+                    itemsPerPage: perPage,
+                    currentPage: currentServiceObjectGroupsPage
+                  }
+          "
+        >
           <td>
-            <span>{{ serviceObjectGroup.Name }}</span>
+            <span>{{ svcObjGroup.name }}</span>
           </td>
           <td>
-            <span>{{ serviceObjectGroup.Type }}</span>
+            <span>{{ svcObjGroup.type }}</span>
           </td>
           <td>
-            <span>{{ serviceObjectGroup.ServiceObjects.length }}</span>
+            <span>{{ svcObjGroup.serviceObjects?.length }}</span>
+          </td>
+          <td>
+            <span>{{ svcObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
             <fa
               name="pencil"
-              (click)="editServiceObjectGroup(serviceObjectGroup)"
+              *ngIf="!svcObjGroup?.deletedAt"
+              (click)="openServiceObjectGroupModal('Edit', svcObjGroup)"
               aria-label="Edit Service Object Group"
-            >
-            </fa>
+            ></fa>
+            <fa
+              name="undo"
+              *ngIf="svcObjGroup?.deletedAt"
+              class="fg-success"
+              (click)="restoreServiceObjectGroup(svcObjGroup)"
+              aria-label="Restore Service Object Group"
+            ></fa>
             <fa
               name="trash"
-              (click)="deleteServiceObjectGroup(serviceObjectGroup)"
-            >
-            </fa>
+              [ngClass]="{ 'fg-danger': svcObjGroup.deletedAt }"
+              (click)="deleteServiceObjectGroup(svcObjGroup)"
+              aria-label="Soft-Delete/Delete Service Object Group"
+            ></fa>
           </td>
         </tr>
         <tr *ngIf="!serviceObjectGroups?.length" class="text-center">
-          <td colspan="4">No Service Object Groups in this Tier (VRF)</td>
+          <td colspan="5">No Service Object Groups in this Tier</td>
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="currentServiceObjectGroupsPage = $event"></pagination-controls>
+  </div>
+
+  <div *ngIf="navIndex == 2">
+    <table class="table table-striped mt-3" aria-describedby="Service Object Group Relations">
+      <thead>
+        <tr>
+          <th scope="col">Click the import CSV button to add service object group relations</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex !== 2" class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">
+        10
+      </button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">
+        20
+      </button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">
+        50
+      </button>
+    </div>
   </div>
 </div>
 
-<div class="pull-right" *ngIf="currentVrf">
+<div *ngIf="navIndex === 0" class="pull-right">
   <app-import-export
-    [exportObject]="exportServiceObjectConfig()"
-    exportFileName="serviceObjects-{{ currentVrf.name }}"
-    disableCsv="true"
-    (import)="importServiceObjectConfig($event)"
+    [exportObject]="serviceObjects"
+    exportFileName="serviceObjects-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importServiceObjectsConfig($event)"
+  ></app-import-export>
+</div>
+
+<div *ngIf="navIndex === 1" class="pull-right">
+  <app-import-export
+    [exportObject]="serviceObjectGroups"
+    exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importServiceObjectGroupsConfig($event)"
+  ></app-import-export>
+</div>
+
+<div *ngIf="navIndex === 2" class="pull-right">
+  <app-import-export
+    [disableExport]="true"
+    [disableJson]="false"
+    (import)="importServiceObjectGroupRelationsConfig($event)"
   ></app-import-export>
 </div>
 
 <app-service-object-group-modal></app-service-object-group-modal>
 <app-service-object-modal></app-service-object-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

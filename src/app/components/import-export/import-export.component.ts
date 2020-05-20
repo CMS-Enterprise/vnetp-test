@@ -4,10 +4,9 @@ import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-import-export',
-  templateUrl: './import-export.component.html'
+  templateUrl: './import-export.component.html',
 })
 export class ImportExportComponent implements OnInit {
-
   downloadHref: SafeUrl;
   currentDate: string;
   fileInput: any;
@@ -23,10 +22,9 @@ export class ImportExportComponent implements OnInit {
 
   @Output() import = new EventEmitter<any>();
 
-  constructor(private sanitizer: DomSanitizer, private papa: Papa) { }
+  constructor(private sanitizer: DomSanitizer, private papa: Papa) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   importFile(evt) {
     this.Import(evt, importObjects => this.importCallback(importObjects));
@@ -52,44 +50,49 @@ export class ImportExportComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
-        const importObject = reader.result.toString();
+      const importObject = reader.result.toString();
 
-        switch (importType) {
-            case 'csv':
-              if (this.disableCsv) { throw new Error('Invalid File Type'); }
-              const options = {
-                header: true,
-                complete: results => {
-                  importCallback(results.data);
-                }
-              };
-              this.papa.parse(importObject, options);
-              break;
-            case 'json':
-              if (this.disableJson) { throw new Error('Invalid File Type'); }
-              importCallback(JSON.parse(importObject));
-              break;
-            default:
-              throw new Error('Invalid File Type');
+      switch (importType) {
+        case 'csv':
+          if (this.disableCsv) {
+            throw new Error('Invalid File Type');
           }
+          const options = {
+            skipEmptyLines: true,
+            header: true,
+            complete: results => {
+              importCallback(results.data);
+            },
+          };
+          this.papa.parse(importObject, options);
+          break;
+        case 'json':
+          if (this.disableJson) {
+            throw new Error('Invalid File Type');
+          }
+          importCallback(JSON.parse(importObject));
+          break;
+        default:
+          throw new Error('Invalid File Type');
+      }
     };
   }
 
   private Export(exportObject: any, exportType: string): SafeUrl {
     switch (exportType) {
       case 'csv':
-        if (this.disableJson) { throw new Error('Invalid File Type'); }
+        if (this.disableJson) {
+          throw new Error('Invalid File Type');
+        }
         const exportCsv = this.papa.unparse(exportObject);
-        return this.sanitizer.bypassSecurityTrustUrl(
-          'data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv)
-        );
+        return this.sanitizer.bypassSecurityTrustUrl('data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv));
 
       case 'json':
-        if (this.disableJson) { throw new Error('Invalid File Type'); }
+        if (this.disableJson) {
+          throw new Error('Invalid File Type');
+        }
         const exportJson = JSON.stringify(exportObject);
-        return this.sanitizer.bypassSecurityTrustUrl(
-          'data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson)
-        );
+        return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
     }
   }
 }

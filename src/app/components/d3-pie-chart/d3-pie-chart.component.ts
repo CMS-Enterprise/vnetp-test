@@ -14,7 +14,7 @@ export interface InternalPieChartData extends PieChartData {
 
 @Component({
   selector: 'app-d3-pie-chart',
-  templateUrl: './d3-pie-chart.component.html'
+  templateUrl: './d3-pie-chart.component.html',
 })
 export class D3PieChartComponent implements OnInit, OnChanges {
   @Input() data: Array<PieChartData> = [];
@@ -54,7 +54,7 @@ export class D3PieChartComponent implements OnInit, OnChanges {
       return {
         ...element,
         innerRadius: this.radius - 40,
-        outerRadius: this.radius
+        outerRadius: this.radius,
       };
     });
 

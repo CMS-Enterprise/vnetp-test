@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg" *ngIf="currentUser">
-  <a class="navbar-brand" routerLink="dashboard" title="DRaaS">
+  <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa name="bolt"></fa>
   </a>
 
@@ -20,178 +20,117 @@
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdown"
+          id="networkingNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           >Networking
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="networks">Subnets</a>
+        <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
+          <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="static-routes">Routing</a>
+          <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="firewall-rules"
-            >Firewall Rules</a
-          >
+          <a class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="load-balancers"
-            >Load Balancers</a
-          >
+          <a class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="network-interfaces"
-            >Network Interfaces</a
-          >
+          <a class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
+
+          <a class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
         </div>
       </li>
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
           href="#"
-          id="navbarDropdown"
+          id="systemsNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           >Systems
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="solaris">Solaris Summary</a>
-          <a class="dropdown-item" routerLink="solaris/cdom/list">CDOM List</a>
-          <a class="dropdown-item" routerLink="solaris/ldom/list">LDOM List</a>
-          <a class="dropdown-item" routerLink="solaris/imagerepository"
-            >Solaris Image Respository</a
-          >
+        <div class="dropdown-menu" aria-labelledby="systemsNavbarDropdown">
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="physical-server"
-            >Physical Servers</a
-          >
-        </div>
-      </li>
-
-      <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          >IPAM
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="ipaddresses">IP Addresses</a>
+          <a class="dropdown-item" routerLink="physical-server" queryParamsHandling="merge">Physical Servers</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="network-objects-groups"
-            >Network Objects/Groups</a
-          >
-          <a class="dropdown-item" routerLink="service-objects-groups"
-            >Service Objects/Groups</a
-          >
+          <a class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
+          <a class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
+          <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
         </div>
       </li>
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs">
-          <fa
-            name="spinner fa-spin"
-            style="padding-right:5px;"
-            [hidden]="!activeJobs.length"
-          ></fa>
-          <span class="badge badge-success" [hidden]="!activeJobs.length">{{
-            activeJobs.length
-          }}</span>
+        <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
+          <fa name="spinner fa-spin" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa>
+          <span class="badge badge-success" [hidden]="!activeJobs.length"> {{ activeJobs.length }}</span>
           Jobs</a
         >
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" [routerLinkActive]="['active']" routerLink="wizard" queryParamsHandling="merge">
+          Wizard
+        </a>
       </li>
 
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdown"
+          id="userNavbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           {{ currentUser.Username }}
+          <span *ngIf="currentUser.CustomerName"> | {{ currentUser.CustomerName }}</span>
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a
-            class="dropdown-item"
-            target="_blank"
-            href="https://jiraent.cms.gov/"
-            >Ticketing System</a
-          >
-          <a class="dropdown-item">Documentation</a>
+        <div class="dropdown-menu dropdown-menu-reverse" aria-labelledby="userNavbarDropdown">
+          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
+          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()"
-            >Logout</a
-          >
+          <a class="dropdown-item" (click)="ngx.getModal('logoutModal').open()">Logout</a>
         </div>
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button class="btn btn-sm btn-danger" routerLink="deploy">
+        <button class="btn btn-sm btn-danger" routerLink="deploy" queryParamsHandling="merge">
           Deploy
         </button>
       </li>
-
-      <ul class="navbar-nav customer-name">
-        <li class="nav-item">
-          <a class="nav-link disabled">{{ currentUser.CustomerName }}</a>
-        </li>
-      </ul>
     </ul>
   </div>
 </nav>
 
-<ngx-smart-modal
-  #logoutModal
-  identifier="logoutModal"
-  customClass="'modal-content'"
->
+<!-- Logout -->
+<ngx-smart-modal #logoutModal identifier="logoutModal" customClass="'modal-content'">
   <div class="modal-header">
     <h4 class="modal-title">Logout?</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="logoutModal.close()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logoutModal.close()"></button>
   </div>
 
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-link"
-      data-dismiss="modal"
-      (click)="logoutModal.close()"
-    >
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
       Cancel
     </button>
 
-    <button
-      type="button"
-      class="btn btn-danger"
-      data-dismiss="modal"
-      (click)="logout()"
-    >
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
       Yes
     </button>
   </div>
 </ngx-smart-modal>
 
-<ngx-smart-modal
-  #jobLaunchModal
-  identifier="jobLaunchModal"
-  customClass="'modal-content'"
-  [dismissable]="false"
->
+<!-- Job Launch -->
+<ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" customClass="'modal-content'" [dismissable]="false">
   <div class="modal-header">
     <h4
       *ngIf="jobMessage?.Success"
@@ -206,13 +145,7 @@
     <h4 *ngIf="!jobMessage?.Success" class="modal-title text-danger">
       Job Launch Failed
     </h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="closeJobModal()"
-    ></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeJobModal()"></button>
   </div>
 
   <div class="modal-body text-center" *ngIf="!jobMessage?.Success">
@@ -232,9 +165,7 @@
           Status: {{ modalJob?.status }}
         </p>
       </div>
-      <div class="form-group col-md-6 text-center">
-        Elapsed Time: {{ modalJob?.elapsed }}s
-      </div>
+      <div class="form-group col-md-6 text-center">Elapsed Time: {{ modalJob?.elapsed }}s</div>
     </div>
   </div>
 
@@ -244,6 +175,7 @@
       class="btn btn-info"
       data-dismiss="modal"
       routerLink="/jobs"
+      queryParamsHandling="merge"
       (click)="closeJobModal()"
       *ngIf="jobMessage?.Success && modalJob?.status !== 'failed'"
     >
@@ -254,17 +186,13 @@
       class="btn btn-danger"
       *ngIf="!jobMessage?.Success || modalJob?.status === 'failed'"
       target="_blank"
+      rel="noopener noreferrer"
       href="https://jiraent.cms.gov/"
     >
       Open Ticket
     </a>
 
-    <button
-      type="button"
-      class="btn btn-success"
-      data-dismiss="modal"
-      (click)="closeJobModal()"
-    >
+    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="closeJobModal()">
       Close Dialog
     </button>
   </div>

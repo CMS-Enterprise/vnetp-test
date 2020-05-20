@@ -14,6 +14,12 @@ import { NetworkObjectGroupModalComponent } from './modals/network-object-group-
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from './modals/modal-mock';
+import { FilterPipe } from './pipes/filter.pipe';
+import { ToastrModule } from 'ngx-toastr';
+import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
+
+const ngx = new NgxSmartModalServiceStub();
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -23,21 +29,24 @@ describe('AppComponent', () => {
         AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
+        ToastrModule.forRoot({}),
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
       declarations: [
         AppComponent,
+        DatacenterSelectComponent,
         NavbarComponent,
         BreadcrumbComponent,
         NetworkObjectModalComponent,
         NetworkObjectGroupModalComponent,
         ServiceObjectModalComponent,
         ServiceObjectGroupModalComponent,
-        TooltipComponent
+        TooltipComponent,
+        FilterPipe,
       ],
-      providers: [CookieService, NgxSmartModalService, FormBuilder]
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

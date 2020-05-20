@@ -1,15 +1,15 @@
-export class SolarisImage  {
-    Id?: number;
+export class SolarisImage {
+  Id?: number;
 
-    Name: string;
+  Name: string;
 
-    Size: number;
+  Size: number;
 
-    Protocol: string;
+  Protocol: string;
 
-    Version: string;
+  Version: string;
 
-    Source: string;
+  Source: string;
 
-    ParentDevice: string;
+  ParentDevice: string;
 }

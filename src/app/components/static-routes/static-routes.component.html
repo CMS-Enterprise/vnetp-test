@@ -1,38 +1,33 @@
 <div>
   <div>
-    <h1>Static Routes</h1>
+    <h4>Static Routes</h4>
 
     <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-      <button
-        type="button"
-        class="btn btn-sm btn-info"
-        (click)="getVrfs()"
-        aria-label="Refresh Static Routes table"
-        >
+      <button type="button" class="btn btn-sm btn-info" (click)="getTiers()" aria-label="Refresh Static Routes">
         <fa name="refresh"></fa>
         Refresh
       </button>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" aria-describedby="Static Routes table">
       <thead>
         <tr>
-          <th scope="col">Tier (VRF)</th>
+          <th scope="col">Tier</th>
           <th scope="col">Static Routes</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vrf of vrfs">
+        <tr *ngFor="let tier of tiers">
           <td>
-            <a routerLink="/static-routes/edit/{{ vrf?.id }}">
-              {{ vrf.name }}
+            {{ tier.name }}
+          </td>
+          <td>
+            <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge">
+              {{ tier.name }}
             </a>
           </td>
-          <td>
-            {{ getStaticRoutesCount(vrf) }}
-          </td>
         </tr>
-        <tr *ngIf="!vrfs?.length" class="text-center">
+        <tr *ngIf="!tiers?.length" class="text-center">
           <td colspan="4">No Tiers</td>
         </tr>
       </tbody>

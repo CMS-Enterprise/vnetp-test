@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { Userpass } from 'src/app/models/user/userpass'
-import { Router, ActivatedRoute } from '@angular/router'
-import { AuthService } from 'src/app/services/auth.service'
-import { first } from 'rxjs/operators'
-import { ToastrService } from 'ngx-toastr'
+import { Component, OnInit } from '@angular/core';
+import { Userpass } from 'src/app/models/user/userpass';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { first } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -16,20 +16,19 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   loading: boolean;
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastr: ToastrService
-  ) {}
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard'
+    this.returnUrl = '/dashboard';
+
+    if (this.route.snapshot.queryParams.returnUrl) {
+      this.returnUrl = decodeURIComponent(this.route.snapshot.queryParams.returnUrl);
+    }
 
     if (!this.auth.currentUser) {
       this.auth.logout();
     } else {
-      this.router.navigate([this.returnUrl]);
+      this.router.navigateByUrl(this.returnUrl);
     }
   }
 
@@ -47,13 +46,13 @@ export class LoginComponent implements OnInit {
       .subscribe(
         data => {
           this.toastr.success(`Welcome ${this.userpass.Username}!`);
-          this.router.navigate([this.returnUrl]);
+          this.router.navigateByUrl(this.returnUrl);
         },
         error => {
           this.toastr.error('Invalid Username/Password');
-          this.errorMessage = 'Invalid Username/Password'
+          this.errorMessage = 'Invalid Username/Password';
           this.loading = false;
-        }
+        },
       );
   }
 }

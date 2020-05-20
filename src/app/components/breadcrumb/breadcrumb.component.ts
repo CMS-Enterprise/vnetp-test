@@ -7,23 +7,20 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+  styleUrls: ['./breadcrumb.component.scss'],
 })
-
 export class BreadcrumbComponent implements OnInit {
-
-
   public breadcrumbs: Breadcrumb[];
   currentUser: User;
 
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) {
-    this.auth.currentUser.subscribe(u => this.currentUser = u);
+    this.auth.currentUser.subscribe(u => (this.currentUser = u));
   }
 
   ngOnInit() {
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
-      url: '/dashboard'
+      url: '/dashboard',
     };
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
@@ -31,11 +28,8 @@ export class BreadcrumbComponent implements OnInit {
       const root: ActivatedRoute = this.route.root;
       this.breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
-
     });
-
   }
-
 
   private getBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
     const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
@@ -50,7 +44,7 @@ export class BreadcrumbComponent implements OnInit {
     // iterate over each child
     for (const child of children) {
       // verify primary route
-      if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length == 0) {
+      if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {
         continue;
       }
 
@@ -68,7 +62,7 @@ export class BreadcrumbComponent implements OnInit {
       // add breadcrumb
       const breadcrumb: Breadcrumb = {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
-        url
+        url,
       };
       breadcrumbs.push(breadcrumb);
 
@@ -81,6 +75,5 @@ export class BreadcrumbComponent implements OnInit {
 
 export interface Breadcrumb {
   label: string;
-    url: string;
+  url: string;
 }
-

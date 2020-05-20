@@ -1,47 +1,79 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { Subscription } from 'rxjs';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
+import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
+import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-service-object-group-modal',
-  templateUrl: './service-object-group-modal.component.html'
+  templateUrl: './service-object-group-modal.component.html',
 })
 export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   serviceObjects: Array<ServiceObject>;
+  TierId: string;
+  ModalMode: ModalMode;
+  tierServiceObjects: Array<ServiceObject>;
+  ServiceObjectGroupId: string;
+  selectedServiceObject: ServiceObject;
 
-  editServiceObjectIndex: number;
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private tierService: V1TiersService,
+    public helpText: ServiceObjectGroupModalHelpText,
+  ) {
+    this.serviceObjects = new Array<ServiceObject>();
+  }
 
-  serviceObjectModalSubscription: Subscription;
-
-  serviceObjectModalMode: ModalMode;
-
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private hs: HelpersService,
-              public helpText: ServiceObjectGroupModalHelpText) { this.serviceObjects = new Array<ServiceObject>(); }
-
-   save() {
+  save() {
     this.submitted = true;
 
     if (this.form.invalid) {
       return;
     }
 
-    const serviceObjectGroup = new ServiceObjectGroup();
+    const modalServiceObjectGroup = {} as ServiceObjectGroup;
 
-    serviceObjectGroup.Name = this.form.value.name;
-    serviceObjectGroup.Description = this.form.value.description;
-    serviceObjectGroup.Type = this.form.value.type;
-    serviceObjectGroup.ServiceObjects = Object.assign([], this.serviceObjects);
+    modalServiceObjectGroup.name = this.form.value.name;
+    modalServiceObjectGroup.description = this.form.value.description;
 
-    this.ngx.resetModalData('serviceObjectGroupModal');
-    this.ngx.setModalData(serviceObjectGroup, 'serviceObjectGroupModal');
+    if (this.ModalMode === ModalMode.Create) {
+      modalServiceObjectGroup.tierId = this.TierId;
+      modalServiceObjectGroup.type = this.form.value.type;
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsPost({
+          serviceObjectGroup: modalServiceObjectGroup,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    } else {
+      modalServiceObjectGroup.type = null;
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsIdPut({
+          id: this.ServiceObjectGroupId,
+          serviceObjectGroup: modalServiceObjectGroup,
+        })
+        .subscribe(
+          data => {
+            this.closeModal();
+          },
+          error => {},
+        );
+    }
+  }
+
+  private closeModal() {
     this.ngx.close('serviceObjectGroupModal');
     this.reset();
   }
@@ -51,89 +83,113 @@ export class ServiceObjectGroupModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  get f() { return this.form.controls; }
-
-  deleteServiceObject(serviceObject: ServiceObject) {
-    const index = this.serviceObjects.indexOf(serviceObject);
-    if ( index > -1) {
-      this.serviceObjects.splice(index, 1);
-    }
+  get f() {
+    return this.form.controls;
   }
 
-  saveServiceObject(serviceObject: ServiceObject) {
-    if (this.serviceObjectModalMode === ModalMode.Create) {
-      this.serviceObjects.push(serviceObject);
-    } else {
-      this.serviceObjects[this.editServiceObjectIndex] = serviceObject;
-    }
+  addServiceObject() {
+    this.serviceObjectGroupService
+      .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost({
+        serviceObjectGroupId: this.ServiceObjectGroupId,
+        serviceObjectId: this.selectedServiceObject.id,
+      })
+      .subscribe(data => {
+        this.selectedServiceObject = null;
+        this.getGroupServiceObjects();
+      });
   }
 
-  createServiceObject() {
-    this.subscribeToServiceObjectModal();
-    this.serviceObjectModalMode = ModalMode.Create;
-    this.ngx.getModal('serviceObjectModal').toggle();
-  }
+  removeServiceObject(serviceObject: ServiceObject) {
+    const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
 
-  editServiceObject(serviceObject: ServiceObject) {
-    this.subscribeToServiceObjectModal();
-    this.serviceObjectModalMode = ModalMode.Edit;
-    this.ngx.setModalData(this.hs.deepCopy(serviceObject), 'serviceObjectModal');
-    this.editServiceObjectIndex = this.serviceObjects.indexOf(serviceObject);
-    this.ngx.getModal('serviceObjectModal').toggle();
-  }
-
-  subscribeToServiceObjectModal() {
-    this.serviceObjectModalSubscription =
-    this.ngx.getModal('serviceObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as ServiceObject;
-      if (data !== undefined) {
-        this.saveServiceObject(data);
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        this.serviceObjectGroupService
+          .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
+            serviceObjectGroupId: this.ServiceObjectGroupId,
+            serviceObjectId: serviceObject.id,
+          })
+          .subscribe(() => {
+            this.getGroupServiceObjects();
+          });
       }
-      this.ngx.resetModalData('serviceObjectModal');
-      this.serviceObjectModalSubscription.unsubscribe();
+      yesNoModalSubscription.unsubscribe();
     });
   }
 
   getData() {
-    const serviceObjectGroup = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroup);
-    if (serviceObjectGroup !== undefined) {
-      this.form.controls.name.setValue(serviceObjectGroup.Name);
-      this.form.controls.description.setValue(serviceObjectGroup.Description);
-      this.form.controls.type.setValue(serviceObjectGroup.Type);
-      if (serviceObjectGroup.ServiceObjects) {
-        this.serviceObjects = serviceObjectGroup.ServiceObjects;
+    const dto = Object.assign({}, this.ngx.getModalData('serviceObjectGroupModal') as ServiceObjectGroupModalDto);
+
+    if (dto.TierId) {
+      this.TierId = dto.TierId;
+    }
+
+    if (!dto.ModalMode) {
+      throw Error('Modal Mode not Set.');
+    } else {
+      this.ModalMode = dto.ModalMode;
+
+      if (this.ModalMode === ModalMode.Edit) {
+        this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
       } else {
-        this.serviceObjects = new Array<ServiceObject>();
+        this.form.controls.name.enable();
+        this.form.controls.type.enable();
       }
+    }
+
+    const serviceObjectGroup = dto.ServiceObjectGroup;
+
+    if (serviceObjectGroup !== undefined) {
+      this.form.controls.name.setValue(serviceObjectGroup.name);
+      this.form.controls.name.disable();
+      this.form.controls.description.setValue(serviceObjectGroup.description);
+      this.form.controls.type.setValue(serviceObjectGroup.type);
+      this.form.controls.type.disable();
+
+      this.getGroupServiceObjects();
+      this.getTierServiceObjects();
     }
     this.ngx.resetModalData('serviceObjectGroupModal');
   }
 
-  private buildForm() {
-    this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
-      type: ['', Validators.required]
+  private getTierServiceObjects() {
+    this.tierService.v1TiersIdGet({ id: this.TierId, join: 'serviceObjects' }).subscribe(data => {
+      this.tierServiceObjects = data.serviceObjects;
     });
   }
 
-  private reset() {
+  private getGroupServiceObjects() {
+    this.serviceObjectGroupService
+      .v1NetworkSecurityServiceObjectGroupsIdGet({
+        id: this.ServiceObjectGroupId,
+        join: 'serviceObjects',
+      })
+      .subscribe(data => {
+        this.serviceObjects = data.serviceObjects;
+      });
+  }
+
+  private buildForm() {
+    this.form = this.formBuilder.group({
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      type: ['', Validators.required],
+    });
+  }
+
+  public reset() {
     this.submitted = false;
     this.serviceObjects = new Array<ServiceObject>();
     this.buildForm();
-  }
-
-  private unsubAll() {
-    if (this.serviceObjectModalSubscription) {
-      this.serviceObjectModalSubscription.unsubscribe();
-    }
   }
 
   ngOnInit() {
     this.buildForm();
   }
 
-  ngOnDestroy() {
-    this.unsubAll();
-  }
+  ngOnDestroy() {}
 }

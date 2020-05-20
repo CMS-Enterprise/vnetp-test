@@ -3,10 +3,7 @@
 
   <div class="card mt-3 mb-5">
     <div class="row p-3">
-      <div
-        *ngFor="let service of status?.service_status"
-        class="col-md-4 status-item"
-      >
+      <div *ngFor="let service of status" class="col-md-4 status-item">
         <span>
           {{ service.name }}
         </span>
@@ -15,106 +12,96 @@
     </div>
   </div>
 
-  <h2>Customer Status</h2>
-
-  <div class="card mt-3 mb-5">
-    <div class="row p-3">
-      <div
-        *ngFor="let customer of status?.customer_status"
-        class="col-md-4 status-item status-item--large"
-      >
-        <span>
-          {{ customer.name }}
-        </span>
-        <div class="status-light" [ngClass]="customer.status"></div>
-      </div>
-    </div>
-  </div>
-
   <h2>Job Status Today</h2>
   <div class="row p-3">
-    <div class="chart-wrap col-md-8">
-      <app-d3-pie-chart
-        [data]="pieChartData"
-        *ngIf="pieChartData"
-      ></app-d3-pie-chart>
+    <div class="chart-wrap col-md-6">
+      <app-d3-pie-chart [data]="pieChartData" *ngIf="pieChartData"></app-d3-pie-chart>
       <div class="legend">
         <p *ngIf="successfulJobs">
           <span class="legend-color success"></span>
           <span class="legend-label">Successful Jobs</span>
         </p>
-        <span class="legend-subtitle" *ngIf="successfulJobs"
-          >Total: {{ successfulJobs }}</span
-        >
+        <span class="legend-subtitle" *ngIf="successfulJobs">Total: {{ successfulJobs }}</span>
 
         <p *ngIf="runningJobs">
           <span class="legend-color warning"></span>
           <span class="legend-label">Running Jobs</span>
         </p>
-        <span class="legend-subtitle" *ngIf="runningJobs"
-          >Total: {{ runningJobs }}</span
-        >
+        <span class="legend-subtitle" *ngIf="runningJobs">Total: {{ runningJobs }}</span>
 
         <p *ngIf="failedJobs">
           <span class="legend-color danger"></span>
           <span class="legend-label">Failed Jobs</span>
         </p>
-        <span class="legend-subtitle" *ngIf="failedJobs"
-          >Total: {{ failedJobs }}</span
-        >
+        <span class="legend-subtitle" *ngIf="failedJobs">Total: {{ failedJobs }}</span>
 
         <p *ngIf="pendingJobs">
           <span class="legend-color info"></span>
           <span class="legend-label">Pending Jobs</span>
         </p>
-        <span class="legend-subtitle" *ngIf="pendingJobs"
-          >Total: {{ pendingJobs }}</span
-        >
+        <span class="legend-subtitle" *ngIf="pendingJobs">Total: {{ pendingJobs }}</span>
 
         <p *ngIf="cancelledJobs">
           <span class="legend-color medium"></span>
           <span class="legend-label">Cancelled Jobs</span>
         </p>
-        <span class="legend-subtitle" *ngIf="cancelledJobs"
-          >Total: {{ cancelledJobs }}</span
-        >
+        <span class="legend-subtitle" *ngIf="cancelledJobs">Total: {{ cancelledJobs }}</span>
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-header text-center">
-          <h4 class="mb-0">Environment</h4>
+          <h4 class="mb-0">Overall Environment</h4>
         </div>
 
         <div class="p-3">
           <ul class="dash-card">
             <li>
-              <span>Networks</span>
-              <span class="inline-block ml-auto">
-                {{ subnets.total_count || 0 }}
-              </span>
-              <a routerLink="/networks">
+              <a>
+                <span>
+                  Datacenters
+                  <tooltip [message]="helpText.Datacenters"></tooltip>
+                </span>
+                <span class="inline-block ml-auto">
+                  {{ datacenters || 0 }}
+                </span>
+                <fa name="chevron-right" style="visibility: hidden;"></fa>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/tiers" queryParamsHandling="merge">
+                <span>
+                  Tiers
+                  <tooltip [message]="helpText.Tiers"></tooltip>
+                </span>
+                <span class="inline-block ml-auto">
+                  {{ tiers || 0 }}
+                </span>
                 <fa name="chevron-right"></fa>
               </a>
             </li>
-
             <li>
-              <span>Devices</span>
-              <span class="inline-block ml-auto">
-                {{ devices.total_count || 0 }}
-              </span>
-              <a routerLink="/solaris">
+              <a routerLink="/load-balancers" queryParamsHandling="merge">
+                <span>
+                  Load Balancer Virtual Servers
+                  <tooltip [message]="helpText.LbVirtualServers"></tooltip>
+                </span>
+                <span class="inline-block ml-auto">
+                  {{ loadBalancerVirtualServers || 0 }}
+                </span>
                 <fa name="chevron-right"></fa>
               </a>
             </li>
-
             <li>
-              <span>IP Addresses</span>
-              <span class="inline-block ml-auto">
-                {{ ips.ips.length || 0 }}
-              </span>
-              <a routerLink="/ipaddresses">
+              <a routerLink="/vmware" queryParamsHandling="merge">
+                <span>
+                  VMware Virtual Machines
+                  <tooltip [message]="helpText.VMwareVms"></tooltip
+                ></span>
+                <span class="inline-block ml-auto">
+                  {{ vmwareVirtualMachines || 0 }}
+                </span>
                 <fa name="chevron-right"></fa>
               </a>
             </li>

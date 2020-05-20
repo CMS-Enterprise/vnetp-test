@@ -4,23 +4,22 @@ import { NetworkObjectGroupModalComponent } from './network-object-group-modal.c
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule],
-      declarations: [ NetworkObjectGroupModalComponent, TooltipComponent ],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
-    })
-    .compileComponents();
+      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [NetworkObjectGroupModalComponent, TooltipComponent],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -37,23 +36,6 @@ describe('NetworkObjectGroupModalComponent', () => {
     expect(component.form).toBeTruthy();
   });
 
-  it('save should set ngxModal data', () => {
-    component.form.controls.name.setValue('Name');
-    component.form.controls.description.setValue('Description');
-    component.networkObjects.push({ Name: 'Test'} as NetworkObject);
-    expect(component.form.valid).toBeTruthy();
-    component.save();
-
-    // Get Data from the modal service
-    const modal = ngx.getModal('networkObjectGroupModal');
-    const data = modal.getData() as NetworkObjectGroup;
-
-    // Ensure that it is equal to our test data.
-    expect(data.Name === 'Name').toBeTruthy();
-    expect(data.Description === 'Description').toBeTruthy();
-    expect(data.NetworkObjects[0].Name === 'Test').toBeTruthy();
-  });
-
   // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;
@@ -63,5 +45,55 @@ describe('NetworkObjectGroupModalComponent', () => {
   it('description should not be required', () => {
     const description = component.form.controls.description;
     expect(description.valid).toBeTruthy();
+  });
+
+  // Name validity
+  it('name should be valid', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(3));
+    expect(name.valid).toBeTruthy();
+  });
+
+  it('name should be invalid, min length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(2));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, max length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(101));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, invalid characters', () => {
+    const name = component.form.controls.name;
+    name.setValue('invalid/name!');
+    expect(name.valid).toBeFalsy();
+  });
+
+  // Description Validity
+  it('description should be valid (null)', () => {
+    const description = component.form.controls.description;
+    description.setValue(null);
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be valid (minlen)', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(3));
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be invalid, min length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(2));
+    expect(description.valid).toBeFalsy();
+  });
+
+  it('description should be invalid, max length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(501));
+    expect(description.valid).toBeFalsy();
   });
 });

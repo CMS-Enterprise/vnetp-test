@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user/user';
 import { Userpass } from '../models/user/userpass';
-import { Observable, BehaviorSubject, config } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  public currentUser: Observable<User> = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private cs: CookieService) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    const user = this.getUserFromToken(localStorage.getItem('token'));
+    this.currentUserSubject.next(user);
   }
 
   public get currentUserValue(): User {
@@ -24,39 +25,57 @@ export class AuthService {
   }
 
   login(userpass: Userpass) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Basic ${userpass.toBase64()}`
+    return this.http
+      .post<any>(environment.apiBase + '/v1/auth/login', {
+        username: userpass.Username,
+        password: userpass.Password,
       })
-    };
+      .pipe(
+        map(result => {
+          const user = this.getUserFromToken(result.token);
 
-    return this.http.get<any>(environment.apiBase + '/api/1.0/admingroups/', httpOptions)
-        .pipe(map(result => {
-          const user = new User(userpass);
-
-          if (!result.admingroups || result.total_count === 0) {
-            throw Error('No Permissons to any Admin Group.');
+          if (user && user.Token) {
+            localStorage.setItem('token', result.token);
+            this.currentUserSubject.next(user);
           }
 
-          const adminGroup = result.admingroups[0];
-
-          if (adminGroup) {
-                user.CustomerName = adminGroup.name;
-                user.CustomerIdentifier = adminGroup.name.toLowerCase();
-
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
-            }
-
           return user;
-        }));
-}
+        }),
+      );
+  }
 
   logout() {
     localStorage.clear();
-    this.cs.deleteAll( '/ ', window.location.hostname);
-    this.cs.delete('d42sessnid', '/', window.location.hostname);
+    this.cs.deleteAll('/ ', window.location.hostname);
     this.currentUserSubject.next(null);
     location.reload();
+  }
+
+  getUserFromToken(jwtEncoded: string): User {
+    try {
+      if (!jwtEncoded) {
+        return null;
+      }
+
+      const jwtHelper = new JwtHelperService();
+
+      const jwtDecoded = jwtHelper.decodeToken(jwtEncoded);
+
+      if (!jwtDecoded || !jwtDecoded.username || !jwtDecoded.email) {
+        console.error('Invalid Token');
+        return null;
+      }
+
+      const user = new User();
+
+      user.Username = jwtDecoded.username;
+      user.Email = jwtDecoded.Email;
+      user.Roles = jwtDecoded.Roles;
+      user.Token = jwtEncoded;
+      return user;
+    } catch (exception) {
+      console.error(exception);
+      return null;
+    }
   }
 }

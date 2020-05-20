@@ -1,25 +1,33 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { StaticRoute } from 'src/app/models/network/static-route';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { Observable } from 'rxjs';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-import { Vrf } from 'src/app/models/d42/vrf';
+import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 
 @Component({
   selector: 'app-static-route-detail',
-  templateUrl: './static-route-detail.component.html'
+  templateUrl: './static-route-detail.component.html',
 })
-export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
+export class StaticRouteDetailComponent implements OnInit, OnDestroy, PendingChangesGuard {
+  currentDatacenterSubscription: Subscription;
+  staticRouteModalSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService) {}
+  constructor(
+    private datacenterService: DatacenterContextService,
+    private tierService: V1TiersService,
+    private staticRouteService: V1NetworkStaticRoutesService,
+    private route: ActivatedRoute,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   Id = '';
-  vrf = new Vrf();
+  tier: Tier;
   staticRoutes: Array<StaticRoute>;
-  deletedStaticRoutes: Array<StaticRoute>;
   dirty: boolean;
 
   @HostListener('window:beforeunload')
@@ -28,92 +36,108 @@ export class StaticRouteDetailComponent implements OnInit, PendingChangesGuard {
   }
 
   ngOnInit() {
-    this.Id  += this.route.snapshot.paramMap.get('id');
-    this.getNetwork();
-  }
-
-  getNetwork() {
-    this.automationApiService.getVrf(this.Id).subscribe(
-      data => {
-        this.vrf = data;
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.Id = this.route.snapshot.paramMap.get('id');
+        // TODO: Ensure Tier is in selected datacenter tiers.
+        this.staticRoutes = [];
         this.getStaticRoutes();
       }
-    );
+    });
   }
 
-  getInterfaceUiName(interfaceName: string) {
-    if (interfaceName === 'inside') {
-      return 'Intra-VRF';
-    }
-
-    if (interfaceName === 'outside') {
-      return 'Inter-VRF';
-    }
-
-    if (interfaceName === 'extranet') {
-      return 'External';
-    }
+  createStaticRoute() {
+    this.openStaticRouteModal(ModalMode.Create);
   }
 
-  addStaticRoute() {
-    if (this.staticRoutes == null) { this.staticRoutes = new Array<StaticRoute>(); }
+  openStaticRouteModal(modalMode: ModalMode, staticRoute?: StaticRoute) {
+    if (modalMode === ModalMode.Edit && !staticRoute) {
+      throw new Error('Firewall Rule Required');
+    }
 
-    const staticRoute = new StaticRoute();
-    staticRoute.Interface = this.vrf.name;
-    staticRoute.Edit = true;
+    const dto = new StaticRouteModalDto();
+    dto.TierId = this.tier.id;
+    dto.ModalMode = modalMode;
 
-    this.staticRoutes.push(staticRoute);
-    this.dirty = true;
+    if (modalMode === ModalMode.Edit) {
+      dto.StaticRoute = staticRoute;
+    }
+
+    this.subscribeToStaticRouteModal();
+    this.ngx.setModalData(dto, 'staticRouteModal');
+    this.ngx.getModal('staticRouteModal').open();
+  }
+
+  subscribeToStaticRouteModal() {
+    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      this.getStaticRoutes();
+      this.ngx.resetModalData('staticRouteModal');
+      this.staticRouteModalSubscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy() {
+    this.currentDatacenterSubscription.unsubscribe();
   }
 
   deleteStaticRoute(staticRoute: StaticRoute) {
-    const index = this.staticRoutes.indexOf(staticRoute);
+    const deleteDescription = staticRoute.deletedAt ? 'Delete' : 'Soft-Delete';
 
-    if (index > -1) {
-      this.staticRoutes.splice(index, 1);
-      if (!this.deletedStaticRoutes) { this.deletedStaticRoutes = new Array<StaticRoute>(); }
-      this.deletedStaticRoutes.push(staticRoute);
-      this.dirty = true;
+    const deleteFunction = () => {
+      if (!staticRoute.deletedAt) {
+        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(data => {
+          this.getStaticRoutes();
+        });
+      } else {
+        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(data => {
+          this.getStaticRoutes();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(`${deleteDescription} Static Route`, `Do you want to ${deleteDescription} the static route "${staticRoute.name}"?`),
+      deleteFunction,
+    );
+  }
+
+  restoreStaticRoute(staticRoute: StaticRoute) {
+    if (staticRoute.deletedAt) {
+      this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(data => {
+        this.getStaticRoutes();
+      });
     }
   }
 
-  updateStaticRoutes() {
-    let extra_vars: {[k: string]: any} = {};
-    extra_vars.vrf = this.vrf;
-
-    this.staticRoutes.forEach(sr => {
-      sr.Edit = false;
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
     });
-
-    extra_vars.static_routes = this.staticRoutes;
-
-    var body = { extra_vars };
-
-    extra_vars.deleted_static_routes = this.deletedStaticRoutes;
-    extra_vars.vrf_name =  this.vrf.name.split('-')[1];
-
-    this.automationApiService.launchTemplate('deploy-static-route', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
-
-    this.dirty = false;
-    this.deletedStaticRoutes = new Array<StaticRoute>();
   }
 
   getStaticRoutes() {
-    const staticRoutes = this.vrf.custom_fields.find(c => c.key === 'static_routes');
-
-    if (staticRoutes) {
-      this.staticRoutes = JSON.parse(staticRoutes.value) as Array<StaticRoute>;
-    }
+    this.tierService.v1TiersIdGet({ id: this.Id, join: 'staticRoutes' }).subscribe(data => {
+      this.tier = data;
+      this.staticRoutes = data.staticRoutes;
+    });
   }
 
-  insertStaticRoutes(routes){
-    if (!this.staticRoutes) { this.staticRoutes = new Array<StaticRoute>(); }
-    routes.forEach(route => {
-      if (routes.Name !== '') {
-        this.staticRoutes.push(route);
-      }
-    });
-    this.dirty = true;
+  insertStaticRoutes(routes) {
+    // if (!this.staticRoutes) {
+    //   this.staticRoutes = new Array<StaticRoute>();
+    // }
+    // routes.forEach(route => {
+    //   if (routes.Name !== '') {
+    //     this.staticRoutes.push(route);
+    //   }
+    // });
+    // this.dirty = true;
   }
 }

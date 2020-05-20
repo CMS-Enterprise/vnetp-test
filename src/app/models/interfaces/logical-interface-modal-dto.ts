@@ -2,8 +2,7 @@ import { LogicalInterface } from '../network/logical-interface';
 import { Subnet } from '../d42/subnet';
 
 export class LogicalInterfaceModalDto {
+  LogicalInterface: LogicalInterface;
 
-    LogicalInterface: LogicalInterface;
-
-    Subnets: Array<Subnet>;
+  Subnets: Array<Subnet>;
 }

@@ -1,5 +1,5 @@
 import { SolarisVariable } from './solaris-variable';
-import {SolarisVswitch } from './solaris-vswitch';
+import { SolarisVswitch } from './solaris-vswitch';
 import { CustomField } from '../interfaces/custom-fields-object.interface';
 
 export class SolarisCdom {
@@ -49,7 +49,7 @@ export class SolarisCdom {
   /** Associated LDOMs */
   associatedldoms = new Array<string>();
 
-  ldomCount: number
+  ldomCount: number;
 
   // TODO: Do we need these??
   // ilomname: string;
@@ -58,6 +58,3 @@ export class SolarisCdom {
   /** Virtual Devices */
   vcsdevs: string; // TODO: Is this valid?
 }
-
-
-

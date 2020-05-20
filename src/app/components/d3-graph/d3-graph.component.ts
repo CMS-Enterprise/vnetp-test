@@ -12,11 +12,11 @@ import { ClickResult } from 'src/app/models/other/click-result';
 @Component({
   selector: 'app-d3-graph',
   templateUrl: './d3-graph.component.html',
-  styleUrls: ['./d3-graph.component.css']
+  styleUrls: ['./d3-graph.component.css'],
 })
 export class D3GraphComponent implements OnInit, AfterContentInit {
   title = 'network-diagram';
-  @ViewChild('graphContainer') graphContainer: ElementRef;
+  @ViewChild('graphContainer', { static: true }) graphContainer: ElementRef;
 
   @Input() graphObject?: any;
   @Input() graph: Graph;
@@ -42,10 +42,9 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     if (this.graphObject) {
-      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray,
-         this.contextMenuArray, this.contextMenuItemClicked);
+      this.graph = new Graph(this.graphObject, this.ignoreArray, this.nameArray, this.contextMenuArray, this.contextMenuItemClicked);
     } else if (!this.graph) {
-      this.graph = new Graph({Name: 'No Data to Graph'}, [''], ['']);
+      this.graph = new Graph({ Name: 'No Data to Graph' }, [''], ['']);
     }
     // TODO: Handle disableAnimation
   }
@@ -66,9 +65,11 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       .attr('oncontextmenu', 'return false;')
       .attr('width', this.width)
       .attr('height', this.height)
-      .call(d3.zoom().on('zoom', () => {
-        this.svg.attr('transform', d3.event.transform);
-      }));
+      .call(
+        d3.zoom().on('zoom', () => {
+          this.svg.attr('transform', d3.event.transform);
+        }),
+      );
 
     // Create Force Diaagram
     this.forceDiagram = d3
@@ -79,7 +80,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
           .forceLink()
           .id((d: any) => d.id)
           .distance(200)
-          .strength(1)
+          .strength(1),
       )
       .force(
         'charge',
@@ -87,7 +88,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
           .forceManyBody()
           .strength(-200)
           .distanceMax(500)
-          .distanceMin(50)
+          .distanceMin(50),
       )
       .force(
         'y',
@@ -101,7 +102,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
               return 0;
             }
           })
-          .strength(2)
+          .strength(2),
       )
       .force('x', d3.forceX(this.width / 2))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
@@ -132,7 +133,7 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
       .attr('stroke', '#778899')
       .attr('stroke-width', 1.5);
 
-      // Draw Nodes
+    // Draw Nodes
     const node = this.svg
       .append('g')
       .attr('class', 'nodes')
@@ -153,20 +154,32 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
     });
 
     // Handle Right Click
-    node.on('contextmenu', contextMenuFactory((data) => this.OnNodeRightClick(data)));
+    node.on(
+      'contextmenu',
+      contextMenuFactory(data => this.OnNodeRightClick(data)),
+    );
 
     // Drag Event Handlers
     if (!this.disableDrag) {
-    node.call(d3.drag()
-          .on('start', d => { this.dragStarted(d); })
-          .on('drag', d => {this.dragged(d); })
-          .on('end', d => {this.dragEnded(d); }));
+      node.call(
+        d3
+          .drag()
+          .on('start', d => {
+            this.dragStarted(d);
+          })
+          .on('drag', d => {
+            this.dragged(d);
+          })
+          .on('end', d => {
+            this.dragEnded(d);
+          }),
+      );
     }
 
     // Add Image to Node
     node
       .append('image')
-      .attr('xlink:href', (d) => {
+      .attr('xlink:href', d => {
         return 'assets/img/group' + d.group + '.png';
       })
       .attr('width', 32)
@@ -221,7 +234,9 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   dragStarted(d) {
-    if (!d3.event.active) { this.forceDiagram.alphaTarget(0.3).restart(); }
+    if (!d3.event.active) {
+      this.forceDiagram.alphaTarget(0.3).restart();
+    }
     d.fx = d.x;
     d.fy = d.y;
   }
@@ -232,7 +247,9 @@ export class D3GraphComponent implements OnInit, AfterContentInit {
   }
 
   dragEnded(d) {
-    if (!d3.event.active) { this.forceDiagram.alphaTarget(0); }
+    if (!d3.event.active) {
+      this.forceDiagram.alphaTarget(0);
+    }
     d.fx = null;
     d.fy = null;
   }

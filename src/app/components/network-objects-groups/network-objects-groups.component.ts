@@ -1,246 +1,260 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
-import { Vrf } from 'src/app/models/d42/vrf';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { Subscription, Observable } from 'rxjs';
-import { Papa } from 'ngx-papaparse';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { SubnetResponse, Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Tier } from 'api_client/model/tier';
+import {
+  V1TiersService,
+  NetworkObject,
+  V1NetworkSecurityNetworkObjectsService,
+  NetworkObjectGroup,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  NetworkObjectGroupRelationBulkImportCollectionDto,
+} from 'api_client';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 @Component({
   selector: 'app-network-objects-groups',
-  templateUrl: './network-objects-groups.component.html'
+  templateUrl: './network-objects-groups.component.html',
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
-  vrfs: Vrf[];
-  currentVrf: Vrf;
+  tiers: Tier[];
+  currentTier: Tier;
+  currentNetworkObjectsPage = 1;
+  currentNetworkObjectGroupsPage = 1;
+  perPage = 20;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
-  deletedNetworkObjects: Array<NetworkObject>;
-  deletedNetworkObjectGroups: Array<NetworkObjectGroup>;
+
   navIndex = 0;
-
-  editNetworkObjectIndex: number;
-  editNetworkObjectGroupIndex: number;
-
-  networkObjectModalMode: ModalMode;
-  networkObjectGroupModalMode: ModalMode;
-  dirty: boolean;
+  showRadio = false;
 
   networkObjectModalSubscription: Subscription;
   networkObjectGroupModalSubscription: Subscription;
-  Subnets: Array<Subnet>;
+  currentDatacenterSubscription: Subscription;
+  currentTierSubscription: Subscription;
 
   @HostListener('window:beforeunload')
+  @HostListener('window:popstate')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
+    return !this.datacenterService.datacenterLockValue;
   }
 
-  constructor(private ngx: NgxSmartModalService, private api: AutomationApiService, private papa: Papa, private hs: HelpersService,
-              public helpText: NetworkObjectsGroupsHelpText) {
+  constructor(
+    private ngx: NgxSmartModalService,
+    public datacenterService: DatacenterContextService,
+    public tierContextService: TierContextService,
+    private tierService: V1TiersService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private bulkUploadService: BulkUploadService,
+    public helpText: NetworkObjectsGroupsHelpText,
+  ) {
     this.networkObjects = new Array<NetworkObject>();
     this.networkObjectGroups = new Array<NetworkObjectGroup>();
   }
 
-  getVrfs() {
-    this.dirty = false;
+  getNetworkObjects() {
+    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjects' }).subscribe(data => {
+      this.networkObjects = data.networkObjects;
+    });
+  }
 
-    let vrfId: number = null;
+  getNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .v1NetworkSecurityNetworkObjectGroupsGet({
+        join: 'networkObjects',
+        filter: `tierId||eq||${this.currentTier.id}`,
+      })
+      .subscribe(data => {
+        this.networkObjectGroups = data;
+      });
+  }
 
-    if (this.currentVrf) {
-      vrfId = this.currentVrf.id;
+  openNetworkObjectModal(modalMode: ModalMode, networkObject?: NetworkObject) {
+    if (modalMode === ModalMode.Edit && !networkObject) {
+      throw new Error('Network Object required.');
     }
 
-    this.api.getVrfs().subscribe(data => {
-      this.vrfs = data;
-
-      if (!vrfId) {
-        this.currentVrf = this.vrfs[0];
-      } else {
-        this.currentVrf = this.vrfs.find(v => v.id === vrfId);
-
-        if (!this.currentVrf) {
-          this.currentVrf = this.vrfs[0];
-        }
-      }
-      this.getVrfObjects(this.currentVrf);
-    });
-  }
-
-  getVrfObjects(vrf: Vrf) {
-    const networkObjectDto = this.hs.getJsonCustomField(vrf, 'network_objects') as NetworkObjectDto;
-
-    if (!networkObjectDto) {
-        this.networkObjects = new Array<NetworkObject>();
-        this.networkObjectGroups = new Array<NetworkObjectGroup>();
-      } else {
-      this.networkObjects = networkObjectDto.NetworkObjects;
-      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-      }
-    this.getVrfSubnets(vrf);
-  }
-
-  getVrfSubnets(vrf: Vrf) {
-    this.api.getSubnets(vrf.id).subscribe(data => {
-      const result = data as SubnetResponse;
-      this.Subnets = result.subnets;
-    });
-  }
-
-  createNetworkObject() {
-    this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Create;
-
     const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.NetworkObject = networkObject;
+    }
+
+    this.subscribeToNetworkObjectModal();
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
 
-  createNetworkObjectGroup() {
+  openNetworkObjectGroupModal(modalMode: ModalMode, networkObjectGroup?: NetworkObjectGroup) {
+    if (modalMode === ModalMode.Edit && !networkObjectGroup) {
+      throw new Error('Network Object required.');
+    }
+
+    const dto = new NetworkObjectGroupModalDto();
+
+    dto.ModalMode = modalMode;
+    dto.TierId = this.currentTier.id;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.NetworkObjectGroup = networkObjectGroup;
+    }
+
     this.subscribeToNetworkObjectGroupModal();
-    this.networkObjectGroupModalMode = ModalMode.Create;
-
-    const dto = new NetworkObjectGroupModalDto();
-    dto.Subnets = this.Subnets;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
-    this.ngx.getModal('networkObjectGroupModal').open();
-  }
-
-  editNetworkObject(networkObject: NetworkObject) {
-    this.subscribeToNetworkObjectModal();
-    this.networkObjectModalMode = ModalMode.Edit;
-
-    const dto = new NetworkObjectModalDto();
-    dto.Subnets = this.Subnets;
-    dto.NetworkObject = networkObject;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectModal');
-    this.editNetworkObjectIndex = this.networkObjects.indexOf(networkObject);
-    this.ngx.getModal('networkObjectModal').open();
-  }
-
-  editNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    this.subscribeToNetworkObjectGroupModal() ;
-    this.networkObjectGroupModalMode = ModalMode.Edit;
-
-    const dto = new NetworkObjectGroupModalDto();
-    dto.Subnets = this.Subnets;
-    dto.NetworkObjectGroup = networkObjectGroup;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'networkObjectGroupModal');
-    this.editNetworkObjectGroupIndex = this.networkObjectGroups.indexOf(networkObjectGroup);
+    this.datacenterService.lockDatacenter();
+    this.ngx.setModalData(dto, 'networkObjectGroupModal');
     this.ngx.getModal('networkObjectGroupModal').open();
   }
 
   subscribeToNetworkObjectModal() {
-    this.networkObjectModalSubscription =
-    this.ngx.getModal('networkObjectModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as NetworkObjectModalDto;
-
-      if (data && data.NetworkObject) {
-        this.saveNetworkObject(data.NetworkObject);
-      }
-      this.ngx.resetModalData('networkObjectModal');
-      this.networkObjectModalSubscription.unsubscribe();
-    });
+    this.networkObjectModalSubscription = this.ngx
+      .getModal('networkObjectModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getNetworkObjects();
+        this.ngx.resetModalData('networkObjectModal');
+        this.datacenterService.unlockDatacenter();
+      });
   }
 
   subscribeToNetworkObjectGroupModal() {
-    this.networkObjectGroupModalSubscription =
-    this.ngx.getModal('networkObjectGroupModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as NetworkObjectGroup;
-
-      if (data !== undefined) {
-        this.saveNetworkObjectGroup(data);
-      }
-      this.ngx.resetModalData('networkObjectGroupModal');
-      this.networkObjectGroupModalSubscription.unsubscribe();
-    });
-  }
-
-  saveNetworkObject(networkObject: NetworkObject) {
-    if (this.networkObjectModalMode === ModalMode.Create) {
-      this.networkObjects.push(networkObject);
-    } else {
-      this.networkObjects[this.editNetworkObjectIndex] = networkObject;
-    }
-    this.dirty = true;
+    this.networkObjectGroupModalSubscription = this.ngx
+      .getModal('networkObjectGroupModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getNetworkObjectGroups();
+        this.ngx.resetModalData('networkObjectGroupModal');
+        this.datacenterService.unlockDatacenter();
+      });
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {
-    const index = this.networkObjects.indexOf(networkObject);
-    if ( index > -1) {
-      this.networkObjects.splice(index, 1);
-
-      if (!this.deletedNetworkObjects) { this.deletedNetworkObjects = new Array<NetworkObject>(); }
-      this.deletedNetworkObjects.push(networkObject);
-
-      this.dirty = true;
+    if (networkObject.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
     }
+
+    const deleteDescription = networkObject.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!networkObject.deletedAt) {
+        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }).subscribe(data => {
+          this.getNetworkObjects();
+        });
+      } else {
+        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }).subscribe(data => {
+          this.getNetworkObjects();
+        });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Network Object?`,
+        `Do you want to ${deleteDescription} network object "${networkObject.name}"?`,
+      ),
+      deleteFunction,
+    );
   }
 
-  saveNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    if (this.networkObjectGroupModalMode === ModalMode.Create) {
-      this.networkObjectGroups.push(networkObjectGroup);
-    } else {
-      this.networkObjectGroups[this.editNetworkObjectGroupIndex] = networkObjectGroup;
+  restoreNetworkObject(networkObject: NetworkObject) {
+    if (networkObject.deletedAt) {
+      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(data => {
+        this.getNetworkObjects();
+      });
     }
-    this.dirty = true;
   }
 
   deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    const index = this.networkObjectGroups.indexOf(networkObjectGroup);
-    if ( index > -1) {
-      this.networkObjectGroups.splice(index, 1);
+    if (networkObjectGroup.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
 
-      if (!this.deletedNetworkObjectGroups) { this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>(); }
-      this.deletedNetworkObjectGroups.push(networkObjectGroup);
+    const deleteDescription = networkObjectGroup.deletedAt ? 'Delete' : 'Soft-Delete';
 
-      this.dirty = true;
+    const deleteFunction = () => {
+      if (!networkObjectGroup.deletedAt) {
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
+            id: networkObjectGroup.id,
+          })
+          .subscribe(data => {
+            this.getNetworkObjectGroups();
+          });
+      } else {
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsIdDelete({
+            id: networkObjectGroup.id,
+          })
+          .subscribe(data => {
+            this.getNetworkObjectGroups();
+          });
+      }
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Network Object Group`,
+        `Do you want to ${deleteDescription} the network object group "${networkObjectGroup.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  restoreNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
+    if (networkObjectGroup.deletedAt) {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsIdRestorePatch({
+          id: networkObjectGroup.id,
+        })
+        .subscribe(data => {
+          this.getNetworkObjectGroups();
+        });
     }
   }
 
-  saveAll() {
-    // TODO: Display warning if objects will be deleted.
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
 
-    this.dirty = false;
-    const dto = new NetworkObjectDto();
+  getObjectsForNavIndex() {
+    if (!this.currentTier) {
+      return;
+    }
 
-    dto.NetworkObjects = this.networkObjects;
-    dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
-
-    let extra_vars: {[k: string]: any} = {};
-    extra_vars.network_object_dto = dto;
-    extra_vars.vrf_name = this.currentVrf.name.split('-')[1];
-    extra_vars.deleted_network_objects = this.deletedNetworkObjects;
-    extra_vars.deleted_network_object_groups = this.deletedNetworkObjectGroups;
-
-    const body = { extra_vars };
-
-    this.api.launchTemplate('save-network-object-dto', body, true).subscribe(data => {
-    }, error => { this.dirty = true; });
-
-    this.deletedNetworkObjects = new Array<NetworkObject>();
-    this.deletedNetworkObjectGroups = new Array<NetworkObjectGroup>();
+    if (this.navIndex === 0) {
+      this.getNetworkObjects();
+    } else {
+      this.getNetworkObjectGroups();
+    }
   }
 
   private unsubAll() {
-    [this.networkObjectModalSubscription,
-    this.networkObjectGroupModalSubscription]
-    .forEach(sub => {
+    [
+      this.networkObjectModalSubscription,
+      this.networkObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ].forEach(sub => {
       try {
         if (sub) {
           sub.unsubscribe();
@@ -251,28 +265,137 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     });
   }
 
-  importNetworkObjectConfig(config) {
-    // TODO: Import Validation
-    // TODO: Validate VRF Id and display warning with confirmation if not present or mismatch current vrf.
-    this.networkObjects = config.NetworkObjects;
-    this.networkObjectGroups = config.NetworkObjectGroups;
+  importNetworkObjectsConfig(event: NetworkObject[]) {
+    const modalDto = new YesNoModalDto(
+      'Import Network Objects',
+      `Are you sure you would like to import ${event.length} network object${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
 
-    this.dirty = true;
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const dto = this.sanitizeData(event);
+        this.networkObjectService
+          .v1NetworkSecurityNetworkObjectsBulkPost({
+            generatedNetworkObjectBulkDto: { bulk: dto },
+          })
+          .subscribe(data => {
+            this.getNetworkObjects();
+          });
+      }
+      this.showRadio = false;
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
-  exportNetworkObjectConfig() {
-    const dto = new NetworkObjectDto();
+  importNetworkObjectGroupRelationsConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Network Object Group Relations',
+      `Are you sure you would like to import ${event.length} network object group relation${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
 
-    dto.NetworkObjects = this.networkObjects;
-    dto.NetworkObjectGroups = this.networkObjectGroups;
-    dto.VrfId = this.currentVrf.id;
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const networkObjectRelationsDto = {} as NetworkObjectGroupRelationBulkImportCollectionDto;
+        networkObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        networkObjectRelationsDto.networkObjectRelations = event;
 
-    return dto;
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsBulkImportRelationsPost({
+            networkObjectGroupRelationBulkImportCollectionDto: networkObjectRelationsDto,
+          })
+          .subscribe(data => {
+            this.getNetworkObjects();
+          });
+      }
+      this.showRadio = false;
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
+  importNetworkObjectGroupsConfig(event) {
+    const modalDto = new YesNoModalDto(
+      'Import Network Object Groups',
+      `Are you sure you would like to import ${event.length} network object group${event.length > 1 ? 's' : ''}?`,
+    );
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        const dto = this.sanitizeData(event);
+        this.networkObjectGroupService
+          .v1NetworkSecurityNetworkObjectGroupsBulkPost({
+            generatedNetworkObjectGroupBulkDto: { bulk: dto },
+          })
+          .subscribe(data => {
+            this.getNetworkObjectGroups();
+          });
+      }
+      this.showRadio = false;
+      yesNoModalSubscription.unsubscribe();
+    });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'ipAddress') {
+        obj[key] = String(val).trim();
+      }
+      if (key === 'vrf_name') {
+        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj.tierId = obj[key];
+        delete obj[key];
+      }
+    });
+    return obj;
+    // tslint:disable-next-line: semicolon
+  };
 
   ngOnInit() {
-    this.getVrfs();
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.tiers = cd.tiers;
+        this.networkObjects = [];
+        this.networkObjectGroups = [];
+
+        if (cd.tiers.length) {
+          this.getObjectsForNavIndex();
+        }
+      }
+    });
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
+      if (ct) {
+        this.currentTier = ct;
+        this.getObjectsForNavIndex();
+      }
+    });
   }
 
   ngOnDestroy() {

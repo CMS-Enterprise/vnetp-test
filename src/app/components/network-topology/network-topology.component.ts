@@ -10,7 +10,7 @@ import { GraphContextMenuResult } from 'src/app/models/other/graph-context-menu-
 
 @Component({
   selector: 'app-network-topology',
-  templateUrl: './network-topology.component.html'
+  templateUrl: './network-topology.component.html',
 })
 export class NetworkTopologyComponent implements OnInit {
   customers: Array<Customer>;
@@ -20,10 +20,7 @@ export class NetworkTopologyComponent implements OnInit {
   contextMenuArray: Array<GraphContextMenu>;
   clickActionArray: Array<ActionData>;
 
-  constructor(
-    private apiService: AutomationApiService,
-    private router: Router,
-  ) {}
+  constructor(private apiService: AutomationApiService, private router: Router) {}
 
   ngOnInit() {
     this.buildContextMenu();
@@ -36,63 +33,21 @@ export class NetworkTopologyComponent implements OnInit {
 
     // Customer Level Menu
     const customerMenu = new GraphContextMenu();
-    customerMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'View Networks',
-        true,
-        new ActionData('Customer', 'View Networks')
-      )
-    );
-    customerMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'View Static Routes',
-        true,
-        new ActionData('Customer', 'View Static Routes')
-      )
-    );
-    customerMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'View Firewall Rules',
-        true,
-        new ActionData('Customer', 'View Firewall Rules')
-      )
-    );
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Networks', true, new ActionData('Customer', 'View Networks')));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Static Routes', true, new ActionData('Customer', 'View Static Routes')));
+    customerMenu.menuItems.push(new GraphContextMenuItem('View Firewall Rules', true, new ActionData('Customer', 'View Firewall Rules')));
 
     // VRF Level Menu
     const vrfMenu = new GraphContextMenu();
-    vrfMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'Add Subnet',
-        true,
-        new ActionData('VRF', 'Add Subnet')
-      )
-    );
+    vrfMenu.menuItems.push(new GraphContextMenuItem('Add Subnet', true, new ActionData('VRF', 'Add Subnet')));
 
     // Network Level Menu
     const networkMenu = new GraphContextMenu();
-    networkMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'Edit Static Routes',
-        true,
-        new ActionData('Subnet', 'Edit Static Routes')
-      )
-    );
+    networkMenu.menuItems.push(new GraphContextMenuItem('Edit Static Routes', true, new ActionData('Subnet', 'Edit Static Routes')));
 
-    networkMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'Edit Firewall Rules',
-        true,
-        new ActionData('Subnet', 'Edit Firewall Rules')
-      )
-    );
+    networkMenu.menuItems.push(new GraphContextMenuItem('Edit Firewall Rules', true, new ActionData('Subnet', 'Edit Firewall Rules')));
 
-    networkMenu.menuItems.push(
-      new GraphContextMenuItem(
-        'New Firewall Rule',
-        true,
-        new ActionData('Subnet', 'New Firewall Rule')
-      )
-    );
+    networkMenu.menuItems.push(new GraphContextMenuItem('New Firewall Rule', true, new ActionData('Subnet', 'New Firewall Rule')));
 
     this.contextMenuArray.push(customerMenu);
     this.contextMenuArray.push(vrfMenu);
@@ -137,23 +92,17 @@ export class NetworkTopologyComponent implements OnInit {
               this.router.navigate(['/networks']);
               break;
             case 'View Static Routes':
-                this.router.navigate(['/static-routes']);
-                break;
+              this.router.navigate(['/static-routes']);
+              break;
             case 'View Firewall Rules':
-                this.router.navigate(['/firewall-rules']);
-                break;
+              this.router.navigate(['/firewall-rules']);
+              break;
             default:
               break;
           }
           break;
         case 'VRF':
-          switch (actionData.ActionType) {
-            case 'Add Subnet':
-                this.router.navigate(['/networks/create']);
-                break;
-            default:
-              break;
-          }
+          this.router.navigate(['/networks/create']);
           break;
         case 'Subnet':
           switch (actionData.ActionType) {
@@ -164,7 +113,7 @@ export class NetworkTopologyComponent implements OnInit {
               this.router.navigate([`/firewall-rules/edit/${ctxMenuResult.object.subnet_id}`]);
               break;
             case 'New Firewall Rule':
-                break;
+              break;
             default:
               break;
           }

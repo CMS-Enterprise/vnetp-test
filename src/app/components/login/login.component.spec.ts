@@ -9,6 +9,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { D3PieChartComponent } from '../d3-pie-chart/d3-pie-chart.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -20,12 +21,12 @@ describe('LoginComponent', () => {
       imports: [
         AngularFontAwesomeModule,
         FormsModule,
-        RouterTestingModule.withRoutes([ {path: 'dashboard', component: DashboardComponent}]),
+        RouterTestingModule.withRoutes([{ path: 'dashboard', component: DashboardComponent }]),
         ToastrModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
-      declarations: [LoginComponent, DashboardComponent, D3PieChartComponent],
-      providers: [CookieService]
+      declarations: [LoginComponent, DashboardComponent, D3PieChartComponent, TooltipComponent],
+      providers: [CookieService],
     }).compileComponents();
   }));
 

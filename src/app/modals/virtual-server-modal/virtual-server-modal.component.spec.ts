@@ -5,23 +5,33 @@ import { NgxMaskModule } from 'ngx-mask';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { NgxSmartModalServiceStub } from '../modal-mock';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
   let fixture: ComponentFixture<VirtualServerModalComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), AngularFontAwesomeModule],
-      declarations: [ VirtualServerModalComponent, TooltipComponent],
-      providers: [ { provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators]
+      imports: [
+        FormsModule,
+        NgxSmartModalModule,
+        ReactiveFormsModule,
+        NgxMaskModule.forRoot(),
+        AngularFontAwesomeModule,
+        HttpClientTestingModule,
+      ],
+      declarations: [VirtualServerModalComponent, TooltipComponent],
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
-    .compileComponents().then(() => {
-      fixture = TestBed.createComponent(VirtualServerModalComponent);
-      component = fixture.componentInstance;
-    });
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(VirtualServerModalComponent);
+        component = fixture.componentInstance;
+      });
   }));
 
   beforeEach(() => {
@@ -68,5 +78,55 @@ describe('VirtualServerModalComponent', () => {
   it('pool should be required', () => {
     const pool = component.form.controls.pool;
     expect(pool.valid).toBeFalsy();
+  });
+
+  // Name validity
+  it('name should be valid', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(3));
+    expect(name.valid).toBeTruthy();
+  });
+
+  it('name should be invalid, min length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(2));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, max length', () => {
+    const name = component.form.controls.name;
+    name.setValue('a'.repeat(101));
+    expect(name.valid).toBeFalsy();
+  });
+
+  it('name should be invalid, invalid characters', () => {
+    const name = component.form.controls.name;
+    name.setValue('invalid/name!');
+    expect(name.valid).toBeFalsy();
+  });
+
+  // Description Validity
+  it('description should be valid (null)', () => {
+    const description = component.form.controls.description;
+    description.setValue(null);
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be valid (minlen)', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(3));
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be invalid, min length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(2));
+    expect(description.valid).toBeFalsy();
+  });
+
+  it('description should be invalid, max length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(501));
+    expect(description.valid).toBeFalsy();
   });
 });

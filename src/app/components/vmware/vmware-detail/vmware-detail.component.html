@@ -1,0 +1,98 @@
+<!-- add back button? -->
+<div class="clearfix">
+  <a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
+    <fa name="arrow-left"></fa>
+    Back
+  </a>
+
+  <h1>Virtual Machine: {{ VirtualMachine?.name }}</h1>
+
+  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
+    <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-sm btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
+      <fa name="undo"></fa>
+      Restore Virtual Machine
+    </button>
+    <button class="btn btn-sm btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
+      <fa name="trash"></fa>
+      Delete Virtual Machine
+    </button>
+  </div>
+</div>
+
+<div *ngIf="VirtualMachine">
+  <p *ngIf="VirtualMachine.description"><strong>Description:</strong> {{ VirtualMachine.description }}</p>
+  <p><strong>CPUs:</strong> {{ VirtualMachine.cpuCores }}</p>
+  <p><strong>Cores per Socket:</strong> {{ VirtualMachine.cpuCoresPerSocket }}</p>
+  <p><strong>CPU Reserved?</strong> {{ VirtualMachine.cpuReserved }}</p>
+  <p>
+    <strong>Memory Size:</strong>
+    {{ convertBytesToGb(VirtualMachine.memorySize) }} GB
+  </p>
+  <p><strong>Memory Reserved?</strong> {{ VirtualMachine.memoryReserved }}</p>
+</div>
+
+<!-- Virtual Disks table -->
+<div class="p-3">
+  <h3>Virtual Disks</h3>
+  <table class="table table-striped" aria-describedby="Virtual Disks table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Size</th>
+        <th scope="col">Raw LUN</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of virtualDisks">
+        <td>
+          <span>{{ v.name }}</span>
+        </td>
+        <td>
+          <span>{{ convertBytesToGb(v.diskSize) }} GB</span>
+        </td>
+        <td>
+          <span>{{ v.rawLun }}</span>
+        </td>
+        <td>
+          <span>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualDisks?.length" class="text-center">
+        <td colspan="4">No Virtual Disks</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Network Adapters table -->
+<div class="p-3">
+  <h3>Network Adapters</h3>
+  <table class="table table-striped" aria-describedby="Network Adapters table">
+    <thead>
+      <tr>
+        <th scope="col">Adapter</th>
+        <th scope="col">VLAN</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of networkAdapters">
+        <td>
+          <span>{{ n.name }}</span>
+        </td>
+        <td>
+          <span>{{ n.vlanId }}</span>
+        </td>
+        <td>
+          <span>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="!networkAdapters?.length" class="text-center">
+        <td colspan="3">No Network Adapters</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-yes-no-modal></app-yes-no-modal>

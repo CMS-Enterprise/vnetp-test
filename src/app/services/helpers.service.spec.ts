@@ -25,7 +25,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'deployed', value: 'Yes', notes: ''}]
+      custom_fields: [{ key: 'deployed', value: 'Yes', notes: '' }],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
@@ -43,13 +43,12 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'deployed', value: 'no', notes: ''}]
+      custom_fields: [{ key: 'deployed', value: 'no', notes: '' }],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
     expect(result).toBeFalsy();
   });
-
 
   it('should not be deployed', () => {
     const service: HelpersService = TestBed.get(HelpersService);
@@ -62,13 +61,12 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'deployed', value: '', notes: ''}]
+      custom_fields: [{ key: 'deployed', value: '', notes: '' }],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
     expect(result).toBeFalsy();
   });
-
 
   it('should not be deployed', () => {
     const service: HelpersService = TestBed.get(HelpersService);
@@ -81,7 +79,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'deployed', value: null, notes: ''}]
+      custom_fields: [{ key: 'deployed', value: null, notes: '' }],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
@@ -99,7 +97,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: null
+      custom_fields: null,
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
@@ -117,7 +115,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: []
+      custom_fields: [],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
@@ -135,7 +133,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'wrong_custom_field', value: 'something else', notes: ''}]
+      custom_fields: [{ key: 'wrong_custom_field', value: 'something else', notes: '' }],
     };
 
     const result = service.getBooleanCustomField(subnet, 'deployed');
@@ -153,7 +151,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'number', value: '9001', notes: ''}]
+      custom_fields: [{ key: 'number', value: '9001', notes: '' }],
     };
 
     const result = service.getNumberCustomField(subnet, 'number');
@@ -172,7 +170,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'string', value: 'value', notes: ''}]
+      custom_fields: [{ key: 'string', value: 'value', notes: '' }],
     };
 
     const result = service.getStringCustomField(subnet, 'string');
@@ -190,7 +188,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'string', value: '', notes: ''}]
+      custom_fields: [{ key: 'string', value: '', notes: '' }],
     };
 
     const result = service.getStringCustomField(subnet, 'string');
@@ -208,7 +206,7 @@ describe('HelpersService', () => {
       gateway: '10.0.0.1',
       subnet_mask: '255.0.0.0',
       mask_bits: 8,
-      custom_fields: [{key: 'string', value: 'value', notes: ''}]
+      custom_fields: [{ key: 'string', value: 'value', notes: '' }],
     };
 
     const result = service.getStringCustomField(subnet, 'random123');
@@ -227,7 +225,7 @@ describe('HelpersService', () => {
   it('should deep copy', () => {
     const service: HelpersService = TestBed.get(HelpersService);
 
-    const test = {Name: 'Test', Children: ['Test1', 'Test2']};
+    const test = { Name: 'Test', Children: ['Test1', 'Test2'] };
 
     const testCopy = service.deepCopy(test);
 
@@ -235,5 +233,4 @@ describe('HelpersService', () => {
 
     expect(test.Children.length === 2).toBeTruthy();
   });
-
 });

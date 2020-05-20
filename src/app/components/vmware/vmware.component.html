@@ -1,0 +1,77 @@
+<div>
+  <h4>VMware</h4>
+
+  <div class="btn-group-sm mb-2 pull-right" role="group">
+    <button type="button" class="btn btn-success mr-1" (click)="createVirtualMachine()">
+      <fa name="plus"></fa>
+      Create Virtual Machine
+    </button>
+
+    <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
+      <fa name="refresh"></fa>
+      Refresh
+    </button>
+  </div>
+
+  <table class="table table-striped" aria-describedby="Virtual Machines table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">CPUs</th>
+        <th scope="col">Cores per Socket</th>
+        <th scope="col">Memory</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vm of virtualMachines | paginate: { itemsPerPage: perPage, currentPage: currentVMWarePage }">
+        <td>
+          <a routerLink="/vmware/{{ vm.id }}" queryParamsHandling="merge">{{ vm.name }}</a>
+        </td>
+        <td>
+          {{ vm.cpuCores }}
+        </td>
+        <td>
+          {{ vm.cpuCoresPerSocket }}
+        </td>
+        <td>{{ convertBytesToGb(vm.memorySize) }} GB</td>
+        <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+        <td>
+          <fa name="pencil" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal('Edit', vm)" aria-label="Edit Virtual Machine"> </fa>
+          <fa
+            name="undo"
+            *ngIf="vm?.deletedAt"
+            class="fg-success"
+            (click)="restoreVirtualMachine(vm)"
+            aria-label="Restore Virtual Machine"
+          ></fa>
+          <fa
+            name="trash"
+            [ngClass]="{ 'fg-danger': vm.deletedAt }"
+            (click)="deleteVirtualMachine(vm)"
+            aria-label="Soft-Delete/Delete Virtual Machine"
+          >
+          </fa>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualMachines?.length" class="text-center">
+        <td colspan="6">No Virtual Machines</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentVMWarePage = $event"></pagination-controls>
+  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
+    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
+      Entities per page
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </div>
+</div>
+
+<app-virtual-machine-modal></app-virtual-machine-modal>
+<app-virtual-disk-modal></app-virtual-disk-modal>
+<app-network-adapter-modal></app-network-adapter-modal>
+<app-yes-no-modal></app-yes-no-modal>

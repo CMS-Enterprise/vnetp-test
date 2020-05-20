@@ -2,17 +2,17 @@ import { CustomFieldsObject, CustomField } from '../interfaces/custom-fields-obj
 import { Subnet } from './subnet';
 
 export class Vrf implements CustomFieldsObject {
-    id: number;
+  id: number;
 
-    name: string;
+  name: string;
 
-    tags: Array<string>;
+  tags: Array<string>;
 
-    subnets?: Array<Subnet>;
+  subnets?: Array<Subnet>;
 
-    custom_fields: Array<CustomField>;
+  custom_fields: Array<CustomField>;
 }
 
 export class VrfResponse {
-    vrfs: Vrf[];
+  vrfs: Vrf[];
 }

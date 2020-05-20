@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadBalancersComponent } from './load-balancers.component';
 import { VirtualServerModalComponent } from 'src/app/modals/virtual-server-modal/virtual-server-modal.component';
 import { PoolModalComponent } from 'src/app/modals/pool-modal/pool-modal.component';
-import { PoolMemberModalComponent } from 'src/app/modals/pool-member-modal/pool-member-modal.component';
+import { NodeModalComponent } from 'src/app/modals/node-modal/node-modal.component';
 import { IRuleModalComponent } from 'src/app/modals/irule-modal/irule-modal.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
@@ -16,10 +16,24 @@ import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { TierSelectComponent } from '../tier-select/tier-select.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
+import { ProfileModalComponent } from 'src/app/modals/profile-modal/profile-modal.component';
+import { PolicyModalComponent } from 'src/app/modals/policy-modal/policy-modal.component';
+import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LoadBalancerVlanModalComponent } from 'src/app/modals/lb-vlan-modal/lb-vlan-modal.component';
+import { LoadBalancerRouteModalComponent } from 'src/app/modals/lb-route-modal/lb-route-modal.component';
+import { LoadBalancerSelfIpModalComponent } from 'src/app/modals/lb-self-ip-modal/lb-self-ip-modal.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
   let fixture: ComponentFixture<LoadBalancersComponent>;
+
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -30,26 +44,32 @@ describe('LoadBalancersComponent', () => {
         PapaParseModule,
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
+        NgxPaginationModule,
+        NgSelectModule,
         AngularFontAwesomeModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([]),
       ],
       declarations: [
         LoadBalancersComponent,
         VirtualServerModalComponent,
+        LoadBalancerVlanModalComponent,
+        LoadBalancerRouteModalComponent,
+        LoadBalancerSelfIpModalComponent,
         PoolModalComponent,
         IRuleModalComponent,
-        PoolMemberModalComponent,
+        NodeModalComponent,
         HealthMonitorModalComponent,
+        ProfileModalComponent,
+        PolicyModalComponent,
         ImportExportComponent,
-        TooltipComponent
+        TierSelectComponent,
+        YesNoModalComponent,
+        TooltipComponent,
+        ResolvePipe,
       ],
-      providers: [
-        NgxSmartModalService,
-        CookieService,
-        FormBuilder
-      ]
-    })
-    .compileComponents();
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

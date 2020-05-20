@@ -11,12 +11,17 @@ import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ImportExportComponent } from '../import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
   let fixture: ComponentFixture<FirewallRulesComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
+  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -28,18 +33,18 @@ describe('FirewallRulesComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        NgxPaginationModule,
       ],
       declarations: [
         FirewallRulesComponent,
         FirewallRuleModalComponent,
-        TooltipComponent
+        TooltipComponent,
+        FilterPipe,
+        ImportExportComponent,
+        YesNoModalComponent,
       ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        CookieService,
-        FormBuilder
-      ]
+      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));
 

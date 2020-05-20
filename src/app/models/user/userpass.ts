@@ -1,10 +1,7 @@
 export class Userpass {
+  Username: string;
 
-    Username: string;
+  Password: string;
 
-    Password: string;
-
-    toBase64() {
-        return btoa(`${this.Username}:${this.Password}`);
-    }
+  Token: string;
 }

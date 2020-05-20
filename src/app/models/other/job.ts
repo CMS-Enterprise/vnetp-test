@@ -1,7 +1,7 @@
 export class Job {
-    id: number;
+  id: number;
 
-    status: string;
+  status: string;
 
-    elapsed: number;
+  elapsed: number;
 }
