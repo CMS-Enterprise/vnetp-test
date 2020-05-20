@@ -18,7 +18,7 @@ pipeline {
             sh 'npm i -g jest'
             sh 'npm i --unsafe-perm'
             sh 'npm rebuild node-sass'
-            sh 'npm run test'
+            sh 'npm run test:ci'
           }
         }
       }

@@ -8,6 +8,7 @@
     "documentation": "compodoc --watch --serve --open",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "ng test --code-coverage",
+    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner",
