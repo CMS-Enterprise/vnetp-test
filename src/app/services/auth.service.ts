@@ -34,14 +34,12 @@ export class AuthService {
   }
 
   async completeAuthentication(): Promise<void> {
-    return await this.manager
-      .signinRedirectCallback()
-      .then(user => {
-        this.user = user;
-      })
-      .catch(err => {
-        console.log('error', err);
-      });
+    try {
+      const user = await this.manager.signinRedirectCallback();
+      this.user = user;
+    } catch (err) {
+      console.log('error', err);
+    }
   }
 
   // private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
