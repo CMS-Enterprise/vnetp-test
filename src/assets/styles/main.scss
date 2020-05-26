@@ -16,6 +16,10 @@ a {
   }
 }
 
+h1.header {
+  font-size: 1.75rem;
+}
+
 // wasn't working inside tooltip component styles for some reason
 .tooltiptext a {
   color: $secondary-medium;
@@ -49,6 +53,9 @@ hr {
 
 .fg-danger {
   color: $danger;
+  &--dark {
+    color: $danger--dark;
+  }
 }
 
 .fg-warning {
@@ -86,6 +93,10 @@ hr {
 .ngx-pagination {
   padding: 0;
   text-align: center;
+
+  li.disabled {
+    color: #75767a;
+  }
 
   li.current {
     background-color: $primary-main;
