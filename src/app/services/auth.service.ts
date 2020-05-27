@@ -36,9 +36,8 @@ export class AuthService {
   }
 
   async completeAuthentication(): Promise<void> {
-    const manager = new UserManager({ ...environment.openId, response_mode: 'query' });
     try {
-      const user = await manager.signinRedirectCallback();
+      const user = await this.manager.signinRedirectCallback();
       this.user = user;
     } catch (err) {
       console.log(err);
