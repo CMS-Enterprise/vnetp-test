@@ -35,10 +35,14 @@ export class AuthService {
     return this.manager.signinRedirect();
   }
 
-  completeAuthentication(): Promise<void> {
-    return this.manager.signinRedirectCallback().then(user => {
+  async completeAuthentication(): Promise<void> {
+    const manager = new UserManager({ ...environment.openId, response_mode: 'query' });
+    try {
+      const user = await manager.signinRedirectCallback();
       this.user = user;
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
