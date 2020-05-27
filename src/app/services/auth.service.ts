@@ -7,7 +7,7 @@ import { UserManager, User, WebStorageStateStore, Log } from '../../../node_modu
   providedIn: 'root',
 })
 export class AuthService {
-  private manager = new UserManager({ ...environment.openId, userStore: new WebStorageStateStore({ store: window.localStorage }) });
+  private manager = new UserManager(environment.openId);
   private user: User = null;
 
   constructor() {
