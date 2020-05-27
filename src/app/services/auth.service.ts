@@ -13,6 +13,7 @@ export class AuthService {
   constructor() {
     Log.logger = console;
     Log.level = Log.DEBUG;
+    console.log(environment.openId);
     this.manager.getUser().then(user => {
       this.user = user;
     });
