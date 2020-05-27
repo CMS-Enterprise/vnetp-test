@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, WebStorageStateStore } from '../../../node_modules/oidc-client';
+import { UserManager, User, WebStorageStateStore, Log } from '../../../node_modules/oidc-client';
 // import * as Oidc from 'oidc-client';
 
 @Injectable({
@@ -11,7 +11,8 @@ export class AuthService {
   private user: User = null;
 
   constructor() {
-    // Oidc.Log.logger = console;
+    Log.logger = console;
+    Log.level = Log.DEBUG;
     this.manager.getUser().then(user => {
       this.user = user;
     });
@@ -36,6 +37,7 @@ export class AuthService {
   async completeAuthentication(): Promise<void> {
     try {
       const user = await this.manager.signinRedirectCallback();
+      console.log('user', user);
       this.user = user;
     } catch (err) {
       console.log('error', err);

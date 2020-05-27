@@ -9,7 +9,7 @@ export const environment = {
     redirect_uri: 'http://localhost:4200/callback',
     response_type: 'code',
     scope: 'openid profile',
-    filterProtocolClaims: true,
+    filterProtocolClaims: false,
     loadUserInfo: true,
     metadata: {
       issuer: 'https://10.151.20.115/cfs/oauth/draasui',
