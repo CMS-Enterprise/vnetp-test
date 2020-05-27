@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
 import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements AfterViewInit {
   constructor(
     private datacenterService: V1DatacentersService,
     private tierService: V1TiersService,
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
 
   dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     this.loadDashboard();
