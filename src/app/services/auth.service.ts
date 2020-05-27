@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, WebStorageStateStore } from 'oidc-client';
-import * as Oidc from 'oidc-client';
+import { UserManager, User, WebStorageStateStore } from '../../../node_modules/oidc-client';
+// import * as Oidc from 'oidc-client';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class AuthService {
   private user: User = null;
 
   constructor() {
-    Oidc.Log.logger = console;
+    // Oidc.Log.logger = console;
     this.manager.getUser().then(user => {
       this.user = user;
     });
