@@ -32,10 +32,6 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
 import { SpecialCharacterDirective } from './directives/special-character.directive';
-import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
-import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
@@ -50,14 +46,10 @@ import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
 import { NodeModalComponent } from './modals/node-modal/node-modal.component';
 import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
 import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
-import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
 import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
 import { PendingChangesGuard } from './guards/pending-changes.guard';
-import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
-import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
 import { D3Module } from './modules/d3-module/d3-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
@@ -118,10 +110,6 @@ export function apiConfigFactory(): Configuration {
     StaticRoutesComponent,
     StaticRouteDetailComponent,
     SpecialCharacterDirective,
-    SolarisComponent,
-    SolarisCdomCreateComponent,
-    SolarisLdomCreateComponent,
-    SolarisCdomListComponent,
     DeployComponent,
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
@@ -139,13 +127,9 @@ export function apiConfigFactory(): Configuration {
     LoadBalancerSelfIpModalComponent,
     LoadBalancerRouteModalComponent,
     HealthMonitorModalComponent,
-    SolarisImageRepositoryComponent,
     ImportExportComponent,
     PhysicalServerComponent,
     PhysicalServerModalComponent,
-    CdomDetailComponent,
-    LdomDetailComponent,
-    LdomListComponent,
     NetworkTopologyComponent,
     TooltipComponent,
     IntraVrfRulesComponent,

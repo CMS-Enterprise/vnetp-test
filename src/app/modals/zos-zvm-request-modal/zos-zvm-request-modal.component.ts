@@ -6,7 +6,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-zos-zvm-request-modal',
   templateUrl: './zos-zvm-request-modal.component.html',
-  styleUrls: ['./zos-zvm-request-modal.component.css'],
 })
 export class ZosZvmRequestModalComponent implements OnInit {
   form: FormGroup;

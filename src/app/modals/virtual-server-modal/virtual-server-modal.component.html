@@ -156,12 +156,12 @@
         <div class="form-group col-md-12">
           <label for="selectedProfiles">Selected Profiles</label>
           <tooltip [message]="helpText.SelectedProfiles"></tooltip>
-          <table class="table table-striped">
+          <table class="table table-striped" aria-describedby="Selected Profiles table">
             <thead>
               <tr>
-                <th>Profile</th>
-                <th>Type</th>
-                <th></th>
+                <th scope="col">Profile</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -203,12 +203,12 @@
         <div class="form-group col-md-12">
           <label for="selectedPolicies">Selected Policies</label>
           <tooltip [message]="helpText.SelectedPolicies"></tooltip>
-          <table class="table table-striped">
+          <table class="table table-striped" aria-describedby="Selected Policies table">
             <thead>
               <tr>
-                <th>Policy</th>
-                <th>Type</th>
-                <th></th>
+                <th scope="col">Policy</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -236,7 +236,11 @@
           <label for="selectedIRule">iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">
+<<<<<<< HEAD
             <select class="form-control" id="selectedIRule" formControlName="selectedIRule">
+=======
+            <select class="form-control" id="availableRules" formControlName="selectedIRule">
+>>>>>>> ea2e6062e25a20d48ff6836e3712e78dac144d41
               <option></option>
               <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
             </select>
@@ -249,11 +253,11 @@
         <div class="form-group col-md-12">
           <label for="selectedIRules">Selected IRules</label>
           <tooltip [message]="helpText.SelectedProfiles"></tooltip>
-          <table class="table table-striped">
+          <table class="table table-striped" aria-describedby="Selected iRules table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th></th>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>

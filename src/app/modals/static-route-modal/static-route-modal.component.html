@@ -1,10 +1,4 @@
-<ngx-smart-modal
-  #staticRouteModal
-  identifier="staticRouteModal"
-  [dismissable]="false"
-  (onOpen)="getData()"
-  (onClose)="reset()"
->
+<ngx-smart-modal #staticRouteModal identifier="staticRouteModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <div class="modal-header">
     <h4 class="modal-title">Static Route</h4>
   </div>
@@ -13,7 +7,6 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <!-- <tooltip [message]="helpText.Name"></tooltip> -->
         <input
           type="text"
           formControlName="name"
@@ -31,7 +24,6 @@
 
       <div class="form-group">
         <label for="destinationNetwork">Destination Network</label>
-        <!-- <tooltip [message]="helpText.Type"></tooltip> -->
         <input
           type="text"
           name="destinationNetwork"
@@ -48,7 +40,6 @@
 
       <div class="form-group">
         <label for="name">Next Hop</label>
-        <!-- <tooltip [message]="helpText.Port"></tooltip> -->
         <input
           type="text"
           name="name"
@@ -61,43 +52,37 @@
           <div *ngIf="f.nextHop.errors.required">
             Next Hop required.
           </div>
-            <div *ngIf="f.nextHop.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
+          <div *ngIf="f.nextHop.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
         </div>
       </div>
 
       <div class="form-group">
-          <label for="name">Metric</label>
-          <!-- <tooltip [message]="helpText.Port"></tooltip> -->
-          <input
-            type="number"
-            name="name"
-            formControlName="metric"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.metric.errors }"
-            aria-label="Metric"
-          />
-          <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
-            <div *ngIf="f.metric.errors.required">
-                  Metric required.
-            </div>
+        <label for="name">Metric</label>
+        <input
+          type="number"
+          name="name"
+          formControlName="metric"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.metric.errors }"
+          aria-label="Metric"
+        />
+        <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
+          <div *ngIf="f.metric.errors.required">
+            Metric required.
           </div>
         </div>
+      </div>
     </div>
 
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
 
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
-          Save
-        </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
     </div>
   </form>
 </ngx-smart-modal>
