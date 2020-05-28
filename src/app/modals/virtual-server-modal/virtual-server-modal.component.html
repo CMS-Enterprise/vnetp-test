@@ -7,7 +7,7 @@
   customClass="medium-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Virtual Server</h4>
+    <h1 class="modal-title header">Virtual Server</h1>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -17,6 +17,7 @@
         <tooltip [message]="helpText.Name"></tooltip>
         <input
           type="text"
+          id="name"
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -32,7 +33,7 @@
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select
-          name="type"
+          id="type"
           formControlName="type"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
@@ -50,7 +51,7 @@
         <label for="sourceAddressTranslation">Source Address Translation</label>
         <tooltip [message]="helpText.SourceAddressTranslation"></tooltip>
         <select
-          name="sourceAddressTranslation"
+          id="sourceAddressTranslation"
           formControlName="sourceAddressTranslation"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.sourceAddressTranslation.errors }"
@@ -71,7 +72,7 @@
           <label for="sourceAddress">Source Address</label>
           <tooltip [message]="helpText.SourceAddress"></tooltip>
           <input
-            name="sourceAddress"
+            id="sourceAddress"
             formControlName="sourceAddress"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
@@ -87,7 +88,7 @@
           <label for="destinationAddress">Destination Address</label>
           <tooltip [message]="helpText.DestinationAddress"></tooltip>
           <input
-            name="destinationAddress"
+            id="destinationAddress"
             formControlName="destinationAddress"
             class="form-control"
             [ngClass]="{
@@ -104,13 +105,11 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="servicePort">
-            Service Port
-          </label>
+          <label for="servicePort">Service Port</label>
           <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
             class="form-control"
-            name="servicePort"
+            id="servicePort"
             formControlName="servicePort"
             [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
             mask="09999"
@@ -125,7 +124,7 @@
           <tooltip [message]="helpText.Pool"></tooltip>
           <select
             class="form-control"
-            name="pool"
+            id="pool"
             formControlName="pool"
             [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
             aria-label="Pool"
@@ -148,7 +147,7 @@
               <option></option>
               <option *ngFor="let profile of availableProfiles" [ngValue]="profile.id">{{ profile.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="addProfile();">
+            <button type="button" class="btn btn-sm btn-info" (click)="addProfile()">
               Add Profile
             </button>
           </div>
@@ -174,8 +173,7 @@
                   {{ profile?.profileType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeProfile(profile)">
-                  </fa>
+                  <fa name="trash" (click)="removeProfile(profile)"> </fa>
                 </td>
               </tr>
               <tr *ngIf="!selectedProfiles?.length" class="text-center">
@@ -196,7 +194,7 @@
               <option></option>
               <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="addPolicy();">
+            <button type="button" class="btn btn-sm btn-info" (click)="addPolicy()">
               Add Policy
             </button>
           </div>
@@ -222,8 +220,7 @@
                   {{ policy?.policyType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removePolicy(policy)">
-                  </fa>
+                  <fa name="trash" (click)="removePolicy(policy)"> </fa>
                 </td>
               </tr>
               <tr *ngIf="!selectedPolicies?.length" class="text-center">
@@ -236,31 +233,21 @@
 
       <div class="form-row" *ngIf="ModalMode === 'Edit'">
         <div class="form-group col-md-12">
-          <label>iRules</label>
+          <label for="selectedIRule">iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">
-            <select
-              class="form-control"
-              id="availableRules"
-              formControlName="selectedIRule"
-            >
+            <select class="form-control" id="selectedIRule" formControlName="selectedIRule">
               <option></option>
-              <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{
-                irule.name
-              }}</option>
+              <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
             </select>
-            <button
-              type="button"
-              class="btn btn-sm btn-info"
-              (click)="addIRule()"
-            >
+            <button type="button" class="btn btn-sm btn-info" (click)="addIRule()">
               Add iRule
             </button>
           </div>
         </div>
 
         <div class="form-group col-md-12">
-          <label for="selectedProfiles">Selected IRules</label>
+          <label for="selectedIRules">Selected IRules</label>
           <tooltip [message]="helpText.SelectedProfiles"></tooltip>
           <table class="table table-striped">
             <thead>
@@ -287,12 +274,7 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
+        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
           Cancel
         </button>
         <button class="btn btn-success" data-dismiss="modal">
