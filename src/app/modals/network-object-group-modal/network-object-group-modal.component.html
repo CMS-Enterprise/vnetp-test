@@ -7,7 +7,7 @@
   customClass="medium-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Network Object Group</h4>
+    <h1 class="modal-title header">Network Object Group</h1>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -21,6 +21,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
           aria-label="Name"
+          id="name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
@@ -31,7 +32,7 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Description</label>
+        <label for="description">Description</label>
         <tooltip [message]="helpText.Description"></tooltip>
         <input
           type="text"
@@ -39,6 +40,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
           aria-label="Description"
+          id="description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
           <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>

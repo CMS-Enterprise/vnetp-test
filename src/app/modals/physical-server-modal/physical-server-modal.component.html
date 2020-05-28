@@ -7,7 +7,7 @@
   customClass="medium-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Physical Server</h4>
+    <h1 class="modal-title header">Physical Server</h1>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -16,6 +16,7 @@
         <label for="name">Name</label>
         <input
           type="text"
+          id="name"
           formControlName="name"
           class="form-control"
           aria-label="Name"
@@ -31,7 +32,7 @@
 
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="text" class="form-control" formControlName="description" />
+        <input type="text" id="description" class="form-control" formControlName="description" />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
           <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
@@ -43,6 +44,7 @@
           <label for="serialNumber">Serial Number</label>
           <input
             type="text"
+            id="serialNumber"
             class="form-control"
             formControlName="serialNumber"
             [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
@@ -56,6 +58,7 @@
           <label for="deliveryDate">Delivery Date</label>
           <input
             type="date"
+            id="deliveryDate"
             class="form-control"
             formControlName="deliveryDate"
             [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
@@ -71,8 +74,8 @@
       <div class="row">
         <div class="form-group col-md-4">
           <label for="localStorageType">Local Storage Type</label>
-          <!-- TO DO: get actual options -->
           <select
+            id="localStorageType"
             formControlName="localStorageType"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
@@ -90,6 +93,7 @@
         <div class="form-group col-md-4">
           <label for="localStorageRequired">Local Storage Required?</label>
           <select
+            id="localStorageRequired"
             formControlName="localStorageRequired"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
@@ -108,6 +112,7 @@
           <label for="localStorageSize">Local Storage Size (GB)</label>
           <input
             type="number"
+            id="localStorageSize"
             class="form-control"
             formControlName="localStorageSize"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
@@ -123,8 +128,7 @@
       <div class="row">
         <div class="form-group col-md-4">
           <label for="sanType">SAN Type</label>
-          <!-- TO DO: get actual options -->
-          <select formControlName="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }">
+          <select formControlName="sanType" id="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }">
             <option></option>
             <option *ngFor="let opt of ['iSCSI', 'NFS']">
               {{ opt }}
@@ -137,7 +141,12 @@
 
         <div class="form-group col-md-4">
           <label for="sanRequired">SAN Required?</label>
-          <select formControlName="sanRequired" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }">
+          <select
+            formControlName="sanRequired"
+            id="sanRequired"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }"
+          >
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
@@ -152,6 +161,7 @@
           <label for="sanStorageSize">SAN Size (GB)</label>
           <input
             type="number"
+            id="sanStorageSize"
             class="form-control"
             formControlName="sanStorageSize"
             [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"

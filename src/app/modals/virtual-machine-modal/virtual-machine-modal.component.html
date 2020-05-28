@@ -7,7 +7,7 @@
   customClass="medium-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Virtual Machine</h4>
+    <h1 class="modal-title header">Virtual Machine</h1>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -16,6 +16,7 @@
         <label for="name">Name</label>
         <input
           type="text"
+          id="name"
           formControlName="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
@@ -34,6 +35,7 @@
         <label for="description">Description</label>
         <input
           type="text"
+          id="description"
           formControlName="description"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
@@ -47,16 +49,16 @@
 
       <div class="form-row">
         <div class="form-group col-md-4">
-          <label>CPU Cores</label>
-          <select name="cpuCount" formControlName="cpuCount" class="form-control" required>
+          <label for="cpuCount">CPU Cores</label>
+          <select id="cpuCount" formControlName="cpuCount" class="form-control" required>
             <option></option>
             <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]"> {{ cpuCount }}</option>
           </select>
         </div>
 
         <div class="form-group col-md-4">
-          <label>Cores Per Socket</label>
-          <select name="coreCount" formControlName="coreCount" class="form-control" required>
+          <label for="coreCount">Cores Per Socket</label>
+          <select id="coreCount" formControlName="coreCount" class="form-control" required>
             <option></option>
             <option *ngFor="let cores of [1, 2, 3, 4, 5, 6, 7, 8]">
               {{ cores }}
@@ -65,8 +67,8 @@
         </div>
 
         <div class="form-group col-md-4">
-          <label>CPU Reserved?</label>
-          <select name="cpuReserved" formControlName="cpuReserved" class="form-control" required>
+          <label for="cpuReserved">CPU Reserved?</label>
+          <select id="cpuReserved" formControlName="cpuReserved" class="form-control" required>
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
@@ -78,12 +80,12 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="memorySize">Memory (GB)</label>
-          <input type="number" name="memorySize" formControlName="memorySize" class="form-control" required />
+          <input type="number" id="memorySize" formControlName="memorySize" class="form-control" required />
         </div>
 
         <div class="form-group col-md-6">
-          <label>Memory Reserved?</label>
-          <select name="memoryReserved" formControlName="memoryReserved" class="form-control" required>
+          <label for="memoryReserved">Memory Reserved?</label>
+          <select id="memoryReserved" formControlName="memoryReserved" class="form-control" required>
             <option></option>
             <option *ngFor="let opt of [true, false]">
               {{ opt }}
@@ -96,7 +98,7 @@
         <hr />
 
         <div class="form-group">
-          <label>Virtual Disks</label>
+          <label for="modalVirtualDisk">Virtual Disks</label>
           <button type="button" name="modalVirtualDisk" class="btn btn-sm btn-info pull-right mb-2" (click)="openVirtualDiskModal()">
             <fa name="plus"></fa>
             Add Virtual Disk

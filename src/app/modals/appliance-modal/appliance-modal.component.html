@@ -1,6 +1,6 @@
 <ngx-smart-modal #applianceModal identifier="applianceModal" [dismissable]="false" (onOpen)="getData()" customClass="medium-modal">
   <div class="modal-header">
-    <h4 class="modal-title">Appliance</h4>
+    <h1 class="modal-title header">Appliance</h1>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
   </div>
 
@@ -14,6 +14,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
           aria-label="Name"
+          id="name"
           required
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -32,6 +33,7 @@
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
           aria-label="Description"
+          id="description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
           <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
@@ -47,6 +49,7 @@
             formControlName="rackUnits"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.rackUnits.errors }"
+            id="rackUnits"
             required
           />
           <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
@@ -60,6 +63,7 @@
             formControlName="serialNumber"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
+            id="serialNumber"
             required
           />
           <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
@@ -73,6 +77,7 @@
         <input
           type="date"
           formControlName="deliveryDate"
+          id="deliveryDate"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
           required
@@ -89,6 +94,7 @@
           <label for="localStorageType">Local Storage Type</label>
           <select
             formControlName="localStorageType"
+            id="localStorageType"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
             required
@@ -105,8 +111,10 @@
 
         <div class="form-group col-md-4">
           <label for="localStorageRequired">Local Storage Required?</label>
+
           <select
             formControlName="localStorageRequired"
+            id="localStorageRequired"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
             required
@@ -116,6 +124,7 @@
               {{ opt }}
             </option>
           </select>
+
           <div *ngIf="submitted && f.localStorageRequired.errors" class="invalid-feedback">
             <div *ngIf="f.localStorageRequired.errors.required">Local Storage is required</div>
           </div>
@@ -126,6 +135,7 @@
           <input
             type="number"
             formControlName="localStorageSize"
+            id="localStorageSize"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
             required
@@ -141,7 +151,13 @@
       <div class="row">
         <div class="form-group col-md-4">
           <label for="sanType">SAN Type</label>
-          <select formControlName="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }" required>
+          <select
+            formControlName="sanType"
+            id="sanType"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }"
+            required
+          >
             <option></option>
             <option *ngFor="let opt of ['iSCSI', 'NFS']">
               {{ opt }}
@@ -156,6 +172,7 @@
           <label for="sanRequired">SAN Required?</label>
           <select
             formControlName="sanRequired"
+            id="sanRequired"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }"
             required
@@ -175,6 +192,7 @@
           <input
             type="number"
             formControlName="sanStorageSize"
+            id="sanStorageSize"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"
             required
@@ -193,6 +211,7 @@
           <input
             type="number"
             formControlName="powerSupplyVoltage"
+            id="powerSupplyVoltage"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.powerSupplyVoltage.errors }"
             required
@@ -207,6 +226,7 @@
           <input
             type="number"
             formControlName="powerSupplyWattage"
+            id="powerSupplyWattage"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.powerSupplyWattage.errors }"
             required
@@ -222,6 +242,7 @@
           <label for="powerSupplyConnectionType">Power Supply Connection Type</label>
           <select
             formControlName="powerSupplyConnectionType"
+            id="powerSupplyConnectionType"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.powerSupplyConnectionType.errors }"
             required
@@ -241,6 +262,7 @@
           <input
             type="number"
             formControlName="powerSupplyCount"
+            id="powerSupplyCount"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.powerSupplyCount.errors }"
             required

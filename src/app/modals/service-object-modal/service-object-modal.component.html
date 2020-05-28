@@ -1,12 +1,6 @@
-<ngx-smart-modal
-  #serviceObjectModal
-  identifier="serviceObjectModal"
-  [dismissable]="false"
-  (onOpen)="getData()"
-  (onClose)="reset()"
->
+<ngx-smart-modal #serviceObjectModal identifier="serviceObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <div class="modal-header">
-    <h4 class="modal-title">Service Object</h4>
+    <h1 class="modal-title header">Service Object</h1>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -17,6 +11,7 @@
         <input
           type="text"
           formControlName="name"
+          id="name"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
           aria-label="Name"
@@ -33,7 +28,7 @@
         <label for="protocol">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select
-          name="protocol"
+          id="protocol"
           formControlName="protocol"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
@@ -49,11 +44,11 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Source Port/Port Range</label>
+        <label for="sourcePorts">Source Port/Port Range</label>
         <tooltip [message]="helpText.Port"></tooltip>
         <input
           type="text"
-          name="name"
+          id="sourcePorts"
           formControlName="sourcePorts"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
@@ -64,8 +59,7 @@
             Source Port/Range required.
           </div>
           <div *ngIf="f.sourcePorts.errors.validPortNumber">
-            Source Port/Range values must be greater than 0 and less than or
-            equal to 65535.
+            Source Port/Range values must be greater than 0 and less than or equal to 65535.
           </div>
           <div *ngIf="f.sourcePorts.errors.validPortRange">
             Source Port Range is invalid.
@@ -74,44 +68,39 @@
       </div>
 
       <div class="form-group">
-          <label for="name">Destination Port/Port Range</label>
-          <tooltip [message]="helpText.Port"></tooltip>
-          <input
-            type="text"
-            name="name"
-            formControlName="destinationPorts"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
-            aria-label="Destination Port"
-          />
-          <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationPorts.errors.required">
-                  Destination Port/Range required.
-            </div>
-            <div *ngIf="f.destinationPorts.errors.validPortNumber">
-              Destination Port/Range values must be greater than 0 and less than or equal to 65535.
-            </div>
-            <div *ngIf="f.destinationPorts.errors.validPortRange">
-              Destination Port Range is invalid.
-            </div>
+        <label for="destinationPorts">Destination Port/Port Range</label>
+        <tooltip [message]="helpText.Port"></tooltip>
+        <input
+          type="text"
+          id="destinationPorts"
+          formControlName="destinationPorts"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+          aria-label="Destination Port"
+        />
+        <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
+          <div *ngIf="f.destinationPorts.errors.required">
+            Destination Port/Range required.
+          </div>
+          <div *ngIf="f.destinationPorts.errors.validPortNumber">
+            Destination Port/Range values must be greater than 0 and less than or equal to 65535.
+          </div>
+          <div *ngIf="f.destinationPorts.errors.validPortRange">
+            Destination Port Range is invalid.
           </div>
         </div>
+      </div>
     </div>
 
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
 
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
-          Save
-        </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa name="save"></fa>
+        Save
+      </button>
     </div>
   </form>
 </ngx-smart-modal>

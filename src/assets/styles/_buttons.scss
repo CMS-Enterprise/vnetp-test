@@ -3,6 +3,10 @@
   margin-right: 5px;
 }
 
+.btn-link {
+  color: $primary--alt;
+}
+
 .btn-primary {
   color: $white;
   background-color: $primary-main;
@@ -17,13 +21,13 @@
 
 .btn-info {
   color: $white;
-  background-color: $primary-medium;
-  border-color: $primary-medium;
+  background-color: $primary-main;
+  border-color: $primary-main;
   &:hover,
   &:focus,
   &:active {
-    background-color: $primary-main;
-    border-color: $primary-main;
+    background-color: $primary-medium;
+    border-color: $primary-medium;
   }
 }
 

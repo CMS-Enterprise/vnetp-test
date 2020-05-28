@@ -11,3 +11,11 @@
     margin: 0 3px;
   }
 }
+
+td a {
+  color: $primary--alt;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: $gray-light;
+}
