@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, WebStorageStateStore, Log } from '../../../node_modules/oidc-client';
-// import * as Oidc from 'oidc-client';
+import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
 
 @Injectable({
   providedIn: 'root',
