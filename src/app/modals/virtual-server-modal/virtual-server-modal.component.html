@@ -236,11 +236,7 @@
           <label for="selectedIRule">iRules</label>
           <tooltip [message]="helpText.IRules"></tooltip>
           <div class="input-group align-items-center">
-<<<<<<< HEAD
             <select class="form-control" id="selectedIRule" formControlName="selectedIRule">
-=======
-            <select class="form-control" id="availableRules" formControlName="selectedIRule">
->>>>>>> ea2e6062e25a20d48ff6836e3712e78dac144d41
               <option></option>
               <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
             </select>
