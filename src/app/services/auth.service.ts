@@ -39,7 +39,7 @@ export class AuthService {
       const user = await this.manager.signinRedirectCallback();
       this.user = user;
     } catch (err) {
-      console.log(err);
+      console.log('error', err);
     }
   }
 
