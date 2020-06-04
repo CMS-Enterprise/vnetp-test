@@ -12,8 +12,11 @@
 import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
 import { StaticRoute } from './staticRoute';
 import { LoadBalancerIrule } from './loadBalancerIrule';
+import { LoadBalancerRoute } from './loadBalancerRoute';
+import { LoadBalancerVlan } from './loadBalancerVlan';
 import { LoadBalancerNode } from './loadBalancerNode';
 import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
+import { LoadBalancerSelfIp } from './loadBalancerSelfIp';
 import { Vlan } from './vlan';
 import { LoadBalancerPool } from './loadBalancerPool';
 import { ServiceObjectGroup } from './serviceObjectGroup';
@@ -56,6 +59,9 @@ export interface Tier {
     readonly loadBalancerVirtualServers?: Array<LoadBalancerVirtualServer>;
     readonly loadBalancerProfiles?: Array<LoadBalancerProfile>;
     readonly loadBalancerPolicies?: Array<LoadBalancerPolicy>;
+    readonly loadBalancerVlans?: Array<LoadBalancerVlan>;
+    readonly loadBalancerSelfIps?: Array<LoadBalancerSelfIp>;
+    readonly loadBalancerRoutes?: Array<LoadBalancerRoute>;
 }
 export enum TierTierType {
     Presentation = 'Presentation',

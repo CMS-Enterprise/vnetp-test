@@ -26,6 +26,7 @@ export interface LoadBalancerPoolBulkImportDto {
     loadBalancingMethod: LoadBalancerPoolBulkImportDtoLoadBalancingMethod;
     nodes?: Array<LoadBalancerNode>;
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
+    defaultHealthMonitors: Array<LoadBalancerPoolBulkImportDtoDefaultHealthMonitors>;
     tierId: string;
     vrfName: string;
     healthMonitorNames: Array<string>;
@@ -35,7 +36,28 @@ export enum LoadBalancerPoolBulkImportDtoLoadBalancingMethod {
     RoundRobin = 'RoundRobin',
     LeastSessions = 'LeastSessions',
     FastestNode = 'FastestNode',
-    FastestAppResponse = 'FastestAppResponse'
+    FastestAppResponse = 'FastestAppResponse',
+    RatioMember = 'RatioMember',
+    ObservedMember = 'ObservedMember',
+    PredictiveMember = 'PredictiveMember',
+    RatioNode = 'RatioNode',
+    LeastConnectionsNode = 'LeastConnectionsNode',
+    ObservedNode = 'ObservedNode',
+    PredictiveNode = 'PredictiveNode',
+    DynamicRatioNode = 'DynamicRatioNode',
+    DynamicRatioMember = 'DynamicRatioMember',
+    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
+    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
+    RatioSession = 'RatioSession',
+    RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
+    RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
+};
+export enum LoadBalancerPoolBulkImportDtoDefaultHealthMonitors {
+    ICMP = 'ICMP',
+    UDP = 'UDP',
+    TCP = 'TCP',
+    HTTP = 'HTTP',
+    HTTPS = 'HTTPS'
 };
 
 

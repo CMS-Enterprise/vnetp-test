@@ -26,13 +26,35 @@ export interface LoadBalancerPool {
     loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
     nodes?: Array<LoadBalancerNode>;
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
+    defaultHealthMonitors: Array<LoadBalancerPoolDefaultHealthMonitors>;
     tierId: string;
 }
 export enum LoadBalancerPoolLoadBalancingMethod {
     RoundRobin = 'RoundRobin',
     LeastSessions = 'LeastSessions',
     FastestNode = 'FastestNode',
-    FastestAppResponse = 'FastestAppResponse'
+    FastestAppResponse = 'FastestAppResponse',
+    RatioMember = 'RatioMember',
+    ObservedMember = 'ObservedMember',
+    PredictiveMember = 'PredictiveMember',
+    RatioNode = 'RatioNode',
+    LeastConnectionsNode = 'LeastConnectionsNode',
+    ObservedNode = 'ObservedNode',
+    PredictiveNode = 'PredictiveNode',
+    DynamicRatioNode = 'DynamicRatioNode',
+    DynamicRatioMember = 'DynamicRatioMember',
+    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
+    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
+    RatioSession = 'RatioSession',
+    RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
+    RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
+};
+export enum LoadBalancerPoolDefaultHealthMonitors {
+    ICMP = 'ICMP',
+    UDP = 'UDP',
+    TCP = 'TCP',
+    HTTP = 'HTTP',
+    HTTPS = 'HTTPS'
 };
 
 

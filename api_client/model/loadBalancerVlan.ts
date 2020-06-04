@@ -11,7 +11,7 @@
  */
 
 
-export interface LoadBalancerProfile { 
+export interface LoadBalancerVlan { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -20,18 +20,7 @@ export interface LoadBalancerProfile {
     provisionedAt?: object;
     readonly provisionedVersion?: number;
     name: string;
-    description?: string;
-    type: LoadBalancerProfileType;
-    properties: object;
-    reverseProxy: string;
-    key: string;
-    certificate: string;
+    tag: number;
     tierId: string;
 }
-export enum LoadBalancerProfileType {
-    ClientSSL = 'ClientSSL',
-    Http = 'Http'
-};
-
-
 
