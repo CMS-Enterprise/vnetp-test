@@ -130,7 +130,7 @@
             <span>{{ pool?.nodes?.length }}</span>
           </td>
           <td>
-            <span>{{ pool?.healthMonitors?.length }}</span>
+            <span>{{ pool?.healthMonitors?.length + pool?.defaultHealthMonitors?.length }}</span>
           </td>
           <td>
             <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>

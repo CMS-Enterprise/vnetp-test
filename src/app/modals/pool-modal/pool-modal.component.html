@@ -168,6 +168,10 @@
                 [ngValue]="healthMonitor.id"
                 >{{ healthMonitor.name }}</option
               >
+              <option
+              *ngFor="let defaultHealthMonitor of defaultHealthMonitors"
+              [ngValue]="defaultHealthMonitor"
+              >{{ defaultHealthMonitor }} (Default)</option>
             </select>
             <button
             type="button"
@@ -198,12 +202,24 @@
                 <td class="item-actions">
                   <fa
                     name="trash"
-                    (click)="removeHealthMonitor(healthMonitor)"
+                    (click)="removeHealthMonitor(healthMonitor.id)"
                   >
                   </fa>
                 </td>
               </tr>
-              <tr *ngIf="!selectedHealthMonitors?.length" class="text-center">
+              <tr *ngFor="let defaultHealthMonitor of selectedDefaultHealthMonitors">
+                <td>
+                  {{ defaultHealthMonitor }} (Default)
+                </td>
+                <td class="item-actions">
+                  <fa
+                    name="trash"
+                    (click)="removeHealthMonitor(defaultHealthMonitor)"
+                  >
+                  </fa>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedHealthMonitors?.length && !selectedDefaultHealthMonitors?.length" class="text-center">
                 <td colspan="2">No Health Monitors Selected</td>
               </tr>
             </tbody>

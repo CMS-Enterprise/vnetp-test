@@ -5,10 +5,18 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerNode, LoadBalancerPool, LoadBalancerHealthMonitor, V1LoadBalancerPoolsService } from 'api_client';
+import {
+  LoadBalancerNode,
+  LoadBalancerPool,
+  LoadBalancerHealthMonitor,
+  V1LoadBalancerPoolsService,
+  LoadBalancerHealthMonitorType,
+  LoadBalancerPoolDefaultHealthMonitors,
+} from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { timeThursday } from 'd3';
 
 @Component({
   selector: 'app-pool-modal',
@@ -32,6 +40,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   HealthMonitors: LoadBalancerHealthMonitor[];
   ModalMode: ModalMode;
   PoolId: string;
+
+  defaultHealthMonitors = ['HTTP', 'HTTPS', 'TCP', 'UDP', 'ICMP'];
+
+  selectedDefaultHealthMonitors: LoadBalancerPoolDefaultHealthMonitors[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -93,18 +105,33 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   addHealthMonitor() {
-    this.poolService
-      .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
-        poolId: this.PoolId,
-        healthMonitorId: this.f.selectedHealthMonitor.value,
-      })
-      .subscribe(data => {
-        this.getPool();
-        this.f.selectedHealthMonitor.setValue('');
-      });
+    if (this.isDefaultHealthMonitor(this.f.selectedHealthMonitor.value)) {
+      this.selectedDefaultHealthMonitors.push(this.f.selectedHealthMonitor.value);
+      this.poolService
+        .v1LoadBalancerPoolsIdPatch({
+          id: this.PoolId,
+          loadBalancerPool: {
+            defaultHealthMonitors: this.selectedDefaultHealthMonitors,
+          } as LoadBalancerPool,
+        })
+        .subscribe(() => {
+          this.getPool();
+          this.f.selectedHealthMonitor.setValue('');
+        });
+    } else {
+      this.poolService
+        .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
+          poolId: this.PoolId,
+          healthMonitorId: this.f.selectedHealthMonitor.value,
+        })
+        .subscribe(() => {
+          this.getPool();
+          this.f.selectedHealthMonitor.setValue('');
+        });
+    }
   }
 
-  removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
+  removeHealthMonitor(healthMonitorId: string) {
     const modalDto = new YesNoModalDto('Remove Health Monitor', '');
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
@@ -113,17 +140,35 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       const data = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (data && data.modalYes) {
-        this.poolService
-          .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
-            poolId: this.PoolId,
-            healthMonitorId: healthMonitor.id,
-          })
-          .subscribe(() => {
-            this.getPool();
-          });
+        if (this.isDefaultHealthMonitor(healthMonitorId)) {
+          this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
+          this.poolService
+            .v1LoadBalancerPoolsIdPatch({
+              id: this.PoolId,
+              loadBalancerPool: {
+                defaultHealthMonitors: this.selectedDefaultHealthMonitors,
+              } as LoadBalancerPool,
+            })
+            .subscribe(() => {
+              this.getPool();
+            });
+        } else {
+          this.poolService
+            .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
+              poolId: this.PoolId,
+              healthMonitorId,
+            })
+            .subscribe(() => {
+              this.getPool();
+            });
+        }
       }
       yesNoModalSubscription.unsubscribe();
     });
+  }
+
+  private isDefaultHealthMonitor(value: string) {
+    return this.defaultHealthMonitors.includes(value);
   }
 
   private getPool() {
@@ -203,6 +248,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         this.selectedHealthMonitors = dto.pool.healthMonitors;
       } else {
         this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+      }
+      if (dto.pool.defaultHealthMonitors) {
+        this.selectedDefaultHealthMonitors = dto.pool.defaultHealthMonitors;
+      } else {
+        this.selectedDefaultHealthMonitors = new Array<LoadBalancerPoolDefaultHealthMonitors>();
       }
       if (dto.pool.nodes) {
         this.selectedNodes = dto.pool.nodes;
