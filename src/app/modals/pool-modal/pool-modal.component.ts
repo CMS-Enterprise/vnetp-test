@@ -41,7 +41,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   ModalMode: ModalMode;
   PoolId: string;
 
-  defaultHealthMonitors = ['HTTP', 'HTTPS', 'TCP', 'UDP', 'ICMP'];
+  defaultHealthMonitors = ['HTTP', 'HTTPS', 'TCP', 'UDP'];
 
   selectedDefaultHealthMonitors: LoadBalancerPoolDefaultHealthMonitors[];
 
