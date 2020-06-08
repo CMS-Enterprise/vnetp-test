@@ -227,7 +227,8 @@ export class PoolModalHelpText {
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
   AvailableNodes = `Nodes that can be added to the Pool.`;
   SelectedNodes = `Nodes that have been added to the Pool.`;
-  ServicePort = `Service Port of the Pool.`;
+  Ratio = 'Ratio of traffic that will be sent to the node.';
+  ServicePort = `Port that the node provides service on.`;
 }
 
 @Injectable({

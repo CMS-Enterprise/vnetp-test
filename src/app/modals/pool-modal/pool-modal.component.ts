@@ -10,7 +10,6 @@ import {
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
   V1LoadBalancerPoolsService,
-  LoadBalancerHealthMonitorType,
   LoadBalancerPoolDefaultHealthMonitors,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -26,18 +25,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-  nodes: LoadBalancerNode[];
-  nodesModalMode: ModalMode;
-  editNodeIndex: number;
-  nodeModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
   selectedNodes: LoadBalancerNode[];
   availableNodes: LoadBalancerNode[];
   TierId: string;
   Pool: LoadBalancerPool;
-  Nodes: LoadBalancerNode[];
-  HealthMonitors: LoadBalancerHealthMonitor[];
   ModalMode: ModalMode;
   PoolId: string;
 
@@ -287,9 +280,9 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.PoolId = null;
     this.buildForm();
-    this.nodes = new Array<LoadBalancerNode>();
     this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
     this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+    this.selectedDefaultHealthMonitors = new Array<LoadBalancerPoolDefaultHealthMonitors>();
     this.selectedNodes = new Array<LoadBalancerNode>();
     this.availableNodes = new Array<LoadBalancerNode>();
   }
