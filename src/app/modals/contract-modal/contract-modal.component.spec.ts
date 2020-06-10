@@ -5,7 +5,6 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { ContractModalComponent } from './contract-modal.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
-import { ExpectedConditions } from 'protractor';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 
 describe('ContractModalComponent', () => {
