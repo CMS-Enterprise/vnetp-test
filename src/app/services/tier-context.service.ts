@@ -13,17 +13,11 @@ import { DatacenterContextService } from './datacenter-context.service';
   providedIn: 'root',
 })
 export class TierContextService {
-  private currentTierSubject: BehaviorSubject<Tier> = new BehaviorSubject<Tier>(
-    null,
-  );
+  private currentTierSubject: BehaviorSubject<Tier> = new BehaviorSubject<Tier>(null);
 
-  private tiersSubject: BehaviorSubject<Tier[]> = new BehaviorSubject<Tier[]>(
-    null,
-  );
+  private tiersSubject: BehaviorSubject<Tier[]> = new BehaviorSubject<Tier[]>(null);
 
-  private lockCurrentTierSubject: BehaviorSubject<
-    boolean
-  > = new BehaviorSubject<boolean>(false);
+  private lockCurrentTierSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   /** Current Tier Context. */
   public currentTier: Observable<Tier> = this.currentTierSubject.asObservable();
@@ -34,9 +28,7 @@ export class TierContextService {
   /** Indicates whether the current tier
    *  context can be changed.
    */
-  public lockCurrentTier: Observable<
-    boolean
-  > = this.lockCurrentTierSubject.asObservable();
+  public lockCurrentTier: Observable<boolean> = this.lockCurrentTierSubject.asObservable();
 
   private _tiers: Tier[] = new Array<Tier>();
   ignoreNextQueryParamEvent: boolean;
@@ -167,12 +159,7 @@ export class TierContextService {
       });
 
       // Send Context Switch Message
-      this.messageService.sendMessage(
-        new AppMessage(
-          `Tier Context Switch ${tierId}`,
-          AppMessageType.TierContextSwitch,
-        ),
-      );
+      this.messageService.sendMessage(new AppMessage(`Tier Context Switch ${tierId}`, AppMessageType.TierContextSwitch));
     }
   }
 }

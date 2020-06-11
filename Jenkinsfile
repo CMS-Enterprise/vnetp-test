@@ -15,8 +15,8 @@ pipeline {
       steps {
         script{
           docker.image('zenika/alpine-chrome:with-node').inside("-u 0:0") {
-            sh 'npm i -g jest'
             sh 'npm i --unsafe-perm'
+            sh 'npm i -g jest'
             sh 'npm rebuild node-sass'
             sh 'npm run test:ci'
           }
@@ -26,7 +26,8 @@ pipeline {
   }
   post {
     always {
-      //junit 'jest-junit.xml'
+      sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
+      cobertura(coberturaReportFile: 'cobertura-coverage.xml')
       script {
         slackNotifier.notify(currentBuild.currentResult)
       }
