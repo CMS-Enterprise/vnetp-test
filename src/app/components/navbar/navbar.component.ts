@@ -69,6 +69,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
   }
 
+  openLogoutModal() {
+    this.ngx.getModal('logoutModal').open();
+  }
+
   updateModalJob() {
     if (this.modalJob && this.modalJob.status !== 'failed' && this.modalJob.status !== 'successful') {
       // Try to update the modal job from the activeJobs array.
