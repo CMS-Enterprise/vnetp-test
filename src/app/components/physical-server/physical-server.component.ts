@@ -13,13 +13,13 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 })
 export class PhysicalServerComponent implements OnInit, OnDestroy {
   physicalServers: Array<PhysicalServer>;
-  ModalMode: ModalMode;
   physicalServerModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
 
   currentPhysicalServersPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,

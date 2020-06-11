@@ -57,7 +57,7 @@
           <fa
             name="pencil"
             *ngIf="!staticRoute?.deletedAt"
-            (click)="openStaticRouteModal('Edit', staticRoute)"
+            (click)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
             aria-label="Edit Static Route"
           ></fa>
           <fa

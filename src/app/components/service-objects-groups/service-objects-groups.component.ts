@@ -31,6 +31,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   currentServiceObjectsPage = 1;
   currentServiceObjectGroupsPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;

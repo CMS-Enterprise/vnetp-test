@@ -19,7 +19,7 @@
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal('Create')" aria-label="Create Network Object">
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)" aria-label="Create Network Object">
         <fa name="plus"></fa>
         Create Network Object
       </button>
@@ -72,7 +72,7 @@
             <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal('Edit', netObj)" aria-label="Edit Network Object">
+            <fa name="pencil" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal(ModalMode.Edit, netObj)" aria-label="Edit Network Object">
             </fa>
             <fa
               name="undo"
@@ -100,7 +100,7 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal('Create')" aria-label="Network Object Groups">
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Network Object Groups">
         <fa name="plus"></fa>
         Create Network Object Group
       </button>
@@ -132,7 +132,7 @@
             <fa
               name="pencil"
               *ngIf="!netObjGroup?.deletedAt"
-              (click)="openNetworkObjectGroupModal('Edit', netObjGroup)"
+              (click)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
               aria-label="Edit Network Object Group"
             ></fa>
             <fa

@@ -31,6 +31,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   currentSubnetsPage = 1;
   currentVlansPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   subnets: Array<Subnet>;
   vlans: Array<Vlan>;

@@ -13,10 +13,11 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 })
 export class ApplianceComponent implements OnInit, OnDestroy {
   appliances: Array<Appliance>;
-  ModalMode: ModalMode;
   applianceModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
+
+  ModalMode = ModalMode;
 
   constructor(
     private ngx: NgxSmartModalService,

@@ -42,7 +42,7 @@
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openVirtualServerModal('Create')" aria-label="Create Virtual Server">
+      <button type="button" class="btn btn-success" (click)="openVirtualServerModal(ModalMode.Create)" aria-label="Create Virtual Server">
         <fa name="plus"></fa>
         Create Virtual Server
       </button>
@@ -81,7 +81,7 @@
             <span>{{ virtualServer?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openVirtualServerModal('Edit', virtualServer)" aria-label="Edit Virtual Server"> </fa>
+            <fa name="pencil" (click)="openVirtualServerModal(ModalMode.Edit, virtualServer)" aria-label="Edit Virtual Server"> </fa>
             <fa
               name="undo"
               *ngIf="virtualServer?.deletedAt"
@@ -107,7 +107,7 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openPoolModal('Create')" aria-label="Create Pool">
+      <button type="button" class="btn btn-success" (click)="openPoolModal(ModalMode.Create)" aria-label="Create Pool">
         <fa name="plus"></fa>
         Create Pool
       </button>
@@ -146,7 +146,7 @@
             <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openPoolModal('Edit', pool)" aria-label="Edit Pool"> </fa>
+            <fa name="pencil" (click)="openPoolModal(ModalMode.Edit, pool)" aria-label="Edit Pool"> </fa>
             <fa name="undo" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa>
             <fa
               name="trash"
@@ -166,7 +166,7 @@
 
   <div *ngIf="navIndex == 2">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNodeModal('Create')" aria-label="Create Node">
+      <button type="button" class="btn btn-success" (click)="openNodeModal(ModalMode.Create)" aria-label="Create Node">
         <fa name="plus"></fa>
         Create Node
       </button>
@@ -213,7 +213,7 @@
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openNodeModal('Edit', node)" aria-label="Edit Node"> </fa>
+            <fa name="pencil" (click)="openNodeModal(ModalMode.Edit, node)" aria-label="Edit Node"> </fa>
             <fa name="undo" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa>
             <fa
               name="trash"
@@ -233,7 +233,7 @@
 
   <div *ngIf="navIndex == 3">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openIRuleModal('Create')" aria-label="Create iRule">
+      <button type="button" class="btn btn-success" (click)="openIRuleModal(ModalMode.Create)" aria-label="Create iRule">
         <fa name="plus"></fa>
         Create iRule
       </button>
@@ -260,7 +260,7 @@
             <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openIRuleModal('Edit', irule)" aria-label="Edit iRule"> </fa>
+            <fa name="pencil" (click)="openIRuleModal(ModalMode.Edit, irule)" aria-label="Edit iRule"> </fa>
             <fa name="undo" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore Irule"></fa>
             <fa
               name="trash"
@@ -280,7 +280,7 @@
 
   <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openHealthMonitorModal('Create')" aria-label="Create Health Monitor">
+      <button type="button" class="btn btn-success" (click)="openHealthMonitorModal(ModalMode.Create)" aria-label="Create Health Monitor">
         <fa name="plus"></fa>
         Create Health Monitor
       </button>
@@ -319,7 +319,7 @@
             <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openHealthMonitorModal('Edit', healthMonitor)" aria-label="Edit Health Monitor"> </fa>
+            <fa name="pencil" (click)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)" aria-label="Edit Health Monitor"> </fa>
             <fa
               name="undo"
               *ngIf="healthMonitor?.deletedAt"
@@ -345,7 +345,7 @@
 
   <div *ngIf="navIndex == 5">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openProfileModal('Create')" aria-label="Create Profile">
+      <button type="button" class="btn btn-success" (click)="openProfileModal(ModalMode.Create)" aria-label="Create Profile">
         <fa name="plus"></fa>
         Create Profile
       </button>
@@ -372,7 +372,7 @@
             <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openProfileModal('Edit', profile)" aria-label="Edit Profile"> </fa>
+            <fa name="pencil" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"> </fa>
             <fa
               name="undo"
               *ngIf="profile?.deletedAt"
@@ -398,7 +398,7 @@
 
   <div *ngIf="navIndex == 6">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openPolicyModal('Create')" aria-label="Create Policy">
+      <button type="button" class="btn btn-success" (click)="openPolicyModal(ModalMode.Create)" aria-label="Create Policy">
         <fa name="plus"></fa>
         Create Policy
       </button>
@@ -425,7 +425,7 @@
             <span>{{ policy?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openPolicyModal('Edit', policy)" aria-label="Edit Policy"> </fa>
+            <fa name="pencil" (click)="openPolicyModal(ModalMode.Edit, policy)" aria-label="Edit Policy"> </fa>
             <fa name="undo" *ngIf="policy?.deletedAt" class="fg-success" (click)="restorePolicy(policy)" aria-label="Restore Policy"></fa>
             <fa
               name="trash"
@@ -445,7 +445,7 @@
 
   <div *ngIf="navIndex == 7">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openVlanModal('Create')" aria-label="Create Vlan">
+      <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="Create Vlan">
         <fa name="plus"></fa>
         Create Vlan
       </button>
@@ -468,7 +468,7 @@
             <span>{{ vlan?.tag }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openVlanModal('Edit', vlan)" aria-label="Edit Vlan"> </fa>
+            <fa name="pencil" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit Vlan"> </fa>
             <fa name="undo" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa>
             <fa
               name="trash"
@@ -488,7 +488,7 @@
 
   <div *ngIf="navIndex == 8">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openSelfIpModal('Create')" aria-label="Create Self IP">
+      <button type="button" class="btn btn-success" (click)="openSelfIpModal(ModalMode.Create)" aria-label="Create Self IP">
         <fa name="plus"></fa>
         Create Self IP
       </button>
@@ -515,7 +515,7 @@
             <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openSelfIpModal('Edit', selfIp)" aria-label="Edit SelfIp"> </fa>
+            <fa name="pencil" (click)="openSelfIpModal(ModalMode.Edit, selfIp)" aria-label="Edit SelfIp"> </fa>
             <fa name="undo" *ngIf="selfIp?.deletedAt" class="fg-success" (click)="restoreSelfIp(selfIp)" aria-label="Restore SelfIp"></fa>
             <fa
               name="trash"
@@ -535,7 +535,7 @@
 
   <div *ngIf="navIndex == 9">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openRouteModal('Create')" aria-label="Create Route">
+      <button type="button" class="btn btn-success" (click)="openRouteModal(ModalMode.Create)" aria-label="Create Route">
         <fa name="plus"></fa>
         Create Route
       </button>
@@ -562,7 +562,7 @@
             <span>{{ route?.gateway }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" (click)="openRouteModal('Edit', route)" aria-label="Edit Route"> </fa>
+            <fa name="pencil" (click)="openRouteModal(ModalMode.Edit, route)" aria-label="Edit Route"> </fa>
             <fa name="undo" *ngIf="route?.deletedAt" class="fg-success" (click)="restoreRoute(route)" aria-label="Restore Route"></fa>
             <fa
               name="trash"

@@ -14,7 +14,7 @@
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openSubnetModal('Create')" aria-label="Create Subnet">
+      <button type="button" class="btn btn-success" (click)="openSubnetModal(ModalMode.Create)" aria-label="Create Subnet">
         <fa name="plus"></fa>
         Create Subnet
       </button>
@@ -53,7 +53,7 @@
             <span>{{ subnet?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal('Edit', subnet)" aria-label="Edit Subnet"> </fa>
+            <fa name="pencil" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal(ModalMode.Edit, subnet)" aria-label="Edit Subnet"> </fa>
             <fa name="undo" *ngIf="subnet?.deletedAt" class="fg-success" (click)="restoreSubnet(subnet)" aria-label="Restore Subnet"></fa>
             <fa
               name="trash"
@@ -74,7 +74,7 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openVlanModal('Create')" aria-label="VLANs">
+      <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="VLANs">
         <fa name="plus"></fa>
         Create VLAN
       </button>
@@ -105,7 +105,7 @@
             <span>{{ vlan?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!vlan?.deletedAt" (click)="openVlanModal('Edit', vlan)" aria-label="Edit VLAN"></fa>
+            <fa name="pencil" *ngIf="!vlan?.deletedAt" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit VLAN"></fa>
             <fa name="undo" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa>
             <fa
               name="trash"

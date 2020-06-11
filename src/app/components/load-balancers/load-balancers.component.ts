@@ -64,6 +64,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   currentRoutesPage = 1;
 
   perPage = 20;
+  ModalMode = ModalMode;
 
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];

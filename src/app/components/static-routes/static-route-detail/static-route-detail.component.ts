@@ -17,6 +17,8 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy, PendingCha
   currentDatacenterSubscription: Subscription;
   staticRouteModalSubscription: Subscription;
 
+  ModalMode = ModalMode;
+
   constructor(
     private datacenterService: DatacenterContextService,
     private tierService: V1TiersService,

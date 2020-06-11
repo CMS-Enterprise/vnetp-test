@@ -13,13 +13,13 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 })
 export class VmwareComponent implements OnInit, OnDestroy {
   virtualMachines: Array<VmwareVirtualMachine>;
-  ModalMode: ModalMode;
   virtualMachineModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   datacenterId: string;
 
   currentVMWarePage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   constructor(
     private ngxSmartModalService: NgxSmartModalService,
