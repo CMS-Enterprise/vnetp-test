@@ -101,7 +101,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.ngx.getModal('serviceObjectModal').open();
   }
 
-  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup: ServiceObjectGroup) {
+  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
       throw new Error('Service Object required.');
     }

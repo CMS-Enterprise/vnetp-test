@@ -449,7 +449,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('healthMonitorModal').open();
   }
 
-  openProfileModal(modalMode: ModalMode, profile: LoadBalancerProfile) {
+  openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
     if (modalMode === ModalMode.Edit && !profile) {
       throw new Error('Profile Required');
     }
@@ -465,9 +465,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerProfileModal').open();
   }
 
-  openPolicyModal(modalMode: ModalMode, policy: LoadBalancerPolicy) {
+  openPolicyModal(modalMode: ModalMode, policy?: LoadBalancerPolicy) {
     if (modalMode === ModalMode.Edit && !policy) {
-      throw new Error('Profile Required');
+      throw new Error('Policy Required');
     }
 
     const dto = new PolicyModalDto();
@@ -481,7 +481,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerPolicyModal').open();
   }
 
-  openVlanModal(modalMode: ModalMode, vlan: LoadBalancerVlan) {
+  openVlanModal(modalMode: ModalMode, vlan?: LoadBalancerVlan) {
     if (modalMode === ModalMode.Edit && !vlan) {
       throw new Error('Vlan Required');
     }
@@ -497,7 +497,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerVlanModal').open();
   }
 
-  openSelfIpModal(modalMode: ModalMode, selfIp: LoadBalancerSelfIp) {
+  openSelfIpModal(modalMode: ModalMode, selfIp?: LoadBalancerSelfIp) {
     if (modalMode === ModalMode.Edit && !selfIp) {
       throw new Error('Self IP Required');
     }
@@ -513,7 +513,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerSelfIpModal').open();
   }
 
-  openRouteModal(modalMode: ModalMode, route: LoadBalancerRoute) {
+  openRouteModal(modalMode: ModalMode, route?: LoadBalancerRoute) {
     if (modalMode === ModalMode.Edit && !route) {
       throw new Error('Route Required');
     }
