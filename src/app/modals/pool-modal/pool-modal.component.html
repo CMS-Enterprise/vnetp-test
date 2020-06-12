@@ -63,7 +63,7 @@
           <option value="RatioLeastConnectionsNode">Ratio Least Connections Node</option>
         </select>
         <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
-          <div *ngIf="f.name.load.required">Name is required</div>
+          <div *ngIf="f.loadBalancingMethod.errors.required">Load Balancing Method is required</div>
         </div>
       </div>
 

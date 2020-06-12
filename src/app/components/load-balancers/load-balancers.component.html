@@ -361,7 +361,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let profile of profiles | paginate: { itemsPerPage: perPage, currentPage: currentProfilePage }">
+        <tr *ngFor="let profile of profiles | paginate: { itemsPerPage: perPage, currentPage: currentProfilesPage }">
           <td>
             <span>{{ profile?.name }}</span>
           </td>
