@@ -27,10 +27,14 @@ export class TierSelectComponent implements OnInit, OnDestroy {
     private datacenterService: V1DatacentersService,
     private tierContextService: TierContextService,
     private toastrService: ToastrService,
-    private ngx: NgxSmartModalService, // used in html
+    private ngx: NgxSmartModalService,
   ) {}
 
   currentUser: User;
+
+  openTierModal() {
+    this.ngx.getModal('tierSwitchModal').open();
+  }
 
   getTiers() {
     this.datacenterService

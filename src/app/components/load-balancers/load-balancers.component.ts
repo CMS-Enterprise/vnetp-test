@@ -64,6 +64,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   currentRoutesPage = 1;
 
   perPage = 20;
+  ModalMode = ModalMode;
 
   virtualServers: LoadBalancerVirtualServer[];
   pools: LoadBalancerPool[];
@@ -403,7 +404,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openNodeModal(modalMode: ModalMode, node?: LoadBalancerNode) {
     if (modalMode === ModalMode.Edit && !node) {
-      throw new Error('Node required.');
+      throw new Error('Node required');
     }
     const dto = new NodeModalDto();
     dto.node = node;
@@ -418,7 +419,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openIRuleModal(modalMode: ModalMode, irule?: LoadBalancerIrule) {
     if (modalMode === ModalMode.Edit && !irule) {
-      throw new Error('IRule required.');
+      throw new Error('IRule required');
     }
 
     const dto = {} as any;
@@ -434,7 +435,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openHealthMonitorModal(modalMode: ModalMode, healthMonitor?: LoadBalancerHealthMonitor) {
     if (modalMode === ModalMode.Edit && !healthMonitor) {
-      throw new Error('Health Monitor required.');
+      throw new Error('Health Monitor required');
     }
 
     const dto = {} as any;
@@ -448,9 +449,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('healthMonitorModal').open();
   }
 
-  openProfileModal(modalMode: ModalMode, profile: LoadBalancerProfile) {
+  openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
     if (modalMode === ModalMode.Edit && !profile) {
-      throw new Error('Profile Required');
+      throw new Error('Profile required');
     }
 
     const dto = new ProfileModalDto();
@@ -464,9 +465,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerProfileModal').open();
   }
 
-  openPolicyModal(modalMode: ModalMode, policy: LoadBalancerPolicy) {
+  openPolicyModal(modalMode: ModalMode, policy?: LoadBalancerPolicy) {
     if (modalMode === ModalMode.Edit && !policy) {
-      throw new Error('Profile Required');
+      throw new Error('Policy required');
     }
 
     const dto = new PolicyModalDto();
@@ -480,9 +481,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerPolicyModal').open();
   }
 
-  openVlanModal(modalMode: ModalMode, vlan: LoadBalancerVlan) {
+  openVlanModal(modalMode: ModalMode, vlan?: LoadBalancerVlan) {
     if (modalMode === ModalMode.Edit && !vlan) {
-      throw new Error('Vlan Required');
+      throw new Error('VLAN required');
     }
 
     const dto = new LoadBalancerVlanModalDto();
@@ -496,9 +497,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerVlanModal').open();
   }
 
-  openSelfIpModal(modalMode: ModalMode, selfIp: LoadBalancerSelfIp) {
+  openSelfIpModal(modalMode: ModalMode, selfIp?: LoadBalancerSelfIp) {
     if (modalMode === ModalMode.Edit && !selfIp) {
-      throw new Error('Self IP Required');
+      throw new Error('Self IP required');
     }
 
     const dto = new LoadBalancerSelfIpModalDto();
@@ -512,9 +513,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerSelfIpModal').open();
   }
 
-  openRouteModal(modalMode: ModalMode, route: LoadBalancerRoute) {
+  openRouteModal(modalMode: ModalMode, route?: LoadBalancerRoute) {
     if (modalMode === ModalMode.Edit && !route) {
-      throw new Error('Route Required');
+      throw new Error('Route required');
     }
 
     const dto = new LoadBalancerRouteModalDto();

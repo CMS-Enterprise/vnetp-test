@@ -31,6 +31,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   currentSubnetsPage = 1;
   currentVlansPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   subnets: Array<Subnet>;
   vlans: Array<Vlan>;
@@ -98,7 +99,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
     this.ngx.getModal('subnetModal').open();
   }
 
-  openVlanModal(modalMode: ModalMode, vlan: Vlan) {
+  openVlanModal(modalMode: ModalMode, vlan?: Vlan) {
     if (modalMode === ModalMode.Edit && !vlan) {
       throw new Error('VLAN Required');
     }

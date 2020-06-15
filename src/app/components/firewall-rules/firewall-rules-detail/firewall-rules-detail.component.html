@@ -96,7 +96,7 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa name="pencil" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal('Edit', firewallRule)"> </fa>
+          <fa name="pencil" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"> </fa>
           <fa
             name="undo"
             *ngIf="firewallRule?.deletedAt"

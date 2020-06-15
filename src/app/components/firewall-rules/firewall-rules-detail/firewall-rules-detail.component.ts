@@ -37,10 +37,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
   firewallRules: Array<FirewallRule>;
 
   currentFirewallRulePage = 1;
-
   perPage = 50;
-
   dirty = false;
+  ModalMode = ModalMode;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;

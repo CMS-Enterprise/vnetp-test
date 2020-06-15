@@ -19,6 +19,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   perPage = 20;
   currentTiersPage = 1;
   navIndex = 0;
+  ModalMode = ModalMode;
 
   tierModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;

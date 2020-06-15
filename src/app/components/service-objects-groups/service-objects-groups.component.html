@@ -19,7 +19,7 @@
 
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openServiceObjectModal('Create')" aria-label="Create Service Object">
+      <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)" aria-label="Create Service Object">
         <fa name="plus"></fa>
         Create Service Object
       </button>
@@ -54,7 +54,7 @@
             <span>{{ svcObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal('Edit', svcObj)" aria-label="Edit Service Object">
+            <fa name="pencil" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal(ModalMode.Edit, svcObj)" aria-label="Edit Service Object">
             </fa>
             <fa
               name="undo"
@@ -82,7 +82,7 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal('Create')" aria-label="Service Object Groups">
+      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)" aria-label="Service Object Groups">
         <fa name="plus"></fa>
         Create Service Object Group
       </button>
@@ -125,7 +125,7 @@
             <fa
               name="pencil"
               *ngIf="!svcObjGroup?.deletedAt"
-              (click)="openServiceObjectGroupModal('Edit', svcObjGroup)"
+              (click)="openServiceObjectGroupModal(ModalMode.Edit, svcObjGroup)"
               aria-label="Edit Service Object Group"
             ></fa>
             <fa

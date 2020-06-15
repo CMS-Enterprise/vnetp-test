@@ -216,6 +216,8 @@ export class VirtualServerModalHelpText {
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
   AvailableProfiles = `Client SSL profiles available (can select multiple).`;
   SelectedProfiles = `Selected Client SSL profiles.`;
+  AvailablePolicies = `Policies available (can select multiple).`;
+  SelectedPolicies = `Selected policies.`;
 }
 
 @Injectable({
@@ -242,6 +244,7 @@ export class NodeModalHelpText {
   Fqdn = `FQDN of Node.`;
   ServicePort = `Port that the Node is listening for requests on.`;
   Priority = `Priority of node.`;
+  AutoPopulate = `Determines whether the pool member will be auto-populated from the FQDN.`;
 }
 
 @Injectable({

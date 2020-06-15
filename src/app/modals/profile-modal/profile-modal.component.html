@@ -86,23 +86,20 @@
       <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
         <div class="form-group col-md-6">
 
-          <button
+        <button
           class="btn btn-warning btn-sm mr-1"
           (click)="privateKeyCipherUploader.click()"
           type="button"
-          *ngIf="!disableImport"
         >
           <fa name="upload"></fa>
           <span>{{ privateKeyCipher ? 'Replace' : 'Upload' }} Encrypted Private Key</span>
         </button>
 
-          <input
+        <input
           hidden
           type="file"
           #privateKeyCipherUploader
           (change)="importPrivateKeyCipher($event)"
-          [(ngModel)]="privateKeyCipherInput"
-          [ngModelOptions]="{standalone: true}"
         />
         </div>
       </div>

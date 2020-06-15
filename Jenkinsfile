@@ -19,6 +19,7 @@ pipeline {
             sh 'npm i -g jest'
             sh 'npm rebuild node-sass'
             sh 'npm run test:ci'
+            sh 'npm run build:prod'
           }
         }
       }

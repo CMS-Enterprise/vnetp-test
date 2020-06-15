@@ -78,7 +78,6 @@
             class="btn btn-warning btn-sm mr-1"
             (click)="policyContentUploader.click()"
             type="button"
-            *ngIf="!disableImport"
           >
             <fa name="upload"></fa>
             <span>Upload ASM XML Export</span>
@@ -99,7 +98,6 @@
             class="btn btn-warning btn-sm mr-1"
             (click)="policyContentUploader.click()"
             type="button"
-            *ngIf="!disableImport"
           >
             <fa name="upload"></fa>
             <span>Upload APM Base64 Export</span>
@@ -110,8 +108,6 @@
             type="file"
             #policyContentUploader
             (change)="importPolicyContent($event)"
-            [(ngModel)]="policyContentInput"
-            [ngModelOptions]="{ standalone: true }"
           />
         </div>
       </div>

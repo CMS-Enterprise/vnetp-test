@@ -31,6 +31,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   currentServiceObjectsPage = 1;
   currentServiceObjectGroupsPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   serviceObjects: Array<ServiceObject>;
   serviceObjectGroups: Array<ServiceObjectGroup>;
@@ -100,7 +101,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.ngx.getModal('serviceObjectModal').open();
   }
 
-  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup: ServiceObjectGroup) {
+  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
       throw new Error('Service Object required.');
     }

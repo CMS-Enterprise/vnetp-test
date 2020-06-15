@@ -43,7 +43,7 @@
 
       <div class="form-group">
         <label for="tierGroup">Tier Group</label>
-        <tooltip [message]="helpText?.Description"></tooltip>
+        <tooltip [message]="helpText?.TierGroup"></tooltip>
         <select id="tierGroup" formControlName="tierGroup" class="form-control" aria-label="Tier Group">
           <option></option>
           <option *ngFor="let tierGroup of tierGroups" [ngValue]="tierGroup.id">{{ tierGroup.name }}</option>

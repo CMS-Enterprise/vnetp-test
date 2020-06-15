@@ -30,6 +30,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   currentNetworkObjectsPage = 1;
   currentNetworkObjectGroupsPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;

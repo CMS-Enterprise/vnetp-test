@@ -4,7 +4,7 @@
   </span>
   <strong>{{ currentTier?.name || 'No Tier Selected' }}</strong>
 
-  <button type="button" class="btn btn-sm btn-primary ml-3" (click)="ngx.getModal('tierSwitchModal').open()" [disabled]="!datacenterId">
+  <button type="button" class="btn btn-sm btn-primary ml-3" (click)="openTierModal()" [disabled]="!datacenterId">
     Switch Tier
   </button>
 </div>

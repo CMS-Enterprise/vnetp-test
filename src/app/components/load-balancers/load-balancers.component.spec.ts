@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoadBalancersComponent } from './load-balancers.component';
 import { VirtualServerModalComponent } from 'src/app/modals/virtual-server-modal/virtual-server-modal.component';
 import { PoolModalComponent } from 'src/app/modals/pool-modal/pool-modal.component';
@@ -28,6 +27,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LoadBalancerVlanModalComponent } from 'src/app/modals/lb-vlan-modal/lb-vlan-modal.component';
 import { LoadBalancerRouteModalComponent } from 'src/app/modals/lb-route-modal/lb-route-modal.component';
 import { LoadBalancerSelfIpModalComponent } from 'src/app/modals/lb-self-ip-modal/lb-self-ip-modal.component';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -80,5 +80,68 @@ describe('LoadBalancersComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should throw an error when editing a pool without a pool provided', () => {
+    const throwsError = () => {
+      component.openPoolModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Pool required');
+  });
+
+  it('should throw an error when editing a node without a node provided', () => {
+    const throwsError = () => {
+      component.openNodeModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Node required');
+  });
+
+  it('should throw an error when editing a iRule without an iRule provided', () => {
+    const throwsError = () => {
+      component.openIRuleModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('IRule required');
+  });
+
+  it('should throw an error when editing a health monitory without a health monitor provided', () => {
+    const throwsError = () => {
+      component.openHealthMonitorModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Health Monitor required');
+  });
+
+  it('should throw an error when editing a profile without a profile provided', () => {
+    const throwsError = () => {
+      component.openProfileModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Profile required');
+  });
+
+  it('should throw an error when editing a policy without a policy provided', () => {
+    const throwsError = () => {
+      component.openPolicyModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Policy required');
+  });
+
+  it('should throw an error when editing a vlan without a vlan provided', () => {
+    const throwsError = () => {
+      component.openVlanModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('VLAN required');
+  });
+
+  it('should throw an error when editing a self ip without a self ip provided', () => {
+    const throwsError = () => {
+      component.openSelfIpModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Self IP required');
+  });
+
+  it('should throw an error when editing a route without a route provided', () => {
+    const throwsError = () => {
+      component.openRouteModal(ModalMode.Edit, null);
+    };
+    expect(throwsError).toThrowError('Route required');
   });
 });

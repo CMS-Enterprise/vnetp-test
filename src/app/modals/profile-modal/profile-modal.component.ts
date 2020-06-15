@@ -142,7 +142,7 @@ export class ProfileModalComponent implements OnInit {
     };
   }
 
-  private isUnencryptedPrivateKey(result: string) {
+  private isUnencryptedPrivateKey(result: string): boolean {
     try {
       if (
         result.toUpperCase().includes('KEY') ||
