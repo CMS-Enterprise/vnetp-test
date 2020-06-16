@@ -50,7 +50,7 @@
     "ngx-papaparse": "^3.0.2",
     "ngx-smart-modal": "^7.1.1",
     "ngx-toastr": "^10.0.2",
-    "oidc-client": "git+https://git-dc01-prod.draas.cdsvdc.lcl/CTMZ/oidc-client.git#local",
+    "oidc-client": "git+https://svc_tower:781c628fd3928c036f047f644baa903a498f44d5@git-dc01-prod.draas.cdsvdc.lcl/CTMZ/oidc-client.git#local",
     "rxjs": "~6.5.3",
     "save-svg-as-png": "^1.4.14",
     "tslib": "^1.13.0",
