@@ -1,12 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FirewallRulesComponent } from './firewall-rules.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PapaParseModule } from 'ngx-papaparse';
 import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -29,7 +27,6 @@ describe('FirewallRulesComponent', () => {
         AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,

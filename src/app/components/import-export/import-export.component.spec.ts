@@ -1,9 +1,6 @@
-// FIXME: Test Inputs/Outputs.
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportExportComponent } from './import-export.component';
 import { FormsModule } from '@angular/forms';
-import { PapaParseModule } from 'ngx-papaparse';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 describe('ImportExportComponent', () => {
@@ -12,7 +9,7 @@ describe('ImportExportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, FormsModule, PapaParseModule],
+      imports: [AngularFontAwesomeModule, FormsModule],
       declarations: [ImportExportComponent],
     }).compileComponents();
   }));

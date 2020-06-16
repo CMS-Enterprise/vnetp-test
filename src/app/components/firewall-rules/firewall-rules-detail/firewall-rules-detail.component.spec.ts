@@ -3,10 +3,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { ImportExportComponent } from '../../import-export/import-export.component';
@@ -31,7 +29,6 @@ describe('FirewallRulesDetailComponent', () => {
         NgxSmartModalModule,
         NgxPaginationModule,
         FormsModule,
-        PapaParseModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),

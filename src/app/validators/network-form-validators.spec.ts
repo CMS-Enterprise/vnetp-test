@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import {
   IpAddressIpValidator,
   IpAddressCidrValidator,
@@ -9,9 +8,7 @@ import {
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
-describe('Network Form Validators', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
-
+describe('NetworkFormValidators', () => {
   it('should be valid ip addresses (any)', () => {
     const formControl = new FormControl();
 

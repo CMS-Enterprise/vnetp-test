@@ -47,7 +47,7 @@
     "ngx-cookie-service": "^2.1.0",
     "ngx-mask": "^7.8.9",
     "ngx-pagination": "^5.0.0",
-    "ngx-papaparse": "^3.0.2",
+    "ngx-papaparse": "^4.0.4",
     "ngx-smart-modal": "^7.1.1",
     "ngx-toastr": "^10.0.2",
     "rxjs": "~6.5.3",
@@ -78,7 +78,6 @@
     "openapi-generator": "^0.1.37",
     "prettier": "^1.19.1",
     "sonar-scanner": "^3.1.0",
-    "swagger2openapi": "^6.0.2",
     "ts-node": "~7.0.0",
     "tslint": "^5.20.1",
     "typescript": "~3.5.3"
