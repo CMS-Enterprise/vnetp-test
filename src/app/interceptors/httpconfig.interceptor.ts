@@ -65,7 +65,7 @@ export class HttpConfigInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-
+        const isLogin = true;
         if (!isLogin) {
           switch (error.status) {
             case 400:
