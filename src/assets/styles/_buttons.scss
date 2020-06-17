@@ -19,6 +19,12 @@
     background-color: darken($background, 10%);
     border-color: darken($background, 10%);
   }
+
+  &:disabled {
+    color: white;
+    background-color: $gray-dark;
+    border-color: $gray-dark;
+  }
 }
 
 .btn-primary,

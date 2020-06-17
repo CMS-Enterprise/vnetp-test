@@ -111,10 +111,11 @@
   </div>
 </nav>
 
+
 <!-- Logout -->
-<ngx-smart-modal #logoutModal identifier="logoutModal" customClass="'modal-content'">
+<ngx-smart-modal #logoutModal identifier="logoutModal">
   <div class="modal-header">
-    <h4 class="modal-title">Logout?</h4>
+    <h4 class="modal-title">Logout</h4>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logoutModal.close()"></button>
   </div>
 
@@ -124,13 +125,13 @@
     </button>
 
     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
-      Yes
+      Logout
     </button>
   </div>
 </ngx-smart-modal>
 
 <!-- Job Launch -->
-<ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" customClass="'modal-content'" [dismissable]="false">
+<ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" [dismissable]="false">
   <div class="modal-header">
     <h4
       *ngIf="jobMessage?.Success"
