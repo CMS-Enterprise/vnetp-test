@@ -14,8 +14,8 @@ export const environment = {
     metadata: {
       issuer: 'https://10.151.20.115/cfs/oauth/draasui',
       authorization_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/authorize',
-      token_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/tokenservice',
-      userinfo_endpoint: 'http://localhost:3000/api/v1/auth/user-info',
+      token_endpoint: 'http://localhost:3000/cfs/oauth/draasui/tokenservice',
+      userinfo_endpoint: 'http://localhost:3000/cfs/oauth/draasui/userinfo',
     },
   },
 };

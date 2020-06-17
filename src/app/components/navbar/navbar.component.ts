@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { User } from 'src/app/models/user/user';
 import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -9,6 +8,7 @@ import { AppMessage } from 'src/app/models/app-message';
 import { AppMessageType } from 'src/app/models/app-message-type';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
+import { User } from 'oidc-client';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +17,7 @@ import { Job } from 'src/app/models/other/job';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   messageServiceSubscription: Subscription;
-  currentUserSubscription: Subscription;
+  // currentUserSubscription: Subscription;
 
   constructor(
     private automationApiService: AutomationApiService,
@@ -96,27 +96,29 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // this.auth.logout();
   }
 
-  private unsubAll() {
-    [this.currentUserSubscription, this.currentUserSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+  // private unsubAll() {
+  //   [this.currentUserSubscription, this.currentUserSubscription].forEach(sub => {
+  //     try {
+  //       if (sub) {
+  //         sub.unsubscribe();
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   });
 
-    if (this.messageServiceSubscription) {
-      this.messageServiceSubscription.unsubscribe();
-    }
-  }
+  //   if (this.messageServiceSubscription) {
+  //     this.messageServiceSubscription.unsubscribe();
+  //   }
+  // }
 
   ngOnInit() {
-    // this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
+    this.auth.getUser().then(data => {
+      this.currentUser = data;
+    });
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    // this.unsubAll();
   }
 }

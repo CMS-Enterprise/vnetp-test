@@ -11,7 +11,9 @@ export class HttpConfigInterceptor {
   constructor(private authService: AuthService, private toastr: ToastrService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const isLoggedIn = this.authService.isLoggedIn();
+    const isLoggedIn = false;
+    // const isLoggedIn = this.authService.isLoggedIn();
+    console.log(isLoggedIn);
 
     if (isLoggedIn) {
       const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
@@ -65,8 +67,7 @@ export class HttpConfigInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-        const isLogin = true;
-        if (!isLogin) {
+        if (!isLoggedIn) {
           switch (error.status) {
             case 400:
               toastrMessage = 'Bad Request';

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
+import { UserManager, User, Log } from 'oidc-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private manager = new UserManager(environment.openId);
-  private user: User = null;
+  user: User = null;
 
   constructor() {
     Log.logger = console;
@@ -19,7 +19,11 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.user != null && !this.user.expired;
+    return this.user !== null;
+  }
+
+  getUser(): Promise<User> {
+    return this.manager.getUser();
   }
 
   getClaims(): any {
@@ -34,13 +38,10 @@ export class AuthService {
     return this.manager.signinRedirect();
   }
 
-  async completeAuthentication(): Promise<void> {
-    try {
-      const user = await this.manager.signinRedirectCallback();
+  completeAuthentication(): Promise<void> {
+    return this.manager.signinRedirectCallback().then(user => {
       this.user = user;
-    } catch (err) {
-      console.log('error', err);
-    }
+    });
   }
 
   // private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
