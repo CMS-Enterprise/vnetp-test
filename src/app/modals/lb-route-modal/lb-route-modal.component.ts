@@ -6,6 +6,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'api_client';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
+import { LoadBalancerRouteModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-load-balancer-route-modal',
@@ -19,7 +20,12 @@ export class LoadBalancerRouteModalComponent implements OnInit {
   route: LoadBalancerRoute;
   RouteId: string;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private routeService: V1LoadBalancerRoutesService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private routeService: V1LoadBalancerRoutesService,
+    public helpText: LoadBalancerRouteModalHelpText,
+  ) {}
 
   save() {
     this.submitted = true;
@@ -105,8 +111,8 @@ export class LoadBalancerRouteModalComponent implements OnInit {
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      destination: ['', Validators.compose([IpAddressCidrValidator])],
-      gateway: ['', Validators.compose([IpAddressIpValidator])],
+      destination: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
+      gateway: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
     });
   }
 
