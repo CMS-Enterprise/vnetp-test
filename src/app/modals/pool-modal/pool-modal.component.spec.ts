@@ -45,39 +45,51 @@ describe('PoolModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Initial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
+  describe('Name', () => {
+    it('should be required', () => {
+      const name = component.form.controls.name;
+      name.updateValueAndValidity();
+      expect(name.errors.required).toBeTruthy();
+    });
+
+    it('should be valid when given a valid name', () => {
+      const name = component.form.controls.name;
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBeTruthy();
+    });
+
+    it('should be invalid due to min length', () => {
+      const name = component.form.controls.name;
+      name.setValue('a'.repeat(2));
+      expect(name.valid).toBeFalsy();
+    });
+
+    it('name should be invalid due to max length', () => {
+      const name = component.form.controls.name;
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBeFalsy();
+    });
+
+    it('name should be invalid due to invalid characters', () => {
+      const name = component.form.controls.name;
+      name.setValue('invalid/name!');
+      expect(name.valid).toBeFalsy();
+    });
   });
 
-  it('load balancing should be required', () => {
-    const loadBalancingMethod = component.form.controls.loadBalancingMethod;
-    expect(loadBalancingMethod.valid).toBeFalsy();
+  describe('Load Balancing Method', () => {
+    it('should be required', () => {
+      const loadBalancingMethod = component.form.controls.loadBalancingMethod;
+      loadBalancingMethod.updateValueAndValidity();
+      expect(loadBalancingMethod.errors.required).toBeTruthy();
+    });
   });
 
-  // Name validity
-  it('name should be valid', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(3));
-    expect(name.valid).toBeTruthy();
-  });
-
-  it('name should be invalid, min length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(2));
-    expect(name.valid).toBeFalsy();
-  });
-
-  it('name should be invalid, max length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(101));
-    expect(name.valid).toBeFalsy();
-  });
-
-  it('name should be invalid, invalid characters', () => {
-    const name = component.form.controls.name;
-    name.setValue('invalid/name!');
-    expect(name.valid).toBeFalsy();
+  describe('Service Port', () => {
+    it('should be required', () => {
+      const servicePort = component.form.controls.servicePort;
+      servicePort.updateValueAndValidity();
+      expect(servicePort.errors.required).toBeTruthy();
+    });
   });
 });
