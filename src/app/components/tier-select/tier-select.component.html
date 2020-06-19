@@ -5,19 +5,18 @@
   <strong>{{ currentTier?.name || 'No Tier Selected' }}</strong>
 
   <button type="button" class="btn btn-sm btn-primary ml-3" (click)="openTierModal()" [disabled]="!datacenterId">
-    Switch Tier
+    {{ currentTier ? 'Switch' : 'Select' }} Tier
   </button>
 </div>
 
-<ngx-smart-modal #tierSwitchModal identifier="tierSwitchModal" customClass="'modal-content'">
+<ngx-smart-modal #tierSwitchModal identifier="tierSwitchModal">
   <div class="modal-header">
-    <h4 class="modal-title">Switch Tier?</h4>
+    <h4 class="modal-title">{{ currentTier ? 'Switch' : 'Select' }} Tier</h4>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="tierSwitchModal.close()"></button>
   </div>
 
   <div class="modal-body">
     <p class="mb-3">Current Tier: {{ currentTier?.name || 'No Tier Selected' }}</p>
-
     <ng-select [items]="tiers" bindLabel="name" bindValue="id" [(ngModel)]="selectedTier"></ng-select>
   </div>
 
@@ -26,8 +25,8 @@
       Cancel
     </button>
 
-    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="switchTier(); tierSwitchModal.close()">
-      Save
+    <button type="button" class="btn btn-primary" data-dismiss="modal" [disabled]="!selectedTier" (click)="switchTier(); tierSwitchModal.close()">
+      {{ currentTier ? 'Switch' : 'Select' }} Tier
     </button>
   </div>
 </ngx-smart-modal>

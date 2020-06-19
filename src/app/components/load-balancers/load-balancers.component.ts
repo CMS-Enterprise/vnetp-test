@@ -116,6 +116,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   ) {}
 
   getVirtualServers() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.virtualServersService
       .v1LoadBalancerVirtualServersGet({
         join: 'irules',
@@ -127,6 +131,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPools(getVirtualServers = false) {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.poolsService
       .v1LoadBalancerPoolsGet({
         join: 'nodes,healthMonitors',
@@ -142,6 +150,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getNodes() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -153,6 +165,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getIrules() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -162,6 +178,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getHealthMonitors() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -173,6 +193,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getProfiles() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -184,6 +208,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPolicies() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -195,6 +223,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getVlans() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.vlansService
       .v1LoadBalancerVlansGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -205,6 +237,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getSelfIps() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.selfIpsService
       .v1LoadBalancerSelfIpsGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -216,6 +252,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getRoutes() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.routesService
       .v1LoadBalancerRoutesGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -954,6 +994,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     });
   }
 
+  private hasCurrentTier(): boolean {
+    return this.currentTier && !!this.currentTier.id;
+  }
+
   private unsubAll() {
     [
       this.virtualServerModalSubscription,
@@ -986,10 +1030,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         this.healthMonitors = [];
         this.policies = [];
         this.profiles = [];
-
-        if (cd.tiers.length) {
-          this.getObjectsForNavIndex();
-        }
         this.getObjectsForNavIndex();
       }
     });

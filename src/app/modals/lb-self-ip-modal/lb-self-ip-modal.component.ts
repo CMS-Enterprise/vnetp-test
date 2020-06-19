@@ -133,6 +133,5 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
-    this.getVlans();
   }
 }

@@ -7,63 +7,39 @@
   color: $primary--alt;
 }
 
-.btn-primary {
-  color: $white;
-  background-color: $primary-main;
-  border-color: $primary-main;
+@mixin button($text, $background) {
+  color: $text;
+  background-color: $background;
+  border-color: $background;
+
   &:hover,
   &:focus,
-  &:active {
-    background-color: $primary-dark;
-    border-color: $primary-dark;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    background-color: darken($background, 10%);
+    border-color: darken($background, 10%);
+  }
+
+  &:disabled {
+    color: white;
+    background-color: $gray-dark;
+    border-color: $gray-dark;
   }
 }
 
+.btn-primary,
 .btn-info {
-  color: $white;
-  background-color: $primary-main;
-  border-color: $primary-main;
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: $primary-medium;
-    border-color: $primary-medium;
-  }
+  @include button($white, $primary-main);
 }
 
 .btn-success {
-  color: $white;
-  background-color: $success--dark;
-  border-color: $success--dark;
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: $success;
-    border-color: $success;
-  }
+  @include button($white, $success--dark);
 }
 
 .btn-warning {
-  color: $gray-darker;
-  background-color: $warning;
-  border-color: $warning;
-  &:hover,
-  &:focus,
-  &:active {
-    color: $gray-dark;
-    background-color: darken($warning, 10%);
-    border-color: darken($warning, 10%);
-  }
+  @include button($gray-darker, $warning);
 }
 
 .btn-danger {
-  color: $white;
-  background-color: $danger;
-  border-color: $danger;
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: darken($danger, 10%);
-    border-color: darken($danger, 10%);
-  }
+  @include button($white, $danger);
 }
