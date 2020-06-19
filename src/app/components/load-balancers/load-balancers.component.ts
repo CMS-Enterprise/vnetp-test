@@ -591,7 +591,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   subscribeToRouteModal() {
     this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      this.getVirtualServers();
+      this.getRoutes();
       this.ngx.resetModalData('loadBalancerRouteModal');
       this.routeModalSubscription.unsubscribe();
       this.datacenterService.unlockDatacenter();
