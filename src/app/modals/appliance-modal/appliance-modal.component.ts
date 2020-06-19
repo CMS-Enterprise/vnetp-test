@@ -31,6 +31,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
   deleteNetworkPort(networkPort: ApplianceNetworkPort) {
     // stub
   }
+
   restoreNetworkPort(networkPort: ApplianceNetworkPort) {
     // stub
   }
@@ -139,22 +140,18 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
       this.form.controls.powerSupplyConnectionType.setValue(appliance.powerSupplyConnectionType);
       this.form.controls.powerSupplyCount.setValue(appliance.powerSupplyCount);
     }
-    this.ngx.resetModalData('virtualMachineModal');
+    this.ngx.resetModalData('applianceModal');
   }
 
-  private convertGbToBytes(val) {
-    const convertedVal = val * 1000000000;
-
-    return convertedVal;
+  private convertGbToBytes(val: number): number {
+    return val * 1000000000;
   }
 
-  private convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
+  private convertBytesToGb(val: number): number {
+    return val / 1000000000;
   }
 
-  private stringToBoolean(str) {
+  private stringToBoolean(str: string): boolean {
     switch (str) {
       case 'true':
         return true;
@@ -186,11 +183,13 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
   }
 
   private closeModal() {
-    this.ngx.close('applianceModal');
     this.reset();
+    this.ngx.close('applianceModal');
   }
 
   private reset() {
+    this.ngx.resetModalData('applianceModal');
+    this.submitted = false;
     this.buildForm();
   }
 

@@ -1,4 +1,4 @@
-<ngx-smart-modal #applianceModal identifier="applianceModal" [dismissable]="false" (onOpen)="getData()" customClass="medium-modal">
+<ngx-smart-modal #applianceModal identifier="applianceModal" [dismissable]="false" (onOpen)="getData()" (onClose)="cancel()" customClass="medium-modal">
   <div class="modal-header">
     <h1 class="modal-title header">Appliance</h1>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
@@ -52,10 +52,11 @@
             id="rackUnits"
             required
           />
-          <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
+          <div *ngIf="submitted && f.rackUnits.errors" class="invalid-feedback">
             <div *ngIf="f.rackUnits.errors.required">Rack Units are required</div>
           </div>
         </div>
+
         <div class="form-group col-md-6">
           <label for="serialNumber">Serial Number</label>
           <input
