@@ -8,7 +8,6 @@ import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { PapaParseModule } from 'ngx-papaparse';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -173,7 +172,6 @@ export function apiConfigFactory(): Configuration {
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     FormsModule,
-    PapaParseModule,
     NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',

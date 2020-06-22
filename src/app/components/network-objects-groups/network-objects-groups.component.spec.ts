@@ -7,7 +7,6 @@ import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal
 import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-group-modal/network-object-group-modal.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
 import { ImportExportComponent } from '../import-export/import-export.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -34,7 +33,6 @@ describe('NetworkObjectsGroupsComponent', () => {
         NgxPaginationModule,
         NgSelectModule,
         ToastrModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,

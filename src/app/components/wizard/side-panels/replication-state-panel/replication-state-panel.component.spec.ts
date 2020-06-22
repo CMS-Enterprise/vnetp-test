@@ -1,10 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ReplicationStatePanelComponent } from './replication-state-panel.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PapaParseModule } from 'ngx-papaparse';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReplicationStatePanelComponent', () => {
@@ -13,7 +11,7 @@ describe('ReplicationStatePanelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [NgxChartsModule, NgxPaginationModule, HttpClientTestingModule, PapaParseModule, BrowserAnimationsModule],
+      imports: [NgxChartsModule, NgxPaginationModule, HttpClientTestingModule, BrowserAnimationsModule],
       declarations: [ReplicationStatePanelComponent],
     }).compileComponents();
   }));

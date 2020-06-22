@@ -9,7 +9,6 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
-import { PapaParseModule } from 'ngx-papaparse';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
@@ -41,7 +40,6 @@ describe('LoadBalancersComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         NgxSmartModalModule,
-        PapaParseModule,
         ToastrModule.forRoot(),
         NgxMaskModule.forRoot(),
         NgxPaginationModule,

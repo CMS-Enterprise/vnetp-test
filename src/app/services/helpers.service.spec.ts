@@ -1,22 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-
 import { HelpersService } from './helpers.service';
 import { Subnet } from '../models/d42/subnet';
-import { isUndefined } from 'util';
-import { CustomFieldsObject } from '../models/interfaces/custom-fields-object.interface';
 import { Vrf } from '../models/d42/vrf';
 
 describe('HelpersService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  const service = new HelpersService();
 
   it('should be created', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
     expect(service).toBeTruthy();
   });
 
   it('should be deployed', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -33,8 +26,6 @@ describe('HelpersService', () => {
   });
 
   it('should not be deployed', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -51,8 +42,6 @@ describe('HelpersService', () => {
   });
 
   it('should not be deployed', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -69,8 +58,6 @@ describe('HelpersService', () => {
   });
 
   it('should not be deployed', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -87,8 +74,6 @@ describe('HelpersService', () => {
   });
 
   it('should handle null custom fields', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -105,8 +90,6 @@ describe('HelpersService', () => {
   });
 
   it('should handle empty custom fields', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -123,8 +106,6 @@ describe('HelpersService', () => {
   });
 
   it('should handle empty custom fields', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -140,9 +121,7 @@ describe('HelpersService', () => {
     expect(result).toBeFalsy();
   });
 
-  it('should return number', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
+  it('should return a number', () => {
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -159,9 +138,7 @@ describe('HelpersService', () => {
     expect(result === 9001).toBeTruthy();
   });
 
-  it('should return string', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
+  it('should return a string', () => {
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -177,9 +154,7 @@ describe('HelpersService', () => {
     expect(result === 'value').toBeTruthy();
   });
 
-  it('should return empty string when custom_field empty', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
+  it('should return an empty string when custom_field empty', () => {
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -195,9 +170,7 @@ describe('HelpersService', () => {
     expect(result === '').toBeTruthy();
   });
 
-  it('should return empty string when custom_field not present', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
+  it('should return an empty string when custom_field not present', () => {
     const subnet: Subnet = {
       subnet_id: 100,
       name: 'subnet',
@@ -214,19 +187,13 @@ describe('HelpersService', () => {
   });
 
   it('should return null when custom_field not present', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const vrf = new Vrf();
-
     const result = service.getJsonCustomField(vrf, 'network_objects');
     expect(result).toBeFalsy();
   });
 
   it('should deep copy', () => {
-    const service: HelpersService = TestBed.get(HelpersService);
-
     const test = { Name: 'Test', Children: ['Test1', 'Test2'] };
-
     const testCopy = service.deepCopy(test);
 
     testCopy.Children.splice(0, 1);

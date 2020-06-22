@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ImportExportComponent } from '../import-export/import-export.component';
@@ -30,7 +28,6 @@ describe('TiersComponent', () => {
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,

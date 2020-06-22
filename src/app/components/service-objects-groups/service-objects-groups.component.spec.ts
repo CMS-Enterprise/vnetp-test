@@ -4,7 +4,6 @@ import { ServiceObjectsGroupsComponent } from './service-objects-groups.componen
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
@@ -35,7 +34,6 @@ describe('ServicesObjectsGroupsComponent', () => {
         NgxPaginationModule,
         NgSelectModule,
         ToastrModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,

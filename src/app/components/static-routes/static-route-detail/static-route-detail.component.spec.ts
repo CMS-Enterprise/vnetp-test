@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaskModule } from 'ngx-mask';
 import { ImportExportComponent } from '../../import-export/import-export.component';
-import { PapaParseModule } from 'ngx-papaparse';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StaticRouteModalComponent } from 'src/app/modals/static-route-modal/static-route-modal.component';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
@@ -29,7 +28,6 @@ describe('StaticRouteDetailComponent', () => {
         RouterTestingModule.withRoutes([]),
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
-        PapaParseModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
