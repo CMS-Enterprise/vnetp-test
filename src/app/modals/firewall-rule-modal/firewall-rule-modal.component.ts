@@ -19,6 +19,7 @@ import {
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -375,15 +376,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.sourceNetworkTypeSubscription, this.destinationNetworkTypeSubscription, this.serviceTypeSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([
+      this.sourceNetworkTypeSubscription,
+      this.destinationNetworkTypeSubscription,
+      this.serviceTypeSubscription,
+    ]);
   }
 
   public reset() {

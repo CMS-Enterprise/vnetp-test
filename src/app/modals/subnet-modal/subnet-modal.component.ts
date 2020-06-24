@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { V1NetworkSubnetsService, Subnet, Vlan } from 'api_client';
@@ -12,7 +12,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-subnet-modal',
   templateUrl: './subnet-modal.component.html',
 })
-export class SubnetModalComponent implements OnInit, OnDestroy {
+export class SubnetModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
@@ -146,6 +146,4 @@ export class SubnetModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
   }
-
-  ngOnDestroy() {}
 }

@@ -41,6 +41,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-load-balancers',
@@ -999,7 +1000,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.virtualServerModalSubscription,
       this.poolModalSubscription,
       this.healthMonitorModalSubscription,
@@ -1009,15 +1010,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
       this.iruleModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   ngOnInit() {

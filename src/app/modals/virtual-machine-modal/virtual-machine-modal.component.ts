@@ -14,6 +14,8 @@ import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-mo
 import { Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-virtual-machine-modal',
@@ -29,6 +31,8 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   networkAdapterModalSubscription: Subscription;
   virtualDisks: Array<VmwareVirtualDisk>;
   networkAdapters: Array<VmwareNetworkAdapter>;
+
+  ConversionUtil = ConversionUtil;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -181,7 +185,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.cpuCores = Number(this.form.value.cpuCount);
     virtualMachine.cpuCoresPerSocket = parseInt(this.form.value.coreCount, 10); // TO DO - figure out type problem
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
-    virtualMachine.memorySize = this.convertGbToBytes(this.form.value.memorySize);
+    virtualMachine.memorySize = ConversionUtil.convertGbToBytes(this.form.value.memorySize);
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
 
     this.ngx.resetModalData('virtualMachineModal');
@@ -253,7 +257,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     const virtualMachine = dto.VmwareVirtualMachine;
 
     if (virtualMachine !== undefined) {
-      const convertedMemorySize = this.convertBytesToGb(virtualMachine.memorySize);
+      const convertedMemorySize = ConversionUtil.convertBytesToGb(virtualMachine.memorySize);
 
       this.form.controls.name.setValue(virtualMachine.name);
       this.form.controls.description.setValue(virtualMachine.description);
@@ -264,18 +268,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
     }
     this.ngx.resetModalData('virtualMachineModal');
-  }
-
-  private convertGbToBytes(val) {
-    const convertedVal = val * 1000000000;
-
-    return convertedVal;
-  }
-
-  public convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
   }
 
   private buildForm() {
@@ -314,15 +306,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.virtualDiskModalSubscription, this.networkAdapterModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.virtualDiskModalSubscription, this.networkAdapterModalSubscription]);
   }
 
   ngOnInit() {

@@ -7,6 +7,7 @@ import { User } from 'src/app/models/user/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-tier-select',
@@ -57,15 +58,7 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.currentDatacenterSubscription, this.currentUserSubscription, this.currentTierSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentUserSubscription, this.currentTierSubscription]);
   }
 
   ngOnInit() {

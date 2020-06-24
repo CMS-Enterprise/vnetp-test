@@ -3,6 +3,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { V1ConfigurationUploadService, ConfigurationUpload, ConfigurationUploadType } from 'api_client';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-zvm',
@@ -86,15 +87,7 @@ export class ZvmComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.requestModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.requestModalSubscription]);
   }
 
   ngOnInit() {

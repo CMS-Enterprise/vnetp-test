@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
@@ -7,12 +7,13 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-appliance-modal',
   templateUrl: './appliance-modal.component.html',
 })
-export class ApplianceModalComponent implements OnInit, OnDestroy {
+export class ApplianceModalComponent implements OnInit {
   form: FormGroup;
   ModalMode: ModalMode;
   DatacenterId: string;
@@ -49,11 +50,11 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     appliance.serialNumber = this.form.value.serialNumber;
     appliance.deliveryDate = this.form.value.deliveryDate;
     appliance.localStorageType = this.form.value.localStorageType;
-    appliance.localStorageRequired = this.stringToBoolean(this.form.value.localStorageRequired);
-    appliance.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
+    appliance.localStorageRequired = ConversionUtil.convertStringToBoolean(this.form.value.localStorageRequired);
+    appliance.localStorageSize = ConversionUtil.convertGbToBytes(this.form.value.localStorageSize);
     appliance.sanType = this.form.value.sanType;
-    appliance.sanRequired = this.stringToBoolean(this.form.value.sanRequired);
-    appliance.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
+    appliance.sanRequired = ConversionUtil.convertStringToBoolean(this.form.value.sanRequired);
+    appliance.sanStorageSize = ConversionUtil.convertGbToBytes(this.form.value.sanStorageSize);
     appliance.powerSupplyVoltage = this.form.value.powerSupplyVoltage;
     appliance.powerSupplyWattage = this.form.value.powerSupplyWattage;
     appliance.powerSupplyConnectionType = this.form.value.powerSupplyConnectionType;
@@ -131,35 +132,16 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
       this.form.controls.deliveryDate.setValue(deliveryDate);
       this.form.controls.localStorageType.setValue(appliance.localStorageType);
       this.form.controls.localStorageRequired.setValue(appliance.localStorageRequired);
-      this.form.controls.localStorageSize.setValue(this.convertBytesToGb(appliance.localStorageSize));
+      this.form.controls.localStorageSize.setValue(ConversionUtil.convertBytesToGb(appliance.localStorageSize));
       this.form.controls.sanType.setValue(appliance.sanType);
       this.form.controls.sanRequired.setValue(appliance.sanRequired);
-      this.form.controls.sanStorageSize.setValue(this.convertBytesToGb(appliance.sanStorageSize));
+      this.form.controls.sanStorageSize.setValue(ConversionUtil.convertBytesToGb(appliance.sanStorageSize));
       this.form.controls.powerSupplyVoltage.setValue(appliance.powerSupplyVoltage);
       this.form.controls.powerSupplyWattage.setValue(appliance.powerSupplyWattage);
       this.form.controls.powerSupplyConnectionType.setValue(appliance.powerSupplyConnectionType);
       this.form.controls.powerSupplyCount.setValue(appliance.powerSupplyCount);
     }
     this.ngx.resetModalData('applianceModal');
-  }
-
-  private convertGbToBytes(val: number): number {
-    return val * 1000000000;
-  }
-
-  private convertBytesToGb(val: number): number {
-    return val / 1000000000;
-  }
-
-  private stringToBoolean(str: string): boolean {
-    switch (str) {
-      case 'true':
-        return true;
-      case 'false':
-        return false;
-      default:
-        return Boolean(str);
-    }
   }
 
   private buildForm() {
@@ -206,25 +188,7 @@ export class ApplianceModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private unsubAll() {
-    [
-      // networkPortsModalSubscription
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  }
-
   ngOnInit() {
     this.buildForm();
-  }
-
-  ngOnDestroy() {
-    this.unsubAll();
   }
 }

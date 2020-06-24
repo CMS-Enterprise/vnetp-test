@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-vmware-detail',
@@ -13,6 +14,8 @@ export class VmwareDetailComponent implements OnInit {
   VirtualMachine: VmwareVirtualMachine;
   virtualDisks: Array<VmwareVirtualDisk>;
   networkAdapters: Array<VmwareNetworkAdapter>;
+
+  ConversionUtil = ConversionUtil;
 
   constructor(
     private route: ActivatedRoute,
@@ -79,12 +82,6 @@ export class VmwareDetailComponent implements OnInit {
     }
   }
 
-  convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
-  }
-
   private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
     this.ngxSmartModalService.getModal('yesNoModal').open();
@@ -102,7 +99,6 @@ export class VmwareDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
-
     this.getVirtualMachine();
   }
 }

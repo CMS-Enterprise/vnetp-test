@@ -7,6 +7,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-tiers',
@@ -198,15 +199,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   }
 
   private unsubAll() {
-    [this.tierModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
   }
 
   ngOnInit() {

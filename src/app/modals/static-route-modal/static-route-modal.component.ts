@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
@@ -11,7 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-static-route-modal',
   templateUrl: './static-route-modal.component.html',
 })
-export class StaticRouteModalComponent implements OnInit, OnDestroy {
+export class StaticRouteModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
@@ -132,6 +132,4 @@ export class StaticRouteModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
   }
-
-  ngOnDestroy() {}
 }

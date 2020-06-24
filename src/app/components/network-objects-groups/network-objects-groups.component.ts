@@ -19,6 +19,7 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -250,20 +251,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.networkObjectModalSubscription,
       this.networkObjectGroupModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   importNetworkObjectsConfig(event: NetworkObject[]) {

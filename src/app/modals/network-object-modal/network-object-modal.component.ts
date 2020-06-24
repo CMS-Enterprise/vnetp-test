@@ -8,6 +8,7 @@ import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networkin
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -245,15 +246,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.networkTypeSubscription, this.natSubscription, this.natServiceSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.networkTypeSubscription, this.natSubscription, this.natServiceSubscription]);
   }
 
   public reset() {

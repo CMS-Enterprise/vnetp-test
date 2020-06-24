@@ -35,7 +35,7 @@
         <td>
           {{ vm.cpuCoresPerSocket }}
         </td>
-        <td>{{ convertBytesToGb(vm.memorySize) }} GB</td>
+        <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
         <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
           <fa name="pencil" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal(ModalMode.Edit, vm)" aria-label="Edit Virtual Machine"> </fa>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Contract } from 'src/app/models/firewall/contract';
@@ -11,7 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-contract-modal',
   templateUrl: './contract-modal.component.html',
 })
-export class ContractModalComponent implements OnInit, OnDestroy {
+export class ContractModalComponent implements OnInit {
   form: FormGroup;
   filterEntryForm: FormGroup;
   submitted: boolean;
@@ -109,10 +109,7 @@ export class ContractModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private unsubAll() {}
-
   public reset() {
-    this.unsubAll();
     this.submitted = false;
     this.filterEntryFormSubmitted = false;
     this.buildForm();
@@ -122,9 +119,5 @@ export class ContractModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
     this.buildFilterEntryForm();
-  }
-
-  ngOnDestroy() {
-    this.unsubAll();
   }
 }

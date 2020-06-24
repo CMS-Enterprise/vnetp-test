@@ -38,7 +38,7 @@
       </p>
       <p>
         <strong>Local Storage Size:</strong>
-        {{ convertBytesToGb(Appliance.localStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(Appliance.localStorageSize) }} GB
       </p>
     </div>
     <div class="col-md-4">
@@ -46,7 +46,7 @@
       <p><strong>SAN Required?</strong> {{ Appliance.sanRequired }}</p>
       <p>
         <strong>SAN Storage Size:</strong>
-        {{ convertBytesToGb(Appliance.sanStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(Appliance.sanStorageSize) }} GB
       </p>
     </div>
     <div class="col-md-4">

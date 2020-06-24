@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
@@ -11,7 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-tier-modal',
   templateUrl: './tier-modal.component.html',
 })
-export class TierModalComponent implements OnInit, OnDestroy {
+export class TierModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
@@ -141,6 +141,4 @@ export class TierModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
   }
-
-  ngOnDestroy() {}
 }
