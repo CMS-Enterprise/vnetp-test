@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-datacenter-select',
@@ -44,15 +45,7 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   };
 
   private unsubAll() {
-    [this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription]);
   }
 
   ngOnInit() {

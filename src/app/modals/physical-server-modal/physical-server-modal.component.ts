@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { PhysicalServer } from 'src/app/models/physical-server/physical-server';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-physical-server-modal',
@@ -36,11 +36,11 @@ export class PhysicalServerModalComponent implements OnInit {
     physicalServer.serialNumber = this.form.value.serialNumber;
     physicalServer.deliveryDate = this.form.value.deliveryDate;
     physicalServer.localStorageType = this.form.value.localStorageType;
-    physicalServer.localStorageSize = this.convertGbToBytes(this.form.value.localStorageSize);
-    physicalServer.localStorageRequired = this.stringToBoolean(this.form.value.localStorageRequired);
+    physicalServer.localStorageSize = ConversionUtil.convertGbToBytes(this.form.value.localStorageSize);
+    physicalServer.localStorageRequired = ConversionUtil.convertStringToBoolean(this.form.value.localStorageRequired);
     physicalServer.sanType = this.form.value.sanType;
-    physicalServer.sanRequired = this.stringToBoolean(this.form.value.sanRequired);
-    physicalServer.sanStorageSize = this.convertGbToBytes(this.form.value.sanStorageSize);
+    physicalServer.sanRequired = ConversionUtil.convertStringToBoolean(this.form.value.sanRequired);
+    physicalServer.sanStorageSize = ConversionUtil.convertGbToBytes(this.form.value.sanStorageSize);
 
     this.ngx.resetModalData('physicalServerModal');
     this.ngx.setModalData(Object.assign({}, physicalServer), 'physicalServerModal');
@@ -110,27 +110,15 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.deliveryDate.setValue(deliveryDate);
       this.form.controls.localStorageType.setValue(physicalServer.localStorageType);
       this.form.controls.localStorageRequired.setValue(physicalServer.localStorageRequired);
-      this.form.controls.localStorageSize.setValue(this.convertBytesToGb(physicalServer.localStorageSize));
+      this.form.controls.localStorageSize.setValue(ConversionUtil.convertBytesToGb(physicalServer.localStorageSize));
       this.form.controls.sanType.setValue(physicalServer.sanType);
       this.form.controls.sanRequired.setValue(physicalServer.sanRequired);
-      this.form.controls.sanStorageSize.setValue(this.convertBytesToGb(physicalServer.sanStorageSize));
+      this.form.controls.sanStorageSize.setValue(ConversionUtil.convertBytesToGb(physicalServer.sanStorageSize));
     }
     this.ngx.resetModalData('physicalServerModal');
   }
 
-  private convertGbToBytes(val) {
-    const convertedVal = val * 1000000000;
-
-    return convertedVal;
-  }
-
-  private convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
-  }
-
-  private stringToBoolean(str) {
+  private stringToBoolean(str: string): boolean {
     switch (str) {
       case 'true':
         return true;

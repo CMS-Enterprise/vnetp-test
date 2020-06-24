@@ -19,6 +19,7 @@ import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -302,17 +303,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
   }
 
   private unsubAll() {
-    [this.subnetModalSubscription, this.vlanModalSubscription, this.currentDatacenterSubscription, this.currentTierSubscription].forEach(
-      sub => {
-        try {
-          if (sub) {
-            sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      },
-    );
+    SubscriptionUtil.unsubscribe([
+      this.subnetModalSubscription,
+      this.vlanModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 
   ngOnInit() {

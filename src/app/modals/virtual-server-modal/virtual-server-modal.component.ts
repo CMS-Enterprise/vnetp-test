@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
@@ -21,7 +21,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-virtual-server-modal',
   templateUrl: './virtual-server-modal.component.html',
 })
-export class VirtualServerModalComponent implements OnInit, OnDestroy {
+export class VirtualServerModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   pools: LoadBalancerPool[];
@@ -292,10 +292,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
     this.selectedPolicies = new Array<LoadBalancerPolicy>();
   }
 
-  private unsubAll() {}
-
   public reset() {
-    this.unsubAll();
     this.submitted = false;
     this.VirtualServerId = null;
     this.buildForm();
@@ -303,9 +300,5 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
-  }
-
-  ngOnDestroy() {
-    this.unsubAll();
   }
 }

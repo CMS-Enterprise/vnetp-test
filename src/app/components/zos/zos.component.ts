@@ -3,6 +3,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-zos',
@@ -86,15 +87,7 @@ export class ZosComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.requestModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.requestModalSubscription]);
   }
 
   ngOnInit() {

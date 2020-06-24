@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirewallRulesHelpText } from 'src/app/helptext/help-text-networking';
-import {
-  Tier,
-  V1TiersService,
-  V1DatacentersService,
-  FirewallRuleGroup,
-  FirewallRuleGroupType,
-  V1NetworkSecurityFirewallRuleGroupsService,
-} from 'api_client';
+import { Tier, V1TiersService, FirewallRuleGroup, FirewallRuleGroupType, V1NetworkSecurityFirewallRuleGroupsService } from 'api_client';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';

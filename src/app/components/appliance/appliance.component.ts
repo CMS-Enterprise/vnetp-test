@@ -6,6 +6,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-appliance',
@@ -115,15 +116,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    [this.applianceModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.applianceModalSubscription, this.currentDatacenterSubscription]);
   }
 
   ngOnInit() {

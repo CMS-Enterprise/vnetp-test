@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup } from '@angular/forms';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -7,7 +7,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
   selector: 'app-yes-no-modal',
   templateUrl: './yes-no-modal.component.html',
 })
-export class YesNoModalComponent implements OnInit {
+export class YesNoModalComponent {
   form: FormGroup;
   submitted: boolean;
   modalBody = 'Title';
@@ -42,6 +42,4 @@ export class YesNoModalComponent implements OnInit {
     this.modalBody = modalConfig.modalBody;
     this.ngx.resetModalData('yesNoModal');
   }
-
-  ngOnInit() {}
 }

@@ -3,6 +3,7 @@ import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } f
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-physical-server-detail',
@@ -13,6 +14,7 @@ export class PhysicalServerDetailComponent implements OnInit {
   PhysicalServer: PhysicalServer;
 
   networkPorts: PhysicalServerNetworkPort[];
+  ConversionUtil = ConversionUtil;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,12 +74,6 @@ export class PhysicalServerDetailComponent implements OnInit {
           this.getPhysicalServer();
         });
     }
-  }
-
-  convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
   }
 
   private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {

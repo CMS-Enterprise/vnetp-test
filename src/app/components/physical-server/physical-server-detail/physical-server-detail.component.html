@@ -41,7 +41,7 @@
       </p>
       <p>
         <strong>Local Storage Size:</strong>
-        {{ convertBytesToGb(PhysicalServer.localStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
       </p>
     </div>
     <div class="col-md-6">
@@ -49,7 +49,7 @@
       <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
       <p>
         <strong>SAN Storage Size: </strong>
-        {{ convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
       </p>
     </div>
   </div>

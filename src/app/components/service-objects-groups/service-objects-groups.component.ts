@@ -19,6 +19,7 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -251,20 +252,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.serviceObjectModalSubscription,
       this.serviceObjectGroupModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   importServiceObjectsConfig(event: ServiceObject[]) {

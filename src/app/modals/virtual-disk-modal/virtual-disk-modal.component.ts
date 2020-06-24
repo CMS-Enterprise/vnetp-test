@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VmwareVirtualDisk, V1VmwareVirtualDisksService } from 'api_client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { ConversionUtil } from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-virtual-disk-modal',
@@ -28,7 +29,7 @@ export class VirtualDiskModalComponent implements OnInit {
     const virtualDisk = {} as VmwareVirtualDisk;
     virtualDisk.name = this.form.value.name;
     virtualDisk.description = this.form.value.description;
-    virtualDisk.diskSize = this.convertGbToBytes(this.form.value.diskSize);
+    virtualDisk.diskSize = ConversionUtil.convertGbToBytes(this.form.value.diskSize);
     virtualDisk.rawLun = this.form.value.rawLun;
     virtualDisk.virtualMachineId = this.VirtualMachineId;
 
@@ -54,12 +55,6 @@ export class VirtualDiskModalComponent implements OnInit {
 
   cancel() {
     this.closeModal();
-  }
-
-  private convertGbToBytes(val) {
-    const convertedVal = val * 1000000000;
-
-    return convertedVal;
   }
 
   get f() {

@@ -9,6 +9,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { ActivatedRoute } from '@angular/router';
+import { SubscriptionUtil } from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-intra-vrf-rules',
@@ -96,15 +97,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   private unsubAll() {
-    [this.contractModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.contractModalSubscription]);
   }
 
   saveAll() {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupType } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
   selector: 'app-deploy',
   templateUrl: './deploy.component.html',
 })
-export class DeployComponent implements OnInit, OnDestroy {
+export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
 
@@ -120,6 +120,4 @@ export class DeployComponent implements OnInit, OnDestroy {
       this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(data => {});
     });
   }
-
-  ngOnDestroy() {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
@@ -12,7 +12,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-service-object-modal',
   templateUrl: './service-object-modal.component.html',
 })
-export class ServiceObjectModalComponent implements OnInit, OnDestroy {
+export class ServiceObjectModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
@@ -133,6 +133,4 @@ export class ServiceObjectModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
   }
-
-  ngOnDestroy() {}
 }
