@@ -2,11 +2,18 @@ import { FormControl } from '@angular/forms';
 import { NameValidator } from './name-validator';
 
 describe('NameValidator', () => {
-  const validate = (name: string) => {
+  const createValidator = (validator: (fc: FormControl) => object) => {
     const formControl = new FormControl();
-    formControl.setValue(name);
-    return NameValidator(formControl);
+
+    return {
+      validate: (value: string) => {
+        formControl.setValue(value);
+        return validator(formControl);
+      },
+    };
   };
+
+  const { validate } = createValidator(NameValidator);
 
   it('should be valid name', () => {
     expect(validate('Test')).toBeNull();

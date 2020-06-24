@@ -9,234 +9,137 @@ import {
 import { FormControl } from '@angular/forms';
 
 describe('NetworkFormValidators', () => {
-  it('should be valid ip addresses (any)', () => {
+  const createValidator = (validator: (fc: FormControl) => object) => {
     const formControl = new FormControl();
 
-    formControl.setValue('255.255.255.255');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
+    return {
+      validate: (value: string) => {
+        formControl.setValue(value);
+        return validator(formControl);
+      },
+    };
+  };
 
-    formControl.setValue('1.1.1.1');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
+  describe('IpAddressAnyValidator', () => {
+    const { validate } = createValidator(IpAddressAnyValidator);
 
-    formControl.setValue('255.255.255.255/32');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
+    it('should allow valid ip addresses (any type)', () => {
+      expect(validate('255.255.255.255')).toBeNull();
+      expect(validate('1.1.1.1')).toBeNull();
+      expect(validate('255.255.255.255/32')).toBeNull();
+      expect(validate('0.0.0.0/0')).toBeNull();
+      expect(validate('fe80::7ccc:2a54:aed2:2180/128')).toBeNull();
+      expect(validate('fe80::7ccc:2a54:aed2:2180')).toBeNull();
+      expect(validate('::/0')).toBeNull();
+    });
 
-    formControl.setValue('0.0.0.0/0');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180/128');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
-
-    formControl.setValue('::/0');
-    expect(IpAddressAnyValidator(formControl)).toBeNull();
+    it('should not allow invalid ip addresses (any type)', () => {
+      expect(validate('all')).toEqual({ invalidIpAny: true });
+      expect(validate('1.1.1.')).toEqual({ invalidIpAny: true });
+      expect(validate('-1.1.1.1')).toEqual({ invalidIpAny: true });
+      expect(validate('255.255.255.255/33')).toEqual({ invalidIpAny: true });
+      expect(validate('0.0.0.0/-1')).toEqual({ invalidIpAny: true });
+      expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpAny: true });
+      expect(validate('fe80::::://')).toEqual({ invalidIpAny: true });
+    });
   });
 
-  it('should be invalid ip addresses (any)', () => {
-    const formControl = new FormControl();
+  describe('IpAddressIpValidator', () => {
+    const { validate } = createValidator(IpAddressIpValidator);
 
-    formControl.setValue('all');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
+    it('should allow valid ip addresses', () => {
+      expect(validate('255.255.255.255')).toBeNull();
+      expect(validate('1.1.1.1')).toBeNull();
+      expect(validate('192.168.10.0')).toBeNull();
+      expect(validate('fe80::7ccc:2a54:aed2:2180')).toBeNull();
+    });
 
-    formControl.setValue('1.1.1.');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('-1.1.1.1');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('255.255.255.255/33');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('0.0.0.0/-1');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180/129');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('fe80::::://');
-    expect(IpAddressAnyValidator(formControl)).toBeTruthy();
+    it('should not allow invalid ip addresses', () => {
+      expect(validate('1.1.1.')).toEqual({ invalidIpAddress: true });
+      expect(validate('1.1.1.1.1')).toEqual({ invalidIpAddress: true });
+      expect(validate('-1.1.1.1')).toEqual({ invalidIpAddress: true });
+      expect(validate('one.two.three.four')).toEqual({ invalidIpAddress: true });
+      expect(validate('1.1.1.1///24')).toEqual({ invalidIpAddress: true });
+      expect(validate('fe80:::::')).toEqual({ invalidIpAddress: true });
+      expect(validate('fe80::::://')).toEqual({ invalidIpAddress: true });
+    });
   });
 
-  it('should be valid ip addresses', () => {
-    const formControl = new FormControl();
-    formControl.setValue('255.255.255.255');
-    expect(IpAddressIpValidator(formControl)).toBeNull();
+  describe('IpAddressCidrValidator', () => {
+    const { validate } = createValidator(IpAddressCidrValidator);
 
-    formControl.setValue('1.1.1.1');
-    expect(IpAddressIpValidator(formControl)).toBeNull();
+    it('should allow valid cidr addresses', () => {
+      expect(validate('255.255.255.255/32')).toBeNull();
+      expect(validate('1.1.1.1/32')).toBeNull();
+      expect(validate('192.168.10.0/24')).toBeNull();
+      expect(validate('127.0.0.1/20')).toBeNull();
+      expect(validate('fe80::7ccc:2a54:aed2:2180/128')).toBeNull();
+      expect(validate('::/0')).toBeNull();
+    });
 
-    formControl.setValue('192.168.10.0');
-    expect(IpAddressIpValidator(formControl)).toBeNull();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180');
-    expect(IpAddressIpValidator(formControl)).toBeNull();
+    it('should not allow invalid cidr addresses', () => {
+      expect(validate('1.1.1/24')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.1.1.1//24')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.1.1.1/-24')).toEqual({ invalidIpCidr: true });
+      expect(validate('one.two.three.four/five')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.2.three.four//')).toEqual({ invalidIpCidr: true });
+      expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpCidr: true });
+    });
   });
 
-  it('should be invalid ip addresses', () => {
-    const formControl = new FormControl();
-    formControl.setValue('1.1.1.');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
+  describe('FqdnValidator', () => {
+    const { validate } = createValidator(FqdnValidator);
 
-    formControl.setValue('1.1.1.1.1');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
+    it('should allow valid fqdn addresses', () => {
+      expect(validate('google.com')).toBeNull();
+      expect(validate('healthcare.gov')).toBeNull();
+      expect(validate('test.com')).toBeNull();
+      expect(validate('test.local')).toBeNull();
+      expect(validate('test.dev')).toBeNull();
+    });
 
-    formControl.setValue('-1.1.1.1');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('one.two.three.four');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('1.2.three.four');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('1.1.1.1///24');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('fe80:::::');
-    expect(IpAddressIpValidator(formControl)).toBeTruthy();
+    it('should not allow invalid fqdn addresses', () => {
+      expect(validate('192.168.10.10')).toEqual({ invalidFqdn: true });
+      expect(validate('.test.com')).toEqual({ invalidFqdn: true });
+      expect(validate('test.com.')).toEqual({ invalidFqdn: true });
+    });
   });
 
-  it('should be valid cidr addresses', () => {
-    const formControl = new FormControl();
-    formControl.setValue('255.255.255.255/32');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
+  describe('MacAddressValidator', () => {
+    const { validate } = createValidator(MacAddressValidator);
 
-    formControl.setValue('1.1.1.1/32');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
+    it('should allow valid mac addresses', () => {
+      expect(validate('00:50:56:8c:d3:4e')).toBeNull();
+      expect(validate('00:50:56:8c:53:f9')).toBeNull();
+      expect(validate(null)).toBeNull();
+    });
 
-    formControl.setValue('192.168.10.0/24');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
-
-    formControl.setValue('127.0.0.1/20');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180/128');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
-
-    formControl.setValue('::/0');
-    expect(IpAddressCidrValidator(formControl)).toBeNull();
+    it('should not allow invalid mac addresses', () => {
+      expect(validate('ma:ca:dd:re:ss')).toEqual({ invalidMacAddress: true });
+      expect(validate('invalid')).toEqual({ invalidMacAddress: true });
+    });
   });
 
-  it('should be invalid cidr addresses', () => {
-    const formControl = new FormControl();
-    formControl.setValue('1.1.1/24');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
+  describe('ValidatePortRange', () => {
+    const { validate } = createValidator(ValidatePortRange);
 
-    formControl.setValue('1.1.1.1//24');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
+    it('should allow valid ports/port ranges', () => {
+      expect(validate('1')).toBeNull();
+      expect(validate('1-100')).toBeNull();
+      expect(validate('90-500')).toBeNull();
+      expect(validate('1-65535')).toBeNull();
+      expect(validate('any')).toBeNull();
+    });
 
-    formControl.setValue('1.1.1.1/-24');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('one.two.three.four/five');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('1.2.three.four//');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('fe80::7ccc:2a54:aed2:2180/129');
-    expect(IpAddressCidrValidator(formControl)).toBeTruthy();
-  });
-
-  it('should be valid fqdn', () => {
-    const formControl = new FormControl();
-
-    formControl.setValue('google.com');
-    expect(FqdnValidator(formControl)).toBeNull();
-
-    formControl.setValue('healthcare.gov');
-    expect(FqdnValidator(formControl)).toBeNull();
-
-    formControl.setValue('test.com');
-    expect(FqdnValidator(formControl)).toBeNull();
-
-    formControl.setValue('test.local');
-    expect(FqdnValidator(formControl)).toBeNull();
-
-    formControl.setValue('test.dev');
-    expect(FqdnValidator(formControl)).toBeNull();
-  });
-
-  it('should be invalid fqdn', () => {
-    const formControl = new FormControl();
-
-    formControl.setValue('192.168.10.10');
-    expect(FqdnValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('.test.com');
-    expect(FqdnValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('test.com.');
-    expect(FqdnValidator(formControl)).toBeTruthy();
-  });
-
-  it('should be valid mac address', () => {
-    const formControl = new FormControl();
-
-    formControl.setValue('00:50:56:8c:d3:4e');
-    expect(MacAddressValidator(formControl)).toBeNull();
-
-    formControl.setValue('00:50:56:8c:53:f9');
-    expect(MacAddressValidator(formControl)).toBeNull();
-
-    formControl.setValue(null);
-    expect(MacAddressValidator(formControl)).toBeNull();
-  });
-
-  it('should be invalid mac address', () => {
-    const formControl = new FormControl();
-
-    formControl.setValue('ma:ca:dd:re:ss');
-    expect(MacAddressValidator(formControl)).toBeTruthy();
-
-    formControl.setValue('invalid');
-    expect(MacAddressValidator(formControl)).toBeTruthy();
-  });
-
-  it('should be valid port/port range', () => {
-    const formControl = new FormControl();
-    formControl.setValue('1');
-    expect(ValidatePortRange(formControl)).toBeNull();
-
-    formControl.setValue('1-100');
-    expect(ValidatePortRange(formControl)).toBeNull();
-
-    formControl.setValue('90-500');
-    expect(ValidatePortRange(formControl)).toBeNull();
-
-    formControl.setValue('1-65535');
-    expect(ValidatePortRange(formControl)).toBeNull();
-
-    formControl.setValue('any');
-    expect(ValidatePortRange(formControl)).toBeNull();
-  });
-
-  it('should be invalid port/port range', () => {
-    const formControl = new FormControl();
-    formControl.setValue('-1');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('500-50');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('500-500');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('500--50');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('999999');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('one');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('one-twenty');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
-
-    formControl.setValue('any ');
-    expect(ValidatePortRange(formControl)).toBeTruthy();
+    it('should not allow invalid ports/port ranges', () => {
+      expect(validate('-1')).toEqual({ invalidPortNumber: true });
+      expect(validate('500-50')).toEqual({ invalidPortRange: true });
+      expect(validate('500-500')).toEqual({ invalidPortRange: true });
+      expect(validate('500--50')).toEqual({ invalidPortNumber: true });
+      expect(validate('999999')).toEqual({ invalidPortNumber: true });
+      expect(validate('one')).toEqual({ invalidPortNumber: true });
+      expect(validate('one-twenty')).toEqual({ invalidPortNumber: true });
+      expect(validate(' any ')).toEqual({ invalidPortNumber: true });
+    });
   });
 });
