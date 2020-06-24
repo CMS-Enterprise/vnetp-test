@@ -30,7 +30,6 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
 import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { SpecialCharacterDirective } from './directives/special-character.directive';
 import { DeployComponent } from './components/deploy/deploy.component';
 import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
 import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
@@ -108,7 +107,6 @@ export function apiConfigFactory(): Configuration {
     BreadcrumbComponent,
     StaticRoutesComponent,
     StaticRouteDetailComponent,
-    SpecialCharacterDirective,
     DeployComponent,
     NetworkObjectsGroupsComponent,
     NetworkObjectModalComponent,
