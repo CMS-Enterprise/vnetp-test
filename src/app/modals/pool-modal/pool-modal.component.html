@@ -92,10 +92,11 @@
           <div class="input-group align-items-center">
             <select class="form-control" id="availableNodes" formControlName="selectedNode">
               <option></option>
-              <option *ngFor="let node of availableNodes" [ngValue]="node"> {{ node.name }}</option>
+              <option *ngFor="let node of availableNodes" [ngValue]="node">{{ node.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectNode()" [disabled]="ModalMode === 'Create'">
-              Select Node
+            <button type="button" class="btn btn-success" (click)="selectNode()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedNode">
+              <fa name="plus"></fa>
+              Add Node
             </button>
           </div>
         </div>
@@ -116,7 +117,7 @@
                   {{ node.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectNode(node)"> </fa>
+                  <fa name="trash" (click)="removeNode(node)"> </fa>
                 </td>
               </tr>
               <tr *ngIf="!selectedNodes?.length" class="text-center">
@@ -139,8 +140,9 @@
               <option></option>
               <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor">{{ healthMonitor.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="selectHealthMonitor()" [disabled]="ModalMode === 'Create'">
-              Select Health Monitor
+            <button type="button" class="btn btn-success" (click)="selectHealthMonitor()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedHealthMonitor">
+              <fa name="plus"></fa>
+              Add Health Monitor
             </button>
           </div>
         </div>
@@ -161,7 +163,7 @@
                   {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="unselectHealthMonitor(healthMonitor)"> </fa>
+                  <fa name="trash" (click)="removeHealthMonitor(healthMonitor)"> </fa>
                 </td>
               </tr>
               <tr *ngIf="!selectedHealthMonitors?.length" class="text-center">
@@ -179,7 +181,7 @@
 
         <button class="btn btn-success" data-dismiss="modal">
           <fa name="save"></fa>
-          Save
+          Save Pool
         </button>
       </div>
     </div>

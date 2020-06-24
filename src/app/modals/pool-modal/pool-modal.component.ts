@@ -23,8 +23,8 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   nodeModalSubscription: Subscription;
   selectedHealthMonitors: LoadBalancerHealthMonitor[];
   availableHealthMonitors: LoadBalancerHealthMonitor[];
-  selectedNodes: LoadBalancerNode[];
-  availableNodes: LoadBalancerNode[];
+  selectedNodes: LoadBalancerNode[] = [];
+  availableNodes: LoadBalancerNode[] = [];
   TierId: string;
   Pool: LoadBalancerPool;
   Nodes: LoadBalancerNode[];
@@ -109,14 +109,29 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    const modalDto = new YesNoModalDto('Remove Health Monitor', '');
+    const modalDto = new YesNoModalDto(
+      'Remove Health Monitor',
+      `Are you sure you would like to remove "${healthMonitor.name}" health monitor from this pool?`,
+    );
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
     const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
       const data = modal.getData() as YesNoModalDto;
       modal.removeData();
-      if (data && data.modalYes) {
+
+      const shouldRemoveHealthMonitor = data && data.modalYes;
+      if (shouldRemoveHealthMonitor) {
+        if (!this.availableHealthMonitors) {
+          this.availableHealthMonitors = [];
+        }
+
+        this.availableHealthMonitors.push(healthMonitor);
+        const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
+        if (selectedIndex > -1) {
+          this.selectedHealthMonitors.splice(selectedIndex, 1);
+        }
+
         this.poolService
           .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
             poolId: this.PoolId,
@@ -144,14 +159,26 @@ export class PoolModalComponent implements OnInit, OnDestroy {
   }
 
   removeNode(node: LoadBalancerNode) {
-    const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${node.name}" node?`);
+    const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to remove "${node.name}" node from this pool?`);
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
 
     const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
       const data = modal.getData() as YesNoModalDto;
       modal.removeData();
-      if (data && data.modalYes) {
+
+      const shouldRemoveNode = data && data.modalYes;
+      if (shouldRemoveNode) {
+        if (!this.availableNodes) {
+          this.availableNodes = [];
+        }
+
+        this.availableNodes.push(node);
+        const selectedIndex = this.selectedNodes.indexOf(node);
+        if (selectedIndex > -1) {
+          this.selectedNodes.splice(selectedIndex, 1);
+        }
+
         this.poolService
           .v1LoadBalancerPoolsPoolIdNodeNodeIdDelete({
             poolId: this.PoolId,
@@ -212,12 +239,12 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       if (dto.pool.healthMonitors) {
         this.selectedHealthMonitors = dto.pool.healthMonitors;
       } else {
-        this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+        this.selectedHealthMonitors = [];
       }
       if (dto.pool && dto.pool.nodes) {
         this.selectedNodes = pool.nodes;
       } else {
-        this.selectedNodes = new Array<LoadBalancerNode>();
+        this.selectedNodes = [];
       }
     }
     if (pool && pool.healthMonitors) {
@@ -229,13 +256,13 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.ngx.resetModalData('poolModal');
   }
 
-  private getAvailableHealthMonitors(healthMonitors: Array<LoadBalancerHealthMonitor>) {
+  private getAvailableHealthMonitors(healthMonitors: LoadBalancerHealthMonitor[]) {
     if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+      this.selectedHealthMonitors = [];
     }
 
     if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+      this.availableHealthMonitors = [];
     }
 
     healthMonitors.forEach(healthMonitor => {
@@ -253,7 +280,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       return;
     }
     if (!this.selectedHealthMonitors) {
-      this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
+      this.selectedHealthMonitors = [];
     }
     this.selectedHealthMonitors.push(healthMonitor);
     const availableIndex = this.availableHealthMonitors.indexOf(healthMonitor);
@@ -265,27 +292,15 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.addHealthMonitor(healthMonitor);
   }
 
-  unselectHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (!this.availableHealthMonitors) {
-      this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    }
-
-    this.availableHealthMonitors.push(healthMonitor);
-    const selectedIndex = this.selectedHealthMonitors.indexOf(healthMonitor);
-    if (selectedIndex > -1) {
-      this.selectedHealthMonitors.splice(selectedIndex, 1);
-    }
-    this.removeHealthMonitor(healthMonitor);
-  }
-
-  private getAvailableNodes(nodes: Array<LoadBalancerNode>) {
+  private getAvailableNodes(nodes: LoadBalancerNode[]) {
     if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
+      this.selectedNodes = [];
     }
 
     if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
+      this.availableNodes = [];
     }
+
     nodes.forEach(node => {
       this.availableNodes = this.availableNodes.filter(n => n.id !== node.id);
       if (!this.selectedNodes.includes(node)) {
@@ -300,7 +315,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
       return;
     }
     if (!this.selectedNodes) {
-      this.selectedNodes = new Array<LoadBalancerNode>();
+      this.selectedNodes = [];
     }
     this.selectedNodes.push(node);
     const availableIndex = this.availableNodes.indexOf(node);
@@ -312,26 +327,13 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.addNode(node);
   }
 
-  unselectNode(node: LoadBalancerNode) {
-    if (!this.availableNodes) {
-      this.availableNodes = new Array<LoadBalancerNode>();
-    }
-
-    this.availableNodes.push(node);
-    const selectedIndex = this.selectedNodes.indexOf(node);
-    if (selectedIndex > -1) {
-      this.selectedNodes.splice(selectedIndex, 1);
-    }
-    this.removeNode(node);
-  }
-
   private buildForm() {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],
-      servicePort: [''],
+      servicePort: ['', Validators.required],
     });
   }
 
@@ -342,11 +344,11 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.PoolId = null;
     this.buildForm();
-    this.nodes = new Array<LoadBalancerNode>();
-    this.selectedHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    this.availableHealthMonitors = new Array<LoadBalancerHealthMonitor>();
-    this.selectedNodes = new Array<LoadBalancerNode>();
-    this.availableNodes = new Array<LoadBalancerNode>();
+    this.nodes = [];
+    this.selectedHealthMonitors = [];
+    this.availableHealthMonitors = [];
+    this.selectedNodes = [];
+    this.availableNodes = [];
   }
 
   ngOnInit() {
