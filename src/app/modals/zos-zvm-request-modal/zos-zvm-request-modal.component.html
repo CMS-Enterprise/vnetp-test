@@ -7,7 +7,9 @@
   (onClose)="reset()"
 >
   <div class="modal-header">
-    <h4 class="modal-title">Upload Request</h4>
+    <h4 class="modal-title">
+      {{ configurationType === ConfigurationUploadType.VM ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
+    </h4>
     <button
       type="button"
       class="close"
@@ -20,8 +22,9 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="file">File Upload</label>
+        <label for="upload-config">File Upload</label>
         <input
+          id="upload-config"
           type="file"
           class="form-control"
           (change)="importFile($event)"
@@ -39,9 +42,11 @@
         Cancel
       </button>
 
-      <button class="btn btn-success" data-dismiss="modal">
+      <button type="submit" class="btn btn-success" data-dismiss="modal">
         <fa name="upload"></fa>
-        Upload
+        <span>
+          {{ configurationType === ConfigurationUploadType.VM ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
+        </span>
       </button>
     </div>
   </form>

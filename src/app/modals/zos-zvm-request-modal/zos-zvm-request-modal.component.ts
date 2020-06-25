@@ -13,6 +13,8 @@ export class ZosZvmRequestModalComponent implements OnInit {
   uploadType: string;
   uploadId: string;
 
+  ConfigurationUploadType = ConfigurationUploadType;
+
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
