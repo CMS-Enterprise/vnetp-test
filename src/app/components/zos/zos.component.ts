@@ -3,6 +3,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
 import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import { DownloadUtil } from 'src/app/utils/download.util';
 
 @Component({
   selector: 'app-zos',
@@ -76,12 +77,7 @@ export class ZosComponent implements OnInit, OnDestroy {
       return date;
     };
 
-    const link = document.createElement('a');
-    link.setAttribute('href', blob);
-    link.setAttribute('download', getDownloadName());
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    DownloadUtil.download(getDownloadName(), blob);
   }
 
   private unsubAll() {
