@@ -5,8 +5,7 @@ import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
 import { AppMessageType } from '../models/app-message-type';
 import { AppMessage } from '../models/app-message';
-import { Datacenter, V1DatacentersService, Tier } from 'api_client';
-import { query } from '@angular/animations';
+import { Datacenter, V1DatacentersService } from 'api_client';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({

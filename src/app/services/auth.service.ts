@@ -24,7 +24,7 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(userpass: Userpass) {
+  login(userpass: Userpass): Observable<User> {
     return this.http
       .post<any>(environment.apiBase + '/v1/auth/login', {
         username: userpass.Username,
@@ -52,13 +52,12 @@ export class AuthService {
   }
 
   getUserFromToken(jwtEncoded: string): User {
+    if (!jwtEncoded) {
+      return null;
+    }
+
     try {
-      if (!jwtEncoded) {
-        return null;
-      }
-
       const jwtHelper = new JwtHelperService();
-
       const jwtDecoded = jwtHelper.decodeToken(jwtEncoded);
 
       if (!jwtDecoded || !jwtDecoded.username || !jwtDecoded.email) {
@@ -67,7 +66,6 @@ export class AuthService {
       }
 
       const user = new User();
-
       user.Username = jwtDecoded.username;
       user.Email = jwtDecoded.Email;
       user.Roles = jwtDecoded.Roles;

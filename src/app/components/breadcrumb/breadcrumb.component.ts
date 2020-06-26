@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
-import { filter, distinctUntilChanged, map, subscribeOn } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { User } from 'src/app/models/user/user';
 import { AuthService } from 'src/app/services/auth.service';
 

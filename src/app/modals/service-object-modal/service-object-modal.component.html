@@ -58,10 +58,10 @@
           <div *ngIf="f.sourcePorts.errors.required">
             Source Port/Range required.
           </div>
-          <div *ngIf="f.sourcePorts.errors.validPortNumber">
+          <div *ngIf="f.sourcePorts.errors.invalidPortNumber">
             Source Port/Range values must be greater than 0 and less than or equal to 65535.
           </div>
-          <div *ngIf="f.sourcePorts.errors.validPortRange">
+          <div *ngIf="f.sourcePorts.errors.invalidPortRange">
             Source Port Range is invalid.
           </div>
         </div>
@@ -82,10 +82,10 @@
           <div *ngIf="f.destinationPorts.errors.required">
             Destination Port/Range required.
           </div>
-          <div *ngIf="f.destinationPorts.errors.validPortNumber">
+          <div *ngIf="f.destinationPorts.errors.invalidPortNumber">
             Destination Port/Range values must be greater than 0 and less than or equal to 65535.
           </div>
-          <div *ngIf="f.destinationPorts.errors.validPortRange">
+          <div *ngIf="f.destinationPorts.errors.invalidPortRange">
             Destination Port Range is invalid.
           </div>
         </div>
