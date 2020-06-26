@@ -5,7 +5,7 @@
     <!-- TO DO: show only if customer -->
     <button class="btn btn-success" (click)="openRequestModal('request', null)">
       <fa name="upload"></fa>
-      Upload z/VM request
+      <span>Upload z/VM Request</span>
     </button>
   </div>
 
@@ -14,36 +14,16 @@
       <tr>
         <th scope="col">Request sent</th>
         <th scope="col">Configuration</th>
-        <th scope="col">Download</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
         <td>{{ configuration.requestedAt | date: 'medium' }}</td>
-        <td>
-          {{ configuration.configuredAt | date: 'medium' }}
-          <ng-container *ngIf="configuration.configuration && configuration.configuration.data && configuration.configuration.data.length">
-            <a
-              class="btn btn-sm mr-1"
-              [href]="downloadHref"
-              download="{{ downloadName }}"
-              (click)="getConfigurationFile($event, configuration.id)"
-            >
-              <fa name="download"></fa>
-            </a>
-          </ng-container>
-        </td>
-        <td>
-          <a
-            class="btn btn-sm mr-1"
-            [href]="downloadHref"
-            download="{{ downloadName }}"
-            (click)="getConfigurationFile($event, configuration.id)"
-          >
-            <fa name="download"></fa>
-          </a>
-
-          <fa name="upload" (click)="openRequestModal('configuration', configuration.id)"></fa>
+        <td>{{ configuration.configuredAt | date: 'medium' }}</td>
+        <td class="item-actions">
+            <fa name="download" aria-label="Download z/VM Configuration" (click)="getConfigurationFile($event, configuration.id)"></fa>
+            <fa name="upload" aria-label="Upload z/VM Configuration" (click)="openRequestModal('configuration', configuration.id)"></fa>
         </td>
       </tr>
       <tr *ngIf="!configurations?.length" class="text-center">
