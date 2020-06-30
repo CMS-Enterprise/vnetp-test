@@ -1,30 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadBalancersComponent } from './load-balancers.component';
-import { VirtualServerModalComponent } from 'src/app/modals/virtual-server-modal/virtual-server-modal.component';
-import { PoolModalComponent } from 'src/app/modals/pool-modal/pool-modal.component';
-import { NodeModalComponent } from 'src/app/modals/node-modal/node-modal.component';
-import { IRuleModalComponent } from 'src/app/modals/irule-modal/irule-modal.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent, MockImportExportComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
-import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 import { ToastrModule } from 'ngx-toastr';
-import { ImportExportComponent } from '../import-export/import-export.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { ProfileModalComponent } from 'src/app/modals/profile-modal/profile-modal.component';
-import { PolicyModalComponent } from 'src/app/modals/policy-modal/policy-modal.component';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { LoadBalancerVlanModalComponent } from 'src/app/modals/lb-vlan-modal/lb-vlan-modal.component';
-import { LoadBalancerRouteModalComponent } from 'src/app/modals/lb-route-modal/lb-route-modal.component';
-import { LoadBalancerSelfIpModalComponent } from 'src/app/modals/lb-self-ip-modal/lb-self-ip-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('LoadBalancersComponent', () => {
@@ -43,24 +31,23 @@ describe('LoadBalancersComponent', () => {
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
         NgSelectModule,
-
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
       declarations: [
         LoadBalancersComponent,
-        VirtualServerModalComponent,
-        LoadBalancerVlanModalComponent,
-        LoadBalancerRouteModalComponent,
-        LoadBalancerSelfIpModalComponent,
-        PoolModalComponent,
-        IRuleModalComponent,
-        NodeModalComponent,
-        HealthMonitorModalComponent,
-        ProfileModalComponent,
-        PolicyModalComponent,
-        ImportExportComponent,
-        TierSelectComponent,
+        MockComponent({ selector: 'app-virtual-server-modal' }),
+        MockComponent({ selector: 'app-pool-modal' }),
+        MockComponent({ selector: 'app-node-modal' }),
+        MockComponent({ selector: 'app-irule-modal' }),
+        MockComponent({ selector: 'app-health-monitor-modal' }),
+        MockComponent({ selector: 'app-load-balancer-profile-modal' }),
+        MockComponent({ selector: 'app-load-balancer-policy-modal' }),
+        MockComponent({ selector: 'app-load-balancer-vlan-modal' }),
+        MockComponent({ selector: 'app-load-balancer-self-ip-modal' }),
+        MockComponent({ selector: 'app-load-balancer-route-modal' }),
+        MockComponent({ selector: 'app-tier-select' }),
+        MockImportExportComponent,
         YesNoModalComponent,
         MockTooltipComponent,
         ResolvePipe,

@@ -1,6 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
 
-const MockComponent = (options: Component): Component => {
+export const MockComponent = (options: Component): Component => {
   const metadata = { ...options };
   metadata.template = metadata.template || '';
   metadata.outputs = metadata.outputs || [];
@@ -17,3 +17,14 @@ const MockComponent = (options: Component): Component => {
 
 export const MockFontAwesomeComponent = MockComponent({ selector: 'fa-icon', inputs: ['icon', 'size', 'spin'] });
 export const MockTooltipComponent = MockComponent({ selector: 'tooltip', inputs: ['message'] });
+export const MockImportExportComponent = MockComponent({
+  selector: 'app-import-export',
+  inputs: ['exportObject', 'exportFileName', 'disableJson', 'disableCsv', 'disableImport', 'disableExport'],
+  outputs: ['import'],
+});
+export const MockNgxSmartModalComponent = MockComponent({
+  selector: 'ngx-smart-modal',
+  template: '<ng-content></ng-content>',
+  inputs: ['identifier', 'customClass', 'dismissable'],
+  outputs: ['onClose', 'onOpen'],
+});
