@@ -63,7 +63,7 @@
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeFilterEntry(filterEntry)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeFilterEntry(filterEntry)" aria-label="Remove Filter Entry"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="filterEntries?.length === 0" class="text-center">
@@ -123,7 +123,7 @@
           />
 
           <button type="button" class="btn btn-sm btn-info" (click)="addFilterEntry()">
-            <fa name="plus"></fa>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             Add Filter Entry
           </button>
         </div>
@@ -134,7 +134,7 @@
           Cancel
         </button>
         <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
+          <fa-icon [icon]="['far', 'save']"></fa-icon>
           Save
         </button>
       </div>

@@ -173,7 +173,7 @@
                   {{ profile?.profileType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeProfile(profile)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeProfile(profile)" aria-label="Remove Profile"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedProfiles?.length" class="text-center">
@@ -220,7 +220,7 @@
                   {{ policy?.policyType }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removePolicy(policy)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removePolicy(policy)" aria-label="Remove Policy"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedPolicies?.length" class="text-center">
@@ -262,7 +262,7 @@
                   {{ irule.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeIRule(irule)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeIRule(irule)" aria-label="Remove iRule"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedIRules?.length" class="text-center">
@@ -278,7 +278,7 @@
           Cancel
         </button>
         <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
+          <fa-icon [icon]="['far', 'save']"></fa-icon>
           Save
         </button>
       </div>

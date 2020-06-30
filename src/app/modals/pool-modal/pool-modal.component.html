@@ -95,7 +95,7 @@
               <option *ngFor="let node of availableNodes" [ngValue]="node">{{ node.name }}</option>
             </select>
             <button type="button" class="btn btn-success" (click)="selectNode()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedNode">
-              <fa name="plus"></fa>
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
               Add Node
             </button>
           </div>
@@ -117,7 +117,7 @@
                   {{ node.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeNode(node)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeNode(node)" aria-label="Remove Node"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedNodes?.length" class="text-center">
@@ -141,7 +141,7 @@
               <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor">{{ healthMonitor.name }}</option>
             </select>
             <button type="button" class="btn btn-success" (click)="selectHealthMonitor()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedHealthMonitor">
-              <fa name="plus"></fa>
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
               Add Health Monitor
             </button>
           </div>
@@ -163,7 +163,7 @@
                   {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
-                  <fa name="trash" (click)="removeHealthMonitor(healthMonitor)"> </fa>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(healthMonitor)" aria-label="Remove Health Monitor"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedHealthMonitors?.length" class="text-center">
@@ -180,7 +180,7 @@
         </button>
 
         <button class="btn btn-success" data-dismiss="modal">
-          <fa name="save"></fa>
+          <fa-icon [icon]="['far', 'save']"></fa-icon>
           Save Pool
         </button>
       </div>

@@ -1,6 +1,6 @@
 <div class="clearfix">
   <a routerLink="/appliance" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa name="arrow-left"></fa>
+    <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
     Back
   </a>
 
@@ -8,11 +8,11 @@
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button *ngIf="Appliance?.deletedAt" class="btn btn-sm btn-success" (click)="restoreAppliance(Appliance)">
-      <fa name="undo"></fa>
+      <fa-icon [icon]="['fas', 'undo']"></fa-icon>
       Restore Appliance
     </button>
     <button class="btn btn-sm btn-danger" (click)="deleteAppliance(Appliance)">
-      <fa name="trash"></fa>
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
       Delete Appliance
     </button>
   </div>

@@ -2,7 +2,6 @@
 @import '~ngx-toastr/toastr.css';
 @import '~ngx-smart-modal/ngx-smart-modal';
 @import '~bootstrap/dist/css/bootstrap.min.css';
-@import '~font-awesome/css/font-awesome.css';
 @import '~d3-context-menu/css/d3-context-menu.css';
 @import '~@ng-select/ng-select/themes/default.theme.css';
 
@@ -28,7 +27,7 @@ h1.header {
   }
 }
 
-fa {
+fa-icon {
   margin-right: 5px;
 }
 
@@ -182,4 +181,8 @@ hr {
 
 .badge-primary {
   background-color: $primary-dark;
+}
+
+.pull-right {
+  float: right;
 }

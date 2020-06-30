@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { WizardComponent } from './wizard.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { ReplicationStatePanelComponent } from './side-panels/replication-state-panel/replication-state-panel.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -12,8 +11,8 @@ describe('WizardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxPaginationModule, NgxChartsModule],
-      declarations: [WizardComponent, ReplicationStatePanelComponent],
+      imports: [NgxPaginationModule, NgxChartsModule],
+      declarations: [WizardComponent, ReplicationStatePanelComponent, MockFontAwesomeComponent],
     }).compileComponents();
   }));
 

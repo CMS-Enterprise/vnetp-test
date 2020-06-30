@@ -3,8 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SubnetModalComponent } from './subnet-modal.component';
@@ -17,15 +16,8 @@ describe('SubnetModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-      ],
-      declarations: [SubnetModalComponent, TooltipComponent],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
+      declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()

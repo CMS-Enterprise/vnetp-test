@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { VirtualMachineModalComponent } from './virtual-machine-modal.component';
-import { NgxSmartModalComponent, NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxSmartModalServiceStub } from '../modal-mock';
@@ -16,15 +15,8 @@ describe('VirtualMachineModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-      ],
-      declarations: [VirtualMachineModalComponent],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
+      declarations: [VirtualMachineModalComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     }).compileComponents();
   }));

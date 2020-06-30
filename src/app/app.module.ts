@@ -7,7 +7,21 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSave, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import {
+  faPlus,
+  faSyncAlt,
+  faPencilAlt,
+  faTrash,
+  faUndo,
+  faChevronRight,
+  faArrowLeft,
+  faUpload,
+  faDownload,
+  faChevronDown,
+  faBolt,
+} from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -167,7 +181,7 @@ export function apiConfigFactory(): Configuration {
     AppRoutingModule,
     CommonModule,
     HttpClientModule,
-    AngularFontAwesomeModule,
+    FontAwesomeModule,
     ReactiveFormsModule,
     FormsModule,
     NgxMaskModule.forRoot(),
@@ -196,4 +210,22 @@ export function apiConfigFactory(): Configuration {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(iconLibary: FaIconLibrary) {
+    iconLibary.addIcons(
+      faSave,
+      faQuestionCircle,
+      faPlus,
+      faSyncAlt,
+      faPencilAlt,
+      faTrash,
+      faUndo,
+      faChevronRight,
+      faArrowLeft,
+      faUpload,
+      faDownload,
+      faChevronDown,
+      faBolt,
+    );
+  }
+}

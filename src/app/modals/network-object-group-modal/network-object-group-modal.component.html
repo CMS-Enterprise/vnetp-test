@@ -63,7 +63,7 @@
           aria-label="Network Object"
           [disabled]="!selectedNetworkObject"
         >
-          <fa name="plus"></fa>
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           Add Network Object
         </button>
       </div>
@@ -90,7 +90,7 @@
               <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
             </td>
             <td class="item-actions">
-              <fa name="times" (click)="removeNetworkObject(netObj)"> </fa>
+              <fa-icon [icon]="['fas', 'trash']" (click)="removeNetworkObject(netObj)" aria-label="Remove Network Object"></fa-icon>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -105,7 +105,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa name="save"></fa>
+        <fa-icon [icon]="['far', 'save']"></fa-icon>
         Save
       </button>
     </div>

@@ -3,8 +3,7 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -16,15 +15,8 @@ describe('HealthMonitorModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-      ],
-      declarations: [HealthMonitorModalComponent, TooltipComponent],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
+      declarations: [HealthMonitorModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()

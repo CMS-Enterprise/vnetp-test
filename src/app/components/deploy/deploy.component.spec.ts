@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
@@ -20,7 +20,6 @@ describe('DeployComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
@@ -28,7 +27,7 @@ describe('DeployComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
-      declarations: [DeployComponent, ResolvePipe, YesNoModalComponent],
+      declarations: [DeployComponent, ResolvePipe, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
     }).compileComponents();
   }));

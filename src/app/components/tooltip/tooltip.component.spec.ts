@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TooltipComponent } from './tooltip.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
 describe('TooltipComponent', () => {
   let component: TooltipComponent;
@@ -9,8 +8,7 @@ describe('TooltipComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule],
-      declarations: [TooltipComponent],
+      declarations: [TooltipComponent, MockFontAwesomeComponent],
     }).compileComponents();
   }));
 

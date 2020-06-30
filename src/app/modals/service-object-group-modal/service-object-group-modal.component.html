@@ -85,7 +85,7 @@
           aria-label="Service Object"
           [disabled]="!selectedServiceObject"
         >
-          <fa name="plus"></fa>
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           Add Service Object
         </button>
       </div>
@@ -115,7 +115,7 @@
               <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
             <td class="item-actions">
-              <fa name="times" (click)="removeServiceObject(serviceObject)"> </fa>
+              <fa-icon [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
             </td>
           </tr>
           <tr *ngIf="!serviceObjects?.length" class="text-center">
@@ -130,7 +130,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa name="save"></fa>
+        <fa-icon [icon]="['far', 'save']"></fa-icon>
         Save
       </button>
     </div>

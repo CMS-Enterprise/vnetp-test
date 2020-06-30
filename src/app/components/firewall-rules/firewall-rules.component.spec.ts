@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
@@ -24,7 +23,6 @@ describe('FirewallRulesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         FormsModule,
@@ -36,10 +34,11 @@ describe('FirewallRulesComponent', () => {
       declarations: [
         FirewallRulesComponent,
         FirewallRuleModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         FilterPipe,
         ImportExportComponent,
         YesNoModalComponent,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

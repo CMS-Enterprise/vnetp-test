@@ -1,7 +1,7 @@
 <!-- add back button? -->
 <div class="clearfix">
   <a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa name="arrow-left"></fa>
+    <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
     Back
   </a>
 
@@ -9,11 +9,11 @@
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-sm btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
-      <fa name="undo"></fa>
+      <fa-icon [icon]="['fas', 'undo']"></fa-icon>
       Restore Virtual Machine
     </button>
     <button class="btn btn-sm btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
-      <fa name="trash"></fa>
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
       Delete Virtual Machine
     </button>
   </div>

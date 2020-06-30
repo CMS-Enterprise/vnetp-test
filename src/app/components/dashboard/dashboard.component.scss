@@ -103,17 +103,20 @@
     padding: 15px 0;
     font-size: 18px;
   }
-  fa {
+
+  fa-icon {
     color: $primary-main;
     padding-left: 20px;
   }
+
   a {
     display: flex;
     width: 100%;
     color: $black;
     &:hover {
       text-decoration: none;
-      fa {
+      
+      fa-icon {
         color: $secondary-main;
       }
     }

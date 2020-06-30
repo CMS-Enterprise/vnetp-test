@@ -4,7 +4,7 @@
   (mouseenter)="showTooltip(true)"
   (mouseleave)="showTooltip(false)"
 >
-  <fa name="question-circle-o" class="pl-2"></fa>
+  <fa-icon [icon]="['far', 'question-circle']" class="pl-2"></fa-icon>
   <div
     class="tooltiptext"
     [class.show]="isShowTooltip"

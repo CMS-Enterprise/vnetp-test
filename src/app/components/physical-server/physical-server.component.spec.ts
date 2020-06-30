@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PhysicalServerComponent } from './physical-server.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { PhysicalServerModalComponent } from 'src/app/modals/physical-server-modal/physical-server-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +20,6 @@ describe('PhysicalServerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         FormsModule,
         ReactiveFormsModule,
@@ -29,7 +27,7 @@ describe('PhysicalServerComponent', () => {
         RouterTestingModule.withRoutes([]),
         HttpClientTestingModule,
       ],
-      declarations: [PhysicalServerComponent, PhysicalServerModalComponent, YesNoModalComponent],
+      declarations: [PhysicalServerComponent, PhysicalServerModalComponent, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService],
     }).compileComponents();
   }));

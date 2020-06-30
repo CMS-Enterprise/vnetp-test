@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ServiceObjectsGroupsComponent } from './service-objects-groups.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -9,7 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
 import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -28,7 +26,6 @@ describe('ServicesObjectsGroupsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
@@ -45,8 +42,9 @@ describe('ServicesObjectsGroupsComponent', () => {
         ServiceObjectGroupModalComponent,
         ImportExportComponent,
         YesNoModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         TierSelectComponent,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
