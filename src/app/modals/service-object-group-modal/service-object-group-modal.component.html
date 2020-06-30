@@ -115,7 +115,7 @@
               <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
             <td class="item-actions">
-              <fa-icon [icon]="['fas', 'times']" (click)="removeServiceObject(serviceObject)"> </fa-icon>
+              <fa-icon [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
             </td>
           </tr>
           <tr *ngIf="!serviceObjects?.length" class="text-center">

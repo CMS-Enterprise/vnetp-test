@@ -295,14 +295,14 @@
                 <td>{{ n.name }}</td>
                 <td class="item-actions">
                   <fa-icon 
-                  [icon]="['fas', 'undo']"
+                    [icon]="['fas', 'undo']"
                     *ngIf="n?.deletedAt"
                     class="fg-success"
                     (click)="restoreNetworkPort(n)"
                     aria-label="Restore Network Port"
                   ></fa-icon>
                   <fa-icon 
-              [icon]="['fas', 'trash']"
+                    [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': n.deletedAt }"
                     (click)="deleteNetworkPort(n)"
                     aria-label="Soft-Delete/Delete Network Port"

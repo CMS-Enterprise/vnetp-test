@@ -121,14 +121,14 @@
                 <td>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
                   <fa-icon 
-            [icon]="['fas', 'undo']"
+                    [icon]="['fas', 'undo']"
                     *ngIf="v?.deletedAt"
                     class="fg-success"
                     (click)="restoreVirtualDisk(v)"
                     aria-label="Restore Virtual Disk"
                   ></fa-icon>
                   <fa-icon 
-              [icon]="['fas', 'trash']"
+                    [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': v.deletedAt }"
                     (click)="deleteVirtualDisk(v)"
                     aria-label="Soft-Delete/Delete Virtual Disk"
@@ -167,14 +167,14 @@
                 <td>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
                   <fa-icon 
-            [icon]="['fas', 'undo']"
+                    [icon]="['fas', 'undo']"
                     *ngIf="n?.deletedAt"
                     class="fg-success"
                     (click)="restoreNetworkAdapter(n)"
                     aria-label="Restore Network Adapter"
                   ></fa-icon>
                   <fa-icon 
-              [icon]="['fas', 'trash']"
+                    [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': n.deletedAt }"
                     (click)="deleteNetworkAdapter(n)"
                     aria-label="Soft-Delete/Delete Network Adapter"

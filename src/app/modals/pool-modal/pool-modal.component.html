@@ -117,7 +117,7 @@
                   {{ node.name }}
                 </td>
                 <td class="item-actions">
-                  <fa-icon [icon]="['fas', 'trash']" (click)="removeNode(node)"> </fa-icon>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeNode(node)" aria-label="Remove Node"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedNodes?.length" class="text-center">
@@ -163,7 +163,7 @@
                   {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
-                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(healthMonitor)"> </fa-icon>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(healthMonitor)" aria-label="Remove Health Monitor"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedHealthMonitors?.length" class="text-center">

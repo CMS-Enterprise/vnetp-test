@@ -96,13 +96,17 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></fa-icon>
+          <fa-icon 
+            [icon]="['fas', 'pencil-alt']" 
+            *ngIf="!firewallRule.deletedAt" 
+            (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
+            aria-label="Edit Firewall Rule"></fa-icon>
           <fa-icon 
             [icon]="['fas', 'undo']"
             *ngIf="firewallRule?.deletedAt"
             class="fg-success"
             (click)="restoreFirewallRule(firewallRule)"
-            aria-label="Restore Network Object Group"
+            aria-label="Restore Firewall Rule"
           ></fa-icon>
           <fa-icon 
             [icon]="['fas', 'trash']"

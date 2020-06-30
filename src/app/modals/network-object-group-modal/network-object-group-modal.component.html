@@ -90,7 +90,7 @@
               <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
             </td>
             <td class="item-actions">
-              <fa-icon [icon]="['fas', 'times']" (click)="removeNetworkObject(netObj)"> </fa-icon>
+              <fa-icon [icon]="['fas', 'trash']" (click)="removeNetworkObject(netObj)" aria-label="Remove Network Object"></fa-icon>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">

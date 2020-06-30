@@ -35,7 +35,7 @@
       </td>
       <td class="item-actions">
         <fa-icon [icon]="['fas', 'pencil-alt']" (click)="editContract(contract)" aria-label="Edit Contract"></fa-icon>
-        <fa-icon [icon]="['fas', 'trash']" (click)="deleteContract(contract)"> </fa-icon>
+        <fa-icon [icon]="['fas', 'trash']" (click)="deleteContract(contract)" aria-label="Delete Contract"></fa-icon>
       </td>
     </tr>
     <tr *ngIf="contracts?.length === 0" class="text-center">

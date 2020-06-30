@@ -36,10 +36,11 @@
         </td>
         <td>{{ a.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}</td>
         <td>
-          <fa-icon [icon]="['fas', 'pencil-alt']" 
-                   *ngIf="!a?.deletedAt" 
-                   (click)="openApplianceModal(ModalMode.Edit, a)" 
-                   aria-label="Edit Appliance"></fa-icon>
+          <fa-icon 
+            [icon]="['fas', 'pencil-alt']" 
+            *ngIf="!a?.deletedAt" 
+            (click)="openApplianceModal(ModalMode.Edit, a)" 
+            aria-label="Edit Appliance"></fa-icon>
           <fa-icon [icon]="['fas', 'undo']" *ngIf="a?.deletedAt" class="fg-success" (click)="restoreAppliance(a)" aria-label="Restore Appliance"></fa-icon>
           <fa-icon [icon]="['fas', 'trash']" [ngClass]="{ 'fg-danger': a.deletedAt }" (click)="deleteAppliance(a)" aria-label="Soft-Delete/Delete Appliance">
           </fa-icon>

@@ -81,7 +81,11 @@
             <span>{{ virtualServer?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openVirtualServerModal(ModalMode.Edit, virtualServer)" aria-label="Edit Virtual Server"></fa-icon>
+            <fa-icon 
+              [icon]="['fas', 'pencil-alt']" 
+              (click)="openVirtualServerModal(ModalMode.Edit, virtualServer)" 
+              aria-label="Edit Virtual Server"
+            ></fa-icon>
             <fa-icon 
               [icon]="['fas', 'undo']"
               *ngIf="virtualServer?.deletedAt"
@@ -261,12 +265,12 @@
           </td>
           <td class="item-actions">
             <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openIRuleModal(ModalMode.Edit, irule)" aria-label="Edit iRule"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore Irule"></fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore iRule"></fa-icon>
             <fa-icon 
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': irule?.deletedAt }"
               (click)="deleteIrule(irule)"
-              aria-label="Soft-Delete/Delete Irule"
+              aria-label="Soft-Delete/Delete iRule"
             ></fa-icon>
           </td>
         </tr>
@@ -321,7 +325,7 @@
           <td class="item-actions">
             <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)" aria-label="Edit Health Monitor"> </fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="healthMonitor?.deletedAt"
               class="fg-success"
               (click)="restoreHealthMonitor(healthMonitor)"
@@ -372,9 +376,9 @@
             <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"> </fa-icon>
+            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"></fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="profile?.deletedAt"
               class="fg-success"
               (click)="restoreProfile(profile)"

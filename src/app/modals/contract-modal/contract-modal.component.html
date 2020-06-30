@@ -63,7 +63,7 @@
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
                 <td class="item-actions">
-                  <fa-icon [icon]="['fas', 'trash']" (click)="removeFilterEntry(filterEntry)"> </fa-icon>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeFilterEntry(filterEntry)" aria-label="Remove Filter Entry"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="filterEntries?.length === 0" class="text-center">
