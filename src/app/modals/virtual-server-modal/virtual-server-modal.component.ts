@@ -278,7 +278,7 @@ export class VirtualServerModalComponent implements OnInit, OnDestroy {
       sourceAddressTranslation: [''],
       destinationAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
-      pool: ['', Validators.required],
+      pool: [''],
       selectedIRule: [''],
       selectedProfile: [''],
       selectedPolicy: [''],
