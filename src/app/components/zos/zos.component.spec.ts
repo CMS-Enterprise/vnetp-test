@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ZosComponent } from './zos.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';

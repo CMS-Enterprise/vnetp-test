@@ -16,3 +16,4 @@ const MockComponent = (options: Component): Component => {
 };
 
 export const MockFontAwesomeComponent = MockComponent({ selector: 'fa-icon', inputs: ['icon', 'size', 'spin'] });
+export const MockTooltipComponent = MockComponent({ selector: 'tooltip', inputs: ['message'] });

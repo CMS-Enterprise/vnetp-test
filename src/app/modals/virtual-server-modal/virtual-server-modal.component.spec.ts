@@ -3,8 +3,7 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
-import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -17,7 +16,7 @@ describe('VirtualServerModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
-      declarations: [VirtualServerModalComponent, TooltipComponent, MockFontAwesomeComponent],
+      declarations: [VirtualServerModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()

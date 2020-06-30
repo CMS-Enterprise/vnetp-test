@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NetworkAdapterModalComponent } from './network-adapter-modal.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';

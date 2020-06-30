@@ -12,12 +12,11 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
 import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
 import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
-import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from './modals/modal-mock';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ToastrModule } from 'ngx-toastr';
 import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 
 const ngx = new NgxSmartModalServiceStub();
 
@@ -42,7 +41,7 @@ describe('AppComponent', () => {
         NetworkObjectGroupModalComponent,
         ServiceObjectModalComponent,
         ServiceObjectGroupModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         FilterPipe,
         MockFontAwesomeComponent,
       ],

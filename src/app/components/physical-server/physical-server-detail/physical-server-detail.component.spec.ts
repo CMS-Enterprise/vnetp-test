@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PhysicalServerDetailComponent } from './physical-server-detail.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';

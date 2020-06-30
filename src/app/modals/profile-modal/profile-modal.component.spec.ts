@@ -2,8 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
-import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { ProfileModalComponent } from './profile-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -25,7 +24,7 @@ describe('ProfileModalComponent', () => {
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],
-      declarations: [ProfileModalComponent, TooltipComponent, MockFontAwesomeComponent],
+      declarations: [ProfileModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()

@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -43,7 +42,7 @@ describe('SubnetsVlansComponent', () => {
         SubnetModalComponent,
         VlanModalComponent,
         ImportExportComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         TierSelectComponent,
         YesNoModalComponent,
         ResolvePipe,

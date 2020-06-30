@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { VmwareComponent } from './vmware.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';

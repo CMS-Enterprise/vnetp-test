@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { WizardComponent } from './wizard.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { ReplicationStatePanelComponent } from './side-panels/replication-state-panel/replication-state-panel.component';

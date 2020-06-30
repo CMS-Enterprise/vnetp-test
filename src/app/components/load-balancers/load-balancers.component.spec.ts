@@ -6,13 +6,12 @@ import { NodeModalComponent } from 'src/app/modals/node-modal/node-modal.compone
 import { IRuleModalComponent } from 'src/app/modals/irule-modal/irule-modal.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { TierSelectComponent } from '../tier-select/tier-select.component';
@@ -63,7 +62,7 @@ describe('LoadBalancersComponent', () => {
         ImportExportComponent,
         TierSelectComponent,
         YesNoModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         ResolvePipe,
         MockFontAwesomeComponent,
       ],

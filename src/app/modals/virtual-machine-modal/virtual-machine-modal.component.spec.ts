@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { VirtualMachineModalComponent } from './virtual-machine-modal.component';
-import { NgxSmartModalComponent, NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';

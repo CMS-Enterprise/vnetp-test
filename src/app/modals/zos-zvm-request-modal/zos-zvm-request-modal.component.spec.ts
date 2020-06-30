@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ZosZvmRequestModalComponent } from './zos-zvm-request-modal.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
