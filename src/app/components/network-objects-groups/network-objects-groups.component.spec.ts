@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
@@ -27,7 +27,6 @@ describe('NetworkObjectsGroupsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule,
         NgxPaginationModule,
@@ -46,6 +45,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         TierSelectComponent,
         TooltipComponent,
         ImportExportComponent,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

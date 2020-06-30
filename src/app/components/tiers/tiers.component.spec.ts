@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -24,7 +24,6 @@ describe('TiersComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
@@ -33,7 +32,15 @@ describe('TiersComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
-      declarations: [TiersComponent, TierModalComponent, YesNoModalComponent, ImportExportComponent, TooltipComponent, ResolvePipe],
+      declarations: [
+        TiersComponent,
+        TierModalComponent,
+        YesNoModalComponent,
+        ImportExportComponent,
+        TooltipComponent,
+        ResolvePipe,
+        MockFontAwesomeComponent,
+      ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
   }));

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
@@ -24,7 +24,6 @@ describe('FirewallRulesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         FormsModule,
@@ -40,6 +39,7 @@ describe('FirewallRulesComponent', () => {
         FilterPipe,
         ImportExportComponent,
         YesNoModalComponent,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

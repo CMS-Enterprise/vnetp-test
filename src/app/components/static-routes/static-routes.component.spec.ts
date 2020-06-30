@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { StaticRoutesComponent } from './static-routes.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -11,8 +11,8 @@ describe('StaticRoutesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, FontAwesomeModule],
-      declarations: [StaticRoutesComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      declarations: [StaticRoutesComponent, MockFontAwesomeComponent],
       providers: [CookieService],
     }).compileComponents();
   }));

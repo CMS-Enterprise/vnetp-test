@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DashboardComponent } from './dashboard.component';
 import { CookieService } from 'ngx-cookie-service';
 import { D3PieChartComponent } from '../d3-pie-chart/d3-pie-chart.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -13,8 +12,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FontAwesomeModule, HttpClientTestingModule],
-      declarations: [DashboardComponent, D3PieChartComponent, TooltipComponent],
+      imports: [HttpClientTestingModule],
+      declarations: [DashboardComponent, D3PieChartComponent, TooltipComponent, MockFontAwesomeComponent],
       providers: [CookieService],
     }).compileComponents();
   }));

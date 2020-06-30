@@ -6,7 +6,7 @@ import { NodeModalComponent } from 'src/app/modals/node-modal/node-modal.compone
 import { IRuleModalComponent } from 'src/app/modals/irule-modal/irule-modal.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { HealthMonitorModalComponent } from 'src/app/modals/health-monitor-modal/health-monitor-modal.component';
@@ -44,7 +44,7 @@ describe('LoadBalancersComponent', () => {
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
         NgSelectModule,
-        FontAwesomeModule,
+
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
@@ -65,6 +65,7 @@ describe('LoadBalancersComponent', () => {
         YesNoModalComponent,
         TooltipComponent,
         ResolvePipe,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

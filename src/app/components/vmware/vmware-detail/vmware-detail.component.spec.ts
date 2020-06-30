@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VmwareDetailComponent } from './vmware-detail.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
@@ -22,14 +22,13 @@ describe('VmwareDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([]),
-        FontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],
-      declarations: [VmwareDetailComponent, YesNoModalComponent],
+      declarations: [VmwareDetailComponent, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         {

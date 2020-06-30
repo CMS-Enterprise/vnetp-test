@@ -3,7 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -18,6 +17,7 @@ import { NgxSmartModalServiceStub } from './modals/modal-mock';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ToastrModule } from 'ngx-toastr';
 import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
 const ngx = new NgxSmartModalServiceStub();
 
@@ -26,7 +26,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         ToastrModule.forRoot({}),
@@ -45,6 +44,7 @@ describe('AppComponent', () => {
         ServiceObjectGroupModalComponent,
         TooltipComponent,
         FilterPipe,
+        MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();
