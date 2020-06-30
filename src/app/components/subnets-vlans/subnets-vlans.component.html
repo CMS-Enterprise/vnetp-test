@@ -15,7 +15,7 @@
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openSubnetModal(ModalMode.Create)" aria-label="Create Subnet">
-        <fa name="plus"></fa>
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         Create Subnet
       </button>
     </div>
@@ -53,15 +53,15 @@
             <span>{{ subnet?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal(ModalMode.Edit, subnet)" aria-label="Edit Subnet"> </fa>
-            <fa name="undo" *ngIf="subnet?.deletedAt" class="fg-success" (click)="restoreSubnet(subnet)" aria-label="Restore Subnet"></fa>
-            <fa
-              name="trash"
+            <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal(ModalMode.Edit, subnet)" aria-label="Edit Subnet"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="subnet?.deletedAt" class="fg-success" (click)="restoreSubnet(subnet)" aria-label="Restore Subnet"></fa-icon>
+            <fa-icon 
+              [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': subnet.deletedAt }"
               (click)="deleteSubnet(subnet)"
               aria-label="Soft-Delete/Delete Subnet"
             >
-            </fa>
+            </fa-icon>
           </td>
         </tr>
         <tr *ngIf="!subnets?.length" class="text-center">
@@ -75,7 +75,7 @@
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="VLANs">
-        <fa name="plus"></fa>
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         Create VLAN
       </button>
     </div>
@@ -105,14 +105,14 @@
             <span>{{ vlan?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!vlan?.deletedAt" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit VLAN"></fa>
-            <fa name="undo" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa>
-            <fa
-              name="trash"
+            <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!vlan?.deletedAt" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit VLAN"></fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa-icon>
+            <fa-icon 
+              [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': vlan.deletedAt }"
               (click)="deleteVlan(vlan)"
               aria-label="Soft-Delete/Delete VLAN"
-            ></fa>
+            ></fa-icon>
           </td>
         </tr>
         <tr *ngIf="!vlans?.length" class="text-center">

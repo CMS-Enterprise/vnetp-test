@@ -280,7 +280,7 @@
         <div class="form-group">
           <label>Network Ports</label>
           <button type="button" name="modalVirtualDisk" class="btn btn-sm btn-info pull-right mb-2" (click)="openAddNetworkPortModal()">
-            <fa name="plus"></fa>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             Add Network Port
           </button>
           <table name="vSwitchTable" class="table table-striped" aria-describedby="Network Ports table">
@@ -294,20 +294,20 @@
               <tr *ngFor="let n of networkPorts">
                 <td>{{ n.name }}</td>
                 <td class="item-actions">
-                  <fa
-                    name="undo"
+                  <fa-icon 
+                  [icon]="['fas', 'undo']"
                     *ngIf="n?.deletedAt"
                     class="fg-success"
                     (click)="restoreNetworkPort(n)"
                     aria-label="Restore Network Port"
-                  ></fa>
-                  <fa
-                    name="trash"
+                  ></fa-icon>
+                  <fa-icon 
+              [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': n.deletedAt }"
                     (click)="deleteNetworkPort(n)"
                     aria-label="Soft-Delete/Delete Network Port"
                   >
-                  </fa>
+                  </fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!networkPorts?.length" class="text-center">
@@ -325,7 +325,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa name="save"></fa>
+        <fa-icon [icon]="['far', 'save']"></fa-icon>
         Save
       </button>
     </div>

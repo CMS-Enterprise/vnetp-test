@@ -1,6 +1,6 @@
 <div>
   <a routerLink="/firewall-rules" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa name="arrow-left"></fa>
+    <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
     Back
   </a>
 
@@ -9,11 +9,11 @@
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
     <div class="btn-group-sm" role="group">
       <button type="button" class="btn btn-success mr-1" (click)="createFirewallRule()" aria-label="Add Firewall Rule">
-        <fa name="plus"></fa>
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         Add Firewall Rule
       </button>
       <button type="button" class="btn btn-info mr-1" (click)="refresh()" aria-label="Refresh Firewall Rules" *ngIf="!dirty">
-        <fa name="refresh"></fa>
+        <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
         Refresh
       </button>
     </div>
@@ -96,20 +96,24 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa name="pencil" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"> </fa>
-          <fa
-            name="undo"
+          <!-- Edit -->
+          <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!firewallRule.deletedAt" (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></fa-icon>
+          
+          <!-- Restore -->
+          <fa-icon 
+            [icon]="['fas', 'undo']"
             *ngIf="firewallRule?.deletedAt"
             class="fg-success"
             (click)="restoreFirewallRule(firewallRule)"
             aria-label="Restore Network Object Group"
-          ></fa>
-          <fa
-            name="trash"
+          ></fa-icon>
+
+          <!-- Delete -->
+          <fa-icon 
+            [icon]="['fas', 'trash']"
             [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
             (click)="deleteFirewallRule(firewallRule)"
-            aria-label="Soft-Delete/Delete Firewall Rule"
-          ></fa>
+            aria-label="Soft-Delete/Delete Firewall Rule"></fa-icon>
         </td>
       </tr>
       <tr *ngIf="firewallRules?.length === 0" class="text-center">

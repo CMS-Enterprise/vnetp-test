@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VmwareComponent } from './vmware.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
@@ -26,7 +26,7 @@ describe('VmwareComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         RouterTestingModule.withRoutes([]),
         FormsModule,
         NgxSmartModalModule,

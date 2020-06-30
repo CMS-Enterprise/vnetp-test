@@ -3,12 +3,12 @@
 
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <button type="button" class="btn btn-success mr-1" (click)="createVirtualMachine()">
-      <fa name="plus"></fa>
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       Create Virtual Machine
     </button>
 
     <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
-      <fa name="refresh"></fa>
+      <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
       Refresh
     </button>
   </div>
@@ -38,21 +38,21 @@
         <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
         <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
-          <fa name="pencil" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal(ModalMode.Edit, vm)" aria-label="Edit Virtual Machine"> </fa>
-          <fa
-            name="undo"
+          <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal(ModalMode.Edit, vm)" aria-label="Edit Virtual Machine"></fa-icon>
+          <fa-icon 
+            [icon]="['fas', 'undo']"
             *ngIf="vm?.deletedAt"
             class="fg-success"
             (click)="restoreVirtualMachine(vm)"
             aria-label="Restore Virtual Machine"
-          ></fa>
-          <fa
-            name="trash"
+          ></fa-icon>
+          <fa-icon 
+              [icon]="['fas', 'trash']"
             [ngClass]="{ 'fg-danger': vm.deletedAt }"
             (click)="deleteVirtualMachine(vm)"
             aria-label="Soft-Delete/Delete Virtual Machine"
           >
-          </fa>
+          </fa-icon>
         </td>
       </tr>
       <tr *ngIf="!virtualMachines?.length" class="text-center">

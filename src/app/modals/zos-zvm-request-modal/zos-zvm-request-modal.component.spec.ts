@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ZosZvmRequestModalComponent } from './zos-zvm-request-modal.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
@@ -15,7 +15,7 @@ describe('ZosZvmRequestModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, AngularFontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule],
+      imports: [HttpClientTestingModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule],
       declarations: [ZosZvmRequestModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();

@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -26,7 +26,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         ToastrModule.forRoot({}),

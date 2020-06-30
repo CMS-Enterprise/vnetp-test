@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportExportComponent } from './import-export.component';
 import { FormsModule } from '@angular/forms';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('ImportExportComponent', () => {
   let component: ImportExportComponent;
@@ -9,7 +9,7 @@ describe('ImportExportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, FormsModule],
+      imports: [FontAwesomeModule, FormsModule],
       declarations: [ImportExportComponent],
     }).compileComponents();
   }));

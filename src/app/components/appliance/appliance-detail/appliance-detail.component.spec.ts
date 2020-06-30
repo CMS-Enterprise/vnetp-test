@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplianceDetailComponent } from './appliance-detail.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -20,7 +20,7 @@ describe('ApplianceDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,

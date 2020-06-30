@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './login.component';
 import { FormsModule } from '@angular/forms';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
@@ -19,7 +19,7 @@ describe('LoginComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         FormsModule,
         RouterTestingModule.withRoutes([{ path: 'dashboard', component: DashboardComponent }]),
         ToastrModule.forRoot(),

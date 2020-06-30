@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntraVrfRulesComponent } from './intra-vrf-rules.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ContractModalComponent } from 'src/app/modals/contract-modal/contract-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ describe('IntraVrfRulesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularFontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FontAwesomeModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [IntraVrfRulesComponent, ContractModalComponent, TooltipComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },

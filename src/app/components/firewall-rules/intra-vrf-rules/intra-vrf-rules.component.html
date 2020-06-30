@@ -2,17 +2,17 @@
 
 <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
   <button type="button" class="btn btn-warning mr-1" (click)="saveAll()" aria-label="Update Contracts" *ngIf="dirty">
-    <fa name="save"></fa>
+    <fa-icon [icon]="['far', 'save']"></fa-icon>
     Save Changes
   </button>
 
   <button type="button" class="btn btn-success" (click)="createContract()" aria-label="Create Contract">
-    <fa name="plus"></fa>
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
     Create Contract
   </button>
 
   <button type="button" class="btn btn-info mr-1" (click)="refresh()" aria-label="Refresh Firewall Rules" *ngIf="!dirty">
-    <fa name="refresh"></fa>
+    <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
     Refresh
   </button>
 </div>
@@ -34,8 +34,8 @@
         <span>{{ contract?.FilterEntries?.length }}</span>
       </td>
       <td class="item-actions">
-        <fa name="pencil" (click)="editContract(contract)" aria-label="Edit Contract"> </fa>
-        <fa name="trash" (click)="deleteContract(contract)"> </fa>
+        <fa-icon [icon]="['fas', 'pencil-alt']" (click)="editContract(contract)" aria-label="Edit Contract"></fa-icon>
+        <fa-icon [icon]="['fas', 'trash']" (click)="deleteContract(contract)"> </fa-icon>
       </td>
     </tr>
     <tr *ngIf="contracts?.length === 0" class="text-center">

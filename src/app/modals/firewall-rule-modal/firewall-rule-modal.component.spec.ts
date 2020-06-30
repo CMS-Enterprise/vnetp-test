@@ -5,7 +5,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
 import { CookieService } from 'ngx-cookie-service';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from '../modal-mock';
@@ -18,14 +18,7 @@ describe('FirewallRuleModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-      ],
+      imports: [FontAwesomeModule, FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
       declarations: [FirewallRuleModalComponent, TooltipComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, CookieService],
     })

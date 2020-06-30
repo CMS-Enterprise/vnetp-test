@@ -3,12 +3,12 @@
 
   <div class="btn-group-sm mb-2 pull-right" role="group">
     <button type="button" class="btn btn-success mr-1" (click)="createAppliance()">
-      <fa name="plus"></fa>
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       Create Appliance
     </button>
 
     <button type="button" class="btn btn-info mr-1" aria-label="Refresh">
-      <fa name="refresh"></fa>
+      <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
       Refresh
     </button>
   </div>
@@ -36,10 +36,13 @@
         </td>
         <td>{{ a.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}</td>
         <td>
-          <fa name="pencil" *ngIf="!a?.deletedAt" (click)="openApplianceModal(ModalMode.Edit, a)" aria-label="Edit Appliance"> </fa>
-          <fa name="undo" *ngIf="a?.deletedAt" class="fg-success" (click)="restoreAppliance(a)" aria-label="Restore Appliance"></fa>
-          <fa name="trash" [ngClass]="{ 'fg-danger': a.deletedAt }" (click)="deleteAppliance(a)" aria-label="Soft-Delete/Delete Appliance">
-          </fa>
+          <fa-icon [icon]="['fas', 'pencil-alt']" 
+                   *ngIf="!a?.deletedAt" 
+                   (click)="openApplianceModal(ModalMode.Edit, a)" 
+                   aria-label="Edit Appliance"></fa-icon>
+          <fa-icon [icon]="['fas', 'undo']" *ngIf="a?.deletedAt" class="fg-success" (click)="restoreAppliance(a)" aria-label="Restore Appliance"></fa-icon>
+          <fa-icon [icon]="['fas', 'trash']" [ngClass]="{ 'fg-danger': a.deletedAt }" (click)="deleteAppliance(a)" aria-label="Soft-Delete/Delete Appliance">
+          </fa-icon>
         </td>
       </tr>
       <tr *ngIf="!appliances?.length" class="text-center">

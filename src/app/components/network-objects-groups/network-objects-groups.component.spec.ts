@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
@@ -27,7 +27,7 @@ describe('NetworkObjectsGroupsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule,
         NgxPaginationModule,

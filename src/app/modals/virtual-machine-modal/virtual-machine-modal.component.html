@@ -100,7 +100,7 @@
         <div class="form-group">
           <label for="modalVirtualDisk">Virtual Disks</label>
           <button type="button" name="modalVirtualDisk" class="btn btn-sm btn-info pull-right mb-2" (click)="openVirtualDiskModal()">
-            <fa name="plus"></fa>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             Add Virtual Disk
           </button>
           <table name="virtualDisksTable" class="table table-striped" aria-describedby="Virtual Disks table">
@@ -120,20 +120,20 @@
                 <td>{{ v.rawLun }}</td>
                 <td>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
-                  <fa
-                    name="undo"
+                  <fa-icon 
+            [icon]="['fas', 'undo']"
                     *ngIf="v?.deletedAt"
                     class="fg-success"
                     (click)="restoreVirtualDisk(v)"
                     aria-label="Restore Virtual Disk"
-                  ></fa>
-                  <fa
-                    name="trash"
+                  ></fa-icon>
+                  <fa-icon 
+              [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': v.deletedAt }"
                     (click)="deleteVirtualDisk(v)"
                     aria-label="Soft-Delete/Delete Virtual Disk"
                   >
-                  </fa>
+                  </fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!virtualDisks?.length" class="text-center">
@@ -148,7 +148,7 @@
         <div class="form-group">
           <label>Network Adapters</label>
           <button type="button" name="modalVswitch" class="btn btn-sm btn-info pull-right mb-2" (click)="openNetworkAdapterModal()">
-            <fa name="plus"></fa>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             Add Network Adapter
           </button>
           <table name="networkAdapterTable" class="table table-striped" aria-describedby="Network Adapters table">
@@ -166,20 +166,20 @@
                 <td>{{ n.vlanId }}</td>
                 <td>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="item-actions">
-                  <fa
-                    name="undo"
+                  <fa-icon 
+            [icon]="['fas', 'undo']"
                     *ngIf="n?.deletedAt"
                     class="fg-success"
                     (click)="restoreNetworkAdapter(n)"
                     aria-label="Restore Network Adapter"
-                  ></fa>
-                  <fa
-                    name="trash"
+                  ></fa-icon>
+                  <fa-icon 
+              [icon]="['fas', 'trash']"
                     [ngClass]="{ 'fg-danger': n.deletedAt }"
                     (click)="deleteNetworkAdapter(n)"
                     aria-label="Soft-Delete/Delete Network Adapter"
                   >
-                  </fa>
+                  </fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!networkAdapters?.length" class="text-center">
@@ -198,7 +198,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa name="save"></fa>
+        <fa-icon [icon]="['far', 'save']"></fa-icon>
         Save
       </button>
     </div>

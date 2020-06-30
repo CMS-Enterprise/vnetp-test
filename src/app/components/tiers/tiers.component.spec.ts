@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -24,7 +24,7 @@ describe('TiersComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         NgxPaginationModule,

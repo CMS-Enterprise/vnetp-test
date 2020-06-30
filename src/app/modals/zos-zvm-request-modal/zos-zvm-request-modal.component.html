@@ -43,7 +43,7 @@
       </button>
 
       <button type="submit" class="btn btn-success" data-dismiss="modal">
-        <fa name="upload"></fa>
+        <fa-icon [icon]="['fas', 'upload']"></fa-icon>
         <span>
           {{ configurationType === ConfigurationUploadType.VM ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
         </span>

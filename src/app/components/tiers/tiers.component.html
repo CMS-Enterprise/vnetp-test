@@ -6,7 +6,7 @@
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openTierModal(ModalMode.Create)" aria-label="Create Tier">
-        <fa name="plus"></fa>
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         Create Tier
       </button>
     </div>
@@ -40,10 +40,10 @@
             <span>{{ tier?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa name="pencil" *ngIf="!tier?.deletedAt" (click)="openTierModal(ModalMode.Edit, tier)" aria-label="Edit Tier"> </fa>
-            <fa name="undo" *ngIf="tier?.deletedAt" class="fg-success" (click)="restoreTier(tier)" aria-label="Restore Tier"></fa>
-            <fa name="trash" [ngClass]="{ 'fg-danger': tier.deletedAt }" (click)="deleteTier(tier)" aria-label="Soft-Delete/Delete Tier">
-            </fa>
+            <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!tier?.deletedAt" (click)="openTierModal(ModalMode.Edit, tier)" aria-label="Edit Tier"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="tier?.deletedAt" class="fg-success" (click)="restoreTier(tier)" aria-label="Restore Tier"></fa-icon>
+            <fa-icon [icon]="['fas', 'trash']" [ngClass]="{ 'fg-danger': tier.deletedAt }" (click)="deleteTier(tier)" aria-label="Soft-Delete/Delete Tier">
+            </fa-icon>
           </td>
         </tr>
         <tr *ngIf="!tiers?.length" class="text-center">

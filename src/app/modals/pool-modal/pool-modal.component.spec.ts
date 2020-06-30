@@ -3,7 +3,7 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { PoolModalComponent } from './pool-modal.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -17,11 +17,11 @@ describe('PoolModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],

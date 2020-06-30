@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -22,7 +22,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        AngularFontAwesomeModule,
+        FontAwesomeModule,
         NgxSmartModalModule,
         ToastrModule.forRoot({}),
         FormsModule,
