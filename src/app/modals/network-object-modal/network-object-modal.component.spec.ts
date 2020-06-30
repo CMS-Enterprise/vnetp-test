@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectModalComponent } from './network-object-modal.component';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -14,17 +14,17 @@ describe('NetworkObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
-    });
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(NetworkObjectModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NetworkObjectModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {

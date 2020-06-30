@@ -1,9 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadBalancersComponent } from './load-balancers.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent, MockImportExportComponent } from 'src/test/mock-components';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -26,9 +31,7 @@ describe('LoadBalancersComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        NgxSmartModalModule,
         ToastrModule.forRoot(),
-        NgxMaskModule.forRoot(),
         NgxPaginationModule,
         NgSelectModule,
         HttpClientTestingModule,
@@ -48,20 +51,21 @@ describe('LoadBalancersComponent', () => {
         MockComponent({ selector: 'app-load-balancer-route-modal' }),
         MockComponent({ selector: 'app-tier-select' }),
         MockImportExportComponent,
+        MockNgxSmartModalComponent,
         YesNoModalComponent,
         MockTooltipComponent,
         ResolvePipe,
         MockFontAwesomeComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(LoadBalancersComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(LoadBalancersComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
