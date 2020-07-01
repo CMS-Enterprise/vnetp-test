@@ -256,10 +256,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 5:
-        const healtMonitors = this.sanitizeData(data, true);
+        const healthMonitors = this.sanitizeData(data, true);
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
-            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healtMonitors },
+            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
