@@ -18,7 +18,7 @@ export class SubnetModalComponent implements OnInit {
   ModalMode: ModalMode;
   TierId: string;
   SubnetId: string;
-  vlans: Array<Vlan>;
+  vlans: Vlan[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -27,66 +27,37 @@ export class SubnetModalComponent implements OnInit {
     private subnetService: V1NetworkSubnetsService,
   ) {}
 
-  save() {
+  get f() {
+    return this.form.controls;
+  }
+
+  public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
       return;
     }
 
-    const modalSubnetObject = {} as Subnet;
-    modalSubnetObject.name = this.form.value.name;
-    modalSubnetObject.description = this.form.value.description;
-    modalSubnetObject.network = this.form.value.network;
-    modalSubnetObject.gateway = this.form.value.gateway;
+    const { name, description, network, gateway } = this.form.value;
+    const subnet = {
+      name,
+      description,
+      network,
+      gateway,
+    } as Subnet;
 
     if (this.ModalMode === ModalMode.Create) {
-      modalSubnetObject.tierId = this.TierId;
-      modalSubnetObject.vlanId = this.form.value.vlan;
-      this.subnetService
-        .v1NetworkSubnetsPost({
-          subnet: modalSubnetObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
+      this.createSubnet(subnet);
     } else {
-      modalSubnetObject.name = null;
-      modalSubnetObject.network = null;
-      modalSubnetObject.gateway = null;
-      modalSubnetObject.tierId = null;
-      modalSubnetObject.vlanId = null;
-      this.subnetService
-        .v1NetworkSubnetsIdPut({
-          id: this.SubnetId,
-          subnet: modalSubnetObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
+      this.updateSubnet(subnet);
     }
   }
 
-  private closeModal() {
+  public closeModal(): void {
     this.ngx.close('subnetModal');
     this.reset();
   }
 
-  cancel() {
-    this.ngx.close('subnetModal');
-    this.reset();
-  }
-
-  get f() {
-    return this.form.controls;
-  }
-
-  getData() {
+  public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('subnetModal') as SubnetModalDto);
 
     if (dto.TierId) {
@@ -95,17 +66,17 @@ export class SubnetModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.SubnetId = dto.Subnet.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.vlan.enable();
-        this.form.controls.network.enable();
-        this.form.controls.gateway.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.SubnetId = dto.Subnet.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.vlan.enable();
+      this.form.controls.network.enable();
+      this.form.controls.gateway.enable();
     }
 
     this.vlans = dto.Vlans.filter(v => !v.deletedAt);
@@ -125,7 +96,49 @@ export class SubnetModalComponent implements OnInit {
     this.ngx.resetModalData('subnetModal');
   }
 
-  private buildForm() {
+  public reset(): void {
+    this.submitted = false;
+    this.TierId = '';
+    this.SubnetId = '';
+    this.ngx.resetModalData('subnetModal');
+    this.buildForm();
+  }
+
+  private createSubnet(subnet: Subnet): void {
+    subnet.tierId = this.TierId;
+    subnet.vlanId = this.form.value.vlan;
+    this.subnetService
+      .v1NetworkSubnetsPost({
+        subnet,
+      })
+      .subscribe(
+        data => {
+          this.closeModal();
+        },
+        error => {},
+      );
+  }
+
+  private updateSubnet(subnet: Subnet): void {
+    subnet.name = null;
+    subnet.network = null;
+    subnet.gateway = null;
+    subnet.tierId = null;
+    subnet.vlanId = null;
+    this.subnetService
+      .v1NetworkSubnetsIdPut({
+        id: this.SubnetId,
+        subnet,
+      })
+      .subscribe(
+        data => {
+          this.closeModal();
+        },
+        error => {},
+      );
+  }
+
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
@@ -133,14 +146,6 @@ export class SubnetModalComponent implements OnInit {
       gateway: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       vlan: ['', Validators.required],
     });
-  }
-
-  public reset() {
-    this.submitted = false;
-    this.TierId = '';
-    this.SubnetId = '';
-    this.ngx.resetModalData('subnetModal');
-    this.buildForm();
   }
 
   ngOnInit() {
