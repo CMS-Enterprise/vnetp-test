@@ -10,14 +10,12 @@ import {
 } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
-import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('LoadBalancersComponent', () => {
@@ -28,15 +26,7 @@ describe('LoadBalancersComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        NgxPaginationModule,
-        NgSelectModule,
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
-      ],
+      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       declarations: [
         LoadBalancersComponent,
         MockComponent({ selector: 'app-virtual-server-modal' }),

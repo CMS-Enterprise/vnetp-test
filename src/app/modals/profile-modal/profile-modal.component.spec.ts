@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { ProfileModalComponent } from './profile-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;
@@ -15,9 +15,14 @@ describe('ProfileModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, ToastrModule.forRoot(), HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [ProfileModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+        { provide: ToastrService, useValue: { error: () => {} } },
+      ],
     })
       .compileComponents()
       .then(() => {

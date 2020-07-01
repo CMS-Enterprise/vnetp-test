@@ -30,10 +30,6 @@ describe('ServiceObjectModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have service object form', () => {
-    expect(component.form).toBeTruthy();
-  });
-
   // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;

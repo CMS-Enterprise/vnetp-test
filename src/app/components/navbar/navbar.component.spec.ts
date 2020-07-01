@@ -23,15 +23,15 @@ describe('NavbarComponent', () => {
       imports: [RouterTestingModule, NgxSmartModalModule, ToastrModule.forRoot({}), FormsModule, HttpClientTestingModule],
       declarations: [NavbarComponent, FilterPipe, MockFontAwesomeComponent],
       providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(NavbarComponent);
+        component = fixture.componentInstance;
+        router = TestBed.get(Router);
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NavbarComponent);
-    component = fixture.componentInstance;
-    router = TestBed.get(Router);
-    fixture.detectChanges();
-  });
 
   afterEach(() => {
     TestBed.resetTestingModule();

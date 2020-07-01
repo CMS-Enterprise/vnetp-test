@@ -18,18 +18,14 @@ describe('FirewallRuleModalComponent', () => {
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [FirewallRuleModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, CookieService],
-    });
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(FirewallRuleModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FirewallRuleModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
-  });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {
