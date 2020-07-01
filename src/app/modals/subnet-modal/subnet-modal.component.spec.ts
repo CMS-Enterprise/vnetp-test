@@ -105,7 +105,7 @@ describe('SubnetModalComponent', () => {
 
   it('should not call to create a subnet when the form is invalid', () => {
     const service = TestBed.get(V1NetworkSubnetsService);
-    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost').mockImplementation(() => of({}));
+    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -124,7 +124,7 @@ describe('SubnetModalComponent', () => {
 
   it('should call to create a subnet when in create mode', () => {
     const service = TestBed.get(V1NetworkSubnetsService);
-    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost').mockImplementation(() => of({}));
+    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -152,7 +152,7 @@ describe('SubnetModalComponent', () => {
 
   it('should call to edit an existing subnet when in edit mode', () => {
     const service = TestBed.get(V1NetworkSubnetsService);
-    const updateSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsIdPut').mockImplementation(() => of({}));
+    const updateSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsIdPut');
 
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({

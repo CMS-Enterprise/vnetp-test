@@ -121,7 +121,7 @@ describe('TierModalComponent', () => {
 
   it('should not call to create a tier when the form is invalid', () => {
     const service = TestBed.get(V1TiersService);
-    const createTierSpy = jest.spyOn(service, 'v1TiersPost').mockImplementation(() => of({}));
+    const createTierSpy = jest.spyOn(service, 'v1TiersPost');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -139,7 +139,7 @@ describe('TierModalComponent', () => {
 
   it('should call to create a tier when in create mode', () => {
     const service = TestBed.get(V1TiersService);
-    const createTierSpy = jest.spyOn(service, 'v1TiersPost').mockImplementation(() => of({}));
+    const createTierSpy = jest.spyOn(service, 'v1TiersPost');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -165,7 +165,7 @@ describe('TierModalComponent', () => {
 
   it('should call to edit an existing tier when in edit mode', () => {
     const service = TestBed.get(V1TiersService);
-    const updateTierSpy = jest.spyOn(service, 'v1TiersIdPut').mockImplementation(() => of({}));
+    const updateTierSpy = jest.spyOn(service, 'v1TiersIdPut');
 
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({

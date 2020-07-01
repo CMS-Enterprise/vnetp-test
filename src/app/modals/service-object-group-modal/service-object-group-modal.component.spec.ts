@@ -9,7 +9,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
   let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
-
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
