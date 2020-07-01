@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
@@ -14,8 +13,6 @@ import {
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { ValidatePortRange } from 'src/app/validators/network-form-validators';
-import { timeThursday } from 'd3';
 
 @Component({
   selector: 'app-pool-modal',

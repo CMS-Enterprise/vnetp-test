@@ -57,7 +57,7 @@ export class ProfileModalComponent implements OnInit {
       }
     }
     if (profile.type === 'Http') {
-      // profile.reverseProxy = this.form.controls.reverseProxy.value;
+      profile.reverseProxy = this.form.controls.reverseProxy.value;
     }
 
     if (this.ModalMode === ModalMode.Create) {
@@ -188,7 +188,7 @@ export class ProfileModalComponent implements OnInit {
         this.form.controls.certificate.setValue(dto.Profile.certificate);
       }
       if (dto.Profile.type === 'Http') {
-        // this.form.controls.reverseProxy.setValue(dto.Profile.reverseProxy);
+        this.form.controls.reverseProxy.setValue(dto.Profile.reverseProxy);
       }
     }
     this.ngx.resetModalData('loadBalancerProfileModal');

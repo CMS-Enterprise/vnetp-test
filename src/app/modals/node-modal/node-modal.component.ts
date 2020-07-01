@@ -50,8 +50,6 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       }
       node.fqdn = this.form.value.fqdn;
     }
-    // node.servicePort = this.form.value.servicePort;
-    // node.priority = this.form.value.priority;
 
     if (this.ModalMode === ModalMode.Create) {
       node.tierId = this.TierId;
@@ -155,8 +153,6 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       fqdn: [''],
       autoPopulate: [false],
-      // servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
-      // priority: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
     });
   }
 
