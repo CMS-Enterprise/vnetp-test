@@ -8359,6 +8359,16 @@ paths:
       consumes:
         - application/json
   /v1/load-balancer/pools:
+    get:
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
     post:
       summary: Create one LoadBalancerPool
       parameters:
@@ -12262,8 +12272,6 @@ definitions:
           - PredictiveNode
           - DynamicRatioNode
           - DynamicRatioMember
-          - WeightedLeastConnectionsMember
-          - WeightedLeastConnectionsNode
           - RatioSession
           - RatioLeastConnectionsMember
           - RatioLeastConnectionsNode
@@ -12280,7 +12288,6 @@ definitions:
         items:
           type: string
           enum: &ref_51
-            - ICMP
             - UDP
             - TCP
             - HTTP
@@ -13575,6 +13582,10 @@ definitions:
         type: array
         items:
           type: string
+      defaultHealthMonitorNames:
+        type: array
+        items:
+          type: string
       nodeNames:
         type: array
         items:
@@ -13586,6 +13597,7 @@ definitions:
       - tierId
       - vrfName
       - healthMonitorNames
+      - defaultHealthMonitorNames
       - nodeNames
   PoolImportCollectionDto:
     type: object

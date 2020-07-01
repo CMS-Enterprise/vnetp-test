@@ -43,14 +43,11 @@ export enum LoadBalancerPoolLoadBalancingMethod {
     PredictiveNode = 'PredictiveNode',
     DynamicRatioNode = 'DynamicRatioNode',
     DynamicRatioMember = 'DynamicRatioMember',
-    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
-    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
     RatioSession = 'RatioSession',
     RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
     RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
 };
 export enum LoadBalancerPoolDefaultHealthMonitors {
-    ICMP = 'ICMP',
     UDP = 'UDP',
     TCP = 'TCP',
     HTTP = 'HTTP',

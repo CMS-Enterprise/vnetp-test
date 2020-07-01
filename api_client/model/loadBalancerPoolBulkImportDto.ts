@@ -30,6 +30,7 @@ export interface LoadBalancerPoolBulkImportDto {
     tierId: string;
     vrfName: string;
     healthMonitorNames: Array<string>;
+    defaultHealthMonitorNames: Array<string>;
     nodeNames: Array<string>;
 }
 export enum LoadBalancerPoolBulkImportDtoLoadBalancingMethod {
@@ -46,14 +47,11 @@ export enum LoadBalancerPoolBulkImportDtoLoadBalancingMethod {
     PredictiveNode = 'PredictiveNode',
     DynamicRatioNode = 'DynamicRatioNode',
     DynamicRatioMember = 'DynamicRatioMember',
-    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
-    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
     RatioSession = 'RatioSession',
     RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
     RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
 };
 export enum LoadBalancerPoolBulkImportDtoDefaultHealthMonitors {
-    ICMP = 'ICMP',
     UDP = 'UDP',
     TCP = 'TCP',
     HTTP = 'HTTP',
