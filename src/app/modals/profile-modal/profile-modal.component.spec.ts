@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { ProfileModalComponent } from './profile-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;
@@ -16,29 +15,22 @@ describe('ProfileModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [ProfileModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+        { provide: ToastrService, useValue: { error: () => {} } },
       ],
-      declarations: [ProfileModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(ProfileModalComponent);
         component = fixture.componentInstance;
+        fixture.detectChanges();
       });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -1,10 +1,8 @@
-// FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
 import { NodeModalComponent } from './node-modal.component';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -16,22 +14,17 @@ describe('NodeModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
-      declarations: [NodeModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [NodeModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(NodeModalComponent);
         component = fixture.componentInstance;
+        fixture.detectChanges();
       });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NodeModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   // Initial Form State
   it('should create', () => {
