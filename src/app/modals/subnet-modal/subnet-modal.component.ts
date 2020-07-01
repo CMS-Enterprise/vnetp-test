@@ -48,7 +48,7 @@ export class SubnetModalComponent implements OnInit {
     if (this.ModalMode === ModalMode.Create) {
       this.createSubnet(subnet);
     } else {
-      this.updateSubnet(subnet);
+      this.editSubnet(subnet);
     }
   }
 
@@ -107,35 +107,26 @@ export class SubnetModalComponent implements OnInit {
   private createSubnet(subnet: Subnet): void {
     subnet.tierId = this.TierId;
     subnet.vlanId = this.form.value.vlan;
-    this.subnetService
-      .v1NetworkSubnetsPost({
-        subnet,
-      })
-      .subscribe(
-        data => {
-          this.closeModal();
-        },
-        error => {},
-      );
+    this.subnetService.v1NetworkSubnetsPost({ subnet }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
   }
 
-  private updateSubnet(subnet: Subnet): void {
+  private editSubnet(subnet: Subnet): void {
     subnet.name = null;
     subnet.network = null;
     subnet.gateway = null;
     subnet.tierId = null;
     subnet.vlanId = null;
-    this.subnetService
-      .v1NetworkSubnetsIdPut({
-        id: this.SubnetId,
-        subnet,
-      })
-      .subscribe(
-        data => {
-          this.closeModal();
-        },
-        error => {},
-      );
+    this.subnetService.v1NetworkSubnetsIdPut({ id: this.SubnetId, subnet }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
   }
 
   private buildForm(): void {
