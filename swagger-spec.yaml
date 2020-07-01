@@ -13468,6 +13468,8 @@ definitions:
         type: array
         items:
           type: string
+      defaultPoolName:
+        type: string
     required:
       - name
       - sourceIpAddress
@@ -13480,6 +13482,7 @@ definitions:
       - iruleNames
       - policyNames
       - profileNames
+      - defaultPoolName
   VirtualServerImportCollectionDto:
     type: object
     properties:
