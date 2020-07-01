@@ -27,62 +27,16 @@ export class TierModalComponent implements OnInit {
     private tierGroupService: V1TierGroupsService,
   ) {}
 
-  save() {
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    const modalTierObject = {} as Tier;
-    modalTierObject.name = this.form.value.name;
-    modalTierObject.description = this.form.value.description;
-    modalTierObject.datacenterId = this.DatacenterId;
-    modalTierObject.tierGroupId = this.form.value.tierGroup || null;
-    modalTierObject.tierType = this.form.value.tierType || null;
-
-    if (this.ModalMode === ModalMode.Create) {
-      this.tierService
-        .v1TiersPost({
-          tier: modalTierObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
-    } else {
-      modalTierObject.name = null;
-      modalTierObject.datacenterId = null;
-      this.tierService
-        .v1TiersIdPut({
-          id: this.TierId,
-          tier: modalTierObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
-    }
-  }
-
-  private closeModal() {
-    this.ngx.close('tierModal');
-    this.reset();
-  }
-
-  cancel() {
-    this.ngx.close('tierModal');
-    this.reset();
-  }
-
   get f() {
     return this.form.controls;
   }
 
-  getData() {
+  public closeModal(): void {
+    this.ngx.close('tierModal');
+    this.reset();
+  }
+
+  public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('tierModal') as TierModalDto);
 
     if (dto.DatacenterId) {
@@ -93,18 +47,16 @@ export class TierModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.TierId = dto.Tier.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+    if (this.ModalMode === ModalMode.Edit) {
+      this.TierId = dto.Tier.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     const tier = dto.Tier;
-
     if (tier !== undefined) {
       this.form.controls.name.setValue(tier.name);
       this.form.controls.name.disable();
@@ -115,13 +67,43 @@ export class TierModalComponent implements OnInit {
     this.ngx.resetModalData('tierModal');
   }
 
-  private getTierGroups() {
+  public reset(): void {
+    this.submitted = false;
+    this.DatacenterId = '';
+    this.tierGroups = [];
+    this.ngx.resetModalData('tierModal');
+    this.buildForm();
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { name, description, tierGroup = null, tierType = null } = this.form.value;
+    const tier = {
+      name,
+      description,
+      tierType,
+      tierGroupId: tierGroup,
+      datacenterId: this.DatacenterId,
+    } as Tier;
+
+    if (this.ModalMode === ModalMode.Create) {
+      this.createTier(tier);
+    } else {
+      this.editTier(tier);
+    }
+  }
+
+  private getTierGroups(): void {
     this.tierGroupService.v1TierGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}` }).subscribe(data => {
       this.tierGroups = data;
     });
   }
 
-  private buildForm() {
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
@@ -130,12 +112,29 @@ export class TierModalComponent implements OnInit {
     });
   }
 
-  public reset() {
-    this.submitted = false;
-    this.DatacenterId = '';
-    this.tierGroups = [];
-    this.ngx.resetModalData('tierModal');
-    this.buildForm();
+  private createTier(tier: Tier): void {
+    this.tierService.v1TiersPost({ tier }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
+  }
+
+  private editTier(tier: Tier): void {
+    tier.name = null;
+    tier.datacenterId = null;
+    this.tierService
+      .v1TiersIdPut({
+        id: this.TierId,
+        tier,
+      })
+      .subscribe(
+        data => {
+          this.closeModal();
+        },
+        error => {},
+      );
   }
 
   ngOnInit() {

@@ -1,4 +1,5 @@
 import { of } from 'rxjs';
+import { ModalMode } from '../models/other/modal-mode';
 
 export class NgxSmartModalServiceStub {
   localObject = {
@@ -52,6 +53,11 @@ export class NgxSmartModalServiceStub {
   }
   setModalData() {
     return;
+  }
+  getModalData() {
+    return {
+      ModalMode: ModalMode.Edit,
+    };
   }
 
   unsubscribe() {
