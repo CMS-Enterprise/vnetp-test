@@ -81,12 +81,12 @@ export class TierModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, tierGroup = null, tierType = null } = this.form.value;
+    const { name, description, tierGroup, tierType } = this.form.value;
     const tier = {
       name,
       description,
-      tierType,
-      tierGroupId: tierGroup,
+      tierType: tierType || null,
+      tierGroupId: tierGroup || null,
       datacenterId: this.DatacenterId,
     } as Tier;
 
