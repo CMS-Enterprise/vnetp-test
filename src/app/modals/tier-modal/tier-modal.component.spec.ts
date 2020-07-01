@@ -3,7 +3,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TierModalComponent } from './tier-modal.component';
 import { TestUtil } from 'src/test/test.util';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
@@ -15,14 +14,28 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 describe('TierModalComponent', () => {
   let component: TierModalComponent;
   let fixture: ComponentFixture<TierModalComponent>;
-
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
+    const tiersService = {
+      v1TiersIdPut: jest.fn(() => of({})),
+      v1TiersPost: jest.fn(() => of({})),
+    };
+
+    const tierGroupsService = {
+      v1TierGroupsGet: jest.fn(() => of({})),
+    };
+
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [TierModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+        { provide: V1TiersService, useValue: tiersService },
+        { provide: V1TierGroupsService, useValue: tierGroupsService },
+      ],
     })
       .compileComponents()
       .then(() => {

@@ -5,7 +5,6 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { NgxMaskModule } from 'ngx-mask';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SubnetModalComponent } from './subnet-modal.component';
 import { TestUtil } from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
@@ -17,14 +16,23 @@ import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
   let fixture: ComponentFixture<SubnetModalComponent>;
-
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
+    const subnetService = {
+      v1NetworkSubnetsIdPut: jest.fn(() => of({})),
+      v1NetworkSubnetsPost: jest.fn(() => of({})),
+    };
+
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [
+        { provide: NgxSmartModalService, useValue: ngx },
+        FormBuilder,
+        Validators,
+        { provide: V1NetworkSubnetsService, useValue: subnetService },
+      ],
     })
       .compileComponents()
       .then(() => {
