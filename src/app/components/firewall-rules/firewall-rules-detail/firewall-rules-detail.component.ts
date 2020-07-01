@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, forkJoin } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
@@ -18,6 +18,10 @@ import {
   V1NetworkSecurityFirewallRulesService,
   Tier,
   FirewallRuleImportCollectionDto,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -36,6 +40,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules: Array<FirewallRule>;
 
+  totalFirewallRules = 0;
   currentFirewallRulePage = 1;
   perPage = 50;
   dirty = false;
@@ -69,6 +74,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
     private bulkUploadService: BulkUploadService,
   ) {}
@@ -80,7 +89,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
         this.datacenterService.lockDatacenter();
         this.Id += this.route.snapshot.paramMap.get('id');
         this.currentTierIds = this.datacenterService.currentTiersValue;
-        this.getFirewallRules();
+        this.getFirewallRuleGroup();
       }
     });
   }
@@ -91,46 +100,73 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
   }
 
   refresh() {
-    this.getFirewallRules();
+    this.getFirewallRuleGroup();
   }
 
-  getFirewallRules() {
+  getFirewallRuleGroup() {
     this.firewallRuleGroupService
       .v1NetworkSecurityFirewallRuleGroupsIdGet({
         id: this.Id,
-        join: 'firewallRules',
       })
       .subscribe(data => {
         this.FirewallRuleGroup = {
           name: data.name,
           type: data.type,
+          id: data.id,
         } as FirewallRuleGroup;
 
-        const sortedFirewallRules = data.firewallRules.sort((a, b) => a.ruleIndex - b.ruleIndex);
         this.TierId = data.tierId;
 
-        this.getObjects(sortedFirewallRules);
+        this.getObjects();
       });
   }
 
-  getObjects(sortedFirewallRules: Array<FirewallRule>) {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.TierId,
-        join: 'networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups',
+  getFirewallRules() {
+    this.firewallRuleService
+      .v1NetworkSecurityFirewallRulesGet({
+        filter: `firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`,
+        perPage: this.perPage,
+        page: this.currentFirewallRulePage,
       })
       .subscribe(data => {
-        this.networkObjects = data.networkObjects;
-        this.networkObjectGroups = data.networkObjectGroups;
-        this.serviceObjects = data.serviceObjects;
-        this.serviceObjectGroups = data.serviceObjectGroups;
-        this.TierName = data.name;
-
-        // Only set the firewall rules after object arrays
-        // have been populated, this allows us to use a pure
-        // pipe to resolve id's to names.
-        this.firewallRules = sortedFirewallRules;
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        const result = data as any;
+        this.firewallRules = result.data;
+        this.totalFirewallRules = result.total;
       });
+  }
+
+  getObjects() {
+    const tierRequest = this.tierService.v1TiersIdGet({ id: this.TierId });
+    const networkObjectRequest = this.networkObjectService.v1NetworkSecurityNetworkObjectsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const networkObjectGroupRequest = this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const serviceObjectRequest = this.serviceObjectService.v1NetworkSecurityServiceObjectsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const serviceObjectGroupRequest = this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+
+    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
+      result => {
+        this.TierName = result[0].name;
+        this.networkObjects = result[1];
+        this.networkObjectGroups = result[2];
+        this.serviceObjects = result[3];
+        this.serviceObjectGroups = result[4];
+
+        this.getFirewallRules();
+      },
+    );
   }
 
   createFirewallRule() {
@@ -158,14 +194,16 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
     this.subscribeToFirewallRuleModal();
     this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
+    this.dirty = true;
   }
 
   subscribeToFirewallRuleModal() {
     this.firewallRuleModalSubscription = this.ngx
       .getModal('firewallRuleModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getFirewallRules();
+        this.getFirewallRuleGroup();
         this.ngx.resetModalData('firewallRuleModal');
+        this.dirty = false;
       });
   }
 
@@ -217,8 +255,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
     this.confirmDeleteObject(
       new YesNoModalDto(
         `${deleteDescription} Firewall Rule`,
-        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?
-        The firewall rule will be removed from the infrastructure on the next provisioning cycle.`,
+        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?`,
       ),
       deleteFunction,
     );
@@ -266,7 +303,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
             firewallRuleImportCollectionDto: fwDto,
           })
           .subscribe(data => {
-            this.getFirewallRules();
+            this.getFirewallRuleGroup();
           });
       }
       yesNoModalSubscription.unsubscribe();
