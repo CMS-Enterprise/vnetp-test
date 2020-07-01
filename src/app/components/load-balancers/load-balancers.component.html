@@ -12,22 +12,25 @@
     <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Pools <tooltip [message]="helpText.Pools"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 2; getNodes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"> Nodes <tooltip [message]="helpText.Nodes"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 2;">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"> Pool Relations <tooltip [message]="helpText.PoolRelations"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 3; getIrules()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"> iRules <tooltip [message]="helpText.IRules"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 3; getNodes()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"> Nodes <tooltip [message]="helpText.Nodes"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 4; getHealthMonitors()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 4 }">
+    <li class="nav-item" (click)="navIndex = 4; getIrules()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 4 }"> iRules <tooltip [message]="helpText.IRules"></tooltip> </a>
+    </li>
+    <li class="nav-item" (click)="navIndex = 5; getHealthMonitors()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 5 }">
         Health Monitors <tooltip [message]="helpText.HealthMonitors"></tooltip>
       </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 5; getProfiles()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 5 }"> Profiles <tooltip [message]="helpText.Profiles"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 6; getProfiles()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 6 }"> Profiles <tooltip [message]="helpText.Profiles"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 6; getPolicies()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 6 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 7; getPolicies()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 7; getVlans()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Vlans <tooltip [message]="helpText.Vlans"></tooltip> </a>
@@ -122,7 +125,6 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">LB Method</th>
-          <th scope="col">Service Port</th>
           <th scope="col">Nodes</th>
           <th scope="col">Health Monitors</th>
           <th scope="col">State</th>
@@ -138,13 +140,10 @@
             <span>{{ pool?.loadBalancingMethod }}</span>
           </td>
           <td>
-            <span>{{ pool?.servicePort }}</span>
-          </td>
-          <td>
             <span>{{ pool?.nodes?.length }}</span>
           </td>
           <td>
-            <span>{{ pool?.healthMonitors?.length }}</span>
+            <span>{{ pool?.healthMonitors?.length + pool?.defaultHealthMonitors?.length }}</span>
           </td>
           <td>
             <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
@@ -161,7 +160,7 @@
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="7">No Pools in this tier</td>
+          <td colspan="6">No Pools in this tier</td>
         </tr>
       </tbody>
     </table>
@@ -169,6 +168,16 @@
   </div>
 
   <div *ngIf="navIndex == 2">
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th scope="col">Click the import CSV button to add pool relations</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <div *ngIf="navIndex == 3">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openNodeModal(ModalMode.Create)" aria-label="Create Node">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -184,8 +193,6 @@
           <th scope="col">IP Address</th>
           <th scope="col">FQDN</th>
           <th scope="col">Autopopulate</th>
-          <th scope="col">Service Port</th>
-          <th scope="col">Priority</th>
           <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
@@ -208,12 +215,6 @@
             <span>{{ node?.autoPopulate }}</span>
           </td>
           <td>
-            <span>{{ node?.servicePort }}</span>
-          </td>
-          <td>
-            <span>{{ node?.priority }}</span>
-          </td>
-          <td>
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
@@ -228,14 +229,14 @@
           </td>
         </tr>
         <tr *ngIf="!nodes?.length" class="text-center">
-          <td colspan="9">No Nodes in this Tier</td>
+          <td colspan="7">No Nodes in this Tier</td>
         </tr>
       </tbody>
     </table>
     <pagination-controls (pageChange)="currentNodePage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 3">
+  <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openIRuleModal(ModalMode.Create)" aria-label="Create iRule">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -282,7 +283,7 @@
     <pagination-controls (pageChange)="currentIrulePage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 4">
+  <div *ngIf="navIndex == 5">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openHealthMonitorModal(ModalMode.Create)" aria-label="Create Health Monitor">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -347,7 +348,7 @@
     <pagination-controls (pageChange)="currentHMPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 5">
+  <div *ngIf="navIndex == 6">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openProfileModal(ModalMode.Create)" aria-label="Create Profile">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -400,7 +401,7 @@
     <pagination-controls (pageChange)="currentProfilesPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 6">
+  <div *ngIf="navIndex == 7">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openPolicyModal(ModalMode.Create)" aria-label="Create Policy">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -601,6 +602,7 @@
 
   <div *ngIf="currentTier" class="pull-right">
     <app-import-export
+      [disableExport]="navIndex === 2 ? true : false"
       [exportObject]="exportLoadBalancerConfig()"
       exportFileName="loadBalancers-{{ currentTier.name }}"
       (import)="importLoadBalancerConfig($event)"

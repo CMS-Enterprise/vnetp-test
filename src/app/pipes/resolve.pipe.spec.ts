@@ -5,6 +5,7 @@ describe('ResolvePipe', () => {
 
   it('should resolve data from a callback', () => {
     const item = { count: 10 };
+    // tslint:disable-next-line: no-shadowed-variable
     const callback = item => item.count;
     const resolvedItem = pipe.transform(item, callback);
 
@@ -13,6 +14,7 @@ describe('ResolvePipe', () => {
 
   it('should return item when not defined', () => {
     const item = undefined;
+    // tslint:disable-next-line: no-shadowed-variable
     const callback = item => item.count;
     const resolvedItem = pipe.transform(item, callback);
 

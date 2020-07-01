@@ -26,12 +26,13 @@ import {
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
   VirtualServerImportCollectionDto,
+  NodeImportCollectionDto,
   LoadBalancerVlan,
   LoadBalancerSelfIp,
   LoadBalancerRoute,
-  V1LoadBalancerRoutesService,
   V1LoadBalancerVlansService,
   V1LoadBalancerSelfIpsService,
+  V1LoadBalancerRoutesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -132,50 +133,42 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPools(getVirtualServers = false) {
-    if (!this.hasCurrentTier()) {
-      return;
+    if (this.currentTier && this.currentTier.id) {
+      this.poolsService
+        .v1LoadBalancerPoolsIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.pools = data;
+
+          if (getVirtualServers) {
+            this.getVirtualServers();
+          }
+        });
     }
-
-    this.poolsService
-      .v1LoadBalancerPoolsGet({
-        join: 'nodes,healthMonitors',
-        filter: `tierId||eq||${this.currentTier.id}`,
-      })
-      .subscribe(data => {
-        this.pools = data;
-
-        if (getVirtualServers) {
-          this.getVirtualServers();
-        }
-      });
   }
 
   getNodes() {
-    if (!this.hasCurrentTier()) {
-      return;
+    if (this.currentTier && this.currentTier.id) {
+      this.nodeService
+        .v1LoadBalancerNodesIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.nodes = data;
+        });
     }
-
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerNodes',
-      })
-      .subscribe(data => {
-        this.nodes = data.loadBalancerNodes;
-      });
   }
 
   getIrules() {
-    if (!this.hasCurrentTier()) {
-      return;
+    if (this.currentTier && this.currentTier.id) {
+      this.tierService
+        .v1TiersIdGet({
+          id: this.currentTier.id,
+          join: 'loadBalancerIrules',
+        })
+        .subscribe(data => (this.irules = data.loadBalancerIrules));
     }
-
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerIrules',
-      })
-      .subscribe(data => (this.irules = data.loadBalancerIrules));
   }
 
   getHealthMonitors() {
@@ -277,19 +270,19 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         this.getHealthMonitors();
         this.getNodes();
         break;
-      case 2:
+      case 3:
         this.getNodes();
         break;
-      case 3:
+      case 4:
         this.getIrules();
         break;
-      case 4:
+      case 5:
         this.getHealthMonitors();
         break;
-      case 5:
+      case 6:
         this.getProfiles();
         break;
-      case 6:
+      case 7:
         this.getPolicies();
         break;
       case 7:
@@ -305,11 +298,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   importLoadBalancerConfig(data) {
-    // TODO: Display modal indicating the number of entities that will
-    // be imported.
-
-    // TODO: Display more descriptive error message when import fails.
-
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
@@ -333,23 +321,36 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
-        this.nodeService
-          .v1LoadBalancerNodesBulkPost({
-            generatedLoadBalancerNodeBulkDto: { bulk: data },
+        const nodeDto = {} as NodeImportCollectionDto;
+        nodeDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        nodeDto.nodes = data;
+        this.poolsService
+          .v1LoadBalancerPoolsBulkUpdatePost({
+            nodeImportCollectionDto: nodeDto,
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 3:
-        this.irulesService
-          .v1LoadBalancerIrulesBulkPost({
-            generatedLoadBalancerIruleBulkDto: { bulk: data },
+        const nodes = this.sanitizeData(data, true);
+        this.nodeService
+          .v1LoadBalancerNodesBulkPost({
+            generatedLoadBalancerNodeBulkDto: { bulk: nodes },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
+        const irules = this.sanitizeData(data, true);
+        this.irulesService
+          .v1LoadBalancerIrulesBulkPost({
+            generatedLoadBalancerIruleBulkDto: { bulk: irules },
+          })
+          .subscribe(result => this.getObjectsForNavIndex());
+        break;
+      case 5:
+        const healthMonitors = this.sanitizeData(data, true);
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
-            generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
+            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
@@ -367,44 +368,34 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         return this.virtualServers;
       case 1:
         return this.pools;
-      case 2:
-        return this.nodes;
       case 3:
-        return this.irules;
+        return this.nodes;
       case 4:
-        return this.healthMonitors;
+        return this.irules;
       case 5:
-        return this.profiles;
+        return this.healthMonitors;
       case 6:
+        return this.profiles;
+      case 7:
         return this.policies;
       default:
         break;
     }
   }
 
-  sanitizeData(entities: any) {
+  sanitizeData(entities: any, resolveTier = false) {
     return entities.map(entity => {
-      this.mapCsv(entity);
+      this.mapData(entity, resolveTier);
       return entity;
     });
   }
 
-  mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames' || key === 'nodeNames' || key === 'iruleNames' || key === 'policyNames' || key === 'profileNames') {
-        const stringArray = val as string;
-        obj[key] = this.createAndFormatArray(stringArray);
+  mapData(entity: any, resolveTier: boolean) {
+    if (resolveTier) {
+      if (entity.vrfName) {
+        entity.tierId = this.tiers.find(t => t.name === entity.vrfName).id;
       }
-    });
-    return obj;
-    // tslint:disable-next-line: semicolon
-  };
-
-  createAndFormatArray(names: string) {
-    return names
-      .replace(/[\[\]']+/g, '')
-      .split(',')
-      .map(name => name.trim());
+    }
   }
 
   getPoolName = (poolId: string) => {

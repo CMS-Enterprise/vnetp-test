@@ -123,7 +123,7 @@ export class HealthMonitorModalComponent implements OnInit {
       }
     }
 
-    if (dto !== undefined) {
+    if (dto.healthMonitor !== undefined) {
       this.form.controls.name.setValue(dto.healthMonitor.name);
       this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.healthMonitor.type);

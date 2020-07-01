@@ -1,3 +1,4 @@
+// tslint:disable-next-line: no-namespace
 export namespace DownloadUtil {
   export function download(fileName: string, data: string): void {
     const link = document.createElement('a');

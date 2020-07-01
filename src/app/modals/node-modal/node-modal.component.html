@@ -97,35 +97,6 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="servicePort">
-          Service Port
-        </label>
-        <tooltip [message]="helpText.ServicePort"></tooltip>
-        <input
-          class="form-control"
-          name="servicePort"
-          formControlName="servicePort"
-          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-          mask="09999"
-          aria-label="Service Port"
-        />
-      </div>
-      <div class="form-group">
-        <label for="priority">
-          Priority
-        </label>
-        <tooltip [message]="helpText.Priority"></tooltip>
-        <input
-          class="form-control"
-          name="priority"
-          formControlName="priority"
-          [ngClass]="{ 'is-invalid': submitted && f.priority.errors }"
-          mask="099"
-          aria-label="Priority"
-        />
-      </div>
-
       <div class="modal-footer">
         <button
           type="button"

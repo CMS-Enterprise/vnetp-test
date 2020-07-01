@@ -11,7 +11,7 @@
  */
 
 
-export interface LoadBalancerNode { 
+export interface LoadBalancerNodeBulkImportDto { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -21,13 +21,17 @@ export interface LoadBalancerNode {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    type: LoadBalancerNodeType;
+    type: LoadBalancerNodeBulkImportDtoType;
     ipAddress: string;
     fqdn: string;
     autoPopulate: boolean;
     tierId: string;
+    vrfName: string;
+    poolName: string;
+    servicePort: number;
+    ratio: number;
 }
-export enum LoadBalancerNodeType {
+export enum LoadBalancerNodeBulkImportDtoType {
     IpAddress = 'IpAddress',
     Fqdn = 'Fqdn'
 };

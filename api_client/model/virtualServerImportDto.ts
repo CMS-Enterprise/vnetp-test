@@ -40,6 +40,7 @@ export interface VirtualServerImportDto {
     iruleNames: Array<string>;
     policyNames: Array<string>;
     profileNames: Array<string>;
+    defaultPoolName: string;
 }
 export enum VirtualServerImportDtoSourceAddressTranslation {
     None = 'None',

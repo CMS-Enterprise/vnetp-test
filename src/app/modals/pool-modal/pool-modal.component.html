@@ -41,7 +41,6 @@
           }"
           aria-label="Load Balancing Method"
         >
-          <!--TODO: Do we want to expose all LB methods to users?-->
           <option></option>
           <option value="RoundRobin">Round Robin</option>
           <option value="LeastSessions">Least Sessions</option>
@@ -56,72 +55,90 @@
           <option value="PredictiveNode">Predictive Node</option>
           <option value="DynamicRatioNode">Dynamic Ratio Node</option>
           <option value="DynamicRatioMember">Dynamic Ratio Member</option>
-          <option value="WeightedLeastConnectionsMember">Weighted Least Connections Member</option>
-          <option value="WeightedLeastConnectionsNode">Weighted Least Connections Node</option>
           <option value="RatioSession">Ratio Session</option>
           <option value="RatioLeastConnectionsMember">Ratio Least Connections Member</option>
           <option value="RatioLeastConnectionsNode">Ratio Least Connections Node</option>
         </select>
-        <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
-          <div *ngIf="f.loadBalancingMethod.errors.required">Load Balancing Method is required</div>
+        <div
+          *ngIf="submitted && f.loadBalancingMethod.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.loadBalancingMethod.errors.required">Name is required</div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="servicePort">Service Port</label>
-        <tooltip [message]="helpText.ServicePort"></tooltip>
-        <input
-          type="text"
-          formControlName="servicePort"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
-          aria-label="Service Port"
-        />
-        <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
-          <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
-        </div>
-      </div>
-
       <hr />
 
       <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-4">
           <label for="availableNodes">Available Nodes</label>
           <tooltip [message]="helpText.AvailableNodes"></tooltip>
 
           <div class="input-group align-items-center">
             <select class="form-control" id="availableNodes" formControlName="selectedNode">
               <option></option>
-              <option *ngFor="let node of availableNodes" [ngValue]="node">{{ node.name }}</option>
+              <option *ngFor="let node of availableNodes" [ngValue]="node">
+                {{ node.name }}</option>
             </select>
-            <button type="button" class="btn btn-success" (click)="selectNode()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedNode">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-              Add Node
-            </button>
           </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="servicePort">Service Port</label>
+          <tooltip [message]="helpText.ServicePort"></tooltip>
+          <input type="text" formControlName="servicePort" class="form-control"
+            [ngClass]="{ 'is-invalid': f.servicePort.errors }" aria-label="Service Port" />
+          <div *ngIf="f.servicePort.errors" class="invalid-feedback">
+            <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
+            <div *ngIf="f.servicePort.errors.min">Service Port must be greater than or equal to 1.</div>
+            <div *ngIf="f.servicePort.errors.max">Service Port must be equal to or less than 65535.</div>
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ratio">Ratio</label>
+          <tooltip [message]="helpText.Ratio"></tooltip>
+          <input type="text" formControlName="ratio" class="form-control"
+            [ngClass]="{ 'is-invalid': f.ratio.errors }" aria-label="Ratio" />
+          <div *ngIf="f.ratio.errors" class="invalid-feedback">
+            <div *ngIf="f.ratio.errors.required">Ratio</div>
+            <div *ngIf="f.ratio.errors.min">Ratio must be greater than or equal to 1.</div>
+            <div *ngIf="f.ratio.errors.max">Ratio must be equal to or less than 100.</div>
+          </div>
+        </div>
+        <div [ngStyle]="{'margin-top': '2.2rem'}">
+          <button type="button" class="btn btn-sm btn-info" (click)="addNode();"
+            [disabled]="ModalMode === 'Create' || f?.servicePort?.errors || f?.ratio?.errors">
+            Select Node
+          </button>
         </div>
 
         <div class="form-group col-md-12">
           <label for="selectedNodes">Selected Nodes</label>
           <tooltip [message]="helpText.SelectedNodes"></tooltip>
-          <table class="table table-striped" aria-describedby="Selected Nodes table">
+          <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
+                <th>Name</th>
+                <th>Service Port</th>
+                <th>Ratio</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let node of selectedNodes">
                 <td>
-                  {{ node.name }}
+                  {{ node?.loadBalancerNode?.name }}
+                </td>
+                <td>
+                  {{ node?.servicePort }}
+                </td>
+                <td>
+                  {{ node?.ratio }}
                 </td>
                 <td class="item-actions">
                   <fa-icon [icon]="['fas', 'trash']" (click)="removeNode(node)" aria-label="Remove Node"></fa-icon>
                 </td>
               </tr>
               <tr *ngIf="!selectedNodes?.length" class="text-center">
-                <td colspan="2">No Nodes Selected</td>
+                <td colspan="4">No Nodes Selected</td>
               </tr>
             </tbody>
           </table>
@@ -136,25 +153,41 @@
           <tooltip [message]="helpText.AvailableHealthMonitors"></tooltip>
 
           <div class="input-group align-items-center">
-            <select class="form-control" id="availableHealthMonitors" formControlName="selectedHealthMonitor">
+            <select
+              class="form-control"
+              id="availableHealthMonitors"
+              formControlName="selectedHealthMonitor"
+            >
               <option></option>
-              <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor">{{ healthMonitor.name }}</option>
+              <option
+                *ngFor="let healthMonitor of availableHealthMonitors"
+                [ngValue]="healthMonitor.id"
+                >{{ healthMonitor.name }}</option
+              >
+              <option
+              *ngFor="let defaultHealthMonitor of defaultHealthMonitors"
+              [ngValue]="defaultHealthMonitor"
+              >{{ defaultHealthMonitor }} (Default)</option>
             </select>
-            <button type="button" class="btn btn-success" (click)="selectHealthMonitor()" [disabled]="ModalMode === 'Create' || !form?.value?.selectedHealthMonitor">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-              Add Health Monitor
-            </button>
+            <button
+            type="button"
+            class="btn btn-sm btn-info"
+            (click)="addHealthMonitor();"
+            [disabled]="ModalMode === 'Create'"
+            >
+            Select Health Monitor
+          </button>
           </div>
         </div>
 
         <div class="form-group col-md-12">
           <label for="selectedHealthMonitors">Selected Health Monitors</label>
           <tooltip [message]="helpText.SelectedHealthMonitors"></tooltip>
-          <table class="table table-striped" aria-describedby="Selected Health Monitors table">
+          <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
+                <th>Name</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -163,10 +196,18 @@
                   {{ healthMonitor.name }}
                 </td>
                 <td class="item-actions">
-                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(healthMonitor)" aria-label="Remove Health Monitor"></fa-icon>
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(healthMonitor.id)" aria-label="Remove Health Monitor"></fa-icon>
                 </td>
               </tr>
-              <tr *ngIf="!selectedHealthMonitors?.length" class="text-center">
+              <tr *ngFor="let defaultHealthMonitor of selectedDefaultHealthMonitors">
+                <td>
+                  {{ defaultHealthMonitor }} (Default)
+                </td>
+                <td class="item-actions">
+                  <fa-icon [icon]="['fas', 'trash']" (click)="removeHealthMonitor(defaultHealthMonitor)" aria-label="Remove Default Health Monitor"></fa-icon>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedHealthMonitors?.length && !selectedDefaultHealthMonitors?.length" class="text-center">
                 <td colspan="2">No Health Monitors Selected</td>
               </tr>
             </tbody>
@@ -175,13 +216,18 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        <button
+          type="button"
+          class="btn btn-link"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
           Cancel
         </button>
 
         <button class="btn btn-success" data-dismiss="modal">
           <fa-icon [icon]="['far', 'save']"></fa-icon>
-          Save Pool
+          Save
         </button>
       </div>
     </div>

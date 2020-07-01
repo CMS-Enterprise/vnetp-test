@@ -62,6 +62,7 @@ export class LoadBalancersHelpText {
   Tier = `Tier that Load Balancer configurations are created within.`;
   VirtualServers = `Manage Virtual Servers.`;
   Pools = `Manage Pools and Nodes.`;
+  PoolRelations = `Manage Pool to Node and Pool to Health Monitor Relations.`;
   Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
@@ -231,7 +232,8 @@ export class PoolModalHelpText {
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
   AvailableNodes = `Nodes that can be added to the Pool.`;
   SelectedNodes = `Nodes that have been added to the Pool.`;
-  ServicePort = `Service Port of the Pool.`;
+  Ratio = 'Ratio of traffic that will be sent to the node.';
+  ServicePort = `Port that the node provides service on.`;
 }
 
 @Injectable({

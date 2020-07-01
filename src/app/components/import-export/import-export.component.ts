@@ -51,7 +51,6 @@ export class ImportExportComponent implements OnInit {
     reader.readAsText(file);
     reader.onload = () => {
       const importObject = reader.result.toString();
-
       switch (importType) {
         case 'csv':
           if (this.disableCsv) {

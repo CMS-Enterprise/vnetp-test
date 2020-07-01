@@ -1,3 +1,4 @@
+// tslint:disable-next-line: no-namespace
 export namespace ConversionUtil {
   const bytesInGb = 1000000000;
 
