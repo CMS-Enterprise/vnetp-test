@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { arc, pie, DefaultArcObject, PieArcDatum } from 'd3-shape';
 
 export interface PieChartData {
@@ -16,24 +16,16 @@ export interface InternalPieChartData extends PieChartData {
   selector: 'app-d3-pie-chart',
   templateUrl: './d3-pie-chart.component.html',
 })
-export class D3PieChartComponent implements OnInit, OnChanges {
-  @Input() data: Array<PieChartData> = [];
-
+export class D3PieChartComponent implements OnChanges {
+  @Input() data: PieChartData[] = [];
   @Input() width = 350;
-
   @Input() height = 350;
-
   @Input() radius = Math.min(this.width, this.height) / 2;
 
   public chartdata!: (PieArcDatum<InternalPieChartData> & DefaultArcObject)[];
-
   public center: string;
 
-  constructor() {}
-
-  ngOnInit() {}
-
-  ngOnChanges(changes: any): void {
+  ngOnChanges(): void {
     this.center = `translate(${this.width / 2}, ${this.height / 2})`;
 
     const label = arc()
