@@ -32,14 +32,14 @@
     <li class="nav-item" (click)="navIndex = 7; getPolicies()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 7; getVlans()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Vlans <tooltip [message]="helpText.Vlans"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 8; getVlans()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> Vlans <tooltip [message]="helpText.Vlans"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 8; getSelfIps()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> Self IPs <tooltip [message]="helpText.SelfIps"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 9; getSelfIps()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 9 }"> Self IPs <tooltip [message]="helpText.SelfIps"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 9; getRoutes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 9 }"> Routes <tooltip [message]="helpText.Routes"></tooltip> </a>
+    <li class="nav-item" (click)="navIndex = 10; getRoutes()">
+      <a class="nav-link" [ngClass]="{ active: navIndex == 10 }"> Routes <tooltip [message]="helpText.Routes"></tooltip> </a>
     </li>
   </ul>
 
@@ -448,7 +448,7 @@
     <pagination-controls (pageChange)="currentPoliciesPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 7">
+  <div *ngIf="navIndex == 8">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="Create Vlan">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -491,7 +491,7 @@
     <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 8">
+  <div *ngIf="navIndex == 9">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openSelfIpModal(ModalMode.Create)" aria-label="Create Self IP">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -538,7 +538,7 @@
     <pagination-controls (pageChange)="currentSelfIpsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 9">
+  <div *ngIf="navIndex == 10">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openRouteModal(ModalMode.Create)" aria-label="Create Route">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
