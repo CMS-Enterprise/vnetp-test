@@ -22,11 +22,15 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterContextService: DatacenterContextService,
-    public ngx: NgxSmartModalService,
+    private ngx: NgxSmartModalService,
     private toastrService: ToastrService,
   ) {}
 
-  switchDatacenter() {
+  public openDatacenterSwitchModal(): void {
+    this.ngx.getModal('datacenterSwitchModal').open();
+  }
+
+  public switchDatacenter(): void {
     try {
       this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
       this.toastrService.success('Datacenter Switched');
@@ -35,16 +39,7 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterDatacenters = (datacenter: Datacenter) => {
-    if (!this.currentDatacenter) {
-      return;
-    }
-    return datacenter.id !== this.currentDatacenter.id;
-    // Using arrow function to pass execution context.
-    // tslint:disable-next-line: semicolon
-  };
-
-  private unsubAll() {
+  private unsubAll(): void {
     SubscriptionUtil.unsubscribe([this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription]);
   }
 

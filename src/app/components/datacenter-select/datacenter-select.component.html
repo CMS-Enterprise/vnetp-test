@@ -5,7 +5,7 @@
 
   <span *ngIf="!currentDatacenter" class="fg-danger--dark">No Datacenter Selected</span>
 
-  <button class="btn btn-sm btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="ngx.getModal('datacenterSwitchModal').open()">
+  <button class="btn btn-sm btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
   </button>
 </div>
