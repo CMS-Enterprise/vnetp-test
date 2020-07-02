@@ -20,10 +20,10 @@ import { VirtualServerModalComponent } from './virtual-server-modal/virtual-serv
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 const routes: Routes = [
   {

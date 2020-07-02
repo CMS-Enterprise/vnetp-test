@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { PhysicalServerComponent } from './physical-server.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
@@ -10,14 +9,16 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { NgxSmartModalComponent } from 'ngx-smart-modal';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { PhysicalServerModalComponent } from './physical-server-modal/physical-server-modal.component';
-import { PhysicalServerDetailComponent } from './physical-server-detail/physical-server-detail.component';
+import { SubnetsVlansComponent } from './subnets-vlans.component';
+import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
+import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
+import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PhysicalServerComponent,
+    component: SubnetsVlansComponent,
   },
 ];
 
@@ -32,9 +33,10 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ],
   declarations: [
-    PhysicalServerComponent,
-    PhysicalServerModalComponent,
-    PhysicalServerDetailComponent,
+    SubnetsVlansComponent,
+    SubnetModalComponent,
+    VlanModalComponent,
+    ResolvePipe,
     NgxSmartModalComponent,
     TooltipComponent,
     TierSelectComponent,
@@ -42,4 +44,4 @@ const routes: Routes = [
     YesNoModalComponent,
   ],
 })
-export class PhysicalServerModule {}
+export class SubnetsVlansModule {}

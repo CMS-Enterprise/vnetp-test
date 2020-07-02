@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { PhysicalServerComponent } from './physical-server.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
@@ -10,14 +9,17 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { NgxSmartModalComponent } from 'ngx-smart-modal';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { PhysicalServerModalComponent } from './physical-server-modal/physical-server-modal.component';
-import { PhysicalServerDetailComponent } from './physical-server-detail/physical-server-detail.component';
 import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
+import { VmwareComponent } from './vmware.component';
+import { NetworkAdapterModalComponent } from './network-adapter-modal/network-adapter-modal.component';
+import { VirtualDiskModalComponent } from './virtual-disk-modal/virtual-disk-modal.component';
+import { VirtualMachineModalComponent } from './virtual-machine-modal/virtual-machine-modal.component';
+import { VmwareDetailComponent } from './vmware-detail/vmware-detail.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PhysicalServerComponent,
+    component: VmwareComponent,
   },
 ];
 
@@ -32,9 +34,11 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ],
   declarations: [
-    PhysicalServerComponent,
-    PhysicalServerModalComponent,
-    PhysicalServerDetailComponent,
+    VmwareComponent,
+    NetworkAdapterModalComponent,
+    VirtualDiskModalComponent,
+    VirtualMachineModalComponent,
+    VmwareDetailComponent,
     NgxSmartModalComponent,
     TooltipComponent,
     TierSelectComponent,
@@ -42,4 +46,4 @@ const routes: Routes = [
     YesNoModalComponent,
   ],
 })
-export class PhysicalServerModule {}
+export class VmwareModule {}

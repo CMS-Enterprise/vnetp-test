@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,6 +15,7 @@ import { ServiceObjectModalComponent } from './service-object-modal/service-obje
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal/service-object-group-modal.component';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;

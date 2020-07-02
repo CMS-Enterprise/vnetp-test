@@ -7,7 +7,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SubnetsVlansComponent } from './subnets-vlans.component';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -17,6 +16,7 @@ import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
 import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;

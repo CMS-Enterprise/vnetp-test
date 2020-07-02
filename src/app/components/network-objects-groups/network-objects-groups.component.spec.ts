@@ -7,7 +7,6 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,6 +15,7 @@ import { NetworkObjectModalComponent } from './network-object-modal/network-obje
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal/network-object-group-modal.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
