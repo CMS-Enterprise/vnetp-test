@@ -61,11 +61,6 @@ describe('VirtualServerModalComponent', () => {
     expect(servicePort.valid).toBeFalsy();
   });
 
-  it('pool should be required', () => {
-    const pool = component.form.controls.pool;
-    expect(pool.valid).toBeFalsy();
-  });
-
   // Name validity
   it('name should be valid', () => {
     const name = component.form.controls.name;
