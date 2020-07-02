@@ -42,7 +42,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-load-balancers',

@@ -3,7 +3,7 @@ import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } f
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { ConversionUtil } from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-physical-server-detail',

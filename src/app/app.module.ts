@@ -21,6 +21,8 @@ import {
   faDownload,
   faChevronDown,
   faBolt,
+  faBars,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
@@ -226,6 +228,8 @@ export class AppModule {
       faDownload,
       faChevronDown,
       faBolt,
+      faBars,
+      faSpinner,
     );
   }
 }

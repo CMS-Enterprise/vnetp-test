@@ -1,8 +1,6 @@
 import { Subscription } from 'rxjs';
-
-// tslint:disable-next-line: no-namespace
-export namespace SubscriptionUtil {
-  export function unsubscribe(subscriptions: Subscription[]): void {
+export default class SubscriptionUtil {
+  static unsubscribe(subscriptions: Subscription[]): void {
     const canUnsubscribe = (sub: Subscription) => {
       return sub && sub.unsubscribe instanceof Function;
     };

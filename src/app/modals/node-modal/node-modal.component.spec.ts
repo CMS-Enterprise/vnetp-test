@@ -56,11 +56,6 @@ describe('NodeModalComponent', () => {
     expect(autoPopulate.valid).toBeTruthy();
   });
 
-  it('service port should be required', () => {
-    const servicePort = component.form.controls.servicePort;
-    expect(servicePort.valid).toBeFalsy();
-  });
-
   // Form State when Type: FQDN selected
   it('ipaddress should be required', () => {
     const type = component.form.controls.type;

@@ -9,7 +9,7 @@ import { AppMessage } from 'src/app/models/app-message';
 import { AppMessageType } from 'src/app/models/app-message-type';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { Job } from 'src/app/models/other/job';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-navbar',

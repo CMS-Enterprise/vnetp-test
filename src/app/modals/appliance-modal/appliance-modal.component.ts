@@ -7,7 +7,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { ConversionUtil } from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-appliance-modal',

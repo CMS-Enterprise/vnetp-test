@@ -1,4 +1,4 @@
-import { ConversionUtil } from './conversion.util';
+import ConversionUtil from './conversion.util';
 
 describe('ConversionUtil', () => {
   describe('convertBytesToGb', () => {

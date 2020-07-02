@@ -19,7 +19,7 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-service-objects-groups',

@@ -49,13 +49,13 @@ describe('PoolModalComponent', () => {
       expect(name.valid).toBeFalsy();
     });
 
-    it('name should be invalid due to max length', () => {
+    it('should be invalid due to max length', () => {
       const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
       expect(name.valid).toBeFalsy();
     });
 
-    it('name should be invalid due to invalid characters', () => {
+    it('should be invalid due to invalid characters', () => {
       const name = component.form.controls.name;
       name.setValue('invalid/name!');
       expect(name.valid).toBeFalsy();
@@ -67,14 +67,6 @@ describe('PoolModalComponent', () => {
       const loadBalancingMethod = component.form.controls.loadBalancingMethod;
       loadBalancingMethod.updateValueAndValidity();
       expect(loadBalancingMethod.errors.required).toBeTruthy();
-    });
-  });
-
-  describe('Service Port', () => {
-    it('should be required', () => {
-      const servicePort = component.form.controls.servicePort;
-      servicePort.updateValueAndValidity();
-      expect(servicePort.errors.required).toBeTruthy();
     });
   });
 });

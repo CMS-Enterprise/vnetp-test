@@ -73,7 +73,7 @@
         />
         <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
           <div *ngIf="f.network.errors.required">
-            Network required.
+            Network is required
           </div>
           <div *ngIf="f.network.errors.invalidIpCidr">
             Invalid IP address, must be a valid IPv4/IPv6 CIDR.
@@ -94,7 +94,7 @@
         />
         <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
           <div *ngIf="f.gateway.errors.required">
-            Gateway required.
+            Gateway is required
           </div>
           <div *ngIf="f.gateway.errors.invalidIpAddress">
             IP Address is invalid, must be a valid IPv4/IPv6 address.
@@ -104,7 +104,7 @@
     </div>
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
 
