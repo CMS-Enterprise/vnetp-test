@@ -62,8 +62,4 @@ const routes: Routes = [
     YesNoModalComponent,
   ],
 })
-export class LoadBalancersModule {
-  constructor(iconLibary: FaIconLibrary) {
-    iconLibary.addIcons(faSave, faEdit, faTrash);
-  }
-}
+export class LoadBalancersModule {}

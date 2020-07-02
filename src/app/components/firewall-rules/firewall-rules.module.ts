@@ -24,8 +24,4 @@ const routes: Routes = [
   imports: [CommonModule, FormsModule, NgxPaginationModule, FontAwesomeModule, NgxSmartModalModule, RouterModule.forChild(routes)],
   declarations: [FirewallRulesComponent, FilterPipe, YesNoModalComponent, TooltipComponent, ImportExportComponent],
 })
-export class FirewallRulesModule {
-  constructor(iconLibary: FaIconLibrary) {
-    iconLibary.addIcons(faSyncAlt, faSave);
-  }
-}
+export class FirewallRulesModule {}

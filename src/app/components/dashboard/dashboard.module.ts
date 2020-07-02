@@ -18,8 +18,4 @@ const routes: Routes = [
   imports: [CommonModule, FontAwesomeModule, RouterModule.forChild(routes)],
   declarations: [DashboardComponent, D3PieChartComponent, TooltipComponent],
 })
-export class DashboardModule {
-  constructor(iconLibary: FaIconLibrary) {
-    iconLibary.addIcons(faChevronRight);
-  }
-}
+export class DashboardModule {}

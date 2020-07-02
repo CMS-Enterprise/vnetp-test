@@ -1,9 +1,0 @@
-<app-d3-graph
-  *ngIf="showGraph"
-  [clickActionArray]="clickActionArray"
-  [contextMenuArray]="contextMenuArray"
-  [ignoreArray]="['custom_fields', 'custom fields']"
-  [graphObject]="selectedCustomer"
-  (nodeClicked)="nodeClickHandler($event)"
-  (contextMenuItemClicked)="nodeContextMenuActionHandler($event)"
-></app-d3-graph>

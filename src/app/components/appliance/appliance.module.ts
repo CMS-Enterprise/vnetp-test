@@ -23,8 +23,4 @@ const routes: Routes = [
   imports: [CommonModule, FontAwesomeModule, FormsModule, ReactiveFormsModule, NgxSmartModalModule, RouterModule.forChild(routes)],
   declarations: [ApplianceComponent, ApplianceDetailComponent, ApplianceModalComponent, YesNoModalComponent],
 })
-export class ApplianceModule {
-  constructor(iconLibary: FaIconLibrary) {
-    iconLibary.addIcons(faArrowLeft, faUndo, faTrash, faSave);
-  }
-}
+export class ApplianceModule {}

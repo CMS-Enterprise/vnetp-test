@@ -17,8 +17,4 @@ const routes: Routes = [
   imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule.forChild(routes)],
   declarations: [LoginComponent],
 })
-export class LoginModule {
-  constructor(iconLibary: FaIconLibrary) {
-    iconLibary.addIcons(faSpinner);
-  }
-}
+export class LoginModule {}
