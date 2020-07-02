@@ -1,64 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { VirtualServerModalComponent } from './virtual-server-modal.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { VirtualMachineModalComponent } from './virtual-machine-modal.component';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
-describe('VirtualServerModalComponent', () => {
-  let component: VirtualServerModalComponent;
-  let fixture: ComponentFixture<VirtualServerModalComponent>;
+describe('VirtualMachineModalComponent', () => {
+  let component: VirtualMachineModalComponent;
+  let fixture: ComponentFixture<VirtualMachineModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [VirtualServerModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
+      declarations: [VirtualMachineModalComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(VirtualServerModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(VirtualMachineModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  // Intial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
-  });
-
-  it('description should not be required', () => {
-    const description = component.form.controls.description;
-    expect(description.valid).toBeTruthy();
-  });
-
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
-  });
-
-  it('source address should not be required', () => {
-    const sourceAddress = component.form.controls.sourceAddress;
-    expect(sourceAddress.valid).toBeTruthy();
-  });
-
-  it('destination address should be required', () => {
-    const destinationAddress = component.form.controls.destinationAddress;
-    expect(destinationAddress.valid).toBeFalsy();
-  });
-
-  it('service port should be required', () => {
-    const servicePort = component.form.controls.servicePort;
-    expect(servicePort.valid).toBeFalsy();
   });
 
   // Name validity

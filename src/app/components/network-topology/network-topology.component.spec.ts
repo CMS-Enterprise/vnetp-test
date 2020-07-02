@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkTopologyComponent } from './network-topology.component';
-import { D3GraphComponent } from '../d3-graph/d3-graph.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { D3GraphComponent } from 'src/app/common/d3-graph/d3-graph.component';
 
 describe('NetworkTopologyComponent', () => {
   let component: NetworkTopologyComponent;

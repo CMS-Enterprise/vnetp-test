@@ -3,9 +3,9 @@ import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoadBalancerVlanModalComponent } from './lb-vlan-modal.component';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('LoadBalancerVlanModalComponent', () => {
   let component: LoadBalancerVlanModalComponent;

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('ApplianceModalComponent', () => {
   let component: ApplianceModalComponent;

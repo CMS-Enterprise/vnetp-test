@@ -2,17 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { User } from 'src/app/models/user/user';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { of } from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;

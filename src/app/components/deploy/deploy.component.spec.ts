@@ -5,6 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
+<<<<<<< HEAD
 import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
@@ -12,6 +13,13 @@ import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+=======
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxMaskModule } from 'ngx-mask';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+>>>>>>> 57f7c98b... chore remove modals folder
 
 describe('DeployComponent', () => {
   let component: DeployComponent;

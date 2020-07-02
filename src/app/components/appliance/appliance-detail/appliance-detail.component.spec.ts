@@ -5,10 +5,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('ApplianceDetailComponent', () => {
   let component: ApplianceDetailComponent;

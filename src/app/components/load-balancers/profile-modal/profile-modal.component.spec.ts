@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { ProfileModalComponent } from './profile-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;

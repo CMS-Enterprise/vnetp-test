@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from '../modal-mock';
 import { PolicyModalComponent } from './policy-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('PolicyModalComponent', () => {
   let component: PolicyModalComponent;

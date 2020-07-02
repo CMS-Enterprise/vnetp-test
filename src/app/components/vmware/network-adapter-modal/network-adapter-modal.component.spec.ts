@@ -1,26 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NetworkAdapterModalComponent } from './network-adapter-modal.component';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoadBalancerSelfIpModalComponent } from './lb-self-ip-modal.component';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
-describe('LoadBalancerSelfIpModalComponent', () => {
-  let component: LoadBalancerSelfIpModalComponent;
-  let fixture: ComponentFixture<LoadBalancerSelfIpModalComponent>;
+describe('NetworkAdapterModalComponent', () => {
+  let component: NetworkAdapterModalComponent;
+  let fixture: ComponentFixture<NetworkAdapterModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [LoadBalancerSelfIpModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [NetworkAdapterModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(LoadBalancerSelfIpModalComponent);
+        fixture = TestBed.createComponent(NetworkAdapterModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
@@ -28,12 +28,6 @@ describe('LoadBalancerSelfIpModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  // Initial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
   });
 
   // Name validity
@@ -59,5 +53,30 @@ describe('LoadBalancerSelfIpModalComponent', () => {
     const name = component.form.controls.name;
     name.setValue('invalid/name!');
     expect(name.valid).toBeFalsy();
+  });
+
+  // Description Validity
+  it('description should be valid (null)', () => {
+    const description = component.form.controls.description;
+    description.setValue(null);
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be valid (minlen)', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(3));
+    expect(description.valid).toBeTruthy();
+  });
+
+  it('description should be invalid, min length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(2));
+    expect(description.valid).toBeFalsy();
+  });
+
+  it('description should be invalid, max length', () => {
+    const description = component.form.controls.description;
+    description.setValue('a'.repeat(501));
+    expect(description.valid).toBeFalsy();
   });
 });

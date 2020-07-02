@@ -3,24 +3,24 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoadBalancerSelfIpModalComponent } from './lb-self-ip-modal.component';
+import { ServiceObjectModalComponent } from '../../service-objects-groups/service-object-modal/service-object-modal.component';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
-describe('LoadBalancerSelfIpModalComponent', () => {
-  let component: LoadBalancerSelfIpModalComponent;
-  let fixture: ComponentFixture<LoadBalancerSelfIpModalComponent>;
+describe('ServiceObjectModalComponent', () => {
+  let component: ServiceObjectModalComponent;
+  let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [LoadBalancerSelfIpModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(LoadBalancerSelfIpModalComponent);
+        fixture = TestBed.createComponent(ServiceObjectModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
@@ -30,10 +30,29 @@ describe('LoadBalancerSelfIpModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have service object form', () => {
+    expect(component.form).toBeTruthy();
+  });
+
   // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
+  });
+
+  it('type should be required', () => {
+    const protocol = component.form.controls.protocol;
+    expect(protocol.valid).toBeFalsy();
+  });
+
+  it('destinationPort should be required', () => {
+    const destinationPort = component.form.controls.destinationPorts;
+    expect(destinationPort.valid).toBeFalsy();
+  });
+
+  it('sourcePort should be required', () => {
+    const sourcePort = component.form.controls.sourcePorts;
+    expect(sourcePort.valid).toBeFalsy();
   });
 
   // Name validity

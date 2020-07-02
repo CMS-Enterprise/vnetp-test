@@ -6,13 +6,13 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
-import { ImportExportComponent } from '../../import-export/import-export.component';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;

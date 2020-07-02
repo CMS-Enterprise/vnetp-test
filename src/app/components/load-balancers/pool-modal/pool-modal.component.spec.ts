@@ -4,7 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { PoolModalComponent } from './pool-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;

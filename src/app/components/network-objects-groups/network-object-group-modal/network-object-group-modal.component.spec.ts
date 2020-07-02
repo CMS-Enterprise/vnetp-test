@@ -1,36 +1,40 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { VirtualServerModalComponent } from './virtual-server-modal.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
-describe('VirtualServerModalComponent', () => {
-  let component: VirtualServerModalComponent;
-  let fixture: ComponentFixture<VirtualServerModalComponent>;
+describe('NetworkObjectGroupModalComponent', () => {
+  let component: NetworkObjectGroupModalComponent;
+  let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
   const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [VirtualServerModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      imports: [NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [NetworkObjectGroupModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(VirtualServerModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // Intial Form State
+  it('should have network object group form', () => {
+    expect(component.form).toBeTruthy();
+  });
+
+  // Initial Form State
   it('name should be required', () => {
     const name = component.form.controls.name;
     expect(name.valid).toBeFalsy();
@@ -39,26 +43,6 @@ describe('VirtualServerModalComponent', () => {
   it('description should not be required', () => {
     const description = component.form.controls.description;
     expect(description.valid).toBeTruthy();
-  });
-
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
-  });
-
-  it('source address should not be required', () => {
-    const sourceAddress = component.form.controls.sourceAddress;
-    expect(sourceAddress.valid).toBeTruthy();
-  });
-
-  it('destination address should be required', () => {
-    const destinationAddress = component.form.controls.destinationAddress;
-    expect(destinationAddress.valid).toBeFalsy();
-  });
-
-  it('service port should be required', () => {
-    const servicePort = component.form.controls.servicePort;
-    expect(servicePort.valid).toBeFalsy();
   });
 
   // Name validity

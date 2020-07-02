@@ -3,13 +3,13 @@ import { PhysicalServerDetailComponent } from './physical-server-detail.componen
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PhysicalServerModalComponent } from 'src/app/modals/physical-server-modal/physical-server-modal.component';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { PhysicalServerModalComponent } from '../physical-server-modal/physical-server-modal.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('PhysicalServerDetailComponent', () => {
   let component: PhysicalServerDetailComponent;

@@ -4,10 +4,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DatacenterSelectComponent } from '../datacenter-select/datacenter-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { DatacenterSelectComponent } from '../datacenter-select/datacenter-select.component';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;

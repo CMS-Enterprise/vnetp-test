@@ -5,7 +5,7 @@ import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
 import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from '../modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;

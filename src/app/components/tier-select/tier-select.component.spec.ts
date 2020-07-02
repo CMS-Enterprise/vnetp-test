@@ -6,9 +6,9 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { CookieService } from 'ngx-cookie-service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
