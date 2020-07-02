@@ -19,7 +19,7 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-network-objects-groups',

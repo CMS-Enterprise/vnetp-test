@@ -6,7 +6,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { SubnetModalComponent } from './subnet-modal.component';
-import { TestUtil } from 'src/test/test.util';
+import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
 import { V1NetworkSubnetsService } from 'api_client';
 import { of } from 'rxjs';
@@ -91,7 +91,7 @@ describe('SubnetModalComponent', () => {
   });
 
   it('should return form controls', () => {
-    expect(component.f['name']).toBeTruthy();
+    expect(component.f.name).toBeTruthy();
   });
 
   it('should reset the form when closing the modal', () => {

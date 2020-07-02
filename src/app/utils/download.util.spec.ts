@@ -1,4 +1,4 @@
-import { DownloadUtil } from './download.util';
+import DownloadUtil from './download.util';
 
 describe('DownloadUtil', () => {
   describe('download', () => {

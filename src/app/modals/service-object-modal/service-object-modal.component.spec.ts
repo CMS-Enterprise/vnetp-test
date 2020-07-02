@@ -6,7 +6,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { of } from 'rxjs';
 import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
-import { TestUtil } from 'src/test/test.util';
+import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -81,7 +81,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should return form controls', () => {
-    expect(component.f['name']).toBeTruthy();
+    expect(component.f.name).toBeTruthy();
   });
 
   it('should reset the form when closing the modal', () => {

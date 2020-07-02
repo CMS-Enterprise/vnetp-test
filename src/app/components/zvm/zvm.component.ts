@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { V1ConfigurationUploadService, ConfigurationUpload, ConfigurationUploadType } from 'api_client';
 import { Subscription } from 'rxjs';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
-import { DownloadUtil } from 'src/app/utils/download.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import DownloadUtil from 'src/app/utils/download.util';
 
 @Component({
   selector: 'app-zvm',

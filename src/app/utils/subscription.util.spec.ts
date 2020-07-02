@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { SubscriptionUtil } from './subscription.util';
+import SubscriptionUtil from './subscription.util';
 
 describe('SubscriptionUtil', () => {
   describe('unsubscribe', () => {

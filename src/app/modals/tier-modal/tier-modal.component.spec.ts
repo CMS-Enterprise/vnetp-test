@@ -4,7 +4,7 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalServiceStub } from '../modal-mock';
 import { TierModalComponent } from './tier-modal.component';
-import { TestUtil } from 'src/test/test.util';
+import TestUtil from 'src/test/test.util';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -107,7 +107,7 @@ describe('TierModalComponent', () => {
   });
 
   it('should return form controls', () => {
-    expect(component.f['name']).toBeTruthy();
+    expect(component.f.name).toBeTruthy();
   });
 
   it('should reset the form when closing the modal', () => {

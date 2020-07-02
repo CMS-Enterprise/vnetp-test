@@ -9,7 +9,7 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { ActivatedRoute } from '@angular/router';
-import { SubscriptionUtil } from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-intra-vrf-rules',

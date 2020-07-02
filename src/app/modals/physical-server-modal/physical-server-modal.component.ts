@@ -5,7 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { ConversionUtil } from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-physical-server-modal',

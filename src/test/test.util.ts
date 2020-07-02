@@ -1,7 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 
-export namespace TestUtil {
-  export function isFormControlRequired(control: AbstractControl): boolean {
+export default class TestUtil {
+  static isFormControlRequired(control: AbstractControl): boolean {
     if (!control) {
       return false;
     }

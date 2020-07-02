@@ -121,7 +121,7 @@ export class ServiceObjectModalComponent implements OnInit {
     this.serviceObjectsService
       .v1NetworkSecurityServiceObjectsIdPut({
         id: this.ServiceObjectId,
-        serviceObject: serviceObject,
+        serviceObject,
       })
       .subscribe(
         data => {

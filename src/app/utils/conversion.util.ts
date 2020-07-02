@@ -1,16 +1,15 @@
-// tslint:disable-next-line: no-namespace
-export namespace ConversionUtil {
-  const bytesInGb = 1000000000;
+export default class ConversionUtil {
+  static bytesInGb = 1000000000;
 
-  export function convertBytesToGb(val: number): number {
-    return val / bytesInGb;
+  static convertBytesToGb(val: number): number {
+    return val / ConversionUtil.bytesInGb;
   }
 
-  export function convertGbToBytes(val: number): number {
-    return val * bytesInGb;
+  static convertGbToBytes(val: number): number {
+    return val * ConversionUtil.bytesInGb;
   }
 
-  export function convertStringToBoolean(str: string): boolean {
+  static convertStringToBoolean(str: string): boolean {
     if (str === 'true') {
       return true;
     }
