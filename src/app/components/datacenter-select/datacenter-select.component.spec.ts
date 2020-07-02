@@ -85,7 +85,7 @@ describe('DatacenterSelectComponent', () => {
       expect(successSpy).toHaveBeenCalledWith('Datacenter Switched');
     });
 
-    it('shoud display a toastr error message when changing datacenters fails', () => {
+    it('should display a toastr error message when changing datacenters fails', () => {
       const toastrService = TestBed.get(ToastrService);
       const datacenterContextService = TestBed.get(DatacenterContextService);
 
