@@ -1,22 +1,22 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
-import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
-import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
-import { NgxSmartModalServiceStub } from './modals/modal-mock';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ToastrModule } from 'ngx-toastr';
-import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
 import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { DatacenterSelectComponent } from './common/datacenter-select/datacenter-select.component';
+import { NavbarComponent } from './common/navbar/navbar.component';
+import { BreadcrumbComponent } from './common/breadcrumb/breadcrumb.component';
+import { NetworkObjectModalComponent } from './components/network-objects-groups/network-object-modal/network-object-modal.component';
+import { NetworkObjectGroupModalComponent } from './components/network-objects-groups/network-object-group-modal/network-object-group-modal.component';
+import { ServiceObjectModalComponent } from './components/service-objects-groups/service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './components/service-objects-groups/service-object-group-modal/service-object-group-modal.component';
 
 const ngx = new NgxSmartModalServiceStub();
 
