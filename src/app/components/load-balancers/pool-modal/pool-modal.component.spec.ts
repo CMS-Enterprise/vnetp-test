@@ -3,8 +3,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PoolModalComponent } from './pool-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from '../modal-mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;

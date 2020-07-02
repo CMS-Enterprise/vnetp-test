@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PieChartData } from '../d3-pie-chart/d3-pie-chart.component';
 import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
+import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 
 @Component({
   selector: 'app-dashboard',
