@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { JobsComponent } from './jobs.component';
-import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -12,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, NgxPaginationModule, RouterModule.forChild(routes)],
+  imports: [SharedModule, RouterModule.forChild(routes)],
   declarations: [JobsComponent],
 })
 export class JobsModule {}

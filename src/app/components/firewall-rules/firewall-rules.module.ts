@@ -1,27 +1,37 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { FormsModule } from '@angular/forms';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
-import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faSave } from '@fortawesome/free-regular-svg-icons';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { SharedModule } from 'src/app/common/shared.module';
+import { FirewallRulesDetailComponent } from './firewall-rules-detail/firewall-rules-detail.component';
+import { AuthGuard } from 'src/app/guards/auth.guard';
+import { IntraVrfRulesComponent } from './intra-vrf-rules/intra-vrf-rules.component';
+import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
+import { ContractModalComponent } from './contract-modal/contract-modal.component';
 
 const routes: Routes = [
   {
     path: '',
     component: FirewallRulesComponent,
   },
+  {
+    path: 'edit/:id',
+    component: FirewallRulesDetailComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Firewall Rule Group' },
+  },
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgxPaginationModule, FontAwesomeModule, NgxSmartModalModule, RouterModule.forChild(routes)],
-  declarations: [FirewallRulesComponent, FilterPipe, YesNoModalComponent, TooltipComponent, ImportExportComponent],
+  imports: [SharedModule, RouterModule.forChild(routes)],
+  declarations: [
+    ContractModalComponent,
+    FirewallRulesComponent,
+    FirewallRulesDetailComponent,
+    IntraVrfRulesComponent,
+    FirewallRulesDetailComponent,
+    FirewallRuleModalComponent,
+    FilterPipe,
+  ],
 })
 export class FirewallRulesModule {}

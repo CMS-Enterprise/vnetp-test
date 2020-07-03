@@ -13,6 +13,7 @@ import { ImportExportComponent } from 'src/app/common/import-export/import-expor
 import { NgxSmartModalComponent } from 'ngx-smart-modal';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -22,24 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    NgxPaginationModule,
-    NgSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    RouterModule.forChild(routes),
-  ],
-  declarations: [
-    NetworkObjectsGroupsComponent,
-    NetworkObjectGroupModalComponent,
-    NetworkObjectModalComponent,
-    NgxSmartModalComponent,
-    TooltipComponent,
-    TierSelectComponent,
-    ImportExportComponent,
-    YesNoModalComponent,
-  ],
+  imports: [SharedModule, RouterModule.forChild(routes)],
+  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
 })
 export class NetworkObjectsGroupsModule {}

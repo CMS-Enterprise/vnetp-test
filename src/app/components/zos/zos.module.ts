@@ -10,6 +10,7 @@ import { ZosComponent } from './zos.component';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ZosZvmRequestModalComponent } from 'src/app/common/zos-zvm-request-modal/zos-zvm-request-modal.component';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -19,7 +20,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, FontAwesomeModule, RouterModule.forChild(routes)],
-  declarations: [ZosComponent, ZosZvmRequestModalComponent, ImportExportComponent, NgxSmartModalComponent, YesNoModalComponent],
+  imports: [SharedModule, RouterModule.forChild(routes)],
+  declarations: [ZosComponent],
 })
 export class ZosModule {}

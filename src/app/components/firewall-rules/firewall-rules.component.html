@@ -35,7 +35,7 @@
         {{ getTierName(firewallRuleGroup.tierId) }}
       </td>
       <td>
-        <a routerLink="/firewall-rule-group/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge">{{ firewallRuleGroup.name }}</a>
+        <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge">{{ firewallRuleGroup.name }}</a>
       </td>
       <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
     </tr>

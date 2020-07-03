@@ -1,45 +1,26 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { PhysicalServerComponent } from './physical-server.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
-import { NgxSmartModalComponent } from 'ngx-smart-modal';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { PhysicalServerModalComponent } from './physical-server-modal/physical-server-modal.component';
 import { PhysicalServerDetailComponent } from './physical-server-detail/physical-server-detail.component';
-import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
+import { SharedModule } from 'src/app/common/shared.module';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: PhysicalServerComponent,
   },
+  {
+    path: ':id',
+    component: PhysicalServerDetailComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Physical Server Detail' },
+  },
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    NgxPaginationModule,
-    NgSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    RouterModule.forChild(routes),
-  ],
-  declarations: [
-    PhysicalServerComponent,
-    PhysicalServerModalComponent,
-    PhysicalServerDetailComponent,
-    NgxSmartModalComponent,
-    TooltipComponent,
-    TierSelectComponent,
-    ImportExportComponent,
-    YesNoModalComponent,
-  ],
+  imports: [SharedModule, RouterModule.forChild(routes)],
+  declarations: [PhysicalServerComponent, PhysicalServerModalComponent, PhysicalServerDetailComponent],
 })
 export class PhysicalServerModule {}

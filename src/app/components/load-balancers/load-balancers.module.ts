@@ -17,13 +17,7 @@ import { PolicyModalComponent } from './policy-modal/policy-modal.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
-import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
-import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { TooltipComponent } from 'src/app/common/tooltip/tooltip.component';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -33,16 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgSelectModule,
-    NgxPaginationModule,
-    NgxSmartModalModule,
-    RouterModule.forChild(routes),
-  ],
+  imports: [SharedModule, RouterModule.forChild(routes)],
   declarations: [
     LoadBalancersComponent,
     HealthMonitorModalComponent,
@@ -55,11 +40,6 @@ const routes: Routes = [
     PoolModalComponent,
     ProfileModalComponent,
     VirtualServerModalComponent,
-    ImportExportComponent,
-    ResolvePipe,
-    TooltipComponent,
-    TierSelectComponent,
-    YesNoModalComponent,
   ],
 })
 export class LoadBalancersModule {}

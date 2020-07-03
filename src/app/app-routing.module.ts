@@ -1,159 +1,113 @@
-import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
-import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
-import { JobsComponent } from './components/jobs/jobs.component';
 import { AuthGuard } from './guards/auth.guard';
-import { NotfoundComponent } from './components/notfound/notfound.component';
-import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
-import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { DeployComponent } from './components/deploy/deploy.component';
-import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
-import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
-import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
-import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
-import { TiersComponent } from './components/tiers/tiers.component';
-import { VmwareComponent } from './components/vmware/vmware.component';
-import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
-import { ZvmComponent } from './components/zvm/zvm.component';
-import { ZosComponent } from './components/zos/zos.component';
-import { ApplianceComponent } from './components/appliance/appliance.component';
-import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
-import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
-import { WizardComponent } from './components/wizard/wizard.component';
+import { NgModule } from '@angular/core';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
+  },
   {
     path: 'subnets-vlans',
-    component: SubnetsVlansComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Subnets & VLANs' },
+    loadChildren: () => import('./components/subnets-vlans/subnets-vlans.module').then(m => m.SubnetsVlansModule),
   },
   {
     path: 'tiers',
-    component: TiersComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Tiers' },
+    loadChildren: () => import('./components/tiers/tiers.module').then(m => m.TiersModule),
   },
   {
     path: 'deploy',
-    component: DeployComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Deploy' },
+    loadChildren: () => import('./components/deploy/deploy.module').then(m => m.DeployModule),
   },
   {
     path: 'jobs',
-    component: JobsComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Jobs' },
+    loadChildren: () => import('./components/jobs/jobs.module').then(m => m.JobsModule),
   },
   {
     path: 'network-objects-groups',
-    component: NetworkObjectsGroupsComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Network Objects' },
+    loadChildren: () => import('./components/network-objects-groups/network-objects-groups.module').then(m => m.NetworkObjectsGroupsModule),
   },
   {
     path: 'service-objects-groups',
-    component: ServiceObjectsGroupsComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Service Objects' },
+    loadChildren: () => import('./components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
   },
   {
     path: 'firewall-rules',
-    component: FirewallRulesComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Firewall Rules' },
-  },
-  {
-    path: 'firewall-rule-group/edit/:id',
-    component: FirewallRulesDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Firewall Rule Group' },
+    loadChildren: () => import('./components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
   },
   {
     path: 'load-balancers',
-    component: LoadBalancersComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Load Balancers' },
+    loadChildren: () => import('./components/load-balancers/load-balancers.module').then(m => m.LoadBalancersModule),
   },
   {
     path: 'static-routes',
-    component: StaticRoutesComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Static Routes' },
-  },
-  {
-    path: 'static-routes/edit/:id',
-    component: StaticRouteDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Edit Static Route' },
+    loadChildren: () => import('./components/static-routes/static-routes.module').then(m => m.StaticRoutesModule),
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
     canActivate: [AuthGuard],
+    loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
   {
     path: 'wizard',
-    component: WizardComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Wizard' },
+    loadChildren: () => import('./components/wizard/wizard.module').then(m => m.WizardModule),
   },
   {
     path: 'physical-server',
-    component: PhysicalServerComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Physical Servers' },
-  },
-  {
-    path: 'physical-server/:id',
-    component: PhysicalServerDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Physical Server Detail' },
+    loadChildren: () => import('./components/physical-server/physical-server.module').then(m => m.PhysicalServerModule),
   },
   {
     path: 'vmware',
-    component: VmwareComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'VMWare' },
-  },
-  {
-    path: 'vmware/:id',
-    component: VmwareDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'VMWare Detail' },
+    loadChildren: () => import('./components/vmware/vmware.module').then(m => m.VmwareModule),
   },
   {
     path: 'zvm',
-    component: ZvmComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'z/VM' },
+    loadChildren: () => import('./components/zvm/zvm.module').then(m => m.ZvmModule),
   },
   {
     path: 'zos',
-    component: ZosComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'z/OS' },
+    loadChildren: () => import('./components/zos/zos.module').then(m => m.ZosModule),
   },
   {
     path: 'appliance',
-    component: ApplianceComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Appliance as a Service' },
-  },
-  {
-    path: 'appliance/:id',
-    component: ApplianceDetailComponent,
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Appliance Detail' },
+    loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', component: NotfoundComponent, canActivate: [AuthGuard] },
+  {
+    path: '**',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
+  },
 ];
 
 @NgModule({

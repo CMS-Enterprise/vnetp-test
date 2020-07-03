@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login.component';
 import { FormsModule } from '@angular/forms';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule.forChild(routes)],
+  imports: [SharedModule, RouterModule.forChild(routes)],
   declarations: [LoginComponent],
 })
 export class LoginModule {}
