@@ -1,10 +1,8 @@
 // Angular Imports
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -25,12 +23,9 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -56,8 +51,6 @@ export function apiConfigFactory(): Configuration {
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    ReactiveFormsModule,
-    FormsModule,
     NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
@@ -66,8 +59,6 @@ export function apiConfigFactory(): Configuration {
       preventDuplicates: true,
     }),
     NgxSmartModalModule.forRoot(),
-    NgSelectModule,
-    NgxChartsModule,
     SharedModule,
   ],
   providers: [
@@ -76,9 +67,7 @@ export function apiConfigFactory(): Configuration {
       useClass: HttpConfigInterceptor,
       multi: true,
     },
-    NgxSmartModalService,
     CookieService,
-    FormBuilder,
   ],
   bootstrap: [AppComponent],
 })

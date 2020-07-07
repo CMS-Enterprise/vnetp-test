@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterSelectComponent } from './datacenter-select.component';
 import { FormsModule } from '@angular/forms';
-<<<<<<< HEAD
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,14 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
-=======
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
->>>>>>> 57f7c98b... chore remove modals folder
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;

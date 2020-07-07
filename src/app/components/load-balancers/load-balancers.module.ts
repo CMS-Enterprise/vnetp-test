@@ -1,12 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadBalancersComponent } from './load-balancers.component';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSave, faEdit } from '@fortawesome/free-regular-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { HealthMonitorModalComponent } from './health-monitor-modal/health-monitor-modal.component';
 import { IRuleModalComponent } from './irule-modal/irule-modal.component';
 import { LoadBalancerVlanModalComponent } from './lb-vlan-modal/lb-vlan-modal.component';

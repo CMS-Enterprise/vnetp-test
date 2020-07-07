@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { ModalMode } from '../models/other/modal-mode';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 export class NgxSmartModalServiceStub {
   localObject = {

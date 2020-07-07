@@ -1,15 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { CookieService } from 'ngx-cookie-service';
-<<<<<<< HEAD
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
 import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { of } from 'rxjs';
-=======
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { D3PieChartComponent } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
->>>>>>> 57f7c98b... chore remove modals folder
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;

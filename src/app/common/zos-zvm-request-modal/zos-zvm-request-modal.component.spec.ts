@@ -2,16 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ZosZvmRequestModalComponent } from './zos-zvm-request-modal.component';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-<<<<<<< HEAD:src/app/modals/zos-zvm-request-modal/zos-zvm-request-modal.component.spec.ts
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from '../modal-mock';
 import { of } from 'rxjs';
 import { V1ConfigurationUploadService, ConfigurationUploadType } from 'api_client';
 import { By } from '@angular/platform-browser';
-=======
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
->>>>>>> 57f7c98b... chore remove modals folder:src/app/common/zos-zvm-request-modal/zos-zvm-request-modal.component.spec.ts
 
 describe('ZosZvmRequestModalComponent', () => {
   let component: ZosZvmRequestModalComponent;

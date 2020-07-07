@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSave } from '@fortawesome/free-regular-svg-icons';
-import { faTrash, faUndo, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
