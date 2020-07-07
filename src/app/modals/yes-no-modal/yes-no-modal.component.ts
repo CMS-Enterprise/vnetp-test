@@ -8,18 +8,20 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
   templateUrl: './yes-no-modal.component.html',
 })
 export class YesNoModalComponent {
+  @Input() allowEmptyTier = false;
+
   form: FormGroup;
   submitted: boolean;
   modalBody = 'Title';
   modalTitle = 'Body';
   allowEmptyTierRadio = false;
-  @Input() allowEmptyTier = false;
 
   constructor(private ngx: NgxSmartModalService) {}
 
-  yes() {
-    const yesNoModalDto = {} as YesNoModalDto;
-    yesNoModalDto.modalYes = true;
+  public yes(): void {
+    const yesNoModalDto = {
+      modalYes: true,
+    } as YesNoModalDto;
 
     if (this.allowEmptyTier) {
       yesNoModalDto.allowTierChecked = this.allowEmptyTierRadio;
@@ -30,12 +32,12 @@ export class YesNoModalComponent {
     this.ngx.close('yesNoModal');
   }
 
-  no() {
+  public no(): void {
     this.ngx.resetModalData('yesNoModal');
     this.ngx.close('yesNoModal');
   }
 
-  getData() {
+  public getData(): void {
     const modalConfig = this.ngx.getModalData('yesNoModal') as YesNoModalDto;
 
     this.modalTitle = modalConfig.modalTitle;
