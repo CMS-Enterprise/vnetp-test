@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  login() {
+  public login(): void {
     if (!this.userpass.Username || !this.userpass.Password) {
       return;
     }

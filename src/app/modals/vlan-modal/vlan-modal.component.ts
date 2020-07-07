@@ -17,7 +17,7 @@ export class VlanModalComponent implements OnInit {
   ModalMode: ModalMode;
   TierId: string;
   VlanId: string;
-  vlans: Array<Vlan>;
+  vlans: Vlan[];
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -26,61 +26,16 @@ export class VlanModalComponent implements OnInit {
     private vlanService: V1NetworkVlansService,
   ) {}
 
-  save() {
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    const modalVlanObject = {} as Vlan;
-    modalVlanObject.name = this.form.value.name;
-    modalVlanObject.description = this.form.value.description;
-
-    if (this.ModalMode === ModalMode.Create) {
-      modalVlanObject.vlanNumber = this.form.value.vlanNumber;
-      modalVlanObject.tierId = this.TierId;
-      this.vlanService
-        .v1NetworkVlansPost({
-          vlan: modalVlanObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
-    } else {
-      modalVlanObject.name = null;
-      modalVlanObject.vlanNumber = null;
-      this.vlanService
-        .v1NetworkVlansIdPut({
-          id: this.VlanId,
-          vlan: modalVlanObject,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
-    }
-  }
-
-  private closeModal() {
-    this.ngx.close('vlanModal');
-    this.reset();
-  }
-
-  cancel() {
-    this.ngx.close('vlanModal');
-    this.reset();
-  }
-
   get f() {
     return this.form.controls;
   }
 
-  getData() {
+  public closeModal(): void {
+    this.ngx.close('vlanModal');
+    this.reset();
+  }
+
+  public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('vlanModal') as VlanModalDto);
 
     if (dto.TierId) {
@@ -89,15 +44,15 @@ export class VlanModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.VlanId = dto.Vlan.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.vlanNumber.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.VlanId = dto.Vlan.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.vlanNumber.enable();
     }
 
     const vlan = dto.Vlan;
@@ -112,7 +67,30 @@ export class VlanModalComponent implements OnInit {
     this.ngx.resetModalData('vlanModal');
   }
 
-  private buildForm() {
+  public reset() {
+    this.submitted = false;
+    this.TierId = '';
+    this.ngx.resetModalData('vlanModal');
+    this.buildForm();
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { name, description } = this.form.value;
+    const vlan = { name, description } as Vlan;
+
+    if (this.ModalMode === ModalMode.Create) {
+      this.createVlan(vlan);
+    } else {
+      this.updateVlan(vlan);
+    }
+  }
+
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(100)])],
@@ -120,11 +98,26 @@ export class VlanModalComponent implements OnInit {
     });
   }
 
-  public reset() {
-    this.submitted = false;
-    this.TierId = '';
-    this.ngx.resetModalData('vlanModal');
-    this.buildForm();
+  private createVlan(vlan: Vlan): void {
+    vlan.vlanNumber = this.form.value.vlanNumber;
+    vlan.tierId = this.TierId;
+    this.vlanService.v1NetworkVlansPost({ vlan }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
+  }
+
+  private updateVlan(vlan: Vlan): void {
+    vlan.name = null;
+    vlan.vlanNumber = null;
+    this.vlanService.v1NetworkVlansIdPut({ id: this.VlanId, vlan }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
   }
 
   ngOnInit() {

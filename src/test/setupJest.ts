@@ -11,6 +11,8 @@ const mock = () => {
   };
 };
 
+Object.defineProperty(window, 'setInterval', { value: () => {} });
+Object.defineProperty(window, 'clearInterval', { value: () => {} });
 Object.defineProperty(window, 'localStorage', { value: mock() });
 Object.defineProperty(window, 'sessionStorage', { value: mock() });
 Object.defineProperty(window, 'getComputedStyle', {

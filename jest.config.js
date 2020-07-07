@@ -9,10 +9,10 @@ module.exports = {
   coverageReporters: ['text', 'cobertura'],
   coverageThreshold: {
     global: {
-      // branches: 90,
-      // functions: 90,
-      // lines: 90,
-      // statements: 90,
+      branches: 21,
+      functions: 31,
+      lines: 41,
+      statements: 43,
     },
   },
   collectCoverage: true,

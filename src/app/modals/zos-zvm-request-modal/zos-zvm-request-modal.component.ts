@@ -18,54 +18,15 @@ export class ZosZvmRequestModalComponent implements OnInit {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public configurationService: V1ConfigurationUploadService,
+    private configurationService: V1ConfigurationUploadService,
   ) {}
 
-  save() {
-    if (this.uploadType === 'request') {
-      const configuration = {} as ConfigurationUpload;
-      configuration.type = this.configurationType;
-      configuration.file = this.form.get('file').value;
-      this.configurationService
-        .v1ConfigurationUploadPost({
-          configurationUpload: configuration,
-        })
-        .subscribe(data => this.closeModal());
-    } else if (this.uploadType === 'configuration' && this.uploadId) {
-      this.configure();
-    }
-    this.ngx.resetModalData('requestModal');
-  }
-
-  configure() {
-    const configuration = this.form.get('file').value;
-    this.configurationService
-      .v1ConfigurationUploadIdConfigurePatch({
-        id: this.uploadId,
-        configurationDto: { configuration },
-      })
-      .subscribe(data => this.closeModal());
-  }
-
-  importFile(event: any) {
-    const reader = new FileReader();
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.form.patchValue({
-          file: reader.result,
-        });
-      };
-    }
-  }
-
-  private closeModal() {
+  public closeModal() {
     this.ngx.close('requestModal');
     this.reset();
   }
 
-  getData() {
+  public getData(): void {
     const configurationDto = this.ngx.getModalData('requestModal');
     this.uploadId = configurationDto.id;
     this.configurationType = configurationDto.type;
@@ -73,20 +34,58 @@ export class ZosZvmRequestModalComponent implements OnInit {
     this.ngx.resetModalData('requestModal');
   }
 
-  public buildForm() {
+  public importFile(event: any): void {
+    const hasFileToUpload = event.target.files && event.target.files.length;
+    if (!hasFileToUpload) {
+      return;
+    }
+    const [file] = event.target.files;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.form.patchValue({
+        file: reader.result,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  public reset(): void {
+    this.uploadId = null;
+    this.buildForm();
+  }
+
+  public save(): void {
+    if (this.uploadType === 'request') {
+      this.createRequest();
+    } else if (this.uploadType === 'configuration' && this.uploadId) {
+      this.updateConfiguration();
+    }
+    this.ngx.resetModalData('requestModal');
+  }
+
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       file: ['', Validators.required],
     });
   }
 
-  cancel() {
-    this.ngx.close('requestModal');
-    this.reset();
+  private createRequest(): void {
+    const configurationUpload = {
+      type: this.configurationType,
+      file: this.form.get('file').value,
+    } as ConfigurationUpload;
+
+    this.configurationService.v1ConfigurationUploadPost({ configurationUpload }).subscribe(data => this.closeModal());
   }
 
-  public reset() {
-    this.uploadId = null;
-    this.buildForm();
+  private updateConfiguration(): void {
+    const configuration = this.form.get('file').value;
+    this.configurationService
+      .v1ConfigurationUploadIdConfigurePatch({
+        id: this.uploadId,
+        configurationDto: { configuration },
+      })
+      .subscribe(data => this.closeModal());
   }
 
   ngOnInit() {
