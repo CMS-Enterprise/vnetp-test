@@ -44,6 +44,7 @@ export interface Tier {
     tierGroupId?: string;
     tierGroup?: TierGroup & object;
     tierType?: TierTierType;
+    tierClass?: TierTierClass;
     readonly vlans?: Array<Vlan>;
     readonly subnets?: Array<Subnet>;
     readonly staticRoutes?: Array<StaticRoute>;
@@ -71,6 +72,14 @@ export enum TierTierType {
     Management = 'Management',
     Backup = 'Backup',
     Other = 'Other'
+};
+export enum TierTierClass {
+    Production = 'Production',
+    Development = 'Development',
+    Implementation = 'Implementation',
+    Validation = 'Validation',
+    Test = 'Test',
+    Management = 'Management'
 };
 
 
