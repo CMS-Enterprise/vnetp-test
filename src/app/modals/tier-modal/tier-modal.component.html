@@ -52,6 +52,19 @@
       </div>
 
       <div class="form-group">
+        <label for="tierType">Tier Class</label>
+        <select id="tierType" formControlName="tierClass" class="form-control" aria-label="Tier Class">
+          <option></option>
+          <option value="Production">Production</option>
+          <option value="Development">Development</option>
+          <option value="Implementation">Implementation</option>
+          <option value="Validation">Validation</option>
+          <option value="Test">Test</option>
+          <option value="Management">Management</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="tierType">Tier Type</label>
         <select id="tierType" formControlName="tierType" class="form-control" aria-label="Tier Type">
           <option></option>

@@ -63,6 +63,7 @@ export class TierModalComponent implements OnInit {
       this.form.controls.description.setValue(tier.description);
       this.form.controls.tierGroup.setValue(tier.tierGroupId);
       this.form.controls.tierType.setValue(tier.tierType);
+      this.form.controls.tierClass.setValue(tier.tierClass);
     }
     this.ngx.resetModalData('tierModal');
   }
@@ -81,11 +82,12 @@ export class TierModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, tierGroup, tierType } = this.form.value;
+    const { name, description, tierGroup, tierClass, tierType } = this.form.value;
     const tier = {
       name,
       description,
       tierType: tierType || null,
+      tierClass: tierClass || null,
       tierGroupId: tierGroup || null,
       datacenterId: this.DatacenterId,
     } as Tier;
@@ -108,6 +110,7 @@ export class TierModalComponent implements OnInit {
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
+      tierClass: [null],
       tierType: [null],
     });
   }
