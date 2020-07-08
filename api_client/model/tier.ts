@@ -74,12 +74,12 @@ export enum TierTierType {
     Other = 'Other'
 };
 export enum TierTierClass {
-    Production = 'Production',
-    Development = 'Development',
-    Implementation = 'Implementation',
-    Validation = 'Validation',
-    Test = 'Test',
-    Management = 'Management'
+    PRD = 'PRD',
+    DEV = 'DEV',
+    IMP = 'IMP',
+    VAL = 'VAL',
+    TST = 'TST',
+    BMS = 'BMS'
 };
 
 

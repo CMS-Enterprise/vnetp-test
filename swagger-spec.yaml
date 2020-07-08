@@ -12770,12 +12770,12 @@ definitions:
       tierClass:
         type: string
         enum:
-          - Production
-          - Development
-          - Implementation
-          - Validation
-          - Test
-          - Management
+          - PRD
+          - DEV
+          - IMP
+          - VAL
+          - TST
+          - BMS
       vlans:
         type: array
         readOnly: true
