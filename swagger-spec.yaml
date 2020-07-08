@@ -6751,6 +6751,17 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/load-balancer/virtual-servers/collection:
+    get:
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/virtual-servers:
     get:
       summary: Retrieve many LoadBalancerVirtualServer
@@ -12756,6 +12767,15 @@ definitions:
           - Management
           - Backup
           - Other
+      tierClass:
+        type: string
+        enum:
+          - PRD
+          - DEV
+          - IMP
+          - VAL
+          - TST
+          - BMS
       vlans:
         type: array
         readOnly: true

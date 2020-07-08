@@ -129,6 +129,7 @@ describe('TierModalComponent', () => {
       description: 'Description',
       tierGroup: '2',
       tierType: 'Presentation',
+      tierClass: 'Production',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -147,6 +148,7 @@ describe('TierModalComponent', () => {
       description: 'Description',
       tierGroup: '2',
       tierType: 'Presentation',
+      tierClass: 'Production',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -159,6 +161,7 @@ describe('TierModalComponent', () => {
         description: 'Description',
         tierGroupId: '2',
         tierType: 'Presentation',
+        tierClass: 'Production',
       },
     });
   });
@@ -173,6 +176,7 @@ describe('TierModalComponent', () => {
       description: 'Description',
       tierGroup: '2',
       tierType: 'Presentation',
+      tierClass: 'Production',
     });
 
     const updateTierButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -186,6 +190,7 @@ describe('TierModalComponent', () => {
         description: 'Description',
         tierGroupId: '2',
         tierType: 'Presentation',
+        tierClass: 'Production',
       },
     });
   });
