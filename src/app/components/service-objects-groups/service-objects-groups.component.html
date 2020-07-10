@@ -20,8 +20,8 @@
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)" aria-label="Create Service Object">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Service Object
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Service Object</span>
       </button>
     </div>
 
@@ -54,16 +54,17 @@
             <span>{{ svcObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal(ModalMode.Edit, svcObj)" aria-label="Edit Service Object">
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal(ModalMode.Edit, svcObj)" aria-label="Edit Service Object">
             </fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="svcObj?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreServiceObject(svcObj)"
               aria-label="Restore Service Object"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': svcObj.deletedAt }"
               (click)="deleteServiceObject(svcObj)"
@@ -82,9 +83,9 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)" aria-label="Service Object Groups">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Service Object Group
+      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)" aria-label="Create Service Object Group">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Service Object Group</span>
       </button>
     </div>
 
@@ -122,19 +123,22 @@
             <span>{{ svcObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" 
+            <fa-icon 
+              class="icon"
+              [icon]="['fas', 'pencil-alt']" 
               *ngIf="!svcObjGroup?.deletedAt"
               (click)="openServiceObjectGroupModal(ModalMode.Edit, svcObjGroup)"
               aria-label="Edit Service Object Group"
             ></fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="svcObjGroup?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreServiceObjectGroup(svcObjGroup)"
               aria-label="Restore Service Object Group"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': svcObjGroup.deletedAt }"
               (click)="deleteServiceObjectGroup(svcObjGroup)"
