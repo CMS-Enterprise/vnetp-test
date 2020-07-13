@@ -104,7 +104,7 @@
     font-size: 18px;
   }
 
-  fa-icon {
+  .icon {
     color: $primary-main;
     padding-left: 20px;
   }
@@ -116,7 +116,7 @@
     &:hover {
       text-decoration: none;
       
-      fa-icon {
+      .icon {
         color: $secondary-main;
       }
     }

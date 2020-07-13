@@ -46,7 +46,7 @@
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openVirtualServerModal(ModalMode.Create)" aria-label="Create Virtual Server">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         Create Virtual Server
       </button>
     </div>
@@ -85,6 +85,7 @@
           </td>
           <td class="item-actions">
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'pencil-alt']" 
               (click)="openVirtualServerModal(ModalMode.Edit, virtualServer)" 
               aria-label="Edit Virtual Server"
@@ -92,11 +93,12 @@
             <fa-icon 
               [icon]="['fas', 'undo']"
               *ngIf="virtualServer?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreVirtualServer(virtualServer)"
               aria-label="Restore Virtual Server"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': virtualServer?.deletedAt }"
               (click)="deleteVirtualServer(virtualServer)"
@@ -115,8 +117,8 @@
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openPoolModal(ModalMode.Create)" aria-label="Create Pool">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Pool
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Pool</span>
       </button>
     </div>
 
@@ -149,9 +151,10 @@
             <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openPoolModal(ModalMode.Edit, pool)" aria-label="Edit Pool"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="pool?.deletedAt" class="fg-success" (click)="restorePool(pool)" aria-label="Restore Pool"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openPoolModal(ModalMode.Edit, pool)" aria-label="Edit Pool"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="pool?.deletedAt" class="fg-success icon" (click)="restorePool(pool)" aria-label="Restore Pool"></fa-icon>
             <fa-icon 
+              class="icon" 
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': pool?.deletedAt }"
               (click)="deletePool(pool)"
@@ -168,7 +171,7 @@
   </div>
 
   <div *ngIf="navIndex == 2">
-    <table class="table table-striped mt-3">
+    <table class="table table-striped mt-3" aria-describedby="Import Pool Relations table">
       <thead>
         <tr>
           <th scope="col">Click the import CSV button to add pool relations</th>
@@ -180,8 +183,8 @@
   <div *ngIf="navIndex == 3">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openNodeModal(ModalMode.Create)" aria-label="Create Node">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Node
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Node</span>
       </button>
     </div>
 
@@ -218,9 +221,10 @@
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openNodeModal(ModalMode.Edit, node)" aria-label="Edit Node"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="node?.deletedAt" class="fg-success" (click)="restoreNode(node)" aria-label="Restore Node"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openNodeModal(ModalMode.Edit, node)" aria-label="Edit Node"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="node?.deletedAt" class="fg-success icon" (click)="restoreNode(node)" aria-label="Restore Node"></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': node?.deletedAt }"
               (click)="deleteNode(node)"
@@ -239,8 +243,8 @@
   <div *ngIf="navIndex == 4">
     <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openIRuleModal(ModalMode.Create)" aria-label="Create iRule">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create iRule
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create iRule</span>
       </button>
     </div>
 
@@ -265,9 +269,10 @@
             <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openIRuleModal(ModalMode.Edit, irule)" aria-label="Edit iRule"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="irule?.deletedAt" class="fg-success" (click)="restoreIrule(irule)" aria-label="Restore iRule"></fa-icon>
-            <fa-icon 
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openIRuleModal(ModalMode.Edit, irule)" aria-label="Edit iRule"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="irule?.deletedAt" class="fg-success icon" (click)="restoreIrule(irule)" aria-label="Restore iRule"></fa-icon>
+            <fa-icon
+              class="icon" 
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': irule?.deletedAt }"
               (click)="deleteIrule(irule)"
@@ -286,8 +291,8 @@
   <div *ngIf="navIndex == 5">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openHealthMonitorModal(ModalMode.Create)" aria-label="Create Health Monitor">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Health Monitor
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Health Monitor</span>
       </button>
     </div>
 
@@ -324,15 +329,16 @@
             <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)" aria-label="Edit Health Monitor"> </fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)" aria-label="Edit Health Monitor"> </fa-icon>
             <fa-icon 
               [icon]="['fas', 'undo']"
               *ngIf="healthMonitor?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreHealthMonitor(healthMonitor)"
               aria-label="Restore Health Monitor"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': healthMonitor?.deletedAt }"
               (click)="deleteHealthMonitor(healthMonitor)"
@@ -351,8 +357,8 @@
   <div *ngIf="navIndex == 6">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openProfileModal(ModalMode.Create)" aria-label="Create Profile">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Profile
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Profile</span>
       </button>
     </div>
 
@@ -377,15 +383,16 @@
             <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"></fa-icon>
             <fa-icon 
               [icon]="['fas', 'undo']"
               *ngIf="profile?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreProfile(profile)"
               aria-label="Restore Profile"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': profile?.deletedAt }"
               (click)="deleteProfile(profile)"
@@ -404,8 +411,8 @@
   <div *ngIf="navIndex == 7">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openPolicyModal(ModalMode.Create)" aria-label="Create Policy">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Policy
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Policy</span>
       </button>
     </div>
 
@@ -430,9 +437,10 @@
             <span>{{ policy?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openPolicyModal(ModalMode.Edit, policy)" aria-label="Edit Policy"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="policy?.deletedAt" class="fg-success" (click)="restorePolicy(policy)" aria-label="Restore Policy"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openPolicyModal(ModalMode.Edit, policy)" aria-label="Edit Policy"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="policy?.deletedAt" class="fg-success icon" (click)="restorePolicy(policy)" aria-label="Restore Policy"></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': policy?.deletedAt }"
               (click)="deletePolicy(policy)"
@@ -451,8 +459,8 @@
   <div *ngIf="navIndex == 8">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="Create Vlan">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Vlan
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Vlan</span>
       </button>
     </div>
 
@@ -473,9 +481,10 @@
             <span>{{ vlan?.tag }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit Vlan"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit Vlan"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success icon" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': vlan?.deletedAt }"
               (click)="deleteVlan(vlan)"
@@ -494,8 +503,8 @@
   <div *ngIf="navIndex == 9">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openSelfIpModal(ModalMode.Create)" aria-label="Create Self IP">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Self IP
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Self IP</span>
       </button>
     </div>
 
@@ -520,9 +529,10 @@
             <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openSelfIpModal(ModalMode.Edit, selfIp)" aria-label="Edit SelfIp"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="selfIp?.deletedAt" class="fg-success" (click)="restoreSelfIp(selfIp)" aria-label="Restore SelfIp"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openSelfIpModal(ModalMode.Edit, selfIp)" aria-label="Edit SelfIp"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="selfIp?.deletedAt" class="fg-success icon" (click)="restoreSelfIp(selfIp)" aria-label="Restore SelfIp"></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': selfIp?.deletedAt }"
               (click)="deleteSelfIp(selfIp)"
@@ -541,8 +551,8 @@
   <div *ngIf="navIndex == 10">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openRouteModal(ModalMode.Create)" aria-label="Create Route">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Route
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Route</span>
       </button>
     </div>
 
@@ -567,9 +577,10 @@
             <span>{{ route?.gateway }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" (click)="openRouteModal(ModalMode.Edit, route)" aria-label="Edit Route"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="route?.deletedAt" class="fg-success" (click)="restoreRoute(route)" aria-label="Restore Route"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openRouteModal(ModalMode.Edit, route)" aria-label="Edit Route"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="route?.deletedAt" class="fg-success icon" (click)="restoreRoute(route)" aria-label="Restore Route"></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': route?.deletedAt }"
               (click)="deleteRoute(route)"

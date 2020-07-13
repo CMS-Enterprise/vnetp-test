@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg" *ngIf="currentUser">
   <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
-    <fa-icon [icon]="['fas', 'bolt']"></fa-icon>
+    <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
   </a>
 
   <button
@@ -12,7 +12,7 @@
     aria-expanded="false"
     aria-label="Toggle navigation"
   >
-    <fa-icon [icon]="['fas', 'bars']"></fa-icon>
+    <fa-icon class="icon" [icon]="['fas', 'bars']"></fa-icon>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -70,10 +70,10 @@
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa-icon>
           <span class="badge badge-success" [hidden]="!activeJobs.length"> {{ activeJobs.length }}</span>
-          Jobs</a
-        >
+          <span>Jobs</span>
+        </a>
       </li>
 
       <li class="nav-item">

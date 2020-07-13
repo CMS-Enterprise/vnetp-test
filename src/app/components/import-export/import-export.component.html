@@ -1,5 +1,5 @@
 <button class="btn btn-warning btn-sm mr-1" (click)="uploader.click()" *ngIf="!disableImport">
-  <fa-icon [icon]="['fas', 'upload']"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
   <span>Import </span>
   <span *ngIf="!disableJson">JSON</span>
   <span *ngIf="!disableJson && !disableCsv">/</span>
@@ -14,7 +14,7 @@
   (click)="getDate(); exportFile('json')"
   *ngIf="!disableJson && !disableExport"
 >
-  <fa-icon [icon]="['fas', 'download']"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'download']"></fa-icon>
   <span>Export JSON</span>
 </a>
 
@@ -26,7 +26,7 @@
   (click)="getDate(); exportFile('csv')"
   *ngIf="!disableCsv && !disableExport"
 >
-  <fa-icon [icon]="['fas', 'download']"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'download']"></fa-icon>
   <span>Export CSV</span>
 </a>
 

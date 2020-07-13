@@ -91,7 +91,7 @@
           (click)="privateKeyCipherUploader.click()"
           type="button"
         >
-          <fa-icon [icon]="['fas', 'upload']"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
           <span>{{ privateKeyCipher ? 'Replace' : 'Upload' }} Encrypted Private Key</span>
         </button>
 
@@ -115,8 +115,8 @@
         </button>
 
         <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon [icon]="['far', 'save']"></fa-icon>
-          Save
+          <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+          <span>Save</span>
         </button>
       </div>
     </div>

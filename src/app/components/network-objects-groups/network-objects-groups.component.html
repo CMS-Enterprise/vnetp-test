@@ -20,8 +20,8 @@
   <div *ngIf="navIndex == 0">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)" aria-label="Create Network Object">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Network Object
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Network Object</span>
       </button>
     </div>
 
@@ -72,16 +72,17 @@
             <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal(ModalMode.Edit, netObj)" aria-label="Edit Network Object">
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal(ModalMode.Edit, netObj)" aria-label="Edit Network Object">
             </fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="netObj?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreNetworkObject(netObj)"
               aria-label="Restore Network Object"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': netObj.deletedAt }"
               (click)="deleteNetworkObject(netObj)"
@@ -100,9 +101,9 @@
 
   <div *ngIf="navIndex == 1">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Network Object Groups">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        Create Network Object Group
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Create Network Object Group">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Network Object Group</span>
       </button>
     </div>
 
@@ -129,19 +130,22 @@
             <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon [icon]="['fas', 'pencil-alt']" 
+            <fa-icon 
+              class="icon"
+              [icon]="['fas', 'pencil-alt']" 
               *ngIf="!netObjGroup?.deletedAt"
               (click)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
               aria-label="Edit Network Object Group"
             ></fa-icon>
             <fa-icon 
-            [icon]="['fas', 'undo']"
+              [icon]="['fas', 'undo']"
               *ngIf="netObjGroup?.deletedAt"
-              class="fg-success"
+              class="fg-success icon"
               (click)="restoreNetworkObjectGroup(netObjGroup)"
               aria-label="Restore Network Object Group"
             ></fa-icon>
             <fa-icon 
+              class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': netObjGroup.deletedAt }"
               (click)="deleteNetworkObjectGroup(netObjGroup)"

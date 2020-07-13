@@ -82,11 +82,10 @@
           type="button"
           class="btn btn-info"
           (click)="addServiceObject()"
-          aria-label="Service Object"
           [disabled]="!selectedServiceObject"
         >
-          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-          Add Service Object
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Add Service Object</span>
         </button>
       </div>
 
@@ -115,7 +114,7 @@
               <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
             <td class="item-actions">
-              <fa-icon [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
+              <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
             </td>
           </tr>
           <tr *ngIf="!serviceObjects?.length" class="text-center">
@@ -130,8 +129,8 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon [icon]="['far', 'save']"></fa-icon>
-        Save
+        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <span>Save</span>
       </button>
     </div>
   </form>
