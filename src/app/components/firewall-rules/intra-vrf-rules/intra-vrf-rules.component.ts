@@ -4,7 +4,6 @@ import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
@@ -15,7 +14,7 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   selector: 'app-intra-vrf-rules',
   templateUrl: './intra-vrf-rules.component.html',
 })
-export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class IntraVrfRulesComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private ngxSm: NgxSmartModalService,
@@ -123,11 +122,6 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
   refresh() {
     this.getVrf();
-  }
-
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
   }
 
   ngOnInit() {

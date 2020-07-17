@@ -14,11 +14,8 @@ import { NetworkObjectsGroupsComponent } from './components/network-objects-grou
 import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
 import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
 import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
-import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
 import { TiersComponent } from './components/tiers/tiers.component';
-import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
-import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
 import { VmwareComponent } from './components/vmware/vmware.component';
 import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
 import { ZvmComponent } from './components/zvm/zvm.component';
@@ -28,25 +25,20 @@ import { ApplianceDetailComponent } from './components/appliance/appliance-detai
 import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
 import { WizardComponent } from './components/wizard/wizard.component';
 
-// tslint:disable: max-line-length
-
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'subnets-vlans',
     component: SubnetsVlansComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Subnets & VLANs' },
   },
   {
     path: 'tiers',
     component: TiersComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Tiers' },
   },
-  // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
   {
     path: 'deploy',
     component: DeployComponent,
@@ -63,14 +55,12 @@ const routes: Routes = [
     path: 'network-objects-groups',
     component: NetworkObjectsGroupsComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Network Objects' },
   },
   {
     path: 'service-objects-groups',
     component: ServiceObjectsGroupsComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Service Objects' },
   },
   {
@@ -83,14 +73,12 @@ const routes: Routes = [
     path: 'firewall-rule-group/edit/:id',
     component: FirewallRulesDetailComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Firewall Rule Group' },
   },
   {
     path: 'load-balancers',
     component: LoadBalancersComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Load Balancers' },
   },
   {
@@ -103,7 +91,6 @@ const routes: Routes = [
     path: 'static-routes/edit/:id',
     component: StaticRouteDetailComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [PendingChangesGuard],
     data: { breadcrumb: 'Edit Static Route' },
   },
   {
