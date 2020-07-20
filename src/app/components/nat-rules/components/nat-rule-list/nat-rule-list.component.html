@@ -1,0 +1,59 @@
+<div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+  <button type="button" class="btn btn-success" (click)="openNatRuleModal(ModalMode.Create)" [disabled]="!currentTier">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create NAT Rule</span>
+  </button>
+</div>
+
+<table class="table table-striped" aria-describedby="NAT Rules table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let natRule of natRules | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
+      <td>
+        <span>{{ natRule?.name }}</span>
+      </td>
+      <td class="item-actions">
+        <!-- Edit NAT Rule -->
+        <fa-icon
+          *ngIf="!natRule?.deletedAt"
+          class="icon"
+          [icon]="['fas', 'pencil-alt']"
+          (click)="openNatRuleModal(ModalMode.Edit, natRule)"
+          aria-label="Edit NAT Rule"
+        >
+        </fa-icon>
+
+        <!-- Restore NAT Rule -->
+        <fa-icon
+          [icon]="['fas', 'undo']"
+          *ngIf="natRule?.deletedAt"
+          class="fg-success icon"
+          (click)="restoreNatRule(natRule)"
+          aria-label="Restore NAT Rule"
+        >
+        </fa-icon>
+
+        <!-- Soft-Delete/Delete NAT Rule -->
+        <fa-icon
+          class="icon"
+          [icon]="['fas', 'trash']"
+          [class.fg-danger]="natRule?.deletedAt"
+          (click)="deleteNatRule(natRule)"
+          aria-label="Soft-Delete/Delete NAT Rule"
+        >
+        </fa-icon>
+      </td>
+    </tr>
+    <tr *ngIf="!natRules?.length" class="text-center">
+      <td colspan="2">No NAT Rules in this Tier</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+
+<app-nat-rule-modal></app-nat-rule-modal>

@@ -1,0 +1,18 @@
+<app-tier-select></app-tier-select>
+
+<h1 class="header mb-3">NAT Rules</h1>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item" *ngFor="let route of routes">
+    <a
+      class="nav-link"
+      [routerLink]="route.link"
+      [class.active]="selectedRouteName === route.name"
+      (click)="selectedRouteName = route.name"
+    >
+      <span>{{ route.name }}</span>
+    </a>
+  </li>
+</ul>
+
+<router-outlet></router-outlet>

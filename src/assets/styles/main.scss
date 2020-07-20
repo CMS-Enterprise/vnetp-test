@@ -87,6 +87,15 @@ hr {
   font-weight: bold;
 }
 
+.nav-tabs .nav-item .nav-link {
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    color: darken( #333, 10);
+  }
+}
+
 // PAGINATION STYLES
 .ngx-pagination {
   padding: 0;

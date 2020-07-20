@@ -102,6 +102,12 @@ const routes: Routes = [
     data: { breadcrumb: 'Appliance as a Service' },
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
+  {
+    path: 'nat-rules',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
+    data: { breadcrumb: 'NAT Rules' },
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: '**',

@@ -1,0 +1,67 @@
+<div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+  <button type="button" class="btn btn-success" (click)="openNatRuleGroupModal(ModalMode.Create)" [disabled]="!currentTier">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create NAT Rule Group</span>
+  </button>
+</div>
+
+<table class="table table-striped" aria-describedby="NAT Rule Groups table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">NAT Rules</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let group of natRuleGroups | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
+      <td>
+        <span>{{ group?.name }}</span>
+      </td>
+      <td>
+        <span>{{ group?.type }}</span>
+      </td>
+      <td>
+        <span>NAT Rules</span>
+      </td>
+      <td class="item-actions">
+        <!-- Edit NAT Rule Group -->
+        <fa-icon
+          *ngIf="!group?.deletedAt"
+          class="icon"
+          [icon]="['fas', 'pencil-alt']"
+          (click)="openNatRuleGroupModal(ModalMode.Edit, group)"
+          aria-label="Edit NAT Rule Group"
+        >
+        </fa-icon>
+
+        <!-- Restore NAT Rule Group -->
+        <fa-icon
+          [icon]="['fas', 'undo']"
+          *ngIf="group?.deletedAt"
+          class="fg-success icon"
+          (click)="restoreNatRuleGroup(group)"
+          aria-label="Restore NAT Rule Group"
+        >
+        </fa-icon>
+
+        <!-- Soft-Delete/Delete NAT Rule Group -->
+        <fa-icon
+          class="icon"
+          [icon]="['fas', 'trash']"
+          [class.fg-danger]="group?.deletedAt"
+          (click)="deleteNatRuleGroup(group)"
+          aria-label="Soft-Delete/Delete NAT Rule Group"
+        >
+        </fa-icon>
+      </td>
+    </tr>
+    <tr *ngIf="!natRuleGroups?.length" class="text-center">
+      <td colspan="4">No NAT Rule Groups in this Tier</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+
+<app-nat-rule-group-modal></app-nat-rule-group-modal>
