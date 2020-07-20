@@ -1,10 +1,9 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
@@ -48,7 +47,7 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
 })
-export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class LoadBalancersComponent implements OnInit, OnDestroy {
   navIndex = 0;
 
   tiers: Tier[];
@@ -92,12 +91,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   currentDatacenterSubscription: Subscription;
   policyModalSubscription: any;
   currentTierSubscription: Subscription;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
 
   constructor(
     private ngx: NgxSmartModalService,

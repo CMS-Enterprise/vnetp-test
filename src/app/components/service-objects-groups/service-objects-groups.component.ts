@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'api_client/model/tier';
@@ -25,7 +24,7 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   selector: 'app-service-objects-groups',
   templateUrl: './service-objects-groups.component.html',
 })
-export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
@@ -44,12 +43,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   serviceObjectGroupModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   currentTierSubscription: Subscription;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
 
   constructor(
     private ngx: NgxSmartModalService,

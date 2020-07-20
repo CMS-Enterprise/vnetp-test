@@ -63,7 +63,6 @@ import { HealthMonitorModalComponent } from './modals/health-monitor-modal/healt
 import { ImportExportComponent } from './components/import-export/import-export.component';
 import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
 import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
-import { PendingChangesGuard } from './guards/pending-changes.guard';
 import { D3Module } from './modules/d3-module/d3-module.module';
 import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
@@ -208,7 +207,6 @@ export function apiConfigFactory(): Configuration {
     NgxSmartModalService,
     CookieService,
     FormBuilder,
-    PendingChangesGuard,
   ],
   bootstrap: [AppComponent],
 })

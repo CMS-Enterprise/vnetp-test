@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -25,7 +24,7 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   selector: 'app-network-objects-groups',
   templateUrl: './network-objects-groups.component.html',
 })
-export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
   currentNetworkObjectsPage = 1;
@@ -43,12 +42,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   networkObjectGroupModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   currentTierSubscription: Subscription;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
 
   constructor(
     private ngx: NgxSmartModalService,

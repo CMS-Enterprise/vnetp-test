@@ -4,7 +4,6 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, Observable, forkJoin } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
 import {
   V1NetworkSecurityFirewallRuleGroupsService,
@@ -31,7 +30,7 @@ import { BulkUploadService } from 'src/app/services/bulk-upload.service';
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
-export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   Id = '';
   TierName = '';
   currentTierIds: Array<string>;
@@ -43,7 +42,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
   totalFirewallRules = 0;
   currentFirewallRulePage = 1;
   perPage = 50;
-  dirty = false;
   ModalMode = ModalMode;
 
   networkObjects: Array<NetworkObject>;
@@ -60,12 +58,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
 
   get scopeString() {
     return this.scope;
-  }
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
   }
 
   constructor(
@@ -194,7 +186,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
     this.subscribeToFirewallRuleModal();
     this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
-    this.dirty = true;
   }
 
   subscribeToFirewallRuleModal() {
@@ -203,7 +194,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy, PendingC
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getFirewallRuleGroup();
         this.ngx.resetModalData('firewallRuleModal');
-        this.dirty = false;
       });
   }
 
