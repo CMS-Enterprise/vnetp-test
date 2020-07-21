@@ -23,7 +23,10 @@
         <span>{{ group?.type }}</span>
       </td>
       <td>
-        <span>NAT Rules</span>
+        <span *ngIf="group.natRules.length === 0">0 NAT Rules</span>
+        <span *ngIf="group.natRules.length > 0">
+          <button class="btn btn-link" type="button" (click)="openNatRuleGroupDetailsModal(group)">{{ group.natRules.length }} {{ group.natRules.length === 1 ? 'NAT Rule' : 'NAT Rules' }}</button>
+        </span>
       </td>
       <td class="item-actions">
         <!-- Edit NAT Rule Group -->
@@ -65,3 +68,15 @@
 <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
 
 <app-nat-rule-group-modal></app-nat-rule-group-modal>
+
+<ngx-smart-modal #natRuleGroupDetailsModal identifier="natRuleGroupDetailsModal" dismissable="true">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ selectedNatRuleGroup?.name }} NAT Rules</h4>
+  </div>
+
+  <div class="modal-body">
+    <ul>
+      <li *ngFor="let natRule of selectedNatRuleGroup?.natRules">{{ natRule.name }} - {{ natRule.ruleIndex }}</li>
+    </ul>
+  </div>
+</ngx-smart-modal>

@@ -13,6 +13,7 @@ interface NatRule {
   id: string;
   name: string;
   description: string;
+  ruleIndex: number;
 }
 
 @Component({

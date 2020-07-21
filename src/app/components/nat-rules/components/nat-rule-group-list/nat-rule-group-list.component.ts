@@ -30,6 +30,7 @@ interface NatRule {
   id: string;
   name: string;
   description: string;
+  ruleIndex: number;
 }
 
 @Component({
@@ -40,6 +41,7 @@ export class NatRuleGroupListComponent implements OnInit, OnDestroy {
   public currentPage = 1;
   public currentTier: Tier;
   public perPage = 20;
+  public selectedNatRuleGroup: NatRuleGroup;
   public ModalMode = ModalMode;
   public natRuleGroups: NatRuleGroup[] = [];
 
@@ -81,11 +83,26 @@ export class NatRuleGroupListComponent implements OnInit, OnDestroy {
     this.ngx.open(modalName);
   }
 
+  public openNatRuleGroupDetailsModal(natRuleGroup: NatRuleGroup): void {
+    this.selectedNatRuleGroup = natRuleGroup;
+    this.ngx.getModal('natRuleGroupDetailsModal').open();
+  }
+
   private loadNatRuleGroups(tier: Tier): Observable<NatRuleGroup[]> {
     const hasCurrentTier = tier && !!tier.id;
     if (!hasCurrentTier) {
       return of([]);
     }
-    return of([]);
+    return of([
+      {
+        name: 'test',
+        type: NatRuleGroupType.External,
+        natRules: [
+          {
+            name: 'Test2',
+          },
+        ],
+      } as any,
+    ]);
   }
 }
