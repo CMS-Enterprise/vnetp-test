@@ -39,10 +39,6 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     }
   }
 
-  private unsubAll(): void {
-    SubscriptionUtil.unsubscribe([this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription]);
-  }
-
   ngOnInit() {
     this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(datacenters => (this.datacenters = datacenters));
 
@@ -56,6 +52,6 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription]);
   }
 }

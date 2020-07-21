@@ -8,6 +8,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSave, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
+  faSignOutAlt,
   faPlus,
   faSyncAlt,
   faPencilAlt,
@@ -34,6 +35,8 @@ import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from './common/shared.module';
+import { NavbarModule } from './common/navbar/navbar.module';
+import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -46,20 +49,21 @@ export function apiConfigFactory(): Configuration {
   declarations: [AppComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
-    BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule,
+    BreadcrumbsModule,
+    BrowserAnimationsModule,
+    BrowserModule,
     FontAwesomeModule,
+    HttpClientModule,
+    NavbarModule,
     NgxMaskModule.forRoot(),
+    NgxSmartModalModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
       progressBar: true,
       closeButton: true,
       preventDuplicates: true,
     }),
-    NgxSmartModalModule.forRoot(),
-    SharedModule,
   ],
   providers: [
     {
@@ -89,6 +93,7 @@ export class AppModule {
       faBolt,
       faBars,
       faSpinner,
+      faSignOutAlt,
     );
   }
 }

@@ -17,92 +17,21 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  messageServiceSubscription: Subscription;
-  currentUserSubscription: Subscription;
+  public currentUser: User;
+  public jobMessage: AppMessage;
+  public modalJob: Job;
 
-  constructor(
-    private automationApiService: AutomationApiService,
-    private messageService: MessageService,
-    private ngx: NgxSmartModalService,
-    private auth: AuthService,
-    private hs: HelpersService,
-  ) {
-    this.activeJobs = [];
-  }
+  private currentUserSubscription: Subscription;
 
-  loggedIn: boolean;
-  activeJobs: Array<Job>;
-  currentUser: User;
-  jobMessage: AppMessage;
+  constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 
-  modalJob: Job;
-
-  getMessageServiceSubscription() {
-    this.messageServiceSubscription = this.messageService.listen().subscribe((m: AppMessage) => {
-      this.messageHandler(m);
-    });
-  }
-
-  private messageHandler(m: AppMessage) {
-    switch (m.Type) {
-      case AppMessageType.JobLaunchSuccess:
-        this.getJobs();
-
-        this.jobMessage = m;
-        this.modalJob = this.hs.deepCopy(m.Object) as Job;
-        this.ngx.getModal('jobLaunchModal').open();
-        break;
-      case AppMessageType.JobLaunchFail:
-        this.jobMessage = m;
-        this.ngx.getModal('jobLaunchModal').open();
-    }
-  }
-
-  getJobs() {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.automationApiService.getJobs('?order_by=-created&or__status=running&or__status=pending').subscribe(data => {
-      const result = data as any;
-      this.activeJobs = result.results as Array<Job>;
-      this.updateModalJob();
-    });
-  }
-
-  openLogoutModal() {
+  public openLogoutModal(): void {
     this.ngx.getModal('logoutModal').open();
   }
 
-  updateModalJob() {
-    if (this.modalJob && this.modalJob.status !== 'failed' && this.modalJob.status !== 'successful') {
-      // Try to update the modal job from the activeJobs array.
-      const updatedJob = this.activeJobs.find(j => j.id === this.modalJob.id);
-
-      if (updatedJob) {
-        this.modalJob = this.hs.deepCopy(updatedJob);
-      } else {
-        // If the job isn't in active jobs, it has either succeeded or failed.
-        // Get its status directly.
-        this.automationApiService.getJob(this.modalJob.id).subscribe(data => {
-          this.modalJob = data as Job;
-        });
-      }
-    }
-  }
-
-  closeJobModal() {
-    this.ngx.getModal('jobLaunchModal').close();
-    this.modalJob = null;
-  }
-
-  logout() {
+  public logout(): void {
     this.ngx.close('logoutModal');
     this.auth.logout();
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentUserSubscription, this.messageServiceSubscription]);
   }
 
   ngOnInit() {
@@ -110,6 +39,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentUserSubscription]);
   }
 }

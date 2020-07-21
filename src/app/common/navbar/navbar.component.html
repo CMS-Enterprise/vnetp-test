@@ -70,8 +70,6 @@
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
-          <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true" style="padding-right:5px;" [hidden]="!activeJobs.length"></fa-icon>
-          <span class="badge badge-success" [hidden]="!activeJobs.length"> {{ activeJobs.length }}</span>
           <span>Jobs</span>
         </a>
       </li>
@@ -119,82 +117,18 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logoutModal.close()"></button>
   </div>
 
+  <div class="modal-body">
+    <p class="mb-3">Are you sure you want to log out?</p>
+  </div>
+
   <div class="modal-footer">
     <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
       Cancel
     </button>
 
     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
-      Logout
-    </button>
-  </div>
-</ngx-smart-modal>
-
-<!-- Job Launch -->
-<ngx-smart-modal #jobLaunchModal identifier="jobLaunchModal" [dismissable]="false">
-  <div class="modal-header">
-    <h4
-      *ngIf="jobMessage?.Success"
-      class="modal-title"
-      [ngClass]="{
-        'text-success': modalJob?.status === 'successful',
-        'text-danger': modalJob?.status === 'failed'
-      }"
-    >
-      Job {{ modalJob?.id }} Status
-    </h4>
-    <h4 *ngIf="!jobMessage?.Success" class="modal-title text-danger">
-      Job Launch Failed
-    </h4>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeJobModal()"></button>
-  </div>
-
-  <div class="modal-body text-center" *ngIf="!jobMessage?.Success">
-    {{ jobMessage?.Text }}
-  </div>
-
-  <div class="modal-body" *ngIf="jobMessage?.Success">
-    <div class="form-row">
-      <div class="form-group col-md-6 text-center">
-        <p
-          [ngClass]="{
-            'text-success': modalJob?.status === 'successful',
-            'text-danger': modalJob?.status === 'failed'
-          }"
-          class="text-capitalize"
-        >
-          Status: {{ modalJob?.status }}
-        </p>
-      </div>
-      <div class="form-group col-md-6 text-center">Elapsed Time: {{ modalJob?.elapsed }}s</div>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-info"
-      data-dismiss="modal"
-      routerLink="/jobs"
-      queryParamsHandling="merge"
-      (click)="closeJobModal()"
-      *ngIf="jobMessage?.Success && modalJob?.status !== 'failed'"
-    >
-      View All Jobs
-    </button>
-
-    <a
-      class="btn btn-danger"
-      *ngIf="!jobMessage?.Success || modalJob?.status === 'failed'"
-      target="_blank"
-      rel="noopener noreferrer"
-      href="https://jiraent.cms.gov/"
-    >
-      Open Ticket
-    </a>
-
-    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="closeJobModal()">
-      Close Dialog
+      <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
+      <span>Logout</span>
     </button>
   </div>
 </ngx-smart-modal>
