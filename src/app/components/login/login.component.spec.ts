@@ -4,14 +4,12 @@ import { LoginComponent } from './login.component';
 import { FormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr';
 import { DashboardComponent } from '../dashboard/dashboard.component';
-import { D3PieChartComponent } from '../d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
+import { D3PieChartComponent } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

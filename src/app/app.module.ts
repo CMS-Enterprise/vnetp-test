@@ -1,10 +1,8 @@
 // Angular Imports
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 // 3rd-Party Imports
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -25,82 +23,17 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { CookieService } from 'ngx-cookie-service';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
-import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
-import { JobsComponent } from './components/jobs/jobs.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { NotfoundComponent } from './components/notfound/notfound.component';
-import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
-import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { DeployComponent } from './components/deploy/deploy.component';
-import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
-import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
-import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
-import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
-import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
-import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
-import { FirewallRuleModalComponent } from './modals/firewall-rule-modal/firewall-rule-modal.component';
-import { VirtualServerModalComponent } from './modals/virtual-server-modal/virtual-server-modal.component';
-import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { PoolModalComponent } from './modals/pool-modal/pool-modal.component';
-import { NodeModalComponent } from './modals/node-modal/node-modal.component';
-import { IRuleModalComponent } from './modals/irule-modal/irule-modal.component';
-import { HealthMonitorModalComponent } from './modals/health-monitor-modal/health-monitor-modal.component';
-import { ImportExportComponent } from './components/import-export/import-export.component';
-import { PhysicalServerModalComponent } from './modals/physical-server-modal/physical-server-modal.component';
-import { PhysicalServerComponent } from './components/physical-server/physical-server.component';
-import { D3Module } from './modules/d3-module/d3-module.module';
-import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
-import { TooltipComponent } from './components/tooltip/tooltip.component';
-import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
-import { ContractModalComponent } from './modals/contract-modal/contract-modal.component';
-import { VmwareComponent } from './components/vmware/vmware.component';
-import { VirtualMachineModalComponent } from './modals/virtual-machine-modal/virtual-machine-modal.component';
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
-import { YesNoModalComponent } from './modals/yes-no-modal/yes-no-modal.component';
-import { FilterPipe } from './pipes/filter.pipe';
-import { ResolvePipe } from './pipes/resolve.pipe';
-import { StaticRouteModalComponent } from './modals/static-route-modal/static-route-modal.component';
-import { SubnetsVlansComponent } from './components/subnets-vlans/subnets-vlans.component';
-import { SubnetModalComponent } from './modals/subnet-modal/subnet-modal.component';
-import { VlanModalComponent } from './modals/vlan-modal/vlan-modal.component';
-import { TiersComponent } from './components/tiers/tiers.component';
-import { TierModalComponent } from './modals/tier-modal/tier-modal.component';
-import { VmwareDetailComponent } from './components/vmware/vmware-detail/vmware-detail.component';
-import { VirtualDiskModalComponent } from './modals/virtual-disk-modal/virtual-disk-modal.component';
-import { NetworkAdapterModalComponent } from './modals/network-adapter-modal/network-adapter-modal.component';
-import { ZvmComponent } from './components/zvm/zvm.component';
-import { ZosComponent } from './components/zos/zos.component';
-import { ZosZvmRequestModalComponent } from './modals/zos-zvm-request-modal/zos-zvm-request-modal.component';
-import { ProfileModalComponent } from './modals/profile-modal/profile-modal.component';
-import { PolicyModalComponent } from './modals/policy-modal/policy-modal.component';
-import { ApplianceComponent } from './components/appliance/appliance.component';
-import { ApplianceModalComponent } from './modals/appliance-modal/appliance-modal.component';
-import { NetworkPortsModalComponent } from './modals/network-ports-modal/network-ports-modal.component';
-import { ApplianceDetailComponent } from './components/appliance/appliance-detail/appliance-detail.component';
-import { PhysicalServerDetailComponent } from './components/physical-server/physical-server-detail/physical-server-detail.component';
-import { TierSelectComponent } from './components/tier-select/tier-select.component';
-import { WizardComponent } from './components/wizard/wizard.component';
-import { ReplicationStatePanelComponent } from './components/wizard/side-panels/replication-state-panel/replication-state-panel.component';
-import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
-import { LoadBalancerVlanModalComponent } from './modals/lb-vlan-modal/lb-vlan-modal.component';
-import { LoadBalancerSelfIpModalComponent } from './modals/lb-self-ip-modal/lb-self-ip-modal.component';
-import { LoadBalancerRouteModalComponent } from './modals/lb-route-modal/lb-route-modal.component';
+import { SharedModule } from './common/shared.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -110,81 +43,14 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DashboardComponent,
-    LoginComponent,
-    FirewallRulesComponent,
-    FirewallRulesDetailComponent,
-    JobsComponent,
-    NavbarComponent,
-    NotfoundComponent,
-    BreadcrumbComponent,
-    StaticRoutesComponent,
-    StaticRouteDetailComponent,
-    DeployComponent,
-    NetworkObjectsGroupsComponent,
-    NetworkObjectModalComponent,
-    NetworkObjectGroupModalComponent,
-    ServiceObjectsGroupsComponent,
-    ServiceObjectModalComponent,
-    ServiceObjectGroupModalComponent,
-    FirewallRuleModalComponent,
-    VirtualServerModalComponent,
-    LoadBalancersComponent,
-    PoolModalComponent,
-    NodeModalComponent,
-    IRuleModalComponent,
-    LoadBalancerVlanModalComponent,
-    LoadBalancerSelfIpModalComponent,
-    LoadBalancerRouteModalComponent,
-    HealthMonitorModalComponent,
-    ImportExportComponent,
-    PhysicalServerComponent,
-    PhysicalServerModalComponent,
-    NetworkTopologyComponent,
-    TooltipComponent,
-    IntraVrfRulesComponent,
-    ContractModalComponent,
-    YesNoModalComponent,
-    FilterPipe,
-    ResolvePipe,
-    StaticRouteModalComponent,
-    SubnetsVlansComponent,
-    SubnetModalComponent,
-    VlanModalComponent,
-    TiersComponent,
-    TierModalComponent,
-    VmwareComponent,
-    VirtualMachineModalComponent,
-    VmwareDetailComponent,
-    VirtualDiskModalComponent,
-    NetworkAdapterModalComponent,
-    ZvmComponent,
-    ZosComponent,
-    ZosZvmRequestModalComponent,
-    ProfileModalComponent,
-    PolicyModalComponent,
-    ApplianceComponent,
-    ApplianceModalComponent,
-    NetworkPortsModalComponent,
-    ApplianceDetailComponent,
-    PhysicalServerDetailComponent,
-    TierSelectComponent,
-    WizardComponent,
-    ReplicationStatePanelComponent,
-    DatacenterSelectComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    CommonModule,
     HttpClientModule,
     FontAwesomeModule,
-    ReactiveFormsModule,
-    FormsModule,
     NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
@@ -193,10 +59,7 @@ export function apiConfigFactory(): Configuration {
       preventDuplicates: true,
     }),
     NgxSmartModalModule.forRoot(),
-    NgxPaginationModule,
-    D3Module,
-    NgSelectModule,
-    NgxChartsModule,
+    SharedModule,
   ],
   providers: [
     {
@@ -204,9 +67,7 @@ export function apiConfigFactory(): Configuration {
       useClass: HttpConfigInterceptor,
       multi: true,
     },
-    NgxSmartModalService,
     CookieService,
-    FormBuilder,
   ],
   bootstrap: [AppComponent],
 })

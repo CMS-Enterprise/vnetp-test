@@ -7,11 +7,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('DeployComponent', () => {
   let component: DeployComponent;

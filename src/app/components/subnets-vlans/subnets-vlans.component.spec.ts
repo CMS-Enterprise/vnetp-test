@@ -4,19 +4,19 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { ImportExportComponent } from '../import-export/import-export.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SubnetsVlansComponent } from './subnets-vlans.component';
-import { SubnetModalComponent } from 'src/app/modals/subnet-modal/subnet-modal.component';
-import { VlanModalComponent } from 'src/app/modals/vlan-modal/vlan-modal.component';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
+import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;

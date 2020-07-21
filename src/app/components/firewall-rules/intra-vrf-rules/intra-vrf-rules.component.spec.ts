@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IntraVrfRulesComponent } from './intra-vrf-rules.component';
 import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { ContractModalComponent } from 'src/app/modals/contract-modal/contract-modal.component';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { ContractModalComponent } from '../contract-modal/contract-modal.component';
 
 describe('IntraVrfRulesComponent', () => {
   let component: IntraVrfRulesComponent;

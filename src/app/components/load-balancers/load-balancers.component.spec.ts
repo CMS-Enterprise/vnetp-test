@@ -11,12 +11,12 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
