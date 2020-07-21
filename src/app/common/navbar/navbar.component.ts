@@ -18,8 +18,6 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public currentUser: User;
-  public jobMessage: AppMessage;
-  public modalJob: Job;
 
   private currentUserSubscription: Subscription;
 
