@@ -105,8 +105,8 @@ const routes: Routes = [
   {
     path: 'nat-rules',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
     data: { breadcrumb: 'NAT Rules' },
+    loadChildren: () => import('./components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
