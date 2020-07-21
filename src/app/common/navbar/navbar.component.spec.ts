@@ -8,9 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
-import { User } from 'src/app/models/user/user';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { of } from 'rxjs';
 import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 
 describe('NavbarComponent', () => {
@@ -41,27 +38,5 @@ describe('NavbarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('getJobs', () => {
-    it('should get jobs for the current user', () => {
-      component.currentUser = {} as User;
-
-      const automationApiService = TestBed.get(AutomationApiService);
-      const getJobsSpy = spyOn(automationApiService, 'getJobs').and.returnValue(of({}));
-
-      component.getJobs();
-      expect(getJobsSpy).toHaveBeenCalled();
-    });
-
-    it('should not get jobs in there is not a current user', () => {
-      component.currentUser = null;
-
-      const automationApiService = TestBed.get(AutomationApiService);
-      const getJobsSpy = spyOn(automationApiService, 'getJobs').and.returnValue(of({}));
-
-      component.getJobs();
-      expect(getJobsSpy).not.toHaveBeenCalled();
-    });
   });
 });
