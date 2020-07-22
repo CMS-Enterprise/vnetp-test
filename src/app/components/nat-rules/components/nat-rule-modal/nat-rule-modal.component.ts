@@ -28,7 +28,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleServiceType = NatRuleServiceType;
 
   private translationTypeSubscription: Subscription;
-  private translatedSourceAddressType: Subscription;
+  private translatedSourceAddressTypeSubscription: Subscription;
 
   constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService) {}
 
@@ -41,7 +41,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.translationTypeSubscription]);
+    SubscriptionUtil.unsubscribe([this.translationTypeSubscription, this.translatedSourceAddressTypeSubscription]);
   }
 
   public initNatRule(): void {
@@ -88,7 +88,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     });
 
     this.translationTypeSubscription = this.subscribeToTranslationTypeChanges();
-    this.translatedSourceAddressType = this.subscribeToTranslatedSourceAddressTypeChanges();
+    this.translatedSourceAddressTypeSubscription = this.subscribeToTranslatedSourceAddressTypeChanges();
   }
 
   private subscribeToTranslationTypeChanges(): Subscription {
