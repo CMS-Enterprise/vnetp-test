@@ -8,31 +8,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { mergeMap, tap } from 'rxjs/operators';
 import { NatRuleGroupModalDto } from '../../models/nat-rule-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-
-// todo: Use generated types from api_client
-enum NatRuleGroupType {
-  Intervrf = 'Intervrf',
-  External = 'External',
-}
-
-interface NatRuleGroup {
-  createdAt?: object;
-  deletedAt?: boolean;
-  id?: string;
-  name: string;
-  natRules: NatRule[];
-  provisionedAt?: object;
-  tierId: string;
-  type: NatRuleGroupType;
-  updatedAt?: object;
-}
-
-interface NatRule {
-  id: string;
-  name: string;
-  description: string;
-  ruleIndex: number;
-}
+import { NatRuleGroup, NatRuleGroupType } from '../../nat-rules.type';
 
 @Component({
   selector: 'app-nat-rule-group-list',

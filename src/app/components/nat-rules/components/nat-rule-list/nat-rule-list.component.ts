@@ -7,14 +7,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { mergeMap, tap } from 'rxjs/operators';
 import { NatRuleModalDto } from '../../models/nat-rule-modal-dto';
-
-// todo: Use generated types from api_client
-interface NatRule {
-  id: string;
-  name: string;
-  description: string;
-  ruleIndex: number;
-}
+import { NatRule } from '../../nat-rules.type';
 
 @Component({
   selector: 'app-nat-rule-list',
