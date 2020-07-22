@@ -7,6 +7,7 @@ import { NatRuleModalDto } from '../../models/nat-rule-modal-dto';
 import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatRuleGroup } from '../../nat-rules.type';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Subscription } from 'rxjs';
+import { NetworkObject, NetworkObjectGroup } from 'api_client';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -14,8 +15,12 @@ import { Subscription } from 'rxjs';
 })
 export class NatRuleModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
-  public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
   public submitted = false;
+
+  // Lookups
+  public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
+  public networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
+  public networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
 
   // Enums
   public NatRuleTranslationType = NatRuleTranslationType;
@@ -23,6 +28,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleServiceType = NatRuleServiceType;
 
   private translationTypeSubscription: Subscription;
+  private translatedSourceAddressType: Subscription;
 
   constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService) {}
 
@@ -64,6 +70,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
+    console.log(this.form.value);
   }
 
   private initForm(): void {
@@ -76,9 +83,12 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceAddressType: null,
       translatedDestinationAddressType: null,
       translatedServiceType: null,
+      translatedSourceNetworkObject: null,
+      translatedSourceNetworkObjectGroup: null,
     });
 
     this.translationTypeSubscription = this.subscribeToTranslationTypeChanges();
+    this.translatedSourceAddressType = this.subscribeToTranslatedSourceAddressTypeChanges();
   }
 
   private subscribeToTranslationTypeChanges(): Subscription {
@@ -103,6 +113,31 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceAddressType.updateValueAndValidity();
       translatedDestinationAddressType.updateValueAndValidity();
       translatedServiceType.updateValueAndValidity();
+    });
+  }
+
+  private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
+    const { translatedSourceAddressType, translatedSourceNetworkObject, translatedSourceNetworkObjectGroup } = this.form.controls;
+
+    return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
+      if (type === NatRuleAddressType.None) {
+        translatedSourceNetworkObject.setValue(null);
+        translatedSourceNetworkObject.clearValidators();
+        translatedSourceNetworkObjectGroup.setValue(null);
+        translatedSourceNetworkObjectGroup.clearValidators();
+      } else if (type === NatRuleAddressType.NetworkObject) {
+        translatedSourceNetworkObject.setValue(null);
+        translatedSourceNetworkObject.setValidators(Validators.required);
+        translatedSourceNetworkObjectGroup.setValue(null);
+        translatedSourceNetworkObjectGroup.clearValidators();
+      } else if (type === NatRuleAddressType.NetworkObjectGroup) {
+        translatedSourceNetworkObject.setValue(null);
+        translatedSourceNetworkObject.clearValidators();
+        translatedSourceNetworkObjectGroup.setValue(null);
+        translatedSourceNetworkObjectGroup.setValidators(Validators.required);
+      }
+      translatedSourceNetworkObject.updateValueAndValidity();
+      translatedSourceNetworkObjectGroup.updateValueAndValidity();
     });
   }
 }

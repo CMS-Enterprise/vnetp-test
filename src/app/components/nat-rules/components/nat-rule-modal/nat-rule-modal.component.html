@@ -81,9 +81,8 @@
 
       <h4>Translation</h4>
 
-      <div class="form-row">
         <!-- Translation Type -->
-        <div class="form-group col-md-6">
+        <div class="form-group">
           <label for="translationType">Translation Type</label>
           <select
             id="translationType"
@@ -102,23 +101,63 @@
           </div>
         </div>
 
-        <div *ngIf="f.translationType.value !== NatRuleTranslationType.None" class="col-md-6">
+        <div *ngIf="f.translationType.value !== NatRuleTranslationType.None">
+
           <!-- Translated Source Address Type -->
-          <div class="form-group">
-            <label for="translatedSourceAddressType">Translated Source Address Type</label>
-            <select
-              id="translatedSourceAddressType"
-              formControlName="translatedSourceAddressType"
-              class="form-control"
-              [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
-              required
-            >
-              <option [value]="NatRuleAddressType.None">None</option>
-              <option [value]="NatRuleAddressType.NetworkObject">Network Object</option>
-              <option [value]="NatRuleAddressType.NetworkObjectGroup">Network Object Group</option>
-            </select>
-            <div *ngIf="submitted && f.translatedSourceAddressType.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedSourceAddressType.errors.required">Translated Source Address Type is required</div>
+          <div class="form-row">
+
+            <div class="form-group col-md-6">
+              <label for="translatedSourceAddressType">Translated Source Address Type</label>
+              <select
+                id="translatedSourceAddressType"
+                formControlName="translatedSourceAddressType"
+                class="form-control"
+                [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
+                required
+              >
+                <option [value]="NatRuleAddressType.None">None</option>
+                <option [value]="NatRuleAddressType.NetworkObject">Network Object</option>
+                <option [value]="NatRuleAddressType.NetworkObjectGroup">Network Object Group</option>
+              </select>
+              <div *ngIf="submitted && f.translatedSourceAddressType.errors" class="invalid-feedback">
+                <div *ngIf="f.translatedSourceAddressType.errors.required">Translated Source Address Type is required</div>
+              </div>
+            </div>
+
+            <!-- Translated Source Network Object -->
+            <div class="form-group col-md-6" *ngIf="f.translatedSourceAddressType.value === NatRuleAddressType.NetworkObject">
+              <label for="translatedSourceNetworkObject">Network Object</label>
+              <select
+                id="translatedSourceNetworkObject"
+                formControlName="translatedSourceNetworkObject"
+                class="form-control"
+                [class.is-invalid]="submitted && f.translatedSourceNetworkObject.errors"
+                required
+              >
+                <option></option>
+                <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
+              </select>
+              <div *ngIf="submitted && f.translatedSourceNetworkObject.errors" class="invalid-feedback">
+                <div *ngIf="f.translatedSourceNetworkObject.errors.required">Translated Source Network Object is required</div>
+              </div>
+            </div>
+
+              <!-- Translated Source Network Object Group -->
+            <div class="form-group col-md-6" *ngIf="f.translatedSourceAddressType.value === NatRuleAddressType.NetworkObjectGroup">
+              <label for="translatedSourceNetworkObjectGroup">Network Object Group</label>
+              <select
+                id="translatedSourceNetworkObjectGroup"
+                formControlName="translatedSourceNetworkObjectGroup"
+                class="form-control"
+                [class.is-invalid]="submitted && f.translatedSourceNetworkObjectGroup.errors"
+                required
+              >
+                <option></option>
+                <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{ networkObjectGroup.name }}</option>
+              </select>
+              <div *ngIf="submitted && f.translatedSourceNetworkObjectGroup.errors" class="invalid-feedback">
+                <div *ngIf="f.translatedSourceNetworkObjectGroup.errors.required">Translated Source Network Object Group is required</div>
+              </div>
             </div>
           </div>
 
@@ -159,7 +198,6 @@
               <div *ngIf="f.translatedServiceType.errors.required">Translated Service Type is required</div>
             </div>
           </div>
-        </div>
       </div>
     </div>
 
