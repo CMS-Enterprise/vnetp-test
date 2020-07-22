@@ -3,10 +3,11 @@ import { Tier } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { mergeMap, tap } from 'rxjs/operators';
 import { NatRuleGroupModalDto } from '../../models/nat-rule-group-modal-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 // todo: Use generated types from api_client
 enum NatRuleGroupType {
@@ -47,6 +48,13 @@ export class NatRuleGroupListComponent implements OnInit, OnDestroy {
 
   private currentTierSubscription: Subscription;
 
+  // TODO: Implement api_client service
+  private V1NATRuleGroupsService = {
+    softDelete: (o: object) => of({}),
+    delete: (o: object) => of({}),
+    restore: (o: object) => of({}),
+  };
+
   constructor(private ngx: NgxSmartModalService, private tierContextService: TierContextService) {}
 
   public ngOnInit(): void {
@@ -65,11 +73,40 @@ export class NatRuleGroupListComponent implements OnInit, OnDestroy {
   }
 
   public deleteNatRuleGroup(natRuleGroup: NatRuleGroup): void {
-    // TODO: Implement
+    if (natRuleGroup.provisionedAt) {
+      throw new Error('Cannot delete provisioned object.');
+    }
+
+    const { name, id, deletedAt } = natRuleGroup;
+    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFn = () => {
+      if (deletedAt) {
+        this.V1NATRuleGroupsService.delete({ id }).subscribe(() => this.loadNatRuleGroups(this.currentTier));
+      } else {
+        this.V1NATRuleGroupsService.softDelete({ id }).subscribe(() => this.loadNatRuleGroups(this.currentTier));
+      }
+    };
+
+    const dto = new YesNoModalDto(`${deleteDescription} NAT Rule Group?`, `Do you want to ${deleteDescription} NAT Rule Group "${name}"?`);
+    this.ngx.setModalData(dto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFn();
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
   public restoreNatRuleGroup(natRuleGroup: NatRuleGroup): void {
-    // TODO: Implement
+    const { deletedAt, id } = natRuleGroup;
+    if (deletedAt) {
+      this.V1NATRuleGroupsService.restore({ id }).subscribe(() => this.loadNatRuleGroups(this.currentTier));
+    }
   }
 
   public openNatRuleGroupModal(modalMode: ModalMode, natRuleGroup?: NatRuleGroup): void {
