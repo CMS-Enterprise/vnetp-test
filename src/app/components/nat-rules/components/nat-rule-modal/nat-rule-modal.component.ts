@@ -4,7 +4,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NatRuleModalDto } from '../../models/nat-rule-modal-dto';
-import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatRuleGroup } from '../../nat-rules.type';
+import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatRuleGroup, NatDirection } from '../../nat-rules.type';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Subscription } from 'rxjs';
 import { NetworkObject, NetworkObjectGroup } from 'api_client';
@@ -26,6 +26,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleTranslationType = NatRuleTranslationType;
   public NatRuleAddressType = NatRuleAddressType;
   public NatRuleServiceType = NatRuleServiceType;
+  public NatDirection = NatDirection;
 
   private subscriptions: Subscription[] = [];
 
@@ -76,6 +77,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      direction: [NatDirection.In, Validators.required],
       ruleIndex: [null, Validators.compose([Validators.required, Validators.min(1)])],
       natRuleGroup: [null, Validators.required],
       translationType: [NatRuleTranslationType.None, Validators.required],
@@ -189,68 +191,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 }
 
-//   @ApiModelProperty({ minLength: 3, maxLength: 100 })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsString({ groups: [CREATE] })
-//   @Length(3, 100, { groups: [CREATE] })
-//   @Validate(NameValidator, { groups: [CREATE] })
-//   @Column({ nullable: false })
-//   name: string;
-
-//   /** Description of the NAT Rule. */
-//   @ApiModelPropertyOptional({ maxLength: 500 })
-//   @IsOptional({ always: true })
-//   @IsString({ always: true })
-//   @Length(0, 500, { always: true })
-//   @Column({
-//     nullable: true,
-//   })
-//   description: string;
-
-//   /** Whether the nat rule is enabled. */
-//   @ApiModelProperty()
-//   @IsOptional({ groups: [CREATE, UPDATE] })
-//   @IsBoolean({ always: true })
-//   @Column({ nullable: false, default: true })
-//   enabled: boolean;
-
-//   /** Order that the rule will be applied to the nat in relation to other rules
-//    * in the nat rule group. Must be unique per nat rule group.
-//    */
-//   @ApiModelProperty({ minimum: 1 })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Min(1, { always: true })
-//   @Column({ nullable: false })
-//   ruleIndex: number;
-
-//   /** Indicates the translation type (static, dynamic) */
-//   @ApiModelProperty({ enum: NatRuleTranslationType })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleTranslationType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleTranslationType })
-//   translationType: NatRuleTranslationType;
-
-//   /** Indicates the direction that the NAT rule will match
-//    * traffic.
-//    */
-//   @ApiModelProperty()
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatDirection, { always: true })
-//   @Column({ type: 'enum', enum: NatDirection })
-//   direction: NatDirection;
-
-//   /** Indicates whether the NAT rule will be applied to traffic
-//    * in both directions.
-//    */
-//   @ApiModelProperty()
-//   @IsOptional({ groups: [CREATE, UPDATE] })
-//   @IsBoolean({ always: true })
-//   @Column({ nullable: false, default: true })
-//   biDirectional: boolean;
+// TODO
+// enabled: boolean, optional, default = true
+// biDirectional: boolean, optional, default = true
 
 //   @ApiModelProperty({ enum: NatRuleAddressType })
 //   @IsNotEmpty({ groups: [CREATE] })

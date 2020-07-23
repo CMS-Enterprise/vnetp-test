@@ -24,6 +24,11 @@ export enum NatRuleAddressType {
   NetworkObjectGroup = 'NetworkObjectGroup',
 }
 
+export enum NatDirection {
+  In = 'In',
+  Out = 'Out',
+}
+
 export interface NatRuleGroup {
   createdAt?: object;
   deletedAt?: boolean;
