@@ -77,29 +77,69 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatDirection.In, Validators.required],
-      ruleIndex: [null, Validators.compose([Validators.required, Validators.min(1)])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       natRuleGroup: [null, Validators.required],
-      translationType: [NatRuleTranslationType.None, Validators.required],
-      translatedSourceAddressType: null,
+      originalServiceObject: null,
+      originalServiceObjectGroup: null,
+      originalServiceType: [NatRuleServiceType.None, Validators.required],
+      originalSourceAddressType: [NatRuleAddressType.None, Validators.required],
+      originalSourceNetworkObject: null,
+      originalSourceNetworkObjectGroup: null,
+      ruleIndex: [null, Validators.compose([Validators.required, Validators.min(1)])],
       translatedDestinationAddressType: null,
-      translatedServiceType: null,
-      translatedSourceNetworkObject: null,
-      translatedSourceNetworkObjectGroup: null,
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
       translatedServiceObject: null,
       translatedServiceObjectGroup: null,
+      translatedServiceType: null,
+      translatedSourceAddressType: null,
+      translatedSourceNetworkObject: null,
+      translatedSourceNetworkObjectGroup: null,
+      translationType: [NatRuleTranslationType.None, Validators.required],
     });
 
     this.subscriptions = [
-      this.subscribeToTranslationTypeChanges(),
-      this.subscribeToTranslatedSourceAddressTypeChanges(),
+      this.subscribeToOriginalServiceTypeChanges(),
+      this.subscribeToOriginalSourceAddressTypeChanges(),
       this.subscribeToTranslatedDestinationAddressTypeChanges(),
       this.subscribeToTranslatedServiceTypeChanges(),
+      this.subscribeToTranslatedSourceAddressTypeChanges(),
+      this.subscribeToTranslationTypeChanges(),
     ];
+  }
+
+  private subscribeToOriginalServiceTypeChanges(): Subscription {
+    const { originalServiceType, originalServiceObject, originalServiceObjectGroup } = this.form.controls;
+
+    const handler: Record<NatRuleServiceType, Function> = {
+      [NatRuleServiceType.None]: () => {
+        originalServiceObject.setValue(null);
+        originalServiceObject.clearValidators();
+        originalServiceObjectGroup.setValue(null);
+        originalServiceObjectGroup.clearValidators();
+      },
+      [NatRuleServiceType.ServiceObject]: () => {
+        originalServiceObject.setValue(null);
+        originalServiceObject.setValidators(Validators.required);
+        originalServiceObjectGroup.setValue(null);
+        originalServiceObjectGroup.clearValidators();
+      },
+      [NatRuleServiceType.ServiceObjectGroup]: () => {
+        originalServiceObject.setValue(null);
+        originalServiceObject.clearValidators();
+        originalServiceObjectGroup.setValue(null);
+        originalServiceObjectGroup.setValidators(Validators.required);
+      },
+    };
+
+    return originalServiceType.valueChanges.subscribe((type: NatRuleServiceType) => {
+      const handlerFn = handler[type];
+      handlerFn();
+      originalServiceObject.updateValueAndValidity();
+      originalServiceObjectGroup.updateValueAndValidity();
+    });
   }
 
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
@@ -156,6 +196,38 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceAddressType.updateValueAndValidity();
       translatedDestinationAddressType.updateValueAndValidity();
       translatedServiceType.updateValueAndValidity();
+    });
+  }
+
+  private subscribeToOriginalSourceAddressTypeChanges(): Subscription {
+    const { originalSourceAddressType, originalSourceNetworkObject, originalSourceNetworkObjectGroup } = this.form.controls;
+
+    const handler: Record<NatRuleAddressType, Function> = {
+      [NatRuleAddressType.None]: () => {
+        originalSourceNetworkObject.setValue(null);
+        originalSourceNetworkObject.clearValidators();
+        originalSourceNetworkObjectGroup.setValue(null);
+        originalSourceNetworkObjectGroup.clearValidators();
+      },
+      [NatRuleAddressType.NetworkObject]: () => {
+        originalSourceNetworkObject.setValue(null);
+        originalSourceNetworkObject.setValidators(Validators.required);
+        originalSourceNetworkObjectGroup.setValue(null);
+        originalSourceNetworkObjectGroup.clearValidators();
+      },
+      [NatRuleAddressType.NetworkObjectGroup]: () => {
+        originalSourceNetworkObject.setValue(null);
+        originalSourceNetworkObject.clearValidators();
+        originalSourceNetworkObjectGroup.setValue(null);
+        originalSourceNetworkObjectGroup.setValidators(Validators.required);
+      },
+    };
+
+    return originalSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
+      const handlerFn = handler[type];
+      handlerFn();
+      originalSourceNetworkObject.updateValueAndValidity();
+      originalSourceNetworkObjectGroup.updateValueAndValidity();
     });
   }
 
@@ -237,114 +309,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 //   @IsOptional({ groups: [UPDATE] })
 //   @IsEnum(NatRuleAddressType, { always: true })
 //   @Column({ type: 'enum', enum: NatRuleAddressType })
-//   originalSourceAddressType: NatRuleAddressType;
-
-//   @ApiModelProperty({ enum: NatRuleAddressType })
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleAddressType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleAddressType })
-//   translatedSourceAddressType: NatRuleAddressType;
-
-//   @ApiModelProperty({ enum: NatRuleAddressType })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleAddressType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleAddressType })
 //   originalDestinationAddressType: NatRuleAddressType;
-
-//   @ApiModelProperty({ enum: NatRuleAddressType })
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleAddressType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleAddressType })
-//   translatedDestinationAddressType: NatRuleAddressType;
-
-//   @ApiModelProperty({ enum: NatRuleServiceType })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleServiceType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleServiceType })
-//   originalServiceType: NatRuleServiceType;
-
-//   @ApiModelProperty({ enum: NatRuleServiceType })
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleServiceType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleServiceType })
-//   translatedServiceType: NatRuleServiceType;
-
-//   @ApiModelProperty()
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsEmpty({
-//     groups: [UPDATE],
-//     message: 'NAT Rule Group cannot be changed after NAT Rule creation.',
-//   })
-//   @IsUUID('4', { groups: [CREATE] })
-//   @Column({ update: false, nullable: false, type: 'uuid' })
-//   @Index()
-//   natRuleGroupId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalSourceAddressType === NatRuleAddressType.NetworkObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalSourceNetworkObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalSourceAddressType === NatRuleAddressType.NetworkObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalSourceNetworkObjectGroupId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None &&
-//       nr.translatedSourceAddressType === NatRuleAddressType.NetworkObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedSourceNetworkObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None &&
-//       nr.translatedSourceAddressType === NatRuleAddressType.NetworkObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedSourceNetworkObjectGroupId: string;
 
 //   @ApiModelPropertyOptional()
 //   @ValidateIf(
@@ -369,72 +334,4 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 //   @Column({ nullable: true, type: 'uuid' })
 //   originalDestinationNetworkObjectGroupId: string;
 
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None &&
-//       nr.translatedDestinationAddressType === NatRuleAddressType.NetworkObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedDestinationNetworkObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translationType !== NatRuleTranslationType.None &&
-//       nr.translatedDestinationAddressType ===
-//         NatRuleAddressType.NetworkObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedDestinationNetworkObjectGroupId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalServiceType === NatRuleServiceType.ServiceObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalServiceObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalServiceType === NatRuleServiceType.ServiceObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalServiceObjectGroupId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translatedServiceType === NatRuleServiceType.ServiceObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedServiceObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.translatedServiceType === NatRuleServiceType.ServiceObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   translatedServiceObjectGroupId: string;
 // }
