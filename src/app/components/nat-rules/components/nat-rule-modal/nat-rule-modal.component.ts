@@ -81,6 +81,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       direction: [NatDirection.In, Validators.required],
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       natRuleGroup: [null, Validators.required],
+      originalDestinationAddressType: [NatRuleAddressType.None, Validators.required],
+      originalDestinationNetworkObject: null,
+      originalDestinationNetworkObjectGroup: null,
       originalServiceObject: null,
       originalServiceObjectGroup: null,
       originalServiceType: [NatRuleServiceType.None, Validators.required],
@@ -101,6 +104,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions = [
+      this.subscribeToOriginalDestinationAddressTypeChanges(),
       this.subscribeToOriginalServiceTypeChanges(),
       this.subscribeToOriginalSourceAddressTypeChanges(),
       this.subscribeToTranslatedDestinationAddressTypeChanges(),
@@ -171,6 +175,38 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       handlerFn();
       translatedServiceObject.updateValueAndValidity();
       translatedServiceObjectGroup.updateValueAndValidity();
+    });
+  }
+
+  private subscribeToOriginalDestinationAddressTypeChanges(): Subscription {
+    const { originalDestinationAddressType, originalDestinationNetworkObject, originalDestinationNetworkObjectGroup } = this.form.controls;
+
+    const handler: Record<NatRuleAddressType, Function> = {
+      [NatRuleAddressType.None]: () => {
+        originalDestinationNetworkObject.setValue(null);
+        originalDestinationNetworkObject.clearValidators();
+        originalDestinationNetworkObjectGroup.setValue(null);
+        originalDestinationNetworkObjectGroup.clearValidators();
+      },
+      [NatRuleAddressType.NetworkObject]: () => {
+        originalDestinationNetworkObject.setValue(null);
+        originalDestinationNetworkObject.setValidators(Validators.required);
+        originalDestinationNetworkObjectGroup.setValue(null);
+        originalDestinationNetworkObjectGroup.clearValidators();
+      },
+      [NatRuleAddressType.NetworkObjectGroup]: () => {
+        originalDestinationNetworkObject.setValue(null);
+        originalDestinationNetworkObject.clearValidators();
+        originalDestinationNetworkObjectGroup.setValue(null);
+        originalDestinationNetworkObjectGroup.setValidators(Validators.required);
+      },
+    };
+
+    return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
+      const handlerFn = handler[type];
+      handlerFn();
+      originalDestinationNetworkObject.updateValueAndValidity();
+      originalDestinationNetworkObjectGroup.updateValueAndValidity();
     });
   }
 
@@ -303,35 +339,3 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 // TODO
 // enabled: boolean, optional, default = true
 // biDirectional: boolean, optional, default = true
-
-//   @ApiModelProperty({ enum: NatRuleAddressType })
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @IsEnum(NatRuleAddressType, { always: true })
-//   @Column({ type: 'enum', enum: NatRuleAddressType })
-//   originalDestinationAddressType: NatRuleAddressType;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalDestinationAddressType === NatRuleAddressType.NetworkObject,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalDestinationNetworkObjectId: string;
-
-//   @ApiModelPropertyOptional()
-//   @ValidateIf(
-//     /* istanbul ignore next */ nr =>
-//       nr.originalDestinationAddressType ===
-//       NatRuleAddressType.NetworkObjectGroup,
-//     { groups: [CREATE] },
-//   )
-//   @IsNotEmpty({ groups: [CREATE] })
-//   @IsOptional({ groups: [UPDATE] })
-//   @Column({ nullable: true, type: 'uuid' })
-//   originalDestinationNetworkObjectGroupId: string;
-
-// }

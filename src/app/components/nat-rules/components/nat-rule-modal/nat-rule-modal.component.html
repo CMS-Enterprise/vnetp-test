@@ -221,6 +221,65 @@
         </div>
       </div>
 
+      <!-- Original Destination Address Type -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="originalDestinationAddressType">Original Destination Address Type</label>
+          <select
+            id="originalDestinationAddressType"
+            formControlName="originalDestinationAddressType"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
+            required
+          >
+            <option [value]="NatRuleAddressType.None">None</option>
+            <option [value]="NatRuleAddressType.NetworkObject">Network Object</option>
+            <option [value]="NatRuleAddressType.NetworkObjectGroup">Network Object Group</option>
+          </select>
+          <div *ngIf="submitted && f.originalDestinationAddressType.errors" class="invalid-feedback">
+            <div *ngIf="f.originalDestinationAddressType.errors.required">Original Destination Address Type is required</div>
+          </div>
+        </div>
+
+        <!-- Original Destination Network Object -->
+        <div class="form-group col-md-6" *ngIf="f.originalDestinationAddressType.value === NatRuleAddressType.NetworkObject">
+          <label for="originalDestinationNetworkObject">Original Destination Network Object</label>
+          <select
+            id="originalDestinationNetworkObject"
+            formControlName="originalDestinationNetworkObject"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalDestinationNetworkObject.errors"
+            required
+          >
+            <option></option>
+            <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
+          </select>
+          <div *ngIf="submitted && f.originalDestinationNetworkObject.errors" class="invalid-feedback">
+            <div *ngIf="f.originalDestinationNetworkObject.errors.required">Original Destination Network Object is required</div>
+          </div>
+        </div>
+
+        <!-- Original Destination Network Object Group -->
+        <div class="form-group col-md-6" *ngIf="f.originalDestinationAddressType.value === NatRuleAddressType.NetworkObjectGroup">
+          <label for="originalDestinationNetworkObjectGroup">Original Destination Network Object Group</label>
+          <select
+            id="originalDestinationNetworkObjectGroup"
+            formControlName="originalDestinationNetworkObjectGroup"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalDestinationNetworkObjectGroup.errors"
+            required
+          >
+            <option></option>
+            <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{
+              networkObjectGroup.name
+            }}</option>
+          </select>
+          <div *ngIf="submitted && f.originalDestinationNetworkObjectGroup.errors" class="invalid-feedback">
+            <div *ngIf="f.originalDestinationNetworkObjectGroup.errors.required">Original Destination Network Object Group is required</div>
+          </div>
+        </div>
+      </div>
+
       <hr />
 
       <h4>Translation</h4>
