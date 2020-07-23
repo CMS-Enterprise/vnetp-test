@@ -137,13 +137,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalServiceObjectGroup.setValidators(Validators.required);
       },
     };
-
-    return originalServiceType.valueChanges.subscribe((type: NatRuleServiceType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      originalServiceObject.updateValueAndValidity();
-      originalServiceObjectGroup.updateValueAndValidity();
-    });
+    return originalServiceType.valueChanges.subscribe((type: NatRuleServiceType) => this.updateForm(type, handler));
   }
 
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
@@ -169,13 +163,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedServiceObjectGroup.setValidators(Validators.required);
       },
     };
-
-    return translatedServiceType.valueChanges.subscribe((type: NatRuleServiceType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      translatedServiceObject.updateValueAndValidity();
-      translatedServiceObjectGroup.updateValueAndValidity();
-    });
+    return translatedServiceType.valueChanges.subscribe((type: NatRuleServiceType) => this.updateForm(type, handler));
   }
 
   private subscribeToOriginalDestinationAddressTypeChanges(): Subscription {
@@ -201,38 +189,35 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationNetworkObjectGroup.setValidators(Validators.required);
       },
     };
-
-    return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      originalDestinationNetworkObject.updateValueAndValidity();
-      originalDestinationNetworkObjectGroup.updateValueAndValidity();
-    });
+    return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => this.updateForm(type, handler));
   }
 
   private subscribeToTranslationTypeChanges(): Subscription {
     const { translatedDestinationAddressType, translatedServiceType, translatedSourceAddressType, translationType } = this.form.controls;
 
-    return translationType.valueChanges.subscribe((value: NatRuleTranslationType) => {
-      if (value === NatRuleTranslationType.None) {
+    const requireTranslatedFields = () => {
+      translatedSourceAddressType.setValue(NatRuleAddressType.None);
+      translatedSourceAddressType.setValidators(Validators.required);
+      translatedDestinationAddressType.setValue(NatRuleAddressType.None);
+      translatedDestinationAddressType.setValidators(Validators.required);
+      translatedServiceType.setValue(NatRuleServiceType.None);
+      translatedServiceType.setValidators(Validators.required);
+    };
+
+    const handler: Record<NatRuleTranslationType, Function> = {
+      [NatRuleTranslationType.None]: () => {
         translatedSourceAddressType.setValue(null);
         translatedSourceAddressType.clearValidators();
         translatedDestinationAddressType.setValue(null);
         translatedDestinationAddressType.clearValidators();
         translatedServiceType.setValue(null);
         translatedServiceType.clearValidators();
-      } else {
-        translatedSourceAddressType.setValue(NatRuleAddressType.None);
-        translatedSourceAddressType.setValidators(Validators.required);
-        translatedDestinationAddressType.setValue(NatRuleAddressType.None);
-        translatedDestinationAddressType.setValidators(Validators.required);
-        translatedServiceType.setValue(NatRuleServiceType.None);
-        translatedServiceType.setValidators(Validators.required);
-      }
-      translatedSourceAddressType.updateValueAndValidity();
-      translatedDestinationAddressType.updateValueAndValidity();
-      translatedServiceType.updateValueAndValidity();
-    });
+      },
+      [NatRuleTranslationType.Static]: requireTranslatedFields,
+      [NatRuleTranslationType.DynamicIp]: requireTranslatedFields,
+      [NatRuleTranslationType.DynamicIpAndPort]: requireTranslatedFields,
+    };
+    return translationType.valueChanges.subscribe((type: NatRuleTranslationType) => this.updateForm(type, handler));
   }
 
   private subscribeToOriginalSourceAddressTypeChanges(): Subscription {
@@ -259,12 +244,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       },
     };
 
-    return originalSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      originalSourceNetworkObject.updateValueAndValidity();
-      originalSourceNetworkObjectGroup.updateValueAndValidity();
-    });
+    return originalSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => this.updateForm(type, handler));
   }
 
   private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
@@ -290,13 +270,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObjectGroup.setValidators(Validators.required);
       },
     };
-
-    return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      translatedSourceNetworkObject.updateValueAndValidity();
-      translatedSourceNetworkObjectGroup.updateValueAndValidity();
-    });
+    return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleAddressType) => this.updateForm(type, handler));
   }
 
   private subscribeToTranslatedDestinationAddressTypeChanges(): Subscription {
@@ -326,16 +300,12 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationNetworkObjectGroup.setValidators(Validators.required);
       },
     };
+    return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => this.updateForm(type, handler));
+  }
 
-    return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => {
-      const handlerFn = handler[type];
-      handlerFn();
-      translatedDestinationNetworkObject.updateValueAndValidity();
-      translatedDestinationNetworkObjectGroup.updateValueAndValidity();
-    });
+  private updateForm<T extends string>(newValue: T, valueHandler: Record<T, Function>): void {
+    const fn = valueHandler[newValue] || (() => {});
+    fn();
+    this.form.updateValueAndValidity();
   }
 }
-
-// TODO
-// enabled: boolean, optional, default = true
-// biDirectional: boolean, optional, default = true
