@@ -125,6 +125,7 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(originalDestinationAddressType)).toBe(true);
     });
 
+    // tslint:disable-next-line:max-line-length
     it('should not require "Original Destination Network Object" and "Original Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',
@@ -277,6 +278,7 @@ describe('NatRuleModalComponent', () => {
       component.f.translationType.setValue(NatRuleTranslationType.Static);
     });
 
+    // tslint:disable-next-line:max-line-length
     it('should not require "Translated Destination Network Object" and "Translated Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedDestinationAddressType',

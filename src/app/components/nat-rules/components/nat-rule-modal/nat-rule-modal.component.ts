@@ -117,7 +117,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToOriginalServiceTypeChanges(): Subscription {
     const { originalServiceType, originalServiceObject, originalServiceObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleServiceType, Function> = {
+    const handler: Record<NatRuleServiceType, () => void> = {
       [NatRuleServiceType.None]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.clearValidators();
@@ -143,7 +143,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
     const { translatedServiceType, translatedServiceObject, translatedServiceObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleServiceType, Function> = {
+    const handler: Record<NatRuleServiceType, () => void> = {
       [NatRuleServiceType.None]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
@@ -169,7 +169,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToOriginalDestinationAddressTypeChanges(): Subscription {
     const { originalDestinationAddressType, originalDestinationNetworkObject, originalDestinationNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleAddressType, Function> = {
+    const handler: Record<NatRuleAddressType, () => void> = {
       [NatRuleAddressType.None]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.clearValidators();
@@ -204,7 +204,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedServiceType.setValidators(Validators.required);
     };
 
-    const handler: Record<NatRuleTranslationType, Function> = {
+    const handler: Record<NatRuleTranslationType, () => void> = {
       [NatRuleTranslationType.None]: () => {
         translatedSourceAddressType.setValue(null);
         translatedSourceAddressType.clearValidators();
@@ -223,7 +223,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToOriginalSourceAddressTypeChanges(): Subscription {
     const { originalSourceAddressType, originalSourceNetworkObject, originalSourceNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleAddressType, Function> = {
+    const handler: Record<NatRuleAddressType, () => void> = {
       [NatRuleAddressType.None]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.clearValidators();
@@ -250,7 +250,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
     const { translatedSourceAddressType, translatedSourceNetworkObject, translatedSourceNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleAddressType, Function> = {
+    const handler: Record<NatRuleAddressType, () => void> = {
       [NatRuleAddressType.None]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.clearValidators();
@@ -280,7 +280,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationNetworkObjectGroup,
     } = this.form.controls;
 
-    const handler: Record<NatRuleAddressType, Function> = {
+    const handler: Record<NatRuleAddressType, () => void> = {
       [NatRuleAddressType.None]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.clearValidators();
@@ -303,7 +303,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleAddressType) => this.updateForm(type, handler));
   }
 
-  private updateForm<T extends string>(newValue: T, valueHandler: Record<T, Function>): void {
+  private updateForm<T extends string>(newValue: T, valueHandler: Record<T, () => void>): void {
     const fn = valueHandler[newValue] || (() => {});
     fn();
     this.form.updateValueAndValidity();
