@@ -7,7 +7,7 @@ import { NatRuleModalDto } from '../../models/nat-rule-modal-dto';
 import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatRuleGroup, NatDirection } from '../../nat-rules.type';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Subscription } from 'rxjs';
-import { NetworkObject, NetworkObjectGroup } from 'api_client';
+import { NetworkObject, NetworkObjectGroup, ServiceObject, ServiceObjectGroup } from 'api_client';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -18,6 +18,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public submitted = false;
 
   // Lookups
+  public serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
+  public serviceObjectGroups: ServiceObjectGroup[] = [{ id: '1', name: 'Service Object Group 1' } as ServiceObjectGroup];
   public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
   public networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
   public networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
@@ -88,13 +90,48 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceNetworkObjectGroup: null,
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
+      translatedServiceObject: null,
+      translatedServiceObjectGroup: null,
     });
 
     this.subscriptions = [
       this.subscribeToTranslationTypeChanges(),
       this.subscribeToTranslatedSourceAddressTypeChanges(),
       this.subscribeToTranslatedDestinationAddressTypeChanges(),
+      this.subscribeToTranslatedServiceTypeChanges(),
     ];
+  }
+
+  private subscribeToTranslatedServiceTypeChanges(): Subscription {
+    const { translatedServiceType, translatedServiceObject, translatedServiceObjectGroup } = this.form.controls;
+
+    const handler: Record<NatRuleServiceType, Function> = {
+      [NatRuleServiceType.None]: () => {
+        translatedServiceObject.setValue(null);
+        translatedServiceObject.clearValidators();
+        translatedServiceObjectGroup.setValue(null);
+        translatedServiceObjectGroup.clearValidators();
+      },
+      [NatRuleServiceType.ServiceObject]: () => {
+        translatedServiceObject.setValue(null);
+        translatedServiceObject.setValidators(Validators.required);
+        translatedServiceObjectGroup.setValue(null);
+        translatedServiceObjectGroup.clearValidators();
+      },
+      [NatRuleServiceType.ServiceObjectGroup]: () => {
+        translatedServiceObject.setValue(null);
+        translatedServiceObject.clearValidators();
+        translatedServiceObjectGroup.setValue(null);
+        translatedServiceObjectGroup.setValidators(Validators.required);
+      },
+    };
+
+    return translatedServiceType.valueChanges.subscribe((type: NatRuleServiceType) => {
+      const handlerFn = handler[type];
+      handlerFn();
+      translatedServiceObject.updateValueAndValidity();
+      translatedServiceObjectGroup.updateValueAndValidity();
+    });
   }
 
   private subscribeToTranslationTypeChanges(): Subscription {
