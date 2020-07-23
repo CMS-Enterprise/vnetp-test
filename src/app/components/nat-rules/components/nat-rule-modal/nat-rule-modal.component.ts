@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -14,21 +14,21 @@ import { NetworkObject, NetworkObjectGroup, ServiceObject, ServiceObjectGroup } 
   templateUrl: './nat-rule-modal.component.html',
 })
 export class NatRuleModalComponent implements OnInit, OnDestroy {
+  // Lookups
+  @Input() networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
+  @Input() networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
+  @Input() serviceObjectGroups: ServiceObjectGroup[] = [{ id: '1', name: 'Service Object Group 1' } as ServiceObjectGroup];
+  @Input() serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
+
   public form: FormGroup;
+  public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
   public submitted = false;
 
-  // Lookups
-  public serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
-  public serviceObjectGroups: ServiceObjectGroup[] = [{ id: '1', name: 'Service Object Group 1' } as ServiceObjectGroup];
-  public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
-  public networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
-  public networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
-
   // Enums
-  public NatRuleTranslationType = NatRuleTranslationType;
+  public NatDirection = NatDirection;
   public NatRuleAddressType = NatRuleAddressType;
   public NatRuleServiceType = NatRuleServiceType;
-  public NatDirection = NatDirection;
+  public NatRuleTranslationType = NatRuleTranslationType;
 
   private subscriptions: Subscription[] = [];
 
