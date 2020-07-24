@@ -175,7 +175,7 @@ describe('VlanModalComponent', () => {
         Vlan: {
           tierId: '1',
           id: '2',
-          name: 'Vlan',
+          name: 'VLAN',
           vlanNumber: 400,
           description: 'Optional!',
         },

@@ -18,7 +18,7 @@ export class NetworkDetailHelpText {
 })
 export class SubnetsVlansHelpText {
   Subnets = `IPv4/IPv6 Subnets within the selected Tier.`;
-  Vlans = `Vlans within the selected Tier.`;
+  Vlans = `VLANs within the selected Tier.`;
   Tier = `Tier that Subnets and VLANs are created within.`;
 }
 
@@ -69,7 +69,7 @@ export class LoadBalancersHelpText {
   Profiles = `Manage Profiles.`;
   Policies = `Manage Policies.`;
   SelfIps = `Manage Load Balancer Self IPs.`;
-  Vlans = `Manage Load Balancer Vlans.`;
+  Vlans = `Manage Load Balancer VLANs.`;
   Routes = `Manage Load Balancer Routes.`;
 }
 
@@ -289,7 +289,7 @@ export class ContractModalHelpText {
 export class DashboardHelpText {
   Datacenters = 'Total Datacenters within the current tenant.';
   Tiers = 'Total Tiers within the current tenant.';
-  Vlans = 'Total Vlans within the current tenant.';
+  Vlans = 'Total VLANs within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
   LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';

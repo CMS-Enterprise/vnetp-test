@@ -33,7 +33,7 @@
       <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 8; getVlans()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> Vlans <tooltip [message]="helpText.Vlans"></tooltip> </a>
+      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> VLANs <tooltip [message]="helpText.Vlans"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 9; getSelfIps()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 9 }"> Self IPs <tooltip [message]="helpText.SelfIps"></tooltip> </a>
@@ -458,13 +458,13 @@
 
   <div *ngIf="navIndex == 8">
     <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="Create Vlan">
+      <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)" aria-label="Create VLAN">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Vlan</span>
+        <span>Create VLAN</span>
       </button>
     </div>
 
-    <table class="table table-striped" aria-describedby="Vlans table">
+    <table class="table table-striped" aria-describedby="VLANs table">
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -481,19 +481,19 @@
             <span>{{ vlan?.tag }}</span>
           </td>
           <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit Vlan"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success icon" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa-icon>
+            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit VLAN"> </fa-icon>
+            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success icon" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa-icon>
             <fa-icon 
               class="icon"
               [icon]="['fas', 'trash']"
               [ngClass]="{ 'fg-danger': vlan?.deletedAt }"
               (click)="deleteVlan(vlan)"
-              aria-label="Soft-Delete/Delete Vlan"
+              aria-label="Soft-Delete/Delete VLAN"
             ></fa-icon>
           </td>
         </tr>
         <tr *ngIf="!vlans?.length" class="text-center">
-          <td colspan="4">No Vlans in this Tier</td>
+          <td colspan="4">No VLANs in this Tier</td>
         </tr>
       </tbody>
     </table>
@@ -513,7 +513,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">IP Address</th>
-          <th scope="col">Vlan</th>
+          <th scope="col">VLAN</th>
           <th scope="col"></th>
         </tr>
       </thead>

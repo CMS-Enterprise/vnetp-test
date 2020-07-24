@@ -38,11 +38,9 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="vlan">
-            Vlan
-          </label>
-          <select class="form-control" name="vlan" formControlName="vlan"
-            [ngClass]="{ 'is-invalid': submitted && f.vlan.errors }" aria-label="Vlan">
+          <label for="vlan">VLAN</label>
+          <select class="form-control" name="vlan" formControlName="vlan" id="vlan"
+            [ngClass]="{ 'is-invalid': submitted && f.vlan.errors }">
             <option></option>
             <option *ngFor="let vlan of availableVlans" [ngValue]="vlan.id">
               {{ vlan.name }} ({{ vlan.tag }})
