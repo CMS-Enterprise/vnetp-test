@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { D3PieChartModule } from 'src/app/common/d3-pie-chart/d3-pie-chart.module';
 
 const routes: Routes = [
   {
@@ -11,7 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [D3PieChartModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [DashboardComponent],
 })
 export class DashboardModule {}

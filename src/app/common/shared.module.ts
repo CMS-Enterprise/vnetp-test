@@ -4,7 +4,6 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { D3PieChartComponent } from './d3-pie-chart/d3-pie-chart.component';
 import { ImportExportComponent } from './import-export/import-export.component';
 import { TierSelectComponent } from './tier-select/tier-select.component';
 import { TooltipComponent } from './tooltip/tooltip.component';
@@ -26,7 +25,6 @@ import { ResolvePipe } from '../pipes/resolve.pipe';
     NgxPaginationModule,
   ],
   declarations: [
-    D3PieChartComponent,
     ImportExportComponent,
     ResolvePipe,
     TierSelectComponent,
@@ -41,7 +39,6 @@ import { ResolvePipe } from '../pipes/resolve.pipe';
     ReactiveFormsModule,
     NgxSmartModalModule,
     NgxPaginationModule,
-    D3PieChartComponent,
     ImportExportComponent,
     ResolvePipe,
     TierSelectComponent,
