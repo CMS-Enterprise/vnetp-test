@@ -42,7 +42,7 @@
 
       <div class="form-row">
         <!-- NAT Direction -->
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="direction">NAT Direction</label>
           <select
             id="direction"
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Rule Index -->
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="ruleIndex">Rule Index</label>
           <input
             id="ruleIndex"
@@ -73,24 +73,6 @@
           <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
             <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
             <div *ngIf="f.ruleIndex.errors.min">Rule Index must be greater than or equal to 1.</div>
-          </div>
-        </div>
-
-        <!-- NAT Rule Group -->
-        <div class="form-group col-md-4">
-          <label for="natRuleGroup">NAT Rule Group</label>
-          <select
-            id="natRuleGroup"
-            formControlName="natRuleGroup"
-            class="form-control"
-            [class.is-invalid]="submitted && f.natRuleGroup.errors"
-            required
-          >
-            <option></option>
-            <option *ngFor="let natRuleGroup of natRuleGroups" [value]="natRuleGroup.id">{{ natRuleGroup.name }}</option>
-          </select>
-          <div *ngIf="submitted && f.natRuleGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.natRuleGroup.errors.required">NAT Rule Group is required</div>
           </div>
         </div>
       </div>

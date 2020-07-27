@@ -4,7 +4,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NatRuleModalDto } from '../../models/nat-rule-modal-dto';
-import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatRuleGroup, NatDirection } from '../../nat-rules.type';
+import { NatRuleTranslationType, NatRuleAddressType, NatRuleServiceType, NatDirection } from '../../nat-rules.type';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Subscription } from 'rxjs';
 import { NetworkObject, NetworkObjectGroup, ServiceObject, ServiceObjectGroup } from 'api_client';
@@ -21,7 +21,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   @Input() serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
 
   public form: FormGroup;
-  public natRuleGroups: NatRuleGroup[] = [{ id: '1', name: 'NAT Group 1' } as NatRuleGroup];
   public submitted = false;
 
   // Enums
@@ -80,7 +79,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatDirection.In, Validators.required],
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      natRuleGroup: [null, Validators.required],
       originalDestinationAddressType: [NatRuleAddressType.None, Validators.required],
       originalDestinationNetworkObject: null,
       originalDestinationNetworkObjectGroup: null,
