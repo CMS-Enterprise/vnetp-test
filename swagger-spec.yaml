@@ -11493,6 +11493,8 @@ definitions:
         type: number
       cpuReserved:
         type: boolean
+      highPerformance:
+        type: boolean
       memorySize:
         type: number
       memoryReserved:
@@ -11514,6 +11516,7 @@ definitions:
       - cpuCores
       - cpuCoresPerSocket
       - cpuReserved
+      - highPerformance
       - memorySize
       - memoryReserved
       - datacenterId

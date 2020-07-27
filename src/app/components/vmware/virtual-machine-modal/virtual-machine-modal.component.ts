@@ -42,6 +42,15 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     private networkAdapterService: V1VmwareNetworkAdapterService,
   ) {}
 
+  get f() {
+    return this.form.controls;
+  }
+
+  public closeModal(): void {
+    this.ngx.close('virtualMachineModal');
+    this.reset();
+  }
+
   getVirtualDisks() {
     this.virtualMachineService
       .v1VmwareVirtualMachinesIdGet({
@@ -187,45 +196,16 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.cpuReserved = this.form.value.cpuReserved;
     virtualMachine.memorySize = ConversionUtil.convertGbToBytes(this.form.value.memorySize);
     virtualMachine.memoryReserved = this.form.value.memoryReserved;
+    virtualMachine.highPerformance = this.form.value.highPerformance;
 
     this.ngx.resetModalData('virtualMachineModal');
     this.ngx.setModalData(Object.assign({}, virtualMachine), 'virtualMachineModal');
 
     if (this.ModalMode === ModalMode.Create) {
-      virtualMachine.name = this.form.value.name;
-      virtualMachine.datacenterId = this.DatacenterId;
-
-      this.virtualMachineService
-        .v1VmwareVirtualMachinesPost({
-          vmwareVirtualMachine: virtualMachine,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
+      this.createVmwareVirtualMachine(virtualMachine);
     } else {
-      this.virtualMachineService
-        .v1VmwareVirtualMachinesIdPut({
-          id: this.VirtualMachineId,
-          vmwareVirtualMachine: virtualMachine,
-        })
-        .subscribe(
-          data => {
-            this.closeModal();
-          },
-          error => {},
-        );
+      this.updateVmwareVirtualMachine(virtualMachine);
     }
-  }
-
-  cancel() {
-    this.closeModal();
-  }
-
-  get f() {
-    return this.form.controls;
   }
 
   getData() {
@@ -266,11 +246,12 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.form.controls.cpuReserved.setValue(virtualMachine.cpuReserved);
       this.form.controls.memorySize.setValue(convertedMemorySize);
       this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
+      this.form.controls.highPerformance.setValue(virtualMachine.highPerformance);
     }
     this.ngx.resetModalData('virtualMachineModal');
   }
 
-  private buildForm() {
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
@@ -279,12 +260,8 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       cpuReserved: ['', Validators.required],
       memorySize: ['', Validators.required],
       memoryReserved: ['', Validators.required],
+      highPerformance: [false, Validators.required],
     });
-  }
-
-  private closeModal() {
-    this.ngx.close('virtualMachineModal');
-    this.reset();
   }
 
   public reset() {
@@ -305,8 +282,30 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.virtualDiskModalSubscription, this.networkAdapterModalSubscription]);
+  private createVmwareVirtualMachine(vmwareVirtualMachine: VmwareVirtualMachine): void {
+    vmwareVirtualMachine.name = this.form.value.name;
+    vmwareVirtualMachine.datacenterId = this.DatacenterId;
+
+    this.virtualMachineService.v1VmwareVirtualMachinesPost({ vmwareVirtualMachine }).subscribe(
+      data => {
+        this.closeModal();
+      },
+      error => {},
+    );
+  }
+
+  private updateVmwareVirtualMachine(vmwareVirtualMachine: VmwareVirtualMachine): void {
+    this.virtualMachineService
+      .v1VmwareVirtualMachinesIdPut({
+        id: this.VirtualMachineId,
+        vmwareVirtualMachine,
+      })
+      .subscribe(
+        data => {
+          this.closeModal();
+        },
+        error => {},
+      );
   }
 
   ngOnInit() {
@@ -314,6 +313,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.virtualDiskModalSubscription, this.networkAdapterModalSubscription]);
   }
 }

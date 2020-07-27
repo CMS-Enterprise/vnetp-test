@@ -26,6 +26,7 @@ export interface VmwareVirtualMachine {
     cpuCores: number;
     cpuCoresPerSocket: number;
     cpuReserved: boolean;
+    highPerformance: boolean;
     memorySize: number;
     memoryReserved: boolean;
     datacenterId: string;
