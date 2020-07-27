@@ -10,14 +10,12 @@ export class TooltipComponent {
   @Input() message: string;
   @ViewChild('tooltip', { static: true }) private tooltip: ElementRef;
 
-  public tooltipMsgStyle: any;
+  public tooltipMsgStyle: Partial<CSSStyleDeclaration>;
   public isShowTooltip = false;
   public isLockTooltip = false;
 
-  constructor() {}
-
-  showTooltip($event) {
-    this.isShowTooltip = $event;
+  public showTooltip(shouldShow: boolean): void {
+    this.isShowTooltip = shouldShow;
 
     const screenW = document.body.clientWidth;
     const screenH = document.body.clientHeight;
@@ -35,26 +33,26 @@ export class TooltipComponent {
     if (this.message.length <= 40) {
       if (posX / screenW <= 0.6) {
         this.tooltipMsgStyle = {
-          left: '0px',
-          'max-width': dynamicWidth + 'px',
+          left: '0',
+          maxWidth: dynamicWidth + 'px',
         };
       } else {
         this.tooltipMsgStyle = {
           right: '8px',
-          'max-width': dynamicWidth + 'px',
+          maxWidth: dynamicWidth + 'px',
         };
       }
     } else if (this.message.length > 750) {
       if (posX / screenW <= 0.6) {
         this.tooltipMsgStyle = {
           left: '0px',
-          'max-width': '600px',
+          maxWidth: '600px',
           top: '-20px',
         };
       } else {
         this.tooltipMsgStyle = {
           right: '8px',
-          'max-width': '600px',
+          maxWidth: '600px',
           top: '-20px',
         };
       }
@@ -62,14 +60,14 @@ export class TooltipComponent {
       if (posX / screenW <= 0.52) {
         this.tooltipMsgStyle = { left: '0px' };
       } else if (posX / screenW <= 0.63) {
-        this.tooltipMsgStyle = { left: '0px', 'max-width': '270px' };
+        this.tooltipMsgStyle = { left: '0px', maxWidth: '270px' };
       } else {
         this.tooltipMsgStyle = { right: '8px' };
       }
     }
   }
 
-  toggleVis() {
+  public toggleVisiblity(): void {
     this.isLockTooltip = !this.isLockTooltip;
     if (this.isLockTooltip === false) {
       this.isShowTooltip = false;
