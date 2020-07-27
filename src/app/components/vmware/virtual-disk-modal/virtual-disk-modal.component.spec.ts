@@ -182,6 +182,7 @@ describe('VirtualDiskModalComponent', () => {
           name: 'Virtual Machine',
           cpuCores: 2,
           cpuCoresPerSocket: 2,
+          highPerformance: false,
           cpuReserved: true,
           memoryReserved: true,
           memorySize: 2,
