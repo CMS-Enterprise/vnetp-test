@@ -1,45 +1,70 @@
+// @mixin button($text, $background) {
+//   color: $text;
+//   background-color: $background;
+//   border-color: $background;
+
+//   &:hover,
+//   &:focus,
+//   &:not(:disabled):not(.disabled):active,
+//   &:not(:disabled):not(.disabled):active:focus {
+//     background-color: darken($background, 10%);
+//     border-color: darken($background, 10%);
+//   }
+
+//   &:disabled {
+//     color: white;
+//     background-color: $gray-dark;
+//     border-color: $gray-dark;
+//   }
+// }
+
+// .btn-primary {
+//   background-color: $primary-light;
+//   color: $primary-main;
+//   border-color: darken($primary-light, 15%);
+// }
+
+// .btn-primary,
+// .btn-info {
+//   //  @include button($white, $primary-main);
+// }
+
+// .btn-success {
+//   @include button($white, $success--dark);
+// }
+
+// .btn-warning {
+//   @include button($gray-darker, $warning);
+// }
+
+// .btn-danger {
+//   @include button($white, $danger);
+// }
+
 .btn {
-  margin-left: 5px;
-  margin-right: 5px;
+  border-radius: 4px;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+
+  + .btn {
+    margin-left: 10px;
+  }
+
+  .icon {
+    margin-right: 8px;
+  }
 }
 
-.btn-link {
-  color: $primary--alt;
-}
-
-@mixin button($text, $background) {
-  color: $text;
-  background-color: $background;
-  border-color: $background;
+.btn-info {
+  background-color: $c-blue-100;
+  border-color: $c-blue-400;
+  color: $c-blue-400;
 
   &:hover,
   &:focus,
   &:not(:disabled):not(.disabled):active,
   &:not(:disabled):not(.disabled):active:focus {
-    background-color: darken($background, 10%);
-    border-color: darken($background, 10%);
-  }
-
-  &:disabled {
+    background-color: $c-blue-400;
     color: white;
-    background-color: $gray-dark;
-    border-color: $gray-dark;
   }
-}
-
-.btn-primary,
-.btn-info {
-  @include button($white, $primary-main);
-}
-
-.btn-success {
-  @include button($white, $success--dark);
-}
-
-.btn-warning {
-  @include button($gray-darker, $warning);
-}
-
-.btn-danger {
-  @include button($white, $danger);
 }
