@@ -13,7 +13,7 @@
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+    <div class="mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openSubnetModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Subnet</span>
@@ -74,7 +74,7 @@
   </div>
 
   <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+    <div class="mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create VLAN</span>

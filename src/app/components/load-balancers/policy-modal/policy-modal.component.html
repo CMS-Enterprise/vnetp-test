@@ -75,7 +75,7 @@
       <div class="form-row" *ngIf="f.type.value === 'ASM'">
         <div class="form-group col-md-6">
           <button
-            class="btn btn-warning btn-sm mr-1"
+            class="btn btn-warning"
             (click)="policyContentUploader.click()"
             type="button"
           >
@@ -95,7 +95,7 @@
       <div class="form-row" *ngIf="f.type.value === 'APM'">
         <div class="form-group col-md-6">
           <button
-            class="btn btn-warning btn-sm mr-1"
+            class="btn btn-warning"
             (click)="policyContentUploader.click()"
             type="button"
           >
@@ -123,7 +123,7 @@
         </button>
 
         <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
           <span>Save</span>
         </button>
       </div>

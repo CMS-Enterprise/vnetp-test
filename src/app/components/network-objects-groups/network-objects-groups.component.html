@@ -18,7 +18,7 @@
   </ul>
 
   <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+    <div class="mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)" aria-label="Create Network Object">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
@@ -100,7 +100,7 @@
   </div>
 
   <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+    <div class="mb-2 pull-right mt-3" role="group">
       <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Create Network Object Group">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object Group</span>

@@ -112,7 +112,8 @@
   a {
     display: flex;
     width: 100%;
-    color: $black;
+    color: $c-gray-700;
+    
     &:hover {
       text-decoration: none;
       

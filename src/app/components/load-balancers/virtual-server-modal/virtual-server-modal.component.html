@@ -147,7 +147,7 @@
               <option></option>
               <option *ngFor="let profile of availableProfiles" [ngValue]="profile.id">{{ profile.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="addProfile()">
+            <button type="button" class="btn btn-info" (click)="addProfile()">
               Add Profile
             </button>
           </div>
@@ -194,7 +194,7 @@
               <option></option>
               <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="addPolicy()">
+            <button type="button" class="btn btn-info" (click)="addPolicy()">
               Add Policy
             </button>
           </div>
@@ -240,7 +240,7 @@
               <option></option>
               <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
             </select>
-            <button type="button" class="btn btn-sm btn-info" (click)="addIRule()">
+            <button type="button" class="btn btn-info" (click)="addIRule()">
               Add iRule
             </button>
           </div>
@@ -278,7 +278,7 @@
           Cancel
         </button>
         <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
           <span>Save</span>
         </button>
       </div>

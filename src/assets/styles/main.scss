@@ -50,9 +50,10 @@ hr {
 }
 
 .fg-danger {
-  color: $danger;
+  color: $c-red-400;
+
   &--dark {
-    color: $danger--dark;
+    color: $c-red-700;
   }
 }
 
@@ -130,7 +131,7 @@ hr {
       content: '\2713';
       display: block;
       margin: 0 auto 4px;
-      background-color: $white;
+      background-color: white;
       width: 36px;
       height: 36px;
       line-height: 32px;
@@ -162,7 +163,7 @@ hr {
     &.is-active {
       @extend %remain-steps;
       &:before {
-        background-color: $white;
+        background-color: white;
         border-color: $multistep-success;
       }
 
@@ -176,10 +177,6 @@ hr {
       }
     }
   }
-}
-
-.badge-primary {
-  background-color: $primary-dark;
 }
 
 .pull-right {

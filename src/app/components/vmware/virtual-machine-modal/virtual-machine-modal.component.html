@@ -163,7 +163,7 @@
 
         <div class="form-group">
           <label for="modalVirtualDisk">Virtual Disks</label>
-          <button type="button" name="modalVirtualDisk" class="btn btn-sm btn-info pull-right mb-2" (click)="openVirtualDiskModal()">
+          <button type="button" name="modalVirtualDisk" class="btn btn-info pull-right" (click)="openVirtualDiskModal()">
             <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
             <span>Add Virtual Disk</span>
           </button>
@@ -212,7 +212,7 @@
 
         <div class="form-group">
           <label>Network Adapters</label>
-          <button type="button" name="modalVswitch" class="btn btn-sm btn-info pull-right mb-2" (click)="openNetworkAdapterModal()">
+          <button type="button" name="modalVswitch" class="btn btn-info pull-right" (click)="openNetworkAdapterModal()">
             <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
             <span>Add Network Adapter</span>
           </button>
@@ -264,7 +264,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save Virtual Machine</span>
       </button>
     </div>

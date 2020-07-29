@@ -1,6 +1,6 @@
 <!-- add back button? -->
 <div class="clearfix">
-  <a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
+  <a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-primary">
     <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
     <span>Back</span>
   </a>
@@ -8,11 +8,11 @@
   <h1>Physical Server: {{ PhysicalServer?.name }}</h1>
 
   <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-sm btn-success" (click)="restorePhysicalServer(PhysicalServer)">
+    <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-success" (click)="restorePhysicalServer(PhysicalServer)">
       <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
       <span>Restore Physical Server</span>
     </button>
-    <button class="btn btn-sm btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
+    <button class="btn btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
       <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
       <span>Delete Physical Server</span>
     </button>

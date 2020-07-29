@@ -6,7 +6,7 @@
 
 label {
   margin: 0;
-  color: $gray-dark;
+  color: $c-gray-700;
 }
 
 %remain-steps {
@@ -39,7 +39,7 @@ label {
       content: "\2713";
       display: block;
       margin: 0 auto 4px;
-      background-color: $white;
+      background-color: white;
       width: 36px;
       height: 36px;
       line-height: 32px;
@@ -71,7 +71,7 @@ label {
     &.is-active {
       @extend %remain-steps;
       &:before {
-        background-color: $white;
+        background-color: white;
         border-color: $multistep-success;
       }
 

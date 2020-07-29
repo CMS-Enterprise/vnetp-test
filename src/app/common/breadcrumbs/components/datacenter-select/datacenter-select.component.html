@@ -3,9 +3,9 @@
     Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
   </span>
 
-  <span *ngIf="!currentDatacenter" class="fg-danger--dark">No Datacenter Selected</span>
+  <span *ngIf="!currentDatacenter">No Datacenter Selected</span>
 
-  <button class="btn btn-sm btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="openDatacenterSwitchModal()">
+  <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
   </button>
 </div>

@@ -1,4 +1,4 @@
-<button class="btn btn-warning btn-sm mr-1" (click)="uploader.click()" *ngIf="!disableImport">
+<button type="button" class="btn btn-warning" (click)="uploader.click()" *ngIf="!disableImport">
   <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
   <span>Import </span>
   <span *ngIf="!disableJson">JSON</span>
@@ -6,28 +6,24 @@
   <span *ngIf="!disableCsv">CSV</span>
 </button>
 
-<a
-  class="btn btn-info btn-sm mr-1"
-  title="Download JSON"
-  [href]="downloadHref"
-  download="{{ exportFileName }}-{{ currentDate }}.json"
+<button
+  type="button"
+  class="btn btn-info"
   (click)="getDate(); exportFile('json')"
   *ngIf="!disableJson && !disableExport"
 >
   <fa-icon class="icon" [icon]="['fas', 'download']"></fa-icon>
   <span>Export JSON</span>
-</a>
+</button>
 
-<a
-  class="btn btn-info btn-sm mr-1"
-  title="Download CSV"
-  [href]="downloadHref"
-  download="{{ exportFileName }}-{{ currentDate }}.csv"
+<button
+  type="button"
+  class="btn btn-info"
   (click)="getDate(); exportFile('csv')"
   *ngIf="!disableCsv && !disableExport"
 >
   <fa-icon class="icon" [icon]="['fas', 'download']"></fa-icon>
   <span>Export CSV</span>
-</a>
+</button>
 
 <input hidden type="file" aria-label="File" #uploader (change)="importFile($event)" [(ngModel)]="fileInput" />

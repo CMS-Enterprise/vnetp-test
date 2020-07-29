@@ -1,6 +1,6 @@
 .table {
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
+  border: 1px solid $c-gray-100;
+  color: $c-gray-700;
 }
 
 .item-actions {
@@ -13,9 +13,9 @@
 }
 
 td a {
-  color: $primary--alt;
+  color: $c-blue-400;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: $gray-light;
+  background-color: $c-gray-100;
 }

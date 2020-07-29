@@ -50,7 +50,7 @@
 
       Network Objects
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
-      <div *ngIf="ModalMode === 'Edit'" class="btn-group-sm pull-right mb-2" role="group">
+      <div *ngIf="ModalMode === 'Edit'" class="pull-right mb-2" role="group">
         <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{ standalone: true }">
           <option></option>
           <option *ngFor="let tierNetworkObject of tierNetworkObjects" [ngValue]="tierNetworkObject">{{ tierNetworkObject?.name }}</option>
@@ -104,7 +104,7 @@
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
     </div>
