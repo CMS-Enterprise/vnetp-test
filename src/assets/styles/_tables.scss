@@ -14,6 +14,10 @@
 
 td a {
   color: $c-blue-400;
+
+  &:hover {
+    color: $c-blue-700;
+  }
 }
 
 .table-striped tbody tr:nth-of-type(odd) {

@@ -72,12 +72,15 @@
       Service Objects
       <tooltip [message]="helpText.ServiceObjects"></tooltip>
 
-      <div *ngIf="ModalMode === 'Edit'" class="pull-right mb-2" role="group">
-        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }">
+      <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
+
+        <!-- Select Service Object -->
+        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
           <option></option>
           <option *ngFor="let tierServiceObject of tierServiceObjects" [ngValue]="tierServiceObject">{{ tierServiceObject?.name }}</option>
         </select>
 
+        <!-- Add Service Object -->
         <button
           type="button"
           class="btn btn-info"
@@ -87,7 +90,7 @@
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Service Object</span>
         </button>
-      </div>
+      </section>
 
       <table class="table table-striped" aria-describedby="Service Objects table">
         <thead>

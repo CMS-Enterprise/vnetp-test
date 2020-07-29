@@ -15,6 +15,11 @@
   }
 }
 
+.btn-toolbar {
+  margin: 10px 0;
+  justify-content: flex-end;
+}
+
 .btn-danger {
   background-color: $c-red-400;
   border-color: $c-red-400;

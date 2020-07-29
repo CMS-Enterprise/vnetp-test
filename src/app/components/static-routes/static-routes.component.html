@@ -1,35 +1,33 @@
-<div>
-  <div>
-    <h4>Static Routes</h4>
-    <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-      <button type="button" class="btn btn-info" (click)="getTiers()" aria-label="Refresh Static Routes">
-        <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-        <span>Refresh</span>
-      </button>
-    </div>
+<h4>Static Routes</h4>
 
-    <table class="table table-striped" aria-describedby="Static Routes table">
-      <thead>
-        <tr>
-          <th scope="col">Tier</th>
-          <th scope="col">Static Routes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let tier of tiers">
-          <td>
-            {{ tier.name }}
-          </td>
-          <td>
-            <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge">
-              {{ tier.name }}
-            </a>
-          </td>
-        </tr>
-        <tr *ngIf="!tiers?.length" class="text-center">
-          <td colspan="4">No Tiers</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="getTiers()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
+<table class="table table-striped" aria-describedby="Static Routes table">
+  <thead>
+    <tr>
+      <th scope="col">Tier</th>
+      <th scope="col">Static Routes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let tier of tiers">
+      <td>
+        {{ tier.name }}
+      </td>
+      <td>
+        <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge">
+          {{ tier.name }}
+        </a>
+      </td>
+    </tr>
+    <tr *ngIf="!tiers?.length" class="text-center">
+      <td colspan="4">No Tiers</td>
+    </tr>
+  </tbody>
+</table>

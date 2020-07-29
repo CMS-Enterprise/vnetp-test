@@ -17,13 +17,15 @@
     </li>
   </ul>
 
-  <div *ngIf="navIndex == 0">
-    <div class="mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)" aria-label="Create Network Object">
+  <div *ngIf="navIndex === 0">
+
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Network Object -->
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="Network Objects table">
       <!-- TO DO: are all of these fields necessary to show on the summary page? -->
@@ -99,13 +101,14 @@
     <pagination-controls (pageChange)="currentNetworkObjectsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 1">
-    <div class="mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Create Network Object Group">
+  <div *ngIf="navIndex === 1">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Network Object Group -->
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object Group</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="Network Object Groups table">
       <thead>
@@ -187,31 +190,28 @@
   </div>
 </div>
 
-<div *ngIf="navIndex === 0" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
   <app-import-export
     [exportObject]="networkObjects"
     exportFileName="networkObjects-{{ currentTier?.name }}"
     [disableJson]="false"
-    (import)="importNetworkObjectsConfig($event)"
-  ></app-import-export>
-</div>
+    (import)="importNetworkObjectsConfig($event)"></app-import-export>
+</section>
 
-<div *ngIf="navIndex === 1" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
   <app-import-export
-    [exportObject]="networkObjectGroups"
-    exportFileName="networkObjectGroups-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importNetworkObjectGroupsConfig($event)"
-  ></app-import-export>
-</div>
+  [exportObject]="networkObjectGroups"
+  exportFileName="networkObjectGroups-{{ currentTier?.name }}"
+  [disableJson]="false"
+  (import)="importNetworkObjectGroupsConfig($event)"></app-import-export>
+</section>
 
-<div *ngIf="navIndex === 2" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 3">
   <app-import-export
-    [disableExport]="true"
-    [disableJson]="false"
-    (import)="importNetworkObjectGroupRelationsConfig($event)"
-  ></app-import-export>
-</div>
+  [disableExport]="true"
+  [disableJson]="false"
+  (import)="importNetworkObjectGroupRelationsConfig($event)"></app-import-export>
+</section>
 
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
