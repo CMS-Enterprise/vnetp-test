@@ -95,7 +95,7 @@ hr {
     font-weight: 700;
   }
   &:after {
-    background-color: $gray-light;
+    background-color: $c-gray-100;
   }
 }
 .multi-steps {
@@ -157,8 +157,8 @@ hr {
         color: #808080;
         @extend %remain-steps;
         &:before {
-          background-color: $gray-light;
-          border-color: $gray-light;
+          background-color: $c-gray-100;
+          border-color: $c-gray-100;
         }
       }
     }
