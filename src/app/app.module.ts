@@ -16,7 +16,7 @@ import {
   faTrash,
   faUndo,
   faChevronRight,
-  faArrowLeft,
+  faChevronLeft,
   faUpload,
   faDownload,
   faChevronDown,
@@ -88,7 +88,6 @@ export class AppModule {
       faTrash,
       faUndo,
       faChevronRight,
-      faArrowLeft,
       faUpload,
       faDownload,
       faChevronDown,
@@ -96,6 +95,7 @@ export class AppModule {
       faBars,
       faSpinner,
       faSignOutAlt,
+      faChevronLeft,
     );
   }
 }
