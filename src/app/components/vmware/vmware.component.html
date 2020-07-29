@@ -38,7 +38,7 @@
       </td>
       <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
       <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
-      <td>
+      <td class="item-actions">
         <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal(ModalMode.Edit, vm)" aria-label="Edit Virtual Machine"></fa-icon>
         <fa-icon 
           [icon]="['fas', 'undo']"

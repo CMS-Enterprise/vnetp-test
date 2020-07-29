@@ -36,7 +36,7 @@
       <td>
         {{ ps.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}
       </td>
-      <td>
+      <td class="item-actions">
         <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!ps?.deletedAt" (click)="openPhysicalServerModal(ModalMode.Edit, ps)" aria-label="Edit Physical Server"></fa-icon>
         <fa-icon 
           [icon]="['fas', 'undo']"
