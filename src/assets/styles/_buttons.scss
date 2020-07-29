@@ -18,6 +18,11 @@
 .btn-toolbar {
   margin: 10px 0;
   justify-content: flex-end;
+  align-items: center;
+
+  &--start {
+    justify-content: flex-start;
+  }
 }
 
 .btn-danger {

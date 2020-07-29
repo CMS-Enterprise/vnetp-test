@@ -22,11 +22,12 @@
   </table>
   <pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>
 </div>
-<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-  <div class="btn-group mr-2" role="group" aria-label="First group">
-    Entities per page
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
     <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
     <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
     <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
   </div>
-</div>
+</section>
