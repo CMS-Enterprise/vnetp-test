@@ -88,20 +88,6 @@ hr {
   font-weight: bold;
 }
 
-// PAGINATION STYLES
-.ngx-pagination {
-  padding: 0;
-  text-align: center;
-
-  li.disabled {
-    color: #75767a;
-  }
-
-  li.current {
-    background-color: $primary-main;
-  }
-}
-
 %remain-steps {
   &:before {
     content: counter(stepNum);

@@ -21,6 +21,28 @@
   }
 }
 
+ul.ngx-pagination {
+  padding: 0;
+  text-align: center;
+  color: $c-gray-700;
+
+  a {
+    border-radius: 4px;
+  }
+
+  li {
+    border-radius: 4px;
+
+    &.disabled {
+      color: $c-gray-400;
+    }
+
+    &.current {
+      background-color: $c-blue-400;
+    }
+  }
+}
+
 td a {
   color: $c-blue-400;
 
