@@ -76,7 +76,7 @@ label {
       }
 
       ~ li {
-        color: #808080;
+        color: $c-gray-400;
         @extend %remain-steps;
         &:before {
           background-color: $c-gray-100;

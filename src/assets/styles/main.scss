@@ -35,15 +35,6 @@ hr {
   cursor: not-allowed;
 }
 
-.pill-default {
-  background-color: #0d146d;
-  border-radius: 2px;
-  color: #ffffff;
-  display: inline;
-  font-size: smaller;
-  padding: 2px 5px 2px 5px;
-}
-
 .fg-danger {
   color: $c-red-400;
 }
@@ -141,7 +132,7 @@ hr {
       }
 
       ~ li {
-        color: #808080;
+        color: $c-gray-400;
         @extend %remain-steps;
         &:before {
           background-color: $c-gray-100;
