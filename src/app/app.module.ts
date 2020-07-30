@@ -34,7 +34,6 @@ import { AppComponent } from './app.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
-import { SharedModule } from './common/shared.module';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
 
