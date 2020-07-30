@@ -8,6 +8,7 @@ import ConversionUtil from 'src/app/utils/conversion.util';
 @Component({
   selector: 'app-vmware-detail',
   templateUrl: './vmware-detail.component.html',
+  styleUrls: ['./vmware-detail.component.scss'],
 })
 export class VmwareDetailComponent implements OnInit {
   Id: string;

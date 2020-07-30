@@ -1,0 +1,28 @@
+@import '../../../../assets/styles/variables';
+
+.info {
+  margin: 0 8px 16px 0;
+
+  &--pill {
+    background: $gray-light;
+    border-radius: 4px;
+    padding: 7px 13px 3px;
+  }
+
+  &__list {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  &__label {
+    margin-bottom: -2px;
+  }
+
+  &__value {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    line-height: 1;
+    word-wrap: break-word;
+    font-weight: 600;
+  }
+}

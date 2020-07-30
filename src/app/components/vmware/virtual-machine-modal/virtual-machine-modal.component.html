@@ -21,7 +21,7 @@
           id="name"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           required
         />
@@ -41,7 +41,7 @@
           id="description"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
@@ -55,59 +55,106 @@
         <!-- CPU Cores -->
         <div class="form-group col-md-3">
           <label for="cpuCount">CPU Cores</label>
-          <select id="cpuCount" formControlName="cpuCount" class="form-control" required>
+          <select 
+            id="cpuCount" 
+            formControlName="cpuCount" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.cpuCount.errors"
+            required>
             <option></option>
-            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]"> {{ cpuCount }}</option>
+            <option *ngFor="let cpuCount of [1, 2, 3, 4, 5, 6, 7, 8]">{{ cpuCount }}</option>
           </select>
+          <div *ngIf="submitted && f.cpuCount.errors" class="invalid-feedback">
+            <div *ngIf="f.cpuCount.errors.required">CPU Cores are required</div>
+          </div>
         </div>
 
         <!-- Cores Per Socket -->
         <div class="form-group col-md-3">
           <label for="coreCount">Cores Per Socket</label>
-          <select id="coreCount" formControlName="coreCount" class="form-control" required>
+          <select 
+            id="coreCount" 
+            formControlName="coreCount" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.coreCount.errors"
+            required>
             <option></option>
             <option *ngFor="let cores of [1, 2, 3, 4, 5, 6, 7, 8]">
               {{ cores }}
             </option>
           </select>
+          <div *ngIf="submitted && f.coreCount.errors" class="invalid-feedback">
+            <div *ngIf="f.coreCount.errors.required">Cores Per Socket is required</div>
+          </div>
         </div>
 
         <!-- CPU Reserved -->
         <div class="form-group col-md-3">
           <label for="cpuReserved">CPU Reserved?</label>
-          <select id="cpuReserved" formControlName="cpuReserved" class="form-control" required>
-            <option></option>
-            <option *ngFor="let opt of [true, false]">
+          <select 
+            id="cpuReserved" 
+            formControlName="cpuReserved" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.cpuReserved.errors"
+            required>
+            <option *ngFor="let opt of [false, true]">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.cpuReserved.errors" class="invalid-feedback">
+            <div *ngIf="f.cpuReserved.errors.required">CPU Reserved is required</div>
+          </div>
         </div>
 
         <!-- High Performance -->
         <div class="form-group col-md-3">
           <label for="highPerformance">High Performance?</label>
-          <select id="highPerformance" formControlName="highPerformance" class="form-control" required>
+          <select 
+            id="highPerformance" 
+            formControlName="highPerformance" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.highPerformance.errors"
+            required>
             <option *ngFor="let opt of [false, true]">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.highPerformance.errors" class="invalid-feedback">
+            <div *ngIf="f.highPerformance.errors.required">High Performance is required</div>
+          </div>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="memorySize">Memory (GB)</label>
-          <input type="number" id="memorySize" formControlName="memorySize" class="form-control" required />
+          <input 
+            type="number" 
+            id="memorySize" 
+            formControlName="memorySize" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.memorySize.errors"
+            required/>
+          <div *ngIf="submitted && f.memorySize.errors" class="invalid-feedback">
+            <div *ngIf="f.memorySize.errors.required">Memory (GB) is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
           <label for="memoryReserved">Memory Reserved?</label>
-          <select id="memoryReserved" formControlName="memoryReserved" class="form-control" required>
-            <option></option>
-            <option *ngFor="let opt of [true, false]">
+          <select 
+            id="memoryReserved" 
+            formControlName="memoryReserved" 
+            class="form-control" 
+            [class.is-invalid]="submitted && f.memoryReserved.errors"
+            required>
+            <option *ngFor="let opt of [false, true]">
               {{ opt }}
             </option>
           </select>
+          <div *ngIf="submitted && f.memoryReserved.errors" class="invalid-feedback">
+            <div *ngIf="f.memoryReserved.errors.required">Memory Reserved is required</div>
+          </div>
         </div>
       </div>
 
@@ -218,7 +265,7 @@
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
-        <span>Save</span>
+        <span>Save Virtual Machine</span>
       </button>
     </div>
   </form>
