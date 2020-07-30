@@ -15,6 +15,25 @@
   }
 }
 
+%disabled-btn {
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    background-color: $c-gray-400;
+    color: white;
+    border-color: $c-gray-400;
+    opacity: 1;
+
+    &:hover,
+    &:focus {
+      background-color: $c-gray-400;
+      color: white;
+      border-color: $c-gray-400;
+      opacity: 1;
+    }
+  }
+}
+
 .btn-toolbar {
   margin: 10px 0;
   justify-content: flex-end;
@@ -30,9 +49,7 @@
   border-color: $c-red-400;
   color: white;
 
-  &:focus {
-    box-shadow: 0 0 0 0.2rem $c-gray-100;
-  }
+  @extend %disabled-btn;
 
   &:hover,
   &:focus,
@@ -50,6 +67,8 @@
   box-shadow: none;
   border: none;
 
+  @extend %disabled-btn;
+
   &:hover,
   &:focus,
   &:not(:disabled):not(.disabled):active,
@@ -63,6 +82,8 @@
   background-color: $c-blue-400;
   border-color: $c-blue-400;
   color: white;
+
+  @extend %disabled-btn;
 
   &:hover,
   &:focus,
@@ -79,6 +100,8 @@
   border-color: $c-green-400;
   color: $c-green-400;
 
+  @extend %disabled-btn;
+
   &:hover,
   &:focus,
   &:not(:disabled):not(.disabled):active,
@@ -94,6 +117,8 @@
   border-color: $c-blue-400;
   color: $c-blue-400;
 
+  @extend %disabled-btn;
+
   &:hover,
   &:focus,
   &:not(:disabled):not(.disabled):active,
@@ -108,6 +133,8 @@
   background-color: $c-gray-100;
   border-color: $c-gray-700;
   color: $c-gray-700;
+
+  @extend %disabled-btn;
 
   &:hover,
   &:focus,
