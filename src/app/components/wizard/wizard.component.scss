@@ -84,14 +84,14 @@ label {
         }
       }
     }
-    
+
     &.warning {
-      color: $warning;
+      color: $c-yellow-100;
       &:before {
-        border-color: $warning;
+        border-color: $c-yellow-100;
       }
       &:after {
-        background-color: $warning;
+        background-color: $c-yellow-100;
       }
     }
 
