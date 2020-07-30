@@ -13,6 +13,7 @@ import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -37,6 +38,7 @@ describe('FirewallRulesDetailComponent', () => {
         ImportExportComponent,
         MockTooltipComponent,
         YesNoModalComponent,
+        PreviewModalComponent,
         ResolvePipe,
         MockFontAwesomeComponent,
       ],

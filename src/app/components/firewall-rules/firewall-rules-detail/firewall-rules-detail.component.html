@@ -22,17 +22,7 @@
   <table class="table table-striped" aria-describedby="Firewall Rule detail table">
     <thead>
       <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Action</th>
-        <th scope="col">Protocol</th>
-        <th scope="col">Direction</th>
-        <th scope="col">Source Address</th>
-        <th scope="col">Destination Address</th>
-        <th scope="col">Service</th>
-        <th scope="col">Log</th>
-        <th scope="col">Enabled</th>
-        <th scope="col">Rule Index</th>
-        <th scope="col"></th>
+        <th scope="col" *ngFor="let header of tableHeaders">{{ header }}</th>
       </tr>
     </thead>
     <tbody>
@@ -96,20 +86,20 @@
           <span>{{ firewallRule?.ruleIndex }}</span>
         </td>
         <td class="item-actions">
-          <fa-icon 
+          <fa-icon
             class="icon"
-            [icon]="['fas', 'pencil-alt']" 
-            *ngIf="!firewallRule.deletedAt" 
+            [icon]="['fas', 'pencil-alt']"
+            *ngIf="!firewallRule.deletedAt"
             (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
             aria-label="Edit Firewall Rule"></fa-icon>
-          <fa-icon 
+          <fa-icon
             [icon]="['fas', 'undo']"
             *ngIf="firewallRule?.deletedAt"
             class="fg-success icon"
             (click)="restoreFirewallRule(firewallRule)"
             aria-label="Restore Firewall Rule"
           ></fa-icon>
-          <fa-icon 
+          <fa-icon
             class="icon"
             [icon]="['fas', 'trash']"
             [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
@@ -147,3 +137,4 @@
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
+<app-preview-modal></app-preview-modal>

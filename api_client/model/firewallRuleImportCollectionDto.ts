@@ -15,5 +15,6 @@ import { FirewallRuleImport } from './firewallRuleImport';
 export interface FirewallRuleImportCollectionDto { 
     datacenterId: string;
     firewallRules: Array<FirewallRuleImport>;
+    dryRun: boolean;
 }
 

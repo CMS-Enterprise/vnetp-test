@@ -13122,9 +13122,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
+      dryRun:
+        type: boolean
     required:
       - datacenterId
       - firewallRules
+      - dryRun
   GeneratedServiceObjectGroupBulkDto:
     type: object
     properties:

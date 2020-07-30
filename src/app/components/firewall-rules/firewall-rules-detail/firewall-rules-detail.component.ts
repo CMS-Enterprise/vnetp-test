@@ -21,10 +21,11 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
+  FirewallRuleImport,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -56,6 +57,20 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   FirewallRuleGroup: FirewallRuleGroup;
   currentDatacenterSubscription: Subscription;
 
+  tableHeaders: string[] = [
+    'Name',
+    'Action',
+    'Protocol',
+    'Direction',
+    'Source Address',
+    'Destination Address',
+    'Service',
+    'Log',
+    'Enabled',
+    'Rule Index',
+    '',
+  ];
+
   get scopeString() {
     return this.scope;
   }
@@ -71,7 +86,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
-    private bulkUploadService: BulkUploadService,
   ) {}
 
   ngOnInit() {
@@ -272,35 +286,23 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  importFirewallRulesConfig(event) {
-    const modalDto = new YesNoModalDto(
-      'Import Firewall Rule',
-      `Are you sure you would like to import ${event.length} firewall rule${event.length > 1 ? 's' : ''}?`,
-    );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+  importFirewallRulesConfig(event): void {
+    const fwDto: FirewallRuleImportCollectionDto = {
+      datacenterId: this.datacenterService.currentDatacenterValue.id,
+      firewallRules: this.sanitizeData(event),
+      dryRun: true,
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const fwDto = {} as FirewallRuleImportCollectionDto;
-        fwDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        fwDto.firewallRules = this.sanitizeData(event);
-
-        this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesBulkImportPost({
-            firewallRuleImportCollectionDto: fwDto,
-          })
-          .subscribe(data => {
-            this.getFirewallRuleGroup();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    this.firewallRuleService
+      .v1NetworkSecurityFirewallRulesBulkImportPost({
+        firewallRuleImportCollectionDto: fwDto,
+      })
+      .subscribe(data => {
+        this.createPreview(data, event);
+      });
   }
 
-  sanitizeData(entities: any) {
+  private sanitizeData(entities: FirewallRuleImport[]) {
     return entities.map(entity => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.mapCsv(entity);
@@ -308,7 +310,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  mapCsv = obj => {
+  private mapCsv = obj => {
     Object.entries(obj).forEach(([key, val]) => {
       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         obj[key] = false;
@@ -323,4 +325,37 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     return obj;
     // tslint:disable-next-line: semicolon
   };
+
+  // TODO: add dto for toBeUploaded / toBeDeleted in api to get rid of any type
+  private createPreview(data: any, firewallRules: FirewallRuleImport[]): void {
+    const previewModalDto = new PreviewModalDto(
+      'Firewall Rule Import Preview',
+      this.tableHeaders,
+      data.firewallRulesToBeUploaded,
+      data.firewallRulesToBeDeleted,
+    );
+    this.ngx.setModalData(previewModalDto, 'previewModal');
+    this.ngx.getModal('previewModal').open();
+
+    const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData: PreviewModalDto<FirewallRule> = modal.getData();
+      modal.removeData();
+      if (modalData && modalData.confirm) {
+        const firewallConfirmDto: FirewallRuleImportCollectionDto = {
+          datacenterId: this.datacenterService.currentDatacenterValue.id,
+          firewallRules: this.sanitizeData(firewallRules),
+          dryRun: false,
+        };
+
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesBulkImportPost({
+            firewallRuleImportCollectionDto: firewallConfirmDto,
+          })
+          .subscribe(res => {
+            this.getFirewallRuleGroup();
+          });
+      }
+      previewImportSubscription.unsubscribe();
+    });
+  }
 }
