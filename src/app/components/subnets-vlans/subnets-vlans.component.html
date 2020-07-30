@@ -138,19 +138,21 @@
 </div>
 
 <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
-  <app-import-export
+  <ng-container *ngIf="navIndex === 0">
+    <app-import-export
     [exportObject]="subnets"
     exportFileName="subnets-{{ currentTier?.name }}"
     [disableJson]="false"
     (import)="importSubnetConfig($event)"></app-import-export>
-</section>
+  </ng-container>
 
-<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
-  <app-import-export
-  [exportObject]="vlans"
-  exportFileName="vlans-{{ currentTier?.name }}"
-  [disableJson]="false"
-  (import)="importVlansConfig($event)"></app-import-export>
+  <ng-container *ngIf="navIndex === 1">
+    <app-import-export
+    [exportObject]="vlans"
+    exportFileName="vlans-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importVlansConfig($event)"></app-import-export>
+  </ng-container>
 </section>
 
 <app-subnet-modal></app-subnet-modal>
