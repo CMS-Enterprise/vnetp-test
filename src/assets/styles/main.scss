@@ -8,10 +8,8 @@
 // custom imports
 @import 'variables', 'buttons', 'tables', 'forms';
 
-a {
-  &:hover {
-    color: $secondary-main;
-  }
+a:hover {
+  color: $c-blue-400;
 }
 
 h1.header {
@@ -48,18 +46,10 @@ hr {
 
 .fg-danger {
   color: $c-red-400;
-
-  &--dark {
-    color: $c-red-700;
-  }
-}
-
-.fg-warning {
-  color: $warning;
 }
 
 .fg-success {
-  color: $success;
+  color: $c-green-400;
 }
 
 .xlarge-modal {

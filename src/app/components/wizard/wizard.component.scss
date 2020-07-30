@@ -84,6 +84,7 @@ label {
         }
       }
     }
+    
     &.warning {
       color: $warning;
       &:before {
@@ -93,13 +94,14 @@ label {
         background-color: $warning;
       }
     }
+
     &.danger {
-      color: $danger;
+      color: $c-red-400;
       &:before {
-        border-color: $danger;
+        border-color: $c-red-400;
       }
       &:after {
-        background-color: $danger;
+        background-color: $c-red-400;
       }
     }
   }

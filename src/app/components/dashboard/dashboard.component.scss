@@ -8,11 +8,11 @@
 
   &__heading {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   &__card {
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 2rem;
     border-radius: 4px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     margin-right: 2rem;
@@ -94,10 +94,10 @@
     margin-right: 10px;
 
     &.success {
-      background-color: $success;
+      background-color: $c-green-400;
     }
     &.danger {
-      background-color: $danger;
+      background-color: $c-red-400;
     }
     &.warning {
       background-color: $warning;

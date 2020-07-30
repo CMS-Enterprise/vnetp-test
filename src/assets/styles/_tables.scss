@@ -11,6 +11,22 @@
     cursor: pointer;
     transition: color 150ms;
 
+    &.fg-success {
+      color: $c-green-400;
+
+      &:hover {
+        color: $c-green-700;
+      }
+    }
+
+    &.fg-danger {
+      color: $c-red-400;
+
+      &:hover {
+        color: $c-red-700;
+      }
+    }
+
     &:hover {
       color: $c-blue-400;
     }
