@@ -6,7 +6,7 @@
           </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let datum of data">
+            <tr *ngFor="let datum of data" [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null">
                 <td *ngFor="let column of config.columns">
                     <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
                     <ng-container *ngIf="!column.property && column.template">
