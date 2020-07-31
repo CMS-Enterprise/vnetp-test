@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FirewallRule } from './firewallRule';
 
 
 export interface FirewallRulePreview { 
-    firewallRulesToBeDeleted: Array<string>;
-    firewallRulesToBeUploaded: Array<string>;
+    firewallRulesToBeDeleted: Array<FirewallRule>;
+    firewallRulesToBeUploaded: Array<FirewallRule>;
 }
 

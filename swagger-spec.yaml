@@ -13136,13 +13136,14 @@ definitions:
       firewallRulesToBeDeleted:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/FirewallRule'
       firewallRulesToBeUploaded:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/FirewallRule'
     required:
       - firewallRulesToBeDeleted
+      - firewallRulesToBeUploaded
       - firewallRulesToBeUploaded
   GeneratedServiceObjectGroupBulkDto:
     type: object
