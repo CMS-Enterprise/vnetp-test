@@ -1,38 +1,22 @@
-// colors
-$primary-main: #006faf;
-$primary-dark: #0b315b;
-$primary-medium: #5ac4f9;
-$primary-light: #e3effc;
-$primary--alt: #0074b8;
+// Palette Colors
+$c-blue-100: #edf3fc;
+$c-blue-300: #2e86ff;
+$c-blue-400: #0058da;
+$c-blue-700: #0043a8;
 
-$secondary-main: #ffad00;
-$secondary-dark: #d17d05;
-$secondary-medium: #ffd085;
-$secondary-light: #fcf7f0;
+$c-green-100: #eef5ef;
+$c-green-400: #14782c;
+$c-green-700: #0b6320;
 
-$white: #fff;
-$black: #000; // change to off-black
-$gray-main: #7f8084;
-$gray-darker: #606266;
-$gray-dark: #3d3e3f;
-$gray-medium: #c2c2c6;
-$gray-light: #f6f6f7;
+$c-gray-100: #f2f2f2;
+$c-gray-400: #75767a;
+$c-gray-700: #222222;
 
-$success: #4eb796;
-$success--dark: #1d8665;
-$success--medium: #99ddc1;
-$success--light: #cdf7e3;
+$c-red-100: #fcf1f1;
+$c-red-400: #d33737;
+$c-red-700: #8c1111;
 
-$warning: #ffdf5a;
+$c-yellow-100: #ffdf5a;
 
-$danger: #d33737;
-$danger--dark: #9e2a2a;
-$danger--medium: #ff8a8a;
-$danger--light: #ffcaca;
-
-$info: #5ac4f9;
-$info--dark: #0088a8;
-$info--medium: #95e6f9;
-$info--light: #c5f7ff;
-
-$multistep-success: $success--dark;
+// Named Colors
+$multistep-success: $c-green-700;

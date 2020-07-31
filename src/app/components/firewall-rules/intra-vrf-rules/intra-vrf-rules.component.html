@@ -1,21 +1,24 @@
 <h1 aria-label="VRF Name">VRF: {{ vrf?.name }}</h1>
 
-<div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-  <button type="button" class="btn btn-warning mr-1" (click)="saveAll()" aria-label="Update Contracts" *ngIf="dirty">
-    <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Save Changes -->
+  <button type="button" class="btn btn-warning" (click)="saveAll()" *ngIf="dirty">
+    <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
     <span>Save Changes</span>
   </button>
 
-  <button type="button" class="btn btn-success" (click)="createContract()" aria-label="Create Contract">
+  <!-- Create Contract -->
+  <button type="button" class="btn btn-success" (click)="createContract()">
     <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
     <span>Create Contract</span>
   </button>
 
-  <button type="button" class="btn btn-info mr-1" (click)="refresh()" aria-label="Refresh Firewall Rules" *ngIf="!dirty">
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="refresh()" *ngIf="!dirty">
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
-</div>
+</section>
 
 <table class="table table-striped" aria-describedby="Intra-VRF Rules table">
   <thead>

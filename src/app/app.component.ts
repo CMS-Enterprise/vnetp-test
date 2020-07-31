@@ -6,6 +6,7 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  styles: ['.app { padding: 0 2rem }'],
 })
 export class AppComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private title: Title) {}

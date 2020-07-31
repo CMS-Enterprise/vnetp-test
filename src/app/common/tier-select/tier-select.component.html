@@ -4,7 +4,7 @@
   </span>
   <strong>{{ currentTier?.name || 'No Tier Selected' }}</strong>
 
-  <button type="button" class="btn btn-sm btn-primary ml-3" (click)="openTierModal()" [disabled]="!datacenterId">
+  <button type="button" class="btn btn-primary ml-3" (click)="openTierModal()" [disabled]="!datacenterId">
     {{ currentTier ? 'Switch' : 'Select' }} Tier
   </button>
 </div>

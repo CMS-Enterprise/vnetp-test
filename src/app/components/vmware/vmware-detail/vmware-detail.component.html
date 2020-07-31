@@ -1,23 +1,23 @@
-<!-- add back button? -->
-<div class="clearfix">
-  <a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-    <span>Back</span>
-  </a>
+<a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h1>Virtual Machine: {{ VirtualMachine?.name }}</h1>
+<h1>Virtual Machine: {{ VirtualMachine?.name }}</h1>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-sm btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
-      <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-      <span>Restore Virtual Machine</span>
-    </button>
-    <button class="btn btn-sm btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
-      <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
-      <span> Delete Virtual Machine</span>
-    </button>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Restore Virtual Machine -->
+  <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
+    <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+    <span>Restore Virtual Machine</span>
+  </button>
+
+  <!-- Delete Virtual Machine -->
+  <button class="btn btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
+    <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
+    <span>Delete Virtual Machine</span>
+  </button>
+</section>
 
 <div *ngIf="VirtualMachine" >
   <!-- Description -->

@@ -1,22 +1,23 @@
-<div class="clearfix">
-  <a routerLink="/appliance" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-    <span>Back</span>
-  </a>
+<a routerLink="/appliance" queryParamsHandling="merge" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h1>Appliance: {{ Appliance?.name }}</h1>
+<h1>Appliance: {{ Appliance?.name }}</h1>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button *ngIf="Appliance?.deletedAt" class="btn btn-sm btn-success" (click)="restoreAppliance(Appliance)">
-      <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-      <span>Restore Appliance</span>
-    </button>
-    <button class="btn btn-sm btn-danger" (click)="deleteAppliance(Appliance)">
-      <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
-      <span>Delete Appliance</span>
-    </button>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Restore Appliance -->
+  <button *ngIf="Appliance?.deletedAt" class="btn btn-success" (click)="restoreAppliance(Appliance)">
+    <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+    <span>Restore Appliance</span>
+  </button>
+
+  <!-- Delete Appliance -->
+  <button class="btn btn-danger" (click)="deleteAppliance(Appliance)">
+    <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
+    <span>Delete Appliance</span>
+  </button>
+</section>
 
 <div *ngIf="Appliance">
   <p *ngIf="Appliance.description"><strong>Description:</strong> {{ Appliance.description }}</p>
@@ -81,7 +82,7 @@
         <td>
           <span>{{ n.name }}</span>
         </td>
-        <td>
+        <td class="item-actions">
           <!-- actions? -->
         </td>
       </tr>

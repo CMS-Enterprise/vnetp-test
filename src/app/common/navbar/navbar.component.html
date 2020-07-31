@@ -29,17 +29,11 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
-
           <a class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
         </div>
       </li>
@@ -55,13 +49,10 @@
           >Systems
         </a>
         <div class="dropdown-menu" aria-labelledby="systemsNavbarDropdown">
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="physical-server" queryParamsHandling="merge">Physical Servers</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
           <a class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
           <a class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
         </div>
       </li>
@@ -92,16 +83,15 @@
           {{ currentUser.Username }}
           <span *ngIf="currentUser.CustomerName"> | {{ currentUser.CustomerName }}</span>
         </a>
-        <div class="dropdown-menu dropdown-menu-reverse" aria-labelledby="userNavbarDropdown">
+        <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button class="btn btn-sm btn-danger" routerLink="deploy" queryParamsHandling="merge">
+        <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">
           Deploy
         </button>
       </li>

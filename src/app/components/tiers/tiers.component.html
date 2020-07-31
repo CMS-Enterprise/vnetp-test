@@ -1,80 +1,80 @@
-<div>
-  <h1 class="header">
-    Tiers <span class="badge badge-primary">{{ currentDatacenter?.name }}</span>
-  </h1>
+<h1 class="header">
+  <span>Tiers</span>
+  <span *ngIf="currentDatacenter"> - <b>{{ currentDatacenter?.name }}</b></span>
+</h1>
 
-  <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openTierModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Tier</span>
-      </button>
+<div *ngIf="navIndex === 0">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Tier -->
+    <button type="button" class="btn btn-success" (click)="openTierModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Tier</span>
+    </button>
+  </section>
+
+  <table class="table table-striped" aria-describedby="Tiers table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Tier Class</th>
+        <th scope="col">Tier Type</th>
+        <th scope="col">Tier Group</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tier of tiers | paginate: { itemsPerPage: perPage, currentPage: currentTiersPage }">
+        <td>
+          <span>{{ tier?.name }}</span>
+        </td>
+        <td>
+          <span>{{ tier?.description }}</span>
+        </td>
+        <td>
+          <span>{{ tier?.tierClass }}</span>
+        </td>
+        <td>
+          <span>{{ tier?.tierType }}</span>
+        </td>
+        <td>
+          <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
+        </td>
+        <td>
+          <span>{{ tier?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="item-actions">
+          <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!tier?.deletedAt" (click)="openTierModal(ModalMode.Edit, tier)" aria-label="Edit Tier"> </fa-icon>
+          <fa-icon [icon]="['fas', 'undo']" *ngIf="tier?.deletedAt" class="fg-success icon" (click)="restoreTier(tier)" aria-label="Restore Tier"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'trash']" [ngClass]="{ 'fg-danger': tier.deletedAt }" (click)="deleteTier(tier)" aria-label="Soft-Delete/Delete Tier">
+          </fa-icon>
+        </td>
+      </tr>
+      <tr *ngIf="!tiers?.length" class="text-center">
+        <td colspan="6">No Tiers in this Datacenter</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentTiersPage = $event"></pagination-controls>
+
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
     </div>
-
-    <table class="table table-striped" aria-describedby="Tiers table">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Description</th>
-          <th scope="col">Tier Class</th>
-          <th scope="col">Tier Type</th>
-          <th scope="col">Tier Group</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let tier of tiers | paginate: { itemsPerPage: perPage, currentPage: currentTiersPage }">
-          <td>
-            <span>{{ tier?.name }}</span>
-          </td>
-          <td>
-            <span>{{ tier?.description }}</span>
-          </td>
-          <td>
-            <span>{{ tier?.tierClass }}</span>
-          </td>
-          <td>
-            <span>{{ tier?.tierType }}</span>
-          </td>
-          <td>
-            <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
-          </td>
-          <td>
-            <span>{{ tier?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!tier?.deletedAt" (click)="openTierModal(ModalMode.Edit, tier)" aria-label="Edit Tier"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="tier?.deletedAt" class="fg-success icon" (click)="restoreTier(tier)" aria-label="Restore Tier"></fa-icon>
-            <fa-icon class="icon" [icon]="['fas', 'trash']" [ngClass]="{ 'fg-danger': tier.deletedAt }" (click)="deleteTier(tier)" aria-label="Soft-Delete/Delete Tier">
-            </fa-icon>
-          </td>
-        </tr>
-        <tr *ngIf="!tiers?.length" class="text-center">
-          <td colspan="6">No Tiers in this Datacenter</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentTiersPage = $event"></pagination-controls>
-    <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-      <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
-        Entities per page
-        <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-        <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-        <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-      </div>
-    </div>
-  </div>
-  <div class="pull-right">
-    <app-import-export
-      [exportObject]="tiers"
-      exportFileName="tiers-{{ currentDatacenter?.name }}"
-      [disableJson]="false"
-      (import)="importTiersConfig($event)"
-    >
-    </app-import-export>
-  </div>
-
-  <app-tier-modal></app-tier-modal>
-  <app-yes-no-modal></app-yes-no-modal>
+  </section>
 </div>
+
+<section class="btn-toolbar" role="toolbar">
+  <app-import-export
+  [exportObject]="tiers"
+  exportFileName="tiers-{{ currentDatacenter?.name }}"
+  [disableJson]="false"
+  (import)="importTiersConfig($event)"></app-import-export>
+</section>
+
+<app-tier-modal></app-tier-modal>
+<app-yes-no-modal></app-yes-no-modal>

@@ -1,20 +1,20 @@
-<div class="container mt-4 mb-5">
-  <h2>Service Status</h2>
-
-  <div class="card mt-3 mb-5">
-    <div class="row p-3">
-      <div *ngFor="let service of status" class="col-md-4 status-item">
-        <span>
-          {{ service.name }}
-        </span>
-        <div class="status-light" [ngClass]="service.status"></div>
-      </div>
+<main class="dashboard">
+  <!-- Service Status -->
+  <div class="dashboard__card">
+    <h4 class="dashboard__heading">Service Status</h4>
+    <div *ngFor="let service of status" class="status-item">
+      <span>
+        {{ service.name }}
+      </span>
+      <div class="status-light" [ngClass]="service.status"></div>
     </div>
   </div>
 
-  <h2>Job Status Today</h2>
-  <div class="row p-3">
-    <div class="chart-wrap col-md-6">
+  <!-- Job Status Today -->
+  <div class="dashboard__card">
+    <h4 class="dashboard__heading">Job Status Today</h4>
+
+    <div class="chart-wrap">
       <app-d3-pie-chart [data]="pieChartData" *ngIf="pieChartData"></app-d3-pie-chart>
       <div class="legend">
         <p *ngIf="successfulJobs">
@@ -48,66 +48,60 @@
         <span class="legend-subtitle" *ngIf="cancelledJobs">Total: {{ cancelledJobs }}</span>
       </div>
     </div>
-
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header text-center">
-          <h3 class="mb-0">Overall Environment</h3>
-        </div>
-
-        <div class="p-3">
-          <ul class="dash-card">
-            <li>
-              <a>
-                <span>
-                  Datacenters
-                  <tooltip [message]="helpText.Datacenters"></tooltip>
-                </span>
-                <span class="inline-block ml-auto">
-                  {{ datacenters || 0 }}
-                </span>
-                <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden;"></fa-icon>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/tiers" queryParamsHandling="merge">
-                <span>
-                  Tiers
-                  <tooltip [message]="helpText.Tiers"></tooltip>
-                </span>
-                <span class="inline-block ml-auto">
-                  {{ tiers || 0 }}
-                </span>
-                <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/load-balancers" queryParamsHandling="merge">
-                <span>
-                  Load Balancer Virtual Servers
-                  <tooltip [message]="helpText.LbVirtualServers"></tooltip>
-                </span>
-                <span class="inline-block ml-auto">
-                  {{ loadBalancerVirtualServers || 0 }}
-                </span>
-                <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/vmware" queryParamsHandling="merge">
-                <span>
-                  VMware Virtual Machines
-                  <tooltip [message]="helpText.VMwareVms"></tooltip
-                ></span>
-                <span class="inline-block ml-auto">
-                  {{ vmwareVirtualMachines || 0 }}
-                </span>
-                <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
   </div>
-</div>
+
+  <!-- Overall Environment -->
+  <div class="dashboard__card">
+    <h4 class="dashboard__heading">Overall Environment</h4>
+    <ul class="dash-card">
+      <li>
+        <a>
+          <span>
+            Datacenters
+            <tooltip [message]="helpText.Datacenters"></tooltip>
+          </span>
+          <span class="inline-block ml-auto">
+            {{ datacenters || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden;"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/tiers" queryParamsHandling="merge">
+          <span>
+            Tiers
+            <tooltip [message]="helpText.Tiers"></tooltip>
+          </span>
+          <span class="inline-block ml-auto">
+            {{ tiers || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/load-balancers" queryParamsHandling="merge">
+          <span>
+            Load Balancer Virtual Servers
+            <tooltip [message]="helpText.LbVirtualServers"></tooltip>
+          </span>
+          <span class="inline-block ml-auto">
+            {{ loadBalancerVirtualServers || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/vmware" queryParamsHandling="merge">
+          <span>
+            VMware Virtual Machines
+            <tooltip [message]="helpText.VMwareVms"></tooltip
+          ></span>
+          <span class="inline-block ml-auto">
+            {{ vmwareVirtualMachines || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+    </ul>
+  </div>
+</main>
