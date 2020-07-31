@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from '../pipes/resolve.pipe';
 import { PreviewModalComponent } from './preview-modal/preview-modal.component';
+import { TableModule } from './table/table.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { PreviewModalComponent } from './preview-modal/preview-modal.component';
     RouterModule,
     NgSelectModule,
     NgxPaginationModule,
+    TableModule,
   ],
   declarations: [
     ImportExportComponent,
@@ -44,6 +46,7 @@ import { PreviewModalComponent } from './preview-modal/preview-modal.component';
     ImportExportComponent,
     ResolvePipe,
     TierSelectComponent,
+    TableModule,
     TooltipComponent,
     YesNoModalComponent,
     PreviewModalComponent,

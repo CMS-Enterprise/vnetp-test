@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -26,6 +26,7 @@ import {
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
+import { TableConfig } from 'src/app/common/table/table.component';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -70,6 +71,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     'Rule Index',
     '',
   ];
+
+  @ViewChild('sourceAddress', { static: false }) sourceAddressTemplate: TemplateRef<any>;
+  @ViewChild('destinationAddress', { static: false }) destinationAddressTemplate: TemplateRef<any>;
+  @ViewChild('serviceType', { static: false }) serviceTemplate: TemplateRef<any>;
 
   get scopeString() {
     return this.scope;
@@ -328,12 +333,20 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   // TODO: add dto for toBeUploaded / toBeDeleted in api to get rid of any type
   private createPreview(data: any, firewallRules: FirewallRuleImport[]): void {
-    const previewModalDto = new PreviewModalDto(
-      'Firewall Rule Import Preview',
-      this.tableHeaders,
-      data.firewallRulesToBeUploaded,
-      data.firewallRulesToBeDeleted,
-    );
+    const tableConfig: TableConfig = {
+      description: 'Firewall Rules Import Preview',
+      columns: [
+        { name: 'Name', property: 'name' },
+        { name: 'Action', property: 'action' },
+        { name: 'Protocol', property: 'protocol' },
+        { name: 'Direction', property: 'direction' },
+        { name: 'Source Address', template: () => this.sourceAddressTemplate },
+        { name: 'Destination Address', template: () => this.destinationAddressTemplate },
+        { name: 'Service', template: () => this.serviceTemplate },
+        { name: 'Rule Index', property: 'ruleIndex' },
+      ],
+    };
+    const previewModalDto = new PreviewModalDto(tableConfig, data.firewallRulesToBeUploaded, data.firewallRulesToBeDeleted);
     this.ngx.setModalData(previewModalDto, 'previewModal');
     this.ngx.getModal('previewModal').open();
 

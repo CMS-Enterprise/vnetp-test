@@ -6,7 +6,7 @@
   customClass="xlarge-modal"
 >
   <div class="modal-header">
-    <h4 class="modal-title">{{ title }}</h4>
+    <h4 class="modal-title">{{ config.description }}</h4>
     <button
       type="button"
       class="close"
@@ -15,156 +15,9 @@
       (click)="previewModal.close()"
     ></button>
   </div>
+  <app-table [config]="config" [data]="data"></app-table>
+  <ng-template #nameTemplate let-datum="datum">{{ datum.name }}</ng-template>
 
-  <table class="table" aria-describedby="Import table">
-    <thead>
-      <tr>
-        <th scope="col" *ngFor="let header of headers">{{ header }}</th>
-      </tr>
-    </thead>
-    <!-- This needs to be generic and map through keys (also how will this look if those ngIfs are true) -->
-    <tbody>
-      <tr
-        *ngFor="let toBeDeletedEntity of toBeDeleted"
-        style="background-color: #F98585"
-      >
-        <td>
-          <p>{{ toBeDeletedEntity?.name }}</p>
-        </td>
-        <td>
-          <p>{{ toBeDeletedEntity?.action }}</p>
-        </td>
-        <td>
-          <p>{{ toBeDeletedEntity?.protocol }}</p>
-        </td>
-        <td>
-          <p>{{ toBeDeletedEntity?.direction }}</p>
-        </td>
-        <td>
-          <p *ngIf="toBeDeletedEntity.sourceAddressType === 'IpAddress'" aria-label="Source IP">
-            {{ toBeDeletedEntity?.sourceIpAddress }}
-          </p>
-          <p *ngIf="toBeDeletedEntity.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
-            <!-- {{ toBeDeletedEntity?.sourceNetworkObjectId | resolve: getNetworkObjectName }} -->
-            {{ toBeDeletedEntity?.sourceNetworkObjectId }}
-            (Object)
-          </p>
-          <p *ngIf="toBeDeletedEntity.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-            <!-- {{ toBeDeletedEntity?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} -->
-            {{ toBeDeletedEntity?.sourceNetworkObjectGroupId }}
-            (Object Group)
-          </p>
-        </td>
-        <td>
-          <p *ngIf="toBeDeletedEntity.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
-            {{ toBeDeletedEntity?.destinationIpAddress }}
-          </p>
-          <p *ngIf="toBeDeletedEntity.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
-            <!-- {{ toBeDeletedEntity?.destinationNetworkObjectId | resolve: getNetworkObjectName }} -->
-            {{ toBeDeletedEntity?.destinationNetworkObjectId }}
-            (Object)
-          </p>
-          <p *ngIf="toBeDeletedEntity.destinationAddressType === 'NetworkObjectGroup'"
-            aria-label="Destination Network Object Group">
-            <!-- {{ toBeDeletedEntity?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} -->
-            {{ toBeDeletedEntity?.destinationNetworkObjectGroupId }}
-            (Object Group)
-          </p>
-        </td>
-        <td>
-          <p *ngIf="toBeDeletedEntity.serviceType === 'Port'" aria-label="Source/Destination Ports">
-            Source Ports: {{ toBeDeletedEntity?.sourcePorts }} - Destination Ports: {{ toBeDeletedEntity?.destinationPorts }}
-          </p>
-          <p *ngIf="toBeDeletedEntity.serviceType === 'ServiceObject'" aria-label="Service Object">
-            <!-- {{ toBeDeletedEntity?.serviceObjectId | resolve: getServiceObjectName }} (Object) -->
-            {{ toBeDeletedEntity?.serviceObjectId }} (Object)
-          </p>
-          <p *ngIf="toBeDeletedEntity.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
-            <!-- {{ toBeDeletedEntity?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group) -->
-            {{ toBeDeletedEntity?.serviceObjectGroupId }} (Object Group)
-          </p>
-        </td>
-        <td>
-          <p>{{ toBeDeletedEntity?.logging }}</p>
-        </td>
-        <td>
-          <p>{{ toBeDeletedEntity?.enabled }}</p>
-        </td>
-        <td>
-          <span>{{ toBeDeletedEntity?.ruleIndex }}</span>
-        </td>
-      </tr>
-      <tr
-        *ngFor="let toBeAddedEntity of toBeAdded"
-        style="background-color: #90ee90"          >
-        <td>
-          <p>{{ toBeAddedEntity?.name }}</p>
-        </td>
-        <td>
-          <p>{{ toBeAddedEntity?.action }}</p>
-        </td>
-        <td>
-          <p>{{ toBeAddedEntity?.protocol }}</p>
-        </td>
-        <td>
-          <p>{{ toBeAddedEntity?.direction }}</p>
-        </td>
-        <td>
-          <p *ngIf="toBeAddedEntity.sourceAddressType === 'IpAddress'" aria-label="Source IP">
-            {{ toBeAddedEntity?.sourceIpAddress }}
-          </p>
-          <p *ngIf="toBeAddedEntity.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
-            <!-- {{ toBeAddedEntity?.sourceNetworkObjectId | resolve: getNetworkObjectName }} -->
-            {{ toBeAddedEntity?.sourceNetworkObjectId }}
-            (Object)
-          </p>
-          <p *ngIf="toBeAddedEntity.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-            <!-- {{ toBeAddedEntity?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} -->
-            {{ toBeAddedEntity?.sourceNetworkObjectGroupId }}
-            (Object Group)
-          </p>
-        </td>
-        <td>
-          <p *ngIf="toBeAddedEntity.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
-            {{ toBeAddedEntity?.destinationIpAddress }}
-          </p>
-          <p *ngIf="toBeAddedEntity.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
-            <!-- {{ toBeAddedEntity?.destinationNetworkObjectId | resolve: getNetworkObjectName }} -->
-            {{ toBeAddedEntity?.destinationNetworkObjectId }}
-            (Object)
-          </p>
-          <p *ngIf="toBeAddedEntity.destinationAddressType === 'NetworkObjectGroup'"
-            aria-label="Destination Network Object Group">
-            <!-- {{ toBeAddedEntity?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }} -->
-            {{ toBeAddedEntity?.destinationNetworkObjectGroupId }}
-            (Object Group)
-          </p>
-        </td>
-        <td>
-          <p *ngIf="toBeAddedEntity.serviceType === 'Port'" aria-label="Source/Destination Ports">
-            Source Ports: {{ toBeAddedEntity?.sourcePorts }} - Destination Ports: {{ toBeAddedEntity?.destinationPorts }}
-          </p>
-          <p *ngIf="toBeAddedEntity.serviceType === 'ServiceObject'" aria-label="Service Object">
-            <!-- {{ toBeAddedEntity?.serviceObjectId | resolve: getServiceObjectName }} (Object) -->
-            {{ toBeAddedEntity?.serviceObjectId }} (Object)
-          </p>
-          <p *ngIf="toBeAddedEntity.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
-            <!-- {{ toBeAddedEntity?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group) -->
-            {{ toBeAddedEntity?.serviceObjectGroupId }} (Object Group)
-          </p>
-        </td>
-        <td>
-          <p>{{ toBeAddedEntity?.logging }}</p>
-        </td>
-        <td>
-          <p>{{ toBeAddedEntity?.enabled }}</p>
-        </td>
-        <td>
-          <span>{{ toBeAddedEntity?.ruleIndex }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
   <div class="modal-footer">
     <button
       type="button"

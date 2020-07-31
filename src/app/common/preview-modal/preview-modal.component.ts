@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup } from '@angular/forms';
-import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
+import { TableConfig } from '../table/table.component';
 
 @Component({
   selector: 'app-preview-modal',
   templateUrl: './preview-modal.component.html',
 })
-export class PreviewModalComponent {
+export class PreviewModalComponent<T> {
+  @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
   form: FormGroup;
   submitted = false;
-  title = 'Preview';
-  headers: string[];
-  toBeAdded: any;
-  toBeDeleted: any;
+  config: TableConfig = {
+    description: 'Import Preview',
+    columns: [],
+  };
+  data: T[];
 
   constructor(private ngx: NgxSmartModalService) {}
 
@@ -32,12 +34,8 @@ export class PreviewModalComponent {
 
   public getData(): void {
     const modalConfig = this.ngx.getModalData('previewModal');
-
-    this.title = modalConfig.title;
-    this.headers = modalConfig.headers.slice(0, -1);
-    this.toBeAdded = modalConfig.toBeAdded;
-    this.toBeDeleted = modalConfig.toBeDeleted;
-
+    this.config = modalConfig.tableConfig;
+    this.data = modalConfig.toBeAdded;
     this.ngx.resetModalData('previewModal');
   }
 }
