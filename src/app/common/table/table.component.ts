@@ -9,6 +9,7 @@ export interface TableColumn {
 export interface TableConfig {
   description: string;
   columns: TableColumn[];
+  rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
 }
 
 /**
@@ -20,6 +21,7 @@ export interface TableConfig {
  *  public config: TableConfig = {
  *     description: 'Table',
  *     columns: [{ name: 'Name', template: () => this.nameTemplate }, { name: 'Desc', property: 'description' }],
+ *     rowStyle: (data: object) => ({ background: 'red' }),
  *  };
  *  public data = [{ name: 'Test', description: 'my-desc' }];
  *
