@@ -14,6 +14,7 @@ import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { TableComponent } from 'src/app/common/table/table.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -39,6 +40,7 @@ describe('FirewallRulesDetailComponent', () => {
         MockTooltipComponent,
         YesNoModalComponent,
         PreviewModalComponent,
+        TableComponent,
         ResolvePipe,
         MockFontAwesomeComponent,
       ],
