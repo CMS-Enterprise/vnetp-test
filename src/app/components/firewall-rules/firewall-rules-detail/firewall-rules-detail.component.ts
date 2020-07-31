@@ -220,21 +220,13 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getServiceObjectName = (id: string) => {
-    return this.getObjectName(id, this.serviceObjects);
-  };
+  getServiceObjectName = (id: string) => this.getObjectName(id, this.serviceObjects);
 
-  getServiceObjectGroupName = (id: string): string => {
-    return this.getObjectName(id, this.serviceObjectGroups);
-  };
+  getServiceObjectGroupName = (id: string): string => this.getObjectName(id, this.serviceObjectGroups);
 
-  getNetworkObjectName = (id: string): string => {
-    return this.getObjectName(id, this.networkObjects);
-  };
+  getNetworkObjectName = (id: string): string => this.getObjectName(id, this.networkObjects);
 
-  getNetworkObjectGroupName = (id: string): string => {
-    return this.getObjectName(id, this.networkObjectGroups);
-  };
+  getNetworkObjectGroupName = (id: string): string => this.getObjectName(id, this.networkObjectGroups);
 
   private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
     if (objects && objects.length) {
