@@ -1,4 +1,4 @@
-import { Component, TemplateRef, Input, OnChanges, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 export interface TableColumn {
   name: string;

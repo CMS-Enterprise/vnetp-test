@@ -15,9 +15,11 @@
       (click)="previewModal.close()"
     ></button>
   </div>
-  <app-table [config]="config" [data]="data"></app-table>
-  <ng-template #nameTemplate let-datum="datum">{{ datum.name }}</ng-template>
 
+  <!-- Preview Table -->
+  <app-table [config]="config" [data]="data"></app-table>
+
+  <!-- Footer -->
   <div class="modal-footer">
     <button
       type="button"

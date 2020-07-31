@@ -1,14 +1,12 @@
 import { TableConfig } from 'src/app/common/table/table.component';
 
 export class PreviewModalDto<T> {
-  constructor(tableConfig: TableConfig, toBeAdded: T[], toBeDeleted: T[]) {
+  constructor(tableConfig: TableConfig, data: T[]) {
     this.tableConfig = tableConfig;
-    this.toBeAdded = toBeAdded;
-    this.toBeDeleted = toBeDeleted;
+    this.data = data;
   }
 
   tableConfig: TableConfig;
-  toBeDeleted: T[];
-  toBeAdded: T[];
+  data: T[];
   confirm: boolean;
 }

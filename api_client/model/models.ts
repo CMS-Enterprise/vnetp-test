@@ -7,6 +7,7 @@ export * from './firewallRule';
 export * from './firewallRuleGroup';
 export * from './firewallRuleImport';
 export * from './firewallRuleImportCollectionDto';
+export * from './firewallRulePreview';
 export * from './generatedApplianceBulkDto';
 export * from './generatedFirewallRuleGroupBulkDto';
 export * from './generatedLoadBalancerHealthMonitorBulkDto';

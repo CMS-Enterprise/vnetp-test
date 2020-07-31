@@ -8,6 +8,7 @@ import { AuthGuard } from 'src/app/guards/auth.guard';
 import { IntraVrfRulesComponent } from './intra-vrf-rules/intra-vrf-rules.component';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
+import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [SharedModule, PreviewModalModule, RouterModule.forChild(routes)],
   declarations: [
     ContractModalComponent,
     FirewallRulesComponent,

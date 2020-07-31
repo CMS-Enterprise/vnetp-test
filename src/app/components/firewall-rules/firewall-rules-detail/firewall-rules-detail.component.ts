@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -22,6 +22,7 @@ import {
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
   FirewallRuleImport,
+  FirewallRulePreview,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -35,21 +36,23 @@ import { TableConfig } from 'src/app/common/table/table.component';
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   Id = '';
   TierName = '';
-  currentTierIds: Array<string>;
-  tiers: Tier[];
+  currentTierIds: string[];
+  ModalMode = ModalMode;
 
   firewallRuleGroup: FirewallRuleGroup;
-  firewallRules: Array<FirewallRule>;
+  firewallRules: FirewallRule[];
 
+  // Pagination
   totalFirewallRules = 0;
   currentFirewallRulePage = 1;
   perPage = 50;
-  ModalMode = ModalMode;
 
-  networkObjects: Array<NetworkObject>;
-  networkObjectGroups: Array<NetworkObjectGroup>;
-  serviceObjects: Array<ServiceObject>;
-  serviceObjectGroups: Array<ServiceObjectGroup>;
+  // Relations
+  networkObjects: NetworkObject[];
+  networkObjectGroups: NetworkObjectGroup[];
+  serviceObjects: ServiceObject[];
+  serviceObjectGroups: ServiceObjectGroup[];
+  tiers: Tier[];
 
   firewallRuleModalSubscription: Subscription;
 
@@ -72,6 +75,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     '',
   ];
 
+  // Templates
   @ViewChild('sourceAddress', { static: false }) sourceAddressTemplate: TemplateRef<any>;
   @ViewChild('destinationAddress', { static: false }) destinationAddressTemplate: TemplateRef<any>;
   @ViewChild('serviceType', { static: false }) serviceTemplate: TemplateRef<any>;
@@ -93,7 +97,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private datacenterService: DatacenterContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
@@ -105,16 +109,16 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentDatacenterSubscription.unsubscribe();
     this.datacenterService.unlockDatacenter();
   }
 
-  refresh() {
+  refresh(): void {
     this.getFirewallRuleGroup();
   }
 
-  getFirewallRuleGroup() {
+  getFirewallRuleGroup(): void {
     this.firewallRuleGroupService
       .v1NetworkSecurityFirewallRuleGroupsIdGet({
         id: this.Id,
@@ -132,7 +136,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getFirewallRules() {
+  getFirewallRules(): void {
     this.firewallRuleService
       .v1NetworkSecurityFirewallRulesGet({
         filter: `firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`,
@@ -148,7 +152,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getObjects() {
+  getObjects(): void {
     const tierRequest = this.tierService.v1TiersIdGet({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.v1NetworkSecurityNetworkObjectsGet({
       filter: `tierId||eq||${this.TierId}`,
@@ -180,11 +184,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  createFirewallRule() {
+  createFirewallRule(): void {
     this.openFirewallRuleModal(ModalMode.Create);
   }
 
-  openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule) {
+  openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule): void {
     if (modalMode === ModalMode.Edit && !firewallRule) {
       throw new Error('Firewall Rule Required');
     }
@@ -207,7 +211,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('firewallRuleModal').open();
   }
 
-  subscribeToFirewallRuleModal() {
+  subscribeToFirewallRuleModal(): void {
     this.firewallRuleModalSubscription = this.ngx
       .getModal('firewallRuleModal')
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
@@ -218,35 +222,27 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   getServiceObjectName = (id: string) => {
     return this.getObjectName(id, this.serviceObjects);
-    // tslint:disable-next-line: semicolon
   };
 
-  getServiceObjectGroupName = (id: string) => {
+  getServiceObjectGroupName = (id: string): string => {
     return this.getObjectName(id, this.serviceObjectGroups);
-    // tslint:disable-next-line: semicolon
   };
 
-  getNetworkObjectName = (id: string) => {
+  getNetworkObjectName = (id: string): string => {
     return this.getObjectName(id, this.networkObjects);
-    // tslint:disable-next-line: semicolon
   };
 
-  getNetworkObjectGroupName = (id: string) => {
+  getNetworkObjectGroupName = (id: string): string => {
     return this.getObjectName(id, this.networkObjectGroups);
-    // tslint:disable-next-line: semicolon
   };
 
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
+  private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
     if (objects && objects.length) {
       return objects.find(o => o.id === id).name || 'N/A';
     }
   }
 
-  updateFirewallRuleGroup() {
-    // TODO: Update Firewall Rule Group
-  }
-
-  deleteFirewallRule(firewallRule: FirewallRule) {
+  deleteFirewallRule(firewallRule: FirewallRule): void {
     const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';
 
     const deleteFunction = () => {
@@ -270,7 +266,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  restoreFirewallRule(firewallRule: FirewallRule) {
+  restoreFirewallRule(firewallRule: FirewallRule): void {
     if (firewallRule.deletedAt) {
       this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(data => {
         this.getFirewallRules();
@@ -278,7 +274,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
     const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
@@ -291,7 +287,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  importFirewallRulesConfig(event): void {
+  importFirewallRulesConfig(event: FirewallRuleImport[]): void {
     const fwDto: FirewallRuleImportCollectionDto = {
       datacenterId: this.datacenterService.currentDatacenterValue.id,
       firewallRules: this.sanitizeData(event),
@@ -307,32 +303,31 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private sanitizeData(entities: FirewallRuleImport[]) {
-    return entities.map(entity => {
+  private sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
+    return entities.map((entity: FirewallRuleImport) => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.mapCsv(entity);
       return entity;
     });
   }
 
-  private mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
+  private mapCsv = (entity: FirewallRuleImport): FirewallRuleImport => {
+    Object.entries(entity).forEach(([key, val]) => {
       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
-        obj[key] = false;
+        entity[key] = false;
       }
       if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
-        obj[key] = true;
+        entity[key] = true;
       }
       if (val === null || val === '') {
-        delete obj[key];
+        delete entity[key];
       }
     });
-    return obj;
-    // tslint:disable-next-line: semicolon
+    return entity;
   };
 
-  // TODO: add dto for toBeUploaded / toBeDeleted in api to get rid of any type
-  private createPreview(data: any, firewallRules: FirewallRuleImport[]): void {
+  private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
+    const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
     const tableConfig: TableConfig = {
       description: 'Firewall Rules Import Preview',
       columns: [
@@ -345,8 +340,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         { name: 'Service', template: () => this.serviceTemplate },
         { name: 'Rule Index', property: 'ruleIndex' },
       ],
+      rowStyle: (firewallRule: FirewallRule) => (firewallRule.hasOwnProperty('id') ? { background: '#ffeef0' } : { background: '#e6ffed' }),
     };
-    const previewModalDto = new PreviewModalDto(tableConfig, data.firewallRulesToBeUploaded, data.firewallRulesToBeDeleted);
+    const previewModalDto = new PreviewModalDto(tableConfig, [...firewallRulesToBeUploaded, ...firewallRulesToBeDeleted]);
     this.ngx.setModalData(previewModalDto, 'previewModal');
     this.ngx.getModal('previewModal').open();
 

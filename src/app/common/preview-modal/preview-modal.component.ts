@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup } from '@angular/forms';
 import { TableConfig } from '../table/table.component';
@@ -8,7 +8,6 @@ import { TableConfig } from '../table/table.component';
   templateUrl: './preview-modal.component.html',
 })
 export class PreviewModalComponent<T> {
-  @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
   form: FormGroup;
   submitted = false;
   config: TableConfig = {
@@ -35,7 +34,7 @@ export class PreviewModalComponent<T> {
   public getData(): void {
     const modalConfig = this.ngx.getModalData('previewModal');
     this.config = modalConfig.tableConfig;
-    this.data = modalConfig.toBeAdded;
+    this.data = modalConfig.data;
     this.ngx.resetModalData('previewModal');
   }
 }

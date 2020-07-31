@@ -1544,6 +1544,8 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/FirewallRulePreview'
       tags: &ref_5
         - v1/network-security/firewall-rules
       produces:
@@ -13128,6 +13130,20 @@ definitions:
       - datacenterId
       - firewallRules
       - dryRun
+  FirewallRulePreview:
+    type: object
+    properties:
+      firewallRulesToBeDeleted:
+        type: array
+        items:
+          type: string
+      firewallRulesToBeUploaded:
+        type: array
+        items:
+          type: string
+    required:
+      - firewallRulesToBeDeleted
+      - firewallRulesToBeUploaded
   GeneratedServiceObjectGroupBulkDto:
     type: object
     properties:

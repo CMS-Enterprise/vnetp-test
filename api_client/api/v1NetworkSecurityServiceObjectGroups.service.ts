@@ -17,9 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneratedServiceObjectGroupBulkDto } from '../model/models';
-import { ServiceObjectGroup } from '../model/models';
-import { ServiceObjectGroupRelationBulkImportCollectionDto } from '../model/models';
+import { GeneratedServiceObjectGroupBulkDto } from '../model/generatedServiceObjectGroupBulkDto';
+import { ServiceObjectGroup } from '../model/serviceObjectGroup';
+import { ServiceObjectGroupRelationBulkImportCollectionDto } from '../model/serviceObjectGroupRelationBulkImportCollectionDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -34,23 +34,14 @@ export interface V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams {
 }
 
 export interface V1NetworkSecurityServiceObjectGroupsGetRequestParams {
-    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
-    /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
     filter?: string;
-    /** &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&amp;or&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;type||eq||hero&amp;filter&#x3D;status||eq||alive&amp;or&#x3D;type||eq||villain&amp;or&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; */
     or?: string;
-    /** &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort&#x3D;name,ASC&amp;sort&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt; */
     sort?: string;
-    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
-    /** &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt; */
     perPage?: number;
-    /** &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt; */
     offset?: number;
-    /** &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt; */
     page?: number;
-    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -64,11 +55,8 @@ export interface V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestPa
 
 export interface V1NetworkSecurityServiceObjectGroupsIdGetRequestParams {
     id: string;
-    /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
-    /** &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1||field11,field12,...&amp;join&#x3D;relation1.nested||field21,field22,...&amp;join&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;profile||firstName,email&amp;join&#x3D;notifications||content&amp;join&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join&#x3D;relation1&amp;join&#x3D;relation1.nested&amp;join&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above. */
     join?: string;
-    /** &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt; */
     cache?: number;
 }
 
@@ -99,16 +87,12 @@ export interface V1NetworkSecurityServiceObjectGroupsPostRequestParams {
 }
 
 export interface V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams {
-    /** Service Object Group that the Service Object is being added to/removed from. */
     serviceObjectGroupId: string;
-    /** Service Object that is being added or removed from group membership. */
     serviceObjectId: string;
 }
 
 export interface V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams {
-    /** Service Object Group that the Service Object is being added to/removed from. */
     serviceObjectGroupId: string;
-    /** Service Object that is being added or removed from group membership. */
     serviceObjectId: string;
 }
 
@@ -138,52 +122,16 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
 
 
-    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
-        if (typeof value === "object" && value instanceof Date === false) {
-            httpParams = this.addToHttpParamsRecursive(httpParams, value);
-        } else {
-            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
-        }
-        return httpParams;
-    }
-
-    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
-        if (value == null) {
-            return httpParams;
-        }
-
-        if (typeof value === "object") {
-            if (Array.isArray(value)) {
-                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
-            } else if (value instanceof Date) {
-                if (key != null) {
-                    httpParams = httpParams.append(key,
-                        (value as Date).toISOString().substr(0, 10));
-                } else {
-                   throw Error("key may not be null if value is Date");
-                }
-            } else {
-                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
-                    httpParams, value[k], key != null ? `${key}.${k}` : k));
-            }
-        } else if (key != null) {
-            httpParams = httpParams.append(key, value);
-        } else {
-            throw Error("key may not be null if value is not object or array");
-        }
-        return httpParams;
-    }
-
     /**
      * Bulk Import Service Object Group to Service Object Relationships
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkImportRelationsPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const serviceObjectGroupRelationBulkImportCollectionDto = requestParameters.serviceObjectGroupRelationBulkImportCollectionDto;
         if (serviceObjectGroupRelationBulkImportCollectionDto === null || serviceObjectGroupRelationBulkImportCollectionDto === undefined) {
             throw new Error('Required parameter serviceObjectGroupRelationBulkImportCollectionDto was null or undefined when calling v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost.');
@@ -191,13 +139,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -212,15 +157,9 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/bulk-import-relations`,
             serviceObjectGroupRelationBulkImportCollectionDto,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -235,10 +174,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ServiceObjectGroup>>>;
-    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ServiceObjectGroup>>>;
-    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ServiceObjectGroup>>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ServiceObjectGroup>>>;
+    public v1NetworkSecurityServiceObjectGroupsBulkPost(requestParameters: V1NetworkSecurityServiceObjectGroupsBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const generatedServiceObjectGroupBulkDto = requestParameters.generatedServiceObjectGroupBulkDto;
         if (generatedServiceObjectGroupBulkDto === null || generatedServiceObjectGroupBulkDto === undefined) {
             throw new Error('Required parameter generatedServiceObjectGroupBulkDto was null or undefined when calling v1NetworkSecurityServiceObjectGroupsBulkPost.');
@@ -246,14 +185,11 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -268,15 +204,9 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.post<Array<ServiceObjectGroup>>(`${this.configuration.basePath}/v1/network-security/service-object-groups/bulk`,
             generatedServiceObjectGroupBulkDto,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -291,10 +221,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ServiceObjectGroup>>>;
-    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ServiceObjectGroup>>>;
-    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<Array<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ServiceObjectGroup>>>;
+    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ServiceObjectGroup>>>;
+    public v1NetworkSecurityServiceObjectGroupsGet(requestParameters: V1NetworkSecurityServiceObjectGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const fields = requestParameters.fields;
         const filter = requestParameters.filter;
         const or = requestParameters.or;
@@ -307,66 +237,48 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>fields, 'fields');
+            queryParameters = queryParameters.set('fields', <any>fields);
         }
         if (filter !== undefined && filter !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>filter, 'filter');
+            queryParameters = queryParameters.set('filter', <any>filter);
         }
         if (or !== undefined && or !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>or, 'or');
+            queryParameters = queryParameters.set('or', <any>or);
         }
         if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+            queryParameters = queryParameters.set('sort', <any>sort);
         }
         if (join !== undefined && join !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>join, 'join');
+            queryParameters = queryParameters.set('join', <any>join);
         }
         if (perPage !== undefined && perPage !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>perPage, 'per_page');
+            queryParameters = queryParameters.set('per_page', <any>perPage);
         }
         if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            queryParameters = queryParameters.set('offset', <any>offset);
         }
         if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
+            queryParameters = queryParameters.set('page', <any>page);
         }
         if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            queryParameters = queryParameters.set('cache', <any>cache);
         }
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.get<Array<ServiceObjectGroup>>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -381,10 +293,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdDelete.');
@@ -392,27 +304,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.delete<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -427,10 +330,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdDeprovisionPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdDeprovisionPatch.');
@@ -438,27 +341,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -473,10 +367,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdGet(requestParameters: V1NetworkSecurityServiceObjectGroupsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdGet.');
@@ -487,42 +381,30 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>fields, 'fields');
+            queryParameters = queryParameters.set('fields', <any>fields);
         }
         if (join !== undefined && join !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>join, 'join');
+            queryParameters = queryParameters.set('join', <any>join);
         }
         if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            queryParameters = queryParameters.set('cache', <any>cache);
         }
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.get<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -537,10 +419,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdPatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdPatch.');
@@ -552,14 +434,11 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -574,15 +453,9 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.patch<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             serviceObjectGroup,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -597,10 +470,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdProvisionPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdProvisionPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdProvisionPut.');
@@ -608,27 +481,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}/provision`,
             null,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -643,10 +507,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsIdPut(requestParameters: V1NetworkSecurityServiceObjectGroupsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdPut.');
@@ -658,14 +522,11 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -680,15 +541,9 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.put<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             serviceObjectGroup,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -703,10 +558,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdRestorePatch(requestParameters: V1NetworkSecurityServiceObjectGroupsIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdRestorePatch.');
@@ -714,27 +569,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}/restore`,
             null,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -749,10 +595,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityServiceObjectGroupsIdSoftDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityServiceObjectGroupsIdSoftDelete.');
@@ -760,26 +606,17 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}/soft`,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -794,10 +631,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsPost(requestParameters: V1NetworkSecurityServiceObjectGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const serviceObjectGroup = requestParameters.serviceObjectGroup;
         if (serviceObjectGroup === null || serviceObjectGroup === undefined) {
             throw new Error('Required parameter serviceObjectGroup was null or undefined when calling v1NetworkSecurityServiceObjectGroupsPost.');
@@ -805,14 +642,11 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -827,15 +661,9 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.post<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
             serviceObjectGroup,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -850,10 +678,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const serviceObjectGroupId = requestParameters.serviceObjectGroupId;
         if (serviceObjectGroupId === null || serviceObjectGroupId === undefined) {
             throw new Error('Required parameter serviceObjectGroupId was null or undefined when calling v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete.');
@@ -865,27 +693,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.delete<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(serviceObjectGroupId))}/service-objects/${encodeURIComponent(String(serviceObjectId))}`,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -900,10 +719,10 @@ export class V1NetworkSecurityServiceObjectGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'body', reportProgress?: boolean): Observable<ServiceObjectGroup>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ServiceObjectGroup>>;
+    public v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost(requestParameters: V1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         const serviceObjectGroupId = requestParameters.serviceObjectGroupId;
         if (serviceObjectGroupId === null || serviceObjectGroupId === undefined) {
             throw new Error('Required parameter serviceObjectGroupId was null or undefined when calling v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost.');
@@ -915,28 +734,19 @@ export class V1NetworkSecurityServiceObjectGroupsService {
 
         let headers = this.defaultHeaders;
 
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
         return this.httpClient.post<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(serviceObjectGroupId))}/service-objects/${encodeURIComponent(String(serviceObjectId))}`,
             null,
             {
-                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
