@@ -303,7 +303,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private mapCsv = (entity: FirewallRuleImport): FirewallRuleImport => {
+  private mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
     Object.entries(entity).forEach(([key, val]) => {
       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         entity[key] = false;
@@ -316,7 +316,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       }
     });
     return entity;
-  };
+  }
 
   private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
     const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
