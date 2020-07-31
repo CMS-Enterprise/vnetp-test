@@ -1,5 +1,5 @@
 // Angular Imports
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -72,6 +72,7 @@ export function apiConfigFactory(): Configuration {
       multi: true,
     },
     CookieService,
+    Title,
   ],
   bootstrap: [AppComponent],
 })
