@@ -40,42 +40,10 @@ import { V1VtsService } from './api/v1Vts.service';
   imports:      [],
   declarations: [],
   exports:      [],
-  providers: [
-    V1AppliancesService,
-    V1AuthService,
-    V1ConfigurationUploadService,
-    V1DatacentersService,
-    V1JobsService,
-    V1LoadBalancerHealthMonitorsService,
-    V1LoadBalancerIrulesService,
-    V1LoadBalancerNodesService,
-    V1LoadBalancerPoliciesService,
-    V1LoadBalancerPoolsService,
-    V1LoadBalancerProfilesService,
-    V1LoadBalancerRoutesService,
-    V1LoadBalancerSelfIpsService,
-    V1LoadBalancerVirtualServersService,
-    V1LoadBalancerVlansService,
-    V1NetworkSecurityFirewallRuleGroupsService,
-    V1NetworkSecurityFirewallRulesService,
-    V1NetworkSecurityNetworkObjectGroupsService,
-    V1NetworkSecurityNetworkObjectsService,
-    V1NetworkSecurityServiceObjectGroupsService,
-    V1NetworkSecurityServiceObjectsService,
-    V1NetworkStaticRoutesService,
-    V1NetworkSubnetsService,
-    V1NetworkVlansService,
-    V1PhysicalServersService,
-    V1TierGroupsService,
-    V1TiersService,
-    V1VlansService,
-    V1VmwareNetworkAdapterService,
-    V1VmwareVirtualDisksService,
-    V1VmwareVirtualMachinesService,
-    V1VtsService ]
+  providers: []
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]
