@@ -12,7 +12,7 @@
     <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes()">
       <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Pools <tooltip [message]="helpText.Pools"></tooltip> </a>
     </li>
-    <li class="nav-item" (click)="navIndex = 2;">
+    <li class="nav-item" (click)="navIndex = 2">
       <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"> Pool Relations <tooltip [message]="helpText.PoolRelations"></tooltip> </a>
     </li>
     <li class="nav-item" (click)="navIndex = 3; getNodes()">
@@ -84,27 +84,28 @@
           <td>
             <span>{{ virtualServer?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'pencil-alt']" 
-              (click)="openVirtualServerModal(ModalMode.Edit, virtualServer)" 
-              aria-label="Edit Virtual Server"
-            ></fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!virtualServer?.deletedAt"
+              icon="edit"
+              label="Edit Virtual Server"
+              (handleClick)="openVirtualServerModal(ModalMode.Edit, virtualServer)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="virtualServer?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreVirtualServer(virtualServer)"
-              aria-label="Restore Virtual Server"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': virtualServer?.deletedAt }"
-              (click)="deleteVirtualServer(virtualServer)"
-              aria-label="Soft-Delete/Delete Virtual Server"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Virtual Server"
+              type="success"
+              (handleClick)="restoreVirtualServer(virtualServer)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Virtual Server"
+              [type]="virtualServer.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteVirtualServer(virtualServer)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="virtualServers?.length === 0" class="text-center">
@@ -152,16 +153,28 @@
           <td>
             <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openPoolModal(ModalMode.Edit, pool)" aria-label="Edit Pool"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="pool?.deletedAt" class="fg-success icon" (click)="restorePool(pool)" aria-label="Restore Pool"></fa-icon>
-            <fa-icon 
-              class="icon" 
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': pool?.deletedAt }"
-              (click)="deletePool(pool)"
-              aria-label="Soft-Delete/Delete Pool"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!pool?.deletedAt"
+              icon="edit"
+              label="Edit Pool"
+              (handleClick)="openPoolModal(ModalMode.Edit, pool)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="pool?.deletedAt"
+              icon="undo"
+              label="Restore Pool"
+              type="success"
+              (handleClick)="restorePool(pool)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Pool"
+              [type]="pool?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deletePool(pool)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!pools?.length" class="text-center">
@@ -223,16 +236,28 @@
           <td>
             <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openNodeModal(ModalMode.Edit, node)" aria-label="Edit Node"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="node?.deletedAt" class="fg-success icon" (click)="restoreNode(node)" aria-label="Restore Node"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': node?.deletedAt }"
-              (click)="deleteNode(node)"
-              aria-label="Soft-Delete/Delete Node"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!node?.deletedAt"
+              icon="edit"
+              label="Edit Node"
+              (handleClick)="openNodeModal(ModalMode.Edit, node)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="node?.deletedAt"
+              icon="undo"
+              label="Restore Node"
+              type="success"
+              (handleClick)="restoreNode(node)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Node"
+              [type]="node?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteNode(node)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!nodes?.length" class="text-center">
@@ -272,16 +297,28 @@
           <td>
             <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openIRuleModal(ModalMode.Edit, irule)" aria-label="Edit iRule"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="irule?.deletedAt" class="fg-success icon" (click)="restoreIrule(irule)" aria-label="Restore iRule"></fa-icon>
-            <fa-icon
-              class="icon" 
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': irule?.deletedAt }"
-              (click)="deleteIrule(irule)"
-              aria-label="Soft-Delete/Delete iRule"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!irule?.deletedAt"
+              icon="edit"
+              label="Edit iRule"
+              (handleClick)="openIRuleModal(ModalMode.Edit, irule)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="irule?.deletedAt"
+              icon="undo"
+              label="Restore iRule"
+              type="success"
+              (handleClick)="restoreIrule(irule)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete iRule"
+              [type]="irule?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteIrule(irule)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!irules?.length" class="text-center">
@@ -333,22 +370,28 @@
           <td>
             <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)" aria-label="Edit Health Monitor"> </fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!healthMonitor?.deletedAt"
+              icon="edit"
+              label="Edit Health Monitor"
+              (handleClick)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="healthMonitor?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreHealthMonitor(healthMonitor)"
-              aria-label="Restore Health Monitor"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': healthMonitor?.deletedAt }"
-              (click)="deleteHealthMonitor(healthMonitor)"
-              aria-label="Soft-Delete/Delete Health Monitor"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Health Monitor"
+              type="success"
+              (handleClick)="restoreHealthMonitor(healthMonitor)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Health Monitor"
+              [type]="healthMonitor?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteHealthMonitor(healthMonitor)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!healthMonitors?.length" class="text-center">
@@ -388,22 +431,28 @@
           <td>
             <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openProfileModal(ModalMode.Edit, profile)" aria-label="Edit Profile"></fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!profile?.deletedAt"
+              icon="edit"
+              label="Edit Profile"
+              (handleClick)="openProfileModal(ModalMode.Edit, profile)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="profile?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreProfile(profile)"
-              aria-label="Restore Profile"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': profile?.deletedAt }"
-              (click)="deleteProfile(profile)"
-              aria-label="Soft-Delete/Delete Profile"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Profile"
+              type="success"
+              (handleClick)="restoreProfile(profile)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Profile"
+              [type]="profile?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteProfile(profile)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!profiles?.length" class="text-center">
@@ -443,16 +492,28 @@
           <td>
             <span>{{ policy?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openPolicyModal(ModalMode.Edit, policy)" aria-label="Edit Policy"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="policy?.deletedAt" class="fg-success icon" (click)="restorePolicy(policy)" aria-label="Restore Policy"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': policy?.deletedAt }"
-              (click)="deletePolicy(policy)"
-              aria-label="Soft-Delete/Delete Policy"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!policy?.deletedAt"
+              icon="edit"
+              label="Edit Policy"
+              (handleClick)="openPolicyModal(ModalMode.Edit, policy)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="policy?.deletedAt"
+              icon="undo"
+              label="Restore Policy"
+              type="success"
+              (handleClick)="restorePolicy(policy)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Policy"
+              [type]="policy?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deletePolicy(policy)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!policies?.length" class="text-center">
@@ -488,16 +549,28 @@
           <td>
             <span>{{ vlan?.tag }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit Vlan"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success icon" (click)="restoreVlan(vlan)" aria-label="Restore Vlan"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': vlan?.deletedAt }"
-              (click)="deleteVlan(vlan)"
-              aria-label="Soft-Delete/Delete Vlan"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!vlan?.deletedAt"
+              icon="edit"
+              label="Edit VLAN"
+              (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="vlan?.deletedAt"
+              icon="undo"
+              label="Restore VLAN"
+              type="success"
+              (handleClick)="restoreVlan(vlan)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete VLAN"
+              [type]="vlan?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteVlan(vlan)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!vlans?.length" class="text-center">
@@ -537,16 +610,28 @@
           <td>
             <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openSelfIpModal(ModalMode.Edit, selfIp)" aria-label="Edit SelfIp"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="selfIp?.deletedAt" class="fg-success icon" (click)="restoreSelfIp(selfIp)" aria-label="Restore SelfIp"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': selfIp?.deletedAt }"
-              (click)="deleteSelfIp(selfIp)"
-              aria-label="Soft-Delete/Delete SelfIp"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!selfIp?.deletedAt"
+              icon="edit"
+              label="Edit Self IP"
+              (handleClick)="openSelfIpModal(ModalMode.Edit, selfIp)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="selfIp?.deletedAt"
+              icon="undo"
+              label="Restore Self IP"
+              type="success"
+              (handleClick)="restoreSelfIp(selfIp)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Self IP"
+              [type]="selfIp?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteSelfIp(selfIp)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!selfIps?.length" class="text-center">
@@ -586,16 +671,28 @@
           <td>
             <span>{{ route?.gateway }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="openRouteModal(ModalMode.Edit, route)" aria-label="Edit Route"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="route?.deletedAt" class="fg-success icon" (click)="restoreRoute(route)" aria-label="Restore Route"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': route?.deletedAt }"
-              (click)="deleteRoute(route)"
-              aria-label="Soft-Delete/Delete Route"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!route?.deletedAt"
+              icon="edit"
+              label="Edit Route"
+              (handleClick)="openRouteModal(ModalMode.Edit, route)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="route?.deletedAt"
+              icon="undo"
+              label="Restore Route"
+              type="success"
+              (handleClick)="restoreRoute(route)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Route"
+              [type]="route?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteRoute(route)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!routes?.length" class="text-center">

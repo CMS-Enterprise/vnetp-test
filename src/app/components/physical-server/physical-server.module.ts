@@ -5,6 +5,7 @@ import { PhysicalServerModalComponent } from './physical-server-modal/physical-s
 import { PhysicalServerDetailComponent } from './physical-server-detail/physical-server-detail.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [PhysicalServerComponent, PhysicalServerModalComponent, PhysicalServerDetailComponent],
 })
 export class PhysicalServerModule {}

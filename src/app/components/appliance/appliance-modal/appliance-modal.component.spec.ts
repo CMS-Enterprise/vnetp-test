@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceModalComponent } from './appliance-modal.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -16,7 +16,7 @@ describe('ApplianceModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
-      declarations: [ApplianceModalComponent, MockFontAwesomeComponent],
+      declarations: [ApplianceModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
     }).compileComponents();
   }));

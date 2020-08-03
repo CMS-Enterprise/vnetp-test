@@ -53,17 +53,28 @@
           <td>
             <span>{{ subnet?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!subnet?.deletedAt" (click)="openSubnetModal(ModalMode.Edit, subnet)" aria-label="Edit Subnet"> </fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="subnet?.deletedAt" class="fg-success icon" (click)="restoreSubnet(subnet)" aria-label="Restore Subnet"></fa-icon>
-            <fa-icon
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': subnet.deletedAt }"
-              (click)="deleteSubnet(subnet)"
-              aria-label="Soft-Delete/Delete Subnet"
-            >
-            </fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!subnet?.deletedAt"
+              icon="edit"
+              label="Edit Subnet"
+              (handleClick)="openSubnetModal(ModalMode.Edit, subnet)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="subnet?.deletedAt"
+              icon="undo"
+              label="Restore Subnet"
+              type="success"
+              (handleClick)="restoreSubnet(subnet)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Subnet"
+              [type]="subnet?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteSubnet(subnet)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!subnets?.length" class="text-center">
@@ -107,16 +118,28 @@
           <td>
             <span>{{ vlan?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!vlan?.deletedAt" (click)="openVlanModal(ModalMode.Edit, vlan)" aria-label="Edit VLAN"></fa-icon>
-            <fa-icon [icon]="['fas', 'undo']" *ngIf="vlan?.deletedAt" class="fg-success icon" (click)="restoreVlan(vlan)" aria-label="Restore VLAN"></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': vlan.deletedAt }"
-              (click)="deleteVlan(vlan)"
-              aria-label="Soft-Delete/Delete VLAN"
-            ></fa-icon>
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!vlan?.deletedAt"
+              icon="edit"
+              label="Edit VLAN"
+              (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
+            ></app-icon-button>
+
+            <app-icon-button
+              *ngIf="vlan?.deletedAt"
+              icon="undo"
+              label="Restore VLAN"
+              type="success"
+              (handleClick)="restoreVlan(vlan)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete VLAN"
+              [type]="vlan?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteVlan(vlan)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!vlans?.length" class="text-center">
@@ -140,18 +163,20 @@
 <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
   <ng-container *ngIf="navIndex === 0">
     <app-import-export
-    [exportObject]="subnets"
-    exportFileName="subnets-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importSubnetConfig($event)"></app-import-export>
+      [exportObject]="subnets"
+      exportFileName="subnets-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importSubnetConfig($event)"
+    ></app-import-export>
   </ng-container>
 
   <ng-container *ngIf="navIndex === 1">
     <app-import-export
-    [exportObject]="vlans"
-    exportFileName="vlans-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importVlansConfig($event)"></app-import-export>
+      [exportObject]="vlans"
+      exportFileName="vlans-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importVlansConfig($event)"
+    ></app-import-export>
   </ng-container>
 </section>
 

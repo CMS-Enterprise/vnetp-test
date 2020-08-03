@@ -44,6 +44,15 @@
   }
 }
 
+.btn-icon {
+  box-shadow: none;
+  padding: 10px;
+
+  .icon {
+    margin: 0;
+  }
+}
+
 .btn-danger {
   background-color: $c-red-400;
   border-color: $c-red-400;

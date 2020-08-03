@@ -5,6 +5,7 @@ import { ApplianceDetailComponent } from './appliance-detail/appliance-detail.co
 import { ApplianceModalComponent } from './appliance-modal/appliance-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [ApplianceComponent, ApplianceDetailComponent, ApplianceModalComponent],
 })
 export class ApplianceModule {}

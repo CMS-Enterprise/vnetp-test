@@ -3,38 +3,10 @@
   color: $c-gray-700;
 }
 
-.item-actions {
-  text-align: right;
-
-  .icon {
-    color: $c-gray-700;
-    cursor: pointer;
-    transition: color 150ms;
-
-    &.fg-success {
-      color: $c-green-400;
-
-      &:hover {
-        color: $c-green-700;
-      }
-    }
-
-    &.fg-danger {
-      color: $c-red-400;
-
-      &:hover {
-        color: $c-red-700;
-      }
-    }
-
-    &:hover {
-      color: $c-blue-400;
-    }
-
-    + .icon {
-      margin-left: 10px;
-    }
-  }
+.table__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 ul.ngx-pagination {

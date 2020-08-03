@@ -52,7 +52,6 @@
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
 
       <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
-
         <!-- Select Network Object-->
         <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
           <option></option>
@@ -60,11 +59,7 @@
         </select>
 
         <!-- Add Network Object -->
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="addNetworkObject()"
-          [disabled]="!selectedNetworkObject">
+        <button type="button" class="btn btn-info" (click)="addNetworkObject()" [disabled]="!selectedNetworkObject">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Network Object</span>
         </button>
@@ -91,8 +86,8 @@
               <span *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
               <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
             </td>
-            <td class="item-actions">
-              <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeNetworkObject(netObj)" aria-label="Remove Network Object"></fa-icon>
+            <td class="table__actions">
+              <app-icon-button icon="delete" label="Remove Network Object" (handleClick)="removeNetworkObject(netObj)"></app-icon-button>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">

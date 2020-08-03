@@ -36,7 +36,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let firewallRule of firewallRules | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage, totalItems: totalFirewallRules }">
+    <tr
+      *ngFor="
+        let firewallRule of firewallRules
+          | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage, totalItems: totalFirewallRules }
+      "
+    >
       <td>
         <p>{{ firewallRule?.name }}</p>
       </td>
@@ -95,26 +100,28 @@
       <td>
         <span>{{ firewallRule?.ruleIndex }}</span>
       </td>
-      <td class="item-actions">
-        <fa-icon 
-          class="icon"
-          [icon]="['fas', 'pencil-alt']" 
-          *ngIf="!firewallRule.deletedAt" 
-          (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
-          aria-label="Edit Firewall Rule"></fa-icon>
-        <fa-icon 
-          [icon]="['fas', 'undo']"
+      <td class="table__actions">
+        <app-icon-button
+          *ngIf="!firewallRule?.deletedAt"
+          icon="edit"
+          label="Edit Firewall Rule"
+          (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
+        ></app-icon-button>
+
+        <app-icon-button
           *ngIf="firewallRule?.deletedAt"
-          class="fg-success icon"
-          (click)="restoreFirewallRule(firewallRule)"
-          aria-label="Restore Firewall Rule"
-        ></fa-icon>
-        <fa-icon 
-          class="icon"
-          [icon]="['fas', 'trash']"
-          [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
-          (click)="deleteFirewallRule(firewallRule)"
-          aria-label="Soft-Delete/Delete Firewall Rule"></fa-icon>
+          icon="undo"
+          label="Restore Firewall Rule"
+          type="success"
+          (handleClick)="restoreFirewallRule(firewallRule)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Appliance"
+          [type]="firewallRule.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteFirewallRule(firewallRule)"
+        ></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="firewallRules?.length === 0" class="text-center">
@@ -135,10 +142,11 @@
 
 <section class="btn-toolbar" role="toolbar">
   <app-import-export
-  [exportObject]="firewallRules"
-  exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
-  (import)="importFirewallRulesConfig($event)"
-  [disableJson]="false"></app-import-export>
+    [exportObject]="firewallRules"
+    exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
+    (import)="importFirewallRulesConfig($event)"
+    [disableJson]="false"
+  ></app-import-export>
 </section>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>

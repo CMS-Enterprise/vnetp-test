@@ -54,24 +54,28 @@
           <td>
             <span>{{ svcObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!svcObj?.deletedAt" (click)="openServiceObjectModal(ModalMode.Edit, svcObj)" aria-label="Edit Service Object">
-            </fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!svcObj?.deletedAt"
+              icon="edit"
+              label="Edit Service Object"
+              (handleClick)="openServiceObjectModal(ModalMode.Edit, svcObj)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="svcObj?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreServiceObject(svcObj)"
-              aria-label="Restore Service Object"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': svcObj.deletedAt }"
-              (click)="deleteServiceObject(svcObj)"
-              aria-label="Soft-Delete/Delete Service Object"
-            >
-            </fa-icon>
+              icon="undo"
+              label="Restore Service Object"
+              type="success"
+              (handleClick)="restoreServiceObject(svcObj)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Service Object"
+              [type]="svcObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteServiceObject(svcObj)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!serviceObjects?.length" class="text-center">
@@ -124,28 +128,28 @@
           <td>
             <span>{{ svcObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'pencil-alt']" 
+          <td class="table__actions">
+            <app-icon-button
               *ngIf="!svcObjGroup?.deletedAt"
-              (click)="openServiceObjectGroupModal(ModalMode.Edit, svcObjGroup)"
-              aria-label="Edit Service Object Group"
-            ></fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+              icon="edit"
+              label="Edit Service Object Group"
+              (handleClick)="openServiceObjectGroupModal(ModalMode.Edit, svcObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="svcObjGroup?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreServiceObjectGroup(svcObjGroup)"
-              aria-label="Restore Service Object Group"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': svcObjGroup.deletedAt }"
-              (click)="deleteServiceObjectGroup(svcObjGroup)"
-              aria-label="Soft-Delete/Delete Service Object Group"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Service Object Group"
+              type="success"
+              (handleClick)="restoreServiceObjectGroup(svcObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Service Object Group"
+              [type]="svcObjGroup?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteServiceObjectGroup(svcObjGroup)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!serviceObjectGroups?.length" class="text-center">
@@ -178,25 +182,28 @@
 
 <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
   <app-import-export
-  [exportObject]="serviceObjects"
-  exportFileName="serviceObjects-{{ currentTier?.name }}"
-  [disableJson]="false"
-  (import)="importServiceObjectsConfig($event)"></app-import-export>
+    [exportObject]="serviceObjects"
+    exportFileName="serviceObjects-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importServiceObjectsConfig($event)"
+  ></app-import-export>
 </section>
 
 <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
   <app-import-export
-  [exportObject]="serviceObjectGroups"
-  exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
-  [disableJson]="false"
-  (import)="importServiceObjectGroupsConfig($event)"></app-import-export>
+    [exportObject]="serviceObjectGroups"
+    exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importServiceObjectGroupsConfig($event)"
+  ></app-import-export>
 </section>
 
 <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
   <app-import-export
-  [disableExport]="true"
-  [disableJson]="false"
-  (import)="importServiceObjectGroupRelationsConfig($event)"></app-import-export>
+    [disableExport]="true"
+    [disableJson]="false"
+    (import)="importServiceObjectGroupRelationsConfig($event)"
+  ></app-import-export>
 </section>
 
 <app-service-object-group-modal></app-service-object-group-modal>

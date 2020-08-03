@@ -1,0 +1,31 @@
+@import '../../../assets/styles/variables';
+
+.icon {
+  font-size: 1rem;
+  color: $c-gray-700;
+  cursor: pointer;
+  transition: color 150ms;
+
+  &:hover,
+  &:focus {
+    color: $c-blue-400;
+  }
+
+  &--success {
+    color: $c-green-400;
+
+    &:hover,
+    &:focus {
+      color: $c-green-700;
+    }
+  }
+
+  &--danger {
+    color: $c-red-400;
+
+    &:hover,
+    &:focus {
+      color: $c-red-700;
+    }
+  }
+}

@@ -62,8 +62,12 @@
                 <td>{{ filterEntry.Protocol }}</td>
                 <td>{{ filterEntry.SourcePorts }}</td>
                 <td>{{ filterEntry.DestinationPorts }}</td>
-                <td class="item-actions">
-                  <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeFilterEntry(filterEntry)" aria-label="Remove Filter Entry"></fa-icon>
+                <td class="table__actions">
+                  <app-icon-button
+                    icon="delete"
+                    label="Remove Filter Entry"
+                    (handleClick)="removeFilterEntry(filterEntry)"
+                  ></app-icon-button>
                 </td>
               </tr>
               <tr *ngIf="filterEntries?.length === 0" class="text-center">

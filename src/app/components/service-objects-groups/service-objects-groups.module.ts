@@ -4,6 +4,7 @@ import { ServiceObjectsGroupsComponent } from './service-objects-groups.componen
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal/service-object-group-modal.component';
 import { ServiceObjectModalComponent } from './service-object-modal/service-object-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent],
 })
 export class ServiceObjectsGroupsModule {}
