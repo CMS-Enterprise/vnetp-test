@@ -43,42 +43,13 @@
       <p>{{ firewallRule?.direction }}</p>
     </td>
     <td>
-      <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
-        {{ firewallRule?.sourceIpAddress }}
-      </p>
-      <p *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
-        {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
-        (Object)
-      </p>
-      <p *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-        {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
-        (Object Group)
-      </p>
+      <ng-container *ngTemplateOutlet="sourceAddress; context: { datum: firewallRule }"></ng-container>
     </td>
     <td>
-      <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
-        {{ firewallRule?.destinationIpAddress }}
-      </p>
-      <p *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
-        {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
-        (Object)
-      </p>
-      <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
-        aria-label="Destination Network Object Group">
-        {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
-        (Object Group)
-      </p>
+      <ng-container *ngTemplateOutlet="destinationAddress; context: { datum: firewallRule }"></ng-container>
     </td>
     <td>
-      <p *ngIf="firewallRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
-        Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
-      </p>
-      <p *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
-        {{ firewallRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
-      </p>
-      <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
-        {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
-      </p>
+      <ng-container *ngTemplateOutlet="serviceType; context: { datum: firewallRule }"></ng-container>
     </td>
     <td>
       <p>{{ firewallRule?.logging }}</p>
