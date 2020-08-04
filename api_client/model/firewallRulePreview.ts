@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FirewallRuleImport } from './firewallRuleImport';
+import { FirewallRule } from './firewallRule';
 
 
-export interface FirewallRuleImportCollectionDto { 
-    datacenterId: string;
-    firewallRules: Array<FirewallRuleImport>;
-    dryRun: boolean;
+export interface FirewallRulePreview { 
+    firewallRulesToBeDeleted: Array<FirewallRule>;
+    firewallRulesToBeUploaded: Array<FirewallRule>;
 }
 

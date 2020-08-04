@@ -22,113 +22,62 @@
 <table class="table table-striped" aria-describedby="Firewall Rule detail table">
   <thead>
     <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Action</th>
-      <th scope="col">Protocol</th>
-      <th scope="col">Direction</th>
-      <th scope="col">Source Address</th>
-      <th scope="col">Destination Address</th>
-      <th scope="col">Service</th>
-      <th scope="col">Log</th>
-      <th scope="col">Enabled</th>
-      <th scope="col">Rule Index</th>
-      <th scope="col"></th>
+      <th scope="col" *ngFor="let header of tableHeaders">{{ header }}</th>
     </tr>
-  </thead>
-  <tbody>
-    <tr
-      *ngFor="
+</thead>
+<tbody>
+  <tr *ngFor="
         let firewallRule of firewallRules
           | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage, totalItems: totalFirewallRules }
-      "
-    >
-      <td>
-        <p>{{ firewallRule?.name }}</p>
-      </td>
-      <td>
-        <p>{{ firewallRule?.action }}</p>
-      </td>
-      <td>
-        <p>{{ firewallRule?.protocol }}</p>
-      </td>
-      <td>
-        <p>{{ firewallRule?.direction }}</p>
-      </td>
-      <td>
-        <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
-          {{ firewallRule?.sourceIpAddress }}
-        </p>
-        <p *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
-          {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
-          (Object)
-        </p>
-        <p *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-          {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
-          (Object Group)
-        </p>
-      </td>
-      <td>
-        <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
-          {{ firewallRule?.destinationIpAddress }}
-        </p>
-        <p *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
-          {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
-          (Object)
-        </p>
-        <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
-          {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
-          (Object Group)
-        </p>
-      </td>
-      <td>
-        <p *ngIf="firewallRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
-          Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
-        </p>
-        <p *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
-          {{ firewallRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
-        </p>
-        <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
-          {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
-        </p>
-      </td>
-      <td>
-        <p>{{ firewallRule?.logging }}</p>
-      </td>
-      <td>
-        <p>{{ firewallRule?.enabled }}</p>
-      </td>
-      <td>
-        <span>{{ firewallRule?.ruleIndex }}</span>
-      </td>
-      <td class="table__actions">
-        <app-icon-button
-          *ngIf="!firewallRule?.deletedAt"
-          icon="edit"
-          label="Edit Firewall Rule"
-          (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
-        ></app-icon-button>
+      ">
+    <td>
+      <p>{{ firewallRule?.name }}</p>
+    </td>
+    <td>
+      <p>{{ firewallRule?.action }}</p>
+    </td>
+    <td>
+      <p>{{ firewallRule?.protocol }}</p>
+    </td>
+    <td>
+      <p>{{ firewallRule?.direction }}</p>
+    </td>
+    <td>
+      <ng-container *ngTemplateOutlet="sourceAddress; context: { datum: firewallRule }"></ng-container>
+    </td>
+    <td>
+      <ng-container *ngTemplateOutlet="destinationAddress; context: { datum: firewallRule }"></ng-container>
+    </td>
+    <td>
+      <ng-container *ngTemplateOutlet="serviceType; context: { datum: firewallRule }"></ng-container>
+    </td>
+    <td>
+      <p>{{ firewallRule?.logging }}</p>
+    </td>
+    <td>
+      <p>{{ firewallRule?.enabled }}</p>
+    </td>
+    <td>
+      <span>{{ firewallRule?.ruleIndex }}</span>
+    </td>
+    <td class="table__actions">
+      <app-icon-button *ngIf="!firewallRule?.deletedAt" icon="edit" label="Edit Firewall Rule"
+        (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
 
-        <app-icon-button
-          *ngIf="firewallRule?.deletedAt"
-          icon="undo"
-          label="Restore Firewall Rule"
-          type="success"
-          (handleClick)="restoreFirewallRule(firewallRule)"
-        ></app-icon-button>
+      <app-icon-button *ngIf="firewallRule?.deletedAt" icon="undo" label="Restore Firewall Rule" type="success"
+        (handleClick)="restoreFirewallRule(firewallRule)"></app-icon-button>
 
-        <app-icon-button
-          icon="delete"
-          label="Soft-Delete/Delete Appliance"
-          [type]="firewallRule.deletedAt ? 'danger' : 'default'"
-          (handleClick)="deleteFirewallRule(firewallRule)"
-        ></app-icon-button>
-      </td>
-    </tr>
-    <tr *ngIf="firewallRules?.length === 0" class="text-center">
-      <td colspan="11">No Firewall Rules</td>
-    </tr>
-  </tbody>
+      <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
+        [type]="firewallRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteFirewallRule(firewallRule)">
+      </app-icon-button>
+    </td>
+  </tr>
+  <tr *ngIf="firewallRules?.length === 0" class="text-center">
+    <td colspan="11">No Firewall Rules</td>
+  </tr>
+</tbody>
 </table>
+
 <pagination-controls (pageChange)="currentFirewallRulePage = $event; getFirewallRules()"></pagination-controls>
 
 <section class="btn-toolbar btn-toolbar--start" role="toolbar">
@@ -151,3 +100,48 @@
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
+<app-preview-modal></app-preview-modal>
+
+<!-- source address template -->
+<ng-template #sourceAddress let-firewallRule="datum">
+  <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
+    {{ firewallRule?.sourceIpAddress }}
+  </p>
+  <p *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
+    {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
+    (Object)
+  </p>
+  <p *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
+    {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    (Object Group)
+  </p>
+</ng-template>
+
+<!-- destination address template -->
+<ng-template #destinationAddress let-firewallRule="datum">
+  <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
+    {{ firewallRule?.destinationIpAddress }}
+  </p>
+  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
+    {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
+    (Object)
+  </p>
+  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
+    aria-label="Destination Network Object Group">
+    {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    (Object Group)
+  </p>
+</ng-template>
+
+<!-- service type template -->
+<ng-template #serviceType let-firewallRule="datum">
+  <p *ngIf="firewallRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
+    Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
+  </p>
+  <p *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
+    {{ firewallRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
+  </p>
+  <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
+    {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
+  </p>
+</ng-template>
