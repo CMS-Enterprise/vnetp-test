@@ -11,10 +11,9 @@
 </div>
 
 <ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal">
-  <div class="modal-header">
+  <header class="modal-header">
     <h4 class="modal-title">{{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter</h4>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="datacenterSwitchModal.close()"></button>
-  </div>
+  </header>
 
   <div class="modal-body">
     Current Datacenter:
@@ -26,13 +25,19 @@
     </select>
   </div>
 
-  <div class="modal-footer">
+  <footer class="modal-footer">
     <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">
       Cancel
     </button>
 
-    <button type="button" class="btn btn-primary" data-dismiss="modal" [disabled]="!selectedDatacenter" (click)="switchDatacenter(); datacenterSwitchModal.close()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      [disabled]="!selectedDatacenter"
+      (click)="switchDatacenter(); datacenterSwitchModal.close()"
+    >
       {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
     </button>
-  </div>
+  </footer>
 </ngx-smart-modal>

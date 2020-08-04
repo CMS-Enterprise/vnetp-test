@@ -1,7 +1,7 @@
 <ngx-smart-modal #networkObjectModal identifier="networkObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
-  <div class="modal-header">
-    <h1 class="modal-title header">Network Object</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Network Object</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -233,17 +233,17 @@
           />
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
-          Cancel
-        </button>
-
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>

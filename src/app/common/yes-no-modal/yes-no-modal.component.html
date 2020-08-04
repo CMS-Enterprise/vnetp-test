@@ -1,29 +1,12 @@
-<ngx-smart-modal
-  #yesNoModal
-  identifier="yesNoModal"
-  [dismissable]="false"
-  (onOpenFinished)="getData()"
-  customClass="small-modal"
->
-  <div class="modal-header">
+<ngx-smart-modal #yesNoModal identifier="yesNoModal" [dismissable]="false" (onOpenFinished)="getData()" customClass="small-modal">
+  <header class="modal-header">
     <h4 class="modal-title">{{ modalTitle || 'Title' }}</h4>
-    <button
-      type="button"
-      class="close"
-      data-dismiss="modal"
-      aria-label="Close"
-      (click)="yesNoModal.close()"
-    ></button>
-  </div>
+  </header>
 
   <div class="modal-body">
     {{ modalBody }}
   </div>
-  <div
-    [style.padding]="'15px 22px'"
-    class="custom-control custom-radio"
-    *ngIf="allowEmptyTier"
-  >
+  <div [style.padding]="'15px 22px'" class="custom-control custom-radio" *ngIf="allowEmptyTier">
     <input
       type="checkbox"
       class="custom-control-input"
@@ -31,29 +14,19 @@
       name="allowEmptyTierRadio"
       [(ngModel)]="allowEmptyTierRadio"
       mdbInput
-    >
+    />
     <label class="custom-control-label" for="allowEmptyTierRadio">
       If checked, CSV's without TierIDs will default to current tier.
     </label>
   </div>
 
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-link"
-      data-dismiss="modal"
-      (click)="no()"
-    >
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="no()">
       No
     </button>
 
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-dismiss="modal"
-      (click)="yes()"
-    >
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="yes()">
       Yes
     </button>
-  </div>
+  </footer>
 </ngx-smart-modal>

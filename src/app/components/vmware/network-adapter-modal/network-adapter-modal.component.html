@@ -6,9 +6,9 @@
   [dismissable]="false"
   customClass="small-modal"
 >
-  <div class="modal-header">
+  <header class="modal-header">
     <h4 class="modal-title">Network Adapter</h4>
-  </div>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -32,12 +32,7 @@
 
       <div class="form-group">
         <label for="description">Description</label>
-        <input
-          type="text"
-          formControlName="description"
-          class="form-control"
-          aria-label="Description"
-        />
+        <input type="text" formControlName="description" class="form-control" aria-label="Description" />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
           <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
@@ -53,22 +48,17 @@
           </option>
         </select>
       </div>
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
-
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>

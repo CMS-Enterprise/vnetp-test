@@ -1,13 +1,7 @@
-<ngx-smart-modal
-  #nodeModal
-  identifier="nodeModal"
-  [dismissable]="false"
-  (onOpen)="getData()"
-  (onClose)="reset()"
->
-  <div class="modal-header">
+<ngx-smart-modal #nodeModal identifier="nodeModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
+  <header class="modal-header">
     <h4 class="modal-title">Node</h4>
-  </div>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -50,7 +44,7 @@
 
       <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
         <label for="ipAddress">IP Address</label>
-        <tooltip  *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
+        <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
         <input
           name="ipAddress"
           formControlName="ipAddress"
@@ -66,7 +60,7 @@
 
       <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
         <label for="fqdn">FQDN</label>
-        <tooltip  *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
+        <tooltip *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
         <input
           name="fqdn"
           formControlName="fqdn"
@@ -82,13 +76,7 @@
 
       <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
         <div class="form-check form-check-inline">
-          <input
-            type="checkbox"
-            name="autoPopulate"
-            class="form-check-input"
-            formControlName="autoPopulate"
-            aria-label="FQDN"
-          />
+          <input type="checkbox" name="autoPopulate" class="form-check-input" formControlName="autoPopulate" aria-label="FQDN" />
 
           <label class="form-check-label" for="autoPopulate">
             Auto Populate
@@ -96,22 +84,17 @@
           <tooltip [message]="helpText.AutoPopulate"></tooltip>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
-
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>

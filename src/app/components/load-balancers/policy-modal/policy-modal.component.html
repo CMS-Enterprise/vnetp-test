@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="large-modal"
 >
-  <div class="modal-header">
+  <header class="modal-header">
     <h4 class="modal-title">Load Balancer Policy</h4>
-  </div>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -34,12 +34,7 @@
         <div class="form-group col-md-6">
           <label for="type">Type</label>
           <tooltip message="todo"></tooltip>
-          <select
-            formControlName="type"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-            aria-label="Type"
-          >
+          <select formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.type.errors }" aria-label="Type">
             <option></option>
             <option value="ASM">ASM</option>
             <option value="APM">APM</option>
@@ -69,64 +64,40 @@
             ASM Policy XML is Required.
           </div>
         </div>
-
       </div>
 
       <div class="form-row" *ngIf="f.type.value === 'ASM'">
         <div class="form-group col-md-6">
-          <button
-            class="btn btn-warning"
-            (click)="policyContentUploader.click()"
-            type="button"
-          >
+          <button class="btn btn-warning" (click)="policyContentUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
             <span>Upload ASM XML Export</span>
           </button>
 
-          <input
-            hidden
-            type="file"
-            #policyContentUploader
-            (change)="importPolicyContent($event)"
-          />
+          <input hidden type="file" #policyContentUploader (change)="importPolicyContent($event)" />
         </div>
       </div>
 
       <div class="form-row" *ngIf="f.type.value === 'APM'">
         <div class="form-group col-md-6">
-          <button
-            class="btn btn-warning"
-            (click)="policyContentUploader.click()"
-            type="button"
-          >
+          <button class="btn btn-warning" (click)="policyContentUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
             <span>Upload APM Base64 Export</span>
           </button>
 
-          <input
-            hidden
-            type="file"
-            #policyContentUploader
-            (change)="importPolicyContent($event)"
-          />
+          <input hidden type="file" #policyContentUploader (change)="importPolicyContent($event)" />
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-link"
-          data-dismiss="modal"
-          (click)="cancel()"
-        >
-          Cancel
-        </button>
-
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>
