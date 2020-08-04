@@ -1,21 +1,72 @@
 .table {
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
+  border: 1px solid $c-gray-100;
+  color: $c-gray-700;
 }
 
 .item-actions {
   text-align: right;
-  
+
   .icon {
+    color: $c-gray-700;
     cursor: pointer;
-    margin: 0 3px;
+    transition: color 150ms;
+
+    &.fg-success {
+      color: $c-green-400;
+
+      &:hover {
+        color: $c-green-700;
+      }
+    }
+
+    &.fg-danger {
+      color: $c-red-400;
+
+      &:hover {
+        color: $c-red-700;
+      }
+    }
+
+    &:hover {
+      color: $c-blue-400;
+    }
+
+    + .icon {
+      margin-left: 10px;
+    }
+  }
+}
+
+ul.ngx-pagination {
+  padding: 0;
+  text-align: center;
+  color: $c-gray-700;
+
+  a {
+    border-radius: 4px;
+  }
+
+  li {
+    border-radius: 4px;
+
+    &.disabled {
+      color: $c-gray-400;
+    }
+
+    &.current {
+      background-color: $c-blue-400;
+    }
   }
 }
 
 td a {
-  color: $primary--alt;
+  color: $c-blue-400;
+
+  &:hover {
+    color: $c-blue-700;
+  }
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: $gray-light;
+  background-color: $c-gray-100;
 }

@@ -1,83 +1,82 @@
-<!-- add back button? -->
-<div class="clearfix">
-  <a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-    <span>Back</span>
-  </a>
+<a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h1>Physical Server: {{ PhysicalServer?.name }}</h1>
+<h1>Physical Server: {{ PhysicalServer?.name }}</h1>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-sm btn-success" (click)="restorePhysicalServer(PhysicalServer)">
-      <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-      <span>Restore Physical Server</span>
-    </button>
-    <button class="btn btn-sm btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
-      <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
-      <span>Delete Physical Server</span>
-    </button>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Restore Physical Server -->
+  <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-success" (click)="restorePhysicalServer(PhysicalServer)">
+    <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+    <span>Restore Physical Server</span>
+  </button>
+
+  <!-- Delete Physical Server -->
+  <button class="btn btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
+    <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
+    <span>Delete Physical Server</span>
+  </button>
+</section>
 
 <div *ngIf="PhysicalServer">
-  <p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
-  <p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
-  <p>
-    <strong>Delivery Date:</strong>
-    {{ PhysicalServer.deliveryDate | date: 'shortDate' }}
-  </p>
+<p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
+<p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
+<p>
+  <strong>Delivery Date:</strong>
+  {{ PhysicalServer.deliveryDate | date: 'shortDate' }}
+</p>
 
-  <hr />
+<hr />
 
-  <div class="row">
-    <div class="col-md-6">
-      <p>
-        <strong>Local Storage Type: </strong>
-        {{ PhysicalServer.localStorageType }}
-      </p>
-      <p>
-        <strong>Local Storage Required?</strong>
-        {{ PhysicalServer.localStorageRequired }}
-      </p>
-      <p>
-        <strong>Local Storage Size:</strong>
-        {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
-      </p>
-    </div>
-    <div class="col-md-6">
-      <p><strong>SAN Type</strong> {{ PhysicalServer.sanType }}</p>
-      <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
-      <p>
-        <strong>SAN Storage Size: </strong>
-        {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
-      </p>
-    </div>
+<div class="row">
+  <div class="col-md-6">
+    <p>
+      <strong>Local Storage Type: </strong>
+      {{ PhysicalServer.localStorageType }}
+    </p>
+    <p>
+      <strong>Local Storage Required?</strong>
+      {{ PhysicalServer.localStorageRequired }}
+    </p>
+    <p>
+      <strong>Local Storage Size:</strong>
+      {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
+    </p>
   </div>
+  <div class="col-md-6">
+    <p><strong>SAN Type</strong> {{ PhysicalServer.sanType }}</p>
+    <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
+    <p>
+      <strong>SAN Storage Size: </strong>
+      {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
+    </p>
+  </div>
+</div>
 </div>
 
 <hr />
 
 <div class="p-3">
-  <h3>Network Ports</h3>
-  <table class="table table-striped" aria-describedby="Network Ports table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
+<h3>Network Ports</h3>
+<table class="table table-striped" aria-describedby="Network Ports table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let n of networkPorts">
+      <td>
+        <span>{{ n.name }}</span>
+      </td>
+      <td class="item-actions"></td>
       </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let n of networkPorts">
-        <td>
-          <span>{{ n.name }}</span>
-        </td>
-        <td></td>
-      </tr>
-      <tr *ngIf="!networkPorts?.length" class="text-center">
-        <td colspan="2">No Network Ports</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <tr *ngIf="!networkPorts?.length" class="text-center">
+      <td colspan="2">No Network Ports</td>
+    </tr>
+  </tbody>
+</table>
 
 <app-yes-no-modal></app-yes-no-modal>

@@ -1,4 +1,4 @@
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/variables';
 
 .card-header {
   border: none;
@@ -6,7 +6,7 @@
 
 label {
   margin: 0;
-  color: $gray-dark;
+  color: $c-gray-700;
 }
 
 %remain-steps {
@@ -16,7 +16,7 @@ label {
     font-weight: 700;
   }
   &:after {
-    background-color: $gray-light;
+    background-color: $c-gray-100;
   }
 }
 .multi-steps {
@@ -32,14 +32,14 @@ label {
     font-size: 12px;
 
     &:before {
-      content: "\f00c";
-      content: "\2713;";
-      content: "\10003";
-      content: "\10004";
-      content: "\2713";
+      content: '\f00c';
+      content: '\2713;';
+      content: '\10003';
+      content: '\10004';
+      content: '\2713';
       display: block;
       margin: 0 auto 4px;
-      background-color: $white;
+      background-color: white;
       width: 36px;
       height: 36px;
       line-height: 32px;
@@ -53,7 +53,7 @@ label {
       }
     }
     &:after {
-      content: "";
+      content: '';
       height: 2px;
       width: 100%;
       background-color: $multistep-success;
@@ -71,35 +71,37 @@ label {
     &.is-active {
       @extend %remain-steps;
       &:before {
-        background-color: $white;
+        background-color: white;
         border-color: $multistep-success;
       }
 
       ~ li {
-        color: #808080;
+        color: $c-gray-400;
         @extend %remain-steps;
         &:before {
-          background-color: $gray-light;
-          border-color: $gray-light;
+          background-color: $c-gray-100;
+          border-color: $c-gray-100;
         }
       }
     }
+
     &.warning {
-      color: $warning;
+      color: $c-yellow-100;
       &:before {
-        border-color: $warning;
+        border-color: $c-yellow-100;
       }
       &:after {
-        background-color: $warning;
+        background-color: $c-yellow-100;
       }
     }
+
     &.danger {
-      color: $danger;
+      color: $c-red-400;
       &:before {
-        border-color: $danger;
+        border-color: $c-red-400;
       }
       &:after {
-        background-color: $danger;
+        background-color: $c-red-400;
       }
     }
   }

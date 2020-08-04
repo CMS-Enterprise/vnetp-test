@@ -1,13 +1,14 @@
 // Angular Imports
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // 3rd-Party Imports
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSave, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
+  faSave,
   faSignOutAlt,
   faPlus,
   faSyncAlt,
@@ -15,7 +16,7 @@ import {
   faTrash,
   faUndo,
   faChevronRight,
-  faArrowLeft,
+  faChevronLeft,
   faUpload,
   faDownload,
   faChevronDown,
@@ -71,6 +72,7 @@ export function apiConfigFactory(): Configuration {
       multi: true,
     },
     CookieService,
+    Title,
   ],
   bootstrap: [AppComponent],
 })
@@ -85,7 +87,6 @@ export class AppModule {
       faTrash,
       faUndo,
       faChevronRight,
-      faArrowLeft,
       faUpload,
       faDownload,
       faChevronDown,
@@ -93,6 +94,7 @@ export class AppModule {
       faBars,
       faSpinner,
       faSignOutAlt,
+      faChevronLeft,
     );
   }
 }

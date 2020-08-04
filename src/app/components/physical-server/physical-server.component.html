@@ -1,76 +1,76 @@
-<div>
-  <h1 class="header">Physical Servers</h1>
+<h1 class="header">Physical Servers</h1>
 
-  <div class="btn-group-sm mb-2 pull-right" role="group">
-    <button type="button" class="btn btn-success mr-1" (click)="createPhysicalServer()">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create Physical Server</span>
-    </button>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Create Physical Server -->
+  <button type="button" class="btn btn-success" (click)="createPhysicalServer()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Physical Server</span>
+  </button>
 
-    <button type="button" class="btn btn-info mr-1" aria-label="Refresh" (click)="getPhysicalServers()">
-      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-      <span>Refresh</span>
-    </button>
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info"(click)="getPhysicalServers()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
+<table class="table table-striped" aria-describedby="Physical Servers table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Serial Number</th>
+      <th scope="col">Delivery Date</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let ps of physicalServers | paginate: { itemsPerPage: perPage, currentPage: currentPhysicalServersPage }">
+      <td>
+        <a routerLink="/physical-server/{{ ps.id }}" queryParamsHandling="merge">
+          {{ ps.name }}
+        </a>
+      </td>
+      <td>
+        {{ ps.serialNumber }}
+      </td>
+      <td>
+        {{ ps.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}
+      </td>
+      <td class="item-actions">
+        <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!ps?.deletedAt" (click)="openPhysicalServerModal(ModalMode.Edit, ps)" aria-label="Edit Physical Server"></fa-icon>
+        <fa-icon 
+          [icon]="['fas', 'undo']"
+          *ngIf="ps?.deletedAt"
+          class="fg-success icon"
+          (click)="restorePhysicalServer(ps)"
+          aria-label="Restore Physical Server"
+        ></fa-icon>
+        <fa-icon 
+          class="icon"
+          [icon]="['fas', 'trash']"
+          [ngClass]="{ 'fg-danger': ps.deletedAt }"
+          (click)="deletePhysicalServer(ps)"
+          aria-label="Soft-Delete/Delete Physical Server"
+        >
+        </fa-icon>
+      </td>
+    </tr>
+    <tr *ngIf="!physicalServers?.length" class="text-center">
+      <td colspan="4">No Physical Servers</td>
+    </tr>
+  </tbody>
+</table>
+
+<pagination-controls (pageChange)="currentPhysicalServersPage = $event"></pagination-controls>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
   </div>
-
-  <table class="table table-striped" aria-describedby="Physical Servers table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Serial Number</th>
-        <th scope="col">Delivery Date</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ps of physicalServers | paginate: { itemsPerPage: perPage, currentPage: currentPhysicalServersPage }">
-        <td>
-          <a routerLink="/physical-server/{{ ps.id }}" queryParamsHandling="merge">
-            {{ ps.name }}
-          </a>
-        </td>
-        <td>
-          {{ ps.serialNumber }}
-        </td>
-        <td>
-          {{ ps.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}
-        </td>
-        <td>
-          <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!ps?.deletedAt" (click)="openPhysicalServerModal(ModalMode.Edit, ps)" aria-label="Edit Physical Server"></fa-icon>
-          <fa-icon 
-            [icon]="['fas', 'undo']"
-            *ngIf="ps?.deletedAt"
-            class="fg-success icon"
-            (click)="restorePhysicalServer(ps)"
-            aria-label="Restore Physical Server"
-          ></fa-icon>
-          <fa-icon 
-            class="icon"
-            [icon]="['fas', 'trash']"
-            [ngClass]="{ 'fg-danger': ps.deletedAt }"
-            (click)="deletePhysicalServer(ps)"
-            aria-label="Soft-Delete/Delete Physical Server"
-          >
-          </fa-icon>
-        </td>
-      </tr>
-      <tr *ngIf="!physicalServers?.length" class="text-center">
-        <td colspan="4">No Physical Servers</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <pagination-controls (pageChange)="currentPhysicalServersPage = $event"></pagination-controls>
-
-  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
-      Entities per page
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    </div>
-  </div>
-</div>
+</section>
 
 <app-physical-server-modal></app-physical-server-modal>
 <app-yes-no-modal></app-yes-no-modal>

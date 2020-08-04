@@ -12,13 +12,14 @@
     </li>
   </ul>
 
-  <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+  <div *ngIf="navIndex === 0">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Subnet -->
       <button type="button" class="btn btn-success" (click)="openSubnetModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Subnet</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="Subnets table">
       <thead>
@@ -73,13 +74,14 @@
     <pagination-controls (pageChange)="currentSubnetsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
+  <div *ngIf="navIndex === 1">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create VLAN -->
       <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create VLAN</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="VLANs table">
       <thead>
@@ -124,33 +126,34 @@
     </table>
     <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
   </div>
-  <div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-    <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
-      Entities per page
+
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
       <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
       <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
       <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
     </div>
-  </div>
+  </section>
 </div>
 
-<div *ngIf="currentTier" class="pull-right">
-  <app-import-export
+<section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
+  <ng-container *ngIf="navIndex === 0">
+    <app-import-export
     [exportObject]="subnets"
     exportFileName="subnets-{{ currentTier?.name }}"
     [disableJson]="false"
-    (import)="importSubnetConfig($event)"
-  ></app-import-export>
-</div>
+    (import)="importSubnetConfig($event)"></app-import-export>
+  </ng-container>
 
-<div *ngIf="navIndex === 1" class="pull-right">
-  <app-import-export
+  <ng-container *ngIf="navIndex === 1">
+    <app-import-export
     [exportObject]="vlans"
     exportFileName="vlans-{{ currentTier?.name }}"
     [disableJson]="false"
-    (import)="importVlansConfig($event)"
-  ></app-import-export>
-</div>
+    (import)="importVlansConfig($event)"></app-import-export>
+  </ng-container>
+</section>
 
 <app-subnet-modal></app-subnet-modal>
 <app-vlan-modal></app-vlan-modal>

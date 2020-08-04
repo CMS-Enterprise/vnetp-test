@@ -1,46 +1,45 @@
-<div>
-  <h4>z/VM</h4>
+<h4>z/VM</h4>
 
-  <div class="btn-group-sm mb-2 pull-right" role="group">
-    <!-- TO DO: show only if customer -->
-    <button class="btn btn-success" (click)="openRequestModal('request', null)">
-      <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
-      <span>Upload z/VM Request</span>
-    </button>
-  </div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- TODO: show only if customer -->
+  <!-- Upload z/VM Request -->
+  <button class="btn btn-success" (click)="openRequestModal('request', null)">
+    <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
+    <span>Upload z/VM Request</span>
+  </button>
+</section>
 
-  <table class="table table-striped" aria-describedby="z/VM Requests table">
-    <thead>
-      <tr>
-        <th scope="col">Request sent</th>
-        <th scope="col">Configuration</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
-        <td>{{ configuration.requestedAt | date: 'medium' }}</td>
-        <td>{{ configuration.configuredAt | date: 'medium' }}</td>
-        <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'download']" aria-label="Download z/VM Configuration" (click)="getConfigurationFile($event, configuration.id)"></fa-icon>
-            <fa-icon class="icon" [icon]="['fas', 'upload']" aria-label="Upload z/VM Configuration" (click)="openRequestModal('configuration', configuration.id)"></fa-icon>
-        </td>
-      </tr>
-      <tr *ngIf="!configurations?.length" class="text-center">
-        <td colspan="3">No z/VM Requests have been sent</td>
-      </tr>
-    </tbody>
-  </table>
-  <pagination-controls (pageChange)="currentConfigurationPage = $event"></pagination-controls>
-</div>
+<table class="table table-striped" aria-describedby="z/VM Requests table">
+  <thead>
+    <tr>
+      <th scope="col">Request sent</th>
+      <th scope="col">Configuration</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
+      <td>{{ configuration.requestedAt | date: 'medium' }}</td>
+      <td>{{ configuration.configuredAt | date: 'medium' }}</td>
+      <td class="item-actions">
+          <fa-icon class="icon" [icon]="['fas', 'download']" aria-label="Download z/VM Configuration" (click)="getConfigurationFile($event, configuration.id)"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'upload']" aria-label="Upload z/VM Configuration" (click)="openRequestModal('configuration', configuration.id)"></fa-icon>
+      </td>
+    </tr>
+    <tr *ngIf="!configurations?.length" class="text-center">
+      <td colspan="3">No z/VM Requests have been sent</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentConfigurationPage = $event"></pagination-controls>
 
-<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-  <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
-    Entities per page
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
     <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
     <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
     <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
   </div>
-</div>
+</section>
 
 <app-zos-zvm-request-modal></app-zos-zvm-request-modal>

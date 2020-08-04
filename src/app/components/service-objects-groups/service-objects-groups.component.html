@@ -17,13 +17,14 @@
     </li>
   </ul>
 
-  <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)" aria-label="Create Service Object">
+  <div *ngIf="navIndex === 0">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Service Object -->
+      <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="Service Objects table">
       <thead>
@@ -81,13 +82,14 @@
     <pagination-controls (pageChange)="currentServiceObjectsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)" aria-label="Create Service Object Group">
+  <div *ngIf="navIndex === 1">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Service Object Group -->
+      <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object Group</span>
       </button>
-    </div>
+    </section>
 
     <table class="table table-striped" aria-describedby="Service Object Groups table">
       <thead>
@@ -164,47 +166,38 @@
     </table>
   </div>
 
-  <div *ngIf="navIndex !== 2" class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-      Entities per page
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">
-        10
-      </button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">
-        20
-      </button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">
-        50
-      </button>
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
     </div>
-  </div>
+  </section>
 </div>
 
-<div *ngIf="navIndex === 0" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
   <app-import-export
-    [exportObject]="serviceObjects"
-    exportFileName="serviceObjects-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importServiceObjectsConfig($event)"
-  ></app-import-export>
-</div>
+  [exportObject]="serviceObjects"
+  exportFileName="serviceObjects-{{ currentTier?.name }}"
+  [disableJson]="false"
+  (import)="importServiceObjectsConfig($event)"></app-import-export>
+</section>
 
-<div *ngIf="navIndex === 1" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
   <app-import-export
-    [exportObject]="serviceObjectGroups"
-    exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importServiceObjectGroupsConfig($event)"
-  ></app-import-export>
-</div>
+  [exportObject]="serviceObjectGroups"
+  exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
+  [disableJson]="false"
+  (import)="importServiceObjectGroupsConfig($event)"></app-import-export>
+</section>
 
-<div *ngIf="navIndex === 2" class="pull-right">
+<section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
   <app-import-export
-    [disableExport]="true"
-    [disableJson]="false"
-    (import)="importServiceObjectGroupRelationsConfig($event)"
-  ></app-import-export>
-</div>
+  [disableExport]="true"
+  [disableJson]="false"
+  (import)="importServiceObjectGroupRelationsConfig($event)"></app-import-export>
+</section>
 
 <app-service-object-group-modal></app-service-object-group-modal>
 <app-service-object-modal></app-service-object-modal>
