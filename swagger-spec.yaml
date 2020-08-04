@@ -12778,7 +12778,9 @@ definitions:
           - IMP
           - VAL
           - TST
-          - BMS
+          - BCK
+          - MGT
+          - SEC
       vlans:
         type: array
         readOnly: true

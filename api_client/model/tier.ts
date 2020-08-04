@@ -79,7 +79,9 @@ export enum TierTierClass {
     IMP = 'IMP',
     VAL = 'VAL',
     TST = 'TST',
-    BMS = 'BMS'
+    BCK = 'BCK',
+    MGT = 'MGT',
+    SEC = 'SEC'
 };
 
 
