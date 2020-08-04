@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,6 +36,7 @@ describe('StaticRouteDetailComponent', () => {
         YesNoModalComponent,
         StaticRouteModalComponent,
         MockFontAwesomeComponent,
+        MockIconButtonComponent,
       ],
       providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();

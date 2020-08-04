@@ -8,6 +8,7 @@ import { AuthGuard } from 'src/app/guards/auth.guard';
 import { IntraVrfRulesComponent } from './intra-vrf-rules/intra-vrf-rules.component';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [
     ContractModalComponent,
     FirewallRulesComponent,

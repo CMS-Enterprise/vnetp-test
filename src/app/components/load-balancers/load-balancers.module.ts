@@ -12,6 +12,7 @@ import { PoolModalComponent } from './pool-modal/pool-modal.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -21,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [
     LoadBalancersComponent,
     HealthMonitorModalComponent,

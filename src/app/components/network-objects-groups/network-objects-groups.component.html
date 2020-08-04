@@ -18,7 +18,6 @@
   </ul>
 
   <div *ngIf="navIndex === 0">
-
     <section class="btn-toolbar" role="toolbar">
       <!-- Create Network Object -->
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
@@ -73,24 +72,28 @@
           <td>
             <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal(ModalMode.Edit, netObj)" aria-label="Edit Network Object">
-            </fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!netObj?.deletedAt"
+              icon="edit"
+              label="Edit Network Object"
+              (handleClick)="openNetworkObjectModal(ModalMode.Edit, netObj)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="netObj?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreNetworkObject(netObj)"
-              aria-label="Restore Network Object"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': netObj.deletedAt }"
-              (click)="deleteNetworkObject(netObj)"
-              aria-label="Soft-Delete/Delete Network Object"
-            >
-            </fa-icon>
+              icon="undo"
+              label="Restore Network Object"
+              type="success"
+              (handleClick)="restoreNetworkObject(netObj)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Network Object"
+              [type]="netObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteNetworkObject(netObj)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -132,28 +135,28 @@
           <td>
             <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'pencil-alt']" 
+          <td class="table__actions">
+            <app-icon-button
               *ngIf="!netObjGroup?.deletedAt"
-              (click)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
-              aria-label="Edit Network Object Group"
-            ></fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+              icon="edit"
+              label="Edit Network Object Group"
+              (handleClick)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="netObjGroup?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreNetworkObjectGroup(netObjGroup)"
-              aria-label="Restore Network Object Group"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': netObjGroup.deletedAt }"
-              (click)="deleteNetworkObjectGroup(netObjGroup)"
-              aria-label="Soft-Delete/Delete Network Object Group"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Network Object Group"
+              type="success"
+              (handleClick)="restoreNetworkObjectGroup(netObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Network Object Group"
+              [type]="netObjGroup?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteNetworkObjectGroup(netObjGroup)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!networkObjectGroups?.length" class="text-center">
@@ -189,22 +192,25 @@
     [exportObject]="networkObjects"
     exportFileName="networkObjects-{{ currentTier?.name }}"
     [disableJson]="false"
-    (import)="importNetworkObjectsConfig($event)"></app-import-export>
+    (import)="importNetworkObjectsConfig($event)"
+  ></app-import-export>
 </section>
 
 <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
   <app-import-export
-  [exportObject]="networkObjectGroups"
-  exportFileName="networkObjectGroups-{{ currentTier?.name }}"
-  [disableJson]="false"
-  (import)="importNetworkObjectGroupsConfig($event)"></app-import-export>
+    [exportObject]="networkObjectGroups"
+    exportFileName="networkObjectGroups-{{ currentTier?.name }}"
+    [disableJson]="false"
+    (import)="importNetworkObjectGroupsConfig($event)"
+  ></app-import-export>
 </section>
 
 <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 3">
   <app-import-export
-  [disableExport]="true"
-  [disableJson]="false"
-  (import)="importNetworkObjectGroupRelationsConfig($event)"></app-import-export>
+    [disableExport]="true"
+    [disableJson]="false"
+    (import)="importNetworkObjectGroupRelationsConfig($event)"
+  ></app-import-export>
 </section>
 
 <app-network-object-group-modal></app-network-object-group-modal>

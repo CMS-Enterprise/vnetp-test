@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VmwareComponent } from './vmware.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
@@ -40,6 +40,7 @@ describe('VmwareComponent', () => {
         NetworkAdapterModalComponent,
         YesNoModalComponent,
         MockFontAwesomeComponent,
+        MockIconButtonComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
     }).compileComponents();
