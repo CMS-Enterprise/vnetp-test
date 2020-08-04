@@ -12,7 +12,6 @@
     <span>Add Firewall Rule</span>
   </button>
 
-<<<<<<< HEAD
   <table class="table table-striped" aria-describedby="Firewall Rule detail table">
     <thead>
       <tr>
@@ -79,14 +78,12 @@
     </tbody>
   </table>
   <pagination-controls (pageChange)="currentFirewallRulePage = $event; getFirewallRules()"></pagination-controls>
-=======
   <!-- Refresh -->
   <button type="button" class="btn btn-info" (click)="refresh()">
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
 </section>
->>>>>>> dev
 
 <table class="table table-striped" aria-describedby="Firewall Rule detail table">
   <thead>
@@ -165,20 +162,20 @@
         <span>{{ firewallRule?.ruleIndex }}</span>
       </td>
       <td class="item-actions">
-        <fa-icon 
+        <fa-icon
           class="icon"
-          [icon]="['fas', 'pencil-alt']" 
-          *ngIf="!firewallRule.deletedAt" 
+          [icon]="['fas', 'pencil-alt']"
+          *ngIf="!firewallRule.deletedAt"
           (click)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
           aria-label="Edit Firewall Rule"></fa-icon>
-        <fa-icon 
+        <fa-icon
           [icon]="['fas', 'undo']"
           *ngIf="firewallRule?.deletedAt"
           class="fg-success icon"
           (click)="restoreFirewallRule(firewallRule)"
           aria-label="Restore Firewall Rule"
         ></fa-icon>
-        <fa-icon 
+        <fa-icon
           class="icon"
           [icon]="['fas', 'trash']"
           [ngClass]="{ 'fg-danger': firewallRule.deletedAt }"
