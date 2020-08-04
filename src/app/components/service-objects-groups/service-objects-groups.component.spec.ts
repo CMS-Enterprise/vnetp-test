@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ServiceObjectsGroupsComponent } from './service-objects-groups.component';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -45,6 +45,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockTooltipComponent,
         TierSelectComponent,
         MockFontAwesomeComponent,
+        MockIconButtonComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

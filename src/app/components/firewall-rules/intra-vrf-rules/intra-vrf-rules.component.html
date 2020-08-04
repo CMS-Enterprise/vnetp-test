@@ -36,9 +36,9 @@
       <td>
         <span>{{ contract?.FilterEntries?.length }}</span>
       </td>
-      <td class="item-actions">
-        <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" (click)="editContract(contract)" aria-label="Edit Contract"></fa-icon>
-        <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="deleteContract(contract)" aria-label="Delete Contract"></fa-icon>
+      <td class="table__actions">
+        <app-icon-button icon="edit" label="Edit Contract" (handleClick)="editContract(contract)"></app-icon-button>
+        <app-icon-button icon="delete" label="Delete Contract" (handleClick)="deleteContract(contract)"></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="contracts?.length === 0" class="text-center">

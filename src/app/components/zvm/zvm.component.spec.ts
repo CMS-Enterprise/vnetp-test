@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ZvmComponent } from './zvm.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ describe('ZvmComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [ZvmComponent, ZosZvmRequestModalComponent, MockFontAwesomeComponent],
+      declarations: [ZvmComponent, ZosZvmRequestModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));

@@ -73,7 +73,6 @@
       <tooltip [message]="helpText.ServiceObjects"></tooltip>
 
       <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
-
         <!-- Select Service Object -->
         <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
           <option></option>
@@ -81,12 +80,7 @@
         </select>
 
         <!-- Add Service Object -->
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="addServiceObject()"
-          [disabled]="!selectedServiceObject"
-        >
+        <button type="button" class="btn btn-info" (click)="addServiceObject()" [disabled]="!selectedServiceObject">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Service Object</span>
         </button>
@@ -116,8 +110,12 @@
             <td>
               <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
-            <td class="item-actions">
-              <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
+            <td class="table__actions">
+              <app-icon-button
+                icon="delete"
+                label="Remove Service Object"
+                (handleClick)="removeServiceObject(serviceObject)"
+              ></app-icon-button>
             </td>
           </tr>
           <tr *ngIf="!serviceObjects?.length" class="text-center">

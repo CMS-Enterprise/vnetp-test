@@ -4,6 +4,7 @@ import { NetworkObjectsGroupsComponent } from './network-objects-groups.componen
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal/network-object-group-modal.component';
 import { NetworkObjectModalComponent } from './network-object-modal/network-object-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
 })
 export class NetworkObjectsGroupsModule {}

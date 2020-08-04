@@ -20,63 +20,64 @@
 </section>
 
 <div *ngIf="PhysicalServer">
-<p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
-<p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
-<p>
-  <strong>Delivery Date:</strong>
-  {{ PhysicalServer.deliveryDate | date: 'shortDate' }}
-</p>
+  <p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
+  <p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
+  <p>
+    <strong>Delivery Date:</strong>
+    {{ PhysicalServer.deliveryDate | date: 'shortDate' }}
+  </p>
 
-<hr />
+  <hr />
 
-<div class="row">
-  <div class="col-md-6">
-    <p>
-      <strong>Local Storage Type: </strong>
-      {{ PhysicalServer.localStorageType }}
-    </p>
-    <p>
-      <strong>Local Storage Required?</strong>
-      {{ PhysicalServer.localStorageRequired }}
-    </p>
-    <p>
-      <strong>Local Storage Size:</strong>
-      {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
-    </p>
+  <div class="row">
+    <div class="col-md-6">
+      <p>
+        <strong>Local Storage Type: </strong>
+        {{ PhysicalServer.localStorageType }}
+      </p>
+      <p>
+        <strong>Local Storage Required?</strong>
+        {{ PhysicalServer.localStorageRequired }}
+      </p>
+      <p>
+        <strong>Local Storage Size:</strong>
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
+      </p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>SAN Type</strong> {{ PhysicalServer.sanType }}</p>
+      <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
+      <p>
+        <strong>SAN Storage Size: </strong>
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
+      </p>
+    </div>
   </div>
-  <div class="col-md-6">
-    <p><strong>SAN Type</strong> {{ PhysicalServer.sanType }}</p>
-    <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
-    <p>
-      <strong>SAN Storage Size: </strong>
-      {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
-    </p>
-  </div>
-</div>
 </div>
 
 <hr />
 
 <div class="p-3">
-<h3>Network Ports</h3>
-<table class="table table-striped" aria-describedby="Network Ports table">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let n of networkPorts">
-      <td>
-        <span>{{ n.name }}</span>
-      </td>
-      <td class="item-actions"></td>
+  <h3>Network Ports</h3>
+  <table class="table table-striped" aria-describedby="Network Ports table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
       </tr>
-    <tr *ngIf="!networkPorts?.length" class="text-center">
-      <td colspan="2">No Network Ports</td>
-    </tr>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of networkPorts">
+        <td>
+          <span>{{ n.name }}</span>
+        </td>
+        <td class="table__actions"></td>
+      </tr>
+      <tr *ngIf="!networkPorts?.length" class="text-center">
+        <td colspan="2">No Network Ports</td>
+      </tr>
+    </tbody>
+  </table>
 
-<app-yes-no-modal></app-yes-no-modal>
+  <app-yes-no-modal></app-yes-no-modal>
+</div>

@@ -28,3 +28,8 @@ export const MockNgxSmartModalComponent = MockComponent({
   inputs: ['identifier', 'customClass', 'dismissable'],
   outputs: ['onClose', 'onOpen'],
 });
+export const MockIconButtonComponent = MockComponent({
+  selector: 'app-icon-button',
+  inputs: ['icon', 'label', 'type'],
+  outputs: ['handleClick'],
+});

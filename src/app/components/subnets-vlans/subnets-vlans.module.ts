@@ -4,6 +4,7 @@ import { SubnetsVlansComponent } from './subnets-vlans.component';
 import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
 import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [SubnetsVlansComponent, SubnetModalComponent, VlanModalComponent],
 })
 export class SubnetsVlansModule {}

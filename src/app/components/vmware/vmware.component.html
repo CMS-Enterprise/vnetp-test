@@ -38,23 +38,28 @@
       </td>
       <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
       <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
-      <td class="item-actions">
-        <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!vm?.deletedAt" (click)="openVirtualMachineModal(ModalMode.Edit, vm)" aria-label="Edit Virtual Machine"></fa-icon>
-        <fa-icon 
-          [icon]="['fas', 'undo']"
+      <td class="table__actions">
+        <app-icon-button
+          *ngIf="!vm?.deletedAt"
+          icon="edit"
+          label="Edit Virtual Machine"
+          (handleClick)="openVirtualMachineModal(ModalMode.Edit, vm)"
+        ></app-icon-button>
+
+        <app-icon-button
           *ngIf="vm?.deletedAt"
-          class="fg-success icon"
-          (click)="restoreVirtualMachine(vm)"
-          aria-label="Restore Virtual Machine"
-        ></fa-icon>
-        <fa-icon 
-          class="icon"
-          [icon]="['fas', 'trash']"
-          [ngClass]="{ 'fg-danger': vm.deletedAt }"
-          (click)="deleteVirtualMachine(vm)"
-          aria-label="Soft-Delete/Delete Virtual Machine"
-        >
-        </fa-icon>
+          icon="undo"
+          label="Restore Virtual Machine"
+          type="success"
+          (handleClick)="restoreVirtualMachine(vm)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Virtual Machine"
+          [type]="vm?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteVirtualMachine(vm)"
+        ></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!virtualMachines?.length" class="text-center">

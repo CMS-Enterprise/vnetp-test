@@ -47,28 +47,28 @@
       <td>
         <span>{{ staticRoute?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
       </td>
-      <td class="item-actions">
-        <fa-icon 
-          class="icon"
-          [icon]="['fas', 'pencil-alt']" 
+      <td class="table__actions">
+        <app-icon-button
           *ngIf="!staticRoute?.deletedAt"
-          (click)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
-          aria-label="Edit Static Route"
-        ></fa-icon>
-        <fa-icon 
-          [icon]="['fas', 'undo']"
+          icon="edit"
+          label="Edit Static Route"
+          (handleClick)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
+        ></app-icon-button>
+
+        <app-icon-button
           *ngIf="staticRoute?.deletedAt"
-          class="fg-success icon"
-          (click)="restoreStaticRoute(staticRoute)"
-          aria-label="Restore Static Route"
-        ></fa-icon>
-        <fa-icon 
-          class="icon"
-          [icon]="['fas', 'trash']"
-          [ngClass]="{ 'fg-danger': staticRoute?.deletedAt }"
-          (click)="deleteStaticRoute(staticRoute)"
-          aria-label="Soft-Delete/Delete Static Route"
-        ></fa-icon>
+          icon="undo"
+          label="Restore Static Route"
+          type="success"
+          (handleClick)="restoreStaticRoute(staticRoute)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Static Route"
+          [type]="staticRoute?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteStaticRoute(staticRoute)"
+        ></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!staticRoutes?.length" class="text-center">

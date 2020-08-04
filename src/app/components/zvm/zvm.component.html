@@ -21,9 +21,18 @@
     <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
       <td>{{ configuration.requestedAt | date: 'medium' }}</td>
       <td>{{ configuration.configuredAt | date: 'medium' }}</td>
-      <td class="item-actions">
-          <fa-icon class="icon" [icon]="['fas', 'download']" aria-label="Download z/VM Configuration" (click)="getConfigurationFile($event, configuration.id)"></fa-icon>
-          <fa-icon class="icon" [icon]="['fas', 'upload']" aria-label="Upload z/VM Configuration" (click)="openRequestModal('configuration', configuration.id)"></fa-icon>
+      <td class="table__actions">
+        <app-icon-button
+          icon="download"
+          label="Download z/VM Configuration"
+          (handleClick)="getConfigurationFile($event, configuration.id)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="upload"
+          label="Upload z/VM Configuration"
+          (handleClick)="openRequestModal('configuration', configuration.id)"
+        ></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!configurations?.length" class="text-center">
