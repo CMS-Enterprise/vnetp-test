@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
-    <h1 class="modal-title header">Physical Server</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Physical Server</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -171,21 +171,17 @@
           </div>
         </div>
       </div>
-
-      <div *ngIf="this.ModalMode === 'Edit'">
-        <hr />
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
-          Cancel
-        </button>
-
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>

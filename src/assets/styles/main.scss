@@ -6,7 +6,7 @@
 @import '~@ng-select/ng-select/themes/default.theme.css';
 
 // custom imports
-@import 'variables', 'buttons', 'tables', 'forms';
+@import 'variables', 'buttons', 'tables', 'forms', 'modals';
 
 a:hover {
   color: $c-blue-400;

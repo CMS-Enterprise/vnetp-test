@@ -1,7 +1,7 @@
 <ngx-smart-modal #serviceObjectModal identifier="serviceObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
-  <div class="modal-header">
-    <h1 class="modal-title header">Service Object</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Service Object</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -92,7 +92,7 @@
       </div>
     </div>
 
-    <div class="modal-footer">
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
@@ -101,6 +101,6 @@
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

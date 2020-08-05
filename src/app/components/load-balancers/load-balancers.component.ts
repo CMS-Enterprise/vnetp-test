@@ -849,7 +849,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Vlan?`, `Do you want to ${deleteDescription} Vlan "${vlan.name}"?`),
+      new YesNoModalDto(`${deleteDescription} VLAN?`, `Do you want to ${deleteDescription} VLAN "${vlan.name}"?`),
       deleteFunction,
     );
   }

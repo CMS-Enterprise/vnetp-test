@@ -99,19 +99,17 @@
   </div>
 </nav>
 
-
 <!-- Logout -->
 <ngx-smart-modal #logoutModal identifier="logoutModal">
-  <div class="modal-header">
+  <header class="modal-header">
     <h4 class="modal-title">Logout</h4>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logoutModal.close()"></button>
-  </div>
+  </header>
 
   <div class="modal-body">
     <p class="mb-3">Are you sure you want to log out?</p>
   </div>
 
-  <div class="modal-footer">
+  <footer class="modal-footer">
     <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
       Cancel
     </button>
@@ -120,5 +118,5 @@
       <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
       <span>Logout</span>
     </button>
-  </div>
+  </footer>
 </ngx-smart-modal>

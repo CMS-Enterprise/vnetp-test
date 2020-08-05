@@ -6,10 +6,9 @@
   (onClose)="cancel()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
-    <h1 class="modal-title header">Appliance</h1>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Appliance</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -331,7 +330,7 @@
       </div>
     </div>
 
-    <div class="modal-footer">
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
@@ -340,6 +339,6 @@
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

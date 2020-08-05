@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
-    <h1 class="modal-title header">Virtual Server</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Virtual Server</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -148,7 +148,8 @@
               <option *ngFor="let profile of availableProfiles" [ngValue]="profile.id">{{ profile.name }}</option>
             </select>
             <button type="button" class="btn btn-info" (click)="addProfile()">
-              Add Profile
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add Profile</span>
             </button>
           </div>
         </div>
@@ -195,7 +196,8 @@
               <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
             </select>
             <button type="button" class="btn btn-info" (click)="addPolicy()">
-              Add Policy
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add Policy</span>
             </button>
           </div>
         </div>
@@ -241,7 +243,8 @@
               <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
             </select>
             <button type="button" class="btn btn-info" (click)="addIRule()">
-              Add iRule
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add iRule</span>
             </button>
           </div>
         </div>
@@ -272,16 +275,16 @@
           </table>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
-          Cancel
-        </button>
-        <button class="btn btn-success" data-dismiss="modal">
-          <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-          <span>Save</span>
-        </button>
-      </div>
     </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
   </form>
 </ngx-smart-modal>
