@@ -53,44 +53,109 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
-  currentIrulePage = 1;
-  currentVSPage = 1;
-  currentNodePage = 1;
-  currentPoolPage = 1;
   currentHMPage = 1;
-  currentProfilesPage = 1;
+  currentIrulePage = 1;
+  currentNodePage = 1;
   currentPoliciesPage = 1;
-  currentVlansPage = 1;
-  currentSelfIpsPage = 1;
+  currentPoolPage = 1;
+  currentProfilesPage = 1;
   currentRoutesPage = 1;
+  currentSelfIpsPage = 1;
+  currentVSPage = 1;
+  currentVlansPage = 1;
 
   perPage = 20;
   ModalMode = ModalMode;
 
-  virtualServers: LoadBalancerVirtualServer[];
-  pools: LoadBalancerPool[];
-  nodes: LoadBalancerNode[];
-  irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
-  profiles: LoadBalancerProfile[];
+  irules: LoadBalancerIrule[];
+  nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
-  vlans: LoadBalancerVlan[];
-  selfIps: LoadBalancerSelfIp[];
+  pools: LoadBalancerPool[];
+  profiles: LoadBalancerProfile[];
   routes: LoadBalancerRoute[];
+  selfIps: LoadBalancerSelfIp[];
+  virtualServers: LoadBalancerVirtualServer[];
+  vlans: LoadBalancerVlan[];
 
-  virtualServerModalSubscription: Subscription;
-  poolModalSubscription: Subscription;
-  nodeModalSubscription: Subscription;
-  iruleModalSubscription: Subscription;
-  healthMonitorModalSubscription: Subscription;
-  profileModalSubscription: Subscription;
-  vlanModalSubscription: Subscription;
-  selfIpModalSubscription: Subscription;
-  routeModalSubscription: Subscription;
+  public tabs = [
+    {
+      name: 'Virtual Servers',
+      tooltip: this.helpText.VirtualServers,
+      onClick: () => {
+        this.getVirtualServers();
+        this.getIrules();
+        this.getPools();
+      },
+    },
+    {
+      name: 'Pools',
+      tooltip: this.helpText.Pools,
+      onClick: () => {
+        this.getPools();
+        this.getHealthMonitors();
+        this.getNodes();
+      },
+    },
+    {
+      name: 'Pool Relations',
+      tooltip: this.helpText.PoolRelations,
+      onClick: () => {},
+    },
+    {
+      name: 'Nodes',
+      tooltip: this.helpText.Nodes,
+      onClick: () => this.getNodes(),
+    },
+    {
+      name: 'iRules',
+      tooltip: this.helpText.IRules,
+      onClick: () => this.getIrules(),
+    },
+    {
+      name: 'Health Monitors',
+      tooltip: this.helpText.HealthMonitors,
+      onClick: () => this.getHealthMonitors(),
+    },
+    {
+      name: 'Profiles',
+      tooltip: this.helpText.Profiles,
+      onClick: () => this.getProfiles(),
+    },
+    {
+      name: 'Policies',
+      tooltip: this.helpText.Policies,
+      onClick: () => this.getPolicies(),
+    },
+    {
+      name: 'VLANs',
+      tooltip: this.helpText.Vlans,
+      onClick: () => this.getVlans(),
+    },
+    {
+      name: 'Self IPs',
+      tooltip: this.helpText.SelfIps,
+      onClick: () => this.getSelfIps(),
+    },
+    {
+      name: 'Routes',
+      tooltip: this.helpText.Routes,
+      onClick: () => this.getRoutes(),
+    },
+  ];
 
-  currentDatacenterSubscription: Subscription;
-  policyModalSubscription: any;
-  currentTierSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private healthMonitorModalSubscription: Subscription;
+  private iruleModalSubscription: Subscription;
+  private nodeModalSubscription: Subscription;
+  private policyModalSubscription: Subscription;
+  private poolModalSubscription: Subscription;
+  private profileModalSubscription: Subscription;
+  private routeModalSubscription: Subscription;
+  private selfIpModalSubscription: Subscription;
+  private virtualServerModalSubscription: Subscription;
+  private vlanModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
