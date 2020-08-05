@@ -5,6 +5,11 @@ import { ServiceObjectGroupModalComponent } from './service-object-group-modal/s
 import { ServiceObjectModalComponent } from './service-object-modal/service-object-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 const routes: Routes = [
   {
@@ -14,7 +19,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    IconButtonModule,
+    NgxPaginationModule,
+    NgxSmartModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+  ],
   declarations: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent],
 })
 export class ServiceObjectsGroupsModule {}

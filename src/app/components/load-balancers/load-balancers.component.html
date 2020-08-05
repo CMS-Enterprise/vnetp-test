@@ -3,21 +3,7 @@
 <div>
   <h1 class="header mb-3">Load Balancers</h1>
 
-  <ul class="nav nav-tabs" role="tablist">
-    <li
-      class="nav-item"
-      *ngFor="let tab of tabs; let i = index"
-      (click)="navIndex = i; tab.onClick()"
-      (keyup.enter)="navIndex = i; tab.onClick()"
-      tabindex="0"
-      role="button"
-    >
-      <a class="nav-link" [class.active]="navIndex === i">
-        <span>{{ tab.name }}</span>
-        <tooltip [message]="tab.tooltip"></tooltip>
-      </a>
-    </li>
-  </ul>
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">

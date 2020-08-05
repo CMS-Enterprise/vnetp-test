@@ -6,6 +6,10 @@ import { ApplianceModalComponent } from './appliance-modal/appliance-modal.compo
 import { SharedModule } from 'src/app/common/shared.module';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CommonModule } from '@angular/common';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -21,7 +25,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    IconButtonModule,
+    NgxSmartModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+  ],
   declarations: [ApplianceComponent, ApplianceDetailComponent, ApplianceModalComponent],
 })
 export class ApplianceModule {}

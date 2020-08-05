@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from '../pipes/resolve.pipe';
+import { TooltipModule } from './tooltip/tooltip.module';
 
 @NgModule({
   imports: [
@@ -23,28 +24,9 @@ import { ResolvePipe } from '../pipes/resolve.pipe';
     RouterModule,
     NgSelectModule,
     NgxPaginationModule,
+    TooltipModule,
   ],
-  declarations: [
-    ImportExportComponent,
-    ResolvePipe,
-    TierSelectComponent,
-    TooltipComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
-  exports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxSmartModalModule,
-    NgxPaginationModule,
-    ImportExportComponent,
-    ResolvePipe,
-    TierSelectComponent,
-    TooltipComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
+  declarations: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  exports: [ImportExportComponent, ResolvePipe, TierSelectComponent, TooltipComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
 })
 export class SharedModule {}

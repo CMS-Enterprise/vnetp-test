@@ -42,6 +42,7 @@ import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-d
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-load-balancers',
@@ -78,69 +79,50 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   virtualServers: LoadBalancerVirtualServer[];
   vlans: LoadBalancerVlan[];
 
-  public tabs = [
+  public tabs: Tab[] = [
     {
       name: 'Virtual Servers',
       tooltip: this.helpText.VirtualServers,
-      onClick: () => {
-        this.getVirtualServers();
-        this.getIrules();
-        this.getPools();
-      },
     },
     {
       name: 'Pools',
       tooltip: this.helpText.Pools,
-      onClick: () => {
-        this.getPools();
-        this.getHealthMonitors();
-        this.getNodes();
-      },
     },
     {
       name: 'Pool Relations',
       tooltip: this.helpText.PoolRelations,
-      onClick: () => {},
     },
     {
       name: 'Nodes',
       tooltip: this.helpText.Nodes,
-      onClick: () => this.getNodes(),
     },
     {
       name: 'iRules',
       tooltip: this.helpText.IRules,
-      onClick: () => this.getIrules(),
     },
     {
       name: 'Health Monitors',
       tooltip: this.helpText.HealthMonitors,
-      onClick: () => this.getHealthMonitors(),
     },
     {
       name: 'Profiles',
       tooltip: this.helpText.Profiles,
-      onClick: () => this.getProfiles(),
     },
     {
       name: 'Policies',
       tooltip: this.helpText.Policies,
-      onClick: () => this.getPolicies(),
     },
     {
       name: 'VLANs',
       tooltip: this.helpText.Vlans,
-      onClick: () => this.getVlans(),
     },
     {
       name: 'Self IPs',
       tooltip: this.helpText.SelfIps,
-      onClick: () => this.getSelfIps(),
     },
     {
       name: 'Routes',
       tooltip: this.helpText.Routes,
-      onClick: () => this.getRoutes(),
     },
   ];
 
@@ -174,6 +156,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private routesService: V1LoadBalancerRoutesService,
     public helpText: LoadBalancersHelpText,
   ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
+  }
 
   getVirtualServers() {
     if (!this.hasCurrentTier()) {

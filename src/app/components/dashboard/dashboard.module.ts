@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { D3PieChartModule } from 'src/app/common/d3-pie-chart/d3-pie-chart.module';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
   {
@@ -12,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [D3PieChartModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, D3PieChartModule, FontAwesomeModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [DashboardComponent],
 })
 export class DashboardModule {}

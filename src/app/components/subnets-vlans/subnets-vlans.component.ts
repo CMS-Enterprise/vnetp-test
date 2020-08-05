@@ -19,6 +19,7 @@ import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -38,10 +39,22 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
   navIndex = 0;
   showRadio = false;
-  subnetModalSubscription: Subscription;
-  vlanModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
+
+  public tabs: Tab[] = [
+    {
+      name: 'Subnets',
+      tooltip: this.helpText.Subnets,
+    },
+    {
+      name: 'VLANs',
+      tooltip: this.helpText.Vlans,
+    },
+  ];
+
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private subnetModalSubscription: Subscription;
+  private vlanModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -52,6 +65,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     private vlanService: V1NetworkVlansService,
     private subnetService: V1NetworkSubnetsService,
   ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
+  }
 
   public openSubnetModal(modalMode: ModalMode, subnet?: Subnet): void {
     if (modalMode === ModalMode.Edit && !subnet) {
