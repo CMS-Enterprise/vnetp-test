@@ -15,6 +15,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TabsModule,
   ],
   declarations: [
     ContractModalComponent,

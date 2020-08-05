@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TabsModule,
   ],
   declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
 })

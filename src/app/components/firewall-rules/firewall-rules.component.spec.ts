@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockTabsComponent } from 'src/test/mock-components';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -39,6 +39,7 @@ describe('FirewallRulesComponent', () => {
         ImportExportComponent,
         YesNoModalComponent,
         MockFontAwesomeComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

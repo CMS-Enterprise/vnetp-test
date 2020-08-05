@@ -1,11 +1,4 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item" (click)="showExternal()">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 'External' }"> External <tooltip [message]="helpText.External"></tooltip> </a>
-  </li>
-  <li class="nav-item" (click)="showIntervrf()">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 'Intervrf' }"> Intervrf <tooltip [message]="helpText.InterVrf"></tooltip></a>
-  </li>
-</ul>
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
 <h1 class="mt-3 header">{{ navIndex }} Firewall Rules</h1>
 
@@ -58,10 +51,11 @@
 
 <section class="btn-toolbar" role="toolbar">
   <app-import-export
-  [exportObject]="firewallRuleGroups"
-  exportFileName="firewallRuleGroups"
-  [disableJson]="false"
-  (import)="importFirewallRuleGroupsConfig($event)"></app-import-export>
+    [exportObject]="firewallRuleGroups"
+    exportFileName="firewallRuleGroups"
+    [disableJson]="false"
+    (import)="importFirewallRuleGroupsConfig($event)"
+  ></app-import-export>
 </section>
 
 <app-yes-no-modal></app-yes-no-modal>

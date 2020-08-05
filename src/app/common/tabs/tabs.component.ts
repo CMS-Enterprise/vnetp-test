@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, Output, EventEmitter } from '@angu
 
 export interface Tab {
   name: string;
-  tooltip: string;
+  tooltip?: string;
 }
 
 @Component({

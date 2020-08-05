@@ -8,6 +8,7 @@ import {
   MockImportExportComponent,
   MockNgxSmartModalComponent,
   MockIconButtonComponent,
+  MockTabsComponent,
 } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -48,6 +49,7 @@ describe('LoadBalancersComponent', () => {
         ResolvePipe,
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     })

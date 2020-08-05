@@ -9,7 +9,7 @@
   >
     <a class="nav-link" [class.active]="activeTab.name === tab.name">
       <span>{{ tab.name }}</span>
-      <tooltip [message]="tab.tooltip"></tooltip>
+      <tooltip *ngIf="tab.tooltip" [message]="tab.tooltip"></tooltip>
     </a>
   </li>
 </ul>

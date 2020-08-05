@@ -19,6 +19,7 @@ import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/servi
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -33,11 +34,25 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   perPage = 20;
   ModalMode = ModalMode;
 
-  serviceObjects: Array<ServiceObject>;
-  serviceObjectGroups: Array<ServiceObjectGroup>;
+  serviceObjects: ServiceObject[] = [];
+  serviceObjectGroups: ServiceObjectGroup[] = [];
 
   navIndex = 0;
   showRadio = false;
+
+  public tabs: Tab[] = [
+    {
+      name: 'Service Objects',
+      tooltip: this.helpText.ServiceObjects,
+    },
+    {
+      name: 'Service Object Groups',
+      tooltip: this.helpText.ServiceObjectGroups,
+    },
+    {
+      name: 'Service Object Group Relations',
+    },
+  ];
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
@@ -53,9 +68,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private bulkUploadService: BulkUploadService,
     public helpText: ServiceObjectsGroupsHelpText,
-  ) {
-    this.serviceObjects = new Array<ServiceObject>();
-    this.serviceObjectGroups = new Array<ServiceObjectGroup>();
+  ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
   }
 
   getServiceObjects() {
