@@ -24,9 +24,8 @@ import { TooltipModule } from './tooltip/tooltip.module';
     RouterModule,
     NgSelectModule,
     NgxPaginationModule,
-    TooltipModule,
   ],
   declarations: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
-  exports: [ImportExportComponent, ResolvePipe, TierSelectComponent, TooltipComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  exports: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
 })
 export class SharedModule {}
