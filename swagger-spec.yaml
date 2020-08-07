@@ -11920,7 +11920,7 @@ definitions:
         minimum: 1
       datacenterId:
         type: string
-      virtualMachines:
+      vmwareVirtualMachines:
         type: array
         readOnly: true
         items:
@@ -13825,7 +13825,7 @@ definitions:
         type: string
       priority:
         type: number
-      virtualMachineIds:
+      vmwareVirtualMachinesIds:
         type: array
         items:
           type: string
@@ -13833,7 +13833,7 @@ definitions:
       - datacenterId
       - name
       - priority
-      - virtualMachineIds
+      - vmwareVirtualMachinesIds
   GeneratedPriorityGroupBulkDto:
     type: object
     properties:

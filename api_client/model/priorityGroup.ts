@@ -22,6 +22,6 @@ export interface PriorityGroup {
     name: string;
     priority: number;
     datacenterId: string;
-    readonly virtualMachines?: Array<Array<string>>;
+    readonly vmwareVirtualMachines?: Array<Array<string>>;
 }
 

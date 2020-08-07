@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterContentInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { PriorityGroup, V1PriorityGroupsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -37,10 +37,6 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
   public deletePriorityGroup(priorityGroup: PriorityGroup): void {
     if (priorityGroup.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
-    }
-
-    if (priorityGroup.virtualMachines.length !== 0) {
-      throw new Error('Cannot delete a priority group with virtual machines.');
     }
 
     const { deletedAt, id, name } = priorityGroup;
