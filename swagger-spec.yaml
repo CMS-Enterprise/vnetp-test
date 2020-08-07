@@ -11879,6 +11879,56 @@ definitions:
       - memoryReserved
       - datacenterId
       - priorityGroupId
+  PriorityGroup:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      priority:
+        type: number
+        minimum: 1
+      datacenterId:
+        type: string
+      virtualMachines:
+        type: array
+        readOnly: true
+        items:
+          type: array
+    required:
+      - name
+      - priority
+      - datacenterId
   TierGroup:
     type: object
     properties:
@@ -13313,6 +13363,11 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/VmwareVirtualMachine'
+      priorityGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/PriorityGroup'
       tiers:
         type: array
         readOnly: true
@@ -13779,56 +13834,6 @@ definitions:
       - name
       - priority
       - virtualMachineIds
-  PriorityGroup:
-    type: object
-    properties:
-      id:
-        type: string
-        readOnly: true
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      version:
-        type: number
-        readOnly: true
-      deletedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      provisionedVersion:
-        type: number
-        readOnly: true
-      name:
-        type: string
-        minLength: 3
-        maxLength: 100
-      priority:
-        type: number
-        minimum: 1
-      datacenterId:
-        type: string
-      virtualMachines:
-        type: array
-        readOnly: true
-        items:
-          type: array
-    required:
-      - name
-      - priority
-      - datacenterId
   GeneratedPriorityGroupBulkDto:
     type: object
     properties:
