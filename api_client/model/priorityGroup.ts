@@ -9,11 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { VmwareNetworkAdapter } from './vmwareNetworkAdapter';
-import { VmwareVirtualDisk } from './vmwareVirtualDisk';
 
 
-export interface VmwareVirtualMachine { 
+export interface PriorityGroup { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -22,16 +20,8 @@ export interface VmwareVirtualMachine {
     provisionedAt?: object;
     readonly provisionedVersion?: number;
     name: string;
-    description?: string;
-    cpuCores: number;
-    cpuCoresPerSocket: number;
-    cpuReserved: boolean;
-    highPerformance: boolean;
-    memorySize: number;
-    memoryReserved: boolean;
+    priority: number;
     datacenterId: string;
-    readonly networkAdapters?: Array<VmwareNetworkAdapter>;
-    readonly virtualDisks?: Array<VmwareVirtualDisk>;
-    priorityGroupId: string;
+    readonly virtualMachines?: Array<Array<string>>;
 }
 

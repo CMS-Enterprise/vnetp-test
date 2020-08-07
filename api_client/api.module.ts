@@ -28,6 +28,7 @@ import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.servic
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1PhysicalServersService } from './api/v1PhysicalServers.service';
+import { V1PriorityGroupsService } from './api/v1PriorityGroups.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
 import { V1VlansService } from './api/v1Vlans.service';
