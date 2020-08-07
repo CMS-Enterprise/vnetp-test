@@ -3,14 +3,7 @@
 <div>
   <h1 class="header mb-3">Subnets & VLANs</h1>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Subnets <tooltip [message]="helpText?.Subnets"></tooltip></a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">VLANs <tooltip [message]="helpText?.Vlans"></tooltip></a>
-    </li>
-  </ul>
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
@@ -34,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let subnet of subnets | paginate: { itemsPerPage: 10, currentPage: currentSubnetsPage }">
+        <tr *ngFor="let subnet of subnets | paginate: { itemsPerPage: perPage, currentPage: currentSubnetsPage }">
           <td>
             <span>{{ subnet?.name }}</span>
           </td>
@@ -105,7 +98,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: 10, currentPage: currentVlansPage }">
+        <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
           <td>
             <span>{{ vlan?.name }}</span>
           </td>

@@ -33,3 +33,9 @@ export const MockIconButtonComponent = MockComponent({
   inputs: ['icon', 'label', 'type'],
   outputs: ['handleClick'],
 });
+
+export const MockTabsComponent = MockComponent({
+  selector: 'app-tabs',
+  inputs: ['tabs'],
+  outputs: ['tabChange'],
+});

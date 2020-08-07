@@ -13,6 +13,13 @@ import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 
 const routes: Routes = [
   {
@@ -22,7 +29,19 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [IconButtonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    IconButtonModule,
+    NgxPaginationModule,
+    NgxSmartModalModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TabsModule,
+    TooltipModule,
+  ],
   declarations: [
     LoadBalancersComponent,
     HealthMonitorModalComponent,

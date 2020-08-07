@@ -6,6 +6,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -22,6 +23,17 @@ export class FirewallRulesComponent implements OnInit {
 
   perPage = 20;
 
+  public tabs: Tab[] = [
+    {
+      name: 'External',
+      tooltip: this.helpText.External,
+    },
+    {
+      name: 'Intervrf',
+      tooltip: this.helpText.InterVrf,
+    },
+  ];
+
   constructor(
     public helpText: FirewallRulesHelpText,
     private ngx: NgxSmartModalService,
@@ -31,12 +43,8 @@ export class FirewallRulesComponent implements OnInit {
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
   ) {}
 
-  showExternal() {
-    this.navIndex = FirewallRuleGroupType.External;
-  }
-
-  showIntervrf() {
-    this.navIndex = FirewallRuleGroupType.Intervrf;
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = tab.name === 'External' ? FirewallRuleGroupType.External : FirewallRuleGroupType.Intervrf;
   }
 
   getTiers() {

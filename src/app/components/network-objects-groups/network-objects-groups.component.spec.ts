@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent, MockTabsComponent } from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -46,6 +46,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         ImportExportComponent,
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

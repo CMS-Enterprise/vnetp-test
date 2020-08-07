@@ -19,6 +19,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -32,16 +33,30 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   perPage = 20;
   ModalMode = ModalMode;
 
-  networkObjects: Array<NetworkObject>;
-  networkObjectGroups: Array<NetworkObjectGroup>;
+  networkObjects: NetworkObject[] = [];
+  networkObjectGroups: NetworkObjectGroup[] = [];
 
   navIndex = 0;
   showRadio = false;
 
-  networkObjectModalSubscription: Subscription;
-  networkObjectGroupModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
+  public tabs: Tab[] = [
+    {
+      name: 'Network Objects',
+      tooltip: this.helpText.NetworkObjects,
+    },
+    {
+      name: 'Network Object Groups',
+      tooltip: this.helpText.NetworkObjectGroups,
+    },
+    {
+      name: 'Network Object Group Relations',
+    },
+  ];
+
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private networkObjectGroupModalSubscription: Subscription;
+  private networkObjectModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -52,9 +67,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private bulkUploadService: BulkUploadService,
     public helpText: NetworkObjectsGroupsHelpText,
-  ) {
-    this.networkObjects = new Array<NetworkObject>();
-    this.networkObjectGroups = new Array<NetworkObjectGroup>();
+  ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
   }
 
   getNetworkObjects() {

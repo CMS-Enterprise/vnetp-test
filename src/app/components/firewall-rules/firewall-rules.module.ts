@@ -10,6 +10,13 @@ import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { CommonModule } from '@angular/common';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 
 const routes: Routes = [
   {
@@ -25,7 +32,20 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [IconButtonModule, PreviewModalModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    IconButtonModule,
+    NgxPaginationModule,
+    NgxSmartModalModule,
+    PreviewModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TabsModule,
+    TooltipModule,
+  ],
   declarations: [
     ContractModalComponent,
     FirewallRulesComponent,

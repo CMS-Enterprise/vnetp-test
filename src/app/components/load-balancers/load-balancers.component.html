@@ -3,45 +3,7 @@
 <div>
   <h1 class="header mb-3">Load Balancers</h1>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getVirtualServers(); getIrules(); getPools()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
-        Virtual Servers <tooltip [message]="helpText.VirtualServers"></tooltip>
-      </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 1; getPools(); getHealthMonitors(); getNodes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"> Pools <tooltip [message]="helpText.Pools"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 2">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }"> Pool Relations <tooltip [message]="helpText.PoolRelations"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 3; getNodes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }"> Nodes <tooltip [message]="helpText.Nodes"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 4; getIrules()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 4 }"> iRules <tooltip [message]="helpText.IRules"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 5; getHealthMonitors()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 5 }">
-        Health Monitors <tooltip [message]="helpText.HealthMonitors"></tooltip>
-      </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 6; getProfiles()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 6 }"> Profiles <tooltip [message]="helpText.Profiles"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 7; getPolicies()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 7 }"> Policies <tooltip [message]="helpText.Policies"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 8; getVlans()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 8 }"> VLANs <tooltip [message]="helpText.Vlans"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 9; getSelfIps()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 9 }"> Self IPs <tooltip [message]="helpText.SelfIps"></tooltip> </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 10; getRoutes()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 10 }"> Routes <tooltip [message]="helpText.Routes"></tooltip> </a>
-    </li>
-  </ul>
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">

@@ -3,19 +3,7 @@
 <div>
   <h1 class="header mb-3">Service Objects & Groups</h1>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Service Objects <tooltip [message]="helpText.ServiceObjects"></tooltip></a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >Service Object Groups <tooltip [message]="helpText.ServiceObjects"></tooltip
-      ></a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 2">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Service Object Group Relations </a>
-    </li>
-  </ul>
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">

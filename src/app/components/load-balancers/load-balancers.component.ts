@@ -42,6 +42,7 @@ import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-d
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-load-balancers',
@@ -53,44 +54,90 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
-  currentIrulePage = 1;
-  currentVSPage = 1;
-  currentNodePage = 1;
-  currentPoolPage = 1;
   currentHMPage = 1;
-  currentProfilesPage = 1;
+  currentIrulePage = 1;
+  currentNodePage = 1;
   currentPoliciesPage = 1;
-  currentVlansPage = 1;
-  currentSelfIpsPage = 1;
+  currentPoolPage = 1;
+  currentProfilesPage = 1;
   currentRoutesPage = 1;
+  currentSelfIpsPage = 1;
+  currentVSPage = 1;
+  currentVlansPage = 1;
 
   perPage = 20;
   ModalMode = ModalMode;
 
-  virtualServers: LoadBalancerVirtualServer[];
-  pools: LoadBalancerPool[];
-  nodes: LoadBalancerNode[];
-  irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
-  profiles: LoadBalancerProfile[];
+  irules: LoadBalancerIrule[];
+  nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
-  vlans: LoadBalancerVlan[];
-  selfIps: LoadBalancerSelfIp[];
+  pools: LoadBalancerPool[];
+  profiles: LoadBalancerProfile[];
   routes: LoadBalancerRoute[];
+  selfIps: LoadBalancerSelfIp[];
+  virtualServers: LoadBalancerVirtualServer[];
+  vlans: LoadBalancerVlan[];
 
-  virtualServerModalSubscription: Subscription;
-  poolModalSubscription: Subscription;
-  nodeModalSubscription: Subscription;
-  iruleModalSubscription: Subscription;
-  healthMonitorModalSubscription: Subscription;
-  profileModalSubscription: Subscription;
-  vlanModalSubscription: Subscription;
-  selfIpModalSubscription: Subscription;
-  routeModalSubscription: Subscription;
+  public tabs: Tab[] = [
+    {
+      name: 'Virtual Servers',
+      tooltip: this.helpText.VirtualServers,
+    },
+    {
+      name: 'Pools',
+      tooltip: this.helpText.Pools,
+    },
+    {
+      name: 'Pool Relations',
+      tooltip: this.helpText.PoolRelations,
+    },
+    {
+      name: 'Nodes',
+      tooltip: this.helpText.Nodes,
+    },
+    {
+      name: 'iRules',
+      tooltip: this.helpText.IRules,
+    },
+    {
+      name: 'Health Monitors',
+      tooltip: this.helpText.HealthMonitors,
+    },
+    {
+      name: 'Profiles',
+      tooltip: this.helpText.Profiles,
+    },
+    {
+      name: 'Policies',
+      tooltip: this.helpText.Policies,
+    },
+    {
+      name: 'VLANs',
+      tooltip: this.helpText.Vlans,
+    },
+    {
+      name: 'Self IPs',
+      tooltip: this.helpText.SelfIps,
+    },
+    {
+      name: 'Routes',
+      tooltip: this.helpText.Routes,
+    },
+  ];
 
-  currentDatacenterSubscription: Subscription;
-  policyModalSubscription: any;
-  currentTierSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private healthMonitorModalSubscription: Subscription;
+  private iruleModalSubscription: Subscription;
+  private nodeModalSubscription: Subscription;
+  private policyModalSubscription: Subscription;
+  private poolModalSubscription: Subscription;
+  private profileModalSubscription: Subscription;
+  private routeModalSubscription: Subscription;
+  private selfIpModalSubscription: Subscription;
+  private virtualServerModalSubscription: Subscription;
+  private vlanModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -109,6 +156,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private routesService: V1LoadBalancerRoutesService,
     public helpText: LoadBalancersHelpText,
   ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
+  }
 
   getVirtualServers() {
     if (!this.hasCurrentTier()) {
