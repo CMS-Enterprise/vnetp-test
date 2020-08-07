@@ -1,1 +1,92 @@
+<ngx-smart-modal
+  #priorityGroupModal
+  identifier="priorityGroupModal"
+  [dismissable]="false"
+  (onOpen)="loadPriorityGroup()"
+  (onClose)="reset()"
+  customClass="medium-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Priority Group</h4>
+  </header>
 
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <main class="modal-body">
+      <section class="form-row">
+        <!-- Name -->
+        <div class="form-group col-md-6">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
+          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+            <div *ngIf="f.name.errors.required">Name is required</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", "."</div>
+          </div>
+        </div>
+
+        <!-- Priority -->
+        <div class="form-group col-md-6">
+          <label for="priority">Priority</label>
+          <input
+            id="priority"
+            type="number"
+            formControlName="priority"
+            class="form-control"
+            min="1"
+            [class.is-invalid]="submitted && f.priority.errors"
+          />
+          <div *ngIf="submitted && f.priority.errors" class="invalid-feedback">
+            <div *ngIf="f.priority.errors.required">Priority is required</div>
+            <div *ngIf="f.priority.errors.min">Priority must be at least 1</div>
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <h4 id="virtual-machines">Virtual Machines</h4>
+        <table class="table table-striped" aria-describedby="virtual-machines">
+          <thead>
+            <tr>
+              <th scope="col" *ngIf="modalMode === ModalMode.Create">Selected?</th>
+              <th scope="col">Name</th>
+              <th scope="col">CPUs</th>
+              <th scope="col">Cores per Socket</th>
+              <th scope="col">Memory</th>
+              <th scope="col">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vm of virtualMachines">
+              <td *ngIf="modalMode === ModalMode.Create">
+                <input type="checkbox" [(ngModel)]="vm.isSelected" [ngModelOptions]="{ standalone: true }" />
+              </td>
+              <td>
+                {{ vm.name }}
+              </td>
+              <td>
+                {{ vm.cpuCores }}
+              </td>
+              <td>
+                {{ vm.cpuCoresPerSocket }}
+              </td>
+              <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
+              <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+            </tr>
+            <tr *ngIf="!virtualMachines?.length" class="text-center">
+              <td [attr.colspan]="modalMode === ModalMode.Create ? 6 : 5">No Virtual Machines</td>
+            </tr>
+          </tbody>
+        </table>
+      </aside>
+    </main>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save Priority Group</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

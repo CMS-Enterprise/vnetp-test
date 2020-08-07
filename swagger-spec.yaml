@@ -13828,7 +13828,7 @@ definitions:
       virtualMachineIds:
         type: array
         items:
-          type: array
+          type: string
     required:
       - datacenterId
       - name

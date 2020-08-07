@@ -49,6 +49,7 @@
         ></app-icon-button>
 
         <app-icon-button
+          *ngIf="priorityGroup?.virtualMachines.length === 0"
           icon="delete"
           label="Soft-Delete/Delete Priority Group"
           [type]="priorityGroup?.deletedAt ? 'danger' : 'default'"
@@ -71,3 +72,6 @@
     <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
   </div>
 </section>
+
+<app-yes-no-modal></app-yes-no-modal>
+<app-priority-group-modal></app-priority-group-modal>
