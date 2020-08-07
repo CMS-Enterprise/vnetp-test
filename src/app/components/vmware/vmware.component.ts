@@ -20,19 +20,20 @@ enum TabName {
   templateUrl: './vmware.component.html',
 })
 export class VmwareComponent implements OnInit, OnDestroy {
-  virtualMachines: Array<VmwareVirtualMachine>;
-  virtualMachineModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterId: string;
+  public datacenterId: string;
+  public virtualMachines: Array<VmwareVirtualMachine>;
 
-  currentVMWarePage = 1;
-  perPage = 20;
-  ModalMode = ModalMode;
-  ConversionUtil = ConversionUtil;
+  public currentVMWarePage = 1;
+  public perPage = 20;
+  public ModalMode = ModalMode;
+  public ConversionUtil = ConversionUtil;
 
   public activeTabName = TabName.VirtualMachines;
   public tabs: Tab[] = [{ name: TabName.VirtualMachines }, { name: TabName.PriorityGroups }];
   public TabName = TabName;
+
+  private currentDatacenterSubscription: Subscription;
+  private virtualMachineModalSubscription: Subscription;
 
   constructor(
     private ngxSmartModalService: NgxSmartModalService,

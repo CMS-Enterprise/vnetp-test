@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { PriorityGroup, V1PriorityGroupsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { PriorityGroupModalComponent } from '../priority-group-modal/priority-group-modal.component';
 
 @Component({
   selector: 'app-priority-group-list',
   templateUrl: './priority-group-list.component.html',
 })
 export class PriorityGroupListComponent implements OnInit {
+  @Input() datacenterId: string;
+
   public ModalMode = ModalMode;
   public currentPage = 1;
   public perPage = 10;
@@ -31,9 +32,11 @@ export class PriorityGroupListComponent implements OnInit {
   }
 
   public loadPriorityGroups(): void {
-    this.priorityGroupService.v1PriorityGroupsGet({}).subscribe(data => {
-      this.priorityGroups = data;
-    });
+    this.priorityGroupService
+      .v1PriorityGroupsGet({ filter: `datacenterId||eq||${this.datacenterId}`, join: 'virtualMachines' })
+      .subscribe(data => {
+        this.priorityGroups = data;
+      });
   }
 
   public openPriorityGroupModal(modalMode: ModalMode, priorityGroup?: PriorityGroup): void {}

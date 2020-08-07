@@ -82,7 +82,7 @@
 </ng-container>
 
 <ng-container *ngIf="activeTabName === TabName.PriorityGroups">
-  <app-priority-group-list></app-priority-group-list>
+  <app-priority-group-list [datacenterId]="datacenterId"></app-priority-group-list>
 </ng-container>
 
 <app-virtual-machine-modal></app-virtual-machine-modal>

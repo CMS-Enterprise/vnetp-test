@@ -16,6 +16,7 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
+      <th scope="col">Priority</th>
       <th scope="col">VM Count</th>
       <th scope="col"></th>
     </tr>
@@ -26,7 +27,10 @@
         {{ priorityGroup.name }}
       </td>
       <td>
-        {{ priorityGroup.vmCount }}
+        {{ priorityGroup.priority }}
+      </td>
+      <td>
+        {{ priorityGroup.virtualMachines.length }}
       </td>
       <td class="table__actions">
         <app-icon-button
@@ -53,7 +57,7 @@
       </td>
     </tr>
     <tr *ngIf="!priorityGroups?.length" class="text-center">
-      <td colspan="3">No Priority Groups</td>
+      <td colspan="4">No Priority Groups</td>
     </tr>
   </tbody>
 </table>
