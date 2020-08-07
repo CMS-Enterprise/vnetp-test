@@ -8,6 +8,12 @@ import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-mo
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/conversion.util';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
+
+enum TabName {
+  VirtualMachines = 'Virtual Machines',
+  PriorityGroups = 'Priority Groups',
+}
 
 @Component({
   selector: 'app-vmware',
@@ -24,12 +30,20 @@ export class VmwareComponent implements OnInit, OnDestroy {
   ModalMode = ModalMode;
   ConversionUtil = ConversionUtil;
 
+  public activeTabName = TabName.VirtualMachines;
+  public tabs: Tab[] = [{ name: TabName.VirtualMachines }, { name: TabName.PriorityGroups }];
+  public TabName = TabName;
+
   constructor(
     private ngxSmartModalService: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
     private virtualMachineService: V1VmwareVirtualMachinesService,
   ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.activeTabName = tab.name as TabName;
+  }
 
   getVirtualMachines() {
     this.datacenterService
