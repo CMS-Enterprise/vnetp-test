@@ -12,23 +12,43 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-      <!-- Name -->
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-control"
-          [class.is-invalid]="submitted && f.name.errors"
-          aria-label="Name"
-          required
-        />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+      <div class="form-row">
+        <!-- Name -->
+        <div class="form-group col-md-8">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="submitted && f.name.errors"
+            aria-label="Name"
+            required
+          />
+          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+            <div *ngIf="f.name.errors.required">Name is required</div>
+            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          </div>
+        </div>
+
+        <!-- Priority Group -->
+        <div class="form-group col-md-4">
+          <label for="priorityGroup">Priority Group</label>
+          <select
+            id="priorityGroup"
+            formControlName="priorityGroupId"
+            class="form-control"
+            [class.is-invalid]="submitted && f.priorityGroupId.errors"
+            required
+          >
+            <option></option>
+            <option *ngFor="let priorityGroup of priorityGroups" [ngValue]="priorityGroup.id">{{ priorityGroup.name }}</option>
+          </select>
+          <div *ngIf="submitted && f.priorityGroupId.errors" class="invalid-feedback">
+            <div *ngIf="f.priorityGroupId.errors.required">Priority Group is required</div>
+          </div>
         </div>
       </div>
 

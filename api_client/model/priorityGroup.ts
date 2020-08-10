@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VmwareVirtualMachine } from './vmwareVirtualMachine';
 
 
 export interface PriorityGroup { 
@@ -22,6 +23,6 @@ export interface PriorityGroup {
     name: string;
     priority: number;
     datacenterId: string;
-    readonly vmwareVirtualMachines?: Array<Array<string>>;
+    readonly vmwareVirtualMachines?: Array<VmwareVirtualMachine>;
 }
 

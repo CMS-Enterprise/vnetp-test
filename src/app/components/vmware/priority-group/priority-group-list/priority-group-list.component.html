@@ -49,7 +49,7 @@
         ></app-icon-button>
 
         <app-icon-button
-          *ngIf="priorityGroup?.vmwareVirtualMachines.length === 0"
+          *ngIf="priorityGroup?.vmwareVirtualMachines?.length === 0"
           icon="delete"
           label="Soft-Delete/Delete Priority Group"
           [type]="priorityGroup?.deletedAt ? 'danger' : 'default'"

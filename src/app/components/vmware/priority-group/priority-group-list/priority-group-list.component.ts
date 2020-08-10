@@ -57,7 +57,7 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
   public loadPriorityGroups(): void {
     this.priorityGroupService
-      .v1PriorityGroupsGet({ filter: `datacenterId||eq||${this.datacenterId}`, join: 'virtualMachines' })
+      .v1PriorityGroupsGet({ filter: `datacenterId||eq||${this.datacenterId}`, join: 'vmwareVirtualMachines' })
       .subscribe(data => {
         this.priorityGroups = data;
       });
