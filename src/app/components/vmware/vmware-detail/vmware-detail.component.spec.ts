@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VmwareDetailComponent } from './vmware-detail.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockViewFieldComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -27,7 +27,7 @@ describe('VmwareDetailComponent', () => {
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],
-      declarations: [VmwareDetailComponent, YesNoModalComponent, MockFontAwesomeComponent],
+      declarations: [VmwareDetailComponent, YesNoModalComponent, MockFontAwesomeComponent, MockViewFieldComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         {

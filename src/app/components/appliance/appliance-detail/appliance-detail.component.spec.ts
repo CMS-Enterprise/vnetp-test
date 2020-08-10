@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceDetailComponent } from './appliance-detail.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockViewFieldComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
@@ -26,7 +26,7 @@ describe('ApplianceDetailComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
-      declarations: [ApplianceDetailComponent, YesNoModalComponent, MockFontAwesomeComponent],
+      declarations: [ApplianceDetailComponent, YesNoModalComponent, MockFontAwesomeComponent, MockViewFieldComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         {
