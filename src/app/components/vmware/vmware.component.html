@@ -16,6 +16,11 @@
     </button>
   </section>
 
+  <div class="flex">
+    <app-view-field label="Ungrouped" [value]="ungroupedVirtualMachines.length"></app-view-field>
+    <app-view-field label="High Performance CPU" [value]="highPerformanceVirtualMachines.length"></app-view-field>
+  </div>
+
   <table class="table table-striped" aria-describedby="Virtual Machines table">
     <thead>
       <tr>
@@ -83,13 +88,13 @@
       <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
     </div>
   </section>
+
+  <app-virtual-machine-modal></app-virtual-machine-modal>
+  <app-virtual-disk-modal></app-virtual-disk-modal>
+  <app-network-adapter-modal></app-network-adapter-modal>
+  <app-yes-no-modal></app-yes-no-modal>
 </ng-container>
 
 <ng-container *ngIf="activeTabName === TabName.PriorityGroups">
   <app-priority-group-list [datacenterId]="datacenterId"></app-priority-group-list>
 </ng-container>
-
-<app-virtual-machine-modal></app-virtual-machine-modal>
-<app-virtual-disk-modal></app-virtual-disk-modal>
-<app-network-adapter-modal></app-network-adapter-modal>
-<app-yes-no-modal></app-yes-no-modal>

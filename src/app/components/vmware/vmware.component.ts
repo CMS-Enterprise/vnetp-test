@@ -26,6 +26,8 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
   public currentVMWarePage = 1;
   public perPage = 20;
+  public highPerformanceVirtualMachines: VmwareVirtualMachine[] = [];
+  public ungroupedVirtualMachines: VmwareVirtualMachine[] = [];
   public ModalMode = ModalMode;
   public ConversionUtil = ConversionUtil;
 
@@ -55,6 +57,8 @@ export class VmwareComponent implements OnInit, OnDestroy {
       })
       .subscribe(data => {
         this.virtualMachines = data.vmwareVirtualMachines;
+        this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
+        this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
       });
   }
 

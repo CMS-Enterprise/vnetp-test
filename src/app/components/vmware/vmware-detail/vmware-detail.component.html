@@ -19,110 +19,77 @@
   </button>
 </section>
 
-<div *ngIf="VirtualMachine" >
-  <!-- Description -->
-  <div class="info">
-    <label class="info__label">Description</label>
-    <p class="info__value">{{ VirtualMachine.description || 'No description provided' }}</p>
+<div *ngIf="VirtualMachine">
+  <app-view-field background="none" label="Description" [value]="VirtualMachine.description || 'No description provided'"></app-view-field>
+
+  <div class="details">
+    <app-view-field label="CPU Cores" [value]="VirtualMachine.cpuCores"></app-view-field>
+    <app-view-field label="CPU Per Socket" [value]="VirtualMachine.cpuCoresPerSocket"></app-view-field>
+    <app-view-field label="CPU Reserved?" [value]="VirtualMachine.cpuReserved"></app-view-field>
+    <app-view-field label="Memory Size" [value]="ConversionUtil.convertBytesToGb(VirtualMachine.memorySize) + ' GB'"></app-view-field>
+    <app-view-field label="Memory Reserved?" [value]="VirtualMachine.memoryReserved"></app-view-field>
+    <app-view-field label="High Performance?" [value]="VirtualMachine.highPerformance"></app-view-field>
   </div>
 
-  <div class="info__list">
-      <!-- CPU Cores -->
-    <div class="info info--pill">
-      <label class="info__label">CPU Cores</label>
-      <p class="info__value">{{ VirtualMachine.cpuCores }}</p>
-    </div>
+  <!-- Virtual Disks table -->
+  <h3>Virtual Disks</h3>
+  <table class="table table-striped" aria-describedby="Virtual Disks table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Size</th>
+        <th scope="col">Raw LUN</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of virtualDisks">
+        <td>
+          <span>{{ v.name }}</span>
+        </td>
+        <td>
+          <span>{{ ConversionUtil.convertBytesToGb(v.diskSize) }} GB</span>
+        </td>
+        <td>
+          <span>{{ v.rawLun }}</span>
+        </td>
+        <td>
+          <span>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualDisks?.length" class="text-center">
+        <td colspan="4">No Virtual Disks</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!-- Cores Per Socket -->
-    <div class="info info--pill">
-      <label class="info__label">Cores Per Socket</label>
-      <p class="info__value"> {{ VirtualMachine.cpuCoresPerSocket }}</p>
-    </div>
+  <!-- Network Adapters table -->
+  <h3>Network Adapters</h3>
+  <table class="table table-striped" aria-describedby="Network Adapters table">
+    <thead>
+      <tr>
+        <th scope="col">Adapter</th>
+        <th scope="col">VLAN</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of networkAdapters">
+        <td>
+          <span>{{ n.name }}</span>
+        </td>
+        <td>
+          <span>{{ n.vlanId }}</span>
+        </td>
+        <td>
+          <span>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="!networkAdapters?.length" class="text-center">
+        <td colspan="3">No Network Adapters</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!-- CPU Reserved? -->
-    <div class="info info--pill">
-      <label class="info__label">CPU Reserved?</label>
-      <p class="info__value"> {{ VirtualMachine.cpuReserved }}</p>
-    </div>
-
-    <!-- Memory Size -->
-    <div class="info info--pill">
-      <label class="info__label">Memory Size</label>
-      <p class="info__value">{{ ConversionUtil.convertBytesToGb(VirtualMachine.memorySize) }} GB</p>
-    </div>
-
-    <!-- Memory Reserved? -->
-    <div class="info info--pill">
-      <label class="info__label">Memory Reserved?</label>
-      <p class="info__value"> {{ VirtualMachine.memoryReserved }}</p>
-    </div>
-
-    <!-- High Performance? -->
-    <div class="info info--pill">
-      <label class="info__label">High Performance?</label>
-      <p class="info__value"> {{ VirtualMachine.highPerformance }}</p>
-    </div>
-  </div>
+  <app-yes-no-modal></app-yes-no-modal>
 </div>
-
-<!-- Virtual Disks table -->
-<h3>Virtual Disks</h3>
-<table class="table table-striped" aria-describedby="Virtual Disks table">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Size</th>
-      <th scope="col">Raw LUN</th>
-      <th scope="col">State</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let v of virtualDisks">
-      <td>
-        <span>{{ v.name }}</span>
-      </td>
-      <td>
-        <span>{{ ConversionUtil.convertBytesToGb(v.diskSize) }} GB</span>
-      </td>
-      <td>
-        <span>{{ v.rawLun }}</span>
-      </td>
-      <td>
-        <span>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-      </td>
-    </tr>
-    <tr *ngIf="!virtualDisks?.length" class="text-center">
-      <td colspan="4">No Virtual Disks</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- Network Adapters table -->
-<h3>Network Adapters</h3>
-<table class="table table-striped" aria-describedby="Network Adapters table">
-  <thead>
-    <tr>
-      <th scope="col">Adapter</th>
-      <th scope="col">VLAN</th>
-      <th scope="col">State</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let n of networkAdapters">
-      <td>
-        <span>{{ n.name }}</span>
-      </td>
-      <td>
-        <span>{{ n.vlanId }}</span>
-      </td>
-      <td>
-        <span>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-      </td>
-    </tr>
-    <tr *ngIf="!networkAdapters?.length" class="text-center">
-      <td colspan="3">No Network Adapters</td>
-    </tr>
-  </tbody>
-</table>
-
-<app-yes-no-modal></app-yes-no-modal>
