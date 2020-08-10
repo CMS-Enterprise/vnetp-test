@@ -18,6 +18,7 @@ enum TabName {
 @Component({
   selector: 'app-vmware',
   templateUrl: './vmware.component.html',
+  styleUrls: ['./vmware.component.scss'],
 })
 export class VmwareComponent implements OnInit, OnDestroy {
   public datacenterId: string;

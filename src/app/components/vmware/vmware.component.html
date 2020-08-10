@@ -33,7 +33,11 @@
           <a routerLink="/vmware/{{ vm.id }}" queryParamsHandling="merge">{{ vm.name }}</a>
         </td>
         <td>
-          {{ vm.cpuCores }}
+          <span>{{ vm.cpuCores }}</span>
+          <span class="vm--high-perf" *ngIf="vm.highPerformance">
+            <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+            <span>High Performance</span>
+          </span>
         </td>
         <td>
           {{ vm.cpuCoresPerSocket }}

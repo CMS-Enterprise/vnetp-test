@@ -47,7 +47,7 @@
             <option *ngFor="let priorityGroup of priorityGroups" [ngValue]="priorityGroup.id">{{ priorityGroup.name }}</option>
           </select>
           <div *ngIf="submitted && f.priorityGroupId.errors" class="invalid-feedback">
-            <div *ngIf="f.priorityGroupId.errors.required">Priority Group is required</div>
+            <div *ngIf="f.priorityGroup.errors.required">Priority Group is required</div>
           </div>
         </div>
       </div>

@@ -156,10 +156,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.description = this.form.value.description;
     virtualMachine.cpuCores = Number.parseInt(this.form.value.cpuCount, 10);
     virtualMachine.cpuCoresPerSocket = Number.parseInt(this.form.value.coreCount, 10);
-    virtualMachine.cpuReserved = Boolean(this.form.value.cpuReserved);
+    virtualMachine.cpuReserved = ConversionUtil.convertStringToBoolean(this.form.value.cpuReserved);
     virtualMachine.memorySize = ConversionUtil.convertGbToBytes(this.form.value.memorySize);
-    virtualMachine.memoryReserved = Boolean(this.form.value.memoryReserved);
-    virtualMachine.highPerformance = Boolean(this.form.value.highPerformance);
+    virtualMachine.memoryReserved = ConversionUtil.convertStringToBoolean(this.form.value.memoryReserved);
+    virtualMachine.highPerformance = ConversionUtil.convertStringToBoolean(this.form.value.highPerformance);
     virtualMachine.priorityGroupId = this.form.value.priorityGroupId;
 
     this.ngx.resetModalData('virtualMachineModal');
