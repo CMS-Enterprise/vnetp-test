@@ -3,32 +3,22 @@ import { ApplianceDetailComponent } from './appliance-detail.component';
 import { MockFontAwesomeComponent, MockViewFieldComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('ApplianceDetailComponent', () => {
   let component: ApplianceDetailComponent;
   let fixture: ComponentFixture<ApplianceDetailComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
-      ],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       declarations: [ApplianceDetailComponent, YesNoModalComponent, MockFontAwesomeComponent, MockViewFieldComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         {
           provide: ActivatedRoute,
           useValue: {

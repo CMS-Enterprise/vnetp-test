@@ -8,20 +8,18 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let router: Router;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, FormsModule, HttpClientTestingModule],
       declarations: [NavbarComponent, FilterPipe, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
+      providers: [CookieService, MockProvider(NgxSmartModalService)],
     })
       .compileComponents()
       .then(() => {

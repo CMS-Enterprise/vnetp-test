@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { of } from 'rxjs';
 import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
 import TestUtil from 'src/test/test.util';
@@ -14,7 +14,6 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     const serviceObjectsService = {
@@ -26,7 +25,7 @@ describe('ServiceObjectModalComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         FormBuilder,
         Validators,
         { provide: V1NetworkSecurityServiceObjectsService, useValue: serviceObjectsService },
@@ -180,6 +179,7 @@ describe('ServiceObjectModalComponent', () => {
     };
 
     it('should throw an error if the modal mode is not set', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createServiceObjectModalDto();
       dto.ModalMode = null;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
@@ -189,6 +189,7 @@ describe('ServiceObjectModalComponent', () => {
     });
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createServiceObjectModalDto();
       dto.ServiceObject = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -203,6 +204,7 @@ describe('ServiceObjectModalComponent', () => {
     });
 
     it('should disable the name and protocol when editing an existing service object', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createServiceObjectModalDto());
 
       component.getData();

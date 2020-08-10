@@ -11,12 +11,11 @@ import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('DeployComponent', () => {
   let component: DeployComponent;
   let fixture: ComponentFixture<DeployComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   const testData = {
     datacenter: {
@@ -63,7 +62,7 @@ describe('DeployComponent', () => {
         MockComponent({ selector: 'app-yes-no-modal' }),
       ],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         FormBuilder,
         CookieService,
         Validators,
@@ -125,6 +124,7 @@ describe('DeployComponent', () => {
 
   describe('deployTiers', () => {
     it('should not open the confirmation modal when 0 tiers are selected', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const spy = jest.spyOn(ngx, 'getModal');
 
       component.tiers = [];
@@ -136,6 +136,7 @@ describe('DeployComponent', () => {
     });
 
     it('should open the confirmation modal to deploys tiers', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
         return {
           open: jest.fn(),
@@ -155,6 +156,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const onCloseFinishedSubject = new Subject();
       jest.spyOn(ngx, 'getModal').mockImplementation(() => {
         return {

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import TestUtil from 'src/test/test.util';
@@ -16,8 +16,6 @@ describe('VlanModalComponent', () => {
   let fixture: ComponentFixture<VlanModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
     const vlanService = {
       v1NetworkVlansPost: jest.fn(() => of({})),
       v1NetworkVlansIdPut: jest.fn(() => of({})),
@@ -26,12 +24,7 @@ describe('VlanModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        { provide: V1NetworkVlansService, useValue: vlanService },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [MockProvider(NgxSmartModalService), { provide: V1NetworkVlansService, useValue: vlanService }, FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {
