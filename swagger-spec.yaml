@@ -2206,8 +2206,8 @@ paths:
         - application/json
       consumes:
         - application/json
-  ? '/v1/network-security/service-object-groups/{serviceObjectGroupId}/service-objects/{serviceObjectId}'
-  : post:
+  '/v1/network-security/service-object-groups/{serviceObjectGroupId}/service-objects/{serviceObjectId}':
+    post:
       summary: Add Service Object to Service Object Group
       parameters:
         - type: string
@@ -2983,8 +2983,8 @@ paths:
         - application/json
       consumes:
         - application/json
-  ? '/v1/network-security/network-object-groups/{networkObjectGroupId}/network-objects/{networkObjectId}'
-  : post:
+  '/v1/network-security/network-object-groups/{networkObjectGroupId}/network-objects/{networkObjectId}':
+    post:
       summary: Add Network Object to Network Object Group
       parameters:
         - type: string
@@ -8928,8 +8928,8 @@ paths:
         - application/json
       consumes:
         - application/json
-  ? '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/ratio/{ratio}'
-  : post:
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/ratio/{ratio}':
+    post:
       summary: Add Node to Load Balancer Pool
       parameters:
         - type: number
@@ -13825,7 +13825,7 @@ definitions:
         type: string
       priority:
         type: number
-      vmwareVirtualMachinesIds:
+      vmwareVirtualMachineIds:
         type: array
         items:
           type: string
@@ -13833,7 +13833,7 @@ definitions:
       - datacenterId
       - name
       - priority
-      - vmwareVirtualMachinesIds
+      - vmwareVirtualMachineIds
   GeneratedPriorityGroupBulkDto:
     type: object
     properties:

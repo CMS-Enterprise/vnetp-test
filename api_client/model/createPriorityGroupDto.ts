@@ -15,6 +15,6 @@ export interface CreatePriorityGroupDto {
     datacenterId: string;
     name: string;
     priority: number;
-    vmwareVirtualMachinesIds: Array<string>;
+    vmwareVirtualMachineIds: Array<string>;
 }
 

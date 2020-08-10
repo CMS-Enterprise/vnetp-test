@@ -114,7 +114,7 @@ export class PriorityGroupModalComponent implements OnInit {
       .v1PriorityGroupsPost({
         createPriorityGroupDto: {
           ...priorityGroup,
-          vmwareVirtualMachinesIds: this.virtualMachines.filter(vm => vm.isSelected).map(vm => vm.id),
+          vmwareVirtualMachineIds: this.virtualMachines.filter(vm => vm.isSelected).map(vm => vm.id),
         },
       })
       .subscribe(() => {
