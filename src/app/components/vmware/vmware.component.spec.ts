@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VmwareComponent } from './vmware.component';
-import { MockFontAwesomeComponent, MockIconButtonComponent, MockTabsComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockTabsComponent, MockComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
@@ -42,6 +42,7 @@ describe('VmwareComponent', () => {
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockTabsComponent,
+        MockComponent({ selector: 'app-priority-group-list', inputs: ['datacenterId'] }),
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
     }).compileComponents();
