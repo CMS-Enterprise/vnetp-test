@@ -5,7 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
@@ -54,13 +54,7 @@ describe('DeployComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [
-        DeployComponent,
-        ResolvePipe,
-        MockFontAwesomeComponent,
-        MockNgxSmartModalComponent,
-        MockComponent({ selector: 'app-yes-no-modal' }),
-      ],
+      declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
       providers: [
         MockProvider(NgxSmartModalService),
         FormBuilder,

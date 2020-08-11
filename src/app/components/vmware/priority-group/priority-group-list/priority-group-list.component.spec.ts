@@ -1,21 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { PriorityGroupListComponent } from './priority-group-list.component';
 import { of, Subject } from 'rxjs';
 import { V1PriorityGroupsService, PriorityGroup } from 'api_client';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('PriorityGroupListComponent', () => {
   let component: PriorityGroupListComponent;
   let fixture: ComponentFixture<PriorityGroupListComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
     const priorityGroupService = {
       v1PriorityGroupsGet: jest.fn(() => of([])),
       v1PriorityGroupsIdDelete: jest.fn(() => of({})),
@@ -27,15 +25,12 @@ describe('PriorityGroupListComponent', () => {
       imports: [NgxPaginationModule],
       declarations: [
         PriorityGroupListComponent,
-        MockComponent({ selector: 'app-yes-no-modal' }),
+        MockYesNoModalComponent,
         MockComponent({ selector: 'app-priority-group-modal' }),
         MockIconButtonComponent,
         MockFontAwesomeComponent,
       ],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        { provide: V1PriorityGroupsService, useValue: priorityGroupService },
-      ],
+      providers: [MockProvider(NgxSmartModalService), { provide: V1PriorityGroupsService, useValue: priorityGroupService }],
     })
       .compileComponents()
       .then(() => {

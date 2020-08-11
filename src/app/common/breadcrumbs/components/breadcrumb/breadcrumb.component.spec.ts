@@ -20,15 +20,14 @@ describe('BreadcrumbComponent', () => {
       imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule, FormsModule],
       declarations: [BreadcrumbComponent, DatacenterSelectComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), CookieService],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(BreadcrumbComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(BreadcrumbComponent);
-    component = fixture.componentInstance;
-    router = TestBed.get(Router);
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

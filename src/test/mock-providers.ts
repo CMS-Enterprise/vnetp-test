@@ -1,6 +1,7 @@
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
+import { V1VmwareVirtualMachinesService, V1VmwareVirtualMachinesBulkPostRequestParams } from 'api_client';
 
 const MockNgxSmartModalService = {
   getModal: jest.fn(() => {
@@ -27,7 +28,7 @@ const MockToastrService = {
   error: jest.fn(),
 };
 
-const MockProviders = new Map<any, any>([
+const MockProviders = new Map<any, object>([
   [NgxSmartModalService, MockNgxSmartModalService],
   [ToastrService, MockToastrService],
 ]);
