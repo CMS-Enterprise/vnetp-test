@@ -186,6 +186,7 @@ describe('VirtualDiskModalComponent', () => {
           cpuReserved: true,
           memoryReserved: true,
           memorySize: 2,
+          priorityGroupId: '',
         },
       };
     };

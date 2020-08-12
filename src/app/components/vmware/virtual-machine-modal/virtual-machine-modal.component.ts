@@ -8,6 +8,8 @@ import {
   V1VmwareVirtualDisksService,
   VmwareNetworkAdapter,
   V1VmwareNetworkAdapterService,
+  V1PriorityGroupsService,
+  PriorityGroup,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
@@ -22,24 +24,28 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   templateUrl: './virtual-machine-modal.component.html',
 })
 export class VirtualMachineModalComponent implements OnInit, OnDestroy {
+  public ConversionUtil = ConversionUtil;
+
   form: FormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
   DatacenterId: string;
   VirtualMachineId: string;
-  virtualDiskModalSubscription: Subscription;
-  networkAdapterModalSubscription: Subscription;
-  virtualDisks: Array<VmwareVirtualDisk>;
-  networkAdapters: Array<VmwareNetworkAdapter>;
 
-  ConversionUtil = ConversionUtil;
+  public networkAdapters: VmwareNetworkAdapter[] = [];
+  public priorityGroups: PriorityGroup[] = [];
+  public virtualDisks: VmwareVirtualDisk[] = [];
+
+  private networkAdapterModalSubscription: Subscription;
+  private virtualDiskModalSubscription: Subscription;
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private virtualMachineService: V1VmwareVirtualMachinesService,
-    private virtualDiskService: V1VmwareVirtualDisksService,
     private networkAdapterService: V1VmwareNetworkAdapterService,
+    private ngx: NgxSmartModalService,
+    private priorityGroupService: V1PriorityGroupsService,
+    private virtualDiskService: V1VmwareVirtualDisksService,
+    private virtualMachineService: V1VmwareVirtualMachinesService,
   ) {}
 
   get f() {
@@ -150,10 +156,11 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     virtualMachine.description = this.form.value.description;
     virtualMachine.cpuCores = Number.parseInt(this.form.value.cpuCount, 10);
     virtualMachine.cpuCoresPerSocket = Number.parseInt(this.form.value.coreCount, 10);
-    virtualMachine.cpuReserved = Boolean(this.form.value.cpuReserved);
+    virtualMachine.cpuReserved = ConversionUtil.convertStringToBoolean(this.form.value.cpuReserved);
     virtualMachine.memorySize = ConversionUtil.convertGbToBytes(this.form.value.memorySize);
-    virtualMachine.memoryReserved = Boolean(this.form.value.memoryReserved);
-    virtualMachine.highPerformance = Boolean(this.form.value.highPerformance);
+    virtualMachine.memoryReserved = ConversionUtil.convertStringToBoolean(this.form.value.memoryReserved);
+    virtualMachine.highPerformance = ConversionUtil.convertStringToBoolean(this.form.value.highPerformance);
+    virtualMachine.priorityGroupId = this.form.value.priorityGroupId;
 
     this.ngx.resetModalData('virtualMachineModal');
     this.ngx.setModalData(Object.assign({}, virtualMachine), 'virtualMachineModal');
@@ -188,6 +195,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.getVirtualDisks();
       this.getNetworkAdapters();
     }
+    this.loadPriorityGroups();
 
     const virtualMachine = dto.VmwareVirtualMachine;
 
@@ -202,6 +210,11 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.form.controls.memorySize.setValue(convertedMemorySize);
       this.form.controls.memoryReserved.setValue(virtualMachine.memoryReserved);
       this.form.controls.highPerformance.setValue(virtualMachine.highPerformance);
+      this.form.controls.priorityGroupId.setValue(virtualMachine.priorityGroupId || null);
+
+      this.form.controls.name.disable();
+    } else {
+      this.form.controls.name.enable();
     }
     this.ngx.resetModalData('virtualMachineModal');
   }
@@ -221,6 +234,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       memorySize: [null, Validators.required],
       memoryReserved: [false, Validators.required],
       highPerformance: [false, Validators.required],
+      priorityGroupId: [null, Validators.required],
     });
   }
 
@@ -259,6 +273,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('virtualDiskModal');
     });
   }
+
   private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
@@ -282,6 +297,14 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       },
       error => {},
     );
+  }
+
+  private loadPriorityGroups(): void {
+    this.priorityGroupService
+      .v1PriorityGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}`, join: 'vmwareVirtualMachines' })
+      .subscribe(data => {
+        this.priorityGroups = data;
+      });
   }
 
   private updateVmwareVirtualMachine(vmwareVirtualMachine: VmwareVirtualMachine): void {

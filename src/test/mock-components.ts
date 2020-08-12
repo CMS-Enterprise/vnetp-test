@@ -39,3 +39,7 @@ export const MockTabsComponent = MockComponent({
   inputs: ['tabs'],
   outputs: ['tabChange'],
 });
+export const MockViewFieldComponent = MockComponent({
+  selector: 'app-view-field',
+  inputs: ['background', 'label', 'value'],
+});

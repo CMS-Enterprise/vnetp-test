@@ -8,21 +8,35 @@ import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-mo
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/conversion.util';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
+
+enum TabName {
+  VirtualMachines = 'Virtual Machines',
+  PriorityGroups = 'Priority Groups',
+}
 
 @Component({
   selector: 'app-vmware',
   templateUrl: './vmware.component.html',
+  styleUrls: ['./vmware.component.scss'],
 })
 export class VmwareComponent implements OnInit, OnDestroy {
-  virtualMachines: Array<VmwareVirtualMachine>;
-  virtualMachineModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterId: string;
+  public datacenterId: string;
+  public virtualMachines: Array<VmwareVirtualMachine>;
 
-  currentVMWarePage = 1;
-  perPage = 20;
-  ModalMode = ModalMode;
-  ConversionUtil = ConversionUtil;
+  public currentVMWarePage = 1;
+  public perPage = 20;
+  public highPerformanceVirtualMachines: VmwareVirtualMachine[] = [];
+  public ungroupedVirtualMachines: VmwareVirtualMachine[] = [];
+  public ModalMode = ModalMode;
+  public ConversionUtil = ConversionUtil;
+
+  public activeTabName = TabName.VirtualMachines;
+  public tabs: Tab[] = [{ name: TabName.VirtualMachines }, { name: TabName.PriorityGroups }];
+  public TabName = TabName;
+
+  private currentDatacenterSubscription: Subscription;
+  private virtualMachineModalSubscription: Subscription;
 
   constructor(
     private ngxSmartModalService: NgxSmartModalService,
@@ -30,6 +44,10 @@ export class VmwareComponent implements OnInit, OnDestroy {
     private datacenterService: V1DatacentersService,
     private virtualMachineService: V1VmwareVirtualMachinesService,
   ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.activeTabName = tab.name as TabName;
+  }
 
   getVirtualMachines() {
     this.datacenterService
@@ -39,6 +57,8 @@ export class VmwareComponent implements OnInit, OnDestroy {
       })
       .subscribe(data => {
         this.virtualMachines = data.vmwareVirtualMachines;
+        this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
+        this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
       });
   }
 
