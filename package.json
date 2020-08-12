@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "analyze": "webpack-bundle-analyzer dist/automation-ui/stats-es2015.json",
     "build": "ng build",
+    "build:stats": "ng build --stats-json",
     "build:prod": "ng build --prod",
     "documentation": "compodoc --watch --serve --open",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -78,7 +80,8 @@
     "sonar-scanner": "^3.1.0",
     "ts-node": "~7.0.0",
     "tslint": "^5.20.1",
-    "typescript": "~3.5.3"
+    "typescript": "~3.5.3",
+    "webpack-bundle-analyzer": "^3.8.0"
   },
   "husky": {
     "hooks": {
