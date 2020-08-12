@@ -13,7 +13,6 @@ import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
   let fixture: ComponentFixture<BreadcrumbComponent>;
-  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

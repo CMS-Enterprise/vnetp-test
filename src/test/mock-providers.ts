@@ -31,7 +31,7 @@ const MockToastrService = () => {
   };
 };
 
-const MockProviders = new Map<any, Function>([
+const MockProviders = new Map<any, () => object>([
   [NgxSmartModalService, MockNgxSmartModalService],
   [ToastrService, MockToastrService],
 ]);
