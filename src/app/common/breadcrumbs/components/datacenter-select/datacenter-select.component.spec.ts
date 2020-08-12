@@ -9,24 +9,17 @@ import { ToastrService } from 'ngx-toastr';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
   let fixture: ComponentFixture<DatacenterSelectComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
-    const toastrService = {
-      success: jest.fn(),
-      error: jest.fn(),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent],
-      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }, { provide: ToastrService, useValue: toastrService }],
+      providers: [CookieService, MockProvider(NgxSmartModalService), MockProvider(ToastrService)],
     })
       .compileComponents()
       .then(() => {
@@ -41,10 +34,9 @@ describe('DatacenterSelectComponent', () => {
   });
 
   it('should call to open the datacenter switch modal on click', () => {
-    const modal = ngx.getModal('test');
+    const ngx = TestBed.get(NgxSmartModalService);
     const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return {
-        ...modal,
         open: jest.fn(),
       };
     });

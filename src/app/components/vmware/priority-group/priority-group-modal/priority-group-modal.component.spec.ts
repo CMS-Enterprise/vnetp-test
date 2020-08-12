@@ -1,21 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 import { of } from 'rxjs';
 import { V1PriorityGroupsService, PriorityGroup, V1VmwareVirtualMachinesService } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { PriorityGroupModalComponent, SelectableVM } from './priority-group-modal.component';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('PriorityGroupModalComponent', () => {
   let component: PriorityGroupModalComponent;
   let fixture: ComponentFixture<PriorityGroupModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
     const priorityGroupService = {
       v1PriorityGroupsPost: jest.fn(() => of({})),
       v1PriorityGroupsIdPut: jest.fn(() => of({})),
@@ -30,7 +28,7 @@ describe('PriorityGroupModalComponent', () => {
       declarations: [PriorityGroupModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
       providers: [
         FormBuilder,
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         { provide: V1PriorityGroupsService, useValue: priorityGroupService },
         { provide: V1VmwareVirtualMachinesService, useValue: virtualMachineService },
       ],

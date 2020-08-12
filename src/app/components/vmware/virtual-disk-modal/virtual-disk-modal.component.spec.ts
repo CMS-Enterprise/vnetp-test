@@ -3,7 +3,7 @@ import { VirtualDiskModalComponent } from './virtual-disk-modal.component';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { V1VmwareVirtualDisksService } from 'api_client';
 import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
@@ -16,8 +16,6 @@ describe('VirtualDiskModalComponent', () => {
   let fixture: ComponentFixture<VirtualDiskModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
     const virtualDiskService = {
       v1VmwareVirtualDisksPost: jest.fn(() => of({})),
     };
@@ -26,7 +24,7 @@ describe('VirtualDiskModalComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VirtualDiskModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         { provide: V1VmwareVirtualDisksService, useValue: virtualDiskService },
         FormBuilder,
         Validators,

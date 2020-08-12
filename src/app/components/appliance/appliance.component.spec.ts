@@ -1,42 +1,43 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceComponent } from './appliance.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
 import { ApplianceModalComponent } from './appliance-modal/appliance-modal.component';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { CookieService } from 'ngx-cookie-service';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockYesNoModalComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
+import { MockProvider } from 'src/test/mock-providers';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { RouterTestingModule } from '@angular/router/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('ApplianceComponent', () => {
   let component: ApplianceComponent;
   let fixture: ComponentFixture<ApplianceComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        ApplianceComponent,
+        ApplianceModalComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockYesNoModalComponent,
       ],
-      declarations: [ApplianceComponent, ApplianceModalComponent, YesNoModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
-    }).compileComponents();
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, CookieService, Validators],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(ApplianceComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ApplianceComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

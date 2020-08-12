@@ -7,15 +7,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { PhysicalServerModalComponent } from '../physical-server-modal/physical-server-modal.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('PhysicalServerDetailComponent', () => {
   let component: PhysicalServerDetailComponent;
   let fixture: ComponentFixture<PhysicalServerDetailComponent>;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,7 +27,7 @@ describe('PhysicalServerDetailComponent', () => {
       ],
       declarations: [PhysicalServerDetailComponent, PhysicalServerModalComponent, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         {
           provide: ActivatedRoute,
           useValue: {
