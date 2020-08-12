@@ -20,6 +20,7 @@ import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -274,16 +275,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     }
   }
 
-  getVlanName = (id: string) => {
-    return this.getObjectName(id, this.vlans);
-    // tslint:disable-next-line: semicolon
-  };
-
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
-    }
-  }
+  public getVlanName = (id: string) => ObjectUtil.getObjectName(id, this.vlans);
 
   private getSubnets(): void {
     if (!this.hasCurrentTier()) {
