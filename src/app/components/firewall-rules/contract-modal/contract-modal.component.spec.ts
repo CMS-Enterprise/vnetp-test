@@ -1,7 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockIconButtonComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { ContractModalComponent } from './contract-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
 
@@ -11,15 +16,16 @@ describe('ContractModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule],
-      declarations: [ContractModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ContractModalComponent);
-        component = fixture.componentInstance;
-      });
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        ContractModalComponent,
+        MockNgxSmartModalComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+      ],
+      providers: [MockProvider(NgxSmartModalService)],
+    });
   }));
 
   beforeEach(() => {
@@ -33,7 +39,6 @@ describe('ContractModalComponent', () => {
   });
 
   // Initial Form State
-
   it('form should not be valid', () => {
     expect(component.form.valid).toBeFalsy();
   });
@@ -49,7 +54,6 @@ describe('ContractModalComponent', () => {
   });
 
   // Initial Filter Entry Form State
-
   it('name should be required', () => {
     const name = component.filterEntryForm.controls.name;
     expect(name.valid).toBeFalsy();

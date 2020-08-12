@@ -1,10 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockIconButtonComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkSecurityNetworkObjectGroupsService, V1TiersService } from 'api_client';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
@@ -12,10 +17,20 @@ describe('NetworkObjectGroupModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [NetworkObjectGroupModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        NetworkObjectGroupModalComponent,
+        MockNgxSmartModalComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+      ],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1TiersService),
+      ],
+    });
   }));
 
   beforeEach(() => {
@@ -28,68 +43,47 @@ describe('NetworkObjectGroupModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have network object group form', () => {
-    expect(component.form).toBeTruthy();
+  describe('Name', () => {
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBe(true);
+
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBe(false);
+    });
+
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('invalid/name!');
+      expect(name.valid).toBe(false);
+    });
   });
 
-  // Initial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
-  });
+  describe('Description', () => {
+    it('should be optional', () => {
+      const { description } = component.form.controls;
 
-  it('description should not be required', () => {
-    const description = component.form.controls.description;
-    expect(description.valid).toBeTruthy();
-  });
+      description.setValue(null);
+      expect(description.valid).toBe(true);
+    });
 
-  // Name validity
-  it('name should be valid', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(3));
-    expect(name.valid).toBeTruthy();
-  });
+    it('should have a minimum length of 3 and maximum length of 500', () => {
+      const name = component.form.controls.name;
 
-  it('name should be invalid, min length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(2));
-    expect(name.valid).toBeFalsy();
-  });
+      name.setValue('a');
+      expect(name.valid).toBe(false);
 
-  it('name should be invalid, max length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(101));
-    expect(name.valid).toBeFalsy();
-  });
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBe(true);
 
-  it('name should be invalid, invalid characters', () => {
-    const name = component.form.controls.name;
-    name.setValue('invalid/name!');
-    expect(name.valid).toBeFalsy();
-  });
-
-  // Description Validity
-  it('description should be valid (null)', () => {
-    const description = component.form.controls.description;
-    description.setValue(null);
-    expect(description.valid).toBeTruthy();
-  });
-
-  it('description should be valid (minlen)', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(3));
-    expect(description.valid).toBeTruthy();
-  });
-
-  it('description should be invalid, min length', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(2));
-    expect(description.valid).toBeFalsy();
-  });
-
-  it('description should be invalid, max length', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(501));
-    expect(description.valid).toBeFalsy();
+      name.setValue('a'.repeat(501));
+      expect(name.valid).toBe(false);
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
 const MockNgxSmartModalService = () => {
   return {
@@ -31,13 +32,36 @@ const MockToastrService = () => {
   };
 };
 
+const MockDatacenterContextService = () => {
+  return {
+    lockDatacenter: jest.fn(),
+    unlockDatacenter: jest.fn(),
+    currentDatacenter: of({ id: '1' }),
+  };
+};
+
 const MockProviders = new Map<any, () => object>([
   [NgxSmartModalService, MockNgxSmartModalService],
   [ToastrService, MockToastrService],
+  [DatacenterContextService, MockDatacenterContextService],
 ]);
 
 export const MockProvider = <T>(provide: T) => {
   const value = MockProviders.get(provide);
-  const useValue = !!value ? value() : {};
+  const useValue = !!value ? value() : generateMockProvider(provide);
   return { provide, useValue };
+};
+
+const generateMockProvider = (provider: any): object => {
+  const { name } = provider.prototype.constructor;
+  const baseName = name.split('Service')[0].replace('V', 'v');
+  return {
+    [`${baseName}IdDelete`]: jest.fn(() => of({})),
+    [`${baseName}IdSoftDelete`]: jest.fn(() => of({})),
+    [`${baseName}IdRestorePatch`]: jest.fn(() => of({})),
+    [`${baseName}Post`]: jest.fn(() => of({})),
+    [`${baseName}IdPut`]: jest.fn(() => of({})),
+    [`${baseName}IdGet`]: jest.fn(() => of({})),
+    [`${baseName}Get`]: jest.fn(() => of([])),
+  };
 };

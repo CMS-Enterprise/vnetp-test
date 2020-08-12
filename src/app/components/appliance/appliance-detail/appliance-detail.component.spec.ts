@@ -12,6 +12,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1AppliancesService } from 'api_client';
 
 describe('ApplianceDetailComponent', () => {
   let component: ApplianceDetailComponent;
@@ -26,7 +27,7 @@ describe('ApplianceDetailComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ApplianceDetailComponent,
         MockViewFieldComponent,
@@ -34,8 +35,12 @@ describe('ApplianceDetailComponent', () => {
         MockYesNoModalComponent,
         MockFontAwesomeComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), { provide: ActivatedRoute, useValue: mockActivatedRoute }, FormBuilder, Validators],
-    }).compileComponents();
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1AppliancesService),
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
+    });
   }));
 
   beforeEach(() => {

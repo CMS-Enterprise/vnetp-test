@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
-import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkSecurityFirewallRulesService } from 'api_client';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -13,9 +12,9 @@ describe('FirewallRuleModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [FirewallRuleModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators, CookieService],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityFirewallRulesService)],
     })
       .compileComponents()
       .then(() => {

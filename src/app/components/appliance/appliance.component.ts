@@ -115,10 +115,6 @@ export class ApplianceComponent implements OnInit, OnDestroy {
     });
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.applianceModalSubscription, this.currentDatacenterSubscription]);
-  }
-
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
@@ -129,6 +125,6 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.applianceModalSubscription, this.currentDatacenterSubscription]);
   }
 }

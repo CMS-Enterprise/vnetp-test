@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent, MockComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -33,18 +33,18 @@ describe('FirewallRulesDetailComponent', () => {
       ],
       declarations: [
         FirewallRulesDetailComponent,
-        FirewallRuleModalComponent,
         ImportExportComponent,
-        MockTooltipComponent,
-        YesNoModalComponent,
-        PreviewModalComponent,
-        TableComponent,
-        ResolvePipe,
+        MockComponent({ selector: 'app-firewall-rule-modal' }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockTooltipComponent,
+        PreviewModalComponent,
+        ResolvePipe,
+        YesNoModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), CookieService, DatacenterContextService, FormBuilder],
-    }).compileComponents();
+      providers: [MockProvider(NgxSmartModalService), MockProvider(DatacenterContextService)],
+    });
   }));
 
   beforeEach(() => {

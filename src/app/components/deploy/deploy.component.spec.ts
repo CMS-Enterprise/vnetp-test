@@ -42,27 +42,19 @@ describe('DeployComponent', () => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
-    const jobService = {
-      v1JobsPost: jest.fn(() => of({})),
-    };
     const tiersService = {
       v1DatacentersDatacenterIdTiersGet: jest.fn(() => of([testData.tier.item])),
-    };
-    const tierGroupService = {
-      v1TierGroupsGet: jest.fn(() => of([])),
     };
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
       providers: [
-        MockProvider(NgxSmartModalService),
-        FormBuilder,
         CookieService,
-        Validators,
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1TierGroupsService),
+        MockProvider(V1JobsService),
         { provide: V1TiersService, useValue: tiersService },
-        { provide: V1TierGroupsService, useValue: tierGroupService },
-        { provide: V1JobsService, useValue: jobService },
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
