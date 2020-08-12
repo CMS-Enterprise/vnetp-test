@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockYesNoModalComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { PriorityGroupListComponent } from './priority-group-list.component';
 import { of, Subject } from 'rxjs';
 import { V1PriorityGroupsService, PriorityGroup } from 'api_client';
@@ -8,6 +8,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { MockProvider } from 'src/test/mock-providers';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 describe('PriorityGroupListComponent', () => {
   let component: PriorityGroupListComponent;
@@ -22,13 +24,14 @@ describe('PriorityGroupListComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule],
       declarations: [
         PriorityGroupListComponent,
-        MockYesNoModalComponent,
+        YesNoModalComponent,
         MockComponent({ selector: 'app-priority-group-modal' }),
         MockIconButtonComponent,
         MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
       ],
       providers: [MockProvider(NgxSmartModalService), { provide: V1PriorityGroupsService, useValue: priorityGroupService }],
     })
@@ -57,11 +60,13 @@ describe('PriorityGroupListComponent', () => {
 
     it('should soft-delete a priority group', () => {
       const onCloseFinishedSubject = new Subject();
-      jest.spyOn(TestBed.get(NgxSmartModalService), 'getModal').mockImplementation(() => {
+      const ngx = TestBed.get(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
         return {
           open: jest.fn(),
+          onAnyCloseEvent: of({}),
           onCloseFinished: onCloseFinishedSubject.asObservable(),
-        } as any;
+        };
       });
 
       const softDeleteSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdSoftDelete');
@@ -78,10 +83,12 @@ describe('PriorityGroupListComponent', () => {
     });
 
     it('should delete a priority group', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const onCloseFinishedSubject = new Subject();
-      jest.spyOn(TestBed.get(NgxSmartModalService), 'getModal').mockImplementation(() => {
+      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
         return {
           open: jest.fn(),
+          onAnyCloseEvent: of({}),
           onCloseFinished: onCloseFinishedSubject.asObservable(),
         } as any;
       });
