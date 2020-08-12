@@ -43,6 +43,7 @@ import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-load-balancers',
@@ -79,51 +80,20 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   virtualServers: LoadBalancerVirtualServer[];
   vlans: LoadBalancerVlan[];
 
+  public wikiBase = environment.wikiBase;
+
   public tabs: Tab[] = [
-    {
-      name: 'Virtual Servers',
-      tooltip: this.helpText.VirtualServers,
-    },
-    {
-      name: 'Pools',
-      tooltip: this.helpText.Pools,
-    },
-    {
-      name: 'Pool Relations',
-      tooltip: this.helpText.PoolRelations,
-    },
-    {
-      name: 'Nodes',
-      tooltip: this.helpText.Nodes,
-    },
-    {
-      name: 'iRules',
-      tooltip: this.helpText.IRules,
-    },
-    {
-      name: 'Health Monitors',
-      tooltip: this.helpText.HealthMonitors,
-    },
-    {
-      name: 'Profiles',
-      tooltip: this.helpText.Profiles,
-    },
-    {
-      name: 'Policies',
-      tooltip: this.helpText.Policies,
-    },
-    {
-      name: 'VLANs',
-      tooltip: this.helpText.Vlans,
-    },
-    {
-      name: 'Self IPs',
-      tooltip: this.helpText.SelfIps,
-    },
-    {
-      name: 'Routes',
-      tooltip: this.helpText.Routes,
-    },
+    { name: 'Virtual Servers' },
+    { name: 'Pools' },
+    { name: 'Pool Relations' },
+    { name: 'Nodes' },
+    { name: 'iRules' },
+    { name: 'Health Monitors' },
+    { name: 'Profiles' },
+    { name: 'Policies' },
+    { name: 'VLANs' },
+    { name: 'Self IPs' },
+    { name: 'Routes' },
   ];
 
   private currentDatacenterSubscription: Subscription;

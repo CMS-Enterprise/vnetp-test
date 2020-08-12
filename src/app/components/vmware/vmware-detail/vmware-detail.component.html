@@ -32,8 +32,12 @@
   </div>
 
   <!-- Virtual Disks table -->
-  <h3>Virtual Disks</h3>
-  <table class="table table-striped" aria-describedby="Virtual Disks table">
+  <h2>Virtual Disks</h2>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Virtual Disks in the currently selected Virtual Machine</span>
+    </caption>
     <thead>
       <tr>
         <th scope="col">Name</th>
@@ -64,8 +68,12 @@
   </table>
 
   <!-- Network Adapters table -->
-  <h3>Network Adapters</h3>
-  <table class="table table-striped" aria-describedby="Network Adapters table">
+  <h2>Network Adapters</h2>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Network Adapters in the currently selected Virtual Machine</span>
+    </caption>
     <thead>
       <tr>
         <th scope="col">Adapter</th>

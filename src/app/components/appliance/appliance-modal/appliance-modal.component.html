@@ -294,7 +294,11 @@
             </button>
           </section>
 
-          <table name="vSwitchTable" class="table table-striped" aria-describedby="Network Ports table">
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Network Ports on this Appliance</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Name</th>

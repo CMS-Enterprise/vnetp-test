@@ -31,12 +31,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     FontAwesomeModule,
+    FormsModule,
     IconButtonModule,
     NgxPaginationModule,
     NgxSmartModalModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
     TabsModule,

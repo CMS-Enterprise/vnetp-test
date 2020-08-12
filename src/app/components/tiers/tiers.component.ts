@@ -18,7 +18,6 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   perPage = 20;
   currentTiersPage = 1;
-  navIndex = 0;
   ModalMode = ModalMode;
 
   tierModalSubscription: Subscription;
