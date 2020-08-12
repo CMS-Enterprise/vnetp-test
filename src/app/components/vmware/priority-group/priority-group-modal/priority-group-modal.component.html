@@ -43,7 +43,11 @@
 
       <aside>
         <h4 id="virtual-machines">Virtual Machines</h4>
-        <table class="table table-striped" aria-describedby="virtual-machines">
+        <table class="table table-striped">
+          <caption>
+            <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+            <span>Virtual Machines within this Priority Group</span>
+          </caption>
           <thead>
             <tr>
               <th scope="col" *ngIf="modalMode === ModalMode.Create">Selected?</th>
