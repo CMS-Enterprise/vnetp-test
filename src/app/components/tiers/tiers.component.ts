@@ -179,19 +179,14 @@ export class TiersComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: semicolon
   };
 
-  getTierGroupName = (id: string) => {
-    return this.getObjectName(id, this.tierGroups);
-    // tslint:disable-next-line: semicolon
-  };
+  public getTierGroupName = (id: string) => this.getObjectName(id, this.tierGroups);
 
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
+  private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
+    if (!objects || objects.length === 0) {
+      return 'N/A';
     }
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
+    const object = objects.find(o => o.id === id);
+    return object ? object.name : 'N/A';
   }
 
   ngOnInit() {
@@ -204,6 +199,6 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
   }
 }
