@@ -1,21 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PapaParseModule } from 'ngx-papaparse';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
-import { ImportExportComponent } from '../../import-export/import-export.component';
-import { TooltipComponent } from '../../tooltip/tooltip.component';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { TableComponent } from 'src/app/common/table/table.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -26,12 +25,10 @@ describe('FirewallRulesDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         NgxPaginationModule,
         FormsModule,
-        PapaParseModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
@@ -40,9 +37,13 @@ describe('FirewallRulesDetailComponent', () => {
         FirewallRulesDetailComponent,
         FirewallRuleModalComponent,
         ImportExportComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         YesNoModalComponent,
+        PreviewModalComponent,
+        TableComponent,
         ResolvePipe,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, DatacenterContextService, FormBuilder],
     }).compileComponents();

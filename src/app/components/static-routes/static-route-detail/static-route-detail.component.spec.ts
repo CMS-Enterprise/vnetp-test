@@ -1,18 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaskModule } from 'ngx-mask';
-import { ImportExportComponent } from '../../import-export/import-export.component';
-import { PapaParseModule } from 'ngx-papaparse';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaticRouteModalComponent } from 'src/app/modals/static-route-modal/static-route-modal.component';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { StaticRouteModalComponent } from '../static-route-modal/static-route-modal.component';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
@@ -24,16 +23,21 @@ describe('StaticRouteDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         FormsModule,
         RouterTestingModule.withRoutes([]),
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
-        PapaParseModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
-      declarations: [StaticRouteDetailComponent, ImportExportComponent, YesNoModalComponent, StaticRouteModalComponent],
+      declarations: [
+        StaticRouteDetailComponent,
+        ImportExportComponent,
+        YesNoModalComponent,
+        StaticRouteModalComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+      ],
       providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));

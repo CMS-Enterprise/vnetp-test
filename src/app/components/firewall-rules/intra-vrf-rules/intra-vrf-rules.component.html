@@ -1,41 +1,26 @@
 <h1 aria-label="VRF Name">VRF: {{ vrf?.name }}</h1>
 
-<div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-    <button
-    type="button"
-    class="btn btn-warning mr-1"
-    (click)="saveAll()"
-    aria-label="Update Contracts"
-    *ngIf="dirty"
-  >
-    <fa name="save"></fa>
-    Save Changes
-  </button>
-  
-  <button
-    type="button"
-    class="btn btn-success"
-    (click)="createContract()"
-    aria-label="Create Contract"
-  >
-    <fa name="plus"></fa>
-    Create Contract
+<section class="btn-toolbar" role="toolbar">
+  <!-- Save Changes -->
+  <button type="button" class="btn btn-warning" (click)="saveAll()" *ngIf="dirty">
+    <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+    <span>Save Changes</span>
   </button>
 
-  
-  <button
-  type="button"
-  class="btn btn-info mr-1"
-  (click)="refresh()"
-  aria-label="Refresh Firewall Rules"
-  *ngIf="!dirty"
->
-  <fa name="refresh"></fa>
-  Refresh
-</button>
-</div>
+  <!-- Create Contract -->
+  <button type="button" class="btn btn-success" (click)="createContract()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Contract</span>
+  </button>
 
-<table class="table table-striped">
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="refresh()" *ngIf="!dirty">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
+<table class="table table-striped" aria-describedby="Intra-VRF Rules table">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -51,14 +36,9 @@
       <td>
         <span>{{ contract?.FilterEntries?.length }}</span>
       </td>
-      <td class="item-actions">
-        <fa
-          name="pencil"
-          (click)="editContract(contract)"
-          aria-label="Edit Contract"
-        >
-        </fa>
-        <fa name="trash" (click)="deleteContract(contract)"> </fa>
+      <td class="table__actions">
+        <app-icon-button icon="edit" label="Edit Contract" (handleClick)="editContract(contract)"></app-icon-button>
+        <app-icon-button icon="delete" label="Delete Contract" (handleClick)="deleteContract(contract)"></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="contracts?.length === 0" class="text-center">

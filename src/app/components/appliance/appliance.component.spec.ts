@@ -1,16 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ApplianceComponent } from './appliance.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApplianceModalComponent } from 'src/app/modals/appliance-modal/appliance-modal.component';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { CookieService } from 'ngx-cookie-service';
+import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { ApplianceModalComponent } from './appliance-modal/appliance-modal.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('ApplianceComponent', () => {
   let component: ApplianceComponent;
@@ -21,7 +20,6 @@ describe('ApplianceComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
@@ -29,7 +27,7 @@ describe('ApplianceComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
       ],
-      declarations: [ApplianceComponent, ApplianceModalComponent, YesNoModalComponent],
+      declarations: [ApplianceComponent, ApplianceModalComponent, YesNoModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
     }).compileComponents();
   }));

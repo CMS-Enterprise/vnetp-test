@@ -1,20 +1,20 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { HelpersService } from 'src/app/services/helpers.service';
 import { ActivatedRoute } from '@angular/router';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-intra-vrf-rules',
   templateUrl: './intra-vrf-rules.component.html',
 })
-export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class IntraVrfRulesComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private ngxSm: NgxSmartModalService,
@@ -96,15 +96,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   private unsubAll() {
-    [this.contractModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.contractModalSubscription]);
   }
 
   saveAll() {
@@ -130,11 +122,6 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
   refresh() {
     this.getVrf();
-  }
-
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
   }
 
   ngOnInit() {

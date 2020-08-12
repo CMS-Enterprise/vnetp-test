@@ -1,10 +1,9 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
@@ -26,12 +25,13 @@ import {
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
   VirtualServerImportCollectionDto,
+  NodeImportCollectionDto,
   LoadBalancerVlan,
   LoadBalancerSelfIp,
   LoadBalancerRoute,
-  V1LoadBalancerRoutesService,
   V1LoadBalancerVlansService,
   V1LoadBalancerSelfIpsService,
+  V1LoadBalancerRoutesService,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
@@ -41,60 +41,103 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
 })
-export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class LoadBalancersComponent implements OnInit, OnDestroy {
   navIndex = 0;
 
   tiers: Tier[];
   currentTier: Tier;
 
-  currentIrulePage = 1;
-  currentVSPage = 1;
-  currentNodePage = 1;
-  currentPoolPage = 1;
   currentHMPage = 1;
-  currentProfilesPage = 1;
+  currentIrulePage = 1;
+  currentNodePage = 1;
   currentPoliciesPage = 1;
-  currentVlansPage = 1;
-  currentSelfIpsPage = 1;
+  currentPoolPage = 1;
+  currentProfilesPage = 1;
   currentRoutesPage = 1;
+  currentSelfIpsPage = 1;
+  currentVSPage = 1;
+  currentVlansPage = 1;
 
   perPage = 20;
+  ModalMode = ModalMode;
 
-  virtualServers: LoadBalancerVirtualServer[];
-  pools: LoadBalancerPool[];
-  nodes: LoadBalancerNode[];
-  irules: LoadBalancerIrule[];
   healthMonitors: LoadBalancerHealthMonitor[];
-  profiles: LoadBalancerProfile[];
+  irules: LoadBalancerIrule[];
+  nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
-  vlans: LoadBalancerVlan[];
-  selfIps: LoadBalancerSelfIp[];
+  pools: LoadBalancerPool[];
+  profiles: LoadBalancerProfile[];
   routes: LoadBalancerRoute[];
+  selfIps: LoadBalancerSelfIp[];
+  virtualServers: LoadBalancerVirtualServer[];
+  vlans: LoadBalancerVlan[];
 
-  virtualServerModalSubscription: Subscription;
-  poolModalSubscription: Subscription;
-  nodeModalSubscription: Subscription;
-  iruleModalSubscription: Subscription;
-  healthMonitorModalSubscription: Subscription;
-  profileModalSubscription: Subscription;
-  vlanModalSubscription: Subscription;
-  selfIpModalSubscription: Subscription;
-  routeModalSubscription: Subscription;
+  public tabs: Tab[] = [
+    {
+      name: 'Virtual Servers',
+      tooltip: this.helpText.VirtualServers,
+    },
+    {
+      name: 'Pools',
+      tooltip: this.helpText.Pools,
+    },
+    {
+      name: 'Pool Relations',
+      tooltip: this.helpText.PoolRelations,
+    },
+    {
+      name: 'Nodes',
+      tooltip: this.helpText.Nodes,
+    },
+    {
+      name: 'iRules',
+      tooltip: this.helpText.IRules,
+    },
+    {
+      name: 'Health Monitors',
+      tooltip: this.helpText.HealthMonitors,
+    },
+    {
+      name: 'Profiles',
+      tooltip: this.helpText.Profiles,
+    },
+    {
+      name: 'Policies',
+      tooltip: this.helpText.Policies,
+    },
+    {
+      name: 'VLANs',
+      tooltip: this.helpText.Vlans,
+    },
+    {
+      name: 'Self IPs',
+      tooltip: this.helpText.SelfIps,
+    },
+    {
+      name: 'Routes',
+      tooltip: this.helpText.Routes,
+    },
+  ];
 
-  currentDatacenterSubscription: Subscription;
-  policyModalSubscription: any;
-  currentTierSubscription: Subscription;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private healthMonitorModalSubscription: Subscription;
+  private iruleModalSubscription: Subscription;
+  private nodeModalSubscription: Subscription;
+  private policyModalSubscription: Subscription;
+  private poolModalSubscription: Subscription;
+  private profileModalSubscription: Subscription;
+  private routeModalSubscription: Subscription;
+  private selfIpModalSubscription: Subscription;
+  private virtualServerModalSubscription: Subscription;
+  private vlanModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -114,7 +157,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     public helpText: LoadBalancersHelpText,
   ) {}
 
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
+  }
+
   getVirtualServers() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.virtualServersService
       .v1LoadBalancerVirtualServersGet({
         join: 'irules',
@@ -126,41 +178,49 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPools(getVirtualServers = false) {
-    this.poolsService
-      .v1LoadBalancerPoolsGet({
-        join: 'nodes,healthMonitors',
-        filter: `tierId||eq||${this.currentTier.id}`,
-      })
-      .subscribe(data => {
-        this.pools = data;
+    if (this.currentTier && this.currentTier.id) {
+      this.poolsService
+        .v1LoadBalancerPoolsIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.pools = data;
 
-        if (getVirtualServers) {
-          this.getVirtualServers();
-        }
-      });
+          if (getVirtualServers) {
+            this.getVirtualServers();
+          }
+        });
+    }
   }
 
   getNodes() {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerNodes',
-      })
-      .subscribe(data => {
-        this.nodes = data.loadBalancerNodes;
-      });
+    if (this.currentTier && this.currentTier.id) {
+      this.nodeService
+        .v1LoadBalancerNodesIdTierIdGet({
+          id: this.currentTier.id,
+        })
+        .subscribe(data => {
+          this.nodes = data;
+        });
+    }
   }
 
   getIrules() {
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerIrules',
-      })
-      .subscribe(data => (this.irules = data.loadBalancerIrules));
+    if (this.currentTier && this.currentTier.id) {
+      this.tierService
+        .v1TiersIdGet({
+          id: this.currentTier.id,
+          join: 'loadBalancerIrules',
+        })
+        .subscribe(data => (this.irules = data.loadBalancerIrules));
+    }
   }
 
   getHealthMonitors() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -172,6 +232,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getProfiles() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -183,6 +247,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getPolicies() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.tierService
       .v1TiersIdGet({
         id: this.currentTier.id,
@@ -194,6 +262,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getVlans() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.vlansService
       .v1LoadBalancerVlansGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -204,6 +276,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getSelfIps() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.selfIpsService
       .v1LoadBalancerSelfIpsGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -215,6 +291,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getRoutes() {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+
     this.routesService
       .v1LoadBalancerRoutesGet({
         filter: `tierId||eq||${this.currentTier.id}`,
@@ -235,19 +315,19 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         this.getHealthMonitors();
         this.getNodes();
         break;
-      case 2:
+      case 3:
         this.getNodes();
         break;
-      case 3:
+      case 4:
         this.getIrules();
         break;
-      case 4:
+      case 5:
         this.getHealthMonitors();
         break;
-      case 5:
+      case 6:
         this.getProfiles();
         break;
-      case 6:
+      case 7:
         this.getPolicies();
         break;
       case 7:
@@ -263,11 +343,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   importLoadBalancerConfig(data) {
-    // TODO: Display modal indicating the number of entities that will
-    // be imported.
-
-    // TODO: Display more descriptive error message when import fails.
-
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
@@ -291,23 +366,36 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
           .subscribe(results => this.getObjectsForNavIndex());
         break;
       case 2:
-        this.nodeService
-          .v1LoadBalancerNodesBulkPost({
-            generatedLoadBalancerNodeBulkDto: { bulk: data },
+        const nodeDto = {} as NodeImportCollectionDto;
+        nodeDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        nodeDto.nodes = data;
+        this.poolsService
+          .v1LoadBalancerPoolsBulkUpdatePost({
+            nodeImportCollectionDto: nodeDto,
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 3:
-        this.irulesService
-          .v1LoadBalancerIrulesBulkPost({
-            generatedLoadBalancerIruleBulkDto: { bulk: data },
+        const nodes = this.sanitizeData(data, true);
+        this.nodeService
+          .v1LoadBalancerNodesBulkPost({
+            generatedLoadBalancerNodeBulkDto: { bulk: nodes },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
       case 4:
+        const irules = this.sanitizeData(data, true);
+        this.irulesService
+          .v1LoadBalancerIrulesBulkPost({
+            generatedLoadBalancerIruleBulkDto: { bulk: irules },
+          })
+          .subscribe(result => this.getObjectsForNavIndex());
+        break;
+      case 5:
+        const healthMonitors = this.sanitizeData(data, true);
         this.healthMonitorsService
           .v1LoadBalancerHealthMonitorsBulkPost({
-            generatedLoadBalancerHealthMonitorBulkDto: { bulk: data },
+            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
           })
           .subscribe(result => this.getObjectsForNavIndex());
         break;
@@ -325,44 +413,34 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         return this.virtualServers;
       case 1:
         return this.pools;
-      case 2:
-        return this.nodes;
       case 3:
-        return this.irules;
+        return this.nodes;
       case 4:
-        return this.healthMonitors;
+        return this.irules;
       case 5:
-        return this.profiles;
+        return this.healthMonitors;
       case 6:
+        return this.profiles;
+      case 7:
         return this.policies;
       default:
         break;
     }
   }
 
-  sanitizeData(entities: any) {
+  sanitizeData(entities: any, resolveTier = false) {
     return entities.map(entity => {
-      this.mapCsv(entity);
+      this.mapData(entity, resolveTier);
       return entity;
     });
   }
 
-  mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (key === 'healthMonitorNames' || key === 'nodeNames' || key === 'iruleNames' || key === 'policyNames' || key === 'profileNames') {
-        const stringArray = val as string;
-        obj[key] = this.createAndFormatArray(stringArray);
+  mapData(entity: any, resolveTier: boolean) {
+    if (resolveTier) {
+      if (entity.vrfName) {
+        entity.tierId = this.tiers.find(t => t.name === entity.vrfName).id;
       }
-    });
-    return obj;
-    // tslint:disable-next-line: semicolon
-  };
-
-  createAndFormatArray(names: string) {
-    return names
-      .replace(/[\[\]']+/g, '')
-      .split(',')
-      .map(name => name.trim());
+    }
   }
 
   getPoolName = (poolId: string) => {
@@ -403,7 +481,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openNodeModal(modalMode: ModalMode, node?: LoadBalancerNode) {
     if (modalMode === ModalMode.Edit && !node) {
-      throw new Error('Node required.');
+      throw new Error('Node required');
     }
     const dto = new NodeModalDto();
     dto.node = node;
@@ -418,7 +496,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openIRuleModal(modalMode: ModalMode, irule?: LoadBalancerIrule) {
     if (modalMode === ModalMode.Edit && !irule) {
-      throw new Error('IRule required.');
+      throw new Error('IRule required');
     }
 
     const dto = {} as any;
@@ -434,7 +512,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   openHealthMonitorModal(modalMode: ModalMode, healthMonitor?: LoadBalancerHealthMonitor) {
     if (modalMode === ModalMode.Edit && !healthMonitor) {
-      throw new Error('Health Monitor required.');
+      throw new Error('Health Monitor required');
     }
 
     const dto = {} as any;
@@ -448,9 +526,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('healthMonitorModal').open();
   }
 
-  openProfileModal(modalMode: ModalMode, profile: LoadBalancerProfile) {
+  openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
     if (modalMode === ModalMode.Edit && !profile) {
-      throw new Error('Profile Required');
+      throw new Error('Profile required');
     }
 
     const dto = new ProfileModalDto();
@@ -464,9 +542,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerProfileModal').open();
   }
 
-  openPolicyModal(modalMode: ModalMode, policy: LoadBalancerPolicy) {
+  openPolicyModal(modalMode: ModalMode, policy?: LoadBalancerPolicy) {
     if (modalMode === ModalMode.Edit && !policy) {
-      throw new Error('Profile Required');
+      throw new Error('Policy required');
     }
 
     const dto = new PolicyModalDto();
@@ -480,9 +558,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerPolicyModal').open();
   }
 
-  openVlanModal(modalMode: ModalMode, vlan: LoadBalancerVlan) {
+  openVlanModal(modalMode: ModalMode, vlan?: LoadBalancerVlan) {
     if (modalMode === ModalMode.Edit && !vlan) {
-      throw new Error('Vlan Required');
+      throw new Error('VLAN required');
     }
 
     const dto = new LoadBalancerVlanModalDto();
@@ -496,9 +574,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerVlanModal').open();
   }
 
-  openSelfIpModal(modalMode: ModalMode, selfIp: LoadBalancerSelfIp) {
+  openSelfIpModal(modalMode: ModalMode, selfIp?: LoadBalancerSelfIp) {
     if (modalMode === ModalMode.Edit && !selfIp) {
-      throw new Error('Self IP Required');
+      throw new Error('Self IP required');
     }
 
     const dto = new LoadBalancerSelfIpModalDto();
@@ -512,9 +590,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     this.ngx.getModal('loadBalancerSelfIpModal').open();
   }
 
-  openRouteModal(modalMode: ModalMode, route: LoadBalancerRoute) {
+  openRouteModal(modalMode: ModalMode, route?: LoadBalancerRoute) {
     if (modalMode === ModalMode.Edit && !route) {
-      throw new Error('Route Required');
+      throw new Error('Route required');
     }
 
     const dto = new LoadBalancerRouteModalDto();
@@ -550,7 +628,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
 
   subscribeToRouteModal() {
     this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      this.getVirtualServers();
+      this.getRoutes();
       this.ngx.resetModalData('loadBalancerRouteModal');
       this.routeModalSubscription.unsubscribe();
       this.datacenterService.unlockDatacenter();
@@ -823,7 +901,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Vlan?`, `Do you want to ${deleteDescription} Vlan "${vlan.name}"?`),
+      new YesNoModalDto(`${deleteDescription} VLAN?`, `Do you want to ${deleteDescription} VLAN "${vlan.name}"?`),
       deleteFunction,
     );
   }
@@ -953,8 +1031,12 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
     });
   }
 
+  private hasCurrentTier(): boolean {
+    return this.currentTier && !!this.currentTier.id;
+  }
+
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.virtualServerModalSubscription,
       this.poolModalSubscription,
       this.healthMonitorModalSubscription,
@@ -964,15 +1046,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
       this.iruleModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   ngOnInit() {
@@ -985,10 +1059,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy, PendingChanges
         this.healthMonitors = [];
         this.policies = [];
         this.profiles = [];
-
-        if (cd.tiers.length) {
-          this.getObjectsForNavIndex();
-        }
         this.getObjectsForNavIndex();
       }
     });

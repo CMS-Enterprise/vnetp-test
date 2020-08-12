@@ -1,104 +1,81 @@
-<div>
-  <a routerLink="/static-routes" class="btn btn-sm btn-primary mb-2">
-    <fa name="arrow-left"></fa>
-    Back
-  </a>
+<a routerLink="/static-routes" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h4>Tier: {{ tier?.name }} Static Routes</h4>
+<h4>Tier: {{ tier?.name }} Static Routes</h4>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <div class="btn-group-sm">
-      <button type="button" class="btn btn-success mr-1" aria-label="Save Changes" (click)="updateStaticRoutes()" *ngIf="dirty">
-        <fa name="save"></fa>
-        Save Changes
-      </button>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Add Static Route -->
+  <button type="button" class="btn btn-success" (click)="createStaticRoute()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Add Static Route</span>
+  </button>
 
-      <button type="button" class="btn btn-success mr-1" (click)="createStaticRoute()">
-        <fa name="plus"></fa>
-        Add Static Route
-      </button>
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="getStaticRoutes()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
 
-      <!-- <app-import-export
-        [exportObject]="staticRoutes"
-        exportFileName="staticRoutes-{{ vrf.name }}"
-        (import)="insertStaticRoutes($event)"
-        disableExport="true"
-      ></app-import-export> -->
+<table class="table table-striped" aria-describedby="Static Routes table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Destination Network</th>
+      <th scope="col">Next Hop</th>
+      <th scope="col">Metric</th>
+      <th scope="col">State</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let staticRoute of staticRoutes">
+      <td>
+        <span>{{ staticRoute?.name }}</span>
+      </td>
+      <td>
+        <span>{{ staticRoute?.destinationNetwork }}</span>
+      </td>
+      <td>
+        <span>{{ staticRoute?.nextHop }}</span>
+      </td>
+      <td>
+        <span>{{ staticRoute?.metric }}</span>
+      </td>
+      <td>
+        <span>{{ staticRoute?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+      </td>
+      <td class="table__actions">
+        <app-icon-button
+          *ngIf="!staticRoute?.deletedAt"
+          icon="edit"
+          label="Edit Static Route"
+          (handleClick)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
+        ></app-icon-button>
 
-      <button type="button" class="btn btn-info mr-1" (click)="getStaticRoutes()" *ngIf="!dirty">
-        <fa name="refresh"></fa>
-        Refresh
-      </button>
-    </div>
-  </div>
+        <app-icon-button
+          *ngIf="staticRoute?.deletedAt"
+          icon="undo"
+          label="Restore Static Route"
+          type="success"
+          (handleClick)="restoreStaticRoute(staticRoute)"
+        ></app-icon-button>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Destination Network</th>
-        <th scope="col">Next Hop</th>
-        <th scope="col">Metric</th>
-        <th scope="col">State</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let staticRoute of staticRoutes">
-        <td>
-          <span>{{ staticRoute?.name }}</span>
-        </td>
-        <td>
-          <span>{{ staticRoute?.destinationNetwork }}</span>
-        </td>
-        <td>
-          <span>{{ staticRoute?.nextHop }}</span>
-        </td>
-        <td>
-          <span>{{ staticRoute?.metric }}</span>
-        </td>
-        <td>
-          <span>{{ staticRoute?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-        </td>
-        <td class="item-actions">
-          <fa
-            name="pencil"
-            *ngIf="!staticRoute?.deletedAt"
-            (click)="openStaticRouteModal('Edit', staticRoute)"
-            aria-label="Edit Static Route"
-          ></fa>
-          <fa
-            name="undo"
-            *ngIf="staticRoute?.deletedAt"
-            class="fg-success"
-            (click)="restoreStaticRoute(staticRoute)"
-            aria-label="Restore Static Route"
-          ></fa>
-          <fa
-            name="trash"
-            [ngClass]="{ 'fg-danger': staticRoute?.deletedAt }"
-            (click)="deleteStaticRoute(staticRoute)"
-            aria-label="Soft-Delete/Delete Static Route"
-          ></fa>
-        </td>
-      </tr>
-      <tr *ngIf="!staticRoutes?.length" class="text-center">
-        <td colspan="6">No Static Routes</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div *ngIf="staticRoutes?.length" class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <div class="btn-group-sm">
-      <!-- <app-import-export
-        [exportObject]="staticRoutes"
-        exportFileName="staticRoutes-{{ vrf.name }}"
-        (import)="insertStaticRoutes($event)"
-        disableImport="true"
-      ></app-import-export> -->
-    </div>
-  </div>
-</div>
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Static Route"
+          [type]="staticRoute?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteStaticRoute(staticRoute)"
+        ></app-icon-button>
+      </td>
+    </tr>
+    <tr *ngIf="!staticRoutes?.length" class="text-center">
+      <td colspan="6">No Static Routes</td>
+    </tr>
+  </tbody>
+</table>
 
 <app-static-route-modal></app-static-route-modal>
 <app-yes-no-modal></app-yes-no-modal>

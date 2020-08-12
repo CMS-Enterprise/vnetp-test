@@ -1,32 +1,27 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { V1ConfigurationUploadService, ConfigurationUpload, ConfigurationUploadType } from 'api_client';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import DownloadUtil from 'src/app/utils/download.util';
 
 @Component({
   selector: 'app-zvm',
   templateUrl: './zvm.component.html',
-  styleUrls: ['./zvm.component.css'],
 })
 export class ZvmComponent implements OnInit, OnDestroy {
   requestModalSubscription: Subscription;
   configurations: ConfigurationUpload[];
-  downloadHref: SafeUrl;
-  downloadName: string;
 
   currentConfigurationPage = 1;
   perPage = 20;
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private configurationService: V1ConfigurationUploadService,
-    private sanitizer: DomSanitizer,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private configurationService: V1ConfigurationUploadService) {}
 
   getConfigurations() {
     this.configurationService
       .v1ConfigurationUploadGet({
+        fields: 'id,requestedAt,configuredAt',
         filter: `type||eq||${ConfigurationUploadType.VM}`,
       })
       .subscribe(data => {
@@ -34,11 +29,24 @@ export class ZvmComponent implements OnInit, OnDestroy {
       });
   }
 
+  getConfigurationFile(event, id: string) {
+    event.preventDefault();
+    this.configurationService
+      .v1ConfigurationUploadIdGet({
+        id,
+      })
+      .subscribe(data => {
+        const requestFile: any = data.file;
+        this.exportFile(requestFile);
+      });
+  }
+
   openRequestModal(uploadType: string, id: string) {
-    const configurationDto = {} as any;
-    configurationDto.type = ConfigurationUploadType.VM;
-    configurationDto.uploadType = uploadType;
-    configurationDto.id = id;
+    const configurationDto = {
+      id,
+      uploadType,
+      type: ConfigurationUploadType.VM,
+    };
     this.subscribeToRequestModal();
     this.ngx.setModalData(configurationDto, 'requestModal');
     this.ngx.getModal('requestModal').open();
@@ -51,34 +59,30 @@ export class ZvmComponent implements OnInit, OnDestroy {
     });
   }
 
-  exportFile(requestFile) {
+  exportFile(requestFile: { type: string; data: number[] }) {
     const utf8decoder = new TextDecoder();
     const buff = new Uint8Array(requestFile.data);
     const blob = utf8decoder.decode(buff);
 
-    const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
-    const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
+    const getDownloadName = () => {
+      const isXlsm = blob.includes('application/vnd.ms-excel.sheet.macroenabled.12;base64');
+      const isDocx = blob.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64');
+      const date = new Date().toISOString().slice(0, 19);
 
-    const date = new Date().toISOString().slice(0, 19);
-    if (isXlsm) {
-      this.downloadName = `${date}.xlsm`;
-    }
-    if (isDocx) {
-      this.downloadName = `${date}.docx`;
-    }
-    this.downloadHref = this.sanitizer.bypassSecurityTrustUrl(blob);
+      if (isXlsm) {
+        return `${date}.xlsm`;
+      }
+      if (isDocx) {
+        return `${date}.docx`;
+      }
+      return date;
+    };
+
+    DownloadUtil.download(getDownloadName(), blob);
   }
 
   private unsubAll() {
-    [this.requestModalSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.requestModalSubscription]);
   }
 
   ngOnInit() {

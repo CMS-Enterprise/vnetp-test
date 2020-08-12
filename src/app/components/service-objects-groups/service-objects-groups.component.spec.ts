@@ -1,24 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ServiceObjectsGroupsComponent } from './service-objects-groups.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent, MockTabsComponent } from 'src/test/mock-components';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { ServiceObjectModalComponent } from 'src/app/modals/service-object-modal/service-object-modal.component';
-import { ServiceObjectGroupModalComponent } from 'src/app/modals/service-object-group-modal/service-object-group-modal.component';
-import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { ServiceObjectModalComponent } from './service-object-modal/service-object-modal.component';
+import { ServiceObjectGroupModalComponent } from './service-object-group-modal/service-object-group-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -29,13 +26,11 @@ describe('ServicesObjectsGroupsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
         NgxPaginationModule,
         NgSelectModule,
         ToastrModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -47,8 +42,11 @@ describe('ServicesObjectsGroupsComponent', () => {
         ServiceObjectGroupModalComponent,
         ImportExportComponent,
         YesNoModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         TierSelectComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

@@ -1,15 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { VmwareDetailComponent } from './vmware-detail.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('VmwareDetailComponent', () => {
   let component: VmwareDetailComponent;
@@ -22,14 +21,13 @@ describe('VmwareDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([]),
-        AngularFontAwesomeModule,
         FormsModule,
         NgxSmartModalModule,
         ReactiveFormsModule,
         NgxMaskModule.forRoot(),
         HttpClientTestingModule,
       ],
-      declarations: [VmwareDetailComponent, YesNoModalComponent],
+      declarations: [VmwareDetailComponent, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },
         {

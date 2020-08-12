@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'api_client/model/tier';
@@ -19,35 +18,46 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-service-objects-groups',
   templateUrl: './service-objects-groups.component.html',
 })
-export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
   currentServiceObjectsPage = 1;
   currentServiceObjectGroupsPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
-  serviceObjects: Array<ServiceObject>;
-  serviceObjectGroups: Array<ServiceObjectGroup>;
+  serviceObjects: ServiceObject[] = [];
+  serviceObjectGroups: ServiceObjectGroup[] = [];
 
   navIndex = 0;
   showRadio = false;
+
+  public tabs: Tab[] = [
+    {
+      name: 'Service Objects',
+      tooltip: this.helpText.ServiceObjects,
+    },
+    {
+      name: 'Service Object Groups',
+      tooltip: this.helpText.ServiceObjectGroups,
+    },
+    {
+      name: 'Service Object Group Relations',
+    },
+  ];
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
   currentTierSubscription: Subscription;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -58,9 +68,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private bulkUploadService: BulkUploadService,
     public helpText: ServiceObjectsGroupsHelpText,
-  ) {
-    this.serviceObjects = new Array<ServiceObject>();
-    this.serviceObjectGroups = new Array<ServiceObjectGroup>();
+  ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
   }
 
   getServiceObjects() {
@@ -100,7 +112,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     this.ngx.getModal('serviceObjectModal').open();
   }
 
-  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup: ServiceObjectGroup) {
+  openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
       throw new Error('Service Object required.');
     }
@@ -250,20 +262,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.serviceObjectModalSubscription,
       this.serviceObjectGroupModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   importServiceObjectsConfig(event: ServiceObject[]) {
@@ -278,8 +282,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.serviceObjectService
           .v1NetworkSecurityServiceObjectsBulkPost({
             generatedServiceObjectBulkDto: { bulk: dto },
@@ -305,9 +308,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
-
         const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
         serviceObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
         serviceObjectRelationsDto.serviceObjectRelations = event;
@@ -337,8 +337,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.serviceObjectGroupService
           .v1NetworkSecurityServiceObjectGroupsBulkPost({
             generatedServiceObjectGroupBulkDto: { bulk: dto },

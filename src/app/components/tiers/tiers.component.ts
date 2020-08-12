@@ -1,35 +1,30 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-tiers',
   templateUrl: './tiers.component.html',
 })
-export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class TiersComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   tierGroups: TierGroup[];
 
   perPage = 20;
   currentTiersPage = 1;
   navIndex = 0;
+  ModalMode = ModalMode;
 
   tierModalSubscription: Subscription;
   currentDatacenterSubscription: Subscription;
 
   currentDatacenter: Datacenter;
-
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -149,8 +144,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.datacenterTierService
           .v1TiersBulkPost({
             generatedTierBulkDto: { bulk: dto },
@@ -198,15 +192,7 @@ export class TiersComponent implements OnInit, OnDestroy, PendingChangesGuard {
   }
 
   private unsubAll() {
-    [this.tierModalSubscription, this.currentDatacenterSubscription].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
   }
 
   ngOnInit() {

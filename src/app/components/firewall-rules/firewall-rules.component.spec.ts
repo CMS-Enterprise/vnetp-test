@@ -1,21 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockTabsComponent } from 'src/test/mock-components';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FirewallRuleModalComponent } from 'src/app/modals/firewall-rule-modal/firewall-rule-modal.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PapaParseModule } from 'ngx-papaparse';
 import { NgxMaskModule } from 'ngx-mask';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ImportExportComponent } from '../import-export/import-export.component';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -26,10 +23,8 @@ describe('FirewallRulesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
@@ -39,10 +34,12 @@ describe('FirewallRulesComponent', () => {
       declarations: [
         FirewallRulesComponent,
         FirewallRuleModalComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         FilterPipe,
         ImportExportComponent,
         YesNoModalComponent,
+        MockFontAwesomeComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

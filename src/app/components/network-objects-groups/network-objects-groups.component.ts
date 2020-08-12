@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -19,34 +18,45 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-network-objects-groups',
   templateUrl: './network-objects-groups.component.html',
 })
-export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
   currentNetworkObjectsPage = 1;
   currentNetworkObjectGroupsPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
-  networkObjects: Array<NetworkObject>;
-  networkObjectGroups: Array<NetworkObjectGroup>;
+  networkObjects: NetworkObject[] = [];
+  networkObjectGroups: NetworkObjectGroup[] = [];
 
   navIndex = 0;
   showRadio = false;
 
-  networkObjectModalSubscription: Subscription;
-  networkObjectGroupModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
+  public tabs: Tab[] = [
+    {
+      name: 'Network Objects',
+      tooltip: this.helpText.NetworkObjects,
+    },
+    {
+      name: 'Network Object Groups',
+      tooltip: this.helpText.NetworkObjectGroups,
+    },
+    {
+      name: 'Network Object Group Relations',
+    },
+  ];
 
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private networkObjectGroupModalSubscription: Subscription;
+  private networkObjectModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -57,9 +67,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private bulkUploadService: BulkUploadService,
     public helpText: NetworkObjectsGroupsHelpText,
-  ) {
-    this.networkObjects = new Array<NetworkObject>();
-    this.networkObjectGroups = new Array<NetworkObjectGroup>();
+  ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
   }
 
   getNetworkObjects() {
@@ -249,20 +261,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
   }
 
   private unsubAll() {
-    [
+    SubscriptionUtil.unsubscribe([
       this.networkObjectModalSubscription,
       this.networkObjectGroupModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-    ].forEach(sub => {
-      try {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    ]);
   }
 
   importNetworkObjectsConfig(event: NetworkObject[]) {
@@ -277,8 +281,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.networkObjectService
           .v1NetworkSecurityNetworkObjectsBulkPost({
             generatedNetworkObjectBulkDto: { bulk: dto },
@@ -304,9 +307,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
-
         const networkObjectRelationsDto = {} as NetworkObjectGroupRelationBulkImportCollectionDto;
         networkObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
         networkObjectRelationsDto.networkObjectRelations = event;
@@ -336,8 +336,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy, Pending
       const modalData = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (modalData && modalData.modalYes) {
-        let dto = event;
-        dto = this.sanitizeData(event);
+        const dto = this.sanitizeData(event);
         this.networkObjectGroupService
           .v1NetworkSecurityNetworkObjectGroupsBulkPost({
             generatedNetworkObjectGroupBulkDto: { bulk: dto },

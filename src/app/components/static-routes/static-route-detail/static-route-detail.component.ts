@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -13,9 +12,11 @@ import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-d
   selector: 'app-static-route-detail',
   templateUrl: './static-route-detail.component.html',
 })
-export class StaticRouteDetailComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   currentDatacenterSubscription: Subscription;
   staticRouteModalSubscription: Subscription;
+
+  ModalMode = ModalMode;
 
   constructor(
     private datacenterService: DatacenterContextService,
@@ -28,12 +29,6 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy, PendingCha
   Id = '';
   tier: Tier;
   staticRoutes: Array<StaticRoute>;
-  dirty: boolean;
-
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
-  }
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -127,17 +122,5 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy, PendingCha
       this.tier = data;
       this.staticRoutes = data.staticRoutes;
     });
-  }
-
-  insertStaticRoutes(routes) {
-    // if (!this.staticRoutes) {
-    //   this.staticRoutes = new Array<StaticRoute>();
-    // }
-    // routes.forEach(route => {
-    //   if (routes.Name !== '') {
-    //     this.staticRoutes.push(route);
-    //   }
-    // });
-    // this.dirty = true;
   }
 }

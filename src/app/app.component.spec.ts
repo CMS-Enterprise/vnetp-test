@@ -1,58 +1,86 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientModule } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
-import { NetworkObjectModalComponent } from './modals/network-object-modal/network-object-modal.component';
-import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
-import { NetworkObjectGroupModalComponent } from './modals/network-object-group-modal/network-object-group-modal.component';
-import { ServiceObjectModalComponent } from './modals/service-object-modal/service-object-modal.component';
-import { ServiceObjectGroupModalComponent } from './modals/service-object-group-modal/service-object-group-modal.component';
-import { TooltipComponent } from './components/tooltip/tooltip.component';
-import { NgxSmartModalServiceStub } from './modals/modal-mock';
-import { FilterPipe } from './pipes/filter.pipe';
-import { ToastrModule } from 'ngx-toastr';
-import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
-
-const ngx = new NgxSmartModalServiceStub();
+import { MockComponent } from 'src/test/mock-components';
+import { Subject, of } from 'rxjs';
+import { ActivatedRoute, Router, Event, NavigationEnd } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
+  const routerEvents = new Subject<Event>();
+
   beforeEach(async(() => {
+    const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
+
+    const router = {
+      events: routerEvents.asObservable(),
+    };
+
+    const title = {
+      setTitle: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        AngularFontAwesomeModule,
-        NgxSmartModalModule,
-        NgxMaskModule.forRoot(),
-        ToastrModule.forRoot({}),
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
+      imports: [RouterTestingModule],
+      declarations: [AppComponent, MockComponent({ selector: 'app-breadcrumb' }), MockComponent({ selector: 'app-navbar' })],
+      providers: [
+        { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: Router, useValue: router },
+        { provide: Title, useValue: title },
       ],
-      declarations: [
-        AppComponent,
-        DatacenterSelectComponent,
-        NavbarComponent,
-        BreadcrumbComponent,
-        NetworkObjectModalComponent,
-        NetworkObjectGroupModalComponent,
-        ServiceObjectModalComponent,
-        ServiceObjectGroupModalComponent,
-        TooltipComponent,
-        FilterPipe,
-      ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should call to set the title when the route changes', () => {
+    const title = TestBed.get(Title);
+    const spy = jest.spyOn(title, 'setTitle');
+
+    const activatedRoute = TestBed.get(ActivatedRoute);
+    activatedRoute.data = of({ title: 'New Title' });
+
+    const navigationEnd = new NavigationEnd(1, '', '');
+    routerEvents.next(navigationEnd);
+
+    expect(spy).toHaveBeenCalledWith('New Title');
+  });
+
+  it('should default the title to "Automation"', () => {
+    const title = TestBed.get(Title);
+    const spy = jest.spyOn(title, 'setTitle');
+
+    const activatedRoute = TestBed.get(ActivatedRoute);
+    activatedRoute.data = of({ title: null });
+
+    const navigationEnd = new NavigationEnd(1, '', '');
+    routerEvents.next(navigationEnd);
+
+    expect(spy).toHaveBeenCalledWith('Automation');
+  });
+
+  it('should get the most child route to set the title', () => {
+    const title = TestBed.get(Title);
+    const spy = jest.spyOn(title, 'setTitle');
+
+    const activatedRoute = TestBed.get(ActivatedRoute);
+    activatedRoute.firstChild = { outlet: 'primary', data: of({ title: 'Child Title' }) };
+    activatedRoute.data = of({ title: 'Parent Title' });
+
+    const navigationEnd = new NavigationEnd(1, '', '');
+    routerEvents.next(navigationEnd);
+
+    expect(spy).toHaveBeenCalledWith('Child Title');
   });
 });

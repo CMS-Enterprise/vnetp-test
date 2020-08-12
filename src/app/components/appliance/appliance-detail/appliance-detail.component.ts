@@ -3,16 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { V1AppliancesService, Appliance, ApplianceNetworkPort } from 'api_client';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import ConversionUtil from 'src/app/utils/conversion.util';
 
 @Component({
   selector: 'app-appliance-detail',
   templateUrl: './appliance-detail.component.html',
-  styleUrls: ['./appliance-detail.component.css'],
 })
 export class ApplianceDetailComponent implements OnInit {
   Id: string;
   Appliance: Appliance;
   networkPorts: Array<ApplianceNetworkPort>;
+
+  ConversionUtil = ConversionUtil;
 
   constructor(
     private route: ActivatedRoute,
@@ -74,12 +76,6 @@ export class ApplianceDetailComponent implements OnInit {
     }
   }
 
-  convertBytesToGb(val) {
-    const convertedVal = val / 1000000000;
-
-    return convertedVal;
-  }
-
   private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
@@ -95,7 +91,6 @@ export class ApplianceDetailComponent implements OnInit {
 
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
-
     this.getAppliance();
   }
 }

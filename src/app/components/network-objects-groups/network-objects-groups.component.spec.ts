@@ -1,23 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockIconButtonComponent, MockTabsComponent } from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
 import { CookieService } from 'ngx-cookie-service';
-import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
-import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-group-modal/network-object-group-modal.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
-import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/app/modals/modal-mock';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TierSelectComponent } from '../tier-select/tier-select.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { YesNoModalComponent } from 'src/app/modals/yes-no-modal/yes-no-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { NetworkObjectModalComponent } from './network-object-modal/network-object-modal.component';
+import { NetworkObjectGroupModalComponent } from './network-object-group-modal/network-object-group-modal.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -28,13 +26,11 @@ describe('NetworkObjectsGroupsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFontAwesomeModule,
         NgxSmartModalModule,
         NgxMaskModule,
         NgxPaginationModule,
         NgSelectModule,
         ToastrModule.forRoot(),
-        PapaParseModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -46,8 +42,11 @@ describe('NetworkObjectsGroupsComponent', () => {
         NetworkObjectGroupModalComponent,
         YesNoModalComponent,
         TierSelectComponent,
-        TooltipComponent,
+        MockTooltipComponent,
         ImportExportComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockTabsComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
     }).compileComponents();

@@ -1,0 +1,111 @@
+<ngx-smart-modal
+  #networkObjectGroupModal
+  identifier="networkObjectGroupModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  customClass="medium-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Network Object Group</h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          aria-label="Name"
+          id="name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <tooltip [message]="helpText.Description"></tooltip>
+        <input
+          type="text"
+          formControlName="description"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          aria-label="Description"
+          id="description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
+        </div>
+      </div>
+
+      Network Objects
+      <tooltip [message]="helpText.NetworkObjects"></tooltip>
+
+      <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
+        <!-- Select Network Object-->
+        <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
+          <option></option>
+          <option *ngFor="let tierNetworkObject of tierNetworkObjects" [ngValue]="tierNetworkObject">{{ tierNetworkObject?.name }}</option>
+        </select>
+
+        <!-- Add Network Object -->
+        <button type="button" class="btn btn-info" (click)="addNetworkObject()" [disabled]="!selectedNetworkObject">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Add Network Object</span>
+        </button>
+      </section>
+
+      <table class="table table-striped" aria-describedby="Network Objects table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Address</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let netObj of networkObjects">
+            <td>
+              <span>{{ netObj.name }}</span>
+            </td>
+            <td>
+              <span>{{ netObj.type }}</span>
+            </td>
+            <td>
+              <span *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+              <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+            </td>
+            <td class="table__actions">
+              <app-icon-button icon="delete" label="Remove Network Object" (handleClick)="removeNetworkObject(netObj)"></app-icon-button>
+            </td>
+          </tr>
+          <tr *ngIf="!networkObjects?.length" class="text-center">
+            <td colspan="4">No Network Objects</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

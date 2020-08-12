@@ -26,7 +26,7 @@ export interface LoadBalancerPool {
     loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod;
     nodes?: Array<LoadBalancerNode>;
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
-    servicePort: number;
+    defaultHealthMonitors: Array<LoadBalancerPoolDefaultHealthMonitors>;
     tierId: string;
 }
 export enum LoadBalancerPoolLoadBalancingMethod {
@@ -43,11 +43,15 @@ export enum LoadBalancerPoolLoadBalancingMethod {
     PredictiveNode = 'PredictiveNode',
     DynamicRatioNode = 'DynamicRatioNode',
     DynamicRatioMember = 'DynamicRatioMember',
-    WeightedLeastConnectionsMember = 'WeightedLeastConnectionsMember',
-    WeightedLeastConnectionsNode = 'WeightedLeastConnectionsNode',
     RatioSession = 'RatioSession',
     RatioLeastConnectionsMember = 'RatioLeastConnectionsMember',
     RatioLeastConnectionsNode = 'RatioLeastConnectionsNode'
+};
+export enum LoadBalancerPoolDefaultHealthMonitors {
+    UDP = 'UDP',
+    TCP = 'TCP',
+    HTTP = 'HTTP',
+    HTTPS = 'HTTPS'
 };
 
 

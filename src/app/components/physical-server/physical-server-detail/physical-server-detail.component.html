@@ -1,39 +1,26 @@
-<!-- add back button? -->
-<div class="clearfix">
-  <a
-    routerLink="/physical-server"
-    queryParamsHandling="merge"
-    class="btn btn-sm btn-primary mb-2"
-  >
-    <fa name="arrow-left"></fa>
-    Back
-  </a>
+<a routerLink="/physical-server" queryParamsHandling="merge" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h1>Physical Server: {{ PhysicalServer?.name }}</h1>
+<h1>Physical Server: {{ PhysicalServer?.name }}</h1>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button
-      *ngIf="PhysicalServer?.deletedAt"
-      class="btn btn-sm btn-success"
-      (click)="restorePhysicalServer(PhysicalServer)"
-    >
-      <fa name="undo"></fa>
-      Restore Physical Server
-    </button>
-    <button
-      class="btn btn-sm btn-danger"
-      (click)="deletePhysicalServer(PhysicalServer)"
-    >
-      <fa name="trash"></fa>
-      Delete Physical Server
-    </button>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Restore Physical Server -->
+  <button *ngIf="PhysicalServer?.deletedAt" class="btn btn-success" (click)="restorePhysicalServer(PhysicalServer)">
+    <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+    <span>Restore Physical Server</span>
+  </button>
+
+  <!-- Delete Physical Server -->
+  <button class="btn btn-danger" (click)="deletePhysicalServer(PhysicalServer)">
+    <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
+    <span>Delete Physical Server</span>
+  </button>
+</section>
 
 <div *ngIf="PhysicalServer">
-  <p *ngIf="PhysicalServer.description">
-    <strong>Description:</strong> {{ PhysicalServer.description }}
-  </p>
+  <p *ngIf="PhysicalServer.description"><strong>Description:</strong> {{ PhysicalServer.description }}</p>
   <p><strong>Serial Number:</strong> {{ PhysicalServer.serialNumber }}</p>
   <p>
     <strong>Delivery Date:</strong>
@@ -54,7 +41,7 @@
       </p>
       <p>
         <strong>Local Storage Size:</strong>
-        {{ convertBytesToGb(PhysicalServer.localStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.localStorageSize) }} GB
       </p>
     </div>
     <div class="col-md-6">
@@ -62,7 +49,7 @@
       <p><strong>SAN Required?</strong> {{ PhysicalServer.sanRequired }}</p>
       <p>
         <strong>SAN Storage Size: </strong>
-        {{ convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
+        {{ ConversionUtil.convertBytesToGb(PhysicalServer.sanStorageSize) }} GB
       </p>
     </div>
   </div>
@@ -72,7 +59,7 @@
 
 <div class="p-3">
   <h3>Network Ports</h3>
-  <table class="table table-striped">
+  <table class="table table-striped" aria-describedby="Network Ports table">
     <thead>
       <tr>
         <th scope="col">Name</th>
@@ -84,13 +71,13 @@
         <td>
           <span>{{ n.name }}</span>
         </td>
-        <td></td>
+        <td class="table__actions"></td>
       </tr>
       <tr *ngIf="!networkPorts?.length" class="text-center">
         <td colspan="2">No Network Ports</td>
       </tr>
     </tbody>
   </table>
-</div>
 
-<app-yes-no-modal></app-yes-no-modal>
+  <app-yes-no-modal></app-yes-no-modal>
+</div>

@@ -5,7 +5,7 @@ import { PipeTransform, Pipe } from '@angular/core';
   pure: true,
 })
 export class ResolvePipe implements PipeTransform {
-  transform(item: any, callback: (item: any) => boolean): any {
+  transform<T, S>(item: T, callback: (item: T) => S): T | S {
     if (!item || !callback) {
       return item;
     }

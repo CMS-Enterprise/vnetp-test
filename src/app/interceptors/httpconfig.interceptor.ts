@@ -15,10 +15,10 @@ export class HttpConfigInterceptor {
     // const isLoggedIn = this.authService.isLoggedIn();
     console.log(isLoggedIn);
 
-    if (isLoggedIn) {
-      const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
-      request = request.clone({ headers });
-    }
+    // if (isLoggedIn) {
+    //   const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
+    //   request = request.clone({ headers });
+    // }
 
     if (!request.headers.has('Accept')) {
       request = request.clone({

@@ -18,7 +18,7 @@ export class NetworkDetailHelpText {
 })
 export class SubnetsVlansHelpText {
   Subnets = `IPv4/IPv6 Subnets within the selected Tier.`;
-  Vlans = `Vlans within the selected Tier.`;
+  Vlans = `VLANs within the selected Tier.`;
   Tier = `Tier that Subnets and VLANs are created within.`;
 }
 
@@ -62,13 +62,14 @@ export class LoadBalancersHelpText {
   Tier = `Tier that Load Balancer configurations are created within.`;
   VirtualServers = `Manage Virtual Servers.`;
   Pools = `Manage Pools and Nodes.`;
+  PoolRelations = `Manage Pool to Node and Pool to Health Monitor Relations.`;
   Nodes = `Manage Nodes.`;
   IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
   HealthMonitors = `Manage Health Monitors.`;
   Profiles = `Manage Profiles.`;
   Policies = `Manage Policies.`;
   SelfIps = `Manage Load Balancer Self IPs.`;
-  Vlans = `Manage Load Balancer Vlans.`;
+  Vlans = `Manage Load Balancer VLANs.`;
   Routes = `Manage Load Balancer Routes.`;
 }
 
@@ -216,6 +217,8 @@ export class VirtualServerModalHelpText {
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
   AvailableProfiles = `Client SSL profiles available (can select multiple).`;
   SelectedProfiles = `Selected Client SSL profiles.`;
+  AvailablePolicies = `Policies available (can select multiple).`;
+  SelectedPolicies = `Selected policies.`;
 }
 
 @Injectable({
@@ -229,7 +232,8 @@ export class PoolModalHelpText {
   SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
   AvailableNodes = `Nodes that can be added to the Pool.`;
   SelectedNodes = `Nodes that have been added to the Pool.`;
-  ServicePort = `Service Port of the Pool.`;
+  Ratio = 'Ratio of traffic that will be sent to the node.';
+  ServicePort = `Port that the node provides service on.`;
 }
 
 @Injectable({
@@ -242,6 +246,7 @@ export class NodeModalHelpText {
   Fqdn = `FQDN of Node.`;
   ServicePort = `Port that the Node is listening for requests on.`;
   Priority = `Priority of node.`;
+  AutoPopulate = `Determines whether the pool member will be auto-populated from the FQDN.`;
 }
 
 @Injectable({
@@ -284,10 +289,19 @@ export class ContractModalHelpText {
 export class DashboardHelpText {
   Datacenters = 'Total Datacenters within the current tenant.';
   Tiers = 'Total Tiers within the current tenant.';
-  Vlans = 'Total Vlans within the current tenant.';
+  Vlans = 'Total VLANs within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
   LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LoadBalancerRouteModalHelpText {
+  Name = 'Name of Load Balancer Route';
+  Destination = 'Destination of Load Balancer Route';
+  Gateway = 'Gateway of Load Balancer Route';
 }

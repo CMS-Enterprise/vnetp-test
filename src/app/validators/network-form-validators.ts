@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import * as validator from 'validator';
 
-export function IpAddressAnyValidator(control: FormControl) {
+export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -23,7 +23,7 @@ export function IpAddressAnyValidator(control: FormControl) {
   }
 }
 
-export function IpAddressCidrValidator(control: FormControl) {
+export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -37,12 +37,11 @@ export function IpAddressCidrValidator(control: FormControl) {
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidIpCidr: true };
   }
+  return { invalidIpCidr: true };
 }
 
-export function IpAddressIpValidator(control: FormControl) {
+export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -56,12 +55,11 @@ export function IpAddressIpValidator(control: FormControl) {
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidIpAddress: true };
   }
+  return { invalidIpAddress: true };
 }
 
-export function FqdnValidator(control: FormControl) {
+export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -70,12 +68,11 @@ export function FqdnValidator(control: FormControl) {
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidFqdn: true };
   }
+  return { invalidFqdn: true };
 }
 
-export function MacAddressValidator(control: FormControl) {
+export function MacAddressValidator(control: FormControl): { invalidMacAddress: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -84,12 +81,11 @@ export function MacAddressValidator(control: FormControl) {
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidMacAddress: true };
   }
+  return { invalidMacAddress: true };
 }
 
-export function ValidatePortRange(control: FormControl) {
+export function ValidatePortRange(control: FormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -102,54 +98,55 @@ export function ValidatePortRange(control: FormControl) {
   const valueArray = value.split('-');
 
   if (valueArray.length < 1 || valueArray.length > 2) {
-    return { validPortNumber: true };
+    return { invalidPortNumber: true };
   }
 
   if (valueArray.length === 1) {
     // Single Number
     if (!isValidPortNumber(Number(valueArray[0]))) {
-      return { validPortNumber: true };
+      return { invalidPortNumber: true };
     }
   } else if (valueArray.length === 2) {
     // Range
     const startPort = Number(valueArray[0]);
     const endPort = Number(valueArray[1]);
 
-    if (isNaN(startPort) || isNaN(endPort)) {
-      return { validPortNumber: true };
+    if (Number.isNaN(startPort) || Number.isNaN(endPort)) {
+      return { invalidPortNumber: true };
     }
 
     if (startPort > endPort || startPort === endPort) {
-      return { validPortRange: true };
+      return { invalidPortRange: true };
     }
 
     if (!isValidPortNumber(startPort) || !isValidPortNumber(endPort)) {
-      return { validPortNumber: true };
+      return { invalidPortNumber: true };
     }
   }
   return null;
 }
 
 function isValidPortNumber(portNumber: number): boolean {
-  return !isNaN(portNumber) && portNumber > 0 && portNumber <= 65535;
+  return !Number.isNaN(portNumber) && portNumber > 0 && portNumber <= 65535;
 }
 
-function ValidateIpAddress(ipAddress: string) {
+function ValidateIpAddress(ipAddress: string): boolean {
   return validator.isIP(ipAddress, 4) || validator.isIP(ipAddress, 6);
 }
 
-function ValidateCidrAddress(ipArray: string[]) {
+function ValidateCidrAddress(ipArray: string[]): boolean {
   // If IP portion after subnet mask is empty.
-  if (!ipArray[1] || !ipArray[1].length) {
+  const [ipAddress, netMask] = ipArray;
+  if (!netMask) {
     return false;
   }
 
-  if (validator.isIP(ipArray[0], 4)) {
-    return ValidateNetMask(Number(ipArray[1]), 4);
-  } else if (validator.isIP(ipArray[0], 6)) {
-    return ValidateNetMask(Number(ipArray[1]), 6);
+  if (validator.isIP(ipAddress, 4)) {
+    return ValidateNetMask(Number(netMask), 4);
   }
-
+  if (validator.isIP(ipAddress, 6)) {
+    return ValidateNetMask(Number(netMask), 6);
+  }
   return false;
 }
 

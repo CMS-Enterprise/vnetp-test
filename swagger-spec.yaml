@@ -1544,6 +1544,8 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/FirewallRulePreview'
       tags: &ref_5
         - v1/network-security/firewall-rules
       produces:
@@ -6751,6 +6753,17 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/load-balancer/virtual-servers/collection:
+    get:
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/virtual-servers:
     get:
       summary: Retrieve many LoadBalancerVirtualServer
@@ -8307,146 +8320,63 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/load-balancer/pools:
-    get:
-      summary: Retrieve many LoadBalancerPool
+  /v1/load-balancer/pools/bulk-update:
+    post:
+      summary: Bulk Import Pools
       parameters:
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: filter
-          description: >-
-            <h4>Adds fields request condition (multiple conditions) to the
-            request.</h4><i>Syntax:</i>
-            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
-            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
-            (multiple filters are treated as a combination of AND type of
-            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
-            conditions accept multiple values separated by
-            commas)</li><li><strong>?filter=power||isnull</strong> (some
-            conditions don't accept value)</li></ul><br/>Filter
-            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
-            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
-            not equal)</li><li><strong><code>gt</code></strong>
-            (<code>&gt;</code>, greater
-            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
-            lower that)</li><li><strong><code>gte</code></strong>
-            (<code>&gt;=</code>, greater than or
-            equal)</li><li><strong><code>lte</code></strong>
-            (<code>&lt;=</code>, lower than or
-            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
-            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
-            (<code>LIKE %val</code>, ends
-            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
-            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
-            (<code>NOT LIKE %val%</code>, not
-            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
-            in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>notin</code></strong>
-            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
-            values</em></strong>)</li><li><strong><code>isnull</code></strong>
-            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>notnull</code></strong>
-            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
-            value</em></strong>)</li><li><strong><code>between</code></strong>
-            (<code>BETWEEN</code>, between, <strong><em>accepts two
-            values</em></strong>)</li></ul>
-          required: false
-          in: query
-          type: string
-        - name: or
-          description: >-
-            <h4>Adds <code>OR</code> conditions to the
-            request.</h4><i>Syntax:</i>
-            <strong>?or=field||condition||value</strong><br/>It uses the same
-            conditions as the filter parameter<br/><i>Rules and
-            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
-            <code>or</code> present (without <code>filter</code>) then it will
-            be interpreted as simple
-            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
-            there are <strong>multiple</strong> <code>or</code> present (without
-            <code>filter</code>) then it will be interpreted as a compination of
-            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
-            OR
-            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            there are <strong>one</strong> <code>or</code> and
-            <strong>one</strong> <code>filter</code> then it will be interpreted
-            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
-            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
-            present <strong>both</strong> <code>or</code> and
-            <code>filter</code> in any amount (<strong>one</strong> or
-            <strong>miltiple</strong> each) then both interpreted as a
-            combitation of <code>AND</code> conditions and compared with each
-            other by <code>OR</code> condition, as follows:<br><code>WHERE
-            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
-            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
-          required: false
-          in: query
-          type: string
-        - name: sort
-          description: >-
-            <h4>Adds sort by field (by multiple fields) and order to query
-            result.</h4><i>Syntax:</i>
-            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: per_page
-          description: >-
-            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?per_page=number</strong><br/><i>Example:</i>
-            <strong>?per_page=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: offset
-          description: >-
-            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?offset=number</strong><br/><i>Example:</i>
-            <strong>?offset=10</strong>
-          required: false
-          in: query
-          type: number
-        - name: page
-          description: >-
-            <h4>Receive a portion of <code>limit</code> entities (alternative to
-            <code>offset</code>). Will be applied if <code>limit</code> is set
-            up.</h4><i>Syntax:</i>
-            <strong>?page=number</strong><br/><i>Example:</i>
-            <strong>?page=2</strong>
-          required: false
-          in: query
-          type: number
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
+        - name: NodeImportCollectionDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/NodeImportCollectionDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/tierId':
+    get:
+      summary: Get Pools
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
       responses:
         '200':
           description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LoadBalancerPool'
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/pools/{id}/poolId':
+    get:
+      summary: Get Pool
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '200':
+          description: ''
+      tags: *ref_31
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/load-balancer/pools:
+    get:
+      parameters: []
+      responses:
+        '200':
+          description: ''
       tags: *ref_31
       produces:
         - application/json
@@ -8471,49 +8401,6 @@ paths:
       consumes:
         - application/json
   '/v1/load-balancer/pools/{id}':
-    get:
-      summary: Retrieve one LoadBalancerPool
-      parameters:
-        - name: id
-          required: true
-          in: path
-          type: string
-        - name: fields
-          description: >-
-            <h4>Selects fields that should be returned in the reponse
-            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
-            <br/><i>Example:</i> <strong>?fields=email,name</strong>
-          required: false
-          in: query
-          type: string
-        - name: join
-          description: >-
-            <h4>Receive joined relational objects in GET result (with all or
-            selected
-            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
-            <code>id</code> field always persists in relational objects. To use
-            nested relations, the parent level MUST be set before the child
-            level like example above.
-          required: false
-          in: query
-          type: string
-        - name: cache
-          description: >-
-            <h4>Reset cache (if was enabled) and receive entities from the
-            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
-          required: false
-          in: query
-          type: number
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
-      produces:
-        - application/json
-      consumes:
-        - application/json
     patch:
       summary: Update one LoadBalancerPool
       parameters:
@@ -8687,10 +8574,18 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/load-balancer/pools/{poolId}/node/{nodeId}':
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/ratio/{ratio}':
     post:
       summary: Add Node to Load Balancer Pool
       parameters:
+        - type: number
+          name: ratio
+          required: true
+          in: path
+        - type: number
+          name: servicePort
+          required: true
+          in: path
         - type: string
           name: poolId
           required: true
@@ -8712,9 +8607,14 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}':
     delete:
       summary: Remove Node to Load Balancer Pool
       parameters:
+        - type: number
+          name: servicePort
+          required: true
+          in: path
         - type: string
           name: poolId
           required: true
@@ -9089,6 +8989,41 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/load-balancer/nodes/{id}/tierId':
+    get:
+      summary: Get Nodes
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '200':
+          description: ''
+      tags: &ref_35
+        - v1/load-balancer/nodes
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/load-balancer/nodes/{id}/poolId':
+    get:
+      summary: Get Node
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '200':
+          description: ''
+      tags: *ref_35
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/load-balancer/nodes:
     get:
       summary: Retrieve many LoadBalancerNode
@@ -9229,8 +9164,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_35
-        - v1/load-balancer/nodes
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -11561,6 +11495,8 @@ definitions:
         type: number
       cpuReserved:
         type: boolean
+      highPerformance:
+        type: boolean
       memorySize:
         type: number
       memoryReserved:
@@ -11582,6 +11518,7 @@ definitions:
       - cpuCores
       - cpuCoresPerSocket
       - cpuReserved
+      - highPerformance
       - memorySize
       - memoryReserved
       - datacenterId
@@ -12210,7 +12147,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum:
+        enum: &ref_52
           - IpAddress
           - Fqdn
       ipAddress:
@@ -12219,14 +12156,6 @@ definitions:
         type: string
       autoPopulate:
         type: boolean
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
-      priority:
-        type: number
-        minimum: 1
-        maximum: 100
       tierId:
         type: string
     required:
@@ -12235,8 +12164,6 @@ definitions:
       - ipAddress
       - fqdn
       - autoPopulate
-      - servicePort
-      - priority
       - tierId
   LoadBalancerHealthMonitor:
     type: object
@@ -12361,8 +12288,6 @@ definitions:
           - PredictiveNode
           - DynamicRatioNode
           - DynamicRatioMember
-          - WeightedLeastConnectionsMember
-          - WeightedLeastConnectionsNode
           - RatioSession
           - RatioLeastConnectionsMember
           - RatioLeastConnectionsNode
@@ -12374,16 +12299,21 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
+      defaultHealthMonitors:
+        type: array
+        items:
+          type: string
+          enum: &ref_51
+            - UDP
+            - TCP
+            - HTTP
+            - HTTPS
       tierId:
         type: string
     required:
       - name
       - loadBalancingMethod
-      - servicePort
+      - defaultHealthMonitors
       - tierId
   LoadBalancerProfile:
     type: object
@@ -12842,6 +12772,17 @@ definitions:
           - Management
           - Backup
           - Other
+      tierClass:
+        type: string
+        enum:
+          - PRD
+          - DEV
+          - IMP
+          - VAL
+          - TST
+          - BCK
+          - MGT
+          - SEC
       vlans:
         type: array
         readOnly: true
@@ -13185,9 +13126,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
+      dryRun:
+        type: boolean
     required:
       - datacenterId
       - firewallRules
+      - dryRun
+  FirewallRulePreview:
+    type: object
+    properties:
+      firewallRulesToBeDeleted:
+        type: array
+        items:
+          $ref: '#/definitions/FirewallRule'
+      firewallRulesToBeUploaded:
+        type: array
+        items:
+          $ref: '#/definitions/FirewallRule'
+    required:
+      - firewallRulesToBeDeleted
+      - firewallRulesToBeUploaded
+      - firewallRulesToBeUploaded
   GeneratedServiceObjectGroupBulkDto:
     type: object
     properties:
@@ -13554,6 +13513,8 @@ definitions:
         type: array
         items:
           type: string
+      defaultPoolName:
+        type: string
     required:
       - name
       - sourceIpAddress
@@ -13566,6 +13527,7 @@ definitions:
       - iruleNames
       - policyNames
       - profileNames
+      - defaultPoolName
   VirtualServerImportCollectionDto:
     type: object
     properties:
@@ -13655,15 +13617,20 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/LoadBalancerHealthMonitor'
-      servicePort:
-        type: number
-        minimum: 1
-        maximum: 65535
+      defaultHealthMonitors:
+        type: array
+        items:
+          type: string
+          enum: *ref_51
       tierId:
         type: string
       vrfName:
         type: string
       healthMonitorNames:
+        type: array
+        items:
+          type: string
+      defaultHealthMonitorNames:
         type: array
         items:
           type: string
@@ -13674,10 +13641,11 @@ definitions:
     required:
       - name
       - loadBalancingMethod
-      - servicePort
+      - defaultHealthMonitors
       - tierId
       - vrfName
       - healthMonitorNames
+      - defaultHealthMonitorNames
       - nodeNames
   PoolImportCollectionDto:
     type: object
@@ -13691,6 +13659,86 @@ definitions:
     required:
       - datacenterId
       - pools
+  LoadBalancerNodeBulkImportDto:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+      description:
+        type: string
+        maxLength: 500
+      type:
+        type: string
+        enum: *ref_52
+      ipAddress:
+        type: string
+      fqdn:
+        type: string
+      autoPopulate:
+        type: boolean
+      tierId:
+        type: string
+      vrfName:
+        type: string
+      poolName:
+        type: string
+      servicePort:
+        type: number
+      ratio:
+        type: number
+    required:
+      - name
+      - type
+      - ipAddress
+      - fqdn
+      - autoPopulate
+      - tierId
+      - vrfName
+      - name
+      - poolName
+      - servicePort
+      - ratio
+  NodeImportCollectionDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/LoadBalancerNodeBulkImportDto'
+    required:
+      - datacenterId
+      - nodes
   GeneratedLoadBalancerHealthMonitorBulkDto:
     type: object
     properties:

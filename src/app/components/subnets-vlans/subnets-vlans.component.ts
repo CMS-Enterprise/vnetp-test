@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'api_client/model/tier';
 import {
@@ -19,34 +18,43 @@ import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-subnets-vlans',
   templateUrl: './subnets-vlans.component.html',
 })
-export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesGuard {
+export class SubnetsVlansComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
   currentSubnetsPage = 1;
   currentVlansPage = 1;
   perPage = 20;
+  ModalMode = ModalMode;
 
-  subnets: Array<Subnet>;
-  vlans: Array<Vlan>;
+  subnets: Subnet[] = [];
+  vlans: Vlan[] = [];
 
   navIndex = 0;
   showRadio = false;
-  subnetModalSubscription: Subscription;
-  vlanModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
 
-  @HostListener('window:beforeunload')
-  @HostListener('window:popstate')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.datacenterService.datacenterLockValue;
-  }
+  public tabs: Tab[] = [
+    {
+      name: 'Subnets',
+      tooltip: this.helpText.Subnets,
+    },
+    {
+      name: 'VLANs',
+      tooltip: this.helpText.Vlans,
+    },
+  ];
+
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private subnetModalSubscription: Subscription;
+  private vlanModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -56,30 +64,16 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
     private tierService: V1TiersService,
     private vlanService: V1NetworkVlansService,
     private subnetService: V1NetworkSubnetsService,
-  ) {
-    this.subnets = new Array<Subnet>();
-    this.vlans = new Array<Vlan>();
+  ) {}
+
+  public handleTabChange(tab: Tab): void {
+    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    this.getObjectsForNavIndex();
   }
 
-  getSubnets() {
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'subnets' }).subscribe(data => {
-      this.subnets = data.subnets;
-    });
-  }
-
-  getVlans(getSubnets = false) {
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' }).subscribe(data => {
-      this.vlans = data.vlans;
-
-      if (getSubnets) {
-        this.getSubnets();
-      }
-    });
-  }
-
-  openSubnetModal(modalMode: ModalMode, subnet?: Subnet) {
+  public openSubnetModal(modalMode: ModalMode, subnet?: Subnet): void {
     if (modalMode === ModalMode.Edit && !subnet) {
-      throw new Error('Service Object required.');
+      throw new Error('Subnet required');
     }
 
     const dto = new SubnetModalDto();
@@ -98,9 +92,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
     this.ngx.getModal('subnetModal').open();
   }
 
-  openVlanModal(modalMode: ModalMode, vlan: Vlan) {
+  public openVlanModal(modalMode: ModalMode, vlan?: Vlan): void {
     if (modalMode === ModalMode.Edit && !vlan) {
-      throw new Error('VLAN Required');
+      throw new Error('VLAN required');
     }
 
     const dto = new VlanModalDto();
@@ -138,7 +132,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
 
   deleteSubnet(subnet: Subnet) {
     if (subnet.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
+      throw new Error('Cannot delete provisioned subnet.');
     }
 
     const deleteDescription = subnet.deletedAt ? 'Delete' : 'Soft-Delete';
@@ -171,7 +165,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
 
   deleteVlan(vlan: Vlan) {
     if (vlan.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
+      throw new Error('Cannot delete provisioned VLAN.');
     }
 
     const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
@@ -258,8 +252,8 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
 
   importVlansConfig(event: Vlan[]) {
     const modalDto = new YesNoModalDto(
-      'Import Vlans',
-      `Are you sure you would like to import ${event.length} vlan${event.length > 1 ? 's' : ''}?`,
+      'Import VLANs',
+      `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
     this.ngx.setModalData(modalDto, 'yesNoModal');
     this.ngx.getModal('yesNoModal').open();
@@ -300,18 +294,39 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy, PendingChangesG
     }
   }
 
-  private unsubAll() {
-    [this.subnetModalSubscription, this.vlanModalSubscription, this.currentDatacenterSubscription, this.currentTierSubscription].forEach(
-      sub => {
-        try {
-          if (sub) {
-            sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      },
-    );
+  private getSubnets(): void {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'subnets' }).subscribe(data => {
+      this.subnets = data.subnets;
+    });
+  }
+
+  private getVlans(getSubnets = false): void {
+    if (!this.hasCurrentTier()) {
+      return;
+    }
+    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' }).subscribe(data => {
+      this.vlans = data.vlans;
+
+      if (getSubnets) {
+        this.getSubnets();
+      }
+    });
+  }
+
+  private hasCurrentTier(): boolean {
+    return this.currentTier && !!this.currentTier.id;
+  }
+
+  private unsubAll(): void {
+    SubscriptionUtil.unsubscribe([
+      this.subnetModalSubscription,
+      this.vlanModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 
   ngOnInit() {

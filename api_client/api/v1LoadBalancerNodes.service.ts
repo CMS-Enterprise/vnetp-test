@@ -72,6 +72,11 @@ export interface V1LoadBalancerNodesIdPatchRequestParams {
     loadBalancerNode: LoadBalancerNode;
 }
 
+export interface V1LoadBalancerNodesIdPoolIdGetRequestParams {
+    /** UUID. */
+    id: string;
+}
+
 export interface V1LoadBalancerNodesIdProvisionPutRequestParams {
     id: string;
 }
@@ -86,6 +91,11 @@ export interface V1LoadBalancerNodesIdRestorePatchRequestParams {
 }
 
 export interface V1LoadBalancerNodesIdSoftDeleteRequestParams {
+    id: string;
+}
+
+export interface V1LoadBalancerNodesIdTierIdGetRequestParams {
+    /** UUID. */
     id: string;
 }
 
@@ -518,6 +528,51 @@ export class V1LoadBalancerNodesService {
     }
 
     /**
+     * Get Node
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerNodesIdPoolIdGet(requestParameters: V1LoadBalancerNodesIdPoolIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerNodesIdPoolIdGet(requestParameters: V1LoadBalancerNodesIdPoolIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerNodesIdPoolIdGet(requestParameters: V1LoadBalancerNodesIdPoolIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerNodesIdPoolIdGet(requestParameters: V1LoadBalancerNodesIdPoolIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerNodesIdPoolIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/nodes/${encodeURIComponent(String(id))}/poolId`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Provisions an Entity.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -704,6 +759,51 @@ export class V1LoadBalancerNodesService {
         }
 
         return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/load-balancer/nodes/${encodeURIComponent(String(id))}/soft`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Nodes
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1LoadBalancerNodesIdTierIdGet(requestParameters: V1LoadBalancerNodesIdTierIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1LoadBalancerNodesIdTierIdGet(requestParameters: V1LoadBalancerNodesIdTierIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1LoadBalancerNodesIdTierIdGet(requestParameters: V1LoadBalancerNodesIdTierIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1LoadBalancerNodesIdTierIdGet(requestParameters: V1LoadBalancerNodesIdTierIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1LoadBalancerNodesIdTierIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/nodes/${encodeURIComponent(String(id))}/tierId`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
