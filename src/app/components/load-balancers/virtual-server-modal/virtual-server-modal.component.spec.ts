@@ -9,13 +9,11 @@ import {
   MockIconButtonComponent,
 } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
   let fixture: ComponentFixture<VirtualServerModalComponent>;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,7 +25,7 @@ describe('VirtualServerModalComponent', () => {
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
       ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {

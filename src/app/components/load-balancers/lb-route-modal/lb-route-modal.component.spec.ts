@@ -4,19 +4,17 @@ import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angu
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoadBalancerRouteModalComponent } from './lb-route-modal.component';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('LoadBalancerRouteModalComponent', () => {
   let component: LoadBalancerRouteModalComponent;
   let fixture: ComponentFixture<LoadBalancerRouteModalComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [LoadBalancerRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {

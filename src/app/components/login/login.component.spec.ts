@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { D3PieChartComponent } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -26,11 +27,6 @@ describe('LoginComponent', () => {
       navigateByUrl: jest.fn(),
     };
 
-    const toastr = {
-      success: jest.fn(),
-      error: jest.fn(),
-    };
-
     const activatedRoute = {
       snapshot: {
         queryParams: {
@@ -44,9 +40,9 @@ describe('LoginComponent', () => {
       declarations: [LoginComponent, DashboardComponent, D3PieChartComponent, MockTooltipComponent, MockFontAwesomeComponent],
       providers: [
         CookieService,
+        MockProvider(ToastrService),
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
-        { provide: ToastrService, useValue: toastr },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     })

@@ -4,19 +4,17 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
   let fixture: ComponentFixture<NetworkObjectModalComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
     })
       .compileComponents()
       .then(() => {

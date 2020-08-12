@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { TierModalComponent } from './tier-modal.component';
 import TestUtil from 'src/test/test.util';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
@@ -14,7 +14,6 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 describe('TierModalComponent', () => {
   let component: TierModalComponent;
   let fixture: ComponentFixture<TierModalComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     const tiersService = {
@@ -30,7 +29,7 @@ describe('TierModalComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [TierModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         FormBuilder,
         Validators,
         { provide: V1TiersService, useValue: tiersService },
@@ -209,6 +208,7 @@ describe('TierModalComponent', () => {
     };
 
     it('should throw an error if the modal mode is not set', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createTierModalDto();
       dto.ModalMode = null;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
@@ -218,6 +218,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should enable the name field when creating a new tier', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createTierModalDto();
       dto.Tier = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -229,6 +230,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should disable the name field when editing an existing tier', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
 
       component.getData();
@@ -237,6 +239,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should load tier groups when opening the modal', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
       const tierGroupsService = TestBed.get(V1TierGroupsService);
       const loadTierGroupsSpy = jest.spyOn(tierGroupsService, 'v1TierGroupsGet').mockImplementation(() => of([] as TierGroup[]));

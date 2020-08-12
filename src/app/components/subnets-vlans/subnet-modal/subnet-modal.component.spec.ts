@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
@@ -15,7 +15,6 @@ import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
   let fixture: ComponentFixture<SubnetModalComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     const subnetService = {
@@ -27,7 +26,7 @@ describe('SubnetModalComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         FormBuilder,
         Validators,
         { provide: V1NetworkSubnetsService, useValue: subnetService },
@@ -196,6 +195,7 @@ describe('SubnetModalComponent', () => {
     };
 
     it('should throw an error if the modal mode is not set', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createSubnetModalDto();
       dto.ModalMode = null;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
@@ -205,6 +205,7 @@ describe('SubnetModalComponent', () => {
     });
 
     it('should enable the name, gateway, network and vlan when creating a new subnet', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createSubnetModalDto();
       dto.Subnet = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -219,6 +220,7 @@ describe('SubnetModalComponent', () => {
     });
 
     it('should disable the name, gateway, network and vlan field when editing an existing subnet', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createSubnetModalDto());
 
       component.getData();

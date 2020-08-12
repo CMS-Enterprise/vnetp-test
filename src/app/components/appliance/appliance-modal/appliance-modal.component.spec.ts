@@ -3,21 +3,18 @@ import { ApplianceModalComponent } from './appliance-modal.component';
 import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('ApplianceModalComponent', () => {
   let component: ApplianceModalComponent;
   let fixture: ComponentFixture<ApplianceModalComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, NgxMaskModule.forRoot(), HttpClientTestingModule],
+      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [ApplianceModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
     }).compileComponents();
   }));
 

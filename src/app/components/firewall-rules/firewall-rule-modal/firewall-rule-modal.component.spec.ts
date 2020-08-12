@@ -5,19 +5,17 @@ import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
 import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [FirewallRuleModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, Validators, CookieService],
+      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators, CookieService],
     })
       .compileComponents()
       .then(() => {

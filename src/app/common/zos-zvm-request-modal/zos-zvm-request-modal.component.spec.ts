@@ -6,13 +6,11 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 import { V1ConfigurationUploadService, ConfigurationUploadType } from 'api_client';
 import { By } from '@angular/platform-browser';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('ZosZvmRequestModalComponent', () => {
   let component: ZosZvmRequestModalComponent;
   let fixture: ComponentFixture<ZosZvmRequestModalComponent>;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     const configurationService = {
@@ -23,10 +21,7 @@ describe('ZosZvmRequestModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ZosZvmRequestModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        { provide: V1ConfigurationUploadService, useValue: configurationService },
-      ],
+      providers: [MockProvider(NgxSmartModalService), { provide: V1ConfigurationUploadService, useValue: configurationService }],
     })
       .compileComponents()
       .then(() => {

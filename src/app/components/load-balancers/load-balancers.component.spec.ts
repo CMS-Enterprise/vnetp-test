@@ -17,14 +17,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
   let fixture: ComponentFixture<LoadBalancersComponent>;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -51,7 +49,7 @@ describe('LoadBalancersComponent', () => {
         MockIconButtonComponent,
         MockTabsComponent,
       ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
+      providers: [MockProvider(NgxSmartModalService), CookieService, FormBuilder],
     })
       .compileComponents()
       .then(() => {

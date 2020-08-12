@@ -6,14 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CookieService } from 'ngx-cookie-service';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { ContractModalComponent } from '../contract-modal/contract-modal.component';
 
 describe('IntraVrfRulesComponent', () => {
   let component: IntraVrfRulesComponent;
   let fixture: ComponentFixture<IntraVrfRulesComponent>;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,7 +24,7 @@ describe('IntraVrfRulesComponent', () => {
         MockIconButtonComponent,
       ],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
+        MockProvider(NgxSmartModalService),
         {
           provide: ActivatedRoute,
           useValue: {

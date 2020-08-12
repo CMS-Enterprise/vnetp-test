@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { By } from '@angular/platform-browser';
 import { YesNoModalComponent } from './yes-no-modal.component';
 
@@ -11,12 +11,10 @@ describe('YesNoModalComponent', () => {
   let fixture: ComponentFixture<YesNoModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }],
+      providers: [MockProvider(NgxSmartModalService)],
     })
       .compileComponents()
       .then(() => {
