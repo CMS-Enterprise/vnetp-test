@@ -39,19 +39,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   navIndex = 0;
   showRadio = false;
 
-  public tabs: Tab[] = [
-    {
-      name: 'Network Objects',
-      tooltip: this.helpText.NetworkObjects,
-    },
-    {
-      name: 'Network Object Groups',
-      tooltip: this.helpText.NetworkObjectGroups,
-    },
-    {
-      name: 'Network Object Group Relations',
-    },
-  ];
+  public tabs: Tab[] = [{ name: 'Network Objects' }, { name: 'Network Object Groups' }, { name: 'Network Object Group Relations' }];
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;

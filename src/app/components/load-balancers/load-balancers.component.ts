@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
-import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
   Tier,
@@ -124,7 +123,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private vlansService: V1LoadBalancerVlansService,
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private routesService: V1LoadBalancerRoutesService,
-    public helpText: LoadBalancersHelpText,
   ) {}
 
   public handleTabChange(tab: Tab): void {

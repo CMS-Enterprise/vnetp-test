@@ -40,16 +40,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   navIndex = 0;
   showRadio = false;
 
-  public tabs: Tab[] = [
-    {
-      name: 'Subnets',
-      tooltip: this.helpText.Subnets,
-    },
-    {
-      name: 'VLANs',
-      tooltip: this.helpText.Vlans,
-    },
-  ];
+  public tabs: Tab[] = [{ name: 'Subnets' }, { name: 'VLANs' }];
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
