@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
@@ -8,8 +8,8 @@ import {
   MockIconButtonComponent,
 } from 'src/test/mock-components';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -17,7 +17,7 @@ describe('ServiceObjectGroupModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         ServiceObjectGroupModalComponent,
         MockTooltipComponent,
@@ -25,7 +25,11 @@ describe('ServiceObjectGroupModalComponent', () => {
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1TiersService),
+      ],
     })
       .compileComponents()
       .then(() => {

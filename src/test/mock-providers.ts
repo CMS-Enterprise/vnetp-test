@@ -2,6 +2,7 @@ import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 const MockNgxSmartModalService = () => {
   return {
@@ -40,10 +41,19 @@ const MockDatacenterContextService = () => {
   };
 };
 
+const MockTierContextService = () => {
+  return {
+    lockTier: jest.fn(),
+    unlockTier: jest.fn(),
+    switchTier: jest.fn(),
+  };
+};
+
 const MockProviders = new Map<any, () => object>([
   [NgxSmartModalService, MockNgxSmartModalService],
   [ToastrService, MockToastrService],
   [DatacenterContextService, MockDatacenterContextService],
+  [TierContextService, MockTierContextService],
 ]);
 
 export const MockProvider = <T>(provide: T) => {

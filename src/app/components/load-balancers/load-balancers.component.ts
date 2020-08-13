@@ -109,20 +109,20 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private vlanModalSubscription: Subscription;
 
   constructor(
+    private datacenterService: DatacenterContextService,
+    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
-    public datacenterService: DatacenterContextService,
+    private nodeService: V1LoadBalancerNodesService,
+    private policiesService: V1LoadBalancerPoliciesService,
+    private poolsService: V1LoadBalancerPoolsService,
+    private profilesService: V1LoadBalancerProfilesService,
+    private routesService: V1LoadBalancerRoutesService,
+    private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
-    private irulesService: V1LoadBalancerIrulesService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
-    private poolsService: V1LoadBalancerPoolsService,
-    private nodeService: V1LoadBalancerNodesService,
-    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
-    private profilesService: V1LoadBalancerProfilesService,
-    private policiesService: V1LoadBalancerPoliciesService,
     private vlansService: V1LoadBalancerVlansService,
-    private selfIpsService: V1LoadBalancerSelfIpsService,
-    private routesService: V1LoadBalancerRoutesService,
   ) {}
 
   public handleTabChange(tab: Tab): void {

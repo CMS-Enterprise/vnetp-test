@@ -5,6 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ServiceObjectModalComponent } from '../../service-objects-groups/service-object-modal/service-object-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkStaticRoutesService } from 'api_client';
 
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
@@ -12,9 +13,9 @@ describe('ServiceObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
     })
       .compileComponents()
       .then(() => {

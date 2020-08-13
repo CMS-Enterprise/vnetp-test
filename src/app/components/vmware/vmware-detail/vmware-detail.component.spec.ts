@@ -3,7 +3,7 @@ import { VmwareDetailComponent } from './vmware-detail.component';
 import { MockFontAwesomeComponent, MockViewFieldComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
@@ -12,7 +12,6 @@ import { V1VmwareVirtualMachinesService } from 'api_client';
 describe('VmwareDetailComponent', () => {
   let component: VmwareDetailComponent;
   let fixture: ComponentFixture<VmwareDetailComponent>;
-  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,7 +42,6 @@ describe('VmwareDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(VmwareDetailComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 
