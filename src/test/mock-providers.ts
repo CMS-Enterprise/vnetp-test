@@ -1,4 +1,4 @@
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -38,6 +38,7 @@ const MockDatacenterContextService = () => {
     lockDatacenter: jest.fn(),
     unlockDatacenter: jest.fn(),
     currentDatacenter: of({ id: '1' }),
+    currentDatacenterValue: { id: '1' },
   };
 };
 
@@ -46,6 +47,7 @@ const MockTierContextService = () => {
     lockTier: jest.fn(),
     unlockTier: jest.fn(),
     switchTier: jest.fn(),
+    currentTier: of({ id: '2' }),
   };
 };
 
@@ -56,19 +58,20 @@ const MockProviders = new Map<any, () => object>([
   [TierContextService, MockTierContextService],
 ]);
 
-export const MockProvider = <T>(provide: T) => {
+export const MockProvider = <T>(provide: T, additionalProps: { [key: string]: Observable<any> } = {}) => {
   const value = MockProviders.get(provide);
-  const useValue = !!value ? value() : generateMockProvider(provide);
+  const useValue = !!value ? value() : generateMockProvider(provide, additionalProps);
   return { provide, useValue };
 };
 
-const generateMockProvider = (provider: any): object => {
+const generateMockProvider = (provider: any, additionalProps: { [key: string]: Observable<any> } = {}): object => {
   const name = provider.prototype.constructor.name as string;
   if (!name.endsWith('Service')) {
     return {};
   }
+
   const baseName = name.substring(0, name.length - 'Service'.length).replace('V', 'v');
-  return {
+  const mockedProvider = {
     [`${baseName}IdDelete`]: jest.fn(() => of({})),
     [`${baseName}IdSoftDelete`]: jest.fn(() => of({})),
     [`${baseName}IdRestorePatch`]: jest.fn(() => of({})),
@@ -77,4 +80,10 @@ const generateMockProvider = (provider: any): object => {
     [`${baseName}IdGet`]: jest.fn(() => of({})),
     [`${baseName}Get`]: jest.fn(() => of([])),
   };
+
+  Object.keys(additionalProps).forEach(key => {
+    mockedProvider[key] = jest.fn(() => additionalProps[key]);
+  });
+
+  return mockedProvider;
 };

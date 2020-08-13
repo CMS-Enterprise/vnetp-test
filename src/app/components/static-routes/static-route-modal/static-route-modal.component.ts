@@ -19,8 +19,8 @@ export class StaticRouteModalComponent implements OnInit {
   StaticRouteId: string;
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private ngx: NgxSmartModalService,
     private staticRouteService: V1NetworkStaticRoutesService,
   ) {}
 

@@ -29,8 +29,10 @@ import {
   V1TiersService,
   V1LoadBalancerVirtualServersService,
   V1LoadBalancerVlansService,
+  V1LoadBalancerProfilesService,
 } from 'api_client';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { of } from 'rxjs';
 
 describe('LoadBalancersComponent', () => {
   let component: LoadBalancersComponent;
@@ -63,18 +65,19 @@ describe('LoadBalancersComponent', () => {
       ],
       providers: [
         MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(TierContextService),
         MockProvider(V1LoadBalancerHealthMonitorsService),
         MockProvider(V1LoadBalancerIrulesService),
+        MockProvider(NgxSmartModalService),
         MockProvider(V1LoadBalancerNodesService),
         MockProvider(V1LoadBalancerPoliciesService),
-        MockProvider(V1LoadBalancerPoolsService),
+        MockProvider(V1LoadBalancerPoolsService, { v1LoadBalancerPoolsIdTierIdGet: of([]) }),
+        MockProvider(V1LoadBalancerProfilesService),
         MockProvider(V1LoadBalancerRoutesService),
         MockProvider(V1LoadBalancerSelfIpsService),
+        MockProvider(TierContextService),
+        MockProvider(V1TiersService),
         MockProvider(V1LoadBalancerVirtualServersService),
         MockProvider(V1LoadBalancerVlansService),
-        MockProvider(V1TiersService),
       ],
     })
       .compileComponents()
