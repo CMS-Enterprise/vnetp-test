@@ -265,7 +265,7 @@
                 <td>{{ n.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
                 <td class="table__actions">
                   <app-icon-button
-                    *ngIf="!n?.deletedAt"
+                    *ngIf="n?.deletedAt"
                     icon="undo"
                     type="success"
                     label="Restore Network Adapter"
