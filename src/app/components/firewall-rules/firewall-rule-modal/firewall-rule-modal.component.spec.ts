@@ -155,28 +155,24 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = getFormControl('name');
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
+      expect(name.valid).toBe(true);
+
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, min length', () => {
-      const name = getFormControl('name');
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
 
-    it('should be invalid, max length', () => {
-      const name = getFormControl('name');
-      name.setValue('a'.repeat(29));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, invalid characters', () => {
-      const name = getFormControl('name');
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 });

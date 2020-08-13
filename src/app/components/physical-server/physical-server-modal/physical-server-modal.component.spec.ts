@@ -59,16 +59,16 @@ describe('PhysicalServerModalComponent', () => {
     });
 
     it('should have a minimum length of 3 and maximum length of 500', () => {
-      const name = component.form.controls.name;
+      const { description } = component.form.controls;
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+      description.setValue('a');
+      expect(description.valid).toBe(false);
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
+      description.setValue('a'.repeat(3));
+      expect(description.valid).toBe(true);
 
-      name.setValue('a'.repeat(501));
-      expect(name.valid).toBe(false);
+      description.setValue('a'.repeat(501));
+      expect(description.valid).toBe(false);
     });
   });
 });

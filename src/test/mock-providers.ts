@@ -53,8 +53,11 @@ export const MockProvider = <T>(provide: T) => {
 };
 
 const generateMockProvider = (provider: any): object => {
-  const { name } = provider.prototype.constructor;
-  const baseName = name.split('Service')[0].replace('V', 'v');
+  const name = provider.prototype.constructor.name as string;
+  if (!name.endsWith('Service')) {
+    return {};
+  }
+  const baseName = name.substring(0, name.length - 'Service'.length).replace('V', 'v');
   return {
     [`${baseName}IdDelete`]: jest.fn(() => of({})),
     [`${baseName}IdSoftDelete`]: jest.fn(() => of({})),

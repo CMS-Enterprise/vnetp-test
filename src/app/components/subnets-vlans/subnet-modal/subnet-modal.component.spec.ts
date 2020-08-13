@@ -1,14 +1,12 @@
-// FIXME: Need to write mock for ngxSmartModal.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
 import { V1NetworkSubnetsService } from 'api_client';
-import { of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 
@@ -17,20 +15,10 @@ describe('SubnetModalComponent', () => {
   let fixture: ComponentFixture<SubnetModalComponent>;
 
   beforeEach(async(() => {
-    const subnetService = {
-      v1NetworkSubnetsIdPut: jest.fn(() => of({})),
-      v1NetworkSubnetsPost: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        FormBuilder,
-        Validators,
-        { provide: V1NetworkSubnetsService, useValue: subnetService },
-      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService)],
     })
       .compileComponents()
       .then(() => {
@@ -47,28 +35,24 @@ describe('SubnetModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = component.form.controls.name;
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 

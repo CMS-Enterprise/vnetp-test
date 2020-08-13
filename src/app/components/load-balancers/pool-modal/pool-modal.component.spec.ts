@@ -40,34 +40,24 @@ describe('PoolModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be required', () => {
-      const name = component.form.controls.name;
-      name.updateValueAndValidity();
-      expect(name.errors.required).toBeTruthy();
-    });
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
 
-    it('should be valid when given a valid name', () => {
-      const name = component.form.controls.name;
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid due to min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid due to max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid due to invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 
