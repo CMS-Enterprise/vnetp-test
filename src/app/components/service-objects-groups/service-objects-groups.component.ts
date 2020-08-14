@@ -15,10 +15,10 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -53,7 +53,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
-    private bulkUploadService: BulkUploadService,
   ) {}
 
   public handleTabChange(tab: Tab): void {
@@ -353,7 +352,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         obj[key] = String(val).toUpperCase();
       }
       if (key === 'vrf_name') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];
       }

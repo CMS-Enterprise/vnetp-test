@@ -19,6 +19,41 @@ describe('ObjectUtil', () => {
     });
   });
 
+  describe('getObjectId', () => {
+    it('should return null when objects is empty', () => {
+      expect(ObjectUtil.getObjectId('1', [])).toBe(null);
+    });
+
+    it('should return null when objects is null', () => {
+      expect(ObjectUtil.getObjectId('1', null)).toBe(null);
+    });
+
+    it('should return null when objects is undefined', () => {
+      expect(ObjectUtil.getObjectId('1', undefined)).toBe(null);
+    });
+
+    it('should return null when the object does not exist', () => {
+      expect(ObjectUtil.getObjectId('1', [{ id: '2', name: 'Test2' }])).toBe(null);
+    });
+
+    it('should return null when multiple objects match', () => {
+      expect(
+        ObjectUtil.getObjectId('1', [
+          { id: '1', name: 'Test1' },
+          { id: '1', name: 'Test-1' },
+        ]),
+      ).toBe(null);
+    });
+
+    it('should return a match based on id', () => {
+      expect(ObjectUtil.getObjectId('1', [{ id: '1', name: 'Test1' }])).toBe('1');
+    });
+
+    it('should return a match based on name', () => {
+      expect(ObjectUtil.getObjectId('Test1', [{ id: '1', name: 'Test1' }])).toBe('1');
+    });
+  });
+
   describe('deepCopy', () => {
     it('should throw an error when object is null', () => {
       const throwsError = () => ObjectUtil.deepCopy(null);

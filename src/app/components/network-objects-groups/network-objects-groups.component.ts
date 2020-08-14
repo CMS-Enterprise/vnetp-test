@@ -16,10 +16,10 @@ import {
   NetworkObjectGroupRelationBulkImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -53,7 +53,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-    private bulkUploadService: BulkUploadService,
     public helpText: NetworkObjectsGroupsHelpText,
   ) {}
 
@@ -360,7 +359,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         obj[key] = String(val).trim();
       }
       if (key === 'vrf_name') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];
       }
