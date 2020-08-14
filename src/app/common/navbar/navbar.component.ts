@@ -1,14 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user/user';
-import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { AppMessage } from 'src/app/models/app-message';
-import { AppMessageType } from 'src/app/models/app-message-type';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { Job } from 'src/app/models/other/job';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({

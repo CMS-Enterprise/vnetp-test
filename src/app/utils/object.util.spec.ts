@@ -18,4 +18,23 @@ describe('ObjectUtil', () => {
       expect(ObjectUtil.getObjectName('1', [{ id: '1', name: 'A' }])).toBe('A');
     });
   });
+
+  describe('deepCopy', () => {
+    it('should throw an error when object is null', () => {
+      const throwsError = () => ObjectUtil.deepCopy(null);
+      expect(throwsError).toThrowError('Null Object.');
+    });
+
+    it('should throw an error when object is undefined', () => {
+      const throwsError = () => ObjectUtil.deepCopy(undefined);
+      expect(throwsError).toThrowError('Null Object.');
+    });
+
+    it('should deep copy', () => {
+      const test = { name: 'Test', children: ['Test1', 'Test2'] };
+      const testCopy = ObjectUtil.deepCopy(test);
+      expect(test).not.toBe(testCopy);
+      expect(test).toEqual(testCopy);
+    });
+  });
 });

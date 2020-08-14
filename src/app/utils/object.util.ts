@@ -6,6 +6,13 @@ export default class ObjectUtil {
     const object = objects.find(o => o.id === id);
     return object ? object.name : 'N/A';
   }
+
+  static deepCopy<T>(object: T): T {
+    if (!object) {
+      throw new Error('Null Object.');
+    }
+    return JSON.parse(JSON.stringify(object));
+  }
 }
 
 export interface Lookup {
