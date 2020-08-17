@@ -41,18 +41,18 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
 
-  serviceObjectModalSubscription: Subscription;
-  serviceObjectGroupModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
+  private serviceObjectModalSubscription: Subscription;
+  private serviceObjectGroupModalSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private ngx: NgxSmartModalService,
-    public datacenterService: DatacenterContextService,
-    public tierContextService: TierContextService,
-    private tierService: V1TiersService,
-    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private tierContextService: TierContextService,
+    private tierService: V1TiersService,
   ) {}
 
   public handleTabChange(tab: Tab): void {
@@ -92,7 +92,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToServiceObjectModal();
-    this.datacenterService.lockDatacenter();
+    this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'serviceObjectModal');
     this.ngx.getModal('serviceObjectModal').open();
   }
@@ -112,7 +112,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToServiceObjectGroupModal();
-    this.datacenterService.lockDatacenter();
+    this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'serviceObjectGroupModal');
     this.ngx.getModal('serviceObjectGroupModal').open();
   }
@@ -123,7 +123,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getServiceObjects();
         this.ngx.resetModalData('serviceObjectModal');
-        this.datacenterService.unlockDatacenter();
+        this.datacenterContextService.unlockDatacenter();
       });
   }
 
@@ -133,7 +133,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getServiceObjectGroups();
         this.ngx.resetModalData('serviceObjectGroupModal');
-        this.datacenterService.unlockDatacenter();
+        this.datacenterContextService.unlockDatacenter();
       });
   }
 
@@ -294,7 +294,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       modal.removeData();
       if (modalData && modalData.modalYes) {
         const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
-        serviceObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        serviceObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
         serviceObjectRelationsDto.serviceObjectRelations = event;
 
         this.serviceObjectGroupService
@@ -362,7 +362,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
         this.serviceObjects = [];
