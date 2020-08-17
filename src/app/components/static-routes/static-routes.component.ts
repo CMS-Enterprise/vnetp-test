@@ -17,8 +17,9 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
 
   getTiers() {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
-        datacenterId: this.DatacenterId,
+      .v1TiersGet({
+        filter: `datacenterId||eq||${this.DatacenterId}`,
+        join: 'staticRoutes',
       })
       .subscribe(data => {
         this.tiers = data;

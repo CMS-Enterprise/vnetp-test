@@ -4,6 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
 describe('ReplicationStatePanelComponent', () => {
   let component: ReplicationStatePanelComponent;
@@ -12,7 +13,7 @@ describe('ReplicationStatePanelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NgxChartsModule, NgxPaginationModule, HttpClientTestingModule, BrowserAnimationsModule],
-      declarations: [ReplicationStatePanelComponent],
+      declarations: [ReplicationStatePanelComponent, MockFontAwesomeComponent],
     }).compileComponents();
   }));
 

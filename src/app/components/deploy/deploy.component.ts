@@ -14,7 +14,6 @@ export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
 
-  navIndex = 0;
   tierGroups: TierGroup[] = [];
   tiers: TableRowWrapper<Tier>[] = [];
 
@@ -50,10 +49,7 @@ export class DeployComponent implements OnInit {
     });
   }
 
-  public getTierGroupName = (id: string): string => {
-    return this.getObjectName(id, this.tierGroups);
-    // tslint:disable-next-line: semicolon
-  };
+  public getTierGroupName = (id: string): string => this.getObjectName(id, this.tierGroups);
 
   private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
     if (!objects) {

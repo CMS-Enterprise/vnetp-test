@@ -15,14 +15,7 @@
       <div class="form-group">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-          aria-label="Name"
-        />
+        <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
@@ -32,13 +25,7 @@
       <div class="form-group">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
-        <select
-          id="type"
-          formControlName="type"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-          aria-label="Type"
-        >
+        <select id="type" formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
           <option></option>
           <option value="standard">Standard</option>
         </select>
@@ -55,7 +42,6 @@
           formControlName="sourceAddressTranslation"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f.sourceAddressTranslation.errors }"
-          aria-label="Type"
         >
           <option></option>
           <option value="None">None</option>
@@ -76,7 +62,6 @@
             formControlName="sourceAddress"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
-            aria-label="Source Address"
           />
           <div *ngIf="submitted && f.sourceAddress.errors" class="invalid-feedback">
             <div *ngIf="f.sourceAddress.errors.required">Source Address is required.</div>
@@ -94,7 +79,6 @@
             [ngClass]="{
               'is-invalid': submitted && f.destinationAddress.errors
             }"
-            aria-label="Destination Address"
           />
           <div *ngIf="submitted && f.destinationAddress.errors" class="invalid-feedback">
             <div *ngIf="f.destinationAddress.errors.required">Destination Address is required.</div>
@@ -113,22 +97,13 @@
             formControlName="servicePort"
             [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
             mask="09999"
-            aria-label="Service Port"
           />
         </div>
 
         <div class="form-group col-md-6">
-          <label for="pool">
-            Pool
-          </label>
+          <label for="pool">Pool</label>
           <tooltip [message]="helpText.Pool"></tooltip>
-          <select
-            class="form-control"
-            id="pool"
-            formControlName="pool"
-            [ngClass]="{ 'is-invalid': submitted && f.pool.errors }"
-            aria-label="Pool"
-          >
+          <select class="form-control" id="pool" formControlName="pool" [ngClass]="{ 'is-invalid': submitted && f.pool.errors }">
             <option></option>
             <option *ngFor="let pool of pools" [ngValue]="pool.id">
               {{ pool.name }}
@@ -156,8 +131,11 @@
 
         <div class="form-group col-md-12">
           <label for="selectedProfiles">Selected Profiles</label>
-          <tooltip [message]="helpText.SelectedProfiles"></tooltip>
-          <table class="table table-striped" aria-describedby="Selected Profiles table">
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected Client SSL Porifles</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Profile</th>
@@ -204,8 +182,11 @@
 
         <div class="form-group col-md-12">
           <label for="selectedPolicies">Selected Policies</label>
-          <tooltip [message]="helpText.SelectedPolicies"></tooltip>
-          <table class="table table-striped" aria-describedby="Selected Policies table">
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected Policies</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Policy</th>
@@ -250,9 +231,12 @@
         </div>
 
         <div class="form-group col-md-12">
-          <label for="selectedIRules">Selected IRules</label>
-          <tooltip [message]="helpText.SelectedProfiles"></tooltip>
-          <table class="table table-striped" aria-describedby="Selected iRules table">
+          <label for="selectedIRules">Selected iRules</label>
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected iRules</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Name</th>

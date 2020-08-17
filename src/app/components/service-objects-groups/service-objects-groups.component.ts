@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { ServiceObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'api_client/model/tier';
 import {
@@ -40,19 +39,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   navIndex = 0;
   showRadio = false;
 
-  public tabs: Tab[] = [
-    {
-      name: 'Service Objects',
-      tooltip: this.helpText.ServiceObjects,
-    },
-    {
-      name: 'Service Object Groups',
-      tooltip: this.helpText.ServiceObjectGroups,
-    },
-    {
-      name: 'Service Object Group Relations',
-    },
-  ];
+  public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
 
   serviceObjectModalSubscription: Subscription;
   serviceObjectGroupModalSubscription: Subscription;
@@ -67,7 +54,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private bulkUploadService: BulkUploadService,
-    public helpText: ServiceObjectsGroupsHelpText,
   ) {}
 
   public handleTabChange(tab: Tab): void {

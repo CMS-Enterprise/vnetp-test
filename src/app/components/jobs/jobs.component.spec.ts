@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { JobsComponent } from './jobs.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
 describe('JobsComponent', () => {
   let component: JobsComponent;
@@ -11,7 +12,7 @@ describe('JobsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NgxPaginationModule],
-      declarations: [JobsComponent],
+      declarations: [JobsComponent, MockFontAwesomeComponent],
       providers: [CookieService],
     }).compileComponents();
   }));

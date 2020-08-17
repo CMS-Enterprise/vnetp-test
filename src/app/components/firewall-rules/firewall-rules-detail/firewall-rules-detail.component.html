@@ -3,7 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1 aria-label="Tier Name" class="header">{{ TierName }} Tier - {{ FirewallRuleGroup?.name }} Firewall Rules</h1>
+<h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} Firewall Rules</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->
@@ -19,63 +19,82 @@
   </button>
 </section>
 
-<table class="table table-striped" aria-describedby="Firewall Rule detail table">
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>{{ FirewallRuleGroup?.name }} Firewall Rules</span>
+  </caption>
   <thead>
     <tr>
       <th scope="col" *ngFor="let header of tableHeaders">{{ header }}</th>
     </tr>
-</thead>
-<tbody>
-  <tr *ngFor="
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="
         let firewallRule of firewallRules
           | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage, totalItems: totalFirewallRules }
-      ">
-    <td>
-      <p>{{ firewallRule?.name }}</p>
-    </td>
-    <td>
-      <p>{{ firewallRule?.action }}</p>
-    </td>
-    <td>
-      <p>{{ firewallRule?.protocol }}</p>
-    </td>
-    <td>
-      <p>{{ firewallRule?.direction }}</p>
-    </td>
-    <td>
-      <ng-container *ngTemplateOutlet="sourceAddress; context: { datum: firewallRule }"></ng-container>
-    </td>
-    <td>
-      <ng-container *ngTemplateOutlet="destinationAddress; context: { datum: firewallRule }"></ng-container>
-    </td>
-    <td>
-      <ng-container *ngTemplateOutlet="serviceType; context: { datum: firewallRule }"></ng-container>
-    </td>
-    <td>
-      <p>{{ firewallRule?.logging }}</p>
-    </td>
-    <td>
-      <p>{{ firewallRule?.enabled }}</p>
-    </td>
-    <td>
-      <span>{{ firewallRule?.ruleIndex }}</span>
-    </td>
-    <td class="table__actions">
-      <app-icon-button *ngIf="!firewallRule?.deletedAt" icon="edit" label="Edit Firewall Rule"
-        (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
+      "
+    >
+      <td>
+        <p>{{ firewallRule?.name }}</p>
+      </td>
+      <td>
+        <p>{{ firewallRule?.action }}</p>
+      </td>
+      <td>
+        <p>{{ firewallRule?.protocol }}</p>
+      </td>
+      <td>
+        <p>{{ firewallRule?.direction }}</p>
+      </td>
+      <td>
+        <ng-container *ngTemplateOutlet="sourceAddress; context: { datum: firewallRule }"></ng-container>
+      </td>
+      <td>
+        <ng-container *ngTemplateOutlet="destinationAddress; context: { datum: firewallRule }"></ng-container>
+      </td>
+      <td>
+        <ng-container *ngTemplateOutlet="serviceType; context: { datum: firewallRule }"></ng-container>
+      </td>
+      <td>
+        <p>{{ firewallRule?.logging }}</p>
+      </td>
+      <td>
+        <p>{{ firewallRule?.enabled }}</p>
+      </td>
+      <td>
+        <span>{{ firewallRule?.ruleIndex }}</span>
+      </td>
+      <td class="table__actions">
+        <app-icon-button
+          *ngIf="!firewallRule?.deletedAt"
+          icon="edit"
+          label="Edit Firewall Rule"
+          (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
+        ></app-icon-button>
 
-      <app-icon-button *ngIf="firewallRule?.deletedAt" icon="undo" label="Restore Firewall Rule" type="success"
-        (handleClick)="restoreFirewallRule(firewallRule)"></app-icon-button>
+        <app-icon-button
+          *ngIf="firewallRule?.deletedAt"
+          icon="undo"
+          label="Restore Firewall Rule"
+          type="success"
+          (handleClick)="restoreFirewallRule(firewallRule)"
+        ></app-icon-button>
 
-      <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-        [type]="firewallRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteFirewallRule(firewallRule)">
-      </app-icon-button>
-    </td>
-  </tr>
-  <tr *ngIf="firewallRules?.length === 0" class="text-center">
-    <td colspan="11">No Firewall Rules</td>
-  </tr>
-</tbody>
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Appliance"
+          [type]="firewallRule.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteFirewallRule(firewallRule)"
+        >
+        </app-icon-button>
+      </td>
+    </tr>
+    <tr *ngIf="firewallRules?.length === 0" class="text-center">
+      <td colspan="11">No Firewall Rules</td>
+    </tr>
+  </tbody>
 </table>
 
 <pagination-controls (pageChange)="currentFirewallRulePage = $event; getFirewallRules()"></pagination-controls>
@@ -126,8 +145,7 @@
     {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
-    aria-label="Destination Network Object Group">
+  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
     {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
