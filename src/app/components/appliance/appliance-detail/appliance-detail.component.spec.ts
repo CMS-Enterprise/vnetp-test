@@ -6,9 +6,8 @@ import {
   MockNgxSmartModalComponent,
   MockViewFieldComponent,
 } from 'src/test/mock-components';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { MockProvider } from 'src/test/mock-providers';

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PoolModalComponent } from './pool-modal.component';
 import {
   MockFontAwesomeComponent,
@@ -8,8 +8,8 @@ import {
   MockNgxSmartModalComponent,
   MockIconButtonComponent,
 } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1LoadBalancerPoolsService } from 'api_client';
 
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;
@@ -17,7 +17,7 @@ describe('PoolModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         PoolModalComponent,
         MockTooltipComponent,
@@ -25,7 +25,7 @@ describe('PoolModalComponent', () => {
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerPoolsService)],
     })
       .compileComponents()
       .then(() => {
