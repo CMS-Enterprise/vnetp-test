@@ -34,7 +34,7 @@ export class DatacenterContextService {
 
   constructor(
     private authService: AuthService,
-    private DatacenterService: V1DatacentersService,
+    private datacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -105,7 +105,7 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.DatacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
+    this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
       // Update internal datacenters array and external subject.
       this._datacenters = data;
       this.datacentersSubject.next(data);

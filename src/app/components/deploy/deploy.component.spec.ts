@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
@@ -47,15 +45,14 @@ describe('DeployComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
       providers: [
-        CookieService,
         MockProvider(NgxSmartModalService),
-        MockProvider(V1TierGroupsService),
         MockProvider(V1JobsService),
-        { provide: V1TiersService, useValue: tiersService },
+        MockProvider(V1TierGroupsService),
         { provide: DatacenterContextService, useValue: datacenterService },
+        { provide: V1TiersService, useValue: tiersService },
       ],
     })
       .compileComponents()
