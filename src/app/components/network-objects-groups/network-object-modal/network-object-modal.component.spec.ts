@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectModalComponent } from './network-object-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkSecurityNetworkObjectsService } from 'api_client';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
@@ -12,9 +12,9 @@ describe('NetworkObjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNetworkObjectsService)],
     })
       .compileComponents()
       .then(() => {
@@ -36,28 +36,24 @@ describe('NetworkObjectModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = getFormControl('name');
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = getFormControl('name');
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = getFormControl('name');
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = getFormControl('name');
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 

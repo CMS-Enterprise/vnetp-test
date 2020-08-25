@@ -6,7 +6,6 @@ import { Vrf } from '../models/d42/vrf';
 import { AppMessage } from '../models/app-message';
 import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
-import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SolarisImage } from 'src/app/models/solaris/solaris-image';
 import { throwError } from 'rxjs';

@@ -1,24 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ServiceObjectModalComponent } from '../../service-objects-groups/service-object-modal/service-object-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1NetworkStaticRoutesService } from 'api_client';
+import { StaticRouteModalComponent } from './static-route-modal.component';
 
-describe('ServiceObjectModalComponent', () => {
-  let component: ServiceObjectModalComponent;
-  let fixture: ComponentFixture<ServiceObjectModalComponent>;
+describe('StaticRouteModalComponent', () => {
+  let component: StaticRouteModalComponent;
+  let fixture: ComponentFixture<StaticRouteModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(ServiceObjectModalComponent);
+        fixture = TestBed.createComponent(StaticRouteModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
@@ -28,53 +28,25 @@ describe('ServiceObjectModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have service object form', () => {
-    expect(component.form).toBeTruthy();
-  });
+  describe('Name', () => {
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
 
-  // Initial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
-  });
+      name.setValue('a');
+      expect(name.valid).toBe(false);
 
-  it('type should be required', () => {
-    const protocol = component.form.controls.protocol;
-    expect(protocol.valid).toBeFalsy();
-  });
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBe(true);
 
-  it('destinationPort should be required', () => {
-    const destinationPort = component.form.controls.destinationPorts;
-    expect(destinationPort.valid).toBeFalsy();
-  });
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBe(false);
+    });
 
-  it('sourcePort should be required', () => {
-    const sourcePort = component.form.controls.sourcePorts;
-    expect(sourcePort.valid).toBeFalsy();
-  });
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
 
-  // Name validity
-  it('name should be valid', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(3));
-    expect(name.valid).toBeTruthy();
-  });
-
-  it('name should be invalid, min length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(2));
-    expect(name.valid).toBeFalsy();
-  });
-
-  it('name should be invalid, max length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(101));
-    expect(name.valid).toBeFalsy();
-  });
-
-  it('name should be invalid, invalid characters', () => {
-    const name = component.form.controls.name;
-    name.setValue('invalid/name!');
-    expect(name.valid).toBeFalsy();
+      name.setValue('invalid/name!');
+      expect(name.valid).toBe(false);
+    });
   });
 });

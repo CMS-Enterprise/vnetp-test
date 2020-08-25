@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -39,7 +39,6 @@ export class FirewallRulesComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private tierService: V1TiersService,
-    private bulkUploadService: BulkUploadService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
   ) {}
 
@@ -115,7 +114,7 @@ export class FirewallRulesComponent implements OnInit {
         obj[key] = String(val).trim();
       }
       if (key === 'vrf_name' || key === 'vrfName') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];
       }

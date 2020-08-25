@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ZosComponent } from './zos.component';
-import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockProvider } from 'src/test/mock-providers';
-import { ZosZvmRequestModalComponent } from 'src/app/common/zos-zvm-request-modal/zos-zvm-request-modal.component';
+import { V1ConfigurationUploadService } from 'api_client';
 
 describe('ZosComponent', () => {
   let component: ZosComponent;
@@ -14,10 +13,16 @@ describe('ZosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule, NgxSmartModalModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [ZosComponent, ZosZvmRequestModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [MockProvider(NgxSmartModalService)],
-    }).compileComponents();
+      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule],
+      declarations: [
+        MockComponent({ selector: 'app-zos-zvm-request-modal' }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        ZosComponent,
+      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1ConfigurationUploadService)],
+    });
   }));
 
   beforeEach(() => {

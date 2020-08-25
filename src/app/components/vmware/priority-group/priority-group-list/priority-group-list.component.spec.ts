@@ -16,24 +16,17 @@ describe('PriorityGroupListComponent', () => {
   let fixture: ComponentFixture<PriorityGroupListComponent>;
 
   beforeEach(async(() => {
-    const priorityGroupService = {
-      v1PriorityGroupsGet: jest.fn(() => of([])),
-      v1PriorityGroupsIdDelete: jest.fn(() => of({})),
-      v1PriorityGroupsIdRestorePatch: jest.fn(() => of({})),
-      v1PriorityGroupsIdSoftDelete: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule],
       declarations: [
+        MockComponent({ selector: 'app-priority-group-modal' }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
         PriorityGroupListComponent,
         YesNoModalComponent,
-        MockComponent({ selector: 'app-priority-group-modal' }),
-        MockIconButtonComponent,
-        MockFontAwesomeComponent,
-        MockNgxSmartModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), { provide: V1PriorityGroupsService, useValue: priorityGroupService }],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1PriorityGroupsService)],
     })
       .compileComponents()
       .then(() => {

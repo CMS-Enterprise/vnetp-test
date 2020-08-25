@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceModalComponent } from './appliance-modal.component';
-import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
+import { of } from 'rxjs';
+import { V1AppliancesService } from 'api_client';
 
 describe('ApplianceModalComponent', () => {
   let component: ApplianceModalComponent;
@@ -12,10 +13,10 @@ describe('ApplianceModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [ApplianceModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [ApplianceModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1AppliancesService)],
+    });
   }));
 
   beforeEach(() => {
@@ -28,53 +29,47 @@ describe('ApplianceModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Name validity
-  it('name should be valid', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(3));
-    expect(name.valid).toBeTruthy();
+  describe('Name', () => {
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBe(true);
+
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBe(false);
+    });
+
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('invalid/name!');
+      expect(name.valid).toBe(false);
+    });
   });
 
-  it('name should be invalid, min length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(2));
-    expect(name.valid).toBeFalsy();
-  });
+  describe('Description', () => {
+    it('should be optional', () => {
+      const { description } = component.form.controls;
 
-  it('name should be invalid, max length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(101));
-    expect(name.valid).toBeFalsy();
-  });
+      description.setValue(null);
+      expect(description.valid).toBe(true);
+    });
 
-  it('name should be invalid, invalid characters', () => {
-    const name = component.form.controls.name;
-    name.setValue('invalid/name!');
-    expect(name.valid).toBeFalsy();
-  });
+    it('should have a minimum length of 3 and maximum length of 500', () => {
+      const { description } = component.form.controls;
 
-  // Description Validity
-  it('description should be valid (null)', () => {
-    const description = component.form.controls.description;
-    description.setValue(null);
-    expect(description.valid).toBeTruthy();
-  });
+      description.setValue('a');
+      expect(description.valid).toBe(false);
 
-  it('description should be valid (minlen)', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(3));
-    expect(description.valid).toBeTruthy();
-  });
+      description.setValue('a'.repeat(3));
+      expect(description.valid).toBe(true);
 
-  it('description should be invalid, min length', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(2));
-    expect(description.valid).toBeFalsy();
-  });
-
-  it('description should be invalid, max length', () => {
-    const description = component.form.controls.description;
-    description.setValue('a'.repeat(501));
-    expect(description.valid).toBeFalsy();
+      description.setValue('a'.repeat(501));
+      expect(description.valid).toBe(false);
+    });
   });
 });

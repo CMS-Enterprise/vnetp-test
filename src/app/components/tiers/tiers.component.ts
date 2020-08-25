@@ -7,6 +7,7 @@ import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-tiers',
@@ -58,7 +59,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   openTierModal(modalMode: ModalMode, tier?: Tier) {
     if (modalMode === ModalMode.Edit && !tier) {
-      throw new Error('Service Object required.');
+      throw new Error('Tier required');
     }
 
     const dto = new TierModalDto();
@@ -179,15 +180,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: semicolon
   };
 
-  public getTierGroupName = (id: string) => this.getObjectName(id, this.tierGroups);
-
-  private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
-    if (!objects || objects.length === 0) {
-      return 'N/A';
-    }
-    const object = objects.find(o => o.id === id);
-    return object ? object.name : 'N/A';
-  }
+  public getTierGroupName = (id: string) => ObjectUtil.getObjectName(id, this.tierGroups);
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {

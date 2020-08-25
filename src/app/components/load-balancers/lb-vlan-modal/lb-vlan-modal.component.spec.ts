@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { LoadBalancerVlanModalComponent } from './lb-vlan-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
+import { V1LoadBalancerVlansService } from 'api_client';
 
 describe('LoadBalancerVlanModalComponent', () => {
   let component: LoadBalancerVlanModalComponent;
@@ -12,15 +12,10 @@ describe('LoadBalancerVlanModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxSmartModalModule, ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [LoadBalancerVlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent],
-      providers: [MockProvider(NgxSmartModalService), FormBuilder, Validators],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(LoadBalancerVlanModalComponent);
-        component = fixture.componentInstance;
-      });
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [LoadBalancerVlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerVlansService)],
+    });
   }));
 
   beforeEach(() => {
@@ -33,34 +28,25 @@ describe('LoadBalancerVlanModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Initial Form State
-  it('name should be required', () => {
-    const name = component.form.controls.name;
-    expect(name.valid).toBeFalsy();
-  });
+  describe('Name', () => {
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
 
-  // Name validity
-  it('name should be valid', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(3));
-    expect(name.valid).toBeTruthy();
-  });
+      name.setValue('a');
+      expect(name.valid).toBe(false);
 
-  it('name should be invalid, min length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(2));
-    expect(name.valid).toBeFalsy();
-  });
+      name.setValue('a'.repeat(3));
+      expect(name.valid).toBe(true);
 
-  it('name should be invalid, max length', () => {
-    const name = component.form.controls.name;
-    name.setValue('a'.repeat(101));
-    expect(name.valid).toBeFalsy();
-  });
+      name.setValue('a'.repeat(101));
+      expect(name.valid).toBe(false);
+    });
 
-  it('name should be invalid, invalid characters', () => {
-    const name = component.form.controls.name;
-    name.setValue('invalid/name!');
-    expect(name.valid).toBeFalsy();
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('invalid/name!');
+      expect(name.valid).toBe(false);
+    });
   });
 });

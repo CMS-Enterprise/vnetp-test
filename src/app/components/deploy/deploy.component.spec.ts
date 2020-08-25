@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
@@ -42,28 +40,19 @@ describe('DeployComponent', () => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
-    const jobService = {
-      v1JobsPost: jest.fn(() => of({})),
-    };
     const tiersService = {
       v1DatacentersDatacenterIdTiersGet: jest.fn(() => of([testData.tier.item])),
     };
-    const tierGroupService = {
-      v1TierGroupsGet: jest.fn(() => of([])),
-    };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
       providers: [
         MockProvider(NgxSmartModalService),
-        FormBuilder,
-        CookieService,
-        Validators,
-        { provide: V1TiersService, useValue: tiersService },
-        { provide: V1TierGroupsService, useValue: tierGroupService },
-        { provide: V1JobsService, useValue: jobService },
+        MockProvider(V1JobsService),
+        MockProvider(V1TierGroupsService),
         { provide: DatacenterContextService, useValue: datacenterService },
+        { provide: V1TiersService, useValue: tiersService },
       ],
     })
       .compileComponents()
