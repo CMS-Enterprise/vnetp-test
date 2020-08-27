@@ -1,45 +1,56 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockIconButtonComponent,
+  MockTabsComponent,
+  MockComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
-import { CookieService } from 'ngx-cookie-service';
-import { NetworkObjectModalComponent } from 'src/app/modals/network-object-modal/network-object-modal.component';
-import { NetworkObjectGroupModalComponent } from 'src/app/modals/network-object-group-modal/network-object-group-modal.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
-import { PapaParseModule } from 'ngx-papaparse';
-import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ImportExportComponent } from '../import-export/import-export.component';
-import { TooltipComponent } from '../tooltip/tooltip.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { MockProvider } from 'src/test/mock-providers';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { ToastrService } from 'ngx-toastr';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService, V1TiersService } from 'api_client';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
   let fixture: ComponentFixture<NetworkObjectsGroupsComponent>;
 
-  const ngx: NgxSmartModalService = new NgxSmartModalService();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ AngularFontAwesomeModule,
-         NgxSmartModalModule,
-         NgxMaskModule,
-         PapaParseModule,
-         FormsModule,
-         ReactiveFormsModule,
-         HttpClientTestingModule
-       ],
+      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
+        ImportExportComponent,
+        MockComponent({ selector: 'app-network-object-group-modal' }),
+        MockComponent({ selector: 'app-network-object-modal' }),
+        MockComponent({ selector: 'app-tier-select' }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockTabsComponent,
+        MockTooltipComponent,
         NetworkObjectsGroupsComponent,
-        NetworkObjectModalComponent,
-        NetworkObjectGroupModalComponent,
-        TooltipComponent,
-        ImportExportComponent],
-      providers: [{provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
-    })
-    .compileComponents();
+        YesNoModalComponent,
+      ],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(ToastrService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1TiersService),
+      ],
+    });
   }));
 
   beforeEach(() => {
@@ -54,107 +65,5 @@ describe('NetworkObjectsGroupsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should create network object', () => {
-    component.createNetworkObject();
-    expect(component.networkObjectModalSubscription).toBeTruthy();
-    expect(component.networkObjectModalMode === ModalMode.Create).toBeTruthy();
-  });
-
-  it('should edit network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
-
-    component.editNetworkObject(component.networkObjects[1]);
-    expect(component.networkObjectModalSubscription).toBeTruthy();
-    expect(component.editNetworkObjectIndex === 1).toBeTruthy();
-    expect(component.networkObjectModalMode === ModalMode.Edit);
-  });
-
-  it('should save new network object', () => {
-    component.createNetworkObject();
-
-    const networkObject = { Name: 'Test' } as NetworkObject;
-
-    component.saveNetworkObject(networkObject);
-
-    expect(component.networkObjects[0].Name === 'Test');
-    expect(component.dirty).toBeTruthy();
-  });
-
-  it('should edit network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
-
-    component.editNetworkObject(component.networkObjects[1]);
-
-    const networkObject = { Name: 'Updated' } as NetworkObject;
-
-    component.saveNetworkObject(networkObject);
-
-    expect(component.networkObjects[1].Name === 'Updated').toBeTruthy();
-    expect(component.dirty).toBeTruthy();
-  });
-
-  it('should delete network object', () => {
-    component.networkObjects = [ { Name: 'Test'} as NetworkObject,
-    { Name: 'Test2'} as NetworkObject];
-
-    component.deleteNetworkObject(component.networkObjects[1]);
-    expect(component.deletedNetworkObjects.length === 1).toBeTruthy();
-    expect(component.networkObjects.length === 1).toBeTruthy();
-  });
-
-  it('should create network object group', () => {
-    component.createNetworkObjectGroup();
-    expect(component.networkObjectGroupModalSubscription).toBeTruthy();
-    expect(component.networkObjectGroupModalMode === ModalMode.Create).toBeTruthy();
-  });
-
-  it('should set subscription, modal mode and index on edit', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
-
-    component.editNetworkObjectGroup(component.networkObjectGroups[1]);
-
-    expect(component.networkObjectGroupModalSubscription).toBeTruthy();
-    expect(component.networkObjectGroupModalMode === ModalMode.Edit);
-    expect(component.editNetworkObjectGroupIndex === 1).toBeTruthy();
-  });
-
-  it('should save new network object group', () => {
-    component.createNetworkObjectGroup();
-
-    const networkObjectGroup = { Name: 'Test' } as NetworkObjectGroup;
-
-    component.saveNetworkObjectGroup(networkObjectGroup);
-
-    expect(component.networkObjectGroups[0].Name === 'Test');
-    expect(component.dirty).toBeTruthy();
-  });
-
-  it('should edit network object group', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
-
-    component.editNetworkObjectGroup(component.networkObjectGroups[1]);
-
-    const networkObjectGroup = { Name: 'Updated' } as NetworkObjectGroup;
-
-    component.saveNetworkObjectGroup(networkObjectGroup);
-
-    expect(component.networkObjectGroups[1].Name === 'Updated').toBeTruthy();
-    expect(component.dirty).toBeTruthy();
-  });
-
-  it('should delete network object group', () => {
-    component.networkObjectGroups = [ { Name: 'Test'} as NetworkObjectGroup,
-    { Name: 'Test2'} as NetworkObjectGroup];
-
-    component.deleteNetworkObjectGroup(component.networkObjectGroups[1]);
-    expect(component.networkObjectGroups.length === 1).toBeTruthy();
-    expect(component.deletedNetworkObjectGroups.length === 1).toBeTruthy();
-    expect(component.dirty).toBeTruthy();
   });
 });

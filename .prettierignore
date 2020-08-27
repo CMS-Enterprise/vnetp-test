@@ -1,0 +1,7 @@
+node_modules
+.vscode
+coverage
+dist
+build
+README.md
+api_client

@@ -1,5 +1,5 @@
 export class ContractAssignment {
-    ContractName: string;
+  ContractName: string;
 
-    Type: string;
+  Type: string;
 }

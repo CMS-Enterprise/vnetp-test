@@ -1,0 +1,187 @@
+<ngx-smart-modal
+  #physicalServerModal
+  identifier="physicalServerModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  customClass="medium-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Physical Server</h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          aria-label="Name"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" class="form-control" formControlName="description" />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="serialNumber">Serial Number</label>
+          <input
+            type="text"
+            id="serialNumber"
+            class="form-control"
+            formControlName="serialNumber"
+            [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
+          />
+          <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
+            <div *ngIf="f.serialNumber.errors.required">Serial Number is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="deliveryDate">Delivery Date</label>
+          <input
+            type="date"
+            id="deliveryDate"
+            class="form-control"
+            formControlName="deliveryDate"
+            [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
+          />
+          <div *ngIf="submitted && f.deliveryDate.errors" class="invalid-feedback">
+            <div *ngIf="f.deliveryDate.errors.required">Delivery Date is required</div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="localStorageType">Local Storage Type</label>
+          <select
+            id="localStorageType"
+            formControlName="localStorageType"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
+          >
+            <option></option>
+            <option *ngFor="let opt of ['HDD', 'SSD']">
+              {{ opt }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.localStorageType.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageType.errors.required">Local Storage Type is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageRequired">Local Storage Required?</label>
+          <select
+            id="localStorageRequired"
+            formControlName="localStorageRequired"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.localStorageRequired.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageRequired.errors.required">Local Storage Required? is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="localStorageSize">Local Storage Size (GB)</label>
+          <input
+            type="number"
+            id="localStorageSize"
+            class="form-control"
+            formControlName="localStorageSize"
+            [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
+          />
+          <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
+            <div *ngIf="f.localStorageSize.errors.required">Local Storage Size is required</div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="sanType">SAN Type</label>
+          <select formControlName="sanType" id="sanType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }">
+            <option></option>
+            <option *ngFor="let opt of ['iSCSI', 'NFS']">
+              {{ opt }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.sanType.errors" class="invalid-feedback">
+            <div *ngIf="f.sanType.errors.required">SAN Type is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanRequired">SAN Required?</label>
+          <select
+            formControlName="sanRequired"
+            id="sanRequired"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }"
+          >
+            <option></option>
+            <option *ngFor="let opt of [true, false]">
+              {{ opt }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.sanRequired.errors" class="invalid-feedback">
+            <div *ngIf="f.sanRequired.errors.required">SAN Required? is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="sanStorageSize">SAN Size (GB)</label>
+          <input
+            type="number"
+            id="sanStorageSize"
+            class="form-control"
+            formControlName="sanStorageSize"
+            [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"
+          />
+          <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
+            <div *ngIf="f.sanStorageSize.errors.required">SAN Storage Size is required</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

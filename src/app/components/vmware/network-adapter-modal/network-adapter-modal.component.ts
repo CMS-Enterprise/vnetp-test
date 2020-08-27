@@ -1,0 +1,102 @@
+import { Component, OnInit } from '@angular/core';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { V1VmwareNetworkAdapterService, VmwareNetworkAdapter, Vlan, V1TiersService } from 'api_client';
+import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
+
+@Component({
+  selector: 'app-network-adapter-modal',
+  templateUrl: './network-adapter-modal.component.html',
+})
+export class NetworkAdapterModalComponent implements OnInit {
+  form: FormGroup;
+  VirtualMachineId: string;
+  Vlans: Array<Vlan>;
+  DatacenterId: string;
+  submitted: boolean;
+
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private networkAdapterService: V1VmwareNetworkAdapterService,
+    private tierService: V1TiersService,
+  ) {}
+
+  getVlanList() {
+    this.tierService
+      .v1DatacentersDatacenterIdTiersGet({
+        datacenterId: this.DatacenterId,
+        join: 'vlans',
+      })
+      .subscribe(data => {
+        this.Vlans = [];
+        data.forEach(tier => {
+          this.Vlans.push(...tier.vlans);
+        });
+        this.Vlans = this.Vlans.filter(v => !v.deletedAt);
+      });
+  }
+
+  save() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const networkAdapter = {} as VmwareNetworkAdapter;
+    networkAdapter.name = this.form.value.name;
+    networkAdapter.description = this.form.value.description;
+    networkAdapter.vlanId = this.form.value.vlanId;
+    networkAdapter.virtualMachineId = this.VirtualMachineId;
+
+    this.ngx.resetModalData('networkAdapterModal');
+    this.ngx.setModalData(Object.assign({}, networkAdapter), 'networkAdapterModal');
+
+    this.networkAdapterService
+      .v1VmwareNetworkAdapterPost({
+        vmwareNetworkAdapter: networkAdapter,
+      })
+      .subscribe(
+        data => {
+          this.closeModal();
+        },
+        error => {},
+      );
+  }
+
+  getData() {
+    const dto = Object.assign({}, this.ngx.getModalData('networkAdapterModal') as VirtualMachineModalDto);
+    this.VirtualMachineId = dto.VirtualMachineId;
+    this.DatacenterId = dto.DatacenterId;
+    this.getVlanList();
+  }
+
+  cancel() {
+    this.closeModal();
+  }
+
+  get f() {
+    return this.form.controls;
+  }
+
+  private buildForm() {
+    this.form = this.formBuilder.group({
+      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      vlanId: [''],
+    });
+  }
+
+  private closeModal() {
+    this.ngx.close('networkAdapterModal');
+    this.reset();
+  }
+
+  public reset() {
+    this.buildForm();
+  }
+
+  ngOnInit() {
+    this.buildForm();
+  }
+}

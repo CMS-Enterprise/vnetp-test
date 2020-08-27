@@ -1,303 +1,732 @@
-<div>
-  <h1>Load Balancers</h1>
+<app-tier-select></app-tier-select>
 
-  <div class="mt-3 mb-3">
-    <div class="form-row pb-2">
-      <span class="col-form-label mr-2">Tier (VRF) <tooltip [message]="helpText.Vrf"></tooltip>
-      </span>
-      <select
-        name="vrf"
-        class="form-control col-md-3 mr-1"
-        [(ngModel)]="currentVrf"
-        (ngModelChange)="getVrfObjects(currentVrf)"
-        [disabled]="dirty"
-      >
-        <option *ngFor="let vrf of vrfs" [ngValue]="vrf">{{ vrf.name }}</option>
-      </select>
+<h1>Load Balancers</h1>
 
-      <div class="button-group btn-group-sm ml-auto">
-        <button
-          type="button"
-          class="btn btn-success mr-1"
-          aria-label="Save Changes to Current VRF"
-          (click)="saveAll()"
-          [hidden]="!dirty"
-        >
-          <fa name="save"></fa>
-          Save Changes to Current Tier (VRF)
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger mr-1"
-          aria-label="Clear Changes to Current VRF"
-          (click)="getVrfs()"
-          [hidden]="!dirty"
-        >
-          <fa name="trash"></fa>
-          Clear Changes to Current Tier (VRF)
-        </button>
-      </div>
-    </div>
-  </div>
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">
-        Virtual Servers <tooltip [message]="helpText.VirtualServers"></tooltip>
-      </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 1">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }">
-        Pools <tooltip [message]="helpText.Pools"></tooltip> 
-      </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 2">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">
-        iRules <tooltip [message]="helpText.IRules"></tooltip>
-      </a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 3">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 3 }">
-        Health Monitors <tooltip [message]="helpText.HealthMonitors"></tooltip>
-      </a>
-    </li>
-  </ul>
+<div *ngIf="navIndex === 0">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Virtual Server -->
+    <button type="button" class="btn btn-success" (click)="openVirtualServerModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      Create Virtual Server
+    </button>
+  </section>
 
-  <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createVirtualServer()"
-        aria-label="Create Virtual Server"
-      >
-        <fa name="plus"></fa>
-        Create Virtual Server
-      </button>
-    </div>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Virtual Servers</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Destination Address</th>
+        <th scope="col">Service Port</th>
+        <th scope="col">Pool</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let virtualServer of virtualServers | paginate: { itemsPerPage: perPage, currentPage: currentVSPage }">
+        <td>
+          <span>{{ virtualServer?.name }}</span>
+        </td>
+        <td>
+          <span>{{ virtualServer?.type }}</span>
+        </td>
+        <td>
+          <span>{{ virtualServer?.destinationIpAddress }}</span>
+        </td>
+        <td>
+          <span>{{ virtualServer?.servicePort }}</span>
+        </td>
+        <td>
+          <span>{{ virtualServer?.defaultPoolId | resolve: getPoolName }}</span>
+        </td>
+        <td>
+          <span>{{ virtualServer?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!virtualServer?.deletedAt"
+            icon="edit"
+            label="Edit Virtual Server"
+            (handleClick)="openVirtualServerModal(ModalMode.Edit, virtualServer)"
+          ></app-icon-button>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Destination Address</th>
-          <th scope="col">Service Port</th>
-          <th scope="col">Pool</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let virtualServer of virtualServers">
-          <td>
-            <span>{{ virtualServer.Name }}</span>
-          </td>
-          <td>
-            <span>{{ virtualServer.Type }}</span>
-          </td>
-          <td>
-            <span>{{ virtualServer.DestinationAddress }}</span>
-          </td>
-          <td>
-            <span>{{ virtualServer.ServicePort }}</span>
-          </td>
-          <td>
-            <span>{{ virtualServer.Pool }}</span>
-          </td>
-          <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="editVirtualServer(virtualServer)"
-              aria-label="Edit Virtual Server"
-            >
-            </fa>
-            <fa name="trash" (click)="deleteVirtualServer(virtualServer)"> </fa>
-          </td>
-        </tr>
-        <tr *ngIf="virtualServers?.length === 0" class="text-center">
-          <td colspan="6">No Virtual Servers in this VRF.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          <app-icon-button
+            *ngIf="virtualServer?.deletedAt"
+            icon="undo"
+            label="Restore Virtual Server"
+            type="success"
+            (handleClick)="restoreVirtualServer(virtualServer)"
+          ></app-icon-button>
 
-  <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createPool()"
-        aria-label="Create Pool"
-      >
-        <fa name="plus"></fa>
-        Create Pool
-      </button>
-    </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">LB Method</th>
-          <th scope="col">Pool Members</th>
-          <th scope="col">Health Monitors</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let pool of pools">
-          <td>
-            <span>{{ pool.Name }}</span>
-          </td>
-          <td>
-            <span>{{ pool.LoadBalancingMethod }}</span>
-          </td>
-          <td>
-            <span>{{ pool.Members?.length }}</span>
-          </td>
-          <td>
-            <span>{{ pool.HealthMonitors?.length }}</span>
-          </td>
-          <td class="item-actions">
-            <fa name="pencil" (click)="editPool(pool)" aria-label="Edit Pool">
-            </fa>
-            <fa
-              name="trash"
-              (click)="deletePool(pool)"
-              aria-label="Delete Pool"
-            >
-            </fa>
-          </td>
-        </tr>
-        <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="5">No Pools in this VRF</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="navIndex == 2">
-    <div class="btn-group-sm mb-2 pull-right  mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createIRule()"
-        aria-label="Create iRule"
-      >
-        <fa name="plus"></fa>
-        Create iRule
-      </button>
-    </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let irule of irules">
-          <td>
-            <span>{{ irule.Name }}</span>
-          </td>
-          <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="editIRule(irule)"
-              aria-label="Edit iRule"
-            >
-            </fa>
-            <fa
-              name="trash"
-              (click)="deleteIRule(irule)"
-              aria-label="Delete iRule"
-            >
-            </fa>
-          </td>
-        </tr>
-        <tr *ngIf="!irules?.length" class="text-center">
-          <td colspan="2">No iRules in this VRF</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="navIndex == 3">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="createHealthMonitor()"
-        aria-label="Create Health Monitor"
-      >
-        <fa name="plus"></fa>
-        Create Health Monitor
-      </button>
-    </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Service Port</th>
-          <th scope="col">Interval</th>
-          <th scope="col">Timeout</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let healthMonitor of healthMonitors">
-          <td>
-            <span>{{ healthMonitor.Name }}</span>
-          </td>
-          <td>
-            <span>{{ healthMonitor.Type }}</span>
-          </td>
-          <td>
-            <span>{{ healthMonitor.ServicePort }}</span>
-          </td>
-          <td>
-            <span>{{ healthMonitor.Interval }}</span>
-          </td>
-          <td>
-            <span>{{ healthMonitor.Timeout }}</span>
-          </td>
-          <td class="item-actions">
-            <fa
-              name="pencil"
-              (click)="editHealthMonitor(healthMonitor)"
-              aria-label="Edit Health Monitor"
-            >
-            </fa>
-            <fa
-              name="trash"
-              (click)="deleteHealthMonitor(healthMonitor)"
-              aria-label="Delete Health Monitor"
-            >
-            </fa>
-          </td>
-        </tr>
-        <tr *ngIf="!healthMonitors?.length" class="text-center">
-          <td colspan="6">No Health Monitors in this VRF</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="currentVrf" class="pull-right">
-    <app-import-export
-      [exportObject]="exportLoadBalancerConfig()"
-      exportFileName="loadBalancers-{{ currentVrf.name }}"
-      disableCsv="true"
-      (import)="importLoadBalancerConfig($event)"
-    ></app-import-export>
-  </div>
-
-  <app-virtual-server-modal></app-virtual-server-modal>
-  <app-pool-modal></app-pool-modal>
-  <app-pool-member-modal></app-pool-member-modal>
-  <app-irule-modal></app-irule-modal>
-  <app-health-monitor-modal></app-health-monitor-modal>
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Virtual Server"
+            [type]="virtualServer.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteVirtualServer(virtualServer)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="virtualServers?.length === 0" class="text-center">
+        <td colspan="7">No Virtual Servers in this Tier.</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentVSPage = $event"></pagination-controls>
 </div>
+
+<div *ngIf="navIndex === 1">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Pool -->
+    <button type="button" class="btn btn-success" (click)="openPoolModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Pool</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Pools</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">LB Method</th>
+        <th scope="col">Nodes</th>
+        <th scope="col">Health Monitors</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pool of pools | paginate: { itemsPerPage: perPage, currentPage: currentPoolPage }">
+        <td>
+          <span>{{ pool?.name }}</span>
+        </td>
+        <td>
+          <span>{{ pool?.loadBalancingMethod }}</span>
+        </td>
+        <td>
+          <span>{{ pool?.nodes?.length }}</span>
+        </td>
+        <td>
+          <span>{{ pool?.healthMonitors?.length + pool?.defaultHealthMonitors?.length }}</span>
+        </td>
+        <td>
+          <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!pool?.deletedAt"
+            icon="edit"
+            label="Edit Pool"
+            (handleClick)="openPoolModal(ModalMode.Edit, pool)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="pool?.deletedAt"
+            icon="undo"
+            label="Restore Pool"
+            type="success"
+            (handleClick)="restorePool(pool)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Pool"
+            [type]="pool?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deletePool(pool)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!pools?.length" class="text-center">
+        <td colspan="6">No Pools in this tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentPoolPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 2">
+  <label class="mt-3 ml-3">Click the import CSV button to add pool relations</label>
+</div>
+
+<div *ngIf="navIndex === 3">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Node -->
+    <button type="button" class="btn btn-success" (click)="openNodeModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Node</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Nodes</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">IP Address</th>
+        <th scope="col">FQDN</th>
+        <th scope="col">Autopopulate</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let node of nodes | paginate: { itemsPerPage: perPage, currentPage: currentNodePage }">
+        <td>
+          <span>{{ node?.name }}</span>
+        </td>
+        <td>
+          <span>{{ node?.type }}</span>
+        </td>
+        <td>
+          <span>{{ node?.ipAddress }}</span>
+        </td>
+        <td>
+          <span>{{ node?.fqdn }}</span>
+        </td>
+        <td>
+          <span>{{ node?.autoPopulate }}</span>
+        </td>
+        <td>
+          <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!node?.deletedAt"
+            icon="edit"
+            label="Edit Node"
+            (handleClick)="openNodeModal(ModalMode.Edit, node)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="node?.deletedAt"
+            icon="undo"
+            label="Restore Node"
+            type="success"
+            (handleClick)="restoreNode(node)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Node"
+            [type]="node?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteNode(node)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!nodes?.length" class="text-center">
+        <td colspan="7">No Nodes in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentNodePage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 4">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create iRule -->
+    <button type="button" class="btn btn-success" (click)="openIRuleModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create iRule</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span
+        >Manage iRules in F5 format. More info:
+        <a target="_blank" rel="noopener noreferrer" [attr.href]="wikiBase + '/load-balancer#iRules'">wiki</a></span
+      >
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Content</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let irule of irules | paginate: { itemsPerPage: perPage, currentPage: currentIrulePage }">
+        <td>
+          <span>{{ irule?.name }}</span>
+        </td>
+        <td>
+          <span>{{ irule?.content }}</span>
+        </td>
+        <td>
+          <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!irule?.deletedAt"
+            icon="edit"
+            label="Edit iRule"
+            (handleClick)="openIRuleModal(ModalMode.Edit, irule)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="irule?.deletedAt"
+            icon="undo"
+            label="Restore iRule"
+            type="success"
+            (handleClick)="restoreIrule(irule)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete iRule"
+            [type]="irule?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteIrule(irule)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!irules?.length" class="text-center">
+        <td colspan="4">No iRules in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentIrulePage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 5">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Health Monitor -->
+    <button type="button" class="btn btn-success" (click)="openHealthMonitorModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Health Monitor</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Health Monitors</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Service Port</th>
+        <th scope="col">Interval</th>
+        <th scope="col">Timeout</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let healthMonitor of healthMonitors | paginate: { itemsPerPage: perPage, currentPage: currentHMPage }">
+        <td>
+          <span>{{ healthMonitor?.name }}</span>
+        </td>
+        <td>
+          <span>{{ healthMonitor?.type }}</span>
+        </td>
+        <td>
+          <span>{{ healthMonitor?.servicePort }}</span>
+        </td>
+        <td>
+          <span>{{ healthMonitor?.interval }}</span>
+        </td>
+        <td>
+          <span>{{ healthMonitor?.timeout }}</span>
+        </td>
+        <td>
+          <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!healthMonitor?.deletedAt"
+            icon="edit"
+            label="Edit Health Monitor"
+            (handleClick)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="healthMonitor?.deletedAt"
+            icon="undo"
+            label="Restore Health Monitor"
+            type="success"
+            (handleClick)="restoreHealthMonitor(healthMonitor)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Health Monitor"
+            [type]="healthMonitor?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteHealthMonitor(healthMonitor)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!healthMonitors?.length" class="text-center">
+        <td colspan="7">No Health Monitors in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentHMPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 6">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Profile -->
+    <button type="button" class="btn btn-success" (click)="openProfileModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Profile</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Profiles</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let profile of profiles | paginate: { itemsPerPage: perPage, currentPage: currentProfilesPage }">
+        <td>
+          <span>{{ profile?.name }}</span>
+        </td>
+        <td>
+          <span>{{ profile?.type }}</span>
+        </td>
+        <td>
+          <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!profile?.deletedAt"
+            icon="edit"
+            label="Edit Profile"
+            (handleClick)="openProfileModal(ModalMode.Edit, profile)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="profile?.deletedAt"
+            icon="undo"
+            label="Restore Profile"
+            type="success"
+            (handleClick)="restoreProfile(profile)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Profile"
+            [type]="profile?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteProfile(profile)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!profiles?.length" class="text-center">
+        <td colspan="4">No Profiles in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentProfilesPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 7">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Policy -->
+    <button type="button" class="btn btn-success" (click)="openPolicyModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Policy</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Policies</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let policy of policies | paginate: { itemsPerPage: perPage, currentPage: currentPoliciesPage }">
+        <td>
+          <span>{{ policy?.name }}</span>
+        </td>
+        <td>
+          <span>{{ policy?.type }}</span>
+        </td>
+        <td>
+          <span>{{ policy?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!policy?.deletedAt"
+            icon="edit"
+            label="Edit Policy"
+            (handleClick)="openPolicyModal(ModalMode.Edit, policy)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="policy?.deletedAt"
+            icon="undo"
+            label="Restore Policy"
+            type="success"
+            (handleClick)="restorePolicy(policy)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Policy"
+            [type]="policy?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deletePolicy(policy)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!policies?.length" class="text-center">
+        <td colspan="4">No Policies in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentPoliciesPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 8">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create VLAN -->
+    <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create VLAN</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Load Balancer VLANs</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Tag</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
+        <td>
+          <span>{{ vlan?.name }}</span>
+        </td>
+        <td>
+          <span>{{ vlan?.tag }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!vlan?.deletedAt"
+            icon="edit"
+            label="Edit VLAN"
+            (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="vlan?.deletedAt"
+            icon="undo"
+            label="Restore VLAN"
+            type="success"
+            (handleClick)="restoreVlan(vlan)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete VLAN"
+            [type]="vlan?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteVlan(vlan)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!vlans?.length" class="text-center">
+        <td colspan="4">No VLANs in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 9">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Self IP -->
+    <button type="button" class="btn btn-success" (click)="openSelfIpModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Self IP</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Load Balancer Self IPs</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">IP Address</th>
+        <th scope="col">VLAN</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let selfIp of selfIps | paginate: { itemsPerPage: perPage, currentPage: currentSelfIpsPage }">
+        <td>
+          <span>{{ selfIp?.name }}</span>
+        </td>
+        <td>
+          <span>{{ selfIp?.ipAddress }}</span>
+        </td>
+        <td>
+          <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!selfIp?.deletedAt"
+            icon="edit"
+            label="Edit Self IP"
+            (handleClick)="openSelfIpModal(ModalMode.Edit, selfIp)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="selfIp?.deletedAt"
+            icon="undo"
+            label="Restore Self IP"
+            type="success"
+            (handleClick)="restoreSelfIp(selfIp)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Self IP"
+            [type]="selfIp?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteSelfIp(selfIp)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!selfIps?.length" class="text-center">
+        <td colspan="4">No Self IPs in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentSelfIpsPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 10">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Route -->
+    <button type="button" class="btn btn-success" (click)="openRouteModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Route</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Manage Load Balancer Routes</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Destination</th>
+        <th scope="col">Gateway</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let route of routes | paginate: { itemsPerPage: perPage, currentPage: currentRoutesPage }">
+        <td>
+          <span>{{ route?.name }}</span>
+        </td>
+        <td>
+          <span>{{ route?.destination }}</span>
+        </td>
+        <td>
+          <span>{{ route?.gateway }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!route?.deletedAt"
+            icon="edit"
+            label="Edit Route"
+            (handleClick)="openRouteModal(ModalMode.Edit, route)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="route?.deletedAt"
+            icon="undo"
+            label="Restore Route"
+            type="success"
+            (handleClick)="restoreRoute(route)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Route"
+            [type]="route?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteRoute(route)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!routes?.length" class="text-center">
+        <td colspan="4">No Routes in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentRoutesPage = $event"></pagination-controls>
+</div>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
+</section>
+
+<section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
+  <app-import-export
+    [disableExport]="navIndex === 2"
+    [exportObject]="exportLoadBalancerConfig()"
+    exportFileName="loadBalancers-{{ currentTier.name }}"
+    (import)="importLoadBalancerConfig($event)"
+  ></app-import-export>
+</section>
+
+<app-virtual-server-modal></app-virtual-server-modal>
+<app-pool-modal></app-pool-modal>
+<app-node-modal></app-node-modal>
+<app-irule-modal></app-irule-modal>
+<app-health-monitor-modal></app-health-monitor-modal>
+<app-load-balancer-profile-modal></app-load-balancer-profile-modal>
+<app-load-balancer-policy-modal></app-load-balancer-policy-modal>
+<app-load-balancer-vlan-modal></app-load-balancer-vlan-modal>
+<app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
+<app-load-balancer-route-modal></app-load-balancer-route-modal>
+<app-yes-no-modal></app-yes-no-modal>

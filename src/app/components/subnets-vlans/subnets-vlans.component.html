@@ -1,0 +1,184 @@
+<app-tier-select></app-tier-select>
+
+<h1>Subnets & VLANs</h1>
+
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+<div *ngIf="navIndex === 0">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Subnet -->
+    <button type="button" class="btn btn-success" (click)="openSubnetModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Subnet</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Subnets in the currently selected Tier</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">VLAN</th>
+        <th scope="col">Network</th>
+        <th scope="col">Gateway</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subnet of subnets | paginate: { itemsPerPage: perPage, currentPage: currentSubnetsPage }">
+        <td>
+          <span>{{ subnet?.name }}</span>
+        </td>
+        <td>
+          <span>{{ subnet?.description }}</span>
+        </td>
+        <td>
+          <span>{{ subnet?.vlanId | resolve: getVlanName }}</span>
+        </td>
+        <td>
+          <span>{{ subnet?.network }}</span>
+        </td>
+        <td>
+          <span>{{ subnet?.gateway }}</span>
+        </td>
+        <td>
+          <span>{{ subnet?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!subnet?.deletedAt"
+            icon="edit"
+            label="Edit Subnet"
+            (handleClick)="openSubnetModal(ModalMode.Edit, subnet)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="subnet?.deletedAt"
+            icon="undo"
+            label="Restore Subnet"
+            type="success"
+            (handleClick)="restoreSubnet(subnet)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Subnet"
+            [type]="subnet?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteSubnet(subnet)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!subnets?.length" class="text-center">
+        <td colspan="7">No Subnets in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentSubnetsPage = $event"></pagination-controls>
+</div>
+
+<div *ngIf="navIndex === 1">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create VLAN -->
+    <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create VLAN</span>
+    </button>
+  </section>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>VLANs in the currently selected Tier</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">VLAN Number</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
+        <td>
+          <span>{{ vlan?.name }}</span>
+        </td>
+        <td>
+          <span>{{ vlan?.description }}</span>
+        </td>
+        <td>
+          <span>{{ vlan?.vlanNumber }}</span>
+        </td>
+        <td>
+          <span>{{ vlan?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!vlan?.deletedAt"
+            icon="edit"
+            label="Edit VLAN"
+            (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="vlan?.deletedAt"
+            icon="undo"
+            label="Restore VLAN"
+            type="success"
+            (handleClick)="restoreVlan(vlan)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete VLAN"
+            [type]="vlan?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteVlan(vlan)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!vlans?.length" class="text-center">
+        <td colspan="5">No VLANs in this Tier</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
+</div>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
+</section>
+
+<section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
+  <ng-container *ngIf="navIndex === 0">
+    <app-import-export
+      [exportObject]="subnets"
+      exportFileName="subnets-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importSubnetConfig($event)"
+    ></app-import-export>
+  </ng-container>
+
+  <ng-container *ngIf="navIndex === 1">
+    <app-import-export
+      [exportObject]="vlans"
+      exportFileName="vlans-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importVlansConfig($event)"
+    ></app-import-export>
+  </ng-container>
+</section>
+
+<app-subnet-modal></app-subnet-modal>
+<app-vlan-modal></app-vlan-modal>
+<app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>

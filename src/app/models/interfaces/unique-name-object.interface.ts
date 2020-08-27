@@ -1,3 +1,3 @@
 export interface UniqueNameObject {
-    Name: string;
+  Name: string;
 }

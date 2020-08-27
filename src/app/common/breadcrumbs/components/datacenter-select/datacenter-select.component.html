@@ -1,0 +1,43 @@
+<div class="select-wrap">
+  <span *ngIf="currentDatacenter">
+    Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
+  </span>
+
+  <span *ngIf="!currentDatacenter">No Datacenter Selected</span>
+
+  <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="openDatacenterSwitchModal()">
+    {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
+  </button>
+</div>
+
+<ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal">
+  <header class="modal-header">
+    <h4 class="modal-title">{{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter</h4>
+  </header>
+
+  <div class="modal-body">
+    Current Datacenter:
+    {{ currentDatacenter?.name || 'No Datacenter Selected' }}
+
+    <select [(ngModel)]="selectedDatacenter" class="form-control">
+      <option></option>
+      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
+    </select>
+  </div>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-dismiss="modal"
+      [disabled]="!selectedDatacenter"
+      (click)="switchDatacenter(); datacenterSwitchModal.close()"
+    >
+      {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
+    </button>
+  </footer>
+</ngx-smart-modal>

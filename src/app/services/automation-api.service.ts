@@ -6,19 +6,19 @@ import { Vrf } from '../models/d42/vrf';
 import { AppMessage } from '../models/app-message';
 import { AppMessageType } from '../models/app-message-type';
 import { MessageService } from './message.service';
-import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SolarisImage } from 'src/app/models/solaris/solaris-image';
-
+import { throwError } from 'rxjs';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AutomationApiService {
-
-  constructor(private http: HttpClient, private auth: AuthService, private ms: MessageService) { }
+  constructor(private http: HttpClient, private auth: AuthService, private ms: MessageService) {}
 
   getJobs(query?: string) {
-    if (query == null) { query = ''; }
+    if (query == null) {
+      query = '';
+    }
 
     return this.http.get(environment.apiBase + '/api/v2/jobs/' + query);
   }
@@ -30,18 +30,18 @@ export class AutomationApiService {
   launchTemplate(jobName: string, ansibleBody, sendJobLaunchMessage = false) {
     const fullJobName = `${this.auth.currentUserValue.CustomerIdentifier}-${jobName}`;
 
-    return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody)
-    .pipe(map( response => {
-      if (sendJobLaunchMessage) {
-        this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
-      }
-      return response;
-     }),
-     catchError( error => {
-       this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
-       // FIXME: Depreceated
-       return Observable.throw(error);
-     }));
+    return this.http.post<any>(environment.apiBase + '/api/v2/job_templates/' + fullJobName + '/launch/', ansibleBody).pipe(
+      map(response => {
+        if (sendJobLaunchMessage) {
+          this.ms.sendMessage(new AppMessage(`Job ${response.job} Launched.`, response, AppMessageType.JobLaunchSuccess));
+        }
+        return response;
+      }),
+      catchError(error => {
+        this.ms.sendMessage(new AppMessage(`Error: "${error.statusText}".`, AppMessageType.JobLaunchFail));
+        return throwError(error);
+      }),
+    );
   }
 
   getAdminGroups() {
@@ -63,10 +63,10 @@ export class AutomationApiService {
   getDevicesbyID(id: string) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/${id}/`);
   }
-  getDevices(){
+  getDevices() {
     return this.http.get(environment.apiBase + `/api/1.0/devices/`);
   }
-  getDevicesbyName(name: string){
+  getDevicesbyName(name: string) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?name=${name}`);
   }
   getCDoms() {
@@ -83,16 +83,16 @@ export class AutomationApiService {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&virtual_host_name=${name}`);
   }
 
-  getLDomsForCDom(name: string){
+  getLDomsForCDom(name: string) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_ldom&virtual_host_name=${name}`);
   }
-  getCDomByID(id: any){
+  getCDomByID(id: any) {
     return this.http.get(environment.apiBase + `/api/1.0/devices/?custom_fields_and=DeviceType:solaris_cdom&device_id=${id}`);
   }
-  getSolarisImages(name: string){
+  getSolarisImages(name: string) {
     return this.http.get(environment.apiBase + `/api/1.0/parts/?device=${name}`);
   }
-  getSolarisImageDetail(id: any){
+  getSolarisImageDetail(id: any) {
     return this.http.get<SolarisImage[]>(environment.apiBase + `/api/1.0/parts/?device_id=${id}`);
   }
 
@@ -101,13 +101,18 @@ export class AutomationApiService {
   }
 
   getVrf(id: any) {
-       return this.http.get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/')
+    return (
+      this.http
+        .get<Vrf[]>(environment.apiBase + '/api/1.0/vrf_group/')
         // Getting a single VRF doesn't return custom properties.
-       .pipe(map(response => {
+        .pipe(
+          map(response => {
             // Extract a single VRF from the full response.
             return response.find(v => v.id === Number(id));
-        }));
-    }
+          }),
+        )
+    );
+  }
 
   getSubnets(vrfId?: number) {
     let uri = '/api/1.0/subnets';

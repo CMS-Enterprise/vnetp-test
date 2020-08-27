@@ -1,73 +1,118 @@
-import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NetworksComponent } from './components/networks/networks.component';
-import { FirewallRulesComponent } from './components/firewall-rules/firewall-rules.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
-import { FirewallRulesDetailComponent } from './components/firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
-import { JobsComponent } from './components/jobs/jobs.component';
-import { CreateNetworkComponent } from './components/networks/create-network/create-network.component';
-import { NetworksDetailComponent } from './components/networks/networks-detail/networks-detail.component';
 import { AuthGuard } from './guards/auth.guard';
-import { IpaddressesComponent } from './components/ipaddresses/ipaddresses.component';
-import { NotfoundComponent } from './components/notfound/notfound.component';
-import { StaticRoutesComponent } from './components/static-routes/static-routes.component';
-import { StaticRouteDetailComponent } from './components/static-routes/static-route-detail/static-route-detail.component';
-import { SolarisComponent } from './components/solaris/solaris.component';
-import { SolarisCdomCreateComponent } from './components/solaris/solaris-cdom-create/solaris-cdom-create.component';
-import { SolarisLdomCreateComponent } from './components/solaris/solaris-ldom-create/solaris-ldom-create.component';
-import { SolarisCdomListComponent } from './components/solaris/solaris-cdom-list/solaris-cdom-list.component';
-import { DeployComponent } from './components/deploy/deploy.component';
-import { NetworkObjectsGroupsComponent } from './components/network-objects-groups/network-objects-groups.component';
-import { ServiceObjectsGroupsComponent } from './components/service-objects-groups/service-objects-groups.component';
-import { LoadBalancersComponent } from './components/load-balancers/load-balancers.component';
-import { NetworkInterfacesComponent } from './components/network-interfaces/network-interfaces.component';
-import { SolarisImageRepositoryComponent } from './components/solaris/solaris-image-repository/solaris-image-repository.component';
-import { PhysicalServerComponent } from './components/systems/physical-server/physical-server.component';
-import { PendingChangesGuard } from './guards/pending-changes.guard';
-import { LdomListComponent } from './components/solaris/ldom-list/ldom-list.component';
-import { LdomDetailComponent } from './components/solaris/ldom-detail/ldom-detail.component';
-import { CdomDetailComponent } from './components/solaris/cdom-detail/cdom-detail.component';
-import { NetworkTopologyComponent } from './components/network-topology/network-topology.component';
-import { IntraVrfRulesComponent } from './components/firewall-rules/intra-vrf-rules/intra-vrf-rules.component';
-
-// tslint:disable: max-line-length
+import { NgModule } from '@angular/core';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'networks', component: NetworksComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Subnets'}},
-  {path: 'networks/create', component: CreateNetworkComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Create Subnet'}},
-  {path: 'networks/edit/:id', component: NetworksDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Subnet'}},
-  {path: 'network-interfaces', component: NetworkInterfacesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Interfaces'}},
-  // {path: '666967687420636c7562', component: NetworkTopologyComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Network Topology'}},
-  {path: 'deploy', component: DeployComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Deploy'}},
-  {path: 'jobs', component: JobsComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Jobs'}},
-  {path: 'ipaddresses', component: IpaddressesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'IP Addresses'}},
-  {path: 'network-objects-groups', component: NetworkObjectsGroupsComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Network Objects'}},
-  {path: 'service-objects-groups', component: ServiceObjectsGroupsComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Service Objects'}},
-  {path: 'firewall-rules', component: FirewallRulesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Firewall Rules'}},
-  {path: 'firewall-rules/intravrf/edit/:id', component: IntraVrfRulesComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Intra-VRF Rules'}},
-  {path: 'firewall-rules/intervrf/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Inter-VRF Firewall Rules'}},
-  {path: 'firewall-rules/external/edit/:id', component: FirewallRulesDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'External Firewall Rules'}},
-  {path: 'load-balancers', component: LoadBalancersComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Load Balancers'}},
-  {path: 'static-routes', component: StaticRoutesComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Static Routes'}},
-  {path: 'static-routes/edit/:id', component: StaticRouteDetailComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'Edit Static Route'}},
-  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-  {path: 'physical-server', component: PhysicalServerComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Physical Servers'}},
-  {path: 'solaris', component: SolarisComponent,canActivate: [AuthGuard], data: {breadcrumb: 'Solaris'}},
-  {path: 'solaris/cdom/create', component: SolarisCdomCreateComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'CDOM Create'}},
-  {path: 'solaris/ldom/create', component: SolarisLdomCreateComponent, canActivate: [AuthGuard], canDeactivate: [PendingChangesGuard], data: {breadcrumb: 'LDOM Create'}},
-  {path: 'solaris/cdom/list', component: SolarisCdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM List'}},
-  {path: 'solaris/imagerepository', component: SolarisImageRepositoryComponent, canActivate: [AuthGuard], data: {breadcrumb: 'Image Repository'}},
-  {path: 'solaris/ldom/list', component: LdomListComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM List'}},
-  {path: 'solaris/ldom/detail/:id', component: LdomDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'LDOM Detail'}},
-  {path: 'solaris/cdom/detail/:id', component: CdomDetailComponent, canActivate: [AuthGuard], data: {breadcrumb: 'CDOM Detail'}},
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: '**', component: NotfoundComponent, canActivate: [AuthGuard]},
+  {
+    path: 'login',
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
+  },
+  {
+    path: 'subnets-vlans',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Subnets & VLANs', title: 'Automation - Subnets & VLANs' },
+    loadChildren: () => import('./components/subnets-vlans/subnets-vlans.module').then(m => m.SubnetsVlansModule),
+  },
+  {
+    path: 'tiers',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Tiers', title: 'Automation - Tiers' },
+    loadChildren: () => import('./components/tiers/tiers.module').then(m => m.TiersModule),
+  },
+  {
+    path: 'deploy',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Deploy', title: 'Automation - Deploy' },
+    loadChildren: () => import('./components/deploy/deploy.module').then(m => m.DeployModule),
+  },
+  {
+    path: 'jobs',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Jobs', title: 'Automation - Jobs' },
+    loadChildren: () => import('./components/jobs/jobs.module').then(m => m.JobsModule),
+  },
+  {
+    path: 'network-objects-groups',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Network Objects', title: 'Automation - Network Objects' },
+    loadChildren: () => import('./components/network-objects-groups/network-objects-groups.module').then(m => m.NetworkObjectsGroupsModule),
+  },
+  {
+    path: 'service-objects-groups',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Service Objects', title: 'Automation - Service Objects' },
+    loadChildren: () => import('./components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
+  },
+  {
+    path: 'firewall-rules',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Firewall Rules', title: 'Automation - Firewall Rules' },
+    loadChildren: () => import('./components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+  },
+  {
+    path: 'load-balancers',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Load Balancers', title: 'Automation - Load Balancers' },
+    loadChildren: () => import('./components/load-balancers/load-balancers.module').then(m => m.LoadBalancersModule),
+  },
+  {
+    path: 'static-routes',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Static Routes', title: 'Automation - Static Routes' },
+    loadChildren: () => import('./components/static-routes/static-routes.module').then(m => m.StaticRoutesModule),
+  },
+  {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    data: { title: 'Automation - Dashboard' },
+    loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
+  },
+  {
+    path: 'wizard',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Wizard', title: 'Automation - Wizard' },
+    loadChildren: () => import('./components/wizard/wizard.module').then(m => m.WizardModule),
+  },
+  {
+    path: 'physical-server',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Physical Servers', title: 'Automation - Physical Servers' },
+    loadChildren: () => import('./components/physical-server/physical-server.module').then(m => m.PhysicalServerModule),
+  },
+  {
+    path: 'vmware',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'VMWare', title: 'Automation - VMWare' },
+    loadChildren: () => import('./components/vmware/vmware.module').then(m => m.VmwareModule),
+  },
+  {
+    path: 'zvm',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/VM', title: 'Automation - z/VM' },
+    loadChildren: () => import('./components/zvm/zvm.module').then(m => m.ZvmModule),
+  },
+  {
+    path: 'zos',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'z/OS', title: 'Automation - z/OS' },
+    loadChildren: () => import('./components/zos/zos.module').then(m => m.ZosModule),
+  },
+  {
+    path: 'appliance',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Appliance as a Service', title: 'Automation - Appliance as a Service' },
+    loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: '**',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

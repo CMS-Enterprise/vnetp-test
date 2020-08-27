@@ -1,0 +1,58 @@
+<h1>z/VM</h1>
+
+<section class="btn-toolbar" role="toolbar">
+  <!-- TODO: show only if customer -->
+  <!-- Upload z/VM Request -->
+  <button class="btn btn-success" (click)="openRequestModal('request', null)">
+    <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
+    <span>Upload z/VM Request</span>
+  </button>
+</section>
+
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>z/VM Requests</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Request sent</th>
+      <th scope="col">Configuration</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let configuration of configurations | paginate: { itemsPerPage: perPage, currentPage: currentConfigurationPage }">
+      <td>{{ configuration.requestedAt | date: 'medium' }}</td>
+      <td>{{ configuration.configuredAt | date: 'medium' }}</td>
+      <td class="table__actions">
+        <app-icon-button
+          icon="download"
+          label="Download z/VM Configuration"
+          (handleClick)="getConfigurationFile($event, configuration.id)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="upload"
+          label="Upload z/VM Configuration"
+          (handleClick)="openRequestModal('configuration', configuration.id)"
+        ></app-icon-button>
+      </td>
+    </tr>
+    <tr *ngIf="!configurations?.length" class="text-center">
+      <td colspan="3">No z/VM Requests have been sent</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentConfigurationPage = $event"></pagination-controls>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
+</section>
+
+<app-zos-zvm-request-modal></app-zos-zvm-request-modal>

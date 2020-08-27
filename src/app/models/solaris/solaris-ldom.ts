@@ -13,7 +13,6 @@ export class SolarisLdom {
   /** CDOM that LDOM is assigned to. */
   associatedcdom: SolarisCdom;
 
-  // Compute
   /** Virtual CPU */
   vcpu: number;
   /** Memory in GB */
@@ -42,9 +41,6 @@ export class SolarisLdom {
   /** D42 Property for Parent */
   virtual_host_name: string;
 
-  //** Boot image information */
+  /** Boot image information */
   solarisImage = new SolarisImage();
 }
-
-
-

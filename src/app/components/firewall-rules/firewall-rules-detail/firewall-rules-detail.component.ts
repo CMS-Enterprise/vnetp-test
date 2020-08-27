@@ -1,251 +1,354 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { NetworkObjectDto } from 'src/app/models/network-objects/network-object-dto';
-import { NetworkObject } from 'src/app/models/network-objects/network-object';
-import { NetworkObjectGroup } from 'src/app/models/network-objects/network-object-group';
-import { ServiceObject } from 'src/app/models/service-objects/service-object';
-import { ServiceObjectGroup } from 'src/app/models/service-objects/service-object-group';
-import { ServiceObjectDto } from 'src/app/models/service-objects/service-object-dto';
+import { Subscription, forkJoin } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
-import { FirewallRule } from 'src/app/models/firewall/firewall-rule';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
-import { Vrf } from 'src/app/models/d42/vrf';
-import { CustomFieldsObject } from 'src/app/models/interfaces/custom-fields-object.interface';
+import {
+  V1NetworkSecurityFirewallRuleGroupsService,
+  FirewallRule,
+  FirewallRuleGroup,
+  NetworkObject,
+  NetworkObjectGroup,
+  ServiceObject,
+  ServiceObjectGroup,
+  V1TiersService,
+  V1NetworkSecurityFirewallRulesService,
+  Tier,
+  FirewallRuleImportCollectionDto,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  FirewallRuleImport,
+  FirewallRulePreview,
+} from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
+import { TableConfig } from 'src/app/common/table/table.component';
+import ObjectUtil from 'src/app/utils/object.util';
 
 @Component({
   selector: 'app-firewall-rules-detail',
-  templateUrl: './firewall-rules-detail.component.html'
+  templateUrl: './firewall-rules-detail.component.html',
 })
-export class FirewallRulesDetailComponent implements OnInit, PendingChangesGuard {
+export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   Id = '';
+  TierName = '';
+  currentTierIds: string[];
+  ModalMode = ModalMode;
 
-  vrf: Vrf;
+  firewallRuleGroup: FirewallRuleGroup;
+  firewallRules: FirewallRule[];
 
-  dirty: boolean;
-  deployedState: boolean;
-  firewallRules: Array<FirewallRule>;
-  deletedFirewallRules: Array<FirewallRule>;
+  // Pagination
+  totalFirewallRules = 0;
+  currentFirewallRulePage = 1;
+  perPage = 50;
 
-  networkObjects: Array<NetworkObject>;
-  networkObjectGroups: Array<NetworkObjectGroup>;
-  serviceObjects: Array<ServiceObject>;
-  serviceObjectGroups: Array<ServiceObjectGroup>;
-  editFirewallRuleIndex: number;
-  firewallRuleModalMode: ModalMode;
+  // Relations
+  networkObjects: NetworkObject[];
+  networkObjectGroups: NetworkObjectGroup[];
+  serviceObjects: ServiceObject[];
+  serviceObjectGroups: ServiceObjectGroup[];
+  tiers: Tier[];
+
   firewallRuleModalSubscription: Subscription;
 
   scope: FirewallRuleScope;
+  TierId: string;
+  FirewallRuleGroup: FirewallRuleGroup;
+  currentDatacenterSubscription: Subscription;
 
-  get scopeString() { return this.scope; }
+  tableHeaders: string[] = [
+    'Name',
+    'Action',
+    'Protocol',
+    'Direction',
+    'Source Address',
+    'Destination Address',
+    'Service',
+    'Log',
+    'Enabled',
+    'Rule Index',
+    '',
+  ];
 
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
+  // Templates
+  @ViewChild('sourceAddress', { static: false }) sourceAddressTemplate: TemplateRef<any>;
+  @ViewChild('destinationAddress', { static: false }) destinationAddressTemplate: TemplateRef<any>;
+  @ViewChild('serviceType', { static: false }) serviceTemplate: TemplateRef<any>;
+
+  get scopeString() {
+    return this.scope;
   }
 
-  constructor(private route: ActivatedRoute, private automationApiService: AutomationApiService,
-              private hs: HelpersService, private ngx: NgxSmartModalService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private ngx: NgxSmartModalService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private tierService: V1TiersService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private datacenterService: DatacenterContextService,
+  ) {}
 
-  ngOnInit() {
-    this.firewallRules = new Array<FirewallRule>();
-    this.deletedFirewallRules = new Array<FirewallRule>();
+  ngOnInit(): void {
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.tiers = cd.tiers;
+        this.datacenterService.lockDatacenter();
+        this.Id += this.route.snapshot.paramMap.get('id');
+        this.currentTierIds = this.datacenterService.currentTiersValue;
+        this.getFirewallRuleGroup();
+      }
+    });
+  }
 
-    this.Id += this.route.snapshot.paramMap.get('id');
-    const scopeUrlElement = this.route.snapshot.url[1].path;
+  ngOnDestroy(): void {
+    this.currentDatacenterSubscription.unsubscribe();
+    this.datacenterService.unlockDatacenter();
+  }
 
-    if (scopeUrlElement === 'external') {
-      this.scope = FirewallRuleScope.external;
-    } else if (scopeUrlElement === 'intervrf') {
-      this.scope = FirewallRuleScope.vrf;
+  refresh(): void {
+    this.getFirewallRuleGroup();
+  }
+
+  getFirewallRuleGroup(): void {
+    this.firewallRuleGroupService
+      .v1NetworkSecurityFirewallRuleGroupsIdGet({
+        id: this.Id,
+      })
+      .subscribe(data => {
+        this.FirewallRuleGroup = {
+          name: data.name,
+          type: data.type,
+          id: data.id,
+        } as FirewallRuleGroup;
+
+        this.TierId = data.tierId;
+
+        this.getObjects();
+      });
+  }
+
+  getFirewallRules(): void {
+    this.firewallRuleService
+      .v1NetworkSecurityFirewallRulesGet({
+        filter: `firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`,
+        perPage: this.perPage,
+        page: this.currentFirewallRulePage,
+      })
+      .subscribe(data => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        const result = data as any;
+        this.firewallRules = result.data;
+        this.totalFirewallRules = result.total;
+      });
+  }
+
+  getObjects(): void {
+    const tierRequest = this.tierService.v1TiersIdGet({ id: this.TierId });
+    const networkObjectRequest = this.networkObjectService.v1NetworkSecurityNetworkObjectsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const networkObjectGroupRequest = this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const serviceObjectRequest = this.serviceObjectService.v1NetworkSecurityServiceObjectsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+    const serviceObjectGroupRequest = this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsGet({
+      filter: `tierId||eq||${this.TierId}`,
+      fields: 'id,name',
+    });
+
+    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
+      result => {
+        this.TierName = result[0].name;
+        this.networkObjects = result[1];
+        this.networkObjectGroups = result[2];
+        this.serviceObjects = result[3];
+        this.serviceObjectGroups = result[4];
+
+        this.getFirewallRules();
+      },
+    );
+  }
+
+  createFirewallRule(): void {
+    this.openFirewallRuleModal(ModalMode.Create);
+  }
+
+  openFirewallRuleModal(modalMode: ModalMode, firewallRule?: FirewallRule): void {
+    if (modalMode === ModalMode.Edit && !firewallRule) {
+      throw new Error('Firewall Rule Required');
     }
-
-    this.getEntity();
-  }
-
-  refresh() {
-    this.deletedFirewallRules = new Array<FirewallRule>();
-    this.getEntity();
-  }
-
-  moveFirewallRule(value: number, rule : FirewallRule) {
-    const ruleIndex = this.firewallRules.indexOf(rule);
-
-    // If the rule isn't in the array, is at the start of the array and requested to move up
-    // or if the rule is at the end of the array, return.
-    if (ruleIndex === -1 || ruleIndex === 0 && value === -1 || ruleIndex + value === this.firewallRules.length) { return; }
-
-    const nextRule = this.firewallRules[ruleIndex + value];
-
-    // If the next rule doesn't exist, return.
-    if (nextRule === null) { return; }
-
-    const nextRuleIndex = this.firewallRules.indexOf(nextRule);
-
-    [this.firewallRules[ruleIndex], this.firewallRules[nextRuleIndex]] =
-    [this.firewallRules[nextRuleIndex], this.firewallRules[ruleIndex]];
-
-    this.dirty = true;
-  }
-
-  getEntity() {
-    let ruleScope = '';
-
-    if (this.scope === FirewallRuleScope.vrf) {
-      ruleScope = 'firewall_rules';
-    } else if (this.scope === FirewallRuleScope.external) {
-      ruleScope = 'external_firewall_rules';
-    }
-
-    this.automationApiService.getVrf(this.Id).subscribe(
-        data => {
-          this.vrf = data;
-          this.getEntityCustomFields(this.vrf, ruleScope);
-          this.getVrfCustomFields(this.vrf);
-        }
-      );
-  }
-
-  getEntityCustomFields(entity: CustomFieldsObject, fieldName: string) {
-    const firewallrules = entity.custom_fields.find(c => c.key === fieldName);
-
-    if (firewallrules) {
-    this.firewallRules = JSON.parse(firewallrules.value) as Array<FirewallRule>;
-    }
-  }
-
-  getVrfCustomFields(vrf: Vrf) {
-    const networkObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'network_objects').value) as NetworkObjectDto;
-
-    if (networkObjectDto) {
-      this.networkObjects = networkObjectDto.NetworkObjects;
-      this.networkObjectGroups = networkObjectDto.NetworkObjectGroups;
-    }
-
-    const serviceObjectDto = JSON.parse(vrf.custom_fields.find(c => c.key === 'service_objects').value) as ServiceObjectDto;
-
-    if (serviceObjectDto) {
-      this.serviceObjects = serviceObjectDto.ServiceObjects;
-      this.serviceObjectGroups = serviceObjectDto.ServiceObjectGroups;
-    }
-  }
-
-  duplicateFirewallRule(rule: FirewallRule) {
-    const ruleIndex = this.firewallRules.indexOf(rule);
-
-    if (ruleIndex === -1) { return; }
-
-    const dupRule = this.hs.deepCopy(rule) as FirewallRule;
-    dupRule.Name = `${dupRule.Name}_copy`;
-
-    this.firewallRules.splice(ruleIndex, 0, dupRule);
-    this.dirty = true;
-  }
-
-  createFirewallRule() {
-    this.subscribeToFirewallRuleModal();
-    this.firewallRuleModalMode = ModalMode.Create;
 
     const dto = new FirewallRuleModalDto();
-    dto.VrfId = this.vrf.id;
+    dto.FirewallRuleGroupId = this.Id;
+    dto.TierId = this.TierId;
+    dto.ModalMode = modalMode;
+    dto.NetworkObjects = this.networkObjects;
+    dto.NetworkObjectGroups = this.networkObjectGroups;
+    dto.ServiceObjects = this.serviceObjects;
+    dto.ServiceObjectGroups = this.serviceObjectGroups;
 
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
-    this.firewallRuleModalMode = ModalMode.Create;
+    if (modalMode === ModalMode.Edit) {
+      dto.FirewallRule = firewallRule;
+    }
+
+    this.subscribeToFirewallRuleModal();
+    this.ngx.setModalData(dto, 'firewallRuleModal');
     this.ngx.getModal('firewallRuleModal').open();
   }
 
-  editFirewallRule(firewallRule: FirewallRule) {
-    this.subscribeToFirewallRuleModal();
-    this.firewallRuleModalMode = ModalMode.Edit;
-
-    const dto = new FirewallRuleModalDto();
-    dto.FirewallRule = firewallRule;
-    dto.VrfId = this.vrf.id;
-
-    this.ngx.setModalData(this.hs.deepCopy(dto), 'firewallRuleModal');
-    this.editFirewallRuleIndex = this.firewallRules.indexOf(firewallRule);
-    this.ngx.getModal('firewallRuleModal').open();
+  subscribeToFirewallRuleModal(): void {
+    this.firewallRuleModalSubscription = this.ngx
+      .getModal('firewallRuleModal')
+      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+        this.getFirewallRuleGroup();
+        this.ngx.resetModalData('firewallRuleModal');
+      });
   }
 
-  subscribeToFirewallRuleModal() {
-    this.firewallRuleModalSubscription =
-    this.ngx.getModal('firewallRuleModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as FirewallRuleModalDto;
+  public getServiceObjectName = (id: string) => ObjectUtil.getObjectName(id, this.serviceObjects);
+  public getServiceObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.serviceObjectGroups);
+  public getNetworkObjectName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjects);
+  public getNetworkObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjectGroups);
 
-      if (data && data.FirewallRule !== undefined) {
-        this.saveFirewallRule(data.FirewallRule);
+  deleteFirewallRule(firewallRule: FirewallRule): void {
+    const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!firewallRule.deletedAt) {
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
+      } else {
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(data => {
+          this.getFirewallRules();
+        });
       }
-      this.ngx.resetModalData('firewallRuleModal');
-      this.firewallRuleModalSubscription.unsubscribe();
+    };
+
+    this.confirmDeleteObject(
+      new YesNoModalDto(
+        `${deleteDescription} Firewall Rule`,
+        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?`,
+      ),
+      deleteFunction,
+    );
+  }
+
+  restoreFirewallRule(firewallRule: FirewallRule): void {
+    if (firewallRule.deletedAt) {
+      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(data => {
+        this.getFirewallRules();
+      });
+    }
+  }
+
+  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+    this.ngx.getModal('yesNoModal').open();
+    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (data && data.modalYes) {
+        deleteFunction();
+      }
+      yesNoModalSubscription.unsubscribe();
     });
   }
 
-  saveFirewallRule(firewallRule: FirewallRule) {
-    if (!this.firewallRules) {
-      this.firewallRules = new Array<FirewallRule>();
-    }
+  importFirewallRulesConfig(event: FirewallRuleImport[]): void {
+    const fwDto: FirewallRuleImportCollectionDto = {
+      datacenterId: this.datacenterService.currentDatacenterValue.id,
+      firewallRules: this.sanitizeData(event),
+      dryRun: true,
+    };
 
-    if (this.firewallRuleModalMode === ModalMode.Create) {
-      this.firewallRules.push(firewallRule);
-    } else {
-      this.firewallRules[this.editFirewallRuleIndex] = firewallRule;
-    }
-    this.dirty = true;
+    this.firewallRuleService
+      .v1NetworkSecurityFirewallRulesBulkImportPost({
+        firewallRuleImportCollectionDto: fwDto,
+      })
+      .subscribe(data => {
+        this.createPreview(data, event);
+      });
   }
 
-  updateFirewallRules() {
-    this.dirty = false;
-
-    let extra_vars: {[k: string]: any} = {};
-
-    if (this.scope === FirewallRuleScope.vrf) {
-      extra_vars.scope = 'vrf';
-      extra_vars.vrf = new Vrf();
-      extra_vars.vrf.id = this.vrf.id;
-      extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
-      extra_vars.firewall_rules = this.firewallRules;
-    } else if (this.scope === FirewallRuleScope.external) {
-      extra_vars.scope = 'external';
-      extra_vars.vrf = new Vrf();
-      extra_vars.vrf.id = this.vrf.id;
-      extra_vars.vrf_group_name = this.vrf.name;
-      extra_vars.vrf_name =  this.vrf.name.split('-')[1];
-      extra_vars.external_firewall_rules = this.firewallRules;
-    }
-
-    extra_vars.deleted_firewall_rules = this.deletedFirewallRules;
-
-    const body = { extra_vars };
-    if (this.scope === FirewallRuleScope.vrf || this.scope === FirewallRuleScope.external) {
-    this.automationApiService.launchTemplate('deploy-acl', body, true).subscribe(data => { },
-      error => { this.dirty = true; });
-   }
-    this.deletedFirewallRules = new Array<FirewallRule>();
-}
-
-  deleteFirewallRule(firewallRule: FirewallRule) {
-    const index = this.firewallRules.indexOf(firewallRule);
-    if ( index > -1) {
-      this.firewallRules.splice(index, 1);
-      this.dirty = true;
-      this.deletedFirewallRules.push(this.hs.deepCopy(firewallRule));
-    }
+  private sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
+    return entities.map((entity: FirewallRuleImport) => {
+      entity.ruleIndex = Number(entity.ruleIndex);
+      this.mapCsv(entity);
+      return entity;
+    });
   }
 
-  insertFirewallRules(rules) {
-    if (this.firewallRules == null) { this.firewallRules = new Array<FirewallRule>(); }
-    rules.forEach(rule => {
-      if (rule.Name !== '') {
-        this.firewallRules.push(rule);
+  private mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
+    Object.entries(entity).forEach(([key, val]) => {
+      if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
+        entity[key] = false;
+      }
+      if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
+        entity[key] = true;
+      }
+      if (val === null || val === '') {
+        delete entity[key];
       }
     });
-    this.dirty = true;
+    return entity;
+  }
+
+  private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
+    const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
+    const tableConfig: TableConfig = {
+      description: 'Firewall Rules Import Preview',
+      columns: [
+        { name: 'Name', property: 'name' },
+        { name: 'Action', property: 'action' },
+        { name: 'Protocol', property: 'protocol' },
+        { name: 'Direction', property: 'direction' },
+        { name: 'Source Address', template: () => this.sourceAddressTemplate },
+        { name: 'Destination Address', template: () => this.destinationAddressTemplate },
+        { name: 'Service', template: () => this.serviceTemplate },
+        { name: 'Rule Index', property: 'ruleIndex' },
+      ],
+      rowStyle: (firewallRule: FirewallRule) => (firewallRule.hasOwnProperty('id') ? { background: '#ffeef0' } : { background: '#e6ffed' }),
+    };
+    const previewModalDto = new PreviewModalDto(tableConfig, [...firewallRulesToBeUploaded, ...firewallRulesToBeDeleted]);
+    this.ngx.setModalData(previewModalDto, 'previewModal');
+    this.ngx.getModal('previewModal').open();
+
+    const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData: PreviewModalDto<FirewallRule> = modal.getData();
+      modal.removeData();
+      if (modalData && modalData.confirm) {
+        const firewallConfirmDto: FirewallRuleImportCollectionDto = {
+          datacenterId: this.datacenterService.currentDatacenterValue.id,
+          firewallRules: this.sanitizeData(firewallRules),
+          dryRun: false,
+        };
+
+        this.firewallRuleService
+          .v1NetworkSecurityFirewallRulesBulkImportPost({
+            firewallRuleImportCollectionDto: firewallConfirmDto,
+          })
+          .subscribe(res => {
+            this.getFirewallRuleGroup();
+          });
+      }
+      previewImportSubscription.unsubscribe();
+    });
   }
 }
-

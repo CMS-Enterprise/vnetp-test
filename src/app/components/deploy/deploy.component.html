@@ -1,73 +1,51 @@
-<div>
-  <h1 class="mb-3">Deploy</h1>
+<h1>Deploy Tiers</h1>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [ngClass]="{ active: tabIndex === 0 }"
-        (click)="tabIndex = 0"
-        >Networks</a
-      >
-    </li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [ngClass]="{ active: tabIndex === 1 }"
-        (click)="tabIndex = 1"
-        >Solaris</a
-      >
-    </li>
-  </ul>
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Select which Tiers to Deploy</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Deploy</th>
+      <th scope="col">Name</th>
+      <th scope="col">Class</th>
+      <th scope="col">Type</th>
+      <th scope="col">Tier Group</th>
+      <th scope="col">State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let tier of tiers">
+      <td>
+        <input type="checkbox" [(ngModel)]="tier.isSelected" />
+      </td>
+      <td>
+        {{ tier?.item?.name }}
+      </td>
+      <td>
+        {{ tier?.item?.tierClass }}
+      </td>
+      <td>
+        {{ tier?.item?.tierType }}
+      </td>
+      <td>
+        {{ tier?.item?.tierGroupId | resolve: getTierGroupName }}
+      </td>
+      <td>
+        {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
+      </td>
+    </tr>
+    <tr *ngIf="!tiers?.length" class="text-center">
+      <td colspan="6">No Tiers to Provision</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="p-3" *ngIf="tabIndex == 0">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Name</th>
-          <th scope="col">Address Range</th>
-          <th scope="col">Firewall Rules</th>
-          <th scope="col">Static Routes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let subnet of subnets">
-          <td></td>
-          <td>
-            <a href="/networks/edit/{{ subnet.subnet_id }}">{{
-              subnet.name
-            }}</a>
-          </td>
-          <td>{{ subnet.network }}/{{ subnet.mask_bits }}</td>
-          <td>{{ getPropertyLength(subnet, "firewall_rules") }}</td>
-          <td>{{ getPropertyLength(subnet, "static_routes") }}</td>
-        </tr>
-        <tr *ngIf="!subnets?.length" class="text-center">
-          <td colspan="5">No Subnets to Deploy</td>
-        </tr>
-      </tbody>
-    </table>
+<section class="btn-toolbar" role="toolbar">
+  <button class="btn btn-danger" (click)="deployTiers()">
+    Deploy Selected Tiers
+  </button>
+</section>
 
-    <button
-      class="btn btn-danger pull-right"
-      (click)="deployNetwork()"
-      *ngIf="subnets.length"
-    >
-      Deploy Networks
-    </button>
-  </div>
-
-  <div *ngIf="tabIndex == 1">
-    <div class="btn-group p-3" role="group">
-      <button
-        type="button"
-        class="btn btn-danger"
-        (click)="deploySolaris()"
-        aria-label="Create Pool"
-      >
-        Deploy Solaris
-      </button>
-    </div>
-  </div>
-</div>
+<app-yes-no-modal></app-yes-no-modal>

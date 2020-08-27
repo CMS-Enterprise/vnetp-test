@@ -1,4 +1,4 @@
 export enum ModalMode {
-    Create,
-    Edit
+  Create = 'Create',
+  Edit = 'Edit',
 }

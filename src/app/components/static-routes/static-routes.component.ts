@@ -1,46 +1,44 @@
-// FIXME
-import { Component, OnInit } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { Vrf } from 'src/app/models/d42/vrf';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Tier, V1TiersService } from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Subscription } from 'rxjs';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-static-routes',
   templateUrl: './static-routes.component.html',
-  styleUrls: ['./static-routes.component.scss']
+  styleUrls: ['./static-routes.component.scss'],
 })
-export class StaticRoutesComponent implements OnInit {
+export class StaticRoutesComponent implements OnInit, OnDestroy {
+  public DatacenterId: string;
+  public tiers: Tier[] = [];
 
-  vrfs: Array<Vrf>;
-  routingTable: any;
+  private currentDatacenterSubscription: Subscription;
 
-  constructor(private automationApiService: AutomationApiService) {
-    this.vrfs = [];
-    this.routingTable = [];
-   }
+  constructor(private datacenterContextService: DatacenterContextService, private tierService: V1TiersService) {}
+
+  public getTiers(): void {
+    this.tierService
+      .v1TiersGet({
+        filter: `datacenterId||eq||${this.DatacenterId}`,
+        join: 'staticRoutes',
+      })
+      .subscribe(data => {
+        this.tiers = data;
+      });
+  }
 
   ngOnInit() {
-    this.getVrfs();
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.DatacenterId = cd.id;
+        this.tiers = [];
+        this.getTiers();
+      }
+    });
   }
 
-  getVrfs() {
-    this.automationApiService.getVrfs().subscribe(
-      data => this.vrfs = data
-      );
-  }
-
-  getStaticRoutesCount(subnet: any) {
-    const jsonStaticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
-
-    const staticRoutes = JSON.parse(jsonStaticRoutes.value);
-
-    return staticRoutes ? staticRoutes.length : 0;
-  }
-
-  getStaticRoutes(subnet: any) {
-    const jsonStaticRoutes = subnet.custom_fields.find(c => c.key === 'static_routes');
-
-    const staticRoutes = JSON.parse(jsonStaticRoutes.value);
-
-    return staticRoutes;
+  ngOnDestroy() {
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
   }
 }

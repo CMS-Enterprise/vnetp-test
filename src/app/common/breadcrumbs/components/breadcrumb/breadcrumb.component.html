@@ -1,0 +1,11 @@
+<div class="breadcrumb-wrap mb-3" *ngIf="currentUser">
+  <ul class="breadcrumb">
+    <li *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb-item">
+      <a routerLink="{{ breadcrumb.url }}" queryParamsHandling="merge">
+        {{ breadcrumb.label }}
+      </a>
+    </li>
+  </ul>
+
+  <app-datacenter-select></app-datacenter-select>
+</div>

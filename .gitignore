@@ -45,6 +45,9 @@ jest-junit.xml
 .DS_Store
 Thumbs.db
 
-
 #Sonarqube
 .scannerwork/
+wwwroot/*.js
+typings
+dist
+.vscode/settings.json

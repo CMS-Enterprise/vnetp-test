@@ -1,11 +1,11 @@
 import { FilterEntry } from './filter-entry';
 
 export class Contract {
-    Id: number;
+  Id: number;
 
-    Name: string;
+  Name: string;
 
-    Description: string;
+  Description: string;
 
-    FilterEntries: Array<FilterEntry>;
+  FilterEntries: Array<FilterEntry>;
 }

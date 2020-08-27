@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CookieService } from 'ngx-cookie-service';
 import { StaticRoutesComponent } from './static-routes.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MockProvider } from 'src/test/mock-providers';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1TiersService } from 'api_client';
 
 describe('StaticRoutesComponent', () => {
   let component: StaticRoutesComponent;
@@ -11,24 +12,31 @@ describe('StaticRoutesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports : [RouterTestingModule, HttpClientTestingModule, AngularFontAwesomeModule],
-      declarations: [ StaticRoutesComponent ],
-      providers: [CookieService]
-    })
-    .compileComponents();
+      imports: [RouterTestingModule.withRoutes([])],
+      declarations: [StaticRoutesComponent, MockFontAwesomeComponent],
+      providers: [MockProvider(DatacenterContextService), MockProvider(V1TiersService)],
+    });
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRoutesComponent);
     component = fixture.componentInstance;
+    component.DatacenterId = '1';
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should load tiers', () => {
+    const tierService = TestBed.get(V1TiersService);
+    const loadTiersSpy = jest.spyOn(tierService, 'v1TiersGet');
+    component.getTiers();
+
+    expect(loadTiersSpy).toHaveBeenCalledWith({
+      filter: 'datacenterId||eq||1',
+      join: 'staticRoutes',
+    });
   });
 });

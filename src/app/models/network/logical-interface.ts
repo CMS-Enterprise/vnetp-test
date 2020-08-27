@@ -1,9 +1,9 @@
 export class LogicalInterface {
-    Name: string;
+  Name: string;
 
-    Description: string;
+  Description: string;
 
-    NativeSubnet: string;
+  NativeSubnet: string;
 
-    TaggedSubnets: Array<string>;
+  TaggedSubnets: Array<string>;
 }

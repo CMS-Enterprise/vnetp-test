@@ -1,89 +1,121 @@
 import { Component, OnInit } from '@angular/core';
-import { Subnet, SubnetResponse } from 'src/app/models/d42/subnet';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupType } from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { Subscription } from 'rxjs';
+import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
+import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-deploy',
-  templateUrl: './deploy.component.html'
+  templateUrl: './deploy.component.html',
 })
 export class DeployComponent implements OnInit {
+  currentDatacenterSubscription: Subscription;
+  currentDatacenter: Datacenter;
 
-  tabIndex: number;
-  subnets: Array<Subnet>;
+  tierGroups: TierGroup[] = [];
+  tiers: TableRowWrapper<Tier>[] = [];
 
   constructor(
-    private hs: HelpersService,
-    private automationApiService: AutomationApiService,
-    private auth: AuthService
-    ) {
-    this.subnets = new Array<Subnet>();
-   }
+    private tierService: V1TiersService,
+    private tierGroupService: V1TierGroupsService,
+    private datacenterService: DatacenterContextService,
+    private jobService: V1JobsService,
+    private ngx: NgxSmartModalService,
+  ) {}
 
-  ngOnInit() {
-    this.tabIndex = 0;
-    this.getSubnets();
-  }
+  public deployTiers(): void {
+    const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item);
 
-  getSubnets() {
-    this.automationApiService.getSubnets()
-    .subscribe(data => {
-      const subnetResponse = data as SubnetResponse;
-      this.getUndeployedSubnets(subnetResponse.subnets);
-    });
-  }
-
-  getPropertyLength(subnet: Subnet, propertyName: string) {
-    const jsonFirewallRules = subnet.custom_fields.find(c => c.key === propertyName);
-
-    const firewallRules = JSON.parse(jsonFirewallRules.value);
-
-    let length = 0;
-
-    if (firewallRules != null) {
-      length = firewallRules.length;
+    if (!tiersToDeploy.length) {
+      return;
     }
 
-    return length;
+    const tierCount = tiersToDeploy.length === 1 ? '1 tier' : `${tiersToDeploy.length} tiers`;
+    const modalDto = new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tierCount}?`);
+
+    this.ngx.setModalData(modalDto, 'yesNoModal');
+
+    const confirmationModal = this.ngx.getModal('yesNoModal');
+    confirmationModal.open();
+    const yesNoModalSubscription = confirmationModal.onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData = modal.getData() as YesNoModalDto;
+      modal.removeData();
+      if (modalData && modalData.modalYes) {
+        this.launchTierProvisioningJobs(tiersToDeploy);
+      }
+      yesNoModalSubscription.unsubscribe();
+    });
   }
 
-  getUndeployedSubnets(subnets: Array<Subnet>) {
-    const undeployedSubnets = [];
+  public getTierGroupName = (id: string): string => this.getObjectName(id, this.tierGroups);
 
-    subnets.forEach(subnet => {
-      const deployedState = this.hs.getBooleanCustomField(subnet, 'deployed');
-      if (!deployedState) {
-        undeployedSubnets.push(subnet);
+  private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
+    if (!objects) {
+      return 'N/A';
+    }
+    const object = objects.find(o => o.id === id);
+    return object ? object.name : 'N/A';
+  }
+
+  private getTierGroups(loadTiers = false): void {
+    this.tierGroupService
+      .v1TierGroupsGet({
+        filter: `datacenterId||eq||${this.currentDatacenter.id}`,
+      })
+      .subscribe(data => {
+        this.tierGroups = data;
+
+        if (loadTiers) {
+          this.getTiers();
+        }
+      });
+  }
+
+  private getTiers(): void {
+    this.tierService
+      .v1DatacentersDatacenterIdTiersGet({
+        datacenterId: this.currentDatacenter.id,
+        join: 'firewallRuleGroups',
+      })
+      .subscribe(data => {
+        this.tiers = data.map(tier => new TableRowWrapper(tier));
+      });
+  }
+
+  private launchTierProvisioningJobs(tiersToDeploy: Tier[]): void {
+    tiersToDeploy.forEach(tier => {
+      const tierProvisionJob = {} as Job;
+
+      tierProvisionJob.datacenterId = this.currentDatacenter.id;
+      tierProvisionJob.jobType = 'provision-tier';
+      tierProvisionJob.definition = {
+        tierId: tier.id,
+      };
+
+      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(data => {});
+
+      const tierNetworkSecurityJob = {} as Job;
+
+      tierNetworkSecurityJob.datacenterId = this.currentDatacenter.id;
+      tierNetworkSecurityJob.jobType = 'provision-tier-network-security';
+      tierNetworkSecurityJob.definition = {
+        tierId: tier.id,
+        intervrfFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.Intervrf).id,
+        externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.External).id,
+      };
+
+      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(data => {});
+    });
+  }
+
+  ngOnInit() {
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.currentDatacenter = cd;
+        this.getTierGroups(true);
       }
     });
-
-    this.subnets = undeployedSubnets;
-  }
-
-  deployAll() {
-    this.deployNetwork();
-  }
-
-  deployNetwork() {
-    // Deploy Subnets
-    this.subnets.forEach(s => {
-      this.deploySubnet(s);
-    });
-  }
-  deploySolaris(){
-    var extra_vars: {[k: string]: any} = {};
-    extra_vars.customer_name = this.auth.currentUserValue.CustomerName;
-    const body = { extra_vars };
-    this.automationApiService.launchTemplate('deploy-solaris', body, true).subscribe();
-  }
-
-   private deploySubnet(subnet: Subnet) {
-    var extra_vars: {[k: string]: any} = {};
-    extra_vars.subnet_id = subnet.subnet_id;
-
-    const body = { extra_vars };
-
-    this.automationApiService.launchTemplate('deploy-network', body, true).subscribe();
   }
 }

@@ -1,4 +1,4 @@
 export enum RuleLocation {
-    Source,
-    Destination
+  Source,
+  Destination,
 }

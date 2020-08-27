@@ -1,0 +1,104 @@
+<h1>VMWare</h1>
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+<ng-container *ngIf="activeTabName === TabName.VirtualMachines">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Virtual Machine -->
+    <button type="button" class="btn btn-success" (click)="createVirtualMachine()">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Virtual Machine</span>
+    </button>
+
+    <!-- Refresh -->
+    <button type="button" class="btn btn-info" (click)="getVirtualMachines()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
+
+  <div class="flex">
+    <app-view-field label="Ungrouped" [value]="ungroupedVirtualMachines.length"></app-view-field>
+    <app-view-field label="High Performance CPU" [value]="highPerformanceVirtualMachines.length"></app-view-field>
+  </div>
+
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Virtual Machines in the currently selected Datacenter</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">CPUs</th>
+        <th scope="col">Cores per Socket</th>
+        <th scope="col">Memory</th>
+        <th scope="col">State</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vm of virtualMachines | paginate: { itemsPerPage: perPage, currentPage: currentVMWarePage }">
+        <td>
+          <a routerLink="/vmware/{{ vm.id }}" queryParamsHandling="merge">{{ vm.name }}</a>
+        </td>
+        <td>
+          <span>{{ vm.cpuCores }}</span>
+          <span class="vm--high-perf" *ngIf="vm.highPerformance">
+            <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+            <span>High Performance</span>
+          </span>
+        </td>
+        <td>
+          {{ vm.cpuCoresPerSocket }}
+        </td>
+        <td>{{ ConversionUtil.convertBytesToGb(vm.memorySize) }} GB</td>
+        <td>{{ vm.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!vm?.deletedAt"
+            icon="edit"
+            label="Edit Virtual Machine"
+            (handleClick)="openVirtualMachineModal(ModalMode.Edit, vm)"
+          ></app-icon-button>
+
+          <app-icon-button
+            *ngIf="vm?.deletedAt"
+            icon="undo"
+            label="Restore Virtual Machine"
+            type="success"
+            (handleClick)="restoreVirtualMachine(vm)"
+          ></app-icon-button>
+
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Virtual Machine"
+            [type]="vm?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteVirtualMachine(vm)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!virtualMachines?.length" class="text-center">
+        <td colspan="6">No Virtual Machines</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentVMWarePage = $event"></pagination-controls>
+
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </section>
+
+  <app-virtual-machine-modal></app-virtual-machine-modal>
+  <app-virtual-disk-modal></app-virtual-disk-modal>
+  <app-network-adapter-modal></app-network-adapter-modal>
+  <app-yes-no-modal></app-yes-no-modal>
+</ng-container>
+
+<ng-container *ngIf="activeTabName === TabName.PriorityGroups">
+  <app-priority-group-list [datacenterId]="datacenterId"></app-priority-group-list>
+</ng-container>

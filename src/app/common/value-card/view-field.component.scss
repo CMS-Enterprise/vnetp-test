@@ -1,0 +1,26 @@
+@import '../../../assets/styles/variables';
+
+.view-field {
+  display: inline-block;
+  margin: 0 8px 16px 0;
+  background-color: $c-gray-100;
+  border-radius: 4px;
+  padding: 7px 13px 3px;
+
+  &--no-bg {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  &__label {
+    margin-bottom: -2px;
+  }
+
+  &__value {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    line-height: 1;
+    word-wrap: break-word;
+    font-weight: 600;
+  }
+}

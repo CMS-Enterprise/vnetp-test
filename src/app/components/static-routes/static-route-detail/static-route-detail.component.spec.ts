@@ -1,39 +1,50 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CookieService } from 'ngx-cookie-service';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxMaskModule } from 'ngx-mask';
-import { ImportExportComponent } from '../../import-export/import-export.component';
-import { PapaParseModule } from 'ngx-papaparse';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { MockProvider } from 'src/test/mock-providers';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { V1TiersService, V1NetworkStaticRoutesService } from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
 describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
   let fixture: ComponentFixture<StaticRouteDetailComponent>;
-  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AngularFontAwesomeModule,
-        FormsModule,
-        RouterTestingModule.withRoutes([]),
-        NgxMaskModule.forRoot(),
-        PapaParseModule,
-        HttpClientTestingModule
+      imports: [FormsModule, RouterTestingModule.withRoutes([]), ReactiveFormsModule],
+      declarations: [
+        StaticRouteDetailComponent,
+        YesNoModalComponent,
+        MockComponent({ selector: 'app-static-route-modal' }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
       ],
-      declarations: [StaticRouteDetailComponent, ImportExportComponent],
-      providers: [CookieService]
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkStaticRoutesService),
+        MockProvider(V1TiersService),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({ id: '1' }),
+            },
+          },
+        },
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRouteDetailComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 

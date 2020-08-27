@@ -1,16 +1,16 @@
 import { Vrf } from './vrf';
 
 export class Customer {
-    id: number;
+  id: number;
 
-    name: string;
+  name: string;
 
-    vrfs?: Array<Vrf>;
+  vrfs?: Array<Vrf>;
 }
 
 export interface CustomerResponse {
-    total_count: number;
-    offset: number;
-    limit: number;
-    Customers: Customer[];
+  total_count: number;
+  offset: number;
+  limit: number;
+  Customers: Customer[];
 }

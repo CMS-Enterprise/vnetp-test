@@ -1,0 +1,20 @@
+<div
+  #tooltip
+  class="tooltip"
+  role="button"
+  (mouseenter)="showTooltip(true)"
+  (mouseleave)="showTooltip(false)"
+  (focus)="showTooltip(true)"
+  (blur)="showTooltip(false)"
+  tabindex="0"
+  aria-label="Toggle Tooltip visibility"
+>
+  <fa-icon class="icon" [icon]="['far', 'question-circle']" class="pl-2" ></fa-icon>
+  <div class="tooltiptext" [class.show]="isShowTooltip" [class.lock]="isLockTooltip" [ngStyle]="tooltipMsgStyle">
+    <p [innerHTML]="message"></p>
+    <div class="pin" (click)="toggleVisiblity()">
+      <span *ngIf="!isLockTooltip" class="pin-icon">+</span>
+      <span *ngIf="isLockTooltip" class="pin-icon">-</span>
+    </div>
+  </div>
+</div>

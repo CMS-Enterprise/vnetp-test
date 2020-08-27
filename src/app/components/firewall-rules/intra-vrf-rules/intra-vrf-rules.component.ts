@@ -1,26 +1,22 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Vrf } from 'src/app/models/d42/vrf';
 import { Contract } from 'src/app/models/firewall/contract';
 import { FilterEntry } from 'src/app/models/firewall/filter-entry';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, Observable } from 'rxjs';
-import { PendingChangesGuard } from 'src/app/guards/pending-changes.guard';
+import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { ActivatedRoute } from '@angular/router';
+import SubscriptionUtil from 'src/app/utils/subscription.util';
+import ObjectUtil from 'src/app/utils/object.util';
+import CustomFieldUtil from 'src/app/utils/custom-field.util';
 
 @Component({
   selector: 'app-intra-vrf-rules',
-  templateUrl: './intra-vrf-rules.component.html'
+  templateUrl: './intra-vrf-rules.component.html',
 })
-export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChangesGuard {
-
-  constructor(
-    private route: ActivatedRoute,
-    private ngxSm: NgxSmartModalService,
-    private api: AutomationApiService,
-    private hs: HelpersService) { }
+export class IntraVrfRulesComponent implements OnInit, OnDestroy {
+  constructor(private route: ActivatedRoute, private ngxSm: NgxSmartModalService, private api: AutomationApiService) {}
 
   Id: string;
   vrf: Vrf;
@@ -40,7 +36,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   getVrfCustomFields() {
-    const contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
+    const contracts = CustomFieldUtil.getJsonCustomField(this.vrf, 'intravrf_contracts') as Contract[];
 
     if (contracts) {
       this.contracts = contracts;
@@ -56,17 +52,19 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   editContract(contract: Contract) {
     this.subscribeToContractModal();
     this.contractModalMode = ModalMode.Edit;
-    this.ngxSm.setModalData(this.hs.deepCopy(contract), 'contractModal');
+    this.ngxSm.setModalData(ObjectUtil.deepCopy(contract), 'contractModal');
     this.editContractIndex = this.contracts.indexOf(contract);
     this.ngxSm.getModal('contractModal').open();
   }
 
   deleteContract(contract: Contract) {
     const index = this.contracts.indexOf(contract);
-    if ( index > -1) {
+    if (index > -1) {
       this.contracts.splice(index, 1);
 
-      if (!this.deletedContracts) { this.deletedContracts = new Array<Contract>(); }
+      if (!this.deletedContracts) {
+        this.deletedContracts = new Array<Contract>();
+      }
       this.deletedContracts.push(contract);
       this.dirty = true;
     }
@@ -82,9 +80,8 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   subscribeToContractModal() {
-    this.contractModalSubscription =
-    this.ngxSm.getModal('contractModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-      let data = modal.getData() as Contract;
+    this.contractModalSubscription = this.ngxSm.getModal('contractModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+      const data = modal.getData() as Contract;
 
       if (data !== undefined) {
         this.saveContract(data);
@@ -95,21 +92,12 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
   }
 
   private unsubAll() {
-    [this.contractModalSubscription]
-      .forEach(sub => {
-        try {
-          if (sub) {
-          sub.unsubscribe();
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      });
+    SubscriptionUtil.unsubscribe([this.contractModalSubscription]);
   }
 
- saveAll() {
+  saveAll() {
     this.dirty = false;
-    let extra_vars: {[k: string]: any} = {};
+    const extra_vars: { [k: string]: any } = {};
 
     extra_vars.vrf_id = this.vrf.id;
     extra_vars.vrf_name = this.vrf.name;
@@ -118,18 +106,18 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy, PendingChanges
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(data => {
-      this.deletedContracts = new Array<Contract>();
-    }, error => { this.dirty = true; });
+    this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(
+      data => {
+        this.deletedContracts = new Array<Contract>();
+      },
+      error => {
+        this.dirty = true;
+      },
+    );
   }
 
   refresh() {
     this.getVrf();
-  }
-
-  @HostListener('window:beforeunload')
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.dirty;
   }
 
   ngOnInit() {
