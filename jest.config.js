@@ -25,7 +25,7 @@ module.exports = {
     '!**/environments/**',
     '!**/src/setupJest.ts',
   ],
-  moduleDirectories: ["", "node_modules", "src"],
+  moduleDirectories: ['', 'node_modules', 'src'],
   transformIgnorePatterns: ['node_modules/(?!lodash-es/*)'],
   verbose: true,
 };
