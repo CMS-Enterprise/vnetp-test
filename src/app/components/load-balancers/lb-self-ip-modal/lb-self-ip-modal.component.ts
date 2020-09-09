@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerSelfIp, V1LoadBalancerSelfIpsService, V1TiersService, LoadBalancerVlan, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerSelfIp, V1LoadBalancerSelfIpsService, LoadBalancerVlan, V1LoadBalancerVlansService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
