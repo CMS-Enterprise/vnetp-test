@@ -1,4 +1,4 @@
-import CustomFieldUtil from './custom-field.util';
+import CustomFieldUtil from './CustomFieldUtil';
 import { Subnet } from '../models/d42/subnet';
 import { Vrf } from '../models/d42/vrf';
 

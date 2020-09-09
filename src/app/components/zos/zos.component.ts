@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
-import DownloadUtil from 'src/app/utils/download.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import DownloadUtil from 'src/app/utils/DownloadUtil';
 
 @Component({
   selector: 'app-zos',

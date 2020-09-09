@@ -16,8 +16,8 @@ import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-mo
 import { Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-virtual-machine-modal',

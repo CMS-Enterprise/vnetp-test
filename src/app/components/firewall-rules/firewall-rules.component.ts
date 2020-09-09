@@ -6,7 +6,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import ObjectUtil from 'src/app/utils/object.util';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-firewall-rules',
