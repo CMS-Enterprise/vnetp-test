@@ -16,7 +16,7 @@ import CustomFieldUtil from 'src/app/utils/CustomFieldUtil';
   templateUrl: './intra-vrf-rules.component.html',
 })
 export class IntraVrfRulesComponent implements OnInit, OnDestroy {
-  constructor(private route: ActivatedRoute, private ngxSm: NgxSmartModalService, private api: AutomationApiService) {}
+  constructor(private route: ActivatedRoute, private ngxSm: NgxSmartModalService, private automationApiService: AutomationApiService) {}
 
   Id: string;
   vrf: Vrf;
@@ -29,7 +29,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy {
   dirty: boolean;
 
   getVrf() {
-    this.api.getVrf(this.Id).subscribe(data => {
+    this.automationApiService.getVrf(this.Id).subscribe(data => {
       this.vrf = data;
       this.getVrfCustomFields();
     });
@@ -106,7 +106,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy {
 
     const body = { extra_vars };
 
-    this.api.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(
+    this.automationApiService.launchTemplate('deploy-intra-vrf-contracts', body, true).subscribe(
       data => {
         this.deletedContracts = new Array<Contract>();
       },

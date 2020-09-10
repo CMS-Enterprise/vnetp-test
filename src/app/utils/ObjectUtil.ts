@@ -1,10 +1,10 @@
 export default class ObjectUtil {
-  static getObjectName(id: string, objects: Lookup[]): string {
+  static getObjectName(id: string, objects: Lookup[], defaultName = 'N/A'): string {
     if (!objects || objects.length === 0) {
-      return 'N/A';
+      return defaultName;
     }
     const object = objects.find(o => o.id === id);
-    return object ? object.name : 'N/A';
+    return object ? object.name : defaultName;
   }
 
   static getObjectId(nameOrId: string, objects: Lookup[]): string {

@@ -1,22 +1,22 @@
-import { CookieService } from 'ngx-cookie-service';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
-import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
   MockTabsComponent,
   MockYesNoModalComponent,
   MockNgxSmartModalComponent,
+  MockImportExportComponent,
+  MockComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1TiersService, V1NetworkSecurityFirewallRuleGroupsService } from 'api_client';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -24,19 +24,24 @@ describe('FirewallRulesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule, NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
       declarations: [
         FilterPipe,
-        FirewallRuleModalComponent,
         FirewallRulesComponent,
-        ImportExportComponent,
+        MockComponent({ selector: 'app-firewall-rule-modal' }),
+        MockImportExportComponent,
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockTabsComponent,
         MockTooltipComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), CookieService, FormBuilder],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(DatacenterContextService),
+        MockProvider(V1TiersService),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+      ],
     }).compileComponents();
   }));
 
@@ -44,10 +49,6 @@ describe('FirewallRulesComponent', () => {
     fixture = TestBed.createComponent(FirewallRulesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
