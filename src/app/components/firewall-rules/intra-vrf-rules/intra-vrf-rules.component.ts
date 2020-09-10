@@ -7,9 +7,9 @@ import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { ActivatedRoute } from '@angular/router';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
-import ObjectUtil from 'src/app/utils/object.util';
-import CustomFieldUtil from 'src/app/utils/custom-field.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
+import CustomFieldUtil from 'src/app/utils/CustomFieldUtil';
 
 @Component({
   selector: 'app-intra-vrf-rules',

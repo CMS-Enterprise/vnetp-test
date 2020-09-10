@@ -3,7 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user/user';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-navbar',

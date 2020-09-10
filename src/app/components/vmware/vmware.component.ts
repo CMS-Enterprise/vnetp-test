@@ -6,8 +6,8 @@ import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesServ
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import ConversionUtil from 'src/app/utils/conversion.util';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 
 enum TabName {
