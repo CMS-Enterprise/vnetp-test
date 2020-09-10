@@ -17,7 +17,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   public currentPhysicalServersPage = 1;
   public datacenterId: string;
   public perPage = 20;
-  public physicalServers: Array<PhysicalServer>;
+  public physicalServers: PhysicalServer[] = [];
 
   private currentDatacenterSubscription: Subscription;
   private physicalServerModalSubscription: Subscription;
