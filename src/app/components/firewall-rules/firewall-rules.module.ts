@@ -5,7 +5,6 @@ import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { SharedModule } from 'src/app/common/shared.module';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail/firewall-rules-detail.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
-import { IntraVrfRulesComponent } from './intra-vrf-rules/intra-vrf-rules.component';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
@@ -50,7 +49,6 @@ const routes: Routes = [
     ContractModalComponent,
     FirewallRulesComponent,
     FirewallRulesDetailComponent,
-    IntraVrfRulesComponent,
     FirewallRulesDetailComponent,
     FirewallRuleModalComponent,
     FilterPipe,

@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
-import { Vrf } from 'src/app/models/d42/vrf';
 import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   ServiceObject,
@@ -29,7 +28,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   TierId: string;
-  vrf: Vrf;
 
   sourceNetworkTypeSubscription: Subscription;
   destinationNetworkTypeSubscription: Subscription;
