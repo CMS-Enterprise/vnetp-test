@@ -6,7 +6,6 @@ import { SharedModule } from 'src/app/common/shared.module';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail/firewall-rules-detail.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
-import { ContractModalComponent } from './contract-modal/contract-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { CommonModule } from '@angular/common';
@@ -45,13 +44,6 @@ const routes: Routes = [
     TabsModule,
     TooltipModule,
   ],
-  declarations: [
-    ContractModalComponent,
-    FirewallRulesComponent,
-    FirewallRulesDetailComponent,
-    FirewallRulesDetailComponent,
-    FirewallRuleModalComponent,
-    FilterPipe,
-  ],
+  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FilterPipe],
 })
 export class FirewallRulesModule {}
