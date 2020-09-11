@@ -17,6 +17,10 @@ describe('ObjectUtil', () => {
     it('should return an existing object name', () => {
       expect(ObjectUtil.getObjectName('1', [{ id: '1', name: 'A' }])).toBe('A');
     });
+
+    it('should return the provided default value when the object does not exist', () => {
+      expect(ObjectUtil.getObjectName('1', [], 'OOPS!')).toBe('OOPS!');
+    });
   });
 
   describe('getObjectId', () => {
