@@ -1,5 +1,5 @@
 export interface CustomFieldsObject {
-  custom_fields: Array<{ notes: string; key: string; value: string }>;
+  custom_fields: CustomField[];
 }
 
 export class CustomField {

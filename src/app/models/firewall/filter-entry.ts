@@ -1,14 +1,9 @@
 export class FilterEntry {
   Id: number;
-
   Name: string;
-
   Action: string;
-
   Protocol: string;
-
   SourcePorts: string;
-
   DestinationPorts: string;
 
   constructor(name: string, protocol: string, sourcePorts: string, destinationPorts: string) {

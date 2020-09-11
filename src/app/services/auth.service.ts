@@ -12,8 +12,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  public currentUser: Observable<User> = this.currentUserSubject.asObservable();
+  private currentUserSubject = new BehaviorSubject<User>(null);
+  public currentUser = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private cs: CookieService) {
     const user = this.getUserFromToken(localStorage.getItem('token'));
@@ -24,7 +24,7 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(userpass: Userpass): Observable<User> {
+  public login(userpass: Userpass): Observable<User> {
     return this.http
       .post<any>(environment.apiBase + '/v1/auth/login', {
         username: userpass.Username,
@@ -44,7 +44,7 @@ export class AuthService {
       );
   }
 
-  logout() {
+  public logout(): void {
     localStorage.clear();
     this.cs.deleteAll('/ ', window.location.hostname);
     this.currentUserSubject.next(null);
