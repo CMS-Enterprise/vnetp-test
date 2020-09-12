@@ -16,10 +16,10 @@ import {
   NetworkObjectGroupRelationBulkImportCollectionDto,
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -39,19 +39,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   navIndex = 0;
   showRadio = false;
 
-  public tabs: Tab[] = [
-    {
-      name: 'Network Objects',
-      tooltip: this.helpText.NetworkObjects,
-    },
-    {
-      name: 'Network Object Groups',
-      tooltip: this.helpText.NetworkObjectGroups,
-    },
-    {
-      name: 'Network Object Group Relations',
-    },
-  ];
+  public tabs: Tab[] = [{ name: 'Network Objects' }, { name: 'Network Object Groups' }, { name: 'Network Object Group Relations' }];
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
@@ -59,13 +47,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private networkObjectModalSubscription: Subscription;
 
   constructor(
-    private ngx: NgxSmartModalService,
-    public datacenterService: DatacenterContextService,
-    public tierContextService: TierContextService,
-    private tierService: V1TiersService,
-    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private datacenterContextService: DatacenterContextService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-    private bulkUploadService: BulkUploadService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
+    private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
   ) {}
 
@@ -106,7 +93,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToNetworkObjectModal();
-    this.datacenterService.lockDatacenter();
+    this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'networkObjectModal');
     this.ngx.getModal('networkObjectModal').open();
   }
@@ -126,7 +113,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToNetworkObjectGroupModal();
-    this.datacenterService.lockDatacenter();
+    this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'networkObjectGroupModal');
     this.ngx.getModal('networkObjectGroupModal').open();
   }
@@ -137,7 +124,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getNetworkObjects();
         this.ngx.resetModalData('networkObjectModal');
-        this.datacenterService.unlockDatacenter();
+        this.datacenterContextService.unlockDatacenter();
       });
   }
 
@@ -147,7 +134,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
         this.getNetworkObjectGroups();
         this.ngx.resetModalData('networkObjectGroupModal');
-        this.datacenterService.unlockDatacenter();
+        this.datacenterContextService.unlockDatacenter();
       });
   }
 
@@ -308,7 +295,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       modal.removeData();
       if (modalData && modalData.modalYes) {
         const networkObjectRelationsDto = {} as NetworkObjectGroupRelationBulkImportCollectionDto;
-        networkObjectRelationsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+        networkObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
         networkObjectRelationsDto.networkObjectRelations = event;
 
         this.networkObjectGroupService
@@ -372,7 +359,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         obj[key] = String(val).trim();
       }
       if (key === 'vrf_name') {
-        obj[key] = this.bulkUploadService.getObjectId(val, this.tiers);
+        obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];
       }
@@ -382,7 +369,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
         this.networkObjects = [];

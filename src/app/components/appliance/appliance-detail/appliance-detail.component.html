@@ -20,15 +20,13 @@
 </section>
 
 <div *ngIf="Appliance">
-  <p *ngIf="Appliance.description"><strong>Description:</strong> {{ Appliance.description }}</p>
-  <p><strong>Rack Units:</strong> {{ Appliance.rackUnits }}</p>
-  <p><strong>Serial Number:</strong> {{ Appliance.serialNumber }}</p>
-  <p>
-    <strong>Delivery Date:</strong>
-    {{ Appliance.deliveryDate | date: 'shortDate' }}
-  </p>
+  <app-view-field background="none" label="Description" [value]="Appliance.description || 'No description provided'"></app-view-field>
 
-  <hr />
+  <div class="details">
+    <app-view-field label="Rack Units" [value]="Appliance.rackUnits"></app-view-field>
+    <app-view-field label="Serial Number" [value]="Appliance.serialNumber"></app-view-field>
+    <app-view-field label="Delivery Date" [value]="Appliance.deliveryDate | date: 'dd/MM/yyyy'"></app-view-field>
+  </div>
 
   <div class="row">
     <div class="col-md-4">
@@ -52,12 +50,8 @@
     </div>
     <div class="col-md-4">
       <p>
-        <strong>Power Supply Voltage:</strong>
-        {{ Appliance.powerSupplyVoltage }}
-      </p>
-      <p>
-        <strong>Power Supply Wattage:</strong>
-        {{ Appliance.powerSupplyWattage }}
+        <strong>Power Supply:</strong>
+        {{ Appliance.powerSupplyVoltage + 'V, ' + Appliance.powerSupplyWattage + 'W' }}
       </p>
       <p>
         <strong>Power Supply Connection Type:</strong>
@@ -68,27 +62,32 @@
   </div>
 </div>
 
-<div class="p-3">
-  <h3>Network Ports</h3>
-  <table class="table table-striped" aria-describedby="Network Ports table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let n of networkPorts">
-        <td>
-          <span>{{ n.name }}</span>
-        </td>
-        <td class="table__actions"></td>
-      </tr>
-      <tr *ngIf="!networkPorts?.length" class="text-center">
-        <td colspan="2">No Network Ports</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<hr />
+
+<h2>Network Ports</h2>
+
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Network Ports on this Appliance</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let n of networkPorts">
+      <td>
+        <span>{{ n.name }}</span>
+      </td>
+      <td class="table__actions"></td>
+    </tr>
+    <tr *ngIf="!networkPorts?.length" class="text-center">
+      <td colspan="2">No Network Ports</td>
+    </tr>
+  </tbody>
+</table>
 
 <app-yes-no-modal></app-yes-no-modal>

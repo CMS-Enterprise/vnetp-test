@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 export interface Tab {
   name: string;
@@ -8,6 +8,7 @@ export interface Tab {
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
+  styleUrls: ['./tabs.component.scss'],
 })
 export class TabsComponent implements OnInit {
   @Input() tabs: Tab[] = [];

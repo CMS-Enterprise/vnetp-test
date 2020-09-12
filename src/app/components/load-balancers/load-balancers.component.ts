@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
-import { LoadBalancersHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
   Tier,
@@ -41,8 +40,9 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-load-balancers',
@@ -79,51 +79,20 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   virtualServers: LoadBalancerVirtualServer[];
   vlans: LoadBalancerVlan[];
 
+  public wikiBase = environment.wikiBase;
+
   public tabs: Tab[] = [
-    {
-      name: 'Virtual Servers',
-      tooltip: this.helpText.VirtualServers,
-    },
-    {
-      name: 'Pools',
-      tooltip: this.helpText.Pools,
-    },
-    {
-      name: 'Pool Relations',
-      tooltip: this.helpText.PoolRelations,
-    },
-    {
-      name: 'Nodes',
-      tooltip: this.helpText.Nodes,
-    },
-    {
-      name: 'iRules',
-      tooltip: this.helpText.IRules,
-    },
-    {
-      name: 'Health Monitors',
-      tooltip: this.helpText.HealthMonitors,
-    },
-    {
-      name: 'Profiles',
-      tooltip: this.helpText.Profiles,
-    },
-    {
-      name: 'Policies',
-      tooltip: this.helpText.Policies,
-    },
-    {
-      name: 'VLANs',
-      tooltip: this.helpText.Vlans,
-    },
-    {
-      name: 'Self IPs',
-      tooltip: this.helpText.SelfIps,
-    },
-    {
-      name: 'Routes',
-      tooltip: this.helpText.Routes,
-    },
+    { name: 'Virtual Servers' },
+    { name: 'Pools' },
+    { name: 'Pool Relations' },
+    { name: 'Nodes' },
+    { name: 'iRules' },
+    { name: 'Health Monitors' },
+    { name: 'Profiles' },
+    { name: 'Policies' },
+    { name: 'VLANs' },
+    { name: 'Self IPs' },
+    { name: 'Routes' },
   ];
 
   private currentDatacenterSubscription: Subscription;
@@ -140,21 +109,20 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private vlanModalSubscription: Subscription;
 
   constructor(
+    private datacenterService: DatacenterContextService,
+    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
-    public datacenterService: DatacenterContextService,
+    private nodeService: V1LoadBalancerNodesService,
+    private policiesService: V1LoadBalancerPoliciesService,
+    private poolsService: V1LoadBalancerPoolsService,
+    private profilesService: V1LoadBalancerProfilesService,
+    private routesService: V1LoadBalancerRoutesService,
+    private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
-    private irulesService: V1LoadBalancerIrulesService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
-    private poolsService: V1LoadBalancerPoolsService,
-    private nodeService: V1LoadBalancerNodesService,
-    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
-    private profilesService: V1LoadBalancerProfilesService,
-    private policiesService: V1LoadBalancerPoliciesService,
     private vlansService: V1LoadBalancerVlansService,
-    private selfIpsService: V1LoadBalancerSelfIpsService,
-    private routesService: V1LoadBalancerRoutesService,
-    public helpText: LoadBalancersHelpText,
   ) {}
 
   public handleTabChange(tab: Tab): void {

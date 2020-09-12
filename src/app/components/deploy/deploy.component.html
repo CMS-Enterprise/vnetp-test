@@ -1,57 +1,51 @@
-<div>
-  <h3 class="mb-3">Deploy</h3>
+<h1>Deploy Tiers</h1>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link" [ngClass]="{ active: navIndex === 0 }">Tiers</a>
-    </li>
-  </ul>
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Select which Tiers to Deploy</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Deploy</th>
+      <th scope="col">Name</th>
+      <th scope="col">Class</th>
+      <th scope="col">Type</th>
+      <th scope="col">Tier Group</th>
+      <th scope="col">State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let tier of tiers">
+      <td>
+        <input type="checkbox" [(ngModel)]="tier.isSelected" />
+      </td>
+      <td>
+        {{ tier?.item?.name }}
+      </td>
+      <td>
+        {{ tier?.item?.tierClass }}
+      </td>
+      <td>
+        {{ tier?.item?.tierType }}
+      </td>
+      <td>
+        {{ tier?.item?.tierGroupId | resolve: getTierGroupName }}
+      </td>
+      <td>
+        {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
+      </td>
+    </tr>
+    <tr *ngIf="!tiers?.length" class="text-center">
+      <td colspan="6">No Tiers to Provision</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div *ngIf="navIndex == 0">
-    <table class="table table-striped" aria-describedby="Deploy table">
-      <thead>
-        <tr>
-          <th scope="col">Deploy</th>
-          <th scope="col">Name</th>
-          <th scope="col">Class</th>
-          <th scope="col">Type</th>
-          <th scope="col">Tier Group</th>
-          <th scope="col">State</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let tier of tiers">
-          <td>
-            <input type="checkbox" [(ngModel)]="tier.isSelected" />
-          </td>
-          <td>
-            {{ tier?.item?.name }}
-          </td>
-          <td>
-            {{ tier?.item?.tierClass }}
-          </td>
-          <td>
-            {{ tier?.item?.tierType }}
-          </td>
-          <td>
-            {{ tier?.item?.tierGroupId | resolve: getTierGroupName }}
-          </td>
-          <td>
-            {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
-          </td>
-        </tr>
-        <tr *ngIf="!tiers?.length" class="text-center">
-          <td colspan="5">No Tiers to Provision</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <section class="btn-toolbar" role="toolbar">
-      <button class="btn btn-danger" (click)="deployTiers()">
-        Deploy Selected Tiers
-      </button>
-    </section>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <button class="btn btn-danger" (click)="deployTiers()">
+    Deploy Selected Tiers
+  </button>
+</section>
 
 <app-yes-no-modal></app-yes-no-modal>

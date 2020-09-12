@@ -8,21 +8,23 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
+  faBars,
+  faBolt,
+  faChevronDown,
+  faChevronLeft,
+  faChevronRight,
+  faDownload,
+  faExclamationTriangle,
+  faPencilAlt,
+  faPlus,
   faSave,
   faSignOutAlt,
-  faPlus,
+  faSpinner,
   faSyncAlt,
-  faPencilAlt,
+  faTable,
   faTrash,
   faUndo,
-  faChevronRight,
-  faChevronLeft,
   faUpload,
-  faDownload,
-  faChevronDown,
-  faBolt,
-  faBars,
-  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -79,22 +81,24 @@ export function apiConfigFactory(): Configuration {
 export class AppModule {
   constructor(iconLibary: FaIconLibrary) {
     iconLibary.addIcons(
-      faSave,
-      faQuestionCircle,
-      faPlus,
-      faSyncAlt,
+      faBars,
+      faBolt,
+      faChevronDown,
+      faChevronLeft,
+      faChevronRight,
+      faDownload,
+      faExclamationTriangle,
       faPencilAlt,
+      faPlus,
+      faQuestionCircle,
+      faSave,
+      faSignOutAlt,
+      faSpinner,
+      faSyncAlt,
+      faTable,
       faTrash,
       faUndo,
-      faChevronRight,
       faUpload,
-      faDownload,
-      faChevronDown,
-      faBolt,
-      faBars,
-      faSpinner,
-      faSignOutAlt,
-      faChevronLeft,
     );
   }
 }

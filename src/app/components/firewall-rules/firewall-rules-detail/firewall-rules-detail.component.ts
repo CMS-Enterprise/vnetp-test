@@ -28,6 +28,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -220,19 +221,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getServiceObjectName = (id: string) => this.getObjectName(id, this.serviceObjects);
-
-  getServiceObjectGroupName = (id: string): string => this.getObjectName(id, this.serviceObjectGroups);
-
-  getNetworkObjectName = (id: string): string => this.getObjectName(id, this.networkObjects);
-
-  getNetworkObjectGroupName = (id: string): string => this.getObjectName(id, this.networkObjectGroups);
-
-  private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
-    }
-  }
+  public getServiceObjectName = (id: string) => ObjectUtil.getObjectName(id, this.serviceObjects);
+  public getServiceObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.serviceObjectGroups);
+  public getNetworkObjectName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjects);
+  public getNetworkObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjectGroups);
 
   deleteFirewallRule(firewallRule: FirewallRule): void {
     const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';

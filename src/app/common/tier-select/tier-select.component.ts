@@ -5,7 +5,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { V1DatacentersService, Tier } from 'api_client';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-tier-select',

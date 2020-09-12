@@ -1,8 +1,8 @@
-<h1 class="header">Physical Servers</h1>
+<h1>Physical Servers</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Create Physical Server -->
-  <button type="button" class="btn btn-success" (click)="createPhysicalServer()">
+  <button type="button" class="btn btn-success" (click)="openPhysicalServerModal(ModalMode.Create)">
     <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
     <span>Create Physical Server</span>
   </button>
@@ -14,7 +14,11 @@
   </button>
 </section>
 
-<table class="table table-striped" aria-describedby="Physical Servers table">
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Physical Servers</span>
+  </caption>
   <thead>
     <tr>
       <th scope="col">Name</th>

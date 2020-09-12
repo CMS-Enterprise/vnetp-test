@@ -1,6 +1,8 @@
+<h1>Dashboard</h1>
+
 <main class="dashboard">
   <!-- Service Status -->
-  <div class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Service Status">
     <h4 class="dashboard__heading">Service Status</h4>
     <div *ngFor="let service of status" class="status-item">
       <span>
@@ -8,10 +10,10 @@
       </span>
       <div class="status-light" [ngClass]="service.status"></div>
     </div>
-  </div>
+  </aside>
 
   <!-- Job Status Today -->
-  <div class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Job Status Today">
     <h4 class="dashboard__heading">Job Status Today</h4>
 
     <div class="chart-wrap">
@@ -48,10 +50,10 @@
         <span class="legend-subtitle" *ngIf="cancelledJobs">Total: {{ cancelledJobs }}</span>
       </div>
     </div>
-  </div>
+  </aside>
 
   <!-- Overall Environment -->
-  <div class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Overall Environment">
     <h4 class="dashboard__heading">Overall Environment</h4>
     <ul class="dash-card">
       <li>
@@ -103,5 +105,5 @@
         </a>
       </li>
     </ul>
-  </div>
+  </aside>
 </main>

@@ -33,9 +33,17 @@ export const MockIconButtonComponent = MockComponent({
   inputs: ['icon', 'label', 'type'],
   outputs: ['handleClick'],
 });
-
 export const MockTabsComponent = MockComponent({
   selector: 'app-tabs',
   inputs: ['tabs'],
   outputs: ['tabChange'],
+});
+
+export const MockViewFieldComponent = MockComponent({
+  selector: 'app-view-field',
+  inputs: ['background', 'label', 'value'],
+});
+
+export const MockYesNoModalComponent = MockComponent({
+  selector: 'app-yes-no-modal',
 });

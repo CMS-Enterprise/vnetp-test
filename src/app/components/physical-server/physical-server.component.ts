@@ -6,21 +6,21 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { V1DatacentersService, V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-physical-server',
   templateUrl: './physical-server.component.html',
 })
 export class PhysicalServerComponent implements OnInit, OnDestroy {
-  physicalServers: Array<PhysicalServer>;
-  physicalServerModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterId: string;
+  public ModalMode = ModalMode;
+  public currentPhysicalServersPage = 1;
+  public datacenterId: string;
+  public perPage = 20;
+  public physicalServers: PhysicalServer[] = [];
 
-  currentPhysicalServersPage = 1;
-  perPage = 20;
-  ModalMode = ModalMode;
+  private currentDatacenterSubscription: Subscription;
+  private physicalServerModalSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -29,7 +29,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     private physicalServerService: V1PhysicalServersService,
   ) {}
 
-  getPhysicalServers() {
+  public getPhysicalServers(): void {
     this.datacenterService
       .v1DatacentersIdGet({
         id: this.datacenterId,
@@ -40,12 +40,8 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
       });
   }
 
-  createPhysicalServer() {
-    this.openPhysicalServerModal(ModalMode.Create);
-  }
-
-  openPhysicalServerModal(modalMode: ModalMode, ps?: PhysicalServer) {
-    if (modalMode === ModalMode.Edit && !ps) {
+  public openPhysicalServerModal(modalMode: ModalMode, physicalServer?: PhysicalServer) {
+    if (modalMode === ModalMode.Edit && !physicalServer) {
       throw new Error('Physical Server required.');
     }
 
@@ -54,56 +50,56 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     dto.DatacenterId = this.datacenterId;
 
     if (modalMode === ModalMode.Edit) {
-      dto.PhysicalServer = ps;
+      dto.PhysicalServer = physicalServer;
     }
 
-    this.subscribeToPhysicalServerModal();
+    this.physicalServerModalSubscription = this.subscribeToPhysicalServerModal();
     this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'physicalServerModal');
     this.ngx.getModal('physicalServerModal').open();
   }
 
-  subscribeToPhysicalServerModal() {
-    this.physicalServerModalSubscription = this.ngx
-      .getModal('physicalServerModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        this.getPhysicalServers();
-        this.ngx.resetModalData('physicalServerModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+  private subscribeToPhysicalServerModal(): Subscription {
+    return this.ngx.getModal('physicalServerModal').onAnyCloseEvent.subscribe(() => {
+      this.getPhysicalServers();
+      this.ngx.resetModalData('physicalServerModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
-  deletePhysicalServer(ps: PhysicalServer) {
-    const deleteDescription = ps.deletedAt ? 'Delete' : 'Soft-Delete';
+  public deletePhysicalServer(physicalServer: PhysicalServer): void {
+    const { deletedAt, id, name } = physicalServer;
+    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
 
     const deleteFunction = () => {
-      if (!ps.deletedAt) {
-        this.physicalServerService.v1PhysicalServersIdSoftDelete({ id: ps.id }).subscribe(data => {
+      if (!deletedAt) {
+        this.physicalServerService.v1PhysicalServersIdSoftDelete({ id }).subscribe(() => {
           this.getPhysicalServers();
         });
       } else {
-        this.physicalServerService.v1PhysicalServersIdDelete({ id: ps.id }).subscribe(data => {
+        this.physicalServerService.v1PhysicalServersIdDelete({ id }).subscribe(() => {
           this.getPhysicalServers();
         });
       }
     };
 
     this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${ps.name}"?`),
+      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${name}"?`),
       deleteFunction,
     );
   }
 
-  restorePhysicalServer(ps: PhysicalServer) {
-    if (ps.deletedAt) {
-      this.physicalServerService
-        .v1PhysicalServersIdRestorePatch({
-          id: ps.id,
-        })
-        .subscribe(data => {
-          this.getPhysicalServers();
-        });
+  public restorePhysicalServer(physicalServer: PhysicalServer): void {
+    if (!physicalServer.deletedAt) {
+      return;
     }
+    this.physicalServerService
+      .v1PhysicalServersIdRestorePatch({
+        id: physicalServer.id,
+      })
+      .subscribe(() => {
+        this.getPhysicalServers();
+      });
   }
 
   private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
@@ -119,11 +115,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     });
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.physicalServerModalSubscription, this.currentDatacenterSubscription]);
-  }
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;
@@ -132,7 +124,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.unsubAll();
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.physicalServerModalSubscription, this.currentDatacenterSubscription]);
   }
 }

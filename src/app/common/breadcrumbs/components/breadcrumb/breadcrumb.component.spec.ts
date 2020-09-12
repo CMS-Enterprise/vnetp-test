@@ -5,35 +5,28 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterSelectComponent } from '../datacenter-select/datacenter-select.component';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
+import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
   let fixture: ComponentFixture<BreadcrumbComponent>;
-  let router: Router;
-
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule, FormsModule, NgxSmartModalModule],
-      declarations: [BreadcrumbComponent, DatacenterSelectComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService],
-    }).compileComponents();
+      imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule, FormsModule],
+      declarations: [BreadcrumbComponent, DatacenterSelectComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), CookieService],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(BreadcrumbComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(BreadcrumbComponent);
-    component = fixture.componentInstance;
-    router = TestBed.get(Router);
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

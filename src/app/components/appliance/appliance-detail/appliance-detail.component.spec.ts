@@ -1,47 +1,45 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceDetailComponent } from './appliance-detail.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  MockFontAwesomeComponent,
+  MockYesNoModalComponent,
+  MockNgxSmartModalComponent,
+  MockViewFieldComponent,
+} from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { MockProvider } from 'src/test/mock-providers';
+import { V1AppliancesService } from 'api_client';
 
 describe('ApplianceDetailComponent', () => {
   let component: ApplianceDetailComponent;
   let fixture: ComponentFixture<ApplianceDetailComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
+    const mockActivatedRoute = {
+      snapshot: {
+        paramMap: convertToParamMap({ id: '1' }),
+        url: [{ path: 'appliance' }],
+      },
+    };
+
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        ApplianceDetailComponent,
+        MockViewFieldComponent,
+        MockNgxSmartModalComponent,
+        MockYesNoModalComponent,
+        MockFontAwesomeComponent,
       ],
-      declarations: [ApplianceDetailComponent, YesNoModalComponent, MockFontAwesomeComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ id: '1' }),
-              url: [{ path: 'appliance' }],
-            },
-          },
-        },
-        FormBuilder,
-        Validators,
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1AppliancesService),
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
-    }).compileComponents();
+    });
   }));
 
   beforeEach(() => {

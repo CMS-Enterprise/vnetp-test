@@ -1,35 +1,41 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplianceComponent } from './appliance.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockYesNoModalComponent,
+  MockNgxSmartModalComponent,
+  MockComponent,
+} from 'src/test/mock-components';
+import { MockProvider } from 'src/test/mock-providers';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
-import { ApplianceModalComponent } from './appliance-modal/appliance-modal.component';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1DatacentersService, V1AppliancesService } from 'api_client';
 
 describe('ApplianceComponent', () => {
   let component: ApplianceComponent;
   let fixture: ComponentFixture<ApplianceComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        ApplianceComponent,
+        MockComponent({ selector: 'app-appliance-modal' }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockYesNoModalComponent,
       ],
-      declarations: [ApplianceComponent, ApplianceModalComponent, YesNoModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
-    }).compileComponents();
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1AppliancesService),
+        MockProvider(V1DatacentersService),
+      ],
+    });
   }));
 
   beforeEach(() => {

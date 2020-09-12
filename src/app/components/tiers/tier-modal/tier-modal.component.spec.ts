@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { TierModalComponent } from './tier-modal.component';
 import TestUtil from 'src/test/test.util';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
@@ -14,28 +14,12 @@ import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 describe('TierModalComponent', () => {
   let component: TierModalComponent;
   let fixture: ComponentFixture<TierModalComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
-    const tiersService = {
-      v1TiersIdPut: jest.fn(() => of({})),
-      v1TiersPost: jest.fn(() => of({})),
-    };
-
-    const tierGroupsService = {
-      v1TierGroupsGet: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [TierModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-        { provide: V1TiersService, useValue: tiersService },
-        { provide: V1TierGroupsService, useValue: tierGroupsService },
-      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), MockProvider(V1TierGroupsService)],
     })
       .compileComponents()
       .then(() => {
@@ -57,52 +41,46 @@ describe('TierModalComponent', () => {
       expect(TestUtil.isFormControlRequired(component.form.controls.name)).toBe(true);
     });
 
-    it('should be valid', () => {
-      const name = component.form.controls.name;
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 
   describe('Description', () => {
     it('should be optional', () => {
-      expect(TestUtil.isFormControlRequired(component.form.controls.description)).toBe(false);
+      const { description } = component.form.controls;
+
+      description.setValue(null);
+      expect(description.valid).toBe(true);
     });
 
-    it('should be valid', () => {
-      const description = component.form.controls.description;
+    it('should have a minimum length of 3 and maximum length of 500', () => {
+      const { description } = component.form.controls;
+
+      description.setValue('a');
+      expect(description.valid).toBe(false);
+
       description.setValue('a'.repeat(3));
-      expect(description.valid).toBeTruthy();
-    });
+      expect(description.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const description = component.form.controls.description;
-      description.setValue('a'.repeat(2));
-      expect(description.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const description = component.form.controls.description;
       description.setValue('a'.repeat(501));
-      expect(description.valid).toBeFalsy();
+      expect(description.valid).toBe(false);
     });
   });
 
@@ -209,6 +187,7 @@ describe('TierModalComponent', () => {
     };
 
     it('should throw an error if the modal mode is not set', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createTierModalDto();
       dto.ModalMode = null;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
@@ -218,6 +197,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should enable the name field when creating a new tier', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       const dto = createTierModalDto();
       dto.Tier = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -229,6 +209,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should disable the name field when editing an existing tier', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
 
       component.getData();
@@ -237,6 +218,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should load tier groups when opening the modal', () => {
+      const ngx = TestBed.get(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
       const tierGroupsService = TestBed.get(V1TierGroupsService);
       const loadTierGroupsSpy = jest.spyOn(tierGroupsService, 'v1TierGroupsGet').mockImplementation(() => of([] as TierGroup[]));

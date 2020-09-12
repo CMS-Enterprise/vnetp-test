@@ -46,7 +46,11 @@
       <tooltip [message]="helpText.FilterEntries"></tooltip>
       <div class="form-row">
         <div class="form-group col-md-12 clearfix">
-          <table name="filterEntryTable" class="table table-striped" aria-describedby="Filter Entries tables">
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Filter Entries for this Contract</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Name</th>

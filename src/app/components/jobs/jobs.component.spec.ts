@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CookieService } from 'ngx-cookie-service';
 import { JobsComponent } from './jobs.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockProvider } from 'src/test/mock-providers';
+import { V1JobsService } from 'api_client';
 
 describe('JobsComponent', () => {
   let component: JobsComponent;
@@ -10,10 +11,10 @@ describe('JobsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, NgxPaginationModule],
-      declarations: [JobsComponent],
-      providers: [CookieService],
-    }).compileComponents();
+      imports: [NgxPaginationModule],
+      declarations: [JobsComponent, MockFontAwesomeComponent],
+      providers: [MockProvider(V1JobsService)],
+    });
   }));
 
   beforeEach(() => {

@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VirtualDiskModalComponent } from './virtual-disk-modal.component';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { V1VmwareVirtualDisksService } from 'api_client';
 import TestUtil from 'src/test/test.util';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -16,21 +15,10 @@ describe('VirtualDiskModalComponent', () => {
   let fixture: ComponentFixture<VirtualDiskModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
-    const virtualDiskService = {
-      v1VmwareVirtualDisksPost: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VirtualDiskModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        { provide: V1VmwareVirtualDisksService, useValue: virtualDiskService },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1VmwareVirtualDisksService)],
     })
       .compileComponents()
       .then(() => {
@@ -46,54 +34,46 @@ describe('VirtualDiskModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = component.form.controls.name;
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 
   describe('Description', () => {
-    it('should be valid (null)', () => {
-      const description = component.form.controls.description;
+    it('should be optional', () => {
+      const { description } = component.form.controls;
+
       description.setValue(null);
-      expect(description.valid).toBeTruthy();
+      expect(description.valid).toBe(true);
     });
 
-    it('should be valid (minlen)', () => {
-      const description = component.form.controls.description;
+    it('should have a minimum length of 3 and maximum length of 500', () => {
+      const { description } = component.form.controls;
+
+      description.setValue('a');
+      expect(description.valid).toBe(false);
+
       description.setValue('a'.repeat(3));
-      expect(description.valid).toBeTruthy();
-    });
+      expect(description.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const description = component.form.controls.description;
-      description.setValue('a'.repeat(2));
-      expect(description.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const description = component.form.controls.description;
       description.setValue('a'.repeat(501));
-      expect(description.valid).toBeFalsy();
+      expect(description.valid).toBe(false);
     });
   });
 
@@ -102,14 +82,6 @@ describe('VirtualDiskModalComponent', () => {
 
     requiredFields.forEach(f => {
       expect(TestUtil.isFormControlRequired(component.form.controls[f])).toBe(true);
-    });
-  });
-
-  it('should not require description', () => {
-    const optionalFields = ['description'];
-
-    optionalFields.forEach(f => {
-      expect(TestUtil.isFormControlRequired(component.form.controls[f])).toBe(false);
     });
   });
 
@@ -186,6 +158,7 @@ describe('VirtualDiskModalComponent', () => {
           cpuReserved: true,
           memoryReserved: true,
           memorySize: 2,
+          priorityGroupId: '',
         },
       };
     };

@@ -2,19 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
-import DownloadUtil from 'src/app/utils/download.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import DownloadUtil from 'src/app/utils/DownloadUtil';
 
 @Component({
   selector: 'app-zos',
   templateUrl: './zos.component.html',
 })
 export class ZosComponent implements OnInit, OnDestroy {
-  requestModalSubscription: Subscription;
-  configurations: ConfigurationUpload[];
+  public configurations: ConfigurationUpload[];
+  public currentConfigurationPage = 1;
+  public perPage = 20;
 
-  currentConfigurationPage = 1;
-  perPage = 20;
+  private requestModalSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private configurationService: V1ConfigurationUploadService) {}
 
@@ -59,7 +59,7 @@ export class ZosComponent implements OnInit, OnDestroy {
     });
   }
 
-  exportFile(requestFile: { type: string; data: number[] }) {
+  exportFile(requestFile: { type: string; data: number[] }): void {
     const utf8decoder = new TextDecoder();
     const buff = new Uint8Array(requestFile.data);
     const blob = utf8decoder.decode(buff);
@@ -80,15 +80,11 @@ export class ZosComponent implements OnInit, OnDestroy {
     DownloadUtil.download(getDownloadName(), blob);
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.requestModalSubscription]);
-  }
-
   ngOnInit() {
     this.getConfigurations();
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.requestModalSubscription]);
   }
 }

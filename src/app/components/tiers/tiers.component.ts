@@ -6,7 +6,8 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-tiers',
@@ -18,7 +19,6 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   perPage = 20;
   currentTiersPage = 1;
-  navIndex = 0;
   ModalMode = ModalMode;
 
   tierModalSubscription: Subscription;
@@ -59,7 +59,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   openTierModal(modalMode: ModalMode, tier?: Tier) {
     if (modalMode === ModalMode.Edit && !tier) {
-      throw new Error('Service Object required.');
+      throw new Error('Tier required');
     }
 
     const dto = new TierModalDto();
@@ -180,20 +180,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: semicolon
   };
 
-  getTierGroupName = (id: string) => {
-    return this.getObjectName(id, this.tierGroups);
-    // tslint:disable-next-line: semicolon
-  };
-
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
-    }
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
-  }
+  public getTierGroupName = (id: string) => ObjectUtil.getObjectName(id, this.tierGroups);
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -205,6 +192,6 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
   }
 }

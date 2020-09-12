@@ -13,6 +13,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { PriorityGroupListComponent } from './priority-group/priority-group-list/priority-group-list.component';
+import { PriorityGroupModalComponent } from './priority-group/priority-group-modal/priority-group-modal.component';
+import { ViewFieldModule } from 'src/app/common/value-card/view-field.module';
 
 const routes: Routes = [
   {
@@ -38,12 +42,16 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TabsModule,
+    ViewFieldModule,
   ],
   declarations: [
-    VmwareComponent,
     NetworkAdapterModalComponent,
+    PriorityGroupListComponent,
+    PriorityGroupModalComponent,
     VirtualDiskModalComponent,
     VirtualMachineModalComponent,
+    VmwareComponent,
     VmwareDetailComponent,
   ],
 })

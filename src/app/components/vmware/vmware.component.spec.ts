@@ -1,49 +1,50 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VmwareComponent } from './vmware.component';
-import { MockFontAwesomeComponent, MockIconButtonComponent, MockTabsComponent } from 'src/test/mock-components';
+import {
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockTabsComponent,
+  MockComponent,
+  MockViewFieldComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
-import { CookieService } from 'ngx-cookie-service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
-import { VirtualMachineModalComponent } from './virtual-machine-modal/virtual-machine-modal.component';
-import { VirtualDiskModalComponent } from './virtual-disk-modal/virtual-disk-modal.component';
-import { NetworkAdapterModalComponent } from './network-adapter-modal/network-adapter-modal.component';
+import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
 
 describe('VmwareComponent', () => {
   let component: VmwareComponent;
   let fixture: ComponentFixture<VmwareComponent>;
   let router: Router;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        FormsModule,
-        NgxSmartModalModule,
-        NgxPaginationModule,
-        ReactiveFormsModule,
-        NgxMaskModule.forRoot(),
-        HttpClientTestingModule,
-      ],
+      imports: [RouterTestingModule.withRoutes([]), FormsModule, NgxPaginationModule, ReactiveFormsModule],
       declarations: [
-        VmwareComponent,
-        VirtualMachineModalComponent,
-        VirtualDiskModalComponent,
-        NetworkAdapterModalComponent,
-        YesNoModalComponent,
+        MockComponent({ selector: 'app-priority-group-list', inputs: ['datacenterId'] }),
+        MockComponent({ selector: 'app-network-adapter-modal' }),
+        MockComponent({ selector: 'app-virtual-disk-modal' }),
+        MockComponent({ selector: 'app-virtual-machine-modal' }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockNgxSmartModalComponent,
         MockTabsComponent,
+        MockViewFieldComponent,
+        VmwareComponent,
+        YesNoModalComponent,
       ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, FormBuilder, CookieService, Validators],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1DatacentersService),
+        MockProvider(V1VmwareVirtualMachinesService),
+      ],
     }).compileComponents();
   }));
 

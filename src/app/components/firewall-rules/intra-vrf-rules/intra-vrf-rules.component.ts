@@ -6,21 +6,17 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { AutomationApiService } from 'src/app/services/automation-api.service';
-import { HelpersService } from 'src/app/services/helpers.service';
 import { ActivatedRoute } from '@angular/router';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
+import CustomFieldUtil from 'src/app/utils/CustomFieldUtil';
 
 @Component({
   selector: 'app-intra-vrf-rules',
   templateUrl: './intra-vrf-rules.component.html',
 })
 export class IntraVrfRulesComponent implements OnInit, OnDestroy {
-  constructor(
-    private route: ActivatedRoute,
-    private ngxSm: NgxSmartModalService,
-    private api: AutomationApiService,
-    private hs: HelpersService,
-  ) {}
+  constructor(private route: ActivatedRoute, private ngxSm: NgxSmartModalService, private automationApiService: AutomationApiService) {}
 
   Id: string;
   vrf: Vrf;
@@ -33,14 +29,14 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy {
   dirty: boolean;
 
   getVrf() {
-    this.api.getVrf(this.Id).subscribe(data => {
+    this.automationApiService.getVrf(this.Id).subscribe(data => {
       this.vrf = data;
       this.getVrfCustomFields();
     });
   }
 
   getVrfCustomFields() {
-    const contracts = this.hs.getJsonCustomField(this.vrf, 'intravrf_contracts') as Array<Contract>;
+    const contracts = CustomFieldUtil.getJsonCustomField(this.vrf, 'intravrf_contracts') as Contract[];
 
     if (contracts) {
       this.contracts = contracts;
@@ -56,7 +52,7 @@ export class IntraVrfRulesComponent implements OnInit, OnDestroy {
   editContract(contract: Contract) {
     this.subscribeToContractModal();
     this.contractModalMode = ModalMode.Edit;
-    this.ngxSm.setModalData(this.hs.deepCopy(contract), 'contractModal');
+    this.ngxSm.setModalData(ObjectUtil.deepCopy(contract), 'contractModal');
     this.editContractIndex = this.contracts.indexOf(contract);
     this.ngxSm.getModal('contractModal').open();
   }

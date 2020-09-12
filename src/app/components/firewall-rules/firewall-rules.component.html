@@ -1,6 +1,6 @@
-<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+<h1>Firewall Rules</h1>
 
-<h1 class="mt-3 header">{{ navIndex }} Firewall Rules</h1>
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
 <section class="btn-toolbar" role="toolbar">
   <button type="button" class="btn btn-info" (click)="getTiers()">
@@ -9,7 +9,11 @@
   </button>
 </section>
 
-<table class="table table-striped" aria-describedby="Firewall Rules table">
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>{{ navIndex }} Firewall Rules with the current Tier</span>
+  </caption>
   <thead>
     <tr>
       <th scope="col">Tier</th>

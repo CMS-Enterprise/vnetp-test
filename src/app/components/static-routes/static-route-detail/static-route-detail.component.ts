@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
@@ -7,31 +7,31 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-static-route-detail',
   templateUrl: './static-route-detail.component.html',
 })
 export class StaticRouteDetailComponent implements OnInit, OnDestroy {
-  currentDatacenterSubscription: Subscription;
-  staticRouteModalSubscription: Subscription;
+  public ModalMode = ModalMode;
+  public Id = '';
+  public tier: Tier;
+  public staticRoutes: StaticRoute[] = [];
 
-  ModalMode = ModalMode;
+  private currentDatacenterSubscription: Subscription;
+  private staticRouteModalSubscription: Subscription;
 
   constructor(
-    private datacenterService: DatacenterContextService,
-    private tierService: V1TiersService,
-    private staticRouteService: V1NetworkStaticRoutesService,
-    private route: ActivatedRoute,
+    private datacenterContextService: DatacenterContextService,
     private ngx: NgxSmartModalService,
+    private route: ActivatedRoute,
+    private staticRouteService: V1NetworkStaticRoutesService,
+    private tierService: V1TiersService,
   ) {}
 
-  Id = '';
-  tier: Tier;
-  staticRoutes: Array<StaticRoute>;
-
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.Id = this.route.snapshot.paramMap.get('id');
         // TODO: Ensure Tier is in selected datacenter tiers.
@@ -47,7 +47,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
 
   openStaticRouteModal(modalMode: ModalMode, staticRoute?: StaticRoute) {
     if (modalMode === ModalMode.Edit && !staticRoute) {
-      throw new Error('Firewall Rule Required');
+      throw new Error('Static Route Required');
     }
 
     const dto = new StaticRouteModalDto();
@@ -72,7 +72,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.currentDatacenterSubscription.unsubscribe();
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.staticRouteModalSubscription]);
   }
 
   deleteStaticRoute(staticRoute: StaticRoute) {

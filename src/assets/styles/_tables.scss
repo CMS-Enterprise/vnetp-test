@@ -1,6 +1,11 @@
 .table {
   border: 1px solid $c-gray-100;
   color: $c-gray-700;
+
+  caption {
+    padding: 0.5rem;
+    color: $c-gray-700;
+  }
 }
 
 .table__actions {

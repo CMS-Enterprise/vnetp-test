@@ -56,26 +56,6 @@ export class TierModalHelpText {
 @Injectable({
   providedIn: 'root',
 })
-export class LoadBalancersHelpText {
-  wikiBase: string = environment.wikiBase;
-
-  Tier = `Tier that Load Balancer configurations are created within.`;
-  VirtualServers = `Manage Virtual Servers.`;
-  Pools = `Manage Pools and Nodes.`;
-  PoolRelations = `Manage Pool to Node and Pool to Health Monitor Relations.`;
-  Nodes = `Manage Nodes.`;
-  IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
-  HealthMonitors = `Manage Health Monitors.`;
-  Profiles = `Manage Profiles.`;
-  Policies = `Manage Policies.`;
-  SelfIps = `Manage Load Balancer Self IPs.`;
-  Vlans = `Manage Load Balancer VLANs.`;
-  Routes = `Manage Load Balancer Routes.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
 export class FirewallRulesHelpText {
   wikiBase: string = environment.wikiBase;
 
@@ -216,9 +196,7 @@ export class VirtualServerModalHelpText {
   Pool = `Pool that the Virtual Server forwards the request to.`;
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
   AvailableProfiles = `Client SSL profiles available (can select multiple).`;
-  SelectedProfiles = `Selected Client SSL profiles.`;
   AvailablePolicies = `Policies available (can select multiple).`;
-  SelectedPolicies = `Selected policies.`;
 }
 
 @Injectable({
@@ -229,9 +207,7 @@ export class PoolModalHelpText {
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
   Nodes = `Nodes of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
-  SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
   AvailableNodes = `Nodes that can be added to the Pool.`;
-  SelectedNodes = `Nodes that have been added to the Pool.`;
   Ratio = 'Ratio of traffic that will be sent to the node.';
   ServicePort = `Port that the node provides service on.`;
 }
