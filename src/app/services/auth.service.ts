@@ -43,6 +43,7 @@ export class AuthService {
   logout(): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
+    location.reload();
   }
 
   async completeAuthentication(): Promise<void> {

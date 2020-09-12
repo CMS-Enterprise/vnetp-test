@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { MockProvider } from 'src/test/mock-providers';
 import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { V1NetworkVlansService } from 'api_client';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
