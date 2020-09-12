@@ -61,9 +61,9 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       });
   }
 
-  public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup) => {
+  public filterFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): boolean {
     return firewallRuleGroup.type === this.navIndex;
-  };
+  }
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
@@ -101,7 +101,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
     });
   }
 
-  private mapToCsv = (obj: any): any => {
+  private mapToCsv(obj: any): any {
     Object.entries(obj).forEach(([key, val]) => {
       if (val === null || val === '') {
         delete obj[key];
@@ -116,7 +116,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       }
     });
     return obj;
-  };
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
