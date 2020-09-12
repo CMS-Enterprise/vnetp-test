@@ -11,14 +11,12 @@ export class HttpConfigInterceptor {
   constructor(private authService: AuthService, private toastr: ToastrService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const isLoggedIn = false;
-    // const isLoggedIn = this.authService.isLoggedIn();
-    console.log(isLoggedIn);
+    const isLoggedIn = this.authService.isLoggedIn();
 
-    // if (isLoggedIn) {
-    //   const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
-    //   request = request.clone({ headers });
-    // }
+    if (isLoggedIn) {
+      const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
+      request = request.clone({ headers });
+    }
 
     if (!request.headers.has('Accept')) {
       request = request.clone({
@@ -73,7 +71,7 @@ export class HttpConfigInterceptor {
               toastrMessage = 'Bad Request';
               break;
             case 401:
-              // this.auth.logout();
+              this.authService.logout();
               return;
             case 403:
               toastrMessage = 'Unauthorized.';

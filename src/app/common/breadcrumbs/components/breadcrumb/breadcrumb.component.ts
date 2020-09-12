@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { User } from 'src/app/models/user/user';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -11,11 +9,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class BreadcrumbComponent implements OnInit {
   public breadcrumbs: Breadcrumb[];
-  currentUser: User;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) {
-    // this.auth.currentUser.subscribe(u => (this.currentUser = u));
-  }
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const breadcrumb: Breadcrumb = {

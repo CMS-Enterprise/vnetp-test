@@ -1,46 +1,56 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, Log } from 'oidc-client';
+import { UserManager, User, Log, Profile } from 'oidc-client';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private manager = new UserManager(environment.openId);
-  user: User = null;
+  private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  public currentUser: Observable<User> = this.user.asObservable();
 
   constructor() {
     Log.logger = console;
     Log.level = Log.DEBUG;
     console.log(environment.openId);
     this.manager.getUser().then(user => {
-      this.user = user;
+      this.user.next(user);
     });
   }
 
   isLoggedIn(): boolean {
-    return this.user !== null;
+    return this.user && this.user.value !== null && new Date(this.user.value.expires_at * 1000) > new Date();
   }
 
   getUser(): Promise<User> {
     return this.manager.getUser();
   }
 
-  getClaims(): any {
-    return this.user.profile;
+  getClaims(): Profile {
+    return this.user.value.profile;
   }
 
   getAuthorizationHeaderValue(): string {
-    return `${this.user.token_type} ${this.user.access_token}`;
+    return `${this.user.value.token_type} ${this.user.value.access_token}`;
   }
 
   startAuthentication(): Promise<void> {
     return this.manager.signinRedirect();
   }
 
-  completeAuthentication(): Promise<void> {
-    return this.manager.signinRedirectCallback().then(user => {
-      this.user = user;
-    });
+  logout(): void {
+    this.user.next(null);
+    this.currentUser = this.user.asObservable();
+  }
+
+  async completeAuthentication(): Promise<void> {
+    const user = await this.manager.signinRedirectCallback();
+    this.user.next(user);
+  }
+
+  public get fullName(): string {
+    return `${this.user.value.profile.given_name} ${this.user.value.profile.family_name}`;
   }
 }

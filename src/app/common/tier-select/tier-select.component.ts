@@ -3,8 +3,6 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { V1DatacentersService, Tier } from 'api_client';
-import { User } from 'src/app/models/user/user';
-import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from 'src/app/utils/subscription.util';
@@ -19,19 +17,15 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   currentTier: Tier;
   datacenterId: string;
   currentDatacenterSubscription: Subscription;
-  currentUserSubscription: Subscription;
   currentTierSubscription: Subscription;
 
   constructor(
-    private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
     private tierContextService: TierContextService,
     private toastrService: ToastrService,
     private ngx: NgxSmartModalService,
   ) {}
-
-  currentUser: User;
 
   openTierModal() {
     this.ngx.getModal('tierSwitchModal').open();
@@ -58,12 +52,10 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentUserSubscription, this.currentTierSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 
   ngOnInit() {
-    // this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;

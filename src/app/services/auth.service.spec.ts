@@ -4,20 +4,19 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AuthService', () => {
-  // let service: AuthService;
-  // beforeEach(() => {
-  //   TestBed.configureTestingModule({
-  //     imports: [HttpClientTestingModule],
-  //     providers: [CookieService],
-  //   });
-  //   service = TestBed.get(AuthService);
-  // });
-  // afterEach(() => {
-  //   TestBed.resetTestingModule();
-  // });
-  // it('should be created', () => {
-  //   expect(service).toBeTruthy();
-  // });
+  let service: AuthService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+    });
+    service = TestBed.get(AuthService);
+  });
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
   // describe('Valid Tokens', () => {
   //   it('should parse a user with roles', () => {
   //     const userWithRoles = service.getUserFromToken(
