@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { V1NetworkSubnetsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';

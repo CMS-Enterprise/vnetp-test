@@ -5,7 +5,7 @@ import { ServiceObjectModalComponent } from '../service-object-modal/service-obj
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';

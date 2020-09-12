@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { TierModalComponent } from './tier-modal.component';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';

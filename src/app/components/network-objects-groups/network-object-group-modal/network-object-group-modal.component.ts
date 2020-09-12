@@ -3,7 +3,6 @@ import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
-import { Subnet } from 'src/app/models/d42/subnet';
 import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
 import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -16,9 +15,8 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class NetworkObjectGroupModalComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
-  networkObjects: Array<NetworkObject>;
-  tierNetworkObjects: Array<NetworkObject>;
-  Subnets: Array<Subnet>;
+  networkObjects: NetworkObject[] = [];
+  tierNetworkObjects: NetworkObject[];
   TierId: string;
   ModalMode: ModalMode;
   NetworkObjectGroupId: string;
@@ -31,9 +29,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private tierService: V1TiersService,
     public helpText: NetworkObjectGroupModalHelpText,
-  ) {
-    this.networkObjects = new Array<NetworkObject>();
-  }
+  ) {}
 
   save() {
     this.submitted = true;
@@ -180,8 +176,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   public reset() {
     this.submitted = false;
-    this.networkObjects = new Array<NetworkObject>();
-    this.Subnets = new Array<Subnet>();
+    this.networkObjects = [];
     this.buildForm();
   }
 
