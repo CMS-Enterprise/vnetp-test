@@ -1,7 +1,7 @@
 import { OidcClientSettings } from 'oidc-client';
 
 const openId: OidcClientSettings = {
-  authority: 'https://10.151.20.115/cfs/oauth/draasui',
+  authority: 'https://cfs01-dc01.draas.cdsvdc.lcl/cfs/oauth/draasui',
   client_id: 'lS12GPO6lWGJ8e7Ocjbo0z',
   client_secret: 'r0Tjc0OZ6Oem4Biw9ZGulD0mY3xzzBD9Q6wuJ4jIgMft',
   redirect_uri: 'http://localhost:4200/callback',
@@ -9,8 +9,8 @@ const openId: OidcClientSettings = {
   scope: 'openid profile',
   loadUserInfo: true,
   metadata: {
-    issuer: 'https://10.151.20.115/cfs/oauth/draasui',
-    authorization_endpoint: 'https://10.151.20.115/cfs/oauth/draasui/authorize',
+    issuer: 'https://cfs01-dc01.draas.cdsvdc.lcl/cfs/oauth/draasui',
+    authorization_endpoint: 'https://cfs01-dc01.draas.cdsvdc.lcl/cfs/oauth/draasui/authorize',
     token_endpoint: 'http://localhost:3000/cfs/oauth/draasui/tokenservice',
     userinfo_endpoint: 'http://localhost:3000/cfs/oauth/draasui/userinfo',
   },
