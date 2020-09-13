@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { UserManager, User, Log, Profile } from 'oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +12,9 @@ export class AuthService {
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   public currentUser: Observable<User> = this.user.asObservable();
 
-  constructor() {
+  constructor(private router: Router) {
     Log.logger = console;
     Log.level = Log.DEBUG;
-    console.log(environment.openId);
     this.manager.getUser().then(user => {
       this.user.next(user);
     });
@@ -43,12 +43,14 @@ export class AuthService {
   logout(): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
-    location.reload();
   }
 
   async completeAuthentication(): Promise<void> {
     const user = await this.manager.signinRedirectCallback();
     this.user.next(user);
+    this.router.navigate(['/dashboard'], {
+      queryParamsHandling: 'merge',
+    });
   }
 
   public get fullName(): string {
