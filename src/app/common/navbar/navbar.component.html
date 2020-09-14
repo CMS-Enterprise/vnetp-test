@@ -82,7 +82,6 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <!-- {{ user?.profile?.name | async }} -->
           <span *ngIf="user && user.profile"> | {{ user.profile.sub }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
