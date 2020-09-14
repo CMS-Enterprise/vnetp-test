@@ -8,12 +8,6 @@ npm install
 npm run build
 ```
 
-### Analyze Webpack Bundle
-
-Run ```npm run build:stats``` to generate JSON file with stats.
-Run ```npm run analyze``` to launch webpack bundle analyzer.
-
-
 ### publishing
 
 First build the package then run ```npm publish```
@@ -45,7 +39,7 @@ npm link
 
 In your project:
 ```
-npm link
+npm link 
 ```
 
 __Note for Windows users:__ The Angular CLI has troubles to use linked npm packages.
@@ -160,7 +154,7 @@ export class AppModule {
 
 
 ### Set service base path
-If different than the generated base path, during app bootstrap, you can provide the base path to your service.
+If different than the generated base path, during app bootstrap, you can provide the base path to your service. 
 
 ```
 import { BASE_PATH } from '';
@@ -208,4 +202,4 @@ import { environment } from '../environments/environment';
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
-```
+```  

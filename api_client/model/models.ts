@@ -1,3 +1,4 @@
+export * from './actifioVirtualMachineDto';
 export * from './appliance';
 export * from './applianceNetworkPort';
 export * from './configurationDto';

@@ -3,6 +3,12 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { V1ActifioAppliancesService } from './api/v1ActifioAppliances.service';
+import { V1ActifioApplicationGroupsService } from './api/v1ActifioApplicationGroups.service';
+import { V1ActifioApplicationsService } from './api/v1ActifioApplications.service';
+import { V1ActifioRecoveryPlansService } from './api/v1ActifioRecoveryPlans.service';
+import { V1ActifioRecoveryTypesService } from './api/v1ActifioRecoveryTypes.service';
+import { V1ActifioVirtualMachinesService } from './api/v1ActifioVirtualMachines.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuthService } from './api/v1Auth.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
