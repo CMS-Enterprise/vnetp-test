@@ -11368,18 +11368,36 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/virtual-machines:
+  /v1/agm/applications:
     get:
-      summary: Get many ActifioVirtualMachineDto
+      summary: Get many ActifioApplicationDto
       responses:
         '200':
           description: ''
           schema:
             type: array
             items:
-              $ref: '#/definitions/ActifioVirtualMachineDto'
-      tags:
-        - v1/actifio/virtual-machines
+              $ref: '#/definitions/ActifioApplicationDto'
+      tags: &ref_43
+        - v1/agm/applications
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/applications/{id}':
+    get:
+      summary: Get one ActifioApplicationDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioApplicationDto'
+      tags: *ref_43
       produces:
         - application/json
       consumes:
@@ -11390,7 +11408,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_43
+      tags: &ref_44
         - v1/actifio/recovery-plans
       produces:
         - application/json
@@ -11401,7 +11419,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11417,7 +11435,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11432,7 +11450,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11448,7 +11466,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11459,7 +11477,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11471,7 +11489,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11487,7 +11505,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_44
+      tags: &ref_45
         - v1/actifio/application-groups
       produces:
         - application/json
@@ -11499,7 +11517,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11515,7 +11533,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -12553,17 +12571,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_45
+        enum: &ref_46
           - In
           - Out
       action:
         type: string
-        enum: &ref_46
+        enum: &ref_47
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_47
+        enum: &ref_48
           - IP
           - ICMP
           - TCP
@@ -12577,19 +12595,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_48
+        enum: &ref_49
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_49
+        enum: &ref_50
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_50
+        enum: &ref_51
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -12751,7 +12769,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_55
+        enum: &ref_56
           - IpAddress
           - Fqdn
       ipAddress:
@@ -12878,7 +12896,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_53
+        enum: &ref_54
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -12907,7 +12925,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_54
+          enum: &ref_55
             - UDP
             - TCP
             - HTTP
@@ -13104,13 +13122,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_51
+        enum: &ref_52
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_52
+        enum: &ref_53
           - Standard
       servicePort:
         type: number
@@ -13633,13 +13651,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_45
+        enum: *ref_46
       action:
         type: string
-        enum: *ref_46
+        enum: *ref_47
       protocol:
         type: string
-        enum: *ref_47
+        enum: *ref_48
       logging:
         type: boolean
       enabled:
@@ -13649,13 +13667,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_48
+        enum: *ref_49
       destinationAddressType:
         type: string
-        enum: *ref_49
+        enum: *ref_50
       serviceType:
         type: string
-        enum: *ref_50
+        enum: *ref_51
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -14125,10 +14143,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_51
+        enum: *ref_52
       type:
         type: string
-        enum: *ref_52
+        enum: *ref_53
       servicePort:
         type: number
         minimum: 1
@@ -14244,7 +14262,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_53
+        enum: *ref_54
       nodes:
         type: array
         items:
@@ -14257,7 +14275,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_54
+          enum: *ref_55
       tierId:
         type: string
       vrfName:
@@ -14334,7 +14352,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_55
+        enum: *ref_56
       ipAddress:
         type: string
       fqdn:
@@ -14429,17 +14447,27 @@ definitions:
           $ref: '#/definitions/TierGroup'
     required:
       - bulk
-  ActifioVirtualMachineDto:
+  ActifioApplicationDto:
     type: object
     properties:
-      name:
+      hasSLA:
+        type: boolean
+      id:
         type: string
       isManaged:
         type: boolean
+      name:
+        type: string
+      slaProfileId:
+        type: string
       slaProfileName:
+        type: string
+      slaTemplateId:
         type: string
       slaTemplateName:
         type: string
     required:
-      - name
+      - hasSLA
+      - id
       - isManaged
+      - name

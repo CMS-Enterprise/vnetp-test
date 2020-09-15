@@ -11,10 +11,14 @@
  */
 
 
-export interface ActifioVirtualMachineDto { 
-    name: string;
+export interface ActifioApplicationDto { 
+    hasSLA: boolean;
+    id: string;
     isManaged: boolean;
+    name: string;
+    slaProfileId?: string;
     slaProfileName?: string;
+    slaTemplateId?: string;
     slaTemplateName?: string;
 }
 

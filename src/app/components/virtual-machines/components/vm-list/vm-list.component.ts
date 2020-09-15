@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { V1ActifioVirtualMachinesService } from 'api_client/api/v1ActifioVirtualMachines.service';
-import { ActifioVirtualMachineDto } from 'api_client/model/actifioVirtualMachineDto';
+import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.service';
+import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
 import { TableConfig } from 'src/app/common/table/table.component';
 
 @Component({
@@ -8,7 +8,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
   templateUrl: './vm-list.component.html',
 })
 export class VmListComponent implements OnInit {
-  public virtualMachines: ActifioVirtualMachineDto[] = [];
+  public virtualMachines: ActifioApplicationDto[] = [];
   public config: TableConfig = {
     description: 'List of Virtual Machines',
     columns: [
@@ -31,10 +31,10 @@ export class VmListComponent implements OnInit {
     ],
   };
 
-  constructor(private actifioVirtualMachineService: V1ActifioVirtualMachinesService) {}
+  constructor(private agmApplicationService: V1AgmApplicationsService) {}
 
   ngOnInit(): void {
-    this.actifioVirtualMachineService.v1ActifioVirtualMachinesGet().subscribe(data => {
+    this.agmApplicationService.v1AgmApplicationsGet().subscribe(data => {
       this.virtualMachines = data;
     });
   }

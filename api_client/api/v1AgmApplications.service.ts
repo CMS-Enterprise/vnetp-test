@@ -17,17 +17,21 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioVirtualMachineDto } from '../model/models';
+import { ActifioApplicationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1AgmApplicationsIdGetRequestParams {
+    id: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1ActifioVirtualMachinesService {
+export class V1AgmApplicationsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -86,14 +90,14 @@ export class V1ActifioVirtualMachinesService {
     }
 
     /**
-     * Get many ActifioVirtualMachineDto
+     * Get many ActifioApplicationDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioVirtualMachinesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioVirtualMachineDto>>;
-    public v1ActifioVirtualMachinesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioVirtualMachineDto>>>;
-    public v1ActifioVirtualMachinesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioVirtualMachineDto>>>;
-    public v1ActifioVirtualMachinesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmApplicationsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
+    public v1AgmApplicationsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
+    public v1AgmApplicationsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
+    public v1AgmApplicationsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -115,7 +119,53 @@ export class V1ActifioVirtualMachinesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioVirtualMachineDto>>(`${this.configuration.basePath}/v1/actifio/virtual-machines`,
+        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/applications`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get one ActifioApplicationDto
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
+    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
+    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
+    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
