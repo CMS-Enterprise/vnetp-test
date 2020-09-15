@@ -86,6 +86,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/vmware/vmware.module').then(m => m.VmwareModule),
   },
   {
+    path: 'virtual-machines',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Virtual Machines', title: 'Automation - Virtual Machines' },
+    loadChildren: () => import('./components/virtual-machines/virtual-machines.module').then(m => m.VirtualMachinesModule),
+  },
+  {
     path: 'zvm',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'z/VM', title: 'Automation - z/VM' },

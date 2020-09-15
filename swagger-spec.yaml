@@ -11368,6 +11368,221 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/agm/applications:
+    get:
+      summary: Get many ActifioApplicationDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationDto'
+      tags: &ref_43
+        - v1/agm/applications
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/applications/{id}':
+    get:
+      summary: Get one ActifioDetailedApplicationDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioDetailedApplicationDto'
+      tags: *ref_43
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/recovery-plans:
+    get:
+      summary: get all recovery plans
+      responses:
+        '200':
+          description: ''
+      tags: &ref_44
+        - v1/actifio/recovery-plans
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: delete all rec plans
+      responses:
+        '200':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/recovery-plans/{id}':
+    get:
+      summary: get 1 recovery plan
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: number
+      responses:
+        '200':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: delete 1 rec plan
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: number
+      responses:
+        '200':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/recovery-plans/execute/{id}':
+    post:
+      summary: execute 1 rec plan
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: number
+      responses:
+        '201':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/recovery-plans/execute:
+    post:
+      summary: execute all recovery plans
+      responses:
+        '201':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/recovery-plans/create:
+    post:
+      summary: create recovery plan
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/application-groups/{id}':
+    get:
+      summary: Get Application Group
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: number
+      responses:
+        '200':
+          description: ''
+      tags: &ref_45
+        - v1/actifio/application-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/application-groups:
+    get:
+      summary: Get Application Groups
+      responses:
+        '200':
+          description: ''
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/application-groups/{name}':
+    post:
+      summary: Create App Group
+      parameters:
+        - name: name
+          required: true
+          in: path
+          type: string
+      responses:
+        '201':
+          description: ''
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/appliances:
+    get:
+      summary: Get Appliances
+      responses:
+        '200':
+          description: ''
+      tags:
+        - v1/actifio/appliances
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/applications/{cdsid}/{serverid}':
+    get:
+      summary: Get Applications
+      parameters:
+        - name: serverid
+          required: true
+          in: path
+          type: number
+        - name: cdsid
+          required: true
+          in: path
+          type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - v1/actifio/applications
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/recovery-types:
+    get:
+      summary: Get Recovery Types
+      responses:
+        '200':
+          description: ''
+      tags:
+        - v1/actifio/recovery-types
+      produces:
+        - application/json
+      consumes:
+        - application/json
 definitions:
   Buffer:
     type: object
@@ -11857,6 +12072,8 @@ definitions:
         type: boolean
       datacenterId:
         type: string
+      priorityGroupId:
+        type: string
       networkAdapters:
         type: array
         readOnly: true
@@ -11867,8 +12084,6 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/VmwareVirtualDisk'
-      priorityGroupId:
-        type: string
     required:
       - name
       - cpuCores
@@ -12356,17 +12571,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_43
+        enum: &ref_46
           - In
           - Out
       action:
         type: string
-        enum: &ref_44
+        enum: &ref_47
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_45
+        enum: &ref_48
           - IP
           - ICMP
           - TCP
@@ -12380,19 +12595,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_46
+        enum: &ref_49
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_47
+        enum: &ref_50
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_48
+        enum: &ref_51
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -12554,7 +12769,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_53
+        enum: &ref_56
           - IpAddress
           - Fqdn
       ipAddress:
@@ -12681,7 +12896,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_51
+        enum: &ref_54
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -12710,7 +12925,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_52
+          enum: &ref_55
             - UDP
             - TCP
             - HTTP
@@ -12907,13 +13122,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_49
+        enum: &ref_52
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_50
+        enum: &ref_53
           - Standard
       servicePort:
         type: number
@@ -13436,13 +13651,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_43
+        enum: *ref_46
       action:
         type: string
-        enum: *ref_44
+        enum: *ref_47
       protocol:
         type: string
-        enum: *ref_45
+        enum: *ref_48
       logging:
         type: boolean
       enabled:
@@ -13452,13 +13667,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_46
+        enum: *ref_49
       destinationAddressType:
         type: string
-        enum: *ref_47
+        enum: *ref_50
       serviceType:
         type: string
-        enum: *ref_48
+        enum: *ref_51
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -13928,10 +14143,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_49
+        enum: *ref_52
       type:
         type: string
-        enum: *ref_50
+        enum: *ref_53
       servicePort:
         type: number
         minimum: 1
@@ -14047,7 +14262,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_51
+        enum: *ref_54
       nodes:
         type: array
         items:
@@ -14060,7 +14275,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_52
+          enum: *ref_55
       tierId:
         type: string
       vrfName:
@@ -14137,7 +14352,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_53
+        enum: *ref_56
       ipAddress:
         type: string
       fqdn:
@@ -14232,3 +14447,73 @@ definitions:
           $ref: '#/definitions/TierGroup'
     required:
       - bulk
+  ActifioApplicationDto:
+    type: object
+    properties:
+      hasSLA:
+        type: boolean
+      id:
+        type: string
+      isManaged:
+        type: boolean
+      name:
+        type: string
+      slaProfileId:
+        type: string
+      slaProfileName:
+        type: string
+      slaTemplateId:
+        type: string
+      slaTemplateName:
+        type: string
+    required:
+      - hasSLA
+      - id
+      - isManaged
+      - name
+  ActifioProfileDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioPolicyDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioTemplateDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      policies:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioPolicyDto'
+    required:
+      - id
+      - name
+      - policies
+  ActifioDetailedApplicationDto:
+    type: object
+    properties:
+      application:
+        $ref: '#/definitions/ActifioApplicationDto'
+      slaProfile:
+        $ref: '#/definitions/ActifioProfileDto'
+      slaTemplate:
+        $ref: '#/definitions/ActifioTemplateDto'
+    required:
+      - application

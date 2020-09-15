@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
+import { ActifioPolicyDto } from './actifioPolicyDto';
 
 
-export interface GeneratedLoadBalancerVirtualServerBulkDto { 
-    bulk: Array<LoadBalancerVirtualServer>;
+export interface ActifioTemplateDto { 
+    id: string;
+    name: string;
+    policies: Array<ActifioPolicyDto>;
 }
 

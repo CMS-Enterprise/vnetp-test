@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerPool } from './loadBalancerPool';
 
 
-export interface GeneratedLoadBalancerPoolBulkDto { 
-    bulk: Array<LoadBalancerPool>;
+export interface ActifioPolicyDto { 
+    id: string;
+    name: string;
 }
 
