@@ -6,7 +6,7 @@ const openId: OidcClientSettings = {
   client_id: 'lS12GPO6lWGJ8e7Ocjbo0z',
   client_secret: 'r0Tjc0OZ6Oem4Biw9ZGulD0mY3xzzBD9Q6wuJ4jIgMft',
   redirect_uri: 'http://localhost:4200/callback',
-  response_type: 'token',
+  response_type: 'code',
   scope: 'openid profile',
   loadUserInfo: true,
   metadata: {

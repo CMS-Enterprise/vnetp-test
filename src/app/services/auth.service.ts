@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   getAuthorizationHeaderValue(): string {
-    return `${this.user.value.token_type} ${this.user.value.access_token}`;
+    return `Bearer ${this.user.value.access_token}`;
   }
 
   startAuthentication(): Promise<void> {
