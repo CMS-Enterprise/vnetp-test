@@ -11386,7 +11386,7 @@ paths:
         - application/json
   '/v1/agm/applications/{id}':
     get:
-      summary: Get one ActifioApplicationDto
+      summary: Get one ActifioDetailedApplicationDto
       parameters:
         - type: string
           name: id
@@ -11396,7 +11396,7 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioApplicationDto'
+            $ref: '#/definitions/ActifioDetailedApplicationDto'
       tags: *ref_43
       produces:
         - application/json
@@ -14471,3 +14471,49 @@ definitions:
       - id
       - isManaged
       - name
+  ActifioProfileDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioPolicyDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioTemplateDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      policies:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioPolicyDto'
+    required:
+      - id
+      - name
+      - policies
+  ActifioDetailedApplicationDto:
+    type: object
+    properties:
+      application:
+        $ref: '#/definitions/ActifioApplicationDto'
+      slaProfile:
+        $ref: '#/definitions/ActifioProfileDto'
+      slaTemplate:
+        $ref: '#/definitions/ActifioTemplateDto'
+    required:
+      - application
