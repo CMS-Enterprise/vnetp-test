@@ -43,6 +43,7 @@ export class AuthService {
   logout(): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
+    sessionStorage.setItem(`oidc.user:${environment.openId.client_id}`, null);
   }
 
   async completeAuthentication(): Promise<void> {
