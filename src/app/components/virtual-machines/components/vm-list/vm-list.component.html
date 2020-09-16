@@ -1,1 +1,26 @@
+<h1>Virtual Machines</h1>
+
+<section class="btn-toolbar" role="toolbar">
+  <button type="button" class="btn btn-info" (click)="loadVirtualMachines()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
 <app-table [config]="config" [data]="virtualMachines"></app-table>
+
+<ng-template #lastSyncTemplate let-vm="datum">
+  <div *ngIf="vm.lastSyncDate | async as lastSyncDate; else loading">
+    {{ lastSyncDate }}
+  </div>
+</ng-template>
+
+<ng-template #lastBackupTemplate let-vm="datum">
+  <div *ngIf="vm.lastBackupDate | async as lastBackupDate; else loading">
+    {{ lastBackupDate }}
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>

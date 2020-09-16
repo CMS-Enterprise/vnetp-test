@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -15,5 +15,6 @@ const routes: Routes = [
 @NgModule({
   imports: [CommonModule, FontAwesomeModule, RouterModule.forChild(routes), TableModule],
   declarations: [VmListComponent],
+  providers: [DatePipe],
 })
 export class VirtualMachinesModule {}
