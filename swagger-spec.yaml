@@ -11402,6 +11402,43 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/agm/jobs:
+    get:
+      summary: Get many ActifioJobDto
+      parameters:
+        - type: string
+          name: status
+          required: true
+          in: query
+        - type: number
+          name: jobClassCode
+          required: true
+          in: query
+        - type: string
+          name: applicationName
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
+        - type: number
+          name: offset
+          required: true
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioJobDto'
+      tags:
+        - v1/agm/jobs
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/actifio/recovery-plans:
     get:
       summary: get all recovery plans
@@ -14517,3 +14554,21 @@ definitions:
         $ref: '#/definitions/ActifioTemplateDto'
     required:
       - application
+  ActifioJobDto:
+    type: object
+    properties:
+      applicationName:
+        type: string
+      startDate:
+        type: string
+      status:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: string
+    required:
+      - applicationName
+      - startDate
+      - status
+      - id

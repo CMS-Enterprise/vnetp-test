@@ -1,5 +1,6 @@
 export * from './actifioApplicationDto';
 export * from './actifioDetailedApplicationDto';
+export * from './actifioJobDto';
 export * from './actifioPolicyDto';
 export * from './actifioProfileDto';
 export * from './actifioTemplateDto';
