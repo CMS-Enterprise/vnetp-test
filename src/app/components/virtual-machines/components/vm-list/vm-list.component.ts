@@ -23,6 +23,7 @@ export interface VirtualMachineView extends ActifioApplicationDto {
   templateUrl: './vm-list.component.html',
 })
 export class VmListComponent implements OnInit {
+  @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
   @ViewChild('lastSyncTemplate', { static: false }) lastSyncTemplate: TemplateRef<any>;
   @ViewChild('lastBackupTemplate', { static: false }) lastBackupTemplate: TemplateRef<any>;
 
@@ -36,7 +37,7 @@ export class VmListComponent implements OnInit {
       },
       {
         name: 'Name',
-        property: 'name',
+        template: () => this.nameTemplate,
       },
       {
         name: 'Last Sync Date',
@@ -92,7 +93,7 @@ export class VmListComponent implements OnInit {
         take(1),
         map((jobs: ActifioJobDto[]) => {
           if (!jobs || jobs.length === 0) {
-            return 'N/A';
+            return '--';
           }
           return this.datePipe.transform(jobs[0].endDate, 'M/d/yy, h:mm:ss a');
         }),

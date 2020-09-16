@@ -9,6 +9,10 @@
 
 <app-table [config]="config" [data]="virtualMachines"></app-table>
 
+<ng-template #nameTemplate let-vm="datum">
+  <a [routerLink]="vm.id" queryParamsHandling="merge">{{ vm.name }}</a>
+</ng-template>
+
 <ng-template #lastSyncTemplate let-vm="datum">
   <div *ngIf="vm.lastSyncDate | async as lastSyncDate; else loading">
     {{ lastSyncDate }}
