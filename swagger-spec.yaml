@@ -11371,6 +11371,15 @@ paths:
   /v1/agm/applications:
     get:
       summary: Get many ActifioApplicationDto
+      parameters:
+        - type: number
+          name: limit
+          required: true
+          in: query
+        - type: number
+          name: offset
+          required: true
+          in: query
       responses:
         '200':
           description: ''
