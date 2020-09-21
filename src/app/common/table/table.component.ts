@@ -1,9 +1,5 @@
 import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
-export interface PaginationEvent {
-  currentPage: number;
-  itemsPerPage: number;
-}
 export interface TableColumn {
   name: string;
   property?: string;

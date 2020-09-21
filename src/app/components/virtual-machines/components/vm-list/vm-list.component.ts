@@ -104,20 +104,6 @@ export class VmListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private queryVirtualMachines(limit: number, offset: number): Subscription {
-    return this.agmApplicationService.v1AgmApplicationsGet({ limit, offset }).subscribe((data: ActifioApplicationDto[] = []) => {
-      const virtualMachines = data.map(datum => {
-        return {
-          ...datum,
-          lastBackupDate: this.getLastBackupDate(datum.name),
-          lastSyncDate: this.getLastSyncDate(datum.name),
-        };
-      });
-      this.virtualMachines = [].concat(this.virtualMachines, virtualMachines);
-      this.isLoading = false;
-    });
-  }
-
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
       .v1AgmJobsGet({
