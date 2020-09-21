@@ -1,4 +1,4 @@
-import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
 export interface TableColumn {
   name: string;
@@ -36,6 +36,9 @@ export interface TableConfig {
 export class TableComponent implements AfterViewInit {
   @Input() config: TableConfig;
   @Input() data: object[] = [];
+
+  public itemsPerPage = 20;
+  public currentPage = 1;
   public show = false;
 
   constructor(private changeRef: ChangeDetectorRef) {}
