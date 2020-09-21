@@ -24,6 +24,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1AgmApplicationsGetRequestParams {
+    limit: number;
+    offset: number;
+}
+
 export interface V1AgmApplicationsIdGetRequestParams {
     id: string;
 }
@@ -92,13 +97,32 @@ export class V1AgmApplicationsService {
 
     /**
      * Get many ActifioApplicationDto
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmApplicationsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
+    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
+    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
+    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const limit = requestParameters.limit;
+        if (limit === null || limit === undefined) {
+            throw new Error('Required parameter limit was null or undefined when calling v1AgmApplicationsGet.');
+        }
+        const offset = requestParameters.offset;
+        if (offset === null || offset === undefined) {
+            throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -122,6 +146,7 @@ export class V1AgmApplicationsService {
 
         return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/applications`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

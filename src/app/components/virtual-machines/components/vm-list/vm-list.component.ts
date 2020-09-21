@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.service';
 import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
 import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
 import { ActifioJobDto } from 'api_client/model/actifioJobDto';
-import { Observable, of } from 'rxjs';
+import { concat, Observable, of, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 enum JobClassCode {
   Snapshot = 1,
@@ -22,7 +23,7 @@ export interface VirtualMachineView extends ActifioApplicationDto {
   selector: 'app-vm-list',
   templateUrl: './vm-list.component.html',
 })
-export class VmListComponent implements OnInit {
+export class VmListComponent implements OnInit, OnDestroy {
   @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
   @ViewChild('lastSyncTemplate', { static: false }) lastSyncTemplate: TemplateRef<any>;
   @ViewChild('lastBackupTemplate', { static: false }) lastBackupTemplate: TemplateRef<any>;
@@ -50,6 +51,8 @@ export class VmListComponent implements OnInit {
     ],
   };
 
+  private virtualMachineSubscription: Subscription;
+
   constructor(
     private agmApplicationService: V1AgmApplicationsService,
     private agmJobService: V1AgmJobsService,
@@ -60,15 +63,33 @@ export class VmListComponent implements OnInit {
     this.loadVirtualMachines();
   }
 
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.virtualMachineSubscription]);
+  }
+
   public loadVirtualMachines(): void {
-    this.agmApplicationService.v1AgmApplicationsGet().subscribe((data: ActifioApplicationDto[]) => {
-      this.virtualMachines = data.map(datum => {
+    this.virtualMachines = [];
+    this.chunkVirtualMachines();
+  }
+
+  private chunkVirtualMachines(chunkSize = 10): void {
+    const virtualMachineCount = 400;
+    const virtualMachineChunks = Array(virtualMachineCount / chunkSize)
+      .fill(null)
+      .map((value: null, index: number) => {
+        return this.agmApplicationService.v1AgmApplicationsGet({ limit: chunkSize, offset: index * chunkSize });
+      });
+
+    this.virtualMachineSubscription = concat(...virtualMachineChunks).subscribe((data: ActifioApplicationDto[] = []) => {
+      const virtualMachines = data.map(datum => {
         return {
           ...datum,
           lastBackupDate: this.getLastBackupDate(datum.name),
           lastSyncDate: this.getLastSyncDate(datum.name),
         };
       });
+
+      this.virtualMachines = [].concat(this.virtualMachines, virtualMachines);
     });
   }
 
