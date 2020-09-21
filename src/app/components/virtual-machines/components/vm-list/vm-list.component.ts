@@ -28,6 +28,7 @@ export class VmListComponent implements OnInit, OnDestroy {
   @ViewChild('lastSyncTemplate', { static: false }) lastSyncTemplate: TemplateRef<any>;
   @ViewChild('lastBackupTemplate', { static: false }) lastBackupTemplate: TemplateRef<any>;
 
+  public isLoading = false;
   public virtualMachines: VirtualMachineView[] = [];
   public config: TableConfig = {
     description: 'List of Virtual Machines',
@@ -69,10 +70,19 @@ export class VmListComponent implements OnInit, OnDestroy {
 
   public loadVirtualMachines(): void {
     this.virtualMachines = [];
-    this.chunkVirtualMachines();
+    this.isLoading = true;
+    this.virtualMachineSubscription = this.chunkVirtualMachines();
   }
 
-  private chunkVirtualMachines(chunkSize = 10): void {
+  public getLastSyncDate(virtualMachineName: string): Observable<string> {
+    return this.getMostRecentSuccessfulJob(virtualMachineName, JobClassCode.DedupAsync);
+  }
+
+  public getLastBackupDate(virtualMachineName: string): Observable<string> {
+    return this.getMostRecentSuccessfulJob(virtualMachineName, JobClassCode.Snapshot);
+  }
+
+  private chunkVirtualMachines(chunkSize = 20): Subscription {
     const virtualMachineCount = 400;
     const virtualMachineChunks = Array(virtualMachineCount / chunkSize)
       .fill(null)
@@ -80,7 +90,7 @@ export class VmListComponent implements OnInit, OnDestroy {
         return this.agmApplicationService.v1AgmApplicationsGet({ limit: chunkSize, offset: index * chunkSize });
       });
 
-    this.virtualMachineSubscription = concat(...virtualMachineChunks).subscribe((data: ActifioApplicationDto[] = []) => {
+    return concat(...virtualMachineChunks).subscribe((data: ActifioApplicationDto[] = []) => {
       const virtualMachines = data.map(datum => {
         return {
           ...datum,
@@ -90,15 +100,22 @@ export class VmListComponent implements OnInit, OnDestroy {
       });
 
       this.virtualMachines = [].concat(this.virtualMachines, virtualMachines);
+      this.isLoading = false;
     });
   }
 
-  public getLastSyncDate(virtualMachineName: string): Observable<string> {
-    return this.getMostRecentSuccessfulJob(virtualMachineName, JobClassCode.DedupAsync);
-  }
-
-  public getLastBackupDate(virtualMachineName: string): Observable<string> {
-    return this.getMostRecentSuccessfulJob(virtualMachineName, JobClassCode.Snapshot);
+  private queryVirtualMachines(limit: number, offset: number): Subscription {
+    return this.agmApplicationService.v1AgmApplicationsGet({ limit, offset }).subscribe((data: ActifioApplicationDto[] = []) => {
+      const virtualMachines = data.map(datum => {
+        return {
+          ...datum,
+          lastBackupDate: this.getLastBackupDate(datum.name),
+          lastSyncDate: this.getLastSyncDate(datum.name),
+        };
+      });
+      this.virtualMachines = [].concat(this.virtualMachines, virtualMachines);
+      this.isLoading = false;
+    });
   }
 
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
