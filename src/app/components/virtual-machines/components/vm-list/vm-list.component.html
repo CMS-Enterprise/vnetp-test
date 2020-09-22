@@ -5,6 +5,11 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-success" (click)="discoverVirtualMachines()">
+    <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
+    <span>Discover Virtual Machines</span>
+  </button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -30,3 +35,5 @@
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
+
+<app-vm-discovery-modal></app-vm-discovery-modal>

@@ -40,11 +40,13 @@ export class TableComponent implements AfterViewInit {
   public itemsPerPage = 20;
   public currentPage = 1;
   public show = false;
+  public uniqueTableId: string;
 
   constructor(private changeRef: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     this.show = true;
+    this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     this.changeRef.detectChanges();
   }
 }

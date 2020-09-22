@@ -4,7 +4,8 @@ import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.servi
 import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
 import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
 import { ActifioJobDto } from 'api_client/model/actifioJobDto';
-import { concat, Observable, of, Subscription } from 'rxjs';
+import { concat, Observable, Subscription } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { map, take } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -58,6 +59,7 @@ export class VmListComponent implements OnInit, OnDestroy {
     private agmApplicationService: V1AgmApplicationsService,
     private agmJobService: V1AgmJobsService,
     private datePipe: DatePipe,
+    private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +68,10 @@ export class VmListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.virtualMachineSubscription]);
+  }
+
+  public discoverVirtualMachines(): void {
+    this.ngx.getModal('vmDiscoveryModal').open();
   }
 
   public loadVirtualMachines(): void {

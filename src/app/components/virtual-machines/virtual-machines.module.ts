@@ -6,6 +6,9 @@ import { VmListComponent } from './components/vm-list/vm-list.component';
 import { TableModule } from 'src/app/common/table/table.module';
 import { ViewFieldModule } from 'src/app/common/value-card/view-field.module';
 import { VmViewComponent } from './components/vm-view/vm-view.component';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { VmDiscoveryModalComponent } from './components/vm-discovery-modal/vm-discovery-modal.component';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -20,8 +23,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ViewFieldModule, CommonModule, FontAwesomeModule, RouterModule.forChild(routes), TableModule],
-  declarations: [VmListComponent, VmViewComponent],
+  imports: [FormsModule, ViewFieldModule, CommonModule, FontAwesomeModule, RouterModule.forChild(routes), TableModule, NgxSmartModalModule],
+  declarations: [VmListComponent, VmViewComponent, VmDiscoveryModalComponent],
   providers: [DatePipe],
 })
 export class VirtualMachinesModule {}

@@ -9,16 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioClusterDto } from './actifioClusterDto';
+import { ActifioLogicalGroupDto } from './actifioLogicalGroupDto';
+import { ActifioTemplateDto } from './actifioTemplateDto';
+import { ActifioProfileDto } from './actifioProfileDto';
 
 
 export interface ActifioApplicationDto { 
-    hasSLA: boolean;
     id: string;
-    isManaged: boolean;
     name: string;
-    slaProfileId?: string;
-    slaProfileName?: string;
-    slaTemplateId?: string;
-    slaTemplateName?: string;
+    folderPath?: string;
+    isManaged: boolean;
+    cluster: ActifioClusterDto;
+    slaProfile?: ActifioProfileDto;
+    slaTemplate?: ActifioTemplateDto;
+    logicalGroup?: ActifioLogicalGroupDto;
 }
 

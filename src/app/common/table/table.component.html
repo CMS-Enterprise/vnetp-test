@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       <tr
-        *ngFor="let datum of data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }"
+        *ngFor="let datum of data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, id: uniqueTableId }"
         [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
       >
         <td *ngFor="let column of config.columns">
@@ -24,7 +24,7 @@
     </tbody>
     <tfoot>
       <td [attr.colspan]="config.columns.length">
-        <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+        <pagination-controls [id]="uniqueTableId" (pageChange)="currentPage = $event"></pagination-controls>
       </td>
     </tfoot>
   </table>

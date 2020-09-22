@@ -1,0 +1,82 @@
+<ngx-smart-modal
+  #vmDiscoveryModal
+  identifier="vmDiscoveryModal"
+  [dismissable]="false"
+  (onOpen)="onLoad()"
+  (onClose)="onClose()"
+  customClass="large-modal"
+>
+  <ng-container *ngTemplateOutlet="currentDiscoveryStepTemplate"></ng-container>
+</ngx-smart-modal>
+
+<!-- Step 1 - Select vCenter -->
+<ng-template #selectVCenter>
+  <header class="modal-header">
+    <h4 class="modal-title">Select vCenter</h4>
+  </header>
+
+  <main class="modal-body">
+    <ng-template #selectVCenterToggle let-vcenter="datum">
+      <input name="vcenter" [value]="vcenter.id" type="radio" [(ngModel)]="selectedVCenterId" aria-label="Select vCenter" />
+    </ng-template>
+
+    <app-table *ngIf="!isLoadingVCenters" [config]="vCenterConfig" [data]="vCenters"></app-table>
+    <ng-container *ngTemplateOutlet="isLoadingVCenters ? loading : null; context: { title: 'Loading vCenters' }"></ng-container>
+  </main>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
+      Cancel
+    </button>
+
+    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="selectVCenter()" [disabled]="!selectedVCenterId">
+      <span>Select vCenter</span>
+    </button>
+  </footer>
+</ng-template>
+
+<!-- Step 2 - Select Virtual Machines -->
+<ng-template #selectVirtualMachines>
+  <header class="modal-header">
+    <h4 class="modal-title">Select Virtual Machines</h4>
+  </header>
+
+  <main class="modal-body">
+    <ng-template #selectVirtualMachineToggle let-virtualMachine="datum">
+      <input
+        type="checkbox"
+        [(ngModel)]="virtualMachine.isSelected"
+        aria-label="Select Virtual Machine"
+        (click)="selectVirtualMachine(virtualMachine.id)"
+      />
+    </ng-template>
+
+    <app-table *ngIf="!isLoadingVirtualMachines" [config]="virtualMachineConfig" [data]="selectableVirtualMachines"></app-table>
+    <ng-container
+      *ngTemplateOutlet="isLoadingVirtualMachines ? loading : null; context: { title: 'Loading Virtual Machines' }"
+    ></ng-container>
+  </main>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-success"
+      data-dismiss="modal"
+      (click)="selectVirtualMachines()"
+      [disabled]="selectedVirtualMachineIds.size === 0"
+    >
+      <span>Select Virtual Machines</span>
+    </button>
+  </footer>
+</ng-template>
+
+<ng-template #loading let-title="title">
+  <aside class="loading">
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" size="2x" [spin]="true"></fa-icon>
+    <span>{{ title }}</span>
+  </aside>
+</ng-template>
