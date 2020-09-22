@@ -10,13 +10,13 @@
 </ngx-smart-modal>
 
 <!-- Step 1 - Select vCenter -->
-<ng-template #selectVCenter>
+<ng-template #selectVCenterTemplate>
   <header class="modal-header">
     <h4 class="modal-title">Select vCenter</h4>
   </header>
 
   <main class="modal-body">
-    <ng-template #selectVCenterToggle let-vcenter="datum">
+    <ng-template #selectVCenterToggleTemplate let-vcenter="datum">
       <input name="vcenter" [value]="vcenter.id" type="radio" [(ngModel)]="selectedVCenterId" aria-label="Select vCenter" />
     </ng-template>
 
@@ -36,13 +36,13 @@
 </ng-template>
 
 <!-- Step 2 - Select Virtual Machines -->
-<ng-template #selectVirtualMachines>
+<ng-template #selectVirtualMachinesTemplate>
   <header class="modal-header">
     <h4 class="modal-title">Select Virtual Machines</h4>
   </header>
 
   <main class="modal-body">
-    <ng-template #selectVirtualMachineToggle let-virtualMachine="datum">
+    <ng-template #selectVirtualMachineToggleTemplate let-virtualMachine="datum">
       <input
         type="checkbox"
         [(ngModel)]="virtualMachine.isSelected"

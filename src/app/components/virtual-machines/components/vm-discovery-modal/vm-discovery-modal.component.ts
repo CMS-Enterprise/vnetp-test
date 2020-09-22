@@ -14,10 +14,10 @@ interface SelectableVirtualMachine extends ActifioApplicationDto {
 })
 export class VmDiscoveryModalComponent {
   // Templates
-  @ViewChild('selectVCenter', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVCenterToggle', { static: false }) selectVCenterToggleTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachines', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachineToggle', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterTemplate', { static: false }) selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterToggleTemplate', { static: false }) selectVCenterToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachinesTemplate', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
   // vCenters
   public vCenterConfig: TableConfig = {
