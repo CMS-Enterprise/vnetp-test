@@ -1,0 +1,40 @@
+<header class="modal-header">
+  <h4 class="modal-title">Select Virtual Machines</h4>
+</header>
+
+<main class="modal-body">
+  <ng-template #selectVirtualMachineToggleTemplate let-virtualMachine="datum">
+    <input
+      type="checkbox"
+      [(ngModel)]="virtualMachine.isSelected"
+      aria-label="Select Virtual Machine"
+      (click)="selectVirtualMachine(virtualMachine.id)"
+    />
+  </ng-template>
+
+  <app-table *ngIf="!isLoading" [config]="config" [data]="selectableVirtualMachines"></app-table>
+  <ng-container *ngTemplateOutlet="isLoading ? loading : null; context: { title: 'Loading Virtual Machines' }"></ng-container>
+</main>
+
+<footer class="modal-footer">
+  <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onCancel()">
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-success"
+    data-dismiss="modal"
+    (click)="selectVirtualMachines()"
+    [disabled]="selectedVirtualMachineIds.size === 0"
+  >
+    <span>Select Virtual Machines</span>
+  </button>
+</footer>
+
+<ng-template #loading let-title="title">
+  <aside class="loading">
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" size="2x" [spin]="true"></fa-icon>
+    <span>{{ title }}</span>
+  </aside>
+</ng-template>
