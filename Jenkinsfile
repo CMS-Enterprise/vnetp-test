@@ -31,11 +31,9 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          docker.image("${nodeImage}").inside("-u 0:0") {
+          docker.image("${nodeImage}").inside("--user node") {
             sh 'npm config set registry http://10.151.14.53/artifactory/api/npm/npm-remote/'
-            sh 'npm i --unsafe-perm'
-            sh 'npm i -g jest'
-            sh 'npm rebuild node-sass'
+            sh 'npm i'
             sh 'npm run build:prod'
           }
         }
@@ -45,7 +43,7 @@ pipeline {
     stage('Tests') {
       steps {
         script {
-          docker.image("${nodeImage}").inside("-u 0:0") {
+          docker.image("${nodeImage}").inside("--user node") {
             sh 'npm run test:ci'
           }
         }
@@ -58,7 +56,7 @@ pipeline {
           script {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
-            docker.image("${sonarImage}").withRun('-u 0:0 -v "$PWD:/usr/src"') { c ->
+            docker.image("${sonarImage}").withRun('-u 1000:993 -v "$PWD:/usr/src"') { c ->
               sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
             }
           }
