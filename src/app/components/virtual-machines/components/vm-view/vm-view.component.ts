@@ -1,13 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { ActifioDetailedApplicationDto } from 'api_client';
 import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.service';
 import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
 import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
 import { ActifioJobDto } from 'api_client/model/actifioJobDto';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 enum JobClassCode {
@@ -39,8 +38,7 @@ export class VmViewComponent implements OnInit, OnDestroy {
         map((params: ParamMap) => params.get('id')),
         switchMap((virtualMachineId: string) => this.loadVirtualMachine(virtualMachineId)),
       )
-      .subscribe((data: ActifioDetailedApplicationDto) => {
-        const { application } = data;
+      .subscribe((application: ActifioApplicationDto) => {
         this.lastBackupDate = this.getLastBackupDate(application.name);
         this.lastSyncDate = this.getLastSyncDate(application.name);
         this.virtualMachine = application;
@@ -59,7 +57,7 @@ export class VmViewComponent implements OnInit, OnDestroy {
     return this.getMostRecentSuccessfulJob(virtualMachineName, JobClassCode.Snapshot);
   }
 
-  private loadVirtualMachine(virtualMachineId: string): Observable<any> {
+  private loadVirtualMachine(virtualMachineId: string): Observable<ActifioApplicationDto> {
     return this.agmApplicationService.v1AgmApplicationsIdGet({ id: virtualMachineId });
   }
 
@@ -73,8 +71,7 @@ export class VmViewComponent implements OnInit, OnDestroy {
         status: 'succeeded',
       })
       .pipe(
-        startWith([]),
-        take(2),
+        take(1),
         map((jobs: ActifioJobDto[]) => {
           if (!jobs || jobs.length === 0) {
             return '--';
