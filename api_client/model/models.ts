@@ -1,6 +1,5 @@
 export * from './actifioApplicationDto';
 export * from './actifioClusterDto';
-export * from './actifioDetailedApplicationDto';
 export * from './actifioHostDto';
 export * from './actifioJobDto';
 export * from './actifioLogicalGroupDto';

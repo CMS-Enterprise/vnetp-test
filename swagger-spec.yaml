@@ -11395,7 +11395,7 @@ paths:
         - application/json
   '/v1/agm/applications/{id}':
     get:
-      summary: Get one ActifioDetailedApplicationDto
+      summary: Get one ActifioApplicationDto
       parameters:
         - type: string
           name: id
@@ -11405,7 +11405,7 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioDetailedApplicationDto'
+            $ref: '#/definitions/ActifioApplicationDto'
       tags: *ref_43
       produces:
         - application/json
@@ -11498,6 +11498,22 @@ paths:
             items:
               $ref: '#/definitions/ActifioApplicationDto'
       tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/agm/logical-groups:
+    get:
+      summary: Get many ActifioLogicalGroupDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioLogicalGroupDto'
+      tags:
+        - v1/agm/logical-groups
       produces:
         - application/json
       consumes:
@@ -14626,17 +14642,6 @@ definitions:
       - name
       - isManaged
       - cluster
-  ActifioDetailedApplicationDto:
-    type: object
-    properties:
-      application:
-        $ref: '#/definitions/ActifioApplicationDto'
-      slaProfile:
-        $ref: '#/definitions/ActifioProfileDto'
-      slaTemplate:
-        $ref: '#/definitions/ActifioTemplateDto'
-    required:
-      - application
   ActifioJobDto:
     type: object
     properties:
