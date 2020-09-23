@@ -71,14 +71,14 @@ describe('VmViewComponent', () => {
     jest.spyOn(applicationService, 'v1AgmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
     const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date(0).toISOString() }]));
+    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
 
     const newParamMap = convertToParamMap({ id: '3' });
     paramMapSubject.next(newParamMap);
 
     const { lastSyncDate } = component;
     lastSyncDate.subscribe((date: string) => {
-      expect(date).toBe('12/31/69, 7:00:00 PM');
+      expect(date).toBe('1/1/70, 12:00:00 AM');
       done();
     });
   });

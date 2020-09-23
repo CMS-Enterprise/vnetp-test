@@ -78,14 +78,14 @@ describe('VmListComponent', () => {
     const spy = jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
     const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date(0).toISOString() }]));
+    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
 
     component.ngOnInit();
 
     const [vm1] = component.virtualMachines;
 
     vm1.lastSyncDate.subscribe((date: string) => {
-      expect(date).toBe('12/31/69, 7:00:00 PM');
+      expect(date).toBe('1/1/70, 12:00:00 AM');
       done();
     });
   });
