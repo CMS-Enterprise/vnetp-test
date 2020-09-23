@@ -6,7 +6,7 @@ import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.servi
 import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
 import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
 import { ActifioJobDto } from 'api_client/model/actifioJobDto';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap, take } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
