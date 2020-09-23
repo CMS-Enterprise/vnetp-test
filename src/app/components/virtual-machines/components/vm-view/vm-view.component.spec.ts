@@ -17,6 +17,7 @@ describe('VmViewComponent', () => {
     const mockActivatedRoute = {
       paramMap: paramMapSubject.asObservable(),
     };
+
     TestBed.configureTestingModule({
       declarations: [VmViewComponent, MockViewFieldComponent, MockFontAwesomeComponent],
       providers: [
