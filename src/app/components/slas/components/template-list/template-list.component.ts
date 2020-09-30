@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
 
 @Component({
   selector: 'app-template-list',
@@ -16,28 +16,19 @@ export class TemplateListComponent implements OnInit {
     ],
   };
   public isLoading = false;
-  public templates: TemplateDto[] = [];
+  public templates: ActifioTemplateDto[] = [];
 
-  // private agmTemplateService: V1AgmTemplatesService,
-  constructor() {}
+  constructor(private agmTemplateService: V1AgmTemplatesService) {}
 
   ngOnInit(): void {
     this.loadTemplates();
   }
 
   public loadTemplates(): void {
-    of([
-      {
-        id: '1',
-        name: 'Template #1',
-      },
-    ]).subscribe(data => {
+    this.isLoading = true;
+    this.agmTemplateService.v1AgmTemplatesGet().subscribe(data => {
       this.templates = data;
+      this.isLoading = false;
     });
   }
-}
-
-interface TemplateDto {
-  id: string;
-  name: string;
 }

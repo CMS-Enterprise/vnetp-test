@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { ActifioProfileDto, V1AgmProfilesService } from 'api_client';
 
 @Component({
   selector: 'app-profile-list',
@@ -16,28 +16,19 @@ export class ProfileListComponent implements OnInit {
     ],
   };
   public isLoading = false;
-  public profiles: ProfileDto[] = [];
+  public profiles: ActifioProfileDto[] = [];
 
-  // private agmProfileService: V1AGMProfilesService,
-  constructor() {}
+  constructor(private agmProfileService: V1AgmProfilesService) {}
 
   ngOnInit(): void {
     this.loadProfiles();
   }
 
   public loadProfiles(): void {
-    of([
-      {
-        id: '1',
-        name: 'Profile #1',
-      },
-    ]).subscribe(data => {
+    this.isLoading = true;
+    this.agmProfileService.v1AgmProfilesGet({}).subscribe(data => {
       this.profiles = data;
+      this.isLoading = false;
     });
   }
-}
-
-interface ProfileDto {
-  id: string;
-  name: string;
 }
