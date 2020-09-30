@@ -17,35 +17,30 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioAddApplicationDto } from '../model/models';
-import { ActifioApplicationDto } from '../model/models';
+import { ActifioApplySlaDto } from '../model/models';
+import { ActifioSlaDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmApplicationsAddPostRequestParams {
-    actifioAddApplicationDto: ActifioAddApplicationDto;
+export interface V1AgmSlasApplyPostRequestParams {
+    actifioApplySlaDto: ActifioApplySlaDto;
 }
 
-export interface V1AgmApplicationsGetRequestParams {
-    limit: number;
-    offset: number;
-}
-
-export interface V1AgmApplicationsIdDeleteRequestParams {
+export interface V1AgmSlasIdDeleteRequestParams {
     id: number;
 }
 
-export interface V1AgmApplicationsIdGetRequestParams {
-    id: string;
+export interface V1AgmSlasIdGetRequestParams {
+    id: number;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmApplicationsService {
+export class V1AgmSlasService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -104,18 +99,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * add Application
+     * apply SLA to VM
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const actifioAddApplicationDto = requestParameters.actifioAddApplicationDto;
-        if (actifioAddApplicationDto === null || actifioAddApplicationDto === undefined) {
-            throw new Error('Required parameter actifioAddApplicationDto was null or undefined when calling v1AgmApplicationsAddPost.');
+    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const actifioApplySlaDto = requestParameters.actifioApplySlaDto;
+        if (actifioApplySlaDto === null || actifioApplySlaDto === undefined) {
+            throw new Error('Required parameter actifioApplySlaDto was null or undefined when calling v1AgmSlasApplyPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -147,8 +142,8 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/add`,
-            actifioAddApplicationDto,
+        return this.httpClient.post<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/apply`,
+            actifioApplySlaDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -160,32 +155,59 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Get many ActifioApplicationDto
+     * Get SLAs
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmSlasGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioSlaDto>>;
+    public v1AgmSlasGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioSlaDto>>>;
+    public v1AgmSlasGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
+    public v1AgmSlasGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioSlaDto>>(`${this.configuration.basePath}/v1/agm/slas`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * remove SLA
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmApplicationsGet.');
-        }
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -208,53 +230,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/applications`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Remove one ActifioApplication
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdDelete.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<object>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -266,18 +242,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Get one ActifioApplicationDto
+     * Get SLA
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -300,7 +276,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
