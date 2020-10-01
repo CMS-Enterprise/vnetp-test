@@ -15,7 +15,7 @@ export class AuthService {
   constructor(private router: Router) {
     Log.logger = console;
     Log.level = Log.DEBUG;
-    console.log(environment.openId);
+    console.log(environment);
     this.manager.getUser().then(user => {
       this.user.next(user);
     });
