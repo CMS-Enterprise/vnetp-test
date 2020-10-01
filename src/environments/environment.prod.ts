@@ -45,7 +45,7 @@ const openId: OidcClientSettings = {
 
 export const environment = {
   production: true,
-  apiBase: '',
+  apiBase: '/api',
   wikiBase: 'http://wiki.draas.cdsvdc.lcl/index.php/UI',
   openId,
 };
