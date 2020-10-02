@@ -11,10 +11,9 @@
  */
 
 
-export interface ActifioPolicyDto { 
+export interface ActifioUpdateTemplatePolicyDto { 
     id: string;
-    name: string;
-    startTime: number;
     endTime?: number;
+    startTime: number;
 }
 

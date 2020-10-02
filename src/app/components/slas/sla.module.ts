@@ -10,6 +10,8 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { SLALandingComponent } from './components/sla-landing/sla-landing.component';
 import { TemplateModalComponent } from './components/template-modal/template-modal.component';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -23,9 +25,11 @@ const routes: Routes = [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
+    IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
+    SharedModule,
     TableModule,
     TabsModule,
   ],

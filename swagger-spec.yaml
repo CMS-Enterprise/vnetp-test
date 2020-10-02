@@ -11734,7 +11734,7 @@ paths:
     get:
       summary: Get one ActifioTemplate
       parameters:
-        - type: number
+        - type: string
           name: id
           required: true
           in: path
@@ -11751,12 +11751,12 @@ paths:
     put:
       summary: Update one ActifioTemplate
       parameters:
-        - name: ActifioTemplateDto
+        - name: ActifioUpdateTemplateDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioTemplateDto'
-        - type: number
+            $ref: '#/definitions/ActifioUpdateTemplateDto'
+        - type: string
           name: id
           required: true
           in: path
@@ -11773,7 +11773,7 @@ paths:
     delete:
       summary: Delete one ActifioTemplate
       parameters:
-        - type: number
+        - type: string
           name: id
           required: true
           in: path
@@ -11791,16 +11791,16 @@ paths:
     put:
       summary: Update one ActifioPolicy
       parameters:
-        - name: ActifioPolicy
+        - name: ActifioUpdateTemplatePolicyDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioPolicy'
-        - type: number
+            $ref: '#/definitions/ActifioUpdateTemplatePolicyDto'
+        - type: string
           name: policyId
           required: true
           in: path
-        - type: number
+        - type: string
           name: id
           required: true
           in: path
@@ -14902,9 +14902,14 @@ definitions:
         type: string
       name:
         type: string
+      startTime:
+        type: number
+      endTime:
+        type: number
     required:
       - id
       - name
+      - startTime
   ActifioTemplateDto:
     type: object
     properties:
@@ -15096,9 +15101,30 @@ definitions:
     required:
       - name
       - policies
-  ActifioPolicy:
+  ActifioUpdateTemplateDto:
     type: object
-    properties: {}
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+      - name
+  ActifioUpdateTemplatePolicyDto:
+    type: object
+    properties:
+      id:
+        type: string
+      endTime:
+        type: number
+      startTime:
+        type: number
+    required:
+      - id
+      - startTime
   ActifioDiskPoolDto:
     type: object
     properties:

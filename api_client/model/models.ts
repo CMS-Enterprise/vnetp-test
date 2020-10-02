@@ -13,6 +13,8 @@ export * from './actifioPolicyDto';
 export * from './actifioProfileDto';
 export * from './actifioSlaDto';
 export * from './actifioTemplateDto';
+export * from './actifioUpdateTemplateDto';
+export * from './actifioUpdateTemplatePolicyDto';
 export * from './appliance';
 export * from './applianceNetworkPort';
 export * from './configurationDto';

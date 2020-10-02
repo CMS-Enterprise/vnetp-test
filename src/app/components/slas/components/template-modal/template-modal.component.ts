@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { ActifioPolicyDto, ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 
 const availableTimes = Array(24)
   .fill('')
@@ -19,10 +20,11 @@ export class TemplateModalComponent implements OnInit {
   public form: FormGroup;
   public modalTitle: string;
   public submitted = false;
-  public template: ActifioTemplateDto;
   public times = [...availableTimes];
 
   private isNewTemplate = true;
+  private template: ActifioTemplateDto;
+  private policies: ActifioPolicyDto[] = [];
 
   constructor(
     private agmTemplateService: V1AgmTemplatesService,
@@ -47,22 +49,45 @@ export class TemplateModalComponent implements OnInit {
     const { name, description, endTime, startTime } = this.form.value;
     if (this.isNewTemplate) {
       this.createTemplate(name, description, endTime, startTime);
+    } else {
+      this.updateTemplate(name, description, endTime, startTime);
     }
   }
 
   public onLoad(): void {
-    this.initForm();
-    this.template = this.ngx.getModalData('templateModal') || {};
-    this.isNewTemplate = !this.template.name;
+    const template = this.ngx.getModalData('templateModal') || {};
+    const { id = '', name = '', description = '' } = template;
+    this.isNewTemplate = !name;
     this.modalTitle = this.isNewTemplate ? 'Edit SLA Template' : 'Create SLA Template';
+
+    if (this.isNewTemplate) {
+      this.form.enable();
+      this.form.setValue({
+        name: '',
+        description: '',
+        endTime: availableTimes[availableTimes.length - 1],
+        startTime: availableTimes[0],
+      });
+    } else {
+      this.form.setValue({
+        name,
+        description,
+        endTime: null,
+        startTime: null,
+      });
+      this.template = template;
+      this.form.controls.name.disable();
+      this.loadTemplatePolicies(id);
+    }
   }
 
   public onCancelOrClose(): void {
     this.form.reset();
-    this.template = undefined;
     this.ngx.resetModalData('templateModal');
     this.ngx.close('templateModal');
     this.submitted = false;
+    this.template = undefined;
+    this.policies = [];
   }
 
   private initForm(): void {
@@ -96,10 +121,63 @@ export class TemplateModalComponent implements OnInit {
       });
   }
 
+  private loadTemplatePolicies(templateId: string): void {
+    this.agmTemplateService.v1AgmTemplatesIdGet({ id: templateId }).subscribe((template: ActifioTemplateDto) => {
+      this.policies = template.policies;
+      const snapshotPolicy = template.policies.find(p => p.name === 'S-Daily');
+      if (!snapshotPolicy) {
+        return;
+      }
+      const { startTime, endTime } = snapshotPolicy;
+      this.f.startTime.setValue(this.convertSecondsToTime(startTime));
+      this.f.endTime.setValue(this.convertSecondsToTime(endTime));
+    });
+  }
+
+  private updateTemplate(name: string, description: string, endTime: string, startTime: string): void {
+    const { id } = this.template;
+
+    const template$ = this.agmTemplateService.v1AgmTemplatesIdPut({
+      id,
+      actifioUpdateTemplateDto: {
+        id,
+        name,
+        description,
+      },
+    });
+
+    const snapshotPolicy = this.policies.find(p => p.name === 'S-Daily');
+    if (!snapshotPolicy) {
+      return;
+    }
+
+    const policyId = snapshotPolicy.id;
+
+    const snapshotPolicy$ = this.agmTemplateService.v1AgmTemplatesIdPolicyPolicyIdPut({
+      id,
+      policyId: policyId,
+      actifioUpdateTemplatePolicyDto: {
+        id: policyId,
+        endTime: this.convertTimeToSeconds(endTime),
+        startTime: this.convertTimeToSeconds(startTime),
+      },
+    });
+
+    forkJoin([template$, snapshotPolicy$]).subscribe(() => {
+      this.onCancelOrClose();
+      this.toastrService.success('Template Updated');
+    });
+  }
+
   private convertTimeToSeconds(time: string): number {
     const [hour, minute] = time.split(':');
     const hoursInSeconds = +hour * 60 * 60;
     const minutesInSeconds = +minute * 60;
     return hoursInSeconds + minutesInSeconds;
+  }
+
+  private convertSecondsToTime(seconds = 0): string {
+    const hour = `${seconds / 3600}`.padStart(2, '0');
+    return hour + ':00';
   }
 }

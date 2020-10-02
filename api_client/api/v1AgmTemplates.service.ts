@@ -19,28 +19,30 @@ import { Observable }                                        from 'rxjs';
 
 import { ActifioAddTemplateDto } from '../model/models';
 import { ActifioTemplateDto } from '../model/models';
+import { ActifioUpdateTemplateDto } from '../model/models';
+import { ActifioUpdateTemplatePolicyDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 export interface V1AgmTemplatesIdDeleteRequestParams {
-    id: number;
+    id: string;
 }
 
 export interface V1AgmTemplatesIdGetRequestParams {
-    id: number;
+    id: string;
 }
 
 export interface V1AgmTemplatesIdPolicyPolicyIdPutRequestParams {
-    policyId: number;
-    id: number;
-    actifioPolicy: object;
+    policyId: string;
+    id: string;
+    actifioUpdateTemplatePolicyDto: ActifioUpdateTemplatePolicyDto;
 }
 
 export interface V1AgmTemplatesIdPutRequestParams {
-    id: number;
-    actifioTemplateDto: ActifioTemplateDto;
+    id: string;
+    actifioUpdateTemplateDto: ActifioUpdateTemplateDto;
 }
 
 export interface V1AgmTemplatesPostRequestParams {
@@ -260,9 +262,9 @@ export class V1AgmTemplatesService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
         }
-        const actifioPolicy = requestParameters.actifioPolicy;
-        if (actifioPolicy === null || actifioPolicy === undefined) {
-            throw new Error('Required parameter actifioPolicy was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
+        const actifioUpdateTemplatePolicyDto = requestParameters.actifioUpdateTemplatePolicyDto;
+        if (actifioUpdateTemplatePolicyDto === null || actifioUpdateTemplatePolicyDto === undefined) {
+            throw new Error('Required parameter actifioUpdateTemplatePolicyDto was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -295,7 +297,7 @@ export class V1AgmTemplatesService {
         }
 
         return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
-            actifioPolicy,
+            actifioUpdateTemplatePolicyDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -320,9 +322,9 @@ export class V1AgmTemplatesService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPut.');
         }
-        const actifioTemplateDto = requestParameters.actifioTemplateDto;
-        if (actifioTemplateDto === null || actifioTemplateDto === undefined) {
-            throw new Error('Required parameter actifioTemplateDto was null or undefined when calling v1AgmTemplatesIdPut.');
+        const actifioUpdateTemplateDto = requestParameters.actifioUpdateTemplateDto;
+        if (actifioUpdateTemplateDto === null || actifioUpdateTemplateDto === undefined) {
+            throw new Error('Required parameter actifioUpdateTemplateDto was null or undefined when calling v1AgmTemplatesIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -355,7 +357,7 @@ export class V1AgmTemplatesService {
         }
 
         return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
-            actifioTemplateDto,
+            actifioUpdateTemplateDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

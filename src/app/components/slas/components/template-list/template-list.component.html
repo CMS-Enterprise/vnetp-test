@@ -16,8 +16,16 @@
   <app-table [config]="config" [data]="templates"></app-table>
 </ng-container>
 
+<ng-template #actionsTemplate let-template="datum">
+  <section class="table__actions">
+    <app-icon-button icon="edit" label="Edit SLA Template" (handleClick)="openTemplateModal(template)"></app-icon-button>
+    <app-icon-button icon="delete" label="Remove SLA Template" (handleClick)="deleteTemplate(template)"></app-icon-button>
+  </section>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
 <app-template-modal></app-template-modal>
+<app-yes-no-modal></app-yes-no-modal>
