@@ -9,6 +9,7 @@ import { V1ActifioApplicationsService } from './api/v1ActifioApplications.servic
 import { V1ActifioRecoveryPlansService } from './api/v1ActifioRecoveryPlans.service';
 import { V1ActifioRecoveryTypesService } from './api/v1ActifioRecoveryTypes.service';
 import { V1AgmApplicationsService } from './api/v1AgmApplications.service';
+import { V1AgmDiskPoolsService } from './api/v1AgmDiskPools.service';
 import { V1AgmHostsService } from './api/v1AgmHosts.service';
 import { V1AgmJobsService } from './api/v1AgmJobs.service';
 import { V1AgmLogicalGroupsService } from './api/v1AgmLogicalGroups.service';

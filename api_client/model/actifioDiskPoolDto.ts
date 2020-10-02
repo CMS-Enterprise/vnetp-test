@@ -9,13 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioTemplateDto } from './actifioTemplateDto';
-import { ActifioProfileDto } from './actifioProfileDto';
 
 
-export interface ActifioSlaDto { 
+export interface ActifioDiskPoolDto { 
+    href?: number;
     id: string;
-    template: ActifioTemplateDto;
-    profile: ActifioProfileDto;
+    name: string;
+    srcid?: string;
+    usduid?: string;
 }
 

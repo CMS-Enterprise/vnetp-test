@@ -11439,7 +11439,7 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioApplicationDto'
+            type: string
       tags: *ref_43
       produces:
         - application/json
@@ -11643,6 +11643,24 @@ paths:
         - application/json
       consumes:
         - application/json
+    post:
+      summary: Create one ActifioProfile
+      parameters:
+        - name: ActifioAddProfileDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddProfileDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioProfileDto'
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
   '/v1/agm/profiles/{id}':
     get:
       summary: Get one ActifioProfile
@@ -11656,6 +11674,23 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioProfileDto'
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one ActifioProfile
+      parameters:
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
       tags: *ref_46
       produces:
         - application/json
@@ -11677,6 +11712,24 @@ paths:
         - application/json
       consumes:
         - application/json
+    post:
+      summary: Create one ActifioTemplate
+      parameters:
+        - name: ActifioAddTemplateDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddTemplateDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
   '/v1/agm/templates/{id}':
     get:
       summary: Get one ActifioTemplate
@@ -11691,6 +11744,88 @@ paths:
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
       tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Update one ActifioTemplate
+      parameters:
+        - name: ActifioTemplateDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one ActifioTemplate
+      parameters:
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/templates/{id}/policy/{policyId}':
+    put:
+      summary: Update one ActifioPolicy
+      parameters:
+        - name: ActifioPolicy
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioPolicy'
+        - type: number
+          name: policyId
+          required: true
+          in: path
+        - type: number
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/agm/disk-pools:
+    get:
+      summary: Get many ActifioDiskPools
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioDiskPoolDto'
+      tags:
+        - v1/agm/disk-pools
       produces:
         - application/json
       consumes:
@@ -14781,10 +14916,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ActifioPolicyDto'
+      description:
+        type: string
     required:
       - id
       - name
-      - policies
   ActifioLogicalGroupDto:
     type: object
     properties:
@@ -14868,25 +15004,19 @@ definitions:
       - id
       - hostName
       - ipAddress
-  ActifioTemplate:
-    type: object
-    properties: {}
-  ActifioProfile:
-    type: object
-    properties: {}
   ActifioSlaDto:
     type: object
     properties:
       id:
         type: string
-      slt:
-        $ref: '#/definitions/ActifioTemplate'
-      slp:
-        $ref: '#/definitions/ActifioProfile'
+      template:
+        $ref: '#/definitions/ActifioTemplateDto'
+      profile:
+        $ref: '#/definitions/ActifioProfileDto'
     required:
       - id
-      - slt
-      - slp
+      - template
+      - profile
   ActifioApplySlaDto:
     type: object
     properties:
@@ -14906,3 +15036,82 @@ definitions:
   ActifioSLA:
     type: object
     properties: {}
+  ActifioAddProfileDto:
+    type: object
+    properties:
+      clusterId:
+        type: string
+      localApplianceName:
+        type: string
+      name:
+        type: string
+      performancePoolName:
+        type: string
+      remoteApplianceName:
+        type: string
+      vaultPool1Id:
+        type: string
+      vaultPool2Id:
+        type: string
+      vaultPool3Id:
+        type: string
+      vaultPool4Id:
+        type: string
+    required:
+      - clusterId
+      - localApplianceName
+      - name
+      - performancePoolName
+      - remoteApplianceName
+      - vaultPool1Id
+      - vaultPool2Id
+      - vaultPool3Id
+      - vaultPool4Id
+  ActifioAddTemplatePolicyDto:
+    type: object
+    properties:
+      startTime:
+        type: number
+      endTime:
+        type: number
+      isSnapshot:
+        type: boolean
+      isWindowed:
+        type: boolean
+    required:
+      - startTime
+      - isSnapshot
+      - isWindowed
+  ActifioAddTemplateDto:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      policies:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioAddTemplatePolicyDto'
+    required:
+      - name
+      - policies
+  ActifioPolicy:
+    type: object
+    properties: {}
+  ActifioDiskPoolDto:
+    type: object
+    properties:
+      href:
+        type: number
+      id:
+        type: string
+      name:
+        type: string
+      srcid:
+        type: string
+      usduid:
+        type: string
+    required:
+      - id
+      - name

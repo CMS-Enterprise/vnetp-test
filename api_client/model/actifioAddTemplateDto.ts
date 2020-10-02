@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioTemplateDto } from './actifioTemplateDto';
-import { ActifioProfileDto } from './actifioProfileDto';
+import { ActifioAddTemplatePolicyDto } from './actifioAddTemplatePolicyDto';
 
 
-export interface ActifioSlaDto { 
-    id: string;
-    template: ActifioTemplateDto;
-    profile: ActifioProfileDto;
+export interface ActifioAddTemplateDto { 
+    name: string;
+    description?: string;
+    policies: Array<ActifioAddTemplatePolicyDto>;
 }
 

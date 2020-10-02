@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouterModule, Routes } from '@angular/router';
@@ -9,6 +9,7 @@ import { TemplateListComponent } from './components/template-list/template-list.
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { SLALandingComponent } from './components/sla-landing/sla-landing.component';
+import { TemplateModalComponent } from './components/template-modal/template-modal.component';
 
 const routes: Routes = [
   {
@@ -18,7 +19,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, RouterModule.forChild(routes), TableModule, TabsModule],
-  declarations: [SLALandingComponent, ProfileListComponent, TemplateListComponent],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    NgxSmartModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    TableModule,
+    TabsModule,
+  ],
+  declarations: [SLALandingComponent, ProfileListComponent, TemplateListComponent, TemplateModalComponent],
 })
 export class SlaModule {}

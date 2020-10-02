@@ -109,9 +109,9 @@ export class V1AgmApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
+    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
+    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
+    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
     public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const actifioAddApplicationDto = requestParameters.actifioAddApplicationDto;
         if (actifioAddApplicationDto === null || actifioAddApplicationDto === undefined) {
@@ -147,7 +147,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/add`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/v1/agm/applications/add`,
             actifioAddApplicationDto,
             {
                 responseType: <any>responseType,

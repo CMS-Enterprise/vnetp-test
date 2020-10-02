@@ -9,13 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioPolicyDto } from './actifioPolicyDto';
 
 
-export interface ActifioTemplateDto { 
-    id: string;
+export interface ActifioAddProfileDto { 
+    clusterId: string;
+    localApplianceName: string;
     name: string;
-    policies?: Array<ActifioPolicyDto>;
-    description?: string;
+    performancePoolName: string;
+    remoteApplianceName: string;
+    vaultPool1Id: string;
+    vaultPool2Id: string;
+    vaultPool3Id: string;
+    vaultPool4Id: string;
 }
 
