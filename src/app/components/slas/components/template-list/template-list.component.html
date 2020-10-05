@@ -23,6 +23,12 @@
   </section>
 </ng-template>
 
+<ng-template #snapshotPolicyTemplate let-template="datum">
+  <div *ngIf="template.snapshotPolicyTimeWindow | async as snapshotPolicyTimeWindow; else loading">
+    {{ snapshotPolicyTimeWindow }}
+  </div>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>

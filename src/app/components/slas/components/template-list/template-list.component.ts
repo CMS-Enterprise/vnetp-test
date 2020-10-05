@@ -1,16 +1,23 @@
+import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { ActifioPolicyDto, ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+
+interface TemplateView extends ActifioTemplateDto {
+  snapshotPolicyTimeWindow: Observable<string>;
+}
 
 @Component({
   selector: 'app-template-list',
   templateUrl: './template-list.component.html',
 })
 export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('snapshotPolicyTemplate', { static: false }) snapshotPolicyTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate', { static: false }) actionsTemplate: TemplateRef<any>;
 
   public config = {
@@ -25,13 +32,17 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
         property: 'description',
       },
       {
+        name: 'Daily Backup',
+        template: () => this.snapshotPolicyTemplate,
+      },
+      {
         name: '',
         template: () => this.actionsTemplate,
       },
     ],
   };
   public isLoading = false;
-  public templates: ActifioTemplateDto[] = [];
+  public templates: TemplateView[] = [];
 
   public ModalMode = ModalMode;
 
@@ -60,7 +71,13 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadTemplates(): void {
     this.isLoading = true;
     this.agmTemplateService.v1AgmTemplatesGet().subscribe(data => {
-      this.templates = data;
+      this.templates = data.map(d => {
+        return {
+          ...d,
+          description: d.description || '--',
+          snapshotPolicyTimeWindow: this.getSnapshotPolicyTimeWindow(d.id),
+        };
+      });
       this.isLoading = false;
     });
   }
@@ -76,6 +93,24 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       new YesNoModalDto(`Delete SLA Template?`, `Do you want to delete SLA Template "${template.name}"?`),
       deleteFunction,
     );
+  }
+
+  private getSnapshotPolicyTimeWindow(templateId: string): Observable<string> {
+    return this.agmTemplateService.v1AgmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 }).pipe(
+      map(policies => (policies.length > 0 ? policies[0] : null)),
+      map(snapshotPolicy => {
+        if (!snapshotPolicy) {
+          return '--';
+        }
+        const { startTime, endTime } = snapshotPolicy;
+        return `${this.convertSecondsToTime(startTime)} to ${this.convertSecondsToTime(endTime)}`;
+      }),
+    );
+  }
+
+  private convertSecondsToTime(seconds = 0): string {
+    const hour = `${seconds / 3600}`.padStart(2, '0');
+    return hour + ':00';
   }
 
   private openConfirmationModal(modalDto: YesNoModalDto, deleteFunction: () => void) {

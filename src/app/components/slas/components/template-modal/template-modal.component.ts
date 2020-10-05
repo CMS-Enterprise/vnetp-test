@@ -77,7 +77,7 @@ export class TemplateModalComponent implements OnInit {
       });
       this.template = template;
       this.form.controls.name.disable();
-      this.loadTemplatePolicies(id);
+      this.loadSnapshotPolicy(id);
     }
   }
 
@@ -121,17 +121,19 @@ export class TemplateModalComponent implements OnInit {
       });
   }
 
-  private loadTemplatePolicies(templateId: string): void {
-    this.agmTemplateService.v1AgmTemplatesIdGet({ id: templateId }).subscribe((template: ActifioTemplateDto) => {
-      this.policies = template.policies;
-      const snapshotPolicy = template.policies.find(p => p.name === 'S-Daily');
-      if (!snapshotPolicy) {
-        return;
-      }
-      const { startTime, endTime } = snapshotPolicy;
-      this.f.startTime.setValue(this.convertSecondsToTime(startTime));
-      this.f.endTime.setValue(this.convertSecondsToTime(endTime));
-    });
+  private loadSnapshotPolicy(templateId: string): void {
+    this.agmTemplateService
+      .v1AgmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 })
+      .subscribe((policies: ActifioPolicyDto[]) => {
+        this.policies = policies;
+        if (policies.length === 0) {
+          return;
+        }
+        const snapshotPolicy = policies[0];
+        const { startTime, endTime } = snapshotPolicy;
+        this.f.startTime.setValue(this.convertSecondsToTime(startTime));
+        this.f.endTime.setValue(this.convertSecondsToTime(endTime));
+      });
   }
 
   private updateTemplate(name: string, description: string, endTime: string, startTime: string): void {
@@ -146,11 +148,10 @@ export class TemplateModalComponent implements OnInit {
       },
     });
 
-    const snapshotPolicy = this.policies.find(p => p.name === 'S-Daily');
-    if (!snapshotPolicy) {
+    if (this.policies.length === 0) {
       return;
     }
-
+    const snapshotPolicy = this.policies[0];
     const policyId = snapshotPolicy.id;
 
     const snapshotPolicy$ = this.agmTemplateService.v1AgmTemplatesIdPolicyPolicyIdPut({
