@@ -11627,6 +11627,14 @@ paths:
       summary: Get many ActifioProfiles
       parameters:
         - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+        - type: string
           name: clusterId
           required: false
           in: query
@@ -11665,7 +11673,7 @@ paths:
     get:
       summary: Get one ActifioProfile
       parameters:
-        - type: number
+        - type: string
           name: id
           required: true
           in: path
@@ -11682,7 +11690,7 @@ paths:
     delete:
       summary: Delete one ActifioProfile
       parameters:
-        - type: number
+        - type: string
           name: id
           required: true
           in: path
@@ -11690,7 +11698,7 @@ paths:
         '200':
           description: ''
           schema:
-            type: string
+            type: ''
       tags: *ref_46
       produces:
         - application/json
@@ -11787,7 +11795,7 @@ paths:
         - application/json
   '/v1/agm/templates/{id}/policy':
     get:
-      summary: Update one ActifioPolicy
+      summary: Get many ActifioPolicyDto
       parameters:
         - type: number
           name: offset
@@ -14922,9 +14930,23 @@ definitions:
         type: string
       name:
         type: string
+      description:
+        type: string
+      remoteClusterName:
+        type: string
+      localClusterName:
+        type: string
+      lastModifiedDate:
+        type: string
+      createdDate:
+        type: string
     required:
       - id
       - name
+      - remoteClusterName
+      - localClusterName
+      - lastModifiedDate
+      - createdDate
   ActifioPolicyDto:
     type: object
     properties:

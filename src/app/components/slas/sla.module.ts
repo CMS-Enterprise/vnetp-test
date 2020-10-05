@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -34,5 +34,6 @@ const routes: Routes = [
     TabsModule,
   ],
   declarations: [SLALandingComponent, ProfileListComponent, TemplateListComponent, TemplateModalComponent],
+  providers: [DatePipe],
 })
 export class SlaModule {}
