@@ -11780,8 +11780,38 @@ paths:
       responses:
         '200':
           description: ''
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/templates/{id}/policy':
+    get:
+      summary: Update one ActifioPolicy
+      parameters:
+        - type: number
+          name: offset
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
+        - type: boolean
+          name: isSnapshot
+          required: true
+          in: query
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
           schema:
-            type: string
+            type: array
+            items:
+              $ref: '#/definitions/ActifioPolicyDto'
       tags: *ref_47
       produces:
         - application/json
@@ -14906,10 +14936,13 @@ definitions:
         type: number
       endTime:
         type: number
+      isSnapshot:
+        type: boolean
     required:
       - id
       - name
       - startTime
+      - isSnapshot
   ActifioTemplateDto:
     type: object
     properties:

@@ -16,5 +16,6 @@ export interface ActifioPolicyDto {
     name: string;
     startTime: number;
     endTime?: number;
+    isSnapshot: boolean;
 }
 
