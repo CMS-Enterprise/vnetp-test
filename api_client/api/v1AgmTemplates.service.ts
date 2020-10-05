@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ActifioAddTemplateDto } from '../model/models';
+import { ActifioPolicyDto } from '../model/models';
 import { ActifioTemplateDto } from '../model/models';
 import { ActifioUpdateTemplateDto } from '../model/models';
 import { ActifioUpdateTemplatePolicyDto } from '../model/models';
@@ -31,6 +32,13 @@ export interface V1AgmTemplatesIdDeleteRequestParams {
 }
 
 export interface V1AgmTemplatesIdGetRequestParams {
+    id: string;
+}
+
+export interface V1AgmTemplatesIdPolicyGetRequestParams {
+    offset: number;
+    limit: number;
+    isSnapshot: boolean;
     id: string;
 }
 
@@ -158,10 +166,10 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdDelete.');
@@ -173,7 +181,6 @@ export class V1AgmTemplatesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -187,7 +194,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<string>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -235,6 +242,79 @@ export class V1AgmTemplatesService {
 
         return this.httpClient.get<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
             {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update one ActifioPolicy
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioPolicyDto>>;
+    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioPolicyDto>>>;
+    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioPolicyDto>>>;
+    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        if (offset === null || offset === undefined) {
+            throw new Error('Required parameter offset was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+        }
+        const limit = requestParameters.limit;
+        if (limit === null || limit === undefined) {
+            throw new Error('Required parameter limit was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+        }
+        const isSnapshot = requestParameters.isSnapshot;
+        if (isSnapshot === null || isSnapshot === undefined) {
+            throw new Error('Required parameter isSnapshot was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+        }
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (isSnapshot !== undefined && isSnapshot !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>isSnapshot, 'isSnapshot');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioPolicyDto>>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy`,
+            {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
