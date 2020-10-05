@@ -25,15 +25,17 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1AgmProfilesGetRequestParams {
-    clusterId?: number;
+    offset?: number;
+    limit?: number;
+    clusterId?: string;
 }
 
 export interface V1AgmProfilesIdDeleteRequestParams {
-    id: number;
+    id: string;
 }
 
 export interface V1AgmProfilesIdGetRequestParams {
-    id: number;
+    id: string;
 }
 
 export interface V1AgmProfilesPostRequestParams {
@@ -112,9 +114,19 @@ export class V1AgmProfilesService {
     public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioProfileDto>>>;
     public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
     public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
         const clusterId = requestParameters.clusterId;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
         if (clusterId !== undefined && clusterId !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>clusterId, 'clusterId');
@@ -158,10 +170,10 @@ export class V1AgmProfilesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
-    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmProfilesIdDelete(requestParameters: V1AgmProfilesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1AgmProfilesIdDelete.');
@@ -173,7 +185,6 @@ export class V1AgmProfilesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -187,7 +198,7 @@ export class V1AgmProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<string>(`${this.configuration.basePath}/v1/agm/profiles/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/profiles/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

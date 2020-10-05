@@ -14,5 +14,10 @@
 export interface ActifioProfileDto { 
     id: string;
     name: string;
+    description?: string;
+    remoteClusterName: string;
+    localClusterName: string;
+    lastModifiedDate: string;
+    createdDate: string;
 }
 
