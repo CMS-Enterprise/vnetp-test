@@ -18,13 +18,13 @@ const availableTimes = Array(24)
 })
 export class TemplateModalComponent implements OnInit {
   public form: FormGroup;
+  public isNewTemplate = true;
   public modalTitle: string;
+  public policies: ActifioPolicyDto[] = [];
   public submitted = false;
   public times = [...availableTimes];
 
-  private isNewTemplate = true;
   private template: ActifioTemplateDto;
-  private policies: ActifioPolicyDto[] = [];
 
   constructor(
     private agmTemplateService: V1AgmTemplatesService,
@@ -88,6 +88,7 @@ export class TemplateModalComponent implements OnInit {
     this.submitted = false;
     this.template = undefined;
     this.policies = [];
+    this.isNewTemplate = true;
   }
 
   private initForm(): void {
