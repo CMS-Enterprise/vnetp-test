@@ -89,8 +89,9 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     };
 
-    this.openConfirmationModal(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`Delete SLA Template?`, `Do you want to delete SLA Template "${template.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -111,19 +112,6 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   private convertSecondsToTime(seconds = 0): string {
     const hour = `${seconds / 3600}`.padStart(2, '0');
     return hour + ':00';
-  }
-
-  private openConfirmationModal(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   private subscribeToTemplateModal(): Subscription {

@@ -9,6 +9,14 @@
   <app-table [config]="config" [data]="profiles"></app-table>
 </ng-container>
 
+<ng-template #actionsTemplate let-profile="datum">
+  <section class="table__actions">
+    <app-icon-button icon="delete" label="Remove SLA Profile" (handleClick)="deleteProfile(profile)"></app-icon-button>
+  </section>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
+
+<app-yes-no-modal></app-yes-no-modal>
