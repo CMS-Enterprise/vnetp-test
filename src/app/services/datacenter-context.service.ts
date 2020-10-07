@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/services/auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -36,6 +37,7 @@ export class DatacenterContextService {
     private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
   ) {
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
@@ -99,17 +101,19 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
-      // Update internal datacenters array and external subject.
-      this._datacenters = data;
-      this.datacentersSubject.next(data);
+    if (this.authService.isLoggedIn()) {
+      this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
+        // Update internal datacenters array and external subject.
+        this._datacenters = data;
+        this.datacentersSubject.next(data);
 
-      // If a datacenter matching currentDatacenterId is present
-      // set currentDatacenter to that datacenter.
-      if (datacenterParam) {
-        this.switchDatacenter(datacenterParam);
-      }
-    });
+        // If a datacenter matching currentDatacenterId is present
+        // set currentDatacenter to that datacenter.
+        if (datacenterParam) {
+          this.switchDatacenter(datacenterParam);
+        }
+      });
+    }
   }
 
   /** Switch from the currentDatacenter to the provided datacenter.

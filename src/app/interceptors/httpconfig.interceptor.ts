@@ -65,21 +65,21 @@ export class HttpConfigInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-        if (!isLoggedIn) {
-          switch (error.status) {
-            case 400:
-              toastrMessage = 'Bad Request';
-              break;
-            case 401:
-              this.authService.logout();
-              // toastrMessage = 'Unauthorized.';
-              break;
-            case 403:
-              this.authService.logout();
-              // toastrMessage = 'Unauthorized.';
-              break;
-          }
+        // if (!isLoggedIn) {
+        switch (error.status) {
+          case 400:
+            toastrMessage = 'Bad Request';
+            break;
+          case 401:
+            this.authService.logout();
+            // toastrMessage = 'Unauthorized.';
+            break;
+          case 403:
+            this.authService.logout();
+            // toastrMessage = 'Unauthorized.';
+            break;
         }
+        // }
 
         const data = {
           error,

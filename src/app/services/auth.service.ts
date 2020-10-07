@@ -22,7 +22,13 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.user && this.user.value !== null && new Date(this.user.value.expires_at * 1000) > new Date();
+    return (
+      (this.user && this.user.value !== null) ||
+      (this.user &&
+        this.user.value !== null &&
+        this.user.value.expires_at !== null &&
+        new Date(this.user.value.expires_at * 1000) > new Date())
+    );
   }
 
   getUser(): Promise<User> {
