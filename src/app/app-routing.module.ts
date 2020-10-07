@@ -106,8 +106,11 @@ const routes: Routes = [
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
+    path: 'unauthorized',
+    loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
+  },
+  {
     path: '**',
-    canActivate: [AuthGuard],
     loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
   },
 ];

@@ -45,6 +45,9 @@ export class AuthService {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
     sessionStorage.setItem(`oidc.user:${environment.openId.client_id}`, null);
+    this.router.navigate(['/unauthorized'], {
+      queryParamsHandling: 'merge',
+    });
   }
 
   async completeAuthentication(): Promise<void> {
