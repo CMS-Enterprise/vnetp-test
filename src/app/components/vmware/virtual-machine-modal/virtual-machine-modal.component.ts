@@ -97,8 +97,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Virtual Disk?`, `Do you want to ${deleteDescription} virtual disk "${name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -131,8 +132,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Network Adapter?`, `Do you want to ${deleteDescription} network adapter "${name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -271,19 +273,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
       this.getVirtualDisks();
       this.ngx.resetModalData('virtualDiskModal');
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 

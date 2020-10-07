@@ -141,8 +141,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Subnet?`, `Do you want to ${deleteDescription} subnet "${subnet.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -182,8 +183,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} VLAN`, `Do you want to ${deleteDescription} the VLAN "${vlan.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -200,67 +202,46 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
-  importSubnetConfig(event: Subnet[]) {
+  public importSubnetConfig(event: Subnet[]): void {
     const modalDto = new YesNoModalDto(
       'Import Subnets',
       `Are you sure you would like to import ${event.length} subnet${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      const subnetsDto = {} as SubnetImportCollectionDto;
+      subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+      subnetsDto.subnets = event as SubnetImport[];
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const subnetsDto = {} as SubnetImportCollectionDto;
-        subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        subnetsDto.subnets = event as SubnetImport[];
+      this.subnetService
+        .v1NetworkSubnetsBulkImportPost({
+          subnetImportCollectionDto: subnetsDto,
+        })
+        .subscribe(data => {
+          this.getVlans(true);
+        });
+    };
 
-        this.subnetService
-          .v1NetworkSubnetsBulkImportPost({
-            subnetImportCollectionDto: subnetsDto,
-          })
-          .subscribe(data => {
-            this.getVlans(true);
-          });
-      }
+    const onClose = () => {
       this.showRadio = false;
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  importVlansConfig(event: Vlan[]) {
+  public importVlansConfig(event: Vlan[]): void {
     const modalDto = new YesNoModalDto(
       'Import VLANs',
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(data => {
-          this.getVlans();
-        });
-      }
+    const onConfirm = () => {
+      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(data => {
+        this.getVlans();
+      });
+    };
+    const onClose = () => {
       this.showRadio = false;
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   getObjectsForNavIndex() {

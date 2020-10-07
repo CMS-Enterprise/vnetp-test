@@ -10,7 +10,7 @@ export default class SubscriptionUtil {
     subscriptions.filter(canUnsubscribe).forEach(s => s.unsubscribe());
   }
 
-  static subscribeToYesNoModal(dto: YesNoModalDto, ngx: NgxSmartModalService, deleteFn: () => void): Subscription {
+  static subscribeToYesNoModal(dto: YesNoModalDto, ngx: NgxSmartModalService, confirmFn: () => void, closeFn = () => {}): Subscription {
     const modalId = 'yesNoModal';
 
     ngx.setModalData(dto, modalId);
@@ -20,8 +20,9 @@ export default class SubscriptionUtil {
       const data = modal.getData() as YesNoModalDto;
       modal.removeData();
       if (data && data.modalYes) {
-        deleteFn();
+        confirmFn();
       }
+      closeFn();
       yesNoModalSubscription.unsubscribe();
     });
 

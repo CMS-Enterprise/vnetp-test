@@ -4,6 +4,7 @@ import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-vmware-detail',
@@ -22,7 +23,7 @@ export class VmwareDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private virtualMachineService: V1VmwareVirtualMachinesService,
-    private ngxSmartModalService: NgxSmartModalService,
+    private ngx: NgxSmartModalService,
   ) {}
 
   getVirtualMachine() {
@@ -65,8 +66,9 @@ export class VmwareDetailComponent implements OnInit {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Virtual Machine?`, `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -81,21 +83,6 @@ export class VmwareDetailComponent implements OnInit {
           this.getVirtualMachine();
         });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
-    this.ngxSmartModalService.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngxSmartModalService
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
   }
 
   ngOnInit() {

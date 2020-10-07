@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfilesHelpText } from 'src/app/helptext/help-text-networking';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-load-balancer-profile-modal',
@@ -101,21 +102,14 @@ export class ProfileModalComponent implements OnInit {
     return this.form.controls;
   }
 
-  removeProfile(profile: LoadBalancerProfile) {
+  removeProfile(profile: LoadBalancerProfile): void {
     const modalDto = new YesNoModalDto('Remove Profile', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.profileService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
-          this.getProfiles();
-        });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.profileService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
+        this.getProfiles();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private getProfiles() {

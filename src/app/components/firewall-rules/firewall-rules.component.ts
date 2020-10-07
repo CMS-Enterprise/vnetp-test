@@ -74,24 +74,19 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       'Import Firewall Rule Groups',
       `Are you sure you would like to import ${event.length} firewall rule group${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.firewallRuleGroupService
-          .v1NetworkSecurityFirewallRuleGroupsBulkPost({
-            generatedFirewallRuleGroupBulkDto: { bulk: dto },
-          })
-          .subscribe(() => {
-            this.getTiers();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.firewallRuleGroupService
+        .v1NetworkSecurityFirewallRuleGroupsBulkPost({
+          generatedFirewallRuleGroupBulkDto: { bulk: dto },
+        })
+        .subscribe(() => {
+          this.getTiers();
+        });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private sanitizeData(entities: any[]): any[] {

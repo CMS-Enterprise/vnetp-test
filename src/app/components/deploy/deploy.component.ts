@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-deploy',
@@ -27,26 +28,20 @@ export class DeployComponent implements OnInit {
 
   public deployTiers(): void {
     const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item);
-
     if (!tiersToDeploy.length) {
       return;
     }
 
     const tierCount = tiersToDeploy.length === 1 ? '1 tier' : `${tiersToDeploy.length} tiers`;
-    const modalDto = new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tierCount}?`);
+    const onConfirm = () => {
+      this.launchTierProvisioningJobs(tiersToDeploy);
+    };
 
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-
-    const confirmationModal = this.ngx.getModal('yesNoModal');
-    confirmationModal.open();
-    const yesNoModalSubscription = confirmationModal.onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        this.launchTierProvisioningJobs(tiersToDeploy);
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(
+      new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tierCount}?`),
+      this.ngx,
+      onConfirm,
+    );
   }
 
   public getTierGroupName = (id: string): string => this.getObjectName(id, this.tierGroups);

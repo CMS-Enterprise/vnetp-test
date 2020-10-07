@@ -694,11 +694,12 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(
         `${deleteDescription} Virtual Server?`,
         `Do you want to ${deleteDescription} virtual server "${virtualServer.name}"?`,
       ),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -721,8 +722,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Irule?`, `Do you want to ${deleteDescription} irule "${irule.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -745,11 +747,12 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(
         `${deleteDescription} Health Monitor?`,
         `Do you want to ${deleteDescription} health monitor "${healthMonitor.name}"?`,
       ),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -772,8 +775,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Pool?`, `Do you want to ${deleteDescription} pool "${pool.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -796,8 +800,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Node?`, `Do you want to ${deleteDescription} node "${node.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -820,8 +825,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Profile?`, `Do you want to ${deleteDescription} Profile "${profile.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -844,8 +850,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Policy?`, `Do you want to ${deleteDescription} Policy "${policy.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -868,8 +875,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} VLAN?`, `Do you want to ${deleteDescription} VLAN "${vlan.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -892,8 +900,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Self IP?`, `Do you want to ${deleteDescription} Self IP "${selfIp.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -916,8 +925,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Route?`, `Do you want to ${deleteDescription} Route "${route.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -984,19 +994,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     if (policy.deletedAt) {
       this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(data => this.getPolicies());
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   private hasCurrentTier(): boolean {

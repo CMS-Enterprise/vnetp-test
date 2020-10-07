@@ -6,6 +6,7 @@ import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from '
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -82,19 +83,13 @@ export class HealthMonitorModalComponent implements OnInit {
 
   removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
     const modalDto = new YesNoModalDto('Remove Health Monitor', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      this.healthMonitorService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
+        this.getHealthMonitors();
+      });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.healthMonitorService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
-          this.getHealthMonitors();
-        });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private getHealthMonitors() {

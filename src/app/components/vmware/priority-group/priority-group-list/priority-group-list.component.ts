@@ -49,8 +49,9 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Priority Group?`, `Do you want to ${deleteDescription} priority group "${name}"?`),
+      this.ngx,
       deleteFn,
     );
   }
@@ -82,19 +83,6 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
     this.priorityGroupService.v1PriorityGroupsIdRestorePatch({ id: priorityGroup.id }).subscribe(() => {
       this.loadPriorityGroups();
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 

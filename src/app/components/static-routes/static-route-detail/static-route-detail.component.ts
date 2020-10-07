@@ -90,8 +90,9 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Static Route`, `Do you want to ${deleteDescription} the static route "${staticRoute.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -102,19 +103,6 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
         this.getStaticRoutes();
       });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   getStaticRoutes() {

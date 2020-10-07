@@ -6,6 +6,7 @@ import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-irule-modal',
@@ -105,19 +106,12 @@ export class IRuleModalComponent implements OnInit {
 
   removeIrule(irule: LoadBalancerIrule) {
     const modalDto = new YesNoModalDto('Remove Irule', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.iruleService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(() => {
-          this.getIrules();
-        });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.iruleService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(() => {
+        this.getIrules();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private getIrules() {

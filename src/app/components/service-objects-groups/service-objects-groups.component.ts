@@ -137,7 +137,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  deleteServiceObject(serviceObject: ServiceObject) {
+  public deleteServiceObject(serviceObject: ServiceObject): void {
     if (serviceObject.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
     }
@@ -156,11 +156,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(
         `${deleteDescription} Service Object?`,
         `Do you want to ${deleteDescription} service object "${serviceObject.name}"?`,
       ),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -173,7 +174,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {
+  public deleteServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup): void {
     if (serviceObjectGroup.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
     }
@@ -186,7 +187,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           .v1NetworkSecurityServiceObjectGroupsIdSoftDelete({
             id: serviceObjectGroup.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getServiceObjectGroups();
           });
       } else {
@@ -194,17 +195,18 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           .v1NetworkSecurityServiceObjectGroupsIdDelete({
             id: serviceObjectGroup.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getServiceObjectGroups();
           });
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(
         `${deleteDescription} Service Object Group`,
         `Do you want to ${deleteDescription} the service object group "${serviceObjectGroup.name}"?`,
       ),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -219,19 +221,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.getServiceObjectGroups();
         });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   getObjectsForNavIndex() {
@@ -255,85 +244,77 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  importServiceObjectsConfig(event: ServiceObject[]) {
+  public importServiceObjectsConfig(event: ServiceObject[]): void {
     const modalDto = new YesNoModalDto(
       'Import Service Objects',
       `Are you sure you would like to import ${event.length} service object${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.serviceObjectService
-          .v1NetworkSecurityServiceObjectsBulkPost({
-            generatedServiceObjectBulkDto: { bulk: dto },
-          })
-          .subscribe(data => {
-            this.getServiceObjects();
-          });
-      }
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.serviceObjectService
+        .v1NetworkSecurityServiceObjectsBulkPost({
+          generatedServiceObjectBulkDto: { bulk: dto },
+        })
+        .subscribe(data => {
+          this.getServiceObjects();
+        });
+    };
+
+    const onClose = () => {
       this.showRadio = false;
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  importServiceObjectGroupRelationsConfig(event) {
+  public importServiceObjectGroupRelationsConfig(event: any): void {
     const modalDto = new YesNoModalDto(
       'Import Service Object Group Relations',
       `Are you sure you would like to import ${event.length} service object group relation${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
+      serviceObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
+      serviceObjectRelationsDto.serviceObjectRelations = event;
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
-        serviceObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
-        serviceObjectRelationsDto.serviceObjectRelations = event;
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost({
+          serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
+        })
+        .subscribe(() => {
+          this.getServiceObjects();
+        });
+    };
 
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost({
-            serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
-          })
-          .subscribe(data => {
-            this.getServiceObjects();
-          });
-      }
+    const onClose = () => {
       this.showRadio = false;
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  importServiceObjectGroupsConfig(event) {
+  public importServiceObjectGroupsConfig(event: any): void {
     const modalDto = new YesNoModalDto(
       'Import Service Object Groups',
       `Are you sure you would like to import ${event.length} service object group${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsBulkPost({
+          generatedServiceObjectGroupBulkDto: { bulk: dto },
+        })
+        .subscribe(() => {
+          this.getServiceObjectGroups();
+        });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsBulkPost({
-            generatedServiceObjectGroupBulkDto: { bulk: dto },
-          })
-          .subscribe(data => {
-            this.getServiceObjectGroups();
-          });
-      }
+    const onClose = () => {
       this.showRadio = false;
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   sanitizeData(entities: any) {

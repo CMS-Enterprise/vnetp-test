@@ -29,6 +29,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -241,11 +242,12 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(
         `${deleteDescription} Firewall Rule`,
         `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?`,
       ),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -256,19 +258,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.getFirewallRules();
       });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   importFirewallRulesConfig(event: FirewallRuleImport[]): void {

@@ -86,7 +86,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteTier(tier: Tier) {
+  public deleteTier(tier: Tier): void {
     if (tier.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
     }
@@ -105,8 +105,9 @@ export class TiersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Tier?`, `Do you want to ${deleteDescription} tier "${tier.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -119,42 +120,23 @@ export class TiersComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
-  importTiersConfig(event) {
+  public importTiersConfig(event: any): void {
     const modalDto = new YesNoModalDto(
       'Import Tiers',
       `Are you sure you would like to import ${event.length} tier${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.datacenterTierService
+        .v1TiersBulkPost({
+          generatedTierBulkDto: { bulk: dto },
+        })
+        .subscribe(() => {
+          this.getTiers();
+        });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.datacenterTierService
-          .v1TiersBulkPost({
-            generatedTierBulkDto: { bulk: dto },
-          })
-          .subscribe(data => {
-            this.getTiers();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   sanitizeData(entities: any) {
@@ -180,7 +162,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: semicolon
   };
 
-  public getTierGroupName = (id: string) => ObjectUtil.getObjectName(id, this.tierGroups);
+  public getTierGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.tierGroups);
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
