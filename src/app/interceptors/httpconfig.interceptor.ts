@@ -65,7 +65,6 @@ export class HttpConfigInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-        // if (!isLoggedIn) {
         switch (error.status) {
           case 400:
             toastrMessage = 'Bad Request';
@@ -79,7 +78,6 @@ export class HttpConfigInterceptor {
             // toastrMessage = 'Unauthorized.';
             break;
         }
-        // }
 
         const data = {
           error,

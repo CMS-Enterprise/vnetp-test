@@ -57,8 +57,9 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
-
-      this.getDatacenters(queryParams.get('datacenter'));
+      setTimeout(() => {
+        this.getDatacenters(queryParams.get('datacenter'));
+      }, 200);
     });
   }
 
@@ -101,19 +102,18 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    if (this.authService.isLoggedIn()) {
-      this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
-        // Update internal datacenters array and external subject.
-        this._datacenters = data;
-        this.datacentersSubject.next(data);
+    console.log('logged in?', this.authService.isLoggedIn());
+    this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
+      // Update internal datacenters array and external subject.
+      this._datacenters = data;
+      this.datacentersSubject.next(data);
 
-        // If a datacenter matching currentDatacenterId is present
-        // set currentDatacenter to that datacenter.
-        if (datacenterParam) {
-          this.switchDatacenter(datacenterParam);
-        }
-      });
-    }
+      // If a datacenter matching currentDatacenterId is present
+      // set currentDatacenter to that datacenter.
+      if (datacenterParam) {
+        this.switchDatacenter(datacenterParam);
+      }
+    });
   }
 
   /** Switch from the currentDatacenter to the provided datacenter.

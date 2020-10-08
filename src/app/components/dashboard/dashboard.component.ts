@@ -42,8 +42,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-    this.loadDashboard();
 
+    setTimeout(() => this.loadDashboard(), 200);
     this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
 
