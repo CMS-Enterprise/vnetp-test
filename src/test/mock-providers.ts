@@ -17,6 +17,9 @@ const MockNgxSmartModalService = () => {
         onAnyCloseEvent: of({
           getData: jest.fn(() => {}),
         }),
+        onCloseFinished: of({
+          getData: jest.fn(() => {}),
+        }),
       };
     }),
     close: jest.fn(),

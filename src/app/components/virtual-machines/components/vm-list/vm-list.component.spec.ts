@@ -47,7 +47,7 @@ describe('VmListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call to get a applications in chunks on init', () => {
+  it('should call to get applications in chunks on init', () => {
     const applicationService = TestBed.get(V1AgmApplicationsService);
     const spy = jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
 

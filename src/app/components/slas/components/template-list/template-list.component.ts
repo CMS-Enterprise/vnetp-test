@@ -65,7 +65,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public openTemplateModal(template?: ActifioTemplateDto): void {
     this.ngx.setModalData(template, 'templateModal');
-    this.ngx.open('templateModal');
+    this.ngx.getModal('templateModal').open();
   }
 
   public loadTemplates(): void {
