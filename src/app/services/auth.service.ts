@@ -43,8 +43,10 @@ export class AuthService {
     return `Bearer ${this.user.value.access_token}`;
   }
 
-  startAuthentication(): Promise<void> {
-    return this.manager.signinRedirect();
+  async startAuthentication(): Promise<void> {
+    try {
+      await this.manager.signinRedirect();
+    } catch (err) {}
   }
 
   logout(): void {
@@ -57,11 +59,13 @@ export class AuthService {
   }
 
   async completeAuthentication(): Promise<void> {
-    const user = await this.manager.signinRedirectCallback();
-    this.user.next(user);
     this.router.navigate(['/dashboard'], {
       queryParamsHandling: 'merge',
     });
+    try {
+      const user = await this.manager.signinRedirectCallback();
+      this.user.next(user);
+    } catch (err) {}
   }
 
   public get fullName(): string {

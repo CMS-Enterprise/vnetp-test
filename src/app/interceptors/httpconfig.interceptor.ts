@@ -12,7 +12,6 @@ export class HttpConfigInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isLoggedIn = this.authService.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn);
     if (isLoggedIn) {
       const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
       request = request.clone({ headers });

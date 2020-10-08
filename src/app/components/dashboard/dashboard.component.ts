@@ -42,8 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-
-    setTimeout(() => this.loadDashboard(), 200);
+    setTimeout(() => this.loadDashboard(), 800);
     this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
 
@@ -59,13 +58,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
-      const paged: any = data;
-      this.datacenters = paged.total;
-      try {
-        this.status[1].status = 'green';
-      } catch {}
-    });
+    if (this.authService.isLoggedIn()) {
+      this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
+        const paged: any = data;
+        this.datacenters = paged.total;
+        try {
+          this.status[1].status = 'green';
+        } catch {}
+      });
+    } else {
+      this.getDatacenters();
+    }
   }
 
   private getTiers(): void {

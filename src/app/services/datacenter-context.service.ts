@@ -57,9 +57,7 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
-      setTimeout(() => {
-        this.getDatacenters(queryParams.get('datacenter'));
-      }, 200);
+      setTimeout(() => this.getDatacenters(queryParams.get('datacenter')), 800);
     });
   }
 
@@ -102,7 +100,6 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    console.log('logged in?', this.authService.isLoggedIn());
     this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
       // Update internal datacenters array and external subject.
       this._datacenters = data;
