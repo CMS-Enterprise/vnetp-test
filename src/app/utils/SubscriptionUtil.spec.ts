@@ -1,4 +1,5 @@
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import { YesNoModalDto } from '../models/other/yes-no-modal-dto';
 import SubscriptionUtil from './SubscriptionUtil';
 
 describe('SubscriptionUtil', () => {
@@ -30,6 +31,56 @@ describe('SubscriptionUtil', () => {
       expect(sub2.closed).toBe(true);
       expect(sub3.closed).toBe(true);
       expect(sub4.closed).toBe(true);
+    });
+  });
+
+  describe('subscribeToYesNoModal', () => {
+    const initNgx = (open = jest.fn(), confirmData = {}) => {
+      return {
+        setModalData: jest.fn(),
+        getModal: jest.fn(() => {
+          return {
+            open,
+            onCloseFinished: of({
+              getData: jest.fn(() => confirmData),
+              removeData: jest.fn(),
+            }),
+          };
+        }),
+      } as any;
+    };
+
+    it('should open "yesNoModal"', () => {
+      const openSpy = jest.fn();
+      const ngx = initNgx(openSpy);
+      const dto = new YesNoModalDto('Title', 'Body');
+
+      SubscriptionUtil.subscribeToYesNoModal(dto, ngx, () => {});
+
+      expect(ngx.getModal).toHaveBeenCalledWith('yesNoModal');
+      expect(openSpy).toHaveBeenCalled();
+    });
+
+    it('should not call the confirm function when cancelled', () => {
+      const open = jest.fn();
+      const ngx = initNgx(open, null);
+      const dto = new YesNoModalDto('Title', 'Body');
+      const confirmFn = jest.fn();
+
+      SubscriptionUtil.subscribeToYesNoModal(dto, ngx, confirmFn);
+
+      expect(confirmFn).not.toHaveBeenCalled();
+    });
+
+    it('should run the confirm function when confirmed', () => {
+      const open = jest.fn();
+      const ngx = initNgx(open, { modalYes: true });
+      const dto = new YesNoModalDto('Title', 'Body');
+      const confirmFn = jest.fn();
+
+      SubscriptionUtil.subscribeToYesNoModal(dto, ngx, confirmFn);
+
+      expect(confirmFn).toHaveBeenCalled();
     });
   });
 });

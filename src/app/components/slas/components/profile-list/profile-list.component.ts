@@ -1,9 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActifioProfileDto, V1AgmProfilesService } from 'api_client';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 interface ProfileView extends ActifioProfileDto {
   mostRecentChangeDate: string;
@@ -14,8 +11,6 @@ interface ProfileView extends ActifioProfileDto {
   templateUrl: './profile-list.component.html',
 })
 export class ProfileListComponent implements OnInit {
-  @ViewChild('actionsTemplate', { static: false }) actionsTemplate: TemplateRef<any>;
-
   public config = {
     description: 'List of SLA Profiles',
     columns: [
@@ -39,16 +34,12 @@ export class ProfileListComponent implements OnInit {
         name: 'Last Modified',
         property: 'mostRecentChangeDate',
       },
-      {
-        name: '',
-        template: () => this.actionsTemplate,
-      },
     ],
   };
   public isLoading = false;
   public profiles: ProfileView[] = [];
 
-  constructor(private agmProfileService: V1AgmProfilesService, private datePipe: DatePipe, private ngx: NgxSmartModalService) {}
+  constructor(private agmProfileService: V1AgmProfilesService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -67,20 +58,6 @@ export class ProfileListComponent implements OnInit {
       });
       this.isLoading = false;
     });
-  }
-
-  public deleteProfile(profile: ProfileView): void {
-    const deleteFunction = () => {
-      this.agmProfileService.v1AgmProfilesIdDelete({ id: profile.id }).subscribe(() => {
-        this.loadProfiles();
-      });
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`Delete SLA Profile?`, `Do you want to delete SLA Profile "${profile.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
   }
 
   private getMostRecentChange(modifiedDate: string, createdDate: string): string {
