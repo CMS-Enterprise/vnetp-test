@@ -37,7 +37,6 @@ export class DatacenterContextService {
     private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService,
   ) {
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
