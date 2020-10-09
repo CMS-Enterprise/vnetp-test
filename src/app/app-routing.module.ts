@@ -41,10 +41,14 @@ const routes: Routes = [
   },
   {
     path: 'firewall-rules',
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Firewall Rules', title: 'Automation - Firewall Rules' },
-    loadChildren: () => import('./components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+    loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
   },
+  // {
+  //   path: 'firewall-rules',
+  //   canActivate: [AuthGuard],
+  //   data: { breadcrumb: 'Firewall Rules', title: 'Automation - Firewall Rules' },
+  //   loadChildren: () => import('./components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+  // },
   {
     path: 'load-balancers',
     canActivate: [AuthGuard],
