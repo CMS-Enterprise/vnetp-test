@@ -9,12 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioSlaDto } from './actifioSlaDto';
 
 
-export interface ActifioLogicalGroupDto { 
-    id: string;
+export interface ActifioDiscoveredVMDto { 
+    applicationId?: string;
+    discoveredId?: string;
     name: string;
-    sla?: ActifioSlaDto;
+    clusterName: string;
+    folderPath?: string;
+    isManaged: boolean;
+    isNewVirtualMachine: boolean;
 }
 

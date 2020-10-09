@@ -1,10 +1,14 @@
 import { Component, Input, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
-import { ActifioApplicationDto, V1AgmHostsService } from 'api_client';
+import { ActifioApplicationDto, ActifioDiscoveredVMDto, V1AgmHostsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
-interface SelectableVirtualMachine extends ActifioApplicationDto {
+interface SelectableVirtualMachine {
+  folderPath: string;
+  id: string;
+  isManaged: boolean;
   isSelected: boolean;
+  name: string;
 }
 
 @Component({
@@ -15,7 +19,7 @@ interface SelectableVirtualMachine extends ActifioApplicationDto {
 export class SelectVirtualMachinesComponent implements OnInit {
   @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
-  @Input() vcenterId: number;
+  @Input() vcenterId: string;
   @Output() virtualMachinesSelected = new EventEmitter<Set<string>>();
 
   public config: TableConfig = {
@@ -56,12 +60,16 @@ export class SelectVirtualMachinesComponent implements OnInit {
     }
   }
 
-  public loadVirtualMachinesOnHost(hostId: number): void {
+  public loadVirtualMachinesOnHost(hostId: string): void {
     this.isLoading = true;
-    this.agmHostService.v1AgmHostsHostIdDiscoveredApplicationsGet({ hostId }).subscribe((data: ActifioApplicationDto[]) => {
-      this.selectableVirtualMachines = data.map(application => {
+    this.agmHostService.v1AgmHostsHostIdDiscoveredApplicationsGet({ hostId }).subscribe((data: ActifioDiscoveredVMDto[]) => {
+      this.selectableVirtualMachines = data.map(discoveredVM => {
+        const { applicationId, discoveredId, isManaged, folderPath, name } = discoveredVM;
         return {
-          ...application,
+          folderPath,
+          name,
+          id: applicationId || discoveredId,
+          isManaged: isManaged,
           isSelected: false,
         };
       });

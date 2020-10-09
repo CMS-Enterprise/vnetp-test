@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioApplicationDto } from '../model/models';
+import { ActifioDiscoveredVMDto } from '../model/models';
 import { ActifioHostDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -25,11 +25,11 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams {
-    hostId: number;
+    hostId: string;
 }
 
 export interface V1AgmHostsIdGetRequestParams {
-    id: number;
+    id: string;
 }
 
 
@@ -136,14 +136,14 @@ export class V1AgmHostsService {
     }
 
     /**
-     * Get many discovered ActifioApplicationDto
+     * Get many discoveredVMDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
+    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioDiscoveredVMDto>>;
+    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioDiscoveredVMDto>>>;
+    public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioDiscoveredVMDto>>>;
     public v1AgmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1AgmHostsHostIdDiscoveredApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const hostId = requestParameters.hostId;
         if (hostId === null || hostId === undefined) {
@@ -170,7 +170,7 @@ export class V1AgmHostsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/hosts/${encodeURIComponent(String(hostId))}/discovered-applications`,
+        return this.httpClient.get<Array<ActifioDiscoveredVMDto>>(`${this.configuration.basePath}/v1/agm/hosts/${encodeURIComponent(String(hostId))}/discovered-applications`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

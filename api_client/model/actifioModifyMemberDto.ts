@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioSlaDto } from './actifioSlaDto';
 
 
-export interface ActifioLogicalGroupDto { 
+export interface ActifioModifyMemberDto { 
     id: string;
     name: string;
-    sla?: ActifioSlaDto;
+    srcid: string;
 }
 

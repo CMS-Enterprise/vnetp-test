@@ -42,6 +42,11 @@ export interface V1AgmTemplatesIdPolicyGetRequestParams {
     id: string;
 }
 
+export interface V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams {
+    policyId: string;
+    id: string;
+}
+
 export interface V1AgmTemplatesIdPolicyPolicyIdPutRequestParams {
     policyId: string;
     id: string;
@@ -315,6 +320,55 @@ export class V1AgmTemplatesService {
         return this.httpClient.get<Array<ActifioPolicyDto>>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Delete one ActifioPolicy
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const policyId = requestParameters.policyId;
+        if (policyId === null || policyId === undefined) {
+            throw new Error('Required parameter policyId was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdDelete.');
+        }
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdDelete.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

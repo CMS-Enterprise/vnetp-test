@@ -17,23 +17,28 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioApplySlaDto } from '../model/models';
+import { ActifioCreateOrApplySlaDto } from '../model/models';
 import { ActifioSlaDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmSlasApplyPostRequestParams {
-    actifioApplySlaDto: ActifioApplySlaDto;
-}
-
 export interface V1AgmSlasIdDeleteRequestParams {
-    id: number;
+    id: string;
 }
 
 export interface V1AgmSlasIdGetRequestParams {
-    id: number;
+    id: string;
+}
+
+export interface V1AgmSlasIdPutRequestParams {
+    id: string;
+    actifioCreateOrApplySlaDto: ActifioCreateOrApplySlaDto;
+}
+
+export interface V1AgmSlasPostRequestParams {
+    actifioCreateOrApplySlaDto: ActifioCreateOrApplySlaDto;
 }
 
 
@@ -96,62 +101,6 @@ export class V1AgmSlasService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
-    }
-
-    /**
-     * apply SLA to VM
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
-    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
-    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
-    public v1AgmSlasApplyPost(requestParameters: V1AgmSlasApplyPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const actifioApplySlaDto = requestParameters.actifioApplySlaDto;
-        if (actifioApplySlaDto === null || actifioApplySlaDto === undefined) {
-            throw new Error('Required parameter actifioApplySlaDto was null or undefined when calling v1AgmSlasApplyPost.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/apply`,
-            actifioApplySlaDto,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
     }
 
     /**
@@ -277,6 +226,122 @@ export class V1AgmSlasService {
         }
 
         return this.httpClient.get<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * apply SLA to VM
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdPut.');
+        }
+        const actifioCreateOrApplySlaDto = requestParameters.actifioCreateOrApplySlaDto;
+        if (actifioCreateOrApplySlaDto === null || actifioCreateOrApplySlaDto === undefined) {
+            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1AgmSlasIdPut.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.put<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
+            actifioCreateOrApplySlaDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * create SLA
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const actifioCreateOrApplySlaDto = requestParameters.actifioCreateOrApplySlaDto;
+        if (actifioCreateOrApplySlaDto === null || actifioCreateOrApplySlaDto === undefined) {
+            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1AgmSlasPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas`,
+            actifioCreateOrApplySlaDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

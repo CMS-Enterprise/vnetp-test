@@ -12,7 +12,7 @@
 
 
 export interface ActifioAddApplicationDto { 
-    hostId: number;
+    hostId: string;
     clusterName: string;
     clusterId: string;
     applicationUUID: Array<string>;

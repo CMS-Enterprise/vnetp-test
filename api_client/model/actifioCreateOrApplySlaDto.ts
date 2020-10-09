@@ -11,10 +11,11 @@
  */
 
 
-export interface ActifioApplySlaDto { 
-    applicationName: string;
-    applicationId: string;
+export interface ActifioCreateOrApplySlaDto { 
+    applicationName?: string;
+    applicationId?: string;
     slpId: string;
     sltId: string;
+    apply?: string;
 }
 

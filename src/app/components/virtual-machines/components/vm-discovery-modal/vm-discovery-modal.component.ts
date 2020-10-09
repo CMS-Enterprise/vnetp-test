@@ -12,7 +12,7 @@ export class VmDiscoveryModalComponent {
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
   public selectedVirtualMachineIds = new Set<string>();
-  public selectedVCenterId: number;
+  public selectedVCenterId: string;
 
   constructor(private changeRef: ChangeDetectorRef, private ngx: NgxSmartModalService) {}
 
@@ -33,7 +33,7 @@ export class VmDiscoveryModalComponent {
     this.selectedVirtualMachineIds = virtualMachineIds;
   }
 
-  public onVCenterSelected(vCenterId: number): void {
+  public onVCenterSelected(vCenterId: string): void {
     this.selectedVCenterId = vCenterId;
     this.currentDiscoveryStepTemplate = this.selectVirtualMachinesTemplate;
   }
