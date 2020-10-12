@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
-import { ActifioApplicationDto, ActifioDiscoveredVMDto, V1AgmHostsService } from 'api_client';
+import { ActifioDiscoveredVMDto, V1AgmHostsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
@@ -67,9 +67,9 @@ export class SelectVirtualMachinesComponent implements OnInit {
         const { applicationId, discoveredId, isManaged, folderPath, name } = discoveredVM;
         return {
           folderPath,
+          isManaged,
           name,
           id: applicationId || discoveredId,
-          isManaged: isManaged,
           isSelected: false,
         };
       });

@@ -15,7 +15,7 @@ export class BreadcrumbComponent implements OnInit {
 
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',

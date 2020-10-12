@@ -63,6 +63,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
 
   public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup) => {
     return firewallRuleGroup.type === this.navIndex;
+    // tslint:disable-next-line: semicolon
   };
 
   public getTierName(tierId: string): string {
@@ -111,6 +112,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       }
     });
     return obj;
+    // tslint:disable-next-line: semicolon
   };
 
   ngOnInit(): void {

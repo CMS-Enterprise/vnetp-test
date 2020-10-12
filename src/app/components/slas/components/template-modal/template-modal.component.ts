@@ -157,7 +157,7 @@ export class TemplateModalComponent implements OnInit {
 
     const snapshotPolicy$ = this.agmTemplateService.v1AgmTemplatesIdPolicyPolicyIdPut({
       id,
-      policyId: policyId,
+      policyId,
       actifioUpdateTemplatePolicyDto: {
         id: policyId,
         endTime: this.convertTimeToSeconds(endTime),
