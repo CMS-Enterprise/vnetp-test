@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -105,7 +105,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   subscribeToSubnetModal() {
-    this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe(() => {
       this.getSubnets();
       this.ngx.resetModalData('subnetModal');
       this.datacenterService.unlockDatacenter();
@@ -114,7 +114,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVlanModal() {
-    this.vlanModalSubscription = this.ngx.getModal('vlanModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.vlanModalSubscription = this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
       this.getVlans();
       this.ngx.resetModalData('vlanModal');
       this.datacenterService.unlockDatacenter();

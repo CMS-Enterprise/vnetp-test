@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -78,7 +78,7 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToTierModal() {
-    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
       this.getTiers();
       this.ngx.resetModalData('tierModal');
       this.datacenterService.unlockDatacenter();

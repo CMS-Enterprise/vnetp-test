@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   V1VmwareVirtualMachinesService,
   VmwareVirtualMachine,
@@ -263,14 +263,14 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNetworkAdapterModal(): Subscription {
-    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe(() => {
       this.getNetworkAdapters();
       this.ngx.resetModalData('networkAdapterModal');
     });
   }
 
   private subscribeToVirtualDiskModal(): Subscription {
-    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe(() => {
       this.getVirtualDisks();
       this.ngx.resetModalData('virtualDiskModal');
     });

@@ -214,12 +214,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   subscribeToFirewallRuleModal(): void {
-    this.firewallRuleModalSubscription = this.ngx
-      .getModal('firewallRuleModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getFirewallRuleGroup();
-        this.ngx.resetModalData('firewallRuleModal');
-      });
+    this.firewallRuleModalSubscription = this.ngx.getModal('firewallRuleModal').onCloseFinished.subscribe(() => {
+      this.getFirewallRuleGroup();
+      this.ngx.resetModalData('firewallRuleModal');
+    });
   }
 
   public getServiceObjectName = (id: string) => ObjectUtil.getObjectName(id, this.serviceObjects);

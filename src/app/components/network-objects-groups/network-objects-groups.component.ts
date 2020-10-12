@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
@@ -119,23 +119,19 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNetworkObjectModal() {
-    this.networkObjectModalSubscription = this.ngx
-      .getModal('networkObjectModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getNetworkObjects();
-        this.ngx.resetModalData('networkObjectModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+    this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
+      this.getNetworkObjects();
+      this.ngx.resetModalData('networkObjectModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
   subscribeToNetworkObjectGroupModal() {
-    this.networkObjectGroupModalSubscription = this.ngx
-      .getModal('networkObjectGroupModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getNetworkObjectGroups();
-        this.ngx.resetModalData('networkObjectGroupModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+    this.networkObjectGroupModalSubscription = this.ngx.getModal('networkObjectGroupModal').onCloseFinished.subscribe(() => {
+      this.getNetworkObjectGroups();
+      this.ngx.resetModalData('networkObjectGroupModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
   deleteNetworkObject(networkObject: NetworkObject) {

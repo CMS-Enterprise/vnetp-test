@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 

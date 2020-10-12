@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -118,23 +118,19 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   subscribeToServiceObjectModal() {
-    this.serviceObjectModalSubscription = this.ngx
-      .getModal('serviceObjectModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getServiceObjects();
-        this.ngx.resetModalData('serviceObjectModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+    this.serviceObjectModalSubscription = this.ngx.getModal('serviceObjectModal').onCloseFinished.subscribe(() => {
+      this.getServiceObjects();
+      this.ngx.resetModalData('serviceObjectModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
   subscribeToServiceObjectGroupModal() {
-    this.serviceObjectGroupModalSubscription = this.ngx
-      .getModal('serviceObjectGroupModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getServiceObjectGroups();
-        this.ngx.resetModalData('serviceObjectGroupModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+    this.serviceObjectGroupModalSubscription = this.ngx.getModal('serviceObjectGroupModal').onCloseFinished.subscribe(() => {
+      this.getServiceObjectGroups();
+      this.ngx.resetModalData('serviceObjectGroupModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
   public deleteServiceObject(serviceObject: ServiceObject): void {

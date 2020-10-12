@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerProfile, V1LoadBalancerProfilesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';

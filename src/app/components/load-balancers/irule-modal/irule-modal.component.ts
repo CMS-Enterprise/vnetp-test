@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'api_client';

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Appliance, V1DatacentersService, V1AppliancesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -62,7 +62,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   }
 
   subscribeToApplianceModal() {
-    this.applianceModalSubscription = this.ngx.getModal('applianceModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    this.applianceModalSubscription = this.ngx.getModal('applianceModal').onAnyCloseEvent.subscribe(() => {
       this.getAppliances();
       this.ngx.resetModalData('applianceModal');
       this.datacenterContextService.unlockDatacenter();

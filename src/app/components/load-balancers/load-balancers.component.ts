@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -575,7 +575,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVlanModal() {
-    this.routeModalSubscription = this.ngx.getModal('loadBalancerVlanModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerVlanModal').onCloseFinished.subscribe(() => {
       this.getVlans();
       this.ngx.resetModalData('loadBalancerVlanModal');
       this.vlanModalSubscription.unsubscribe();
@@ -584,18 +584,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToSelfIpModal() {
-    this.selfIpModalSubscription = this.ngx
-      .getModal('loadBalancerSelfIpModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getSelfIps();
-        this.ngx.resetModalData('loadBalancerSelfIpModal');
-        this.selfIpModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.selfIpModalSubscription = this.ngx.getModal('loadBalancerSelfIpModal').onCloseFinished.subscribe(() => {
+      this.getSelfIps();
+      this.ngx.resetModalData('loadBalancerSelfIpModal');
+      this.selfIpModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToRouteModal() {
-    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe(() => {
       this.getRoutes();
       this.ngx.resetModalData('loadBalancerRouteModal');
       this.routeModalSubscription.unsubscribe();
@@ -604,18 +602,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVirtualServerModal() {
-    this.virtualServerModalSubscription = this.ngx
-      .getModal('virtualServerModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getVirtualServers();
-        this.ngx.resetModalData('virtualServerModal');
-        this.virtualServerModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.virtualServerModalSubscription = this.ngx.getModal('virtualServerModal').onCloseFinished.subscribe(() => {
+      this.getVirtualServers();
+      this.ngx.resetModalData('virtualServerModal');
+      this.virtualServerModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToPoolModal() {
-    this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.getPools();
       this.getHealthMonitors();
       this.getNodes();
@@ -626,7 +622,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNodeModal() {
-    this.nodeModalSubscription = this.ngx.getModal('nodeModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.nodeModalSubscription = this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
       this.getNodes();
       this.ngx.resetModalData('nodeModal');
       this.nodeModalSubscription.unsubscribe();
@@ -635,7 +631,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToIRuleModal() {
-    this.iruleModalSubscription = this.ngx.getModal('iruleModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.iruleModalSubscription = this.ngx.getModal('iruleModal').onCloseFinished.subscribe(() => {
       this.getIrules();
       this.ngx.resetModalData('iruleModal');
       this.iruleModalSubscription.unsubscribe();
@@ -644,36 +640,30 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToHealthMonitorModal() {
-    this.healthMonitorModalSubscription = this.ngx
-      .getModal('healthMonitorModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getHealthMonitors();
-        this.ngx.resetModalData('healthMonitorModal');
-        this.healthMonitorModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.healthMonitorModalSubscription = this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
+      this.getHealthMonitors();
+      this.ngx.resetModalData('healthMonitorModal');
+      this.healthMonitorModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToProfileModal() {
-    this.profileModalSubscription = this.ngx
-      .getModal('loadBalancerProfileModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getProfiles();
-        this.ngx.resetModalData('loadBalancerProfileModal');
-        this.profileModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.profileModalSubscription = this.ngx.getModal('loadBalancerProfileModal').onCloseFinished.subscribe(() => {
+      this.getProfiles();
+      this.ngx.resetModalData('loadBalancerProfileModal');
+      this.profileModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToPolicyModal() {
-    this.policyModalSubscription = this.ngx
-      .getModal('loadBalancerPolicyModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getPolicies();
-        this.ngx.resetModalData('loadBalancerPolicyModal');
-        this.policyModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.policyModalSubscription = this.ngx.getModal('loadBalancerPolicyModal').onCloseFinished.subscribe(() => {
+      this.getPolicies();
+      this.ngx.resetModalData('loadBalancerPolicyModal');
+      this.policyModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   deleteVirtualServer(virtualServer: LoadBalancerVirtualServer) {

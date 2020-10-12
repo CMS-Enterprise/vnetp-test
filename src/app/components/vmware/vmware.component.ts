@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
@@ -86,13 +86,11 @@ export class VmwareComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVirtualMachineModal() {
-    this.virtualMachineModalSubscription = this.ngx
-      .getModal('virtualMachineModal')
-      .onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
-        this.getVirtualMachines();
-        this.ngx.resetModalData('virtualMachineModal');
-        this.datacenterContextService.unlockDatacenter();
-      });
+    this.virtualMachineModalSubscription = this.ngx.getModal('virtualMachineModal').onAnyCloseEvent.subscribe(() => {
+      this.getVirtualMachines();
+      this.ngx.resetModalData('virtualMachineModal');
+      this.datacenterContextService.unlockDatacenter();
+    });
   }
 
   deleteVirtualMachine(vm: VmwareVirtualMachine) {

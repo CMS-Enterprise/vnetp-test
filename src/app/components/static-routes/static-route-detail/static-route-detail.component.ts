@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -64,7 +64,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   }
 
   subscribeToStaticRouteModal() {
-    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe(() => {
       this.getStaticRoutes();
       this.ngx.resetModalData('staticRouteModal');
       this.staticRouteModalSubscription.unsubscribe();

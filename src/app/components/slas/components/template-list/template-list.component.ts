@@ -1,7 +1,6 @@
-import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioPolicyDto, ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
