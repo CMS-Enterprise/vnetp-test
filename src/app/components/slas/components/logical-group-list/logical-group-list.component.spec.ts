@@ -38,6 +38,7 @@ describe('LogicalGroupListComponent', () => {
   beforeEach(async(() => {
     const logicalGroupService = {
       v1AgmLogicalGroupsGet: jest.fn(() => of(createLogicalGroups())),
+      v1AgmLogicalGroupsIdGet: jest.fn(() => of({ members: [] })),
     };
 
     TestBed.configureTestingModule({
@@ -70,17 +71,20 @@ describe('LogicalGroupListComponent', () => {
     expect(spy).toHaveBeenCalledWith();
   });
 
-  it('should map a logical group', () => {
+  it('should map a logical group', done => {
     component.ngOnInit();
 
     const [logicalGroup1] = component.logicalGroups;
-    expect(logicalGroup1).toEqual({
-      id: '1',
-      name: 'LogicalGroupName-1',
-      slaProfileDescription: '--',
-      slaTemplateDescription: '--',
-      slaProfileName: 'Profile-1',
-      slaTemplateName: 'Template-1',
+    expect(logicalGroup1.id).toBe('1');
+    expect(logicalGroup1.name).toBe('LogicalGroupName-1');
+    expect(logicalGroup1.slaProfileDescription).toBe('--');
+    expect(logicalGroup1.slaTemplateDescription).toBe('--');
+    expect(logicalGroup1.slaProfileName).toBe('Profile-1');
+    expect(logicalGroup1.slaTemplateName).toEqual('Template-1');
+
+    logicalGroup1.memberCount.subscribe(count => {
+      expect(count).toBe(0);
+      done();
     });
   });
 });
