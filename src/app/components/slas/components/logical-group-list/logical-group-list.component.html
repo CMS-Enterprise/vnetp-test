@@ -9,6 +9,12 @@
   <app-table [config]="config" [data]="logicalGroups"></app-table>
 </ng-container>
 
+<ng-template #memberTemplate let-logicalGroup="datum">
+  <div *ngIf="logicalGroup.memberCount | async as memberCount; else loading">
+    {{ memberCount }}
+  </div>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>

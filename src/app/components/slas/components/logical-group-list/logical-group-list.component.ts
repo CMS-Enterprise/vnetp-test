@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { V1AgmLogicalGroupsService } from 'api_client';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActifioDetailedLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface LogicalGroupView {
   id: string;
@@ -8,12 +10,15 @@ interface LogicalGroupView {
   slaTemplateDescription: string;
   slaProfileName: string;
   slaProfileDescription: string;
+  memberCount: Observable<number>;
 }
 @Component({
   selector: 'app-logical-group-list',
   templateUrl: './logical-group-list.component.html',
 })
 export class LogicalGroupListComponent implements OnInit {
+  @ViewChild('memberTemplate', { static: false }) memberTemplate: TemplateRef<any>;
+
   public config = {
     description: 'List of SLA Logical Groups',
     columns: [
@@ -36,6 +41,10 @@ export class LogicalGroupListComponent implements OnInit {
       {
         name: '',
         property: 'slaProfileDescription',
+      },
+      {
+        name: 'Virtual Machines',
+        template: () => this.memberTemplate,
       },
     ],
   };
@@ -60,9 +69,16 @@ export class LogicalGroupListComponent implements OnInit {
           slaTemplateDescription: sla.template.description || '--',
           slaProfileName: sla.profile.name,
           slaProfileDescription: sla.profile.description || '--',
+          memberCount: this.getMemberCount(logicalGroup.id),
         };
       });
       this.isLoading = false;
     });
+  }
+
+  private getMemberCount(logicalGroupId: string): Observable<number> {
+    return this.agmLogicalGroupService
+      .v1AgmLogicalGroupsIdGet({ id: logicalGroupId })
+      .pipe(map((detailedLogicalGroup: ActifioDetailedLogicalGroupDto) => detailedLogicalGroup.members.length));
   }
 }
