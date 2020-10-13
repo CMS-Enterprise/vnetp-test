@@ -1,12 +1,8 @@
-import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
-import { MockProvider } from 'src/test/mock-providers';
-import { ActifioProfileDto, ActifioTemplateDto, V1AgmProfilesService, V1AgmTemplatesService } from 'api_client';
+import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
+import { ActifioProfileDto, V1AgmProfilesService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { from, of } from 'rxjs';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ProfileListComponent } from './profile-list.component';
 import { DatePipe } from '@angular/common';
 
