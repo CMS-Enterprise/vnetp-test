@@ -12,6 +12,8 @@
 
 
 export interface ActifioAddApplicationDto { 
+    id: string;
+    name: string;
     hostId: string;
     clusterName: string;
     clusterId: string;

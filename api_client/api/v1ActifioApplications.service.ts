@@ -17,14 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { ActifioVMMemberDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1ActifioApplicationsCdsidServeridGetRequestParams {
-    serverid: number;
-    cdsid: number;
+export interface V1ActifioApplicationsCdsIdServerIdGetRequestParams {
+    serverId: string;
+    cdsId: string;
 }
 
 
@@ -95,17 +96,17 @@ export class V1ActifioApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioApplicationsCdsidServeridGet(requestParameters: V1ActifioApplicationsCdsidServeridGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1ActifioApplicationsCdsidServeridGet(requestParameters: V1ActifioApplicationsCdsidServeridGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1ActifioApplicationsCdsidServeridGet(requestParameters: V1ActifioApplicationsCdsidServeridGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1ActifioApplicationsCdsidServeridGet(requestParameters: V1ActifioApplicationsCdsidServeridGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const serverid = requestParameters.serverid;
-        if (serverid === null || serverid === undefined) {
-            throw new Error('Required parameter serverid was null or undefined when calling v1ActifioApplicationsCdsidServeridGet.');
+    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioVMMemberDto>>;
+    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioVMMemberDto>>>;
+    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioVMMemberDto>>>;
+    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const serverId = requestParameters.serverId;
+        if (serverId === null || serverId === undefined) {
+            throw new Error('Required parameter serverId was null or undefined when calling v1ActifioApplicationsCdsIdServerIdGet.');
         }
-        const cdsid = requestParameters.cdsid;
-        if (cdsid === null || cdsid === undefined) {
-            throw new Error('Required parameter cdsid was null or undefined when calling v1ActifioApplicationsCdsidServeridGet.');
+        const cdsId = requestParameters.cdsId;
+        if (cdsId === null || cdsId === undefined) {
+            throw new Error('Required parameter cdsId was null or undefined when calling v1ActifioApplicationsCdsIdServerIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -114,6 +115,7 @@ export class V1ActifioApplicationsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -127,7 +129,7 @@ export class V1ActifioApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/actifio/applications/${encodeURIComponent(String(cdsid))}/${encodeURIComponent(String(serverid))}`,
+        return this.httpClient.get<Array<ActifioVMMemberDto>>(`${this.configuration.basePath}/v1/actifio/applications/${encodeURIComponent(String(cdsId))}/${encodeURIComponent(String(serverId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

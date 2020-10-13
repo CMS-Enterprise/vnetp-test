@@ -12,9 +12,9 @@
 
 
 export interface ActifioDiskPoolDto { 
-    href?: number;
     id: string;
     name: string;
+    href?: number;
     srcid?: string;
     usduid?: string;
 }

@@ -18,7 +18,7 @@ export class SelectVCenterComponent implements OnInit {
     description: 'List of vCenters',
     columns: [
       { name: '', template: () => this.selectVCenterToggleTemplate },
-      { name: 'Name', property: 'hostName' },
+      { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
     ],
   };

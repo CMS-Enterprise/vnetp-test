@@ -1,6 +1,5 @@
 export * from './actifioAddApplicationDto';
 export * from './actifioAddOrUpdateLogicalGroupDto';
-export * from './actifioAddProfileDto';
 export * from './actifioAddTemplateDto';
 export * from './actifioAddTemplatePolicyDto';
 export * from './actifioApplicationDto';
@@ -20,6 +19,7 @@ export * from './actifioTemplateDto';
 export * from './actifioUpdateLogicalGroupMembersDto';
 export * from './actifioUpdateTemplateDto';
 export * from './actifioUpdateTemplatePolicyDto';
+export * from './actifioVMMemberDto';
 export * from './appliance';
 export * from './applianceNetworkPort';
 export * from './configurationDto';

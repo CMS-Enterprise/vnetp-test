@@ -11,15 +11,9 @@
  */
 
 
-export interface ActifioAddProfileDto { 
-    clusterId: string;
-    localApplianceName: string;
+export interface ActifioVMMemberDto { 
+    id: string;
     name: string;
-    performancePoolName: string;
-    remoteApplianceName: string;
-    vaultPool1Id: string;
-    vaultPool2Id: string;
-    vaultPool3Id: string;
-    vaultPool4Id: string;
+    vmPresentInRecPlan?: boolean;
 }
 

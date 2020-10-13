@@ -13,7 +13,7 @@
 
 export interface ActifioHostDto { 
     id: string;
-    hostName: string;
+    name: string;
     ipAddress: string;
 }
 

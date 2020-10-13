@@ -31,7 +31,7 @@ export interface V1ActifioRecoveryPlansIdDeleteRequestParams {
 }
 
 export interface V1ActifioRecoveryPlansIdGetRequestParams {
-    id: number;
+    id: string;
 }
 
 

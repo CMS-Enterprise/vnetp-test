@@ -23,11 +23,7 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioApplicationGroupsIdGetRequestParams {
-    id: number;
-}
-
-export interface V1ActifioApplicationGroupsNamePostRequestParams {
-    name: string;
+    id: string;
 }
 
 
@@ -179,18 +175,13 @@ export class V1ActifioApplicationGroupsService {
 
     /**
      * Create App Group
-     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioApplicationGroupsNamePost(requestParameters: V1ActifioApplicationGroupsNamePostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1ActifioApplicationGroupsNamePost(requestParameters: V1ActifioApplicationGroupsNamePostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1ActifioApplicationGroupsNamePost(requestParameters: V1ActifioApplicationGroupsNamePostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1ActifioApplicationGroupsNamePost(requestParameters: V1ActifioApplicationGroupsNamePostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const name = requestParameters.name;
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling v1ActifioApplicationGroupsNamePost.');
-        }
+    public v1ActifioApplicationGroupsPost(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioApplicationGroupsPost(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioApplicationGroupsPost(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioApplicationGroupsPost(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -211,7 +202,7 @@ export class V1ActifioApplicationGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/actifio/application-groups/${encodeURIComponent(String(name))}`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/actifio/application-groups`,
             null,
             {
                 responseType: <any>responseType,

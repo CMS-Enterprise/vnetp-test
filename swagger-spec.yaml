@@ -11824,24 +11824,6 @@ paths:
         - application/json
       consumes:
         - application/json
-    post:
-      summary: Create one ActifioProfile
-      parameters:
-        - name: ActifioAddProfileDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/ActifioAddProfileDto'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/ActifioProfileDto'
-      tags: *ref_47
-      produces:
-        - application/json
-      consumes:
-        - application/json
   '/v1/agm/profiles/{id}':
     get:
       summary: Get one ActifioProfile
@@ -11855,23 +11837,6 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioProfileDto'
-      tags: *ref_47
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: Delete one ActifioProfile
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-          schema:
-            type: ''
       tags: *ref_47
       produces:
         - application/json
@@ -12086,10 +12051,10 @@ paths:
     get:
       summary: get 1 recovery plan
       parameters:
-        - name: id
+        - type: string
+          name: id
           required: true
           in: path
-          type: number
       responses:
         '200':
           description: ''
@@ -12156,10 +12121,10 @@ paths:
     get:
       summary: Get Application Group
       parameters:
-        - name: id
+        - type: string
+          name: id
           required: true
           in: path
-          type: number
       responses:
         '200':
           description: ''
@@ -12180,14 +12145,9 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/application-groups/{name}':
     post:
       summary: Create App Group
-      parameters:
-        - name: name
-          required: true
-          in: path
-          type: string
+      parameters: []
       responses:
         '201':
           description: ''
@@ -12208,21 +12168,25 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/applications/{cdsid}/{serverid}':
+  '/v1/actifio/applications/{cdsId}/{serverId}':
     get:
       summary: Get Applications
       parameters:
-        - name: serverid
+        - type: string
+          name: serverId
           required: true
           in: path
-          type: number
-        - name: cdsid
+        - type: string
+          name: cdsId
           required: true
           in: path
-          type: number
       responses:
         '200':
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioVMMemberDto'
       tags:
         - v1/actifio/applications
       produces:
@@ -15225,6 +15189,10 @@ definitions:
   ActifioAddApplicationDto:
     type: object
     properties:
+      id:
+        type: string
+      name:
+        type: string
       hostId:
         type: string
       clusterName:
@@ -15236,6 +15204,8 @@ definitions:
         items:
           type: string
     required:
+      - id
+      - name
       - hostId
       - clusterName
       - clusterId
@@ -15263,13 +15233,13 @@ definitions:
     properties:
       id:
         type: string
-      hostName:
+      name:
         type: string
       ipAddress:
         type: string
     required:
       - id
-      - hostName
+      - name
       - ipAddress
   ActifioDiscoveredVMDto:
     type: object
@@ -15362,37 +15332,6 @@ definitions:
   ActifioSLA:
     type: object
     properties: {}
-  ActifioAddProfileDto:
-    type: object
-    properties:
-      clusterId:
-        type: string
-      localApplianceName:
-        type: string
-      name:
-        type: string
-      performancePoolName:
-        type: string
-      remoteApplianceName:
-        type: string
-      vaultPool1Id:
-        type: string
-      vaultPool2Id:
-        type: string
-      vaultPool3Id:
-        type: string
-      vaultPool4Id:
-        type: string
-    required:
-      - clusterId
-      - localApplianceName
-      - name
-      - performancePoolName
-      - remoteApplianceName
-      - vaultPool1Id
-      - vaultPool2Id
-      - vaultPool3Id
-      - vaultPool4Id
   ActifioAddTemplatePolicyDto:
     type: object
     properties:
@@ -15449,16 +15388,28 @@ definitions:
   ActifioDiskPoolDto:
     type: object
     properties:
-      href:
-        type: number
       id:
         type: string
       name:
         type: string
+      href:
+        type: number
       srcid:
         type: string
       usduid:
         type: string
+    required:
+      - id
+      - name
+  ActifioVMMemberDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      vmPresentInRecPlan:
+        type: boolean
     required:
       - id
       - name
