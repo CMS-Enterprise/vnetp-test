@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActifioDetailedLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 interface LogicalGroupView {
   id: string;
@@ -10,14 +10,15 @@ interface LogicalGroupView {
   slaTemplateDescription: string;
   slaProfileName: string;
   slaProfileDescription: string;
-  memberCount: Observable<number>;
+  detailedLogicalGroup: Observable<ActifioDetailedLogicalGroupDto>;
 }
+
 @Component({
   selector: 'app-logical-group-list',
   templateUrl: './logical-group-list.component.html',
 })
 export class LogicalGroupListComponent implements OnInit {
-  @ViewChild('memberTemplate', { static: false }) memberTemplate: TemplateRef<any>;
+  @ViewChild('detailsTemplate', { static: false }) detailsTemplate: TemplateRef<any>;
 
   public config = {
     description: 'List of SLA Logical Groups',
@@ -44,14 +45,15 @@ export class LogicalGroupListComponent implements OnInit {
       },
       {
         name: 'Virtual Machines',
-        template: () => this.memberTemplate,
+        template: () => this.detailsTemplate,
       },
     ],
   };
   public isLoading = false;
   public logicalGroups: LogicalGroupView[] = [];
+  public selectedLogicalGroup: ActifioDetailedLogicalGroupDto;
 
-  constructor(private agmLogicalGroupService: V1AgmLogicalGroupsService) {}
+  constructor(private agmLogicalGroupService: V1AgmLogicalGroupsService, private ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.loadLogicalGroups();
@@ -61,24 +63,27 @@ export class LogicalGroupListComponent implements OnInit {
     this.isLoading = true;
     this.agmLogicalGroupService.v1AgmLogicalGroupsGet().subscribe(logicalGroups => {
       this.logicalGroups = logicalGroups.map(logicalGroup => {
-        const { sla } = logicalGroup;
+        const { id, name, sla } = logicalGroup;
         return {
-          id: logicalGroup.id,
-          name: logicalGroup.name,
+          id,
+          name,
           slaTemplateName: sla.template.name,
           slaTemplateDescription: sla.template.description || '--',
           slaProfileName: sla.profile.name,
           slaProfileDescription: sla.profile.description || '--',
-          memberCount: this.getMemberCount(logicalGroup.id),
+          detailedLogicalGroup: this.loadDetailedLogicalGroup(id),
         };
       });
       this.isLoading = false;
     });
   }
 
-  private getMemberCount(logicalGroupId: string): Observable<number> {
-    return this.agmLogicalGroupService
-      .v1AgmLogicalGroupsIdGet({ id: logicalGroupId })
-      .pipe(map((detailedLogicalGroup: ActifioDetailedLogicalGroupDto) => detailedLogicalGroup.members.length));
+  public loadDetailedLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
+    return this.agmLogicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId });
+  }
+
+  public openDetailedModal(detailedLogicalGroup: ActifioDetailedLogicalGroupDto): void {
+    this.selectedLogicalGroup = detailedLogicalGroup;
+    this.ngx.getModal('logicalGroupViewModal').open();
   }
 }

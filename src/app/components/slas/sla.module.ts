@@ -13,6 +13,7 @@ import { TemplateModalComponent } from './components/template-modal/template-mod
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { SharedModule } from 'src/app/common/shared.module';
 import { LogicalGroupListComponent } from './components/logical-group-list/logical-group-list.component';
+import { LogicalGroupViewModalComponent } from './components/logical-group-view-modal/logical-group-view-modal.component';
 
 const routes: Routes = [
   {
@@ -34,7 +35,14 @@ const routes: Routes = [
     TableModule,
     TabsModule,
   ],
-  declarations: [LogicalGroupListComponent, SLALandingComponent, ProfileListComponent, TemplateListComponent, TemplateModalComponent],
+  declarations: [
+    LogicalGroupListComponent,
+    LogicalGroupViewModalComponent,
+    ProfileListComponent,
+    SLALandingComponent,
+    TemplateListComponent,
+    TemplateModalComponent,
+  ],
   providers: [DatePipe],
 })
 export class SlaModule {}

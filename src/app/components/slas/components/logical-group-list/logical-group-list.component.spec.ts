@@ -4,6 +4,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LogicalGroupListComponent } from './logical-group-list.component';
+import { MockProvider } from 'src/test/mock-providers';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 describe('LogicalGroupListComponent', () => {
   let component: LogicalGroupListComponent;
@@ -15,7 +17,7 @@ describe('LogicalGroupListComponent', () => {
       .map((val: null, index: number) => {
         return {
           id: `${index + 1}`,
-          name: `LogicalGroupName-${index + 1}`,
+          name: `LogicalGroup-${index + 1}`,
           sla: {
             id: `${index + 1}-1`,
             template: {
@@ -45,10 +47,11 @@ describe('LogicalGroupListComponent', () => {
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
+        MockComponent({ selector: 'app-logical-group-view-modal', inputs: ['logicalGroup'] }),
         MockFontAwesomeComponent,
         LogicalGroupListComponent,
       ],
-      providers: [{ useValue: logicalGroupService, provide: V1AgmLogicalGroupsService }],
+      providers: [{ useValue: logicalGroupService, provide: V1AgmLogicalGroupsService }, MockProvider(NgxSmartModalService)],
     })
       .compileComponents()
       .then(() => {
@@ -71,20 +74,15 @@ describe('LogicalGroupListComponent', () => {
     expect(spy).toHaveBeenCalledWith();
   });
 
-  it('should map a logical group', done => {
+  it('should map a logical group', () => {
     component.ngOnInit();
 
     const [logicalGroup1] = component.logicalGroups;
     expect(logicalGroup1.id).toBe('1');
-    expect(logicalGroup1.name).toBe('LogicalGroupName-1');
+    expect(logicalGroup1.name).toBe('LogicalGroup-1');
     expect(logicalGroup1.slaProfileDescription).toBe('--');
     expect(logicalGroup1.slaTemplateDescription).toBe('--');
     expect(logicalGroup1.slaProfileName).toBe('Profile-1');
     expect(logicalGroup1.slaTemplateName).toEqual('Template-1');
-
-    logicalGroup1.memberCount.subscribe(count => {
-      expect(count).toBe(0);
-      done();
-    });
   });
 });
