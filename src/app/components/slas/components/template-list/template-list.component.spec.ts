@@ -2,7 +2,7 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockY
 import { MockProvider } from 'src/test/mock-providers';
 import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { from, of } from 'rxjs';
+import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';

@@ -2,9 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterSelectComponent } from './datacenter-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrService } from 'ngx-toastr';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -17,9 +14,9 @@ describe('DatacenterSelectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent],
-      providers: [CookieService, MockProvider(NgxSmartModalService), MockProvider(ToastrService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
     })
       .compileComponents()
       .then(() => {
@@ -35,19 +32,17 @@ describe('DatacenterSelectComponent', () => {
 
   it('should call to open the datacenter switch modal on click', () => {
     const ngx = TestBed.get(NgxSmartModalService);
-    const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
+    const openSpy = jest.fn();
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return {
-        open: jest.fn(),
+        open: openSpy,
       };
     });
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
     openButton.nativeElement.click();
 
-    expect(spy).toHaveBeenCalledWith('datacenterSwitchModal');
-
-    const getModalCall = spy.mock.results[0].value;
-    expect(getModalCall.open).toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalled();
   });
 
   describe('switchDatacenter', () => {
