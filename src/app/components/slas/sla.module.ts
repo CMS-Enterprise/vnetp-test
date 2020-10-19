@@ -14,6 +14,7 @@ import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module'
 import { SharedModule } from 'src/app/common/shared.module';
 import { LogicalGroupListComponent } from './components/logical-group-list/logical-group-list.component';
 import { LogicalGroupViewModalComponent } from './components/logical-group-view-modal/logical-group-view-modal.component';
+import { LogicalGroupModalComponent } from './components/logical-group-modal/logical-group-modal.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
   ],
   declarations: [
     LogicalGroupListComponent,
+    LogicalGroupModalComponent,
     LogicalGroupViewModalComponent,
     ProfileListComponent,
     SLALandingComponent,

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioDetailedLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
+import { ActifioDetailedLogicalGroupDto, ActifioLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable } from 'rxjs';
 
@@ -80,6 +80,11 @@ export class LogicalGroupListComponent implements OnInit {
 
   public loadDetailedLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
     return this.agmLogicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId });
+  }
+
+  public openLogicalGroupModal(logicalGroupId?: string): void {
+    this.ngx.setModalData({ id: logicalGroupId }, 'logicalGroupModal');
+    this.ngx.getModal('logicalGroupModal').open();
   }
 
   public openDetailedModal(detailedLogicalGroup: ActifioDetailedLogicalGroupDto): void {

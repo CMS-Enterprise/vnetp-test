@@ -1,0 +1,27 @@
+<ngx-smart-modal
+  #logicalGroupModal
+  identifier="logicalGroupModal"
+  [dismissable]="false"
+  customClass="large-modal"
+  (onOpen)="loadLogicalGroup()"
+  (onClose)="onClose()"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">{{ modalTitle }}</h4>
+  </header>
+
+  <main class="modal-body">
+    <app-table [config]="config" [data]="virtualMachines"></app-table>
+  </main>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
+      Close
+    </button>
+
+    <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="save()">
+      <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+      <span>Save Logical Group</span>
+    </button>
+  </footer>
+</ngx-smart-modal>

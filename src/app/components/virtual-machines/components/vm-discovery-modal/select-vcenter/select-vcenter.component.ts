@@ -14,7 +14,7 @@ export class SelectVCenterComponent implements OnInit {
 
   @Output() vcenterSelected = new EventEmitter<number>();
 
-  public config: TableConfig = {
+  public config: TableConfig<ActifioHostDto> = {
     description: 'List of vCenters',
     columns: [
       { name: '', template: () => this.selectVCenterToggleTemplate },

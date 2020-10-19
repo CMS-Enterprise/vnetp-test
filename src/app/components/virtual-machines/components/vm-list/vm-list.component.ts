@@ -31,7 +31,7 @@ export class VmListComponent implements OnInit, OnDestroy {
 
   public isLoading = false;
   public virtualMachines: VirtualMachineView[] = [];
-  public config: TableConfig = {
+  public config: TableConfig<VirtualMachineView> = {
     description: 'List of Virtual Machines',
     columns: [
       {

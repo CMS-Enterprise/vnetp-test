@@ -22,7 +22,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   @Input() vcenterId: string;
   @Output() virtualMachinesSelected = new EventEmitter<Set<string>>();
 
-  public config: TableConfig = {
+  public config: TableConfig<SelectableVirtualMachine> = {
     description: 'List of Virtual Machines on vCenter',
     columns: [
       { name: '', template: () => this.selectVirtualMachineToggleTemplate },
