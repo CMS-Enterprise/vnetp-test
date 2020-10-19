@@ -4,9 +4,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
 import { By } from '@angular/platform-browser';
 
+interface Data {
+  name: string;
+}
+
 describe('TableComponent', () => {
-  let component: TableComponent;
-  let fixture: ComponentFixture<TableComponent>;
+  let component: TableComponent<Data>;
+  let fixture: ComponentFixture<TableComponent<Data>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -31,7 +35,7 @@ describe('TableComponent', () => {
   });
 
   it('should render data in HTML', () => {
-    component.config.columns = [{ property: 'name', name: 'Name ' }];
+    component.config.columns = [{ property: 'name', name: 'Name' }];
     component.data = [{ name: 'Example' }];
     fixture.detectChanges();
 
