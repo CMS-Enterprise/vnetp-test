@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LogicalGroupListComponent } from './logical-group-list.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('LogicalGroupListComponent', () => {
   let component: LogicalGroupListComponent;
@@ -14,7 +15,7 @@ describe('LogicalGroupListComponent', () => {
   const createLogicalGroups = (): ActifioLogicalGroupDto[] => {
     return Array(400)
       .fill(null)
-      .map((val: null, index: number) => {
+      .map((_, index: number) => {
         return {
           id: `${index + 1}`,
           name: `LogicalGroup-${index + 1}`,
@@ -88,5 +89,19 @@ describe('LogicalGroupListComponent', () => {
     expect(logicalGroup1.slaTemplateDescription).toBe('--');
     expect(logicalGroup1.slaProfileName).toBe('Profile-1');
     expect(logicalGroup1.slaTemplateName).toEqual('Template-1');
+  });
+
+  it('should delete a single logical group', () => {
+    const logicalGroupService = TestBed.get(V1AgmLogicalGroupsService);
+    const deleteSpy = jest.spyOn(logicalGroupService, 'v1AgmLogicalGroupsIdDelete');
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
+      confirmFn();
+      return of().subscribe();
+    });
+    component.ngOnInit();
+    const [logicalGroup1] = component.logicalGroups;
+    component.deleteLogicalGroup(logicalGroup1);
+
+    expect(deleteSpy).toHaveBeenCalledWith({ id: '1' });
   });
 });
