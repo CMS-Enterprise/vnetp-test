@@ -1,4 +1,4 @@
-import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { ActifioLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
@@ -40,6 +40,7 @@ describe('LogicalGroupListComponent', () => {
   beforeEach(async(() => {
     const logicalGroupService = {
       v1AgmLogicalGroupsGet: jest.fn(() => of(createLogicalGroups())),
+      v1AgmLogicalGroupsIdDelete: jest.fn(() => of()),
       v1AgmLogicalGroupsIdGet: jest.fn(() => of({ members: [] })),
     };
 
@@ -49,6 +50,8 @@ describe('LogicalGroupListComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
         MockComponent({ selector: 'app-logical-group-modal' }),
         MockComponent({ selector: 'app-logical-group-view-modal', inputs: ['logicalGroup'] }),
+        MockYesNoModalComponent,
+        MockIconButtonComponent,
         MockFontAwesomeComponent,
         LogicalGroupListComponent,
       ],

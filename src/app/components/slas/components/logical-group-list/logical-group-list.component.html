@@ -18,9 +18,16 @@
   </div>
 </ng-template>
 
+<ng-template #actionsTemplate let-logicalGroup="datum">
+  <section class="table__actions">
+    <app-icon-button icon="delete" label="Remove Logical Group" (handleClick)="deleteLogicalGroup(logicalGroup)"></app-icon-button>
+  </section>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
 <app-logical-group-view-modal [logicalGroup]="selectedLogicalGroup"></app-logical-group-view-modal>
 <app-logical-group-modal></app-logical-group-modal>
+<app-yes-no-modal></app-yes-no-modal>
