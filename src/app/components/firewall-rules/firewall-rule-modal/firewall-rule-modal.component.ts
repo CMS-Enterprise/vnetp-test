@@ -117,10 +117,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           firewallRule: modalFirewallRule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.firewallRuleService
@@ -129,10 +129,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           firewallRule: modalFirewallRule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

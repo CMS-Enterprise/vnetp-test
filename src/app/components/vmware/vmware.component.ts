@@ -102,11 +102,11 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!vm.deletedAt) {
-        this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }).subscribe(data => {
+        this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }).subscribe(() => {
           this.getVirtualMachines();
         });
       } else {
-        this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }).subscribe(data => {
+        this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }).subscribe(() => {
           this.getVirtualMachines();
         });
       }
@@ -125,7 +125,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
         .v1VmwareVirtualMachinesIdRestorePatch({
           id: vm.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVirtualMachines();
         });
     }

@@ -43,7 +43,7 @@ export class ApplianceDetailComponent implements OnInit {
           .v1AppliancesIdSoftDelete({
             id: a.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getAppliance();
           });
       } else {
@@ -51,7 +51,7 @@ export class ApplianceDetailComponent implements OnInit {
           .v1AppliancesIdDelete({
             id: a.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.router.navigate(['/appliance'], {
               queryParamsHandling: 'merge',
             });

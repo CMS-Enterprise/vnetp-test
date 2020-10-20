@@ -230,11 +230,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!firewallRule.deletedAt) {
-        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(data => {
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(() => {
           this.getFirewallRules();
         });
       } else {
-        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(data => {
+        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(() => {
           this.getFirewallRules();
         });
       }
@@ -252,7 +252,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   restoreFirewallRule(firewallRule: FirewallRule): void {
     if (firewallRule.deletedAt) {
-      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(data => {
+      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(() => {
         this.getFirewallRules();
       });
     }

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BreadcrumbComponent } from './breadcrumb.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockComponent } from 'src/test/mock-components';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET, Event } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';

@@ -321,7 +321,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerVirtualServersBulkImportPost({
             virtualServerImportCollectionDto: virtualServerDto,
           })
-          .subscribe(results => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 1:
         const poolDto = {} as PoolImportCollectionDto;
@@ -331,7 +331,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerPoolsBulkImportPost({
             poolImportCollectionDto: poolDto,
           })
-          .subscribe(results => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 2:
         const nodeDto = {} as NodeImportCollectionDto;
@@ -341,7 +341,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerPoolsBulkUpdatePost({
             nodeImportCollectionDto: nodeDto,
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 3:
         const nodes = this.sanitizeData(data, true);
@@ -349,7 +349,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerNodesBulkPost({
             generatedLoadBalancerNodeBulkDto: { bulk: nodes },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 4:
         const irules = this.sanitizeData(data, true);
@@ -357,7 +357,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: irules },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 5:
         const healthMonitors = this.sanitizeData(data, true);
@@ -365,7 +365,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerHealthMonitorsBulkPost({
             generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       default:
         break;
@@ -674,11 +674,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!virtualServer.deletedAt) {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }).subscribe(data => {
+        this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }).subscribe(() => {
           this.getVirtualServers();
         });
       } else {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }).subscribe(data => {
+        this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }).subscribe(() => {
           this.getVirtualServers();
         });
       }
@@ -702,11 +702,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!irule.deletedAt) {
-        this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }).subscribe(data => {
+        this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }).subscribe(() => {
           this.getIrules();
         });
       } else {
-        this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(data => {
+        this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(() => {
           this.getIrules();
         });
       }
@@ -727,11 +727,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!healthMonitor.deletedAt) {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }).subscribe(data => {
+        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }).subscribe(() => {
           this.getHealthMonitors();
         });
       } else {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(data => {
+        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
           this.getHealthMonitors();
         });
       }
@@ -755,11 +755,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!pool.deletedAt) {
-        this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }).subscribe(data => {
+        this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }).subscribe(() => {
           this.getPools();
         });
       } else {
-        this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }).subscribe(data => {
+        this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }).subscribe(() => {
           this.getPools();
         });
       }
@@ -780,11 +780,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!node.deletedAt) {
-        this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }).subscribe(data => {
+        this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }).subscribe(() => {
           this.getNodes();
         });
       } else {
-        this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }).subscribe(data => {
+        this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }).subscribe(() => {
           this.getNodes();
         });
       }
@@ -805,11 +805,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!profile.deletedAt) {
-        this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }).subscribe(data => {
+        this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }).subscribe(() => {
           this.getProfiles();
         });
       } else {
-        this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(data => {
+        this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
           this.getProfiles();
         });
       }
@@ -830,11 +830,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!policy.deletedAt) {
-        this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }).subscribe(data => {
+        this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }).subscribe(() => {
           this.getPolicies();
         });
       } else {
-        this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }).subscribe(data => {
+        this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }).subscribe(() => {
           this.getPolicies();
         });
       }
@@ -855,11 +855,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!vlan.deletedAt) {
-        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(data => {
+        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(() => {
           this.getVlans();
         });
       } else {
-        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(data => {
+        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(() => {
           this.getVlans();
         });
       }
@@ -880,11 +880,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!selfIp.deletedAt) {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(data => {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(() => {
           this.getSelfIps();
         });
       } else {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(data => {
+        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(() => {
           this.getSelfIps();
         });
       }
@@ -905,11 +905,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!route.deletedAt) {
-        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(data => {
+        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(() => {
           this.getRoutes();
         });
       } else {
-        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(data => {
+        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(() => {
           this.getRoutes();
         });
       }
@@ -924,19 +924,19 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   restoreVlan(vlan: LoadBalancerVlan) {
     if (vlan.deletedAt) {
-      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(data => this.getVlans());
+      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(() => this.getVlans());
     }
   }
 
   restoreSelfIp(selfIp: LoadBalancerSelfIp) {
     if (selfIp.deletedAt) {
-      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(data => this.getSelfIps());
+      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.getSelfIps());
     }
   }
 
   restoreRoute(route: LoadBalancerRoute) {
     if (route.deletedAt) {
-      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(data => this.getRoutes());
+      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(() => this.getRoutes());
     }
   }
 
@@ -944,25 +944,25 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     if (virtualServer.deletedAt) {
       this.virtualServersService
         .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
-        .subscribe(data => this.getVirtualServers());
+        .subscribe(() => this.getVirtualServers());
     }
   }
 
   restorePool(pool: LoadBalancerPool) {
     if (pool.deletedAt) {
-      this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(data => this.getPools());
+      this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.getPools());
     }
   }
 
   restoreNode(node: LoadBalancerNode) {
     if (node.deletedAt) {
-      this.nodeService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(data => this.getNodes());
+      this.nodeService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(() => this.getNodes());
     }
   }
 
   restoreIrule(irule: LoadBalancerIrule) {
     if (irule.deletedAt) {
-      this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(data => this.getIrules());
+      this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(() => this.getIrules());
     }
   }
 
@@ -970,38 +970,24 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     if (healthMonitor.deletedAt) {
       this.healthMonitorsService
         .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
-        .subscribe(data => this.getHealthMonitors());
+        .subscribe(() => this.getHealthMonitors());
     }
   }
 
   restoreProfile(profile: LoadBalancerProfile) {
     if (profile.deletedAt) {
-      this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(data => this.getProfiles());
+      this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.getProfiles());
     }
   }
 
   restorePolicy(policy: LoadBalancerPolicy) {
     if (policy.deletedAt) {
-      this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(data => this.getPolicies());
+      this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.getPolicies());
     }
   }
 
   private hasCurrentTier(): boolean {
     return this.currentTier && !!this.currentTier.id;
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([
-      this.virtualServerModalSubscription,
-      this.poolModalSubscription,
-      this.healthMonitorModalSubscription,
-      this.nodeModalSubscription,
-      this.profileModalSubscription,
-      this.policyModalSubscription,
-      this.iruleModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
   }
 
   ngOnInit() {
@@ -1027,6 +1013,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([
+      this.virtualServerModalSubscription,
+      this.poolModalSubscription,
+      this.healthMonitorModalSubscription,
+      this.nodeModalSubscription,
+      this.profileModalSubscription,
+      this.policyModalSubscription,
+      this.iruleModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

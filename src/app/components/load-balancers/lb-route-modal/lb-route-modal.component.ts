@@ -45,10 +45,10 @@ export class LoadBalancerRouteModalComponent implements OnInit {
           loadBalancerRoute: route,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.routeService
@@ -57,10 +57,10 @@ export class LoadBalancerRouteModalComponent implements OnInit {
           loadBalancerRoute: route,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

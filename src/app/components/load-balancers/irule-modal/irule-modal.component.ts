@@ -44,10 +44,10 @@ export class IRuleModalComponent implements OnInit {
           loadBalancerIrule: irule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.iruleService
@@ -56,10 +56,10 @@ export class IRuleModalComponent implements OnInit {
           loadBalancerIrule: irule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

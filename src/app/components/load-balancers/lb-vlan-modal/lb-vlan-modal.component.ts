@@ -37,10 +37,10 @@ export class LoadBalancerVlanModalComponent implements OnInit {
           loadBalancerVlan: vlan,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.vlanService
@@ -49,10 +49,10 @@ export class LoadBalancerVlanModalComponent implements OnInit {
           loadBalancerVlan: vlan,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

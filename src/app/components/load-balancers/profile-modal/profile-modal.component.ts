@@ -68,10 +68,10 @@ export class ProfileModalComponent implements OnInit {
           loadBalancerProfile: profile,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.profileService
@@ -80,10 +80,10 @@ export class ProfileModalComponent implements OnInit {
           loadBalancerProfile: profile,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -138,15 +138,11 @@ export class ProfileModalComponent implements OnInit {
 
   private isUnencryptedPrivateKey(result: string): boolean {
     try {
-      if (
-        result.toUpperCase().includes('KEY') ||
-        atob(result)
-          .toUpperCase()
-          .includes('KEY')
-      ) {
-        return true;
-      }
-      return false;
+      const isKey = result.toUpperCase().includes('KEY');
+      const base64IsKey = atob(result)
+        .toUpperCase()
+        .includes('KEY');
+      return isKey || base64IsKey;
     } catch {
       return false;
     }
@@ -157,21 +153,18 @@ export class ProfileModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.ProfileId = dto.Profile.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+    if (this.ModalMode === ModalMode.Edit) {
+      this.ProfileId = dto.Profile.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     this.TierId = dto.TierId;
-    const profile = dto.Profile;
-
-    if (profile !== undefined) {
+    if (dto.Profile !== undefined) {
       this.form.controls.name.setValue(dto.Profile.name);
       this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.Profile.type);

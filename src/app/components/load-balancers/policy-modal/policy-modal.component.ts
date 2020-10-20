@@ -50,10 +50,10 @@ export class PolicyModalComponent implements OnInit {
           loadBalancerPolicy: policy,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.policyService
@@ -62,10 +62,10 @@ export class PolicyModalComponent implements OnInit {
           loadBalancerPolicy: policy,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -106,21 +106,18 @@ export class PolicyModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PolicyId = dto.Policy.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PolicyId = dto.Policy.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     this.TierId = dto.TierId;
-    const profile = dto.Policy;
-
-    if (profile !== undefined) {
+    if (dto.Policy !== undefined) {
       this.form.controls.name.setValue(dto.Policy.name);
       this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.Policy.type);

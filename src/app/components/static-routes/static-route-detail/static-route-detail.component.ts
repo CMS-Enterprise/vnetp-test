@@ -80,11 +80,11 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!staticRoute.deletedAt) {
-        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(data => {
+        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(() => {
           this.getStaticRoutes();
         });
       } else {
-        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(data => {
+        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(() => {
           this.getStaticRoutes();
         });
       }
@@ -97,12 +97,13 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  restoreStaticRoute(staticRoute: StaticRoute) {
-    if (staticRoute.deletedAt) {
-      this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(data => {
-        this.getStaticRoutes();
-      });
+  public restoreStaticRoute(staticRoute: StaticRoute): void {
+    if (!staticRoute.deletedAt) {
+      return;
     }
+    this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(() => {
+      this.getStaticRoutes();
+    });
   }
 
   getStaticRoutes() {

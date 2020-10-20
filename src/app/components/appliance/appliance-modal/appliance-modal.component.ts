@@ -70,10 +70,10 @@ export class ApplianceModalComponent implements OnInit {
           appliance,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.applianceService
@@ -82,10 +82,10 @@ export class ApplianceModalComponent implements OnInit {
           appliance,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

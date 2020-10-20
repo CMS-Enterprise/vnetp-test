@@ -58,7 +58,7 @@ describe('VmListComponent', () => {
 
   it('should default to get the last sync date when jobs are empty', done => {
     const applicationService = TestBed.get(V1AgmApplicationsService);
-    const spy = jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
+    jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
     const jobService = TestBed.get(V1AgmJobsService);
     jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([]));
@@ -75,7 +75,7 @@ describe('VmListComponent', () => {
 
   it('should call to get the last sync date for each VM', done => {
     const applicationService = TestBed.get(V1AgmApplicationsService);
-    const spy = jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
+    jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
     const jobService = TestBed.get(V1AgmJobsService);
     jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));

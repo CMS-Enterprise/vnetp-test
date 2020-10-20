@@ -74,11 +74,11 @@ export class ApplianceComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!a.deletedAt) {
-        this.applianceService.v1AppliancesIdSoftDelete({ id: a.id }).subscribe(data => {
+        this.applianceService.v1AppliancesIdSoftDelete({ id: a.id }).subscribe(() => {
           this.getAppliances();
         });
       } else {
-        this.applianceService.v1AppliancesIdDelete({ id: a.id }).subscribe(data => {
+        this.applianceService.v1AppliancesIdDelete({ id: a.id }).subscribe(() => {
           this.getAppliances();
         });
       }
@@ -97,7 +97,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
         .v1AppliancesIdRestorePatch({
           id: a.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getAppliances();
         });
     }

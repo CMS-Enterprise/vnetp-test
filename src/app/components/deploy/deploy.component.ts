@@ -89,7 +89,7 @@ export class DeployComponent implements OnInit {
         tierId: tier.id,
       };
 
-      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(data => {});
+      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(() => {});
 
       const tierNetworkSecurityJob = {} as Job;
 
@@ -101,7 +101,7 @@ export class DeployComponent implements OnInit {
         externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.External).id,
       };
 
-      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(data => {});
+      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(() => {});
     });
   }
 

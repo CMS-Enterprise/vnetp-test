@@ -95,11 +95,11 @@ export class TiersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!tier.deletedAt) {
-        this.datacenterTierService.v1TiersIdSoftDelete({ id: tier.id }).subscribe(data => {
+        this.datacenterTierService.v1TiersIdSoftDelete({ id: tier.id }).subscribe(() => {
           this.getTiers();
         });
       } else {
-        this.datacenterTierService.v1TiersIdDelete({ id: tier.id }).subscribe(data => {
+        this.datacenterTierService.v1TiersIdDelete({ id: tier.id }).subscribe(() => {
           this.getTiers();
         });
       }
@@ -114,7 +114,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   restoreTier(tier: Tier) {
     if (tier.deletedAt) {
-      this.datacenterTierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(data => {
+      this.datacenterTierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(() => {
         this.getTiers();
       });
     }

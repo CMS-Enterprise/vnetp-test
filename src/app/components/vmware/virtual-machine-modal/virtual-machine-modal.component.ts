@@ -281,10 +281,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     vmwareVirtualMachine.datacenterId = this.DatacenterId;
 
     this.virtualMachineService.v1VmwareVirtualMachinesPost({ vmwareVirtualMachine }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -303,10 +303,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
         vmwareVirtualMachine,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 

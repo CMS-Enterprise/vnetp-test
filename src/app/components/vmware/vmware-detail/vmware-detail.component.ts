@@ -52,7 +52,7 @@ export class VmwareDetailComponent implements OnInit {
           .v1VmwareVirtualMachinesIdSoftDelete({
             id: vm.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getVirtualMachine();
           });
       } else {
@@ -60,7 +60,7 @@ export class VmwareDetailComponent implements OnInit {
           .v1VmwareVirtualMachinesIdDelete({
             id: vm.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.router.navigate(['/vmware'], { queryParamsHandling: 'merge' });
           });
       }
@@ -79,7 +79,7 @@ export class VmwareDetailComponent implements OnInit {
         .v1VmwareVirtualMachinesIdRestorePatch({
           id: vm.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVirtualMachine();
         });
     }

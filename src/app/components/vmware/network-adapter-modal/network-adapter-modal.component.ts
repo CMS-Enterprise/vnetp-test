@@ -57,10 +57,10 @@ export class NetworkAdapterModalComponent implements OnInit {
         vmwareNetworkAdapter: networkAdapter,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 
