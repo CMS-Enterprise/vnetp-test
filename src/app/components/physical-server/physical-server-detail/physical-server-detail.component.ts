@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } from 'api_client';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-physical-server-detail',
@@ -33,7 +34,7 @@ export class PhysicalServerDetailComponent implements OnInit {
       });
   }
 
-  deletePhysicalServer(ps: PhysicalServer) {
+  public deletePhysicalServer(ps: PhysicalServer): void {
     const deleteDescription = ps.deletedAt ? 'Delete' : 'Soft-Delete';
 
     const deleteFunction = () => {
@@ -42,7 +43,7 @@ export class PhysicalServerDetailComponent implements OnInit {
           .v1PhysicalServersIdSoftDelete({
             id: ps.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getPhysicalServer();
           });
       } else {
@@ -50,7 +51,7 @@ export class PhysicalServerDetailComponent implements OnInit {
           .v1PhysicalServersIdDelete({
             id: ps.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.router.navigate(['/physical-server'], {
               queryParamsHandling: 'merge',
             });
@@ -58,8 +59,9 @@ export class PhysicalServerDetailComponent implements OnInit {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${ps.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -70,28 +72,14 @@ export class PhysicalServerDetailComponent implements OnInit {
         .v1PhysicalServersIdRestorePatch({
           id: ps.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getPhysicalServer();
         });
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
-
     this.getPhysicalServer();
   }
 }

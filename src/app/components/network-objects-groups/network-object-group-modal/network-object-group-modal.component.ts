@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
@@ -7,6 +7,7 @@ import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-netw
 import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-network-object-group-modal',
@@ -96,26 +97,19 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       });
   }
 
-  removeNetworkObject(networkObject: NetworkObject) {
+  public removeNetworkObject(networkObject: NetworkObject): void {
     const modalDto = new YesNoModalDto('Remove Network Object from Network Object Group', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.networkObjectGroupService
-          .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdDelete({
-            networkObjectGroupId: this.NetworkObjectGroupId,
-            networkObjectId: networkObject.id,
-          })
-          .subscribe(() => {
-            this.getGroupNetworkObjects();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.networkObjectGroupService
+        .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdDelete({
+          networkObjectGroupId: this.NetworkObjectGroupId,
+          networkObjectId: networkObject.id,
+        })
+        .subscribe(() => {
+          this.getGroupNetworkObjects();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   getData() {

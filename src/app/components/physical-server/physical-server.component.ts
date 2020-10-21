@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1DatacentersService, V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
@@ -83,8 +83,9 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -100,19 +101,6 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.getPhysicalServers();
       });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   ngOnInit(): void {

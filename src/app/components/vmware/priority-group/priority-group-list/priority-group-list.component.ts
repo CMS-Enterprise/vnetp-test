@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { PriorityGroup, V1PriorityGroupsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -49,8 +49,9 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Priority Group?`, `Do you want to ${deleteDescription} priority group "${name}"?`),
+      this.ngx,
       deleteFn,
     );
   }
@@ -82,19 +83,6 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
     this.priorityGroupService.v1PriorityGroupsIdRestorePatch({ id: priorityGroup.id }).subscribe(() => {
       this.loadPriorityGroups();
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 

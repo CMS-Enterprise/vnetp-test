@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { V1AppliancesService, Appliance, ApplianceNetworkPort } from 'api_client';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-appliance-detail',
@@ -42,7 +43,7 @@ export class ApplianceDetailComponent implements OnInit {
           .v1AppliancesIdSoftDelete({
             id: a.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getAppliance();
           });
       } else {
@@ -50,7 +51,7 @@ export class ApplianceDetailComponent implements OnInit {
           .v1AppliancesIdDelete({
             id: a.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.router.navigate(['/appliance'], {
               queryParamsHandling: 'merge',
             });
@@ -58,8 +59,9 @@ export class ApplianceDetailComponent implements OnInit {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Appliance?`, `Do you want to ${deleteDescription} appliance "${a.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -70,23 +72,10 @@ export class ApplianceDetailComponent implements OnInit {
         .v1AppliancesIdRestorePatch({
           id: a.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getAppliance();
         });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   ngOnInit() {

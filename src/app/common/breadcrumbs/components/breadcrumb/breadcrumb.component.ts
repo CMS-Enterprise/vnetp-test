@@ -12,7 +12,7 @@ export class BreadcrumbComponent implements OnInit {
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',

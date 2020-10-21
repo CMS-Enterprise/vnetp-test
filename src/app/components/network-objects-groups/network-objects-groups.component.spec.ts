@@ -8,7 +8,7 @@ import {
   MockComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';

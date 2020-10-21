@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -53,7 +53,7 @@ export class ZosComponent implements OnInit, OnDestroy {
   }
 
   subscribeToRequestModal() {
-    this.requestModalSubscription = this.ngx.getModal('requestModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    this.requestModalSubscription = this.ngx.getModal('requestModal').onAnyCloseEvent.subscribe(() => {
       this.getConfigurations();
       this.ngx.resetModalData('requestModal');
     });

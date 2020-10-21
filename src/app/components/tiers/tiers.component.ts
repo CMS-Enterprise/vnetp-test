@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -78,7 +78,7 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToTierModal() {
-    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
       this.getTiers();
       this.ngx.resetModalData('tierModal');
       this.datacenterService.unlockDatacenter();
@@ -86,7 +86,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteTier(tier: Tier) {
+  public deleteTier(tier: Tier): void {
     if (tier.provisionedAt) {
       throw new Error('Cannot delete provisioned object.');
     }
@@ -95,66 +95,48 @@ export class TiersComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!tier.deletedAt) {
-        this.datacenterTierService.v1TiersIdSoftDelete({ id: tier.id }).subscribe(data => {
+        this.datacenterTierService.v1TiersIdSoftDelete({ id: tier.id }).subscribe(() => {
           this.getTiers();
         });
       } else {
-        this.datacenterTierService.v1TiersIdDelete({ id: tier.id }).subscribe(data => {
+        this.datacenterTierService.v1TiersIdDelete({ id: tier.id }).subscribe(() => {
           this.getTiers();
         });
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Tier?`, `Do you want to ${deleteDescription} tier "${tier.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
 
   restoreTier(tier: Tier) {
     if (tier.deletedAt) {
-      this.datacenterTierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(data => {
+      this.datacenterTierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(() => {
         this.getTiers();
       });
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
-  importTiersConfig(event) {
+  public importTiersConfig(event: any): void {
     const modalDto = new YesNoModalDto(
       'Import Tiers',
       `Are you sure you would like to import ${event.length} tier${event.length > 1 ? 's' : ''}?`,
     );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.datacenterTierService
+        .v1TiersBulkPost({
+          generatedTierBulkDto: { bulk: dto },
+        })
+        .subscribe(() => {
+          this.getTiers();
+        });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.datacenterTierService
-          .v1TiersBulkPost({
-            generatedTierBulkDto: { bulk: dto },
-          })
-          .subscribe(data => {
-            this.getTiers();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   sanitizeData(entities: any) {
@@ -180,7 +162,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: semicolon
   };
 
-  public getTierGroupName = (id: string) => ObjectUtil.getObjectName(id, this.tierGroups);
+  public getTierGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.tierGroups);
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {

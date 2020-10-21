@@ -9,10 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FirewallRule } from './firewallRule';
 
 
-export interface GeneratedFirewallRuleBulkDto { 
-    bulk: Array<FirewallRule>;
+export interface ActifioCreateOrApplySlaDto { 
+    applicationName?: string;
+    applicationId?: string;
+    slpId: string;
+    sltId: string;
+    apply?: string;
 }
 

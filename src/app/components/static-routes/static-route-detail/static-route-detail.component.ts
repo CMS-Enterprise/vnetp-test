@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -64,7 +64,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   }
 
   subscribeToStaticRouteModal() {
-    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe(() => {
       this.getStaticRoutes();
       this.ngx.resetModalData('staticRouteModal');
       this.staticRouteModalSubscription.unsubscribe();
@@ -80,40 +80,29 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!staticRoute.deletedAt) {
-        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(data => {
+        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(() => {
           this.getStaticRoutes();
         });
       } else {
-        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(data => {
+        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(() => {
           this.getStaticRoutes();
         });
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Static Route`, `Do you want to ${deleteDescription} the static route "${staticRoute.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
 
-  restoreStaticRoute(staticRoute: StaticRoute) {
-    if (staticRoute.deletedAt) {
-      this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(data => {
-        this.getStaticRoutes();
-      });
+  public restoreStaticRoute(staticRoute: StaticRoute): void {
+    if (!staticRoute.deletedAt) {
+      return;
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
+    this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(() => {
+      this.getStaticRoutes();
     });
   }
 

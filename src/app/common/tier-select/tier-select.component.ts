@@ -12,12 +12,13 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './tier-select.component.html',
 })
 export class TierSelectComponent implements OnInit, OnDestroy {
-  tiers: Array<Tier>;
-  selectedTier: string;
-  currentTier: Tier;
-  datacenterId: string;
-  currentDatacenterSubscription: Subscription;
-  currentTierSubscription: Subscription;
+  public currentTier: Tier;
+  public datacenterId: string;
+  public selectedTier: string;
+  public tiers: Tier[] = [];
+
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
@@ -27,11 +28,11 @@ export class TierSelectComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
   ) {}
 
-  openTierModal() {
+  public openTierModal(): void {
     this.ngx.getModal('tierSwitchModal').open();
   }
 
-  getTiers() {
+  public getTiers(): void {
     this.datacenterService
       .v1DatacentersIdGet({
         id: this.datacenterId,
@@ -42,17 +43,13 @@ export class TierSelectComponent implements OnInit, OnDestroy {
       });
   }
 
-  switchTier() {
+  public switchTier(): void {
     try {
       this.tierContextService.switchTier(this.selectedTier);
       this.toastrService.success('Tier Switched');
     } catch (error) {
       this.toastrService.error(error);
     }
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 
   ngOnInit() {
@@ -67,6 +64,6 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 }

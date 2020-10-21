@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Subnet } from './subnet';
 
 
-export interface GeneratedSubnetBulkDto { 
-    bulk: Array<Subnet>;
+export interface ActifioUpdateTemplatePolicyDto { 
+    id: string;
+    endTime?: number;
+    startTime: number;
 }
 

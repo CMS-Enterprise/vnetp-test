@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   V1VmwareVirtualMachinesService,
   VmwareVirtualMachine,
@@ -97,8 +97,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Virtual Disk?`, `Do you want to ${deleteDescription} virtual disk "${name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -131,8 +132,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Network Adapter?`, `Do you want to ${deleteDescription} network adapter "${name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -261,29 +263,16 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNetworkAdapterModal(): Subscription {
-    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe(() => {
       this.getNetworkAdapters();
       this.ngx.resetModalData('networkAdapterModal');
     });
   }
 
   private subscribeToVirtualDiskModal(): Subscription {
-    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe(() => {
       this.getVirtualDisks();
       this.ngx.resetModalData('virtualDiskModal');
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 
@@ -292,10 +281,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     vmwareVirtualMachine.datacenterId = this.DatacenterId;
 
     this.virtualMachineService.v1VmwareVirtualMachinesPost({ vmwareVirtualMachine }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -314,10 +303,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
         vmwareVirtualMachine,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 

@@ -10,6 +10,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('PriorityGroupListComponent', () => {
   let component: PriorityGroupListComponent;
@@ -52,50 +53,26 @@ describe('PriorityGroupListComponent', () => {
     });
 
     it('should soft-delete a priority group', () => {
-      const onCloseFinishedSubject = new Subject();
-      const ngx = TestBed.get(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onAnyCloseEvent: of({}),
-          onCloseFinished: onCloseFinishedSubject.asObservable(),
-        };
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+        confirmFn();
+        return of().subscribe();
       });
 
       const softDeleteSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdSoftDelete');
       const pg = { id: '1' } as PriorityGroup;
       component.deletePriorityGroup(pg);
-      onCloseFinishedSubject.next({
-        getData: () => {
-          return { modalYes: true };
-        },
-        removeData: jest.fn(),
-      });
-
       expect(softDeleteSpy).toHaveBeenCalledWith({ id: '1' });
     });
 
     it('should delete a priority group', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const onCloseFinishedSubject = new Subject();
-      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onAnyCloseEvent: of({}),
-          onCloseFinished: onCloseFinishedSubject.asObservable(),
-        } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+        confirmFn();
+        return of().subscribe();
       });
 
       const deleteSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdDelete');
       const pg = { id: '1', deletedAt: {} } as PriorityGroup;
       component.deletePriorityGroup(pg);
-      onCloseFinishedSubject.next({
-        getData: () => {
-          return { modalYes: true };
-        },
-        removeData: jest.fn(),
-      });
-
       expect(deleteSpy).toHaveBeenCalledWith({ id: '1' });
     });
   });

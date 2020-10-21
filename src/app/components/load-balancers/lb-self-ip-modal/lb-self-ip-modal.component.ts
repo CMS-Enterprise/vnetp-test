@@ -45,10 +45,10 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
           loadBalancerSelfIp: selfIp,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.selfIpService
@@ -57,10 +57,10 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
           loadBalancerSelfIp: selfIp,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -93,15 +93,14 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     const dto = this.ngx.getModalData('loadBalancerSelfIpModal') as LoadBalancerSelfIpModalDto;
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.SelfIpId = dto.SelfIp.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.ipAddress.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+    if (this.ModalMode === ModalMode.Edit) {
+      this.SelfIpId = dto.SelfIp.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.ipAddress.enable();
     }
 
     this.TierId = dto.TierId;
@@ -118,7 +117,7 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     this.ngx.resetModalData('loadBalancerSelfIpModal');
   }
 
-  private buildForm() {
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
       ipAddress: ['', Validators.compose([IpAddressIpValidator])],

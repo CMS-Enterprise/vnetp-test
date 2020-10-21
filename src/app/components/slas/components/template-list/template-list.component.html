@@ -1,0 +1,37 @@
+<section class="btn-toolbar" role="toolbar">
+  <!-- Refresh Templates -->
+  <button type="button" class="btn btn-info" (click)="loadTemplates()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+
+  <!-- Create Template -->
+  <button type="button" class="btn btn-success" (click)="openTemplateModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Template</span>
+  </button>
+</section>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="templates"></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-template="datum">
+  <section class="table__actions">
+    <app-icon-button icon="edit" label="Edit SLA Template" (handleClick)="openTemplateModal(template)"></app-icon-button>
+    <app-icon-button icon="delete" label="Remove SLA Template" (handleClick)="deleteTemplate(template)"></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #snapshotPolicyTemplate let-template="datum">
+  <div *ngIf="template.snapshotPolicyTimeWindow | async as snapshotPolicyTimeWindow; else loading">
+    {{ snapshotPolicyTimeWindow }}
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-template-modal></app-template-modal>
+<app-yes-no-modal></app-yes-no-modal>

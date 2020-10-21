@@ -10,7 +10,7 @@ import { TableConfig } from '../table/table.component';
 export class PreviewModalComponent<T> {
   form: FormGroup;
   submitted = false;
-  config: TableConfig = {
+  config: TableConfig<T> = {
     description: 'Import Preview',
     columns: [],
   };

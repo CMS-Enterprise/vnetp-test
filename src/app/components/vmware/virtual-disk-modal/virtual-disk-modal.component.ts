@@ -48,10 +48,10 @@ export class VirtualDiskModalComponent implements OnInit {
     this.ngx.setModalData(Object.assign({}, vmwareVirtualDisk), 'virtualDiskModal');
 
     this.virtualDiskService.v1VmwareVirtualDisksPost({ vmwareVirtualDisk }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 

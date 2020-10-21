@@ -17,6 +17,9 @@ const MockNgxSmartModalService = () => {
         onAnyCloseEvent: of({
           getData: jest.fn(() => {}),
         }),
+        onCloseFinished: of({
+          getData: jest.fn(() => {}),
+        }),
       };
     }),
     close: jest.fn(),
@@ -35,10 +38,13 @@ const MockToastrService = () => {
 
 const MockDatacenterContextService = () => {
   return {
-    lockDatacenter: jest.fn(),
-    unlockDatacenter: jest.fn(),
     currentDatacenter: of({ id: '1' }),
     currentDatacenterValue: { id: '1' },
+    datacenters: of([{ id: '1', tiers: [] }]),
+    lockCurrentDatacenter: of(false),
+    lockDatacenter: jest.fn(),
+    switchDatacenter: jest.fn(),
+    unlockDatacenter: jest.fn(),
   };
 };
 

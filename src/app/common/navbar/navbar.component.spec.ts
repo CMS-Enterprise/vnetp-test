@@ -3,7 +3,6 @@ import { NavbarComponent } from './navbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { MockProvider } from 'src/test/mock-providers';
@@ -13,7 +12,6 @@ import { AuthService } from 'src/app/services/auth.service';
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let router: Router;
 
   beforeEach(async(() => {
     const authService = {
@@ -31,7 +29,6 @@ describe('NavbarComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(NavbarComponent);
         component = fixture.componentInstance;
-        router = TestBed.get(Router);
         fixture.detectChanges();
       });
   }));

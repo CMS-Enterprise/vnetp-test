@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
 
 
-export interface GeneratedLoadBalancerVirtualServerBulkDto { 
-    bulk: Array<LoadBalancerVirtualServer>;
+export interface ActifioUpdateTemplateDto { 
+    id: string;
+    name: string;
+    description?: string;
 }
 

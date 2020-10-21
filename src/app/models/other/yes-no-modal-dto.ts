@@ -1,14 +1,11 @@
 export class YesNoModalDto {
-  constructor(title: string, body: string) {
-    this.modalTitle = title;
-    this.modalBody = body;
-  }
-
-  modalTitle: string;
-
-  modalBody: string;
-
+  constructor(
+    public modalTitle: string,
+    public modalBody: string,
+    public confirmText = 'Yes',
+    public cancelText = 'No',
+    public confirmButtonType: 'primary' | 'danger' = 'primary',
+  ) {}
   modalYes: boolean;
-
   allowTierChecked: boolean;
 }

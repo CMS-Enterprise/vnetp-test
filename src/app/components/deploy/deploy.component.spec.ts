@@ -3,13 +3,14 @@ import { DeployComponent } from './deploy.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { MockProvider } from 'src/test/mock-providers';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('DeployComponent', () => {
   let component: DeployComponent;
@@ -118,34 +119,10 @@ describe('DeployComponent', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should open the confirmation modal to deploys tiers', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onCloseFinished: new Subject().asObservable(),
-        } as any;
-      });
-
-      component.tiers = [testData.tier];
-
-      const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
-      deployButton.nativeElement.click();
-
-      expect(spy).toHaveBeenCalledWith('yesNoModal');
-
-      const getModalCall = spy.mock.results[0].value;
-      expect(getModalCall.open).toHaveBeenCalled();
-    });
-
     it('should call to deploys tiers after confirming', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const onCloseFinishedSubject = new Subject();
-      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onCloseFinished: onCloseFinishedSubject.asObservable(),
-        } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+        confirmFn();
+        return of().subscribe();
       });
 
       component.tiers = [testData.tier];
@@ -155,13 +132,6 @@ describe('DeployComponent', () => {
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();
-      onCloseFinishedSubject.next({
-        getData: () => {
-          return { modalYes: true };
-        },
-        removeData: jest.fn(),
-      });
-
       expect(deploySpy).toHaveBeenCalled();
     });
   });

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
@@ -13,6 +13,7 @@ import {
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-pool-modal',
@@ -123,38 +124,31 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   removeHealthMonitor(healthMonitorId: string) {
     const modalDto = new YesNoModalDto('Remove Health Monitor', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        if (this.isDefaultHealthMonitor(healthMonitorId)) {
-          this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
-          this.poolService
-            .v1LoadBalancerPoolsIdPatch({
-              id: this.PoolId,
-              loadBalancerPool: {
-                defaultHealthMonitors: this.selectedDefaultHealthMonitors,
-              } as LoadBalancerPool,
-            })
-            .subscribe(() => {
-              this.getPool();
-            });
-        } else {
-          this.poolService
-            .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
-              poolId: this.PoolId,
-              healthMonitorId,
-            })
-            .subscribe(() => {
-              this.getPool();
-            });
-        }
+    const onConfirm = () => {
+      if (this.isDefaultHealthMonitor(healthMonitorId)) {
+        this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
+        this.poolService
+          .v1LoadBalancerPoolsIdPatch({
+            id: this.PoolId,
+            loadBalancerPool: {
+              defaultHealthMonitors: this.selectedDefaultHealthMonitors,
+            } as LoadBalancerPool,
+          })
+          .subscribe(() => {
+            this.getPool();
+          });
+      } else {
+        this.poolService
+          .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
+            poolId: this.PoolId,
+            healthMonitorId,
+          })
+          .subscribe(() => {
+            this.getPool();
+          });
       }
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private isDefaultHealthMonitor(value: string) {
@@ -171,25 +165,18 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   removeNode(nodeToPool: any) {
     const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${nodeToPool.loadBalancerNode.name}" node?`);
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.poolService
-          .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
-            poolId: this.PoolId,
-            nodeId: nodeToPool.loadBalancerNode.id,
-            servicePort: nodeToPool.servicePort,
-          })
-          .subscribe(() => {
-            this.getPool();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.poolService
+        .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
+          poolId: this.PoolId,
+          nodeId: nodeToPool.loadBalancerNode.id,
+          servicePort: nodeToPool.servicePort,
+        })
+        .subscribe(() => {
+          this.getPool();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   addNode() {

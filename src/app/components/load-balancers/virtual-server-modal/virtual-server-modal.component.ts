@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -16,6 +16,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { IpAddressCidrValidator, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-virtual-server-modal',
@@ -114,26 +115,19 @@ export class VirtualServerModalComponent implements OnInit {
       });
   }
 
-  removeIRule(irule: LoadBalancerIrule) {
+  removeIRule(irule: LoadBalancerIrule): void {
     const modalDto = new YesNoModalDto('Remove IRule from Virtual Server', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.virtualServerService
-          .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
-            virtualServerId: this.VirtualServerId,
-            iruleId: irule.id,
-          })
-          .subscribe(result => {
-            this.getVirtualServerIRulesProfilesPolicies();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
+          virtualServerId: this.VirtualServerId,
+          iruleId: irule.id,
+        })
+        .subscribe(() => {
+          this.getVirtualServerIRulesProfilesPolicies();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   addProfile() {
@@ -150,24 +144,17 @@ export class VirtualServerModalComponent implements OnInit {
 
   removeProfile(profile: LoadBalancerProfile) {
     const modalDto = new YesNoModalDto('Remove Profile from Virtual Server', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.virtualServerService
-          .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete({
-            virtualServerId: this.VirtualServerId,
-            profileId: profile.id,
-          })
-          .subscribe(result => {
-            this.getVirtualServerIRulesProfilesPolicies();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete({
+          virtualServerId: this.VirtualServerId,
+          profileId: profile.id,
+        })
+        .subscribe(() => {
+          this.getVirtualServerIRulesProfilesPolicies();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   addPolicy() {
@@ -184,24 +171,17 @@ export class VirtualServerModalComponent implements OnInit {
 
   removePolicy(policy: LoadBalancerPolicy) {
     const modalDto = new YesNoModalDto('Remove Policy from Virtual Server', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.virtualServerService
-          .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
-            virtualServerId: this.VirtualServerId,
-            policyId: policy.id,
-          })
-          .subscribe(result => {
-            this.getVirtualServerIRulesProfilesPolicies();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.virtualServerService
+        .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
+          virtualServerId: this.VirtualServerId,
+          policyId: policy.id,
+        })
+        .subscribe(() => {
+          this.getVirtualServerIRulesProfilesPolicies();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   getData() {

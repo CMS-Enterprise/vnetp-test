@@ -10,7 +10,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let datum of data" [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null">
+      <tr
+        *ngFor="let datum of data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, id: uniqueTableId }"
+        [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
+      >
         <td *ngFor="let column of config.columns">
           <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
           <ng-container *ngIf="!column.property && column.template">
@@ -19,5 +22,10 @@
         </td>
       </tr>
     </tbody>
+    <tfoot>
+      <td [attr.colspan]="config.columns.length">
+        <pagination-controls [id]="uniqueTableId" (pageChange)="currentPage = $event"></pagination-controls>
+      </td>
+    </tfoot>
   </table>
 </ng-container>

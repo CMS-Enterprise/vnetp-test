@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -7,6 +7,7 @@ import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroups
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -99,26 +100,20 @@ export class ServiceObjectGroupModalComponent implements OnInit {
       });
   }
 
-  removeServiceObject(serviceObject: ServiceObject) {
+  public removeServiceObject(serviceObject: ServiceObject): void {
     const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
+          serviceObjectGroupId: this.ServiceObjectGroupId,
+          serviceObjectId: serviceObject.id,
+        })
+        .subscribe(() => {
+          this.getGroupServiceObjects();
+        });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
-            serviceObjectGroupId: this.ServiceObjectGroupId,
-            serviceObjectId: serviceObject.id,
-          })
-          .subscribe(() => {
-            this.getGroupServiceObjects();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   getData() {

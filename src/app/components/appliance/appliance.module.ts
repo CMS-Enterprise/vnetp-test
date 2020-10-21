@@ -10,7 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ViewFieldModule } from 'src/app/common/value-card/view-field.module';
+import { ViewFieldModule } from 'src/app/common/view-field/view-field.module';
 
 const routes: Routes = [
   {

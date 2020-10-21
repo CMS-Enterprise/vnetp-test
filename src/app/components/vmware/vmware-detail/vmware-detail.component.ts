@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-vmware-detail',
@@ -22,7 +23,7 @@ export class VmwareDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private virtualMachineService: V1VmwareVirtualMachinesService,
-    private ngxSmartModalService: NgxSmartModalService,
+    private ngx: NgxSmartModalService,
   ) {}
 
   getVirtualMachine() {
@@ -51,7 +52,7 @@ export class VmwareDetailComponent implements OnInit {
           .v1VmwareVirtualMachinesIdSoftDelete({
             id: vm.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getVirtualMachine();
           });
       } else {
@@ -59,14 +60,15 @@ export class VmwareDetailComponent implements OnInit {
           .v1VmwareVirtualMachinesIdDelete({
             id: vm.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.router.navigate(['/vmware'], { queryParamsHandling: 'merge' });
           });
       }
     };
 
-    this.confirmDeleteObject(
+    SubscriptionUtil.subscribeToYesNoModal(
       new YesNoModalDto(`${deleteDescription} Virtual Machine?`, `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`),
+      this.ngx,
       deleteFunction,
     );
   }
@@ -77,25 +79,10 @@ export class VmwareDetailComponent implements OnInit {
         .v1VmwareVirtualMachinesIdRestorePatch({
           id: vm.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVirtualMachine();
         });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
-    this.ngxSmartModalService.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngxSmartModalService
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
   }
 
   ngOnInit() {
