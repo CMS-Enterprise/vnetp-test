@@ -94,7 +94,13 @@ export class LogicalGroupListComponent implements OnInit {
 
   public deleteLogicalGroup(logicalGroup: ActifioLogicalGroupDto): void {
     const { id, name } = logicalGroup;
-    const dto = new YesNoModalDto('Delete Logical Group?', `Do you want to delete logical group "${name}"?`);
+    const dto = new YesNoModalDto(
+      'Delete Logical Group',
+      `Do you want to delete logical group "${name}"?`,
+      'Delete Logical Group',
+      'Cancel',
+      'danger',
+    );
     const deleteFunction = () => {
       this.agmLogicalGroupService.v1AgmLogicalGroupsIdDelete({ id }).subscribe(() => this.loadLogicalGroups());
     };

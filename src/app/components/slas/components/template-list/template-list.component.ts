@@ -87,12 +87,14 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadTemplates();
       });
     };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`Delete SLA Template?`, `Do you want to delete SLA Template "${template.name}"?`),
-      this.ngx,
-      deleteFunction,
+    const dto = new YesNoModalDto(
+      'Delete SLA Template',
+      `Do you want to delete SLA Template "${template.name}"?`,
+      'Delete SLA Template',
+      'Cancel',
+      'danger',
     );
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, deleteFunction);
   }
 
   private getSnapshotPolicyTimeWindow(templateId: string): Observable<string> {

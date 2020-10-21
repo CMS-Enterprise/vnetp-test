@@ -22,11 +22,11 @@
 
   <footer class="modal-footer">
     <button type="button" class="btn btn-link" data-dismiss="modal" (click)="no()">
-      No
+      {{ cancelText }}
     </button>
 
-    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="yes()">
-      Yes
+    <button type="button" class="btn btn-{{ confirmButtonType }}" data-dismiss="modal" (click)="yes()">
+      {{ confirmText }}
     </button>
   </footer>
 </ngx-smart-modal>
