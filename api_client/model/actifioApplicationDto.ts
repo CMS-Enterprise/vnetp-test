@@ -18,11 +18,12 @@ import { ActifioProfileDto } from './actifioProfileDto';
 export interface ActifioApplicationDto { 
     id: string;
     name: string;
+    applianceId: string;
+    cluster: ActifioClusterDto;
     folderPath?: string;
     isManaged: boolean;
-    cluster: ActifioClusterDto;
+    logicalGroup?: ActifioLogicalGroupDto;
     slaProfile?: ActifioProfileDto;
     slaTemplate?: ActifioTemplateDto;
-    logicalGroup?: ActifioLogicalGroupDto;
 }
 

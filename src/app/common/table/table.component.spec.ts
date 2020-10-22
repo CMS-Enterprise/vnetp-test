@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
@@ -12,23 +12,21 @@ describe('TableComponent', () => {
   let component: TableComponent<Data>;
   let fixture: ComponentFixture<TableComponent<Data>>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule],
       declarations: [TableComponent, MockFontAwesomeComponent],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TableComponent);
-        component = fixture.componentInstance;
-        component.config = {
-          description: 'Description',
-          columns: [],
-        };
-        component.data = [];
-        fixture.detectChanges();
-      });
-  }));
+    });
+
+    fixture = TestBed.createComponent(TableComponent);
+    component = fixture.componentInstance;
+    component.config = {
+      description: 'Description',
+      columns: [],
+    };
+    component.data = [];
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

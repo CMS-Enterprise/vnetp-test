@@ -13,11 +13,11 @@
 
 export interface ActifioDiscoveredVMDto { 
     applicationId?: string;
-    discoveredId?: string;
-    name: string;
     clusterName: string;
+    discoveredId?: string;
     folderPath?: string;
     isManaged: boolean;
     isNewVirtualMachine: boolean;
+    name: string;
 }
 

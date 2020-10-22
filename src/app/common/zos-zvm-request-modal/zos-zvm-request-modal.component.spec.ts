@@ -13,15 +13,10 @@ describe('ZosZvmRequestModalComponent', () => {
   let fixture: ComponentFixture<ZosZvmRequestModalComponent>;
 
   beforeEach(async(() => {
-    const configurationService = {
-      v1ConfigurationUploadIdConfigurePatch: jest.fn(() => of({})),
-      v1ConfigurationUploadPost: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ZosZvmRequestModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), { provide: V1ConfigurationUploadService, useValue: configurationService }],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1ConfigurationUploadService)],
     })
       .compileComponents()
       .then(() => {

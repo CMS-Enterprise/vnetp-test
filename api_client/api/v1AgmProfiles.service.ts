@@ -96,7 +96,7 @@ export class V1AgmProfilesService {
     }
 
     /**
-     * Get many ActifioProfiles
+     * Get many ActifioProfileDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -156,7 +156,7 @@ export class V1AgmProfilesService {
     }
 
     /**
-     * Get one ActifioProfile
+     * Get one ActifioProfileDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

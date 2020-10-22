@@ -11,9 +11,10 @@
  */
 
 
-export interface ActifioModifyMemberDto { 
+export interface ActifioOrganizationDto { 
     id: string;
     name: string;
-    srcid: string;
+    createdate: number;
+    description?: string;
 }
 

@@ -23,10 +23,6 @@ describe('LoginComponent', () => {
       login: jest.fn(() => of({})),
     };
 
-    const router = {
-      navigateByUrl: jest.fn(),
-    };
-
     const activatedRoute = {
       snapshot: {
         queryParams: {
@@ -41,8 +37,8 @@ describe('LoginComponent', () => {
       providers: [
         CookieService,
         MockProvider(ToastrService),
+        MockProvider(Router),
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     })

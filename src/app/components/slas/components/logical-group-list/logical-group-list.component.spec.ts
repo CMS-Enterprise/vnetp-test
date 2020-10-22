@@ -39,12 +39,6 @@ describe('LogicalGroupListComponent', () => {
   };
 
   beforeEach(async(() => {
-    const logicalGroupService = {
-      v1AgmLogicalGroupsGet: jest.fn(() => of(createLogicalGroups())),
-      v1AgmLogicalGroupsIdDelete: jest.fn(() => of()),
-      v1AgmLogicalGroupsIdGet: jest.fn(() => of({ members: [] })),
-    };
-
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
@@ -56,7 +50,13 @@ describe('LogicalGroupListComponent', () => {
         MockFontAwesomeComponent,
         LogicalGroupListComponent,
       ],
-      providers: [{ useValue: logicalGroupService, provide: V1AgmLogicalGroupsService }, MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(V1AgmLogicalGroupsService, {
+          v1AgmLogicalGroupsGet: of(createLogicalGroups()),
+          v1AgmLogicalGroupsIdGet: of({ members: [] }),
+        }),
+        MockProvider(NgxSmartModalService),
+      ],
     })
       .compileComponents()
       .then(() => {

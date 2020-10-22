@@ -3,6 +3,11 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-success" (click)="openLogicalGroupModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Logical Group</span>
+  </button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">

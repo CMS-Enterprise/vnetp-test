@@ -89,7 +89,7 @@ export class V1ActifioApplicationGroupsService {
     }
 
     /**
-     * Get Application Groups
+     * Get many ActifioApplicationGroupDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -129,7 +129,7 @@ export class V1ActifioApplicationGroupsService {
     }
 
     /**
-     * Get Application Group
+     * Get one ActifioApplicationGroupDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -174,7 +174,7 @@ export class V1ActifioApplicationGroupsService {
     }
 
     /**
-     * Create App Group
+     * Create one Application Group
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

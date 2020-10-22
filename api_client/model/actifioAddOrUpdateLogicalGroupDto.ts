@@ -9,12 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioModifyLgMemberDto } from './actifioModifyLgMemberDto';
 
 
 export interface ActifioAddOrUpdateLogicalGroupDto { 
+    applianceId?: string;
+    description?: string;
+    members?: Array<ActifioModifyLgMemberDto>;
     name: string;
-    description: string;
-    clusterId: string;
-    srcid: string;
+    profileId?: string;
+    templateId?: string;
 }
 

@@ -17,35 +17,40 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioAddApplicationDto } from '../model/models';
-import { ActifioApplicationDto } from '../model/models';
+import { ActifioAddOrganizationDto } from '../model/models';
+import { ActifioOrganizationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmApplicationsAddPostRequestParams {
-    actifioAddApplicationDto: ActifioAddApplicationDto;
+export interface V1AgmOrganizationsAddPostRequestParams {
+    actifioAddOrganizationDto: ActifioAddOrganizationDto;
 }
 
-export interface V1AgmApplicationsGetRequestParams {
+export interface V1AgmOrganizationsGetRequestParams {
     limit: number;
     offset: number;
 }
 
-export interface V1AgmApplicationsIdDeleteRequestParams {
+export interface V1AgmOrganizationsIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmApplicationsIdGetRequestParams {
+export interface V1AgmOrganizationsIdGetRequestParams {
     id: string;
+}
+
+export interface V1AgmOrganizationsIdPutRequestParams {
+    id: string;
+    actifioAddOrganizationDto: ActifioAddOrganizationDto;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmApplicationsService {
+export class V1AgmOrganizationsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -104,18 +109,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Add one ActifioApplication
+     * Create one ActifioOrganization
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const actifioAddApplicationDto = requestParameters.actifioAddApplicationDto;
-        if (actifioAddApplicationDto === null || actifioAddApplicationDto === undefined) {
-            throw new Error('Required parameter actifioAddApplicationDto was null or undefined when calling v1AgmApplicationsAddPost.');
+    public v1AgmOrganizationsAddPost(requestParameters: V1AgmOrganizationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmOrganizationsAddPost(requestParameters: V1AgmOrganizationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmOrganizationsAddPost(requestParameters: V1AgmOrganizationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmOrganizationsAddPost(requestParameters: V1AgmOrganizationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const actifioAddOrganizationDto = requestParameters.actifioAddOrganizationDto;
+        if (actifioAddOrganizationDto === null || actifioAddOrganizationDto === undefined) {
+            throw new Error('Required parameter actifioAddOrganizationDto was null or undefined when calling v1AgmOrganizationsAddPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -146,8 +151,8 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/add`,
-            actifioAddApplicationDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/organizations/add`,
+            actifioAddOrganizationDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -159,22 +164,22 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Get many ActifioApplicationDto
+     * Get many ActifioOrganizationDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmOrganizationsGet(requestParameters: V1AgmOrganizationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioOrganizationDto>>;
+    public v1AgmOrganizationsGet(requestParameters: V1AgmOrganizationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioOrganizationDto>>>;
+    public v1AgmOrganizationsGet(requestParameters: V1AgmOrganizationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioOrganizationDto>>>;
+    public v1AgmOrganizationsGet(requestParameters: V1AgmOrganizationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const limit = requestParameters.limit;
         if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmApplicationsGet.');
+            throw new Error('Required parameter limit was null or undefined when calling v1AgmOrganizationsGet.');
         }
         const offset = requestParameters.offset;
         if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
+            throw new Error('Required parameter offset was null or undefined when calling v1AgmOrganizationsGet.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -207,7 +212,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/applications`,
+        return this.httpClient.get<Array<ActifioOrganizationDto>>(`${this.configuration.basePath}/v1/agm/organizations`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -220,18 +225,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Remove one ActifioApplication
+     * Delete one ActifioOrganization
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1AgmOrganizationsIdDelete(requestParameters: V1AgmOrganizationsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmOrganizationsIdDelete(requestParameters: V1AgmOrganizationsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmOrganizationsIdDelete(requestParameters: V1AgmOrganizationsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmOrganizationsIdDelete(requestParameters: V1AgmOrganizationsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1AgmOrganizationsIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -253,7 +258,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/organizations/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -265,18 +270,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Get one ActifioApplicationDto
+     * Get one ActifioOrganizationDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmOrganizationsIdGet(requestParameters: V1AgmOrganizationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioOrganizationDto>;
+    public v1AgmOrganizationsIdGet(requestParameters: V1AgmOrganizationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioOrganizationDto>>;
+    public v1AgmOrganizationsIdGet(requestParameters: V1AgmOrganizationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioOrganizationDto>>;
+    public v1AgmOrganizationsIdGet(requestParameters: V1AgmOrganizationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1AgmOrganizationsIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -299,7 +304,67 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioOrganizationDto>(`${this.configuration.basePath}/v1/agm/organizations/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update ActifioOrganization
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmOrganizationsIdPut(requestParameters: V1AgmOrganizationsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioOrganizationDto>;
+    public v1AgmOrganizationsIdPut(requestParameters: V1AgmOrganizationsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioOrganizationDto>>;
+    public v1AgmOrganizationsIdPut(requestParameters: V1AgmOrganizationsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioOrganizationDto>>;
+    public v1AgmOrganizationsIdPut(requestParameters: V1AgmOrganizationsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1AgmOrganizationsIdPut.');
+        }
+        const actifioAddOrganizationDto = requestParameters.actifioAddOrganizationDto;
+        if (actifioAddOrganizationDto === null || actifioAddOrganizationDto === undefined) {
+            throw new Error('Required parameter actifioAddOrganizationDto was null or undefined when calling v1AgmOrganizationsIdPut.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.put<ActifioOrganizationDto>(`${this.configuration.basePath}/v1/agm/organizations/${encodeURIComponent(String(id))}/`,
+            actifioAddOrganizationDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

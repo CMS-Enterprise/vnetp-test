@@ -15,6 +15,7 @@ import { SharedModule } from 'src/app/common/shared.module';
 import { LogicalGroupListComponent } from './components/logical-group-list/logical-group-list.component';
 import { LogicalGroupViewModalComponent } from './components/logical-group-view-modal/logical-group-view-modal.component';
 import { LogicalGroupModalComponent } from './components/logical-group-modal/logical-group-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     FontAwesomeModule,
     FormsModule,
     IconButtonModule,
+    NgSelectModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),

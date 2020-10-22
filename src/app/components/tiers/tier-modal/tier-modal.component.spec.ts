@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -15,22 +15,19 @@ describe('TierModalComponent', () => {
   let component: TierModalComponent;
   let fixture: ComponentFixture<TierModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [TierModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), MockProvider(V1TierGroupsService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TierModalComponent);
-        component = fixture.componentInstance;
-        component.DatacenterId = '1';
-        component.TierId = '2';
-        component.ModalMode = ModalMode.Edit;
-        fixture.detectChanges();
-      });
-  }));
+    });
+    fixture = TestBed.createComponent(TierModalComponent);
+    component = fixture.componentInstance;
+    component.DatacenterId = '1';
+    component.TierId = '2';
+    component.ModalMode = ModalMode.Edit;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

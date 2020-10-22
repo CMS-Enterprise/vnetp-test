@@ -104,7 +104,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * Get SLAs
+     * Get many ActifioSlaDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -145,7 +145,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * remove SLA
+     * Remove one SLA
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -191,7 +191,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * Get SLA
+     * Get one ActifioSlaDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -237,7 +237,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * apply SLA to VM
+     * Apply one SLA to VM
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -297,7 +297,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * create SLA
+     * Create one SLA
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

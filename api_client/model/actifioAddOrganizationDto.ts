@@ -9,12 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioAddTemplatePolicyDto } from './actifioAddTemplatePolicyDto';
 
 
-export interface ActifioAddTemplateDto { 
+export interface ActifioAddOrganizationDto { 
+    applicationIds?: Array<string>;
     description?: string;
+    hostIds?: Array<string>;
+    logicalGroupIds?: Array<string>;
     name: string;
-    policies: Array<ActifioAddTemplatePolicyDto>;
+    slpIds?: Array<string>;
+    sltIds?: Array<string>;
+    storageArrayIds?: Array<string>;
+    storagePoolIds?: Array<string>;
+    userIds?: Array<string>;
 }
 
