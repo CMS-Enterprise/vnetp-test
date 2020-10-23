@@ -359,7 +359,7 @@ export class V1AgmLogicalGroupsService {
     }
 
     /**
-     * Remove SLA from Logical Group
+     * Remove Sla from Logical Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -404,7 +404,7 @@ export class V1AgmLogicalGroupsService {
     }
 
     /**
-     * Apply SLA to Logical Group
+     * Apply Sla to Logical Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

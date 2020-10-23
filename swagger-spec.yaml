@@ -11688,7 +11688,7 @@ paths:
         - application/json
   '/v1/agm/logical-groups/{id}/sla':
     post:
-      summary: Apply SLA to Logical Group
+      summary: Apply Sla to Logical Group
       parameters:
         - name: ActifioCreateOrApplySlaDto
           required: true
@@ -11708,7 +11708,7 @@ paths:
       consumes:
         - application/json
     delete:
-      summary: Remove SLA from Logical Group
+      summary: Remove Sla from Logical Group
       parameters:
         - type: string
           name: id
@@ -11884,7 +11884,7 @@ paths:
       consumes:
         - application/json
     post:
-      summary: Create one SLA
+      summary: Create one Sla
       parameters:
         - name: ActifioCreateOrApplySlaDto
           required: true
@@ -11920,7 +11920,7 @@ paths:
       consumes:
         - application/json
     put:
-      summary: Apply one SLA to VM
+      summary: Apply one Sla to VM
       parameters:
         - name: ActifioCreateOrApplySlaDto
           required: true
@@ -11942,7 +11942,7 @@ paths:
       consumes:
         - application/json
     delete:
-      summary: Remove one SLA
+      summary: Remove one Sla
       parameters:
         - type: string
           name: id
@@ -11952,7 +11952,7 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioSLA'
+            $ref: '#/definitions/ActifioSla'
       tags: *ref_48
       produces:
         - application/json
@@ -15261,6 +15261,10 @@ definitions:
         type: string
       name:
         type: string
+      applianceId:
+        type: string
+      description:
+        type: string
       sla:
         $ref: '#/definitions/ActifioSlaDto'
     required:
@@ -15493,7 +15497,7 @@ definitions:
           type: string
     required:
       - name
-  ActifioSLA:
+  ActifioSla:
     type: object
     properties: {}
   ActifioAddTemplatePolicyDto:

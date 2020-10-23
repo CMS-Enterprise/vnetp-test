@@ -145,7 +145,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * Remove one SLA
+     * Remove one Sla
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -237,7 +237,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * Apply one SLA to VM
+     * Apply one Sla to VM
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -297,7 +297,7 @@ export class V1AgmSlasService {
     }
 
     /**
-     * Create one SLA
+     * Create one Sla
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

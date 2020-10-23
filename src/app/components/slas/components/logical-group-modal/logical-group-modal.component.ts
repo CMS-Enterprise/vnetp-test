@@ -71,6 +71,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     this.modalTitle = isNewLogicalGroup ? 'Create Logical Group' : 'Edit Logical Group';
 
     this.loadLookups(isNewLogicalGroup);
+    this.loadLogicalGroupById(logicalGroup.id);
   }
 
   public onClose(): void {
@@ -87,23 +88,26 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
     const isNewLogicalGroup = !this.logicalGroupId;
     const { description, name, clusterId, templateId, profileId, virtualMachines } = this.form.value;
+    const members = (virtualMachines || []).map(vm => {
+      return {
+        id: vm.id,
+        applianceId: vm.applianceId,
+      };
+    });
+
+    const dto: ActifioAddOrUpdateLogicalGroupDto = {
+      description,
+      members,
+      name,
+      profileId,
+      templateId,
+      applianceId: clusterId,
+    };
 
     if (isNewLogicalGroup) {
-      this.createLogicalGroup({
-        name,
-        description,
-        templateId,
-        profileId,
-        applianceId: clusterId,
-        members: (virtualMachines || []).map(vm => {
-          return {
-            id: vm.id,
-            applianceId: vm.applianceId,
-          };
-        }),
-      });
+      this.createLogicalGroup(dto);
     } else {
-      this.updateLogicalGroup();
+      this.updateLogicalGroup(this.logicalGroupId, dto);
     }
   }
 
@@ -122,6 +126,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     this.logicalGroupId = null;
     this.submitted = false;
     this.form.reset();
+    this.form.enable();
   }
 
   private loadApplications(): void {
@@ -184,5 +189,32 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
       .subscribe(() => this.onClose());
   }
 
-  private updateLogicalGroup(): void {}
+  private loadLogicalGroupById(logicalGroupId: string): void {
+    if (!logicalGroupId) {
+      return;
+    }
+    this.logicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
+      const { logicalGroup, members } = detailedLogicalGroup;
+
+      const { name, description, applianceId, sla } = logicalGroup;
+
+      this.form.controls.name.setValue(name);
+      this.form.controls.name.disable();
+
+      this.form.controls.description.setValue(description);
+      this.form.controls.clusterId.setValue(applianceId);
+      this.form.controls.templateId.setValue(sla ? sla.template.id : null);
+      this.form.controls.profileId.setValue(sla ? sla.profile.id : null);
+      this.form.controls.virtualMachines.setValue(members);
+    });
+  }
+
+  private updateLogicalGroup(logicalGroupId: string, dto: ActifioAddOrUpdateLogicalGroupDto): void {
+    this.logicalGroupService
+      .v1AgmLogicalGroupsIdPut({
+        id: logicalGroupId,
+        actifioAddOrUpdateLogicalGroupDto: dto,
+      })
+      .subscribe(() => this.onClose());
+  }
 }
