@@ -1,5 +1,4 @@
-import { MessageService } from './message.service';
-import { AppMessage } from '../models/app-message';
+import { Message, MessageService } from './message.service';
 import { environment } from 'src/environments/environment';
 
 describe('MessageService', () => {
@@ -12,19 +11,19 @@ describe('MessageService', () => {
   });
 
   it('should receive message', () => {
-    service.sendMessage(new AppMessage(''));
+    service.sendMessage(new Message('0', '1', 'Change'));
     expect(service.messageHistory.length).toBe(1);
   });
 
   it('should clear messages out', () => {
-    service.sendMessage(new AppMessage(''));
+    service.sendMessage(new Message('0', '1', 'Change'));
     service.clearMessages();
 
     expect(service.messageHistory.length).toBe(0);
   });
 
   it('should listen to the message service', done => {
-    const message = new AppMessage('Hello!');
+    const message = new Message('0', '1', 'Change');
 
     const sub = service.listen().subscribe(msg => {
       expect(msg).toBe(message);
@@ -36,10 +35,10 @@ describe('MessageService', () => {
   });
 
   it('should not log a message when running in production', () => {
-    const consoleSpy = spyOn(console, 'log').and.callThrough();
+    const consoleSpy = spyOn(console, 'debug').and.callThrough();
     environment.production = true;
 
-    service.sendMessage(new AppMessage('Hello!'));
+    service.sendMessage(new Message('0', '1', 'Change'));
     expect(consoleSpy).not.toHaveBeenCalled();
     environment.production = false;
   });

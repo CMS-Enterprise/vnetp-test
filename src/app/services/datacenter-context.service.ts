@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from './auth.service';
-import { MessageService } from './message.service';
-import { AppMessageType } from '../models/app-message-type';
-import { AppMessage } from '../models/app-message';
+import { Message, MessageService } from './message.service';
 import { Datacenter, V1DatacentersService } from 'api_client';
 
 /** Service to store and expose the Current Datacenter Context. */
@@ -118,10 +116,7 @@ export class DatacenterContextService {
     });
   }
 
-  /** Switch from the currentDatacenter to the provided datacenter.
-   * @param datacenter Datacenter to switch to.
-   */
-  public switchDatacenter(datacenterId: string) {
+  public switchDatacenter(datacenterId: string): void {
     if (this.lockCurrentDatacenterSubject.value) {
       throw Error('Current Datacenter Locked.');
     }
@@ -134,8 +129,9 @@ export class DatacenterContextService {
       throw Error('Datacenter already Selected.');
     }
 
+    const oldDatacenterId = this.currentDatacenterValue ? this.currentDatacenterValue.id : null;
+
     if (datacenter) {
-      // Update Subject
       this.currentDatacenterSubject.next(datacenter);
 
       this.ignoreNextQueryParamEvent = true;
@@ -146,8 +142,7 @@ export class DatacenterContextService {
         queryParamsHandling: 'merge',
       });
 
-      // Send Context Switch Message
-      this.messageService.sendMessage(new AppMessage(`Datacenter Context Switch ${datacenterId}`, AppMessageType.DatacenterContextSwitch));
+      this.messageService.sendMessage(new Message(oldDatacenterId, datacenterId, 'Datacenter Switched'));
     }
   }
 }
