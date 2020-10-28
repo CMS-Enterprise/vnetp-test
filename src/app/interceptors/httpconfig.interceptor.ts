@@ -62,19 +62,12 @@ export class HttpConfigInterceptor {
     }
 
     return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (!environment.production) {
-            // console.log('debug-httpevent-->>', event);
-          }
-        }
-        return event;
-      }),
       catchError((error: HttpErrorResponse) => {
-        let toastrMessage = 'Request Failed!';
+        const { status } = error;
+        let toastrMessage = 'Request Failed';
 
         if (!isLogin) {
-          switch (error.status) {
+          switch (status) {
             case 400:
               toastrMessage = 'Bad Request';
               break;
@@ -82,19 +75,17 @@ export class HttpConfigInterceptor {
               this.auth.logout();
               return;
             case 403:
-              toastrMessage = 'Unauthorized.';
+              toastrMessage = 'Unauthorized';
+              break;
+            case 500:
+              toastrMessage = 'Internal Server Error';
               break;
           }
         }
 
-        const data = {
-          error,
-          status: error.status,
-        };
-
-        console.error(data);
-
+        console.error({ error, status });
         this.toastr.error(toastrMessage);
+
         return throwError(error);
       }),
     );
