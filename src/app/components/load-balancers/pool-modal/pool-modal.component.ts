@@ -61,10 +61,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
           loadBalancerPool: pool,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.poolService
@@ -73,10 +73,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
           loadBalancerPool: pool,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -151,7 +151,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private isDefaultHealthMonitor(value: string) {
+  private isDefaultHealthMonitor(value: string): boolean {
     return this.defaultHealthMonitors.includes(value);
   }
 
@@ -187,7 +187,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         servicePort: this.f.servicePort.value,
         ratio: this.f.ratio.value,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.getPool();
         this.f.selectedNode.setValue('');
         this.f.servicePort.setValue('');
@@ -207,15 +207,16 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PoolId = dto.pool.id;
-      } else {
-        this.form.controls.name.enable();
-      }
     }
+
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PoolId = dto.pool.id;
+    } else {
+      this.form.controls.name.enable();
+    }
+
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.name);
       this.form.controls.name.disable();
@@ -239,11 +240,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     this.ngx.resetModalData('poolModal');
-  }
-
-  // not currently filtering properly, also need to add this type of logic to virtual servers -> profiles, policies
-  private removeIntersection(all: any[], selected: any[]) {
-    return all.filter(allEntity => !selected.includes(allEntity));
   }
 
   private buildForm() {

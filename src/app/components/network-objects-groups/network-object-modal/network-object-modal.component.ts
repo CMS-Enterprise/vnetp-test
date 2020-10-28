@@ -72,10 +72,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           networkObject: modalNetworkObject,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       modalNetworkObject.type = null;
@@ -85,10 +85,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           networkObject: modalNetworkObject,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

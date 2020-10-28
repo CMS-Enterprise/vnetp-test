@@ -143,11 +143,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!networkObject.deletedAt) {
-        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }).subscribe(data => {
+        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }).subscribe(() => {
           this.getNetworkObjects();
         });
       } else {
-        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }).subscribe(data => {
+        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }).subscribe(() => {
           this.getNetworkObjects();
         });
       }
@@ -165,7 +165,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   restoreNetworkObject(networkObject: NetworkObject) {
     if (networkObject.deletedAt) {
-      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(data => {
+      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(() => {
         this.getNetworkObjects();
       });
     }
@@ -184,7 +184,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
             id: networkObjectGroup.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getNetworkObjectGroups();
           });
       } else {
@@ -192,7 +192,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           .v1NetworkSecurityNetworkObjectGroupsIdDelete({
             id: networkObjectGroup.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getNetworkObjectGroups();
           });
       }
@@ -214,7 +214,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityNetworkObjectGroupsIdRestorePatch({
           id: networkObjectGroup.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getNetworkObjectGroups();
         });
     }
@@ -293,7 +293,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityNetworkObjectGroupsBulkPost({
           generatedNetworkObjectGroupBulkDto: { bulk: dto },
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getNetworkObjectGroups();
         });
     };

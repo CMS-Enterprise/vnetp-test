@@ -331,7 +331,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           .v1NetworkSecurityFirewallRulesBulkImportPost({
             firewallRuleImportCollectionDto: firewallConfirmDto,
           })
-          .subscribe(res => {
+          .subscribe(() => {
             this.getFirewallRuleGroup();
           });
       }

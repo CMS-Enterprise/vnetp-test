@@ -69,10 +69,10 @@ export class VirtualServerModalComponent implements OnInit {
           loadBalancerVirtualServer: virtualServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.virtualServerService
@@ -81,10 +81,10 @@ export class VirtualServerModalComponent implements OnInit {
           loadBalancerVirtualServer: virtualServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -109,7 +109,7 @@ export class VirtualServerModalComponent implements OnInit {
         virtualServerId: this.VirtualServerId,
         iruleId: this.f.selectedIRule.value,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.getVirtualServerIRulesProfilesPolicies();
         this.f.selectedIRule.setValue('');
       });
@@ -136,7 +136,7 @@ export class VirtualServerModalComponent implements OnInit {
         virtualServerId: this.VirtualServerId,
         profileId: this.f.selectedProfile.value,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.getVirtualServerIRulesProfilesPolicies();
         this.f.selectedProfile.setValue('');
       });
@@ -163,7 +163,7 @@ export class VirtualServerModalComponent implements OnInit {
         virtualServerId: this.VirtualServerId,
         policyId: this.f.selectedPolicy.value,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.getVirtualServerIRulesProfilesPolicies();
         this.f.selectedPolicy.setValue('');
       });
@@ -193,15 +193,15 @@ export class VirtualServerModalComponent implements OnInit {
     }
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.VirtualServerId = dto.VirtualServer.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.VirtualServerId = dto.VirtualServer.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     const virtualServer = dto.VirtualServer;
@@ -264,12 +264,12 @@ export class VirtualServerModalComponent implements OnInit {
       selectedPolicy: [''],
     });
 
-    this.availableIRules = new Array<LoadBalancerIrule>();
-    this.selectedIRules = new Array<LoadBalancerIrule>();
-    this.availableProfiles = new Array<LoadBalancerProfile>();
-    this.selectedProfiles = new Array<LoadBalancerProfile>();
-    this.availablePolicies = new Array<LoadBalancerPolicy>();
-    this.selectedPolicies = new Array<LoadBalancerPolicy>();
+    this.availableIRules = [];
+    this.selectedIRules = [];
+    this.availableProfiles = [];
+    this.selectedProfiles = [];
+    this.availablePolicies = [];
+    this.selectedPolicies = [];
   }
 
   public reset() {

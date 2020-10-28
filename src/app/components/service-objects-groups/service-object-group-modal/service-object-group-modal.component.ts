@@ -53,10 +53,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           serviceObjectGroup: modalServiceObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       modalServiceObjectGroup.type = null;
@@ -66,10 +66,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           serviceObjectGroup: modalServiceObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -94,7 +94,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
         serviceObjectGroupId: this.ServiceObjectGroupId,
         serviceObjectId: this.selectedServiceObject.id,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.selectedServiceObject = null;
         this.getGroupServiceObjects();
       });

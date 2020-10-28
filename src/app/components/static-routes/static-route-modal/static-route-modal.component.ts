@@ -43,10 +43,10 @@ export class StaticRouteModalComponent implements OnInit {
           staticRoute: modalStaticRoute,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.staticRouteService
@@ -55,10 +55,10 @@ export class StaticRouteModalComponent implements OnInit {
           staticRoute: modalStaticRoute,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }

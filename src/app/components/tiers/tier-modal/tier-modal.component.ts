@@ -117,10 +117,10 @@ export class TierModalComponent implements OnInit {
 
   private createTier(tier: Tier): void {
     this.tierService.v1TiersPost({ tier }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -133,10 +133,10 @@ export class TierModalComponent implements OnInit {
         tier,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 

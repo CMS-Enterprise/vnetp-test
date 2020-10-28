@@ -108,10 +108,10 @@ export class SubnetModalComponent implements OnInit {
     subnet.tierId = this.TierId;
     subnet.vlanId = this.form.value.vlan;
     this.subnetService.v1NetworkSubnetsPost({ subnet }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -122,10 +122,10 @@ export class SubnetModalComponent implements OnInit {
     subnet.tierId = null;
     subnet.vlanId = null;
     this.subnetService.v1NetworkSubnetsIdPut({ id: this.SubnetId, subnet }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 

@@ -47,10 +47,10 @@ export class HealthMonitorModalComponent implements OnInit {
           loadBalancerHealthMonitor: healthMonitor,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.healthMonitorService
@@ -59,10 +59,10 @@ export class HealthMonitorModalComponent implements OnInit {
           loadBalancerHealthMonitor: healthMonitor,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -107,15 +107,15 @@ export class HealthMonitorModalComponent implements OnInit {
 
     if (!dto.ModalMode) {
       throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    }
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.HealthMonitorId = dto.healthMonitor.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.HealthMonitorId = dto.healthMonitor.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     if (dto.healthMonitor !== undefined) {

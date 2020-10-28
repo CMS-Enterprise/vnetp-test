@@ -102,10 +102,10 @@ export class VlanModalComponent implements OnInit {
     vlan.vlanNumber = this.form.value.vlanNumber;
     vlan.tierId = this.TierId;
     this.vlanService.v1NetworkVlansPost({ vlan }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -113,10 +113,10 @@ export class VlanModalComponent implements OnInit {
     vlan.name = null;
     vlan.vlanNumber = null;
     this.vlanService.v1NetworkVlansIdPut({ id: this.VlanId, vlan }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 

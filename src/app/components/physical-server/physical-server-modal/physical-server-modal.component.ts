@@ -53,10 +53,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.physicalServerService
@@ -65,10 +65,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -116,17 +116,6 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.sanStorageSize.setValue(ConversionUtil.convertBytesToGb(physicalServer.sanStorageSize));
     }
     this.ngx.resetModalData('physicalServerModal');
-  }
-
-  private stringToBoolean(str: string): boolean {
-    switch (str) {
-      case 'true':
-        return true;
-      case 'false':
-        return false;
-      default:
-        return Boolean(str);
-    }
   }
 
   private buildForm() {

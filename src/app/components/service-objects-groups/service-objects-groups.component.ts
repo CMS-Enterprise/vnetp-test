@@ -142,11 +142,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!serviceObject.deletedAt) {
-        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdSoftDelete({ id: serviceObject.id }).subscribe(data => {
+        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdSoftDelete({ id: serviceObject.id }).subscribe(() => {
           this.getServiceObjects();
         });
       } else {
-        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdDelete({ id: serviceObject.id }).subscribe(data => {
+        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdDelete({ id: serviceObject.id }).subscribe(() => {
           this.getServiceObjects();
         });
       }
@@ -164,7 +164,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   restoreServiceObject(serviceObject: ServiceObject) {
     if (serviceObject.deletedAt) {
-      this.serviceObjectService.v1NetworkSecurityServiceObjectsIdRestorePatch({ id: serviceObject.id }).subscribe(data => {
+      this.serviceObjectService.v1NetworkSecurityServiceObjectsIdRestorePatch({ id: serviceObject.id }).subscribe(() => {
         this.getServiceObjects();
       });
     }
@@ -213,7 +213,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityServiceObjectGroupsIdRestorePatch({
           id: serviceObjectGroup.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getServiceObjectGroups();
         });
     }
@@ -231,15 +231,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([
-      this.serviceObjectModalSubscription,
-      this.serviceObjectGroupModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
-  }
-
   public importServiceObjectsConfig(event: ServiceObject[]): void {
     const modalDto = new YesNoModalDto(
       'Import Service Objects',
@@ -252,7 +243,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityServiceObjectsBulkPost({
           generatedServiceObjectBulkDto: { bulk: dto },
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getServiceObjects();
         });
     };
@@ -360,6 +351,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([
+      this.serviceObjectModalSubscription,
+      this.serviceObjectGroupModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

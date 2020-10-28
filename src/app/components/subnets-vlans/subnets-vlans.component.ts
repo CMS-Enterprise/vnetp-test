@@ -131,11 +131,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
     const deleteFunction = () => {
       if (!subnet.deletedAt) {
-        this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }).subscribe(data => {
+        this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }).subscribe(() => {
           this.getSubnets();
         });
       } else {
-        this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }).subscribe(data => {
+        this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }).subscribe(() => {
           this.getSubnets();
         });
       }
@@ -150,7 +150,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
   restoreSubnet(subnet: Subnet) {
     if (subnet.deletedAt) {
-      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(data => {
+      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(() => {
         this.getSubnets();
       });
     }
@@ -169,7 +169,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           .v1NetworkVlansIdSoftDelete({
             id: vlan.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getVlans();
           });
       } else {
@@ -177,7 +177,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           .v1NetworkVlansIdDelete({
             id: vlan.id,
           })
-          .subscribe(data => {
+          .subscribe(() => {
             this.getVlans();
           });
       }
@@ -196,7 +196,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         .v1NetworkVlansIdRestorePatch({
           id: vlan.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVlans();
         });
     }
@@ -216,7 +216,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         .v1NetworkSubnetsBulkImportPost({
           subnetImportCollectionDto: subnetsDto,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVlans(true);
         });
     };
@@ -234,7 +234,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
     const onConfirm = () => {
-      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(data => {
+      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(() => {
         this.getVlans();
       });
     };
@@ -284,15 +284,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     return this.currentTier && !!this.currentTier.id;
   }
 
-  private unsubAll(): void {
-    SubscriptionUtil.unsubscribe([
-      this.subnetModalSubscription,
-      this.vlanModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
-  }
-
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
@@ -315,6 +306,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([
+      this.subnetModalSubscription,
+      this.vlanModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

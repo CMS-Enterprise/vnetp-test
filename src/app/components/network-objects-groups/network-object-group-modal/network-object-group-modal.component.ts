@@ -51,10 +51,10 @@ export class NetworkObjectGroupModalComponent implements OnInit {
           networkObjectGroup: modalNetworkObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.networkObjectGroupService
@@ -63,10 +63,10 @@ export class NetworkObjectGroupModalComponent implements OnInit {
           networkObjectGroup: modalNetworkObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -91,7 +91,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         networkObjectGroupId: this.NetworkObjectGroupId,
         networkObjectId: this.selectedNetworkObject.id,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.selectedNetworkObject = null;
         this.getGroupNetworkObjects();
       });

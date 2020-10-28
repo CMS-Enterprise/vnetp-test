@@ -31,6 +31,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentUserSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
 }

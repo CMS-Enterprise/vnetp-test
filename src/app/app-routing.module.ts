@@ -119,7 +119,7 @@ const routes: Routes = [
   {
     path: '**',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
+    loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule),
   },
 ];
 

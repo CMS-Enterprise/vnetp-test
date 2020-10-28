@@ -44,11 +44,11 @@ export class LoginComponent implements OnInit {
       .login(this.userpass)
       .pipe(first())
       .subscribe(
-        data => {
+        () => {
           this.toastr.success(`Welcome ${this.userpass.Username}!`);
           this.router.navigateByUrl(this.returnUrl);
         },
-        error => {
+        () => {
           this.toastr.error('Invalid Username/Password');
           this.errorMessage = 'Invalid Username/Password';
           this.loading = false;
