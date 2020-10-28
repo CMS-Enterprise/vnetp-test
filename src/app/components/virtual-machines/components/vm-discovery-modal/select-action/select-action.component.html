@@ -1,0 +1,89 @@
+<header class="modal-header">
+  <h4 class="modal-title">Select Action</h4>
+</header>
+
+<main class="modal-body">
+  <form [formGroup]="form">
+    <!-- Action -->
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="actions">Actions</label>
+        <ng-select id="actions" [items]="actions" bindLabel="name" [closeOnSelect]="true" bindValue="type" formControlName="actionType">
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- Add to Logical Group -->
+    <div class="form-row" *ngIf="f.actionType.value === 'logical-group'">
+      <!-- Logical Group -->
+      <div class="form-group col-md-6">
+        <label for="logical-group">Logical Group</label>
+        <ng-select
+          id="logical-group"
+          [items]="logicalGroups"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          bindValue="id"
+          [loading]="isLoadingLogicalGroups"
+          formControlName="logicalGroupId"
+          [class.is-invalid]="submitted && f.logicalGroupId.errors"
+        >
+        </ng-select>
+        <div *ngIf="submitted && f.logicalGroupId.errors" class="invalid-feedback">
+          <div *ngIf="f.logicalGroupId.errors.required">Logical Group is required</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apply SLA -->
+    <div class="form-row" *ngIf="f.actionType.value === 'sla'">
+      <!-- Template -->
+      <div class="form-group col-md-6">
+        <label for="template">Template</label>
+        <ng-select
+          id="template"
+          [items]="templates"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          bindValue="id"
+          [loading]="isLoadingTemplates"
+          formControlName="templateId"
+          [class.is-invalid]="submitted && f.templateId.errors"
+        >
+        </ng-select>
+        <div *ngIf="submitted && f.templateId.errors" class="invalid-feedback">
+          <div *ngIf="f.templateId.errors.required">SLA Template is required</div>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="form-group col-md-6">
+        <label for="profile">Profile</label>
+        <ng-select
+          id="profile"
+          [items]="profiles"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          bindValue="id"
+          [loading]="isLoadingProfiles"
+          formControlName="profileId"
+          [class.is-invalid]="submitted && f.profileId.errors"
+        >
+        </ng-select>
+        <div *ngIf="submitted && f.profileId.errors" class="invalid-feedback">
+          <div *ngIf="f.profileId.errors.required">SLA Profile is required</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
+
+<footer class="modal-footer">
+  <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onCancel()">
+    Cancel
+  </button>
+
+  <button type="button" class="btn btn-success" data-dismiss="modal" (click)="onConfirm()">
+    <span>{{ getConfirmText() }}</span>
+  </button>
+</footer>

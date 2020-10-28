@@ -6,6 +6,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
 interface SelectableVirtualMachine {
   folderPath: string;
   id: string;
+  isNew: boolean;
   isManaged: boolean;
   isSelected: boolean;
   name: string;
@@ -20,7 +21,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
   @Input() vcenterId: string;
-  @Output() virtualMachinesSelected = new EventEmitter<Set<string>>();
+  @Output() virtualMachinesSelected = new EventEmitter<{ newVirtualMachineIds: string[]; existingVirtualMachineIds: string[] }>();
 
   public config: TableConfig<SelectableVirtualMachine> = {
     description: 'List of Virtual Machines on vCenter',
@@ -49,7 +50,20 @@ export class SelectVirtualMachinesComponent implements OnInit {
     if (this.selectedVirtualMachineIds.size === 0) {
       return;
     }
-    this.virtualMachinesSelected.emit(this.selectedVirtualMachineIds);
+
+    const newVirtualMachineIds = this.selectableVirtualMachines
+      .filter(vm => vm.isNew)
+      .filter(vm => this.selectedVirtualMachineIds.has(vm.id))
+      .map(vm => vm.id);
+    const existingVirtualMachineIds = this.selectableVirtualMachines
+      .filter(vm => !vm.isNew)
+      .filter(vm => this.selectedVirtualMachineIds.has(vm.id))
+      .map(vm => vm.id);
+
+    this.virtualMachinesSelected.emit({
+      newVirtualMachineIds,
+      existingVirtualMachineIds,
+    });
   }
 
   public selectVirtualMachine(id: string): void {
@@ -69,6 +83,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
           folderPath,
           isManaged,
           name,
+          isNew: !applicationId,
           id: applicationId || discoveredId,
           isSelected: false,
         };

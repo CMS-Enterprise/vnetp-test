@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Unmanaged, ApplySla, AddToLogicalGroup } from './select-action/select-action.component';
 
 @Component({
   selector: 'app-vm-discovery-modal',
@@ -7,12 +8,17 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class VmDiscoveryModalComponent {
-  @ViewChild('selectVCenterTemplate', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachinesTemplate', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenter', { static: false }) selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachines', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectAction', { static: false }) selectActionTemplate: TemplateRef<any>;
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
-  public selectedVirtualMachineIds = new Set<string>();
+  public selectedVirtualMachines: {
+    newVirtualMachineIds: string[];
+    existingVirtualMachineIds: string[];
+  };
   public selectedVCenterId: string;
+  public selectedAction: Unmanaged | ApplySla | AddToLogicalGroup;
 
   constructor(private changeRef: ChangeDetectorRef, private ngx: NgxSmartModalService) {}
 
@@ -26,15 +32,21 @@ export class VmDiscoveryModalComponent {
     this.currentDiscoveryStepTemplate = this.selectVCenterTemplate;
 
     this.selectedVCenterId = null;
-    this.selectedVirtualMachineIds = new Set<string>();
+    this.selectedVirtualMachines = null;
+    this.selectedAction = null;
   }
 
-  public onVirtualMachinesSelected(virtualMachineIds: Set<string>): void {
-    this.selectedVirtualMachineIds = virtualMachineIds;
+  public onVirtualMachinesSelected(selection: { newVirtualMachineIds: string[]; existingVirtualMachineIds: string[] }): void {
+    this.selectedVirtualMachines = selection;
+    this.currentDiscoveryStepTemplate = this.selectActionTemplate;
   }
 
   public onVCenterSelected(vCenterId: string): void {
     this.selectedVCenterId = vCenterId;
     this.currentDiscoveryStepTemplate = this.selectVirtualMachinesTemplate;
+  }
+
+  public onActionSelected(action: Unmanaged | ApplySla | AddToLogicalGroup): void {
+    this.selectedAction = action;
   }
 }
