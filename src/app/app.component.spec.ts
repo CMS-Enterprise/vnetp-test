@@ -25,7 +25,7 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [AppComponent, MockComponent({ selector: 'app-breadcrumb' }), MockComponent({ selector: 'app-navbar' })],
+      declarations: [AppComponent, MockComponent('app-breadcrumb'), MockComponent('app-navbar')],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router, useValue: router },

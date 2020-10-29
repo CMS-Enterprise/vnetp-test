@@ -1,7 +1,11 @@
 import { Component, EventEmitter } from '@angular/core';
 
-export const MockComponent = (options: Component): Component => {
-  const metadata = { ...options };
+/**
+ * Creates a Component to use during tests
+ * @param options Either a component or just the selector name
+ */
+export const MockComponent = (options: Component | string): Component => {
+  const metadata = typeof options === 'string' ? { selector: options } : { ...options };
   metadata.template = metadata.template || '';
   metadata.outputs = metadata.outputs || [];
   metadata.exportAs = metadata.exportAs || '';

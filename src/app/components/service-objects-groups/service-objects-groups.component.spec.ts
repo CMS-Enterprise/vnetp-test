@@ -28,9 +28,9 @@ describe('ServicesObjectsGroupsComponent', () => {
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
-        MockComponent({ selector: 'app-service-object-group-modal' }),
-        MockComponent({ selector: 'app-service-object-modal' }),
-        MockComponent({ selector: 'app-tier-select' }),
+        MockComponent('app-service-object-group-modal'),
+        MockComponent('app-service-object-modal'),
+        MockComponent('app-tier-select'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

@@ -20,7 +20,7 @@ describe('PriorityGroupListComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule],
       declarations: [
-        MockComponent({ selector: 'app-priority-group-modal' }),
+        MockComponent('app-priority-group-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

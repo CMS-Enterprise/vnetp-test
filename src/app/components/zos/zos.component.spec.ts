@@ -15,7 +15,7 @@ describe('ZosComponent', () => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule],
       declarations: [
-        MockComponent({ selector: 'app-zos-zvm-request-modal' }),
+        MockComponent('app-zos-zvm-request-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

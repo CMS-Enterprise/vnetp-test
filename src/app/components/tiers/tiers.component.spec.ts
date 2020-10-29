@@ -21,7 +21,7 @@ describe('TiersComponent', () => {
       imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
-        MockComponent({ selector: 'app-tier-modal' }),
+        MockComponent('app-tier-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockTooltipComponent,

@@ -18,7 +18,7 @@ describe('VmListComponent', () => {
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
-        MockComponent({ selector: 'app-vm-discovery-modal' }),
+        MockComponent('app-vm-discovery-modal'),
         MockFontAwesomeComponent,
         VmListComponent,
       ],

@@ -43,7 +43,7 @@ describe('LogicalGroupListComponent', () => {
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
-        MockComponent({ selector: 'app-logical-group-modal' }),
+        MockComponent('app-logical-group-modal'),
         MockComponent({ selector: 'app-logical-group-view-modal', inputs: ['logicalGroup'] }),
         MockYesNoModalComponent,
         MockIconButtonComponent,

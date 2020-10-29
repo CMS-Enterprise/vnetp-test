@@ -28,7 +28,7 @@ describe('FirewallRulesComponent', () => {
       declarations: [
         FilterPipe,
         FirewallRulesComponent,
-        MockComponent({ selector: 'app-firewall-rule-modal' }),
+        MockComponent('app-firewall-rule-modal'),
         MockImportExportComponent,
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,

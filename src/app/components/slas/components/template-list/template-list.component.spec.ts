@@ -24,7 +24,7 @@ describe('TemplateListComponent', () => {
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
-        MockComponent({ selector: 'app-template-modal' }),
+        MockComponent('app-template-modal'),
         MockIconButtonComponent,
         MockFontAwesomeComponent,
         MockYesNoModalComponent,

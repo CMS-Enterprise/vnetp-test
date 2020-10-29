@@ -30,9 +30,9 @@ describe('SubnetsVlansComponent', () => {
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
-        MockComponent({ selector: 'app-subnet-modal' }),
-        MockComponent({ selector: 'app-tier-select' }),
-        MockComponent({ selector: 'app-vlan-modal' }),
+        MockComponent('app-subnet-modal'),
+        MockComponent('app-tier-select'),
+        MockComponent('app-vlan-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

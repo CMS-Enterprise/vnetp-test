@@ -13,21 +13,21 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './appliance.component.html',
 })
 export class ApplianceComponent implements OnInit, OnDestroy {
-  appliances: Array<Appliance>;
-  applianceModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterId: string;
+  public appliances: Appliance[] = [];
+  public ModalMode = ModalMode;
 
-  ModalMode = ModalMode;
+  private applianceModalSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private datacenterId: string;
 
   constructor(
-    private ngx: NgxSmartModalService,
+    private applianceService: V1AppliancesService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
-    private applianceService: V1AppliancesService,
+    private ngx: NgxSmartModalService,
   ) {}
 
-  getAppliances() {
+  public getAppliances(): void {
     this.datacenterService
       .v1DatacentersIdGet({
         id: this.datacenterId,
@@ -38,11 +38,12 @@ export class ApplianceComponent implements OnInit, OnDestroy {
       });
   }
 
-  createAppliance() {
+  public createAppliance(): void {
     this.openApplianceModal(ModalMode.Create);
+    console.log('HERE');
   }
 
-  openApplianceModal(modalMode: ModalMode, a?: Appliance) {
+  public openApplianceModal(modalMode: ModalMode, a?: Appliance): void {
     if (modalMode === ModalMode.Edit && !a) {
       throw new Error('Appliance Required.');
     }
@@ -61,7 +62,47 @@ export class ApplianceComponent implements OnInit, OnDestroy {
     this.ngx.getModal('applianceModal').open();
   }
 
-  subscribeToApplianceModal() {
+  public deleteAppliance(appliance: Appliance): void {
+    const { deletedAt, id, name } = appliance;
+    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
+
+    const deleteFunction = () => {
+      if (!deletedAt) {
+        this.applianceService.v1AppliancesIdSoftDelete({ id }).subscribe(() => {
+          this.getAppliances();
+        });
+      } else {
+        this.applianceService.v1AppliancesIdDelete({ id }).subscribe(() => {
+          this.getAppliances();
+        });
+      }
+    };
+
+    const dto = new YesNoModalDto(
+      `${deleteDescription} Appliance`,
+      `Do you want to ${deleteDescription} appliance "${name}"?`,
+      `${deleteDescription} Appliance`,
+      'Cancel',
+      'danger',
+    );
+
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, deleteFunction);
+  }
+
+  public restoreAppliance(appliance: Appliance): void {
+    if (!appliance.deletedAt) {
+      return;
+    }
+    this.applianceService
+      .v1AppliancesIdRestorePatch({
+        id: appliance.id,
+      })
+      .subscribe(() => {
+        this.getAppliances();
+      });
+  }
+
+  private subscribeToApplianceModal(): void {
     this.applianceModalSubscription = this.ngx.getModal('applianceModal').onAnyCloseEvent.subscribe(() => {
       this.getAppliances();
       this.ngx.resetModalData('applianceModal');
@@ -69,41 +110,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteAppliance(a: Appliance) {
-    const deleteDescription = a.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!a.deletedAt) {
-        this.applianceService.v1AppliancesIdSoftDelete({ id: a.id }).subscribe(() => {
-          this.getAppliances();
-        });
-      } else {
-        this.applianceService.v1AppliancesIdDelete({ id: a.id }).subscribe(() => {
-          this.getAppliances();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Appliance?`, `Do you want to ${deleteDescription} appliance "${a.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
-  }
-
-  restoreAppliance(a: Appliance) {
-    if (a.deletedAt) {
-      this.applianceService
-        .v1AppliancesIdRestorePatch({
-          id: a.id,
-        })
-        .subscribe(() => {
-          this.getAppliances();
-        });
-    }
-  }
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;
@@ -112,7 +119,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.applianceModalSubscription, this.currentDatacenterSubscription]);
   }
 }

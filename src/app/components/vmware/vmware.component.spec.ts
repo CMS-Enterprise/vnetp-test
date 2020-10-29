@@ -26,9 +26,9 @@ describe('VmwareComponent', () => {
       imports: [RouterTestingModule.withRoutes([]), FormsModule, NgxPaginationModule, ReactiveFormsModule],
       declarations: [
         MockComponent({ selector: 'app-priority-group-list', inputs: ['datacenterId'] }),
-        MockComponent({ selector: 'app-network-adapter-modal' }),
-        MockComponent({ selector: 'app-virtual-disk-modal' }),
-        MockComponent({ selector: 'app-virtual-machine-modal' }),
+        MockComponent('app-network-adapter-modal'),
+        MockComponent('app-virtual-disk-modal'),
+        MockComponent('app-virtual-machine-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
