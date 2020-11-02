@@ -7,6 +7,7 @@ import { LogicalGroupListComponent } from './logical-group-list.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ToastrService } from 'ngx-toastr';
 
 describe('LogicalGroupListComponent', () => {
   let component: LogicalGroupListComponent;
@@ -56,6 +57,7 @@ describe('LogicalGroupListComponent', () => {
           v1AgmLogicalGroupsIdGet: of({ members: [] }),
         }),
         MockProvider(NgxSmartModalService),
+        MockProvider(ToastrService),
       ],
     })
       .compileComponents()
@@ -85,8 +87,6 @@ describe('LogicalGroupListComponent', () => {
     const [logicalGroup1] = component.logicalGroups;
     expect(logicalGroup1.id).toBe('1');
     expect(logicalGroup1.name).toBe('LogicalGroup-1');
-    expect(logicalGroup1.slaProfileDescription).toBe('--');
-    expect(logicalGroup1.slaTemplateDescription).toBe('--');
     expect(logicalGroup1.slaProfileName).toBe('Profile-1');
     expect(logicalGroup1.slaTemplateName).toEqual('Template-1');
   });

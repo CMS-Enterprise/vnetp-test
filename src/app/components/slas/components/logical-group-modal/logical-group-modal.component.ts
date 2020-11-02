@@ -13,6 +13,8 @@ import {
   V1AgmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-logical-group-modal',
@@ -131,7 +133,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadApplications(): void {
     this.isLoadingVirtualMachines = true;
-    this.applicationService.v1AgmApplicationsGet({ limit: 400, offset: 0 }).subscribe(applications => {
+    this.loadAllApplications().subscribe(applications => {
       this.virtualMachines = applications;
       this.isLoadingVirtualMachines = false;
     });
@@ -151,10 +153,17 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadLogicalGroupMembers(logicalGroupId: string): void {
     this.isLoadingVirtualMachines = true;
-    this.logicalGroupService.v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId }).subscribe(members => {
-      this.virtualMachines = members;
-      this.isLoadingVirtualMachines = false;
-    });
+
+    this.logicalGroupService
+      .v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId })
+      .pipe(
+        tap(virtualMachines => this.form.controls.virtualMachines.setValue(virtualMachines)),
+        switchMap(() => this.loadAllApplications()),
+      )
+      .subscribe((allApplications: ActifioApplicationDto[]) => {
+        this.virtualMachines = allApplications;
+        this.isLoadingVirtualMachines = false;
+      });
   }
 
   private loadTemplates(): void {
@@ -207,6 +216,10 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
       this.form.controls.profileId.setValue(sla ? sla.profile.id : null);
       this.form.controls.virtualMachines.setValue(members);
     });
+  }
+
+  private loadAllApplications(): Observable<ActifioApplicationDto[]> {
+    return this.applicationService.v1AgmApplicationsGet({ limit: 400, offset: 0 });
   }
 
   private updateLogicalGroup(logicalGroupId: string, dto: ActifioAddOrUpdateLogicalGroupDto): void {
