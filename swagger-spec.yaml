@@ -11426,15 +11426,15 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/applications/add:
+  /v1/agm/applications/bulk:
     post:
-      summary: Add one ActifioApplication
+      summary: Import ActifioApplications
       parameters:
-        - name: ActifioAddApplicationDto
+        - name: ActifioAddApplicationsDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioAddApplicationDto'
+            $ref: '#/definitions/ActifioAddApplicationsDto'
       responses:
         '201':
           description: ''
@@ -15297,24 +15297,35 @@ definitions:
       - applianceId
       - cluster
       - isManaged
-  ActifioAddApplicationDto:
+  ActifioAddApplicationsToClusterDto:
     type: object
     properties:
-      applicationUUID:
+      applicationUUIDs:
         type: array
         items:
           type: string
-      clusterId:
-        type: string
+      applicationNames:
+        type: array
+        items:
+          type: string
       clusterName:
         type: string
+    required:
+      - applicationUUIDs
+      - applicationNames
+      - clusterName
+  ActifioAddApplicationsDto:
+    type: object
+    properties:
       hostId:
         type: string
+      clusters:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioAddApplicationsToClusterDto'
     required:
-      - applicationUUID
-      - clusterId
-      - clusterName
       - hostId
+      - clusters
   ActifioDiskPoolDto:
     type: object
     properties:

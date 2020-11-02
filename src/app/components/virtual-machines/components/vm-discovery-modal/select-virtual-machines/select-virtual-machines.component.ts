@@ -1,9 +1,16 @@
 import { Component, Input, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
-import { ActifioDiscoveredVMDto, V1AgmHostsService } from 'api_client';
+import {
+  ActifioAddApplicationsToClusterDto,
+  ActifioApplicationDto,
+  ActifioDiscoveredVMDto,
+  V1AgmApplicationsService,
+  V1AgmHostsService,
+} from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
 interface SelectableVirtualMachine {
+  applianceName: string;
   folderPath: string;
   id: string;
   isNew: boolean;
@@ -21,7 +28,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
   @Input() vcenterId: string;
-  @Output() virtualMachinesSelected = new EventEmitter<{ newVirtualMachineIds: string[]; existingVirtualMachineIds: string[] }>();
+  @Output() virtualMachinesSelected = new EventEmitter<ActifioApplicationDto[]>();
 
   public config: TableConfig<SelectableVirtualMachine> = {
     description: 'List of Virtual Machines on vCenter',
@@ -32,11 +39,16 @@ export class SelectVirtualMachinesComponent implements OnInit {
       { name: 'Managed?', property: 'isManaged' },
     ],
   };
+
   public isLoading = false;
   public selectedVirtualMachineIds = new Set<string>();
   public selectableVirtualMachines: SelectableVirtualMachine[] = [];
 
-  constructor(private ngx: NgxSmartModalService, private agmHostService: V1AgmHostsService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private agmHostService: V1AgmHostsService,
+    private agmApplicationService: V1AgmApplicationsService,
+  ) {}
 
   ngOnInit(): void {
     this.loadVirtualMachinesOnHost(this.vcenterId);
@@ -51,19 +63,39 @@ export class SelectVirtualMachinesComponent implements OnInit {
       return;
     }
 
-    const newVirtualMachineIds = this.selectableVirtualMachines
-      .filter(vm => vm.isNew)
-      .filter(vm => this.selectedVirtualMachineIds.has(vm.id))
-      .map(vm => vm.id);
-    const existingVirtualMachineIds = this.selectableVirtualMachines
-      .filter(vm => !vm.isNew)
-      .filter(vm => this.selectedVirtualMachineIds.has(vm.id))
-      .map(vm => vm.id);
-
-    this.virtualMachinesSelected.emit({
-      newVirtualMachineIds,
-      existingVirtualMachineIds,
+    const selectedVirtualMachines = this.selectableVirtualMachines.filter(vm => {
+      this.selectedVirtualMachineIds.has(vm.id);
     });
+
+    const clusterNames = Array.from(new Set(selectedVirtualMachines.map(vm => vm.applianceName)));
+
+    const clusters: ActifioAddApplicationsToClusterDto[] = clusterNames.map((clusterName: string) => {
+      const virtualMachinesOnCluster = selectedVirtualMachines.filter(vm => vm.applianceName === clusterName);
+      return {
+        clusterName,
+        applicationUUIDs: virtualMachinesOnCluster.map(vm => vm.id),
+        applicationNames: virtualMachinesOnCluster.map(vm => vm.name),
+      };
+    });
+
+    this.isLoading = true;
+    this.agmApplicationService
+      .v1AgmApplicationsBulkPost({
+        actifioAddApplicationsDto: {
+          clusters,
+          hostId: this.vcenterId,
+        },
+      })
+      .subscribe(
+        (applications: ActifioApplicationDto[]) => {
+          this.isLoading = false;
+          this.virtualMachinesSelected.emit(applications);
+        },
+        () => {
+          this.isLoading = false;
+          this.virtualMachinesSelected.emit([]);
+        },
+      );
   }
 
   public selectVirtualMachine(id: string): void {
@@ -76,19 +108,28 @@ export class SelectVirtualMachinesComponent implements OnInit {
 
   public loadVirtualMachinesOnHost(hostId: string): void {
     this.isLoading = true;
-    this.agmHostService.v1AgmHostsHostIdDiscoveredApplicationsGet({ hostId }).subscribe((data: ActifioDiscoveredVMDto[]) => {
-      this.selectableVirtualMachines = data.map(discoveredVM => {
-        const { applicationId, discoveredId, isManaged, folderPath, name } = discoveredVM;
-        return {
-          folderPath,
-          isManaged,
-          name,
-          isNew: !applicationId,
-          id: applicationId || discoveredId,
-          isSelected: false,
-        };
-      });
-      this.isLoading = false;
-    });
+    this.agmHostService.v1AgmHostsHostIdDiscoveredApplicationsGet({ hostId }).subscribe(
+      (data: ActifioDiscoveredVMDto[]) => {
+        this.selectableVirtualMachines = data.map(discoveredVM => this.mapDiscoveredVM(discoveredVM)).filter(vm => vm.isNew);
+        this.isLoading = false;
+      },
+      () => {
+        this.selectableVirtualMachines = [];
+        this.isLoading = false;
+      },
+    );
+  }
+
+  private mapDiscoveredVM(discoveredVM: ActifioDiscoveredVMDto): SelectableVirtualMachine {
+    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name } = discoveredVM;
+    return {
+      folderPath,
+      isManaged,
+      name,
+      applianceName: clusterName,
+      isNew: !applicationId,
+      id: applicationId || discoveredId,
+      isSelected: false,
+    };
   }
 }

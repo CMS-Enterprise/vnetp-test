@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ActifioApplicationDto } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Unmanaged, ApplySla, AddToLogicalGroup } from './select-action/select-action.component';
 
@@ -13,10 +14,7 @@ export class VmDiscoveryModalComponent {
   @ViewChild('selectAction', { static: false }) selectActionTemplate: TemplateRef<any>;
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
-  public selectedVirtualMachines: {
-    newVirtualMachineIds: string[];
-    existingVirtualMachineIds: string[];
-  };
+  public selectedVirtualMachines: ActifioApplicationDto[] = [];
   public selectedVCenterId: string;
   public selectedAction: Unmanaged | ApplySla | AddToLogicalGroup;
 
@@ -32,12 +30,12 @@ export class VmDiscoveryModalComponent {
     this.currentDiscoveryStepTemplate = this.selectVCenterTemplate;
 
     this.selectedVCenterId = null;
-    this.selectedVirtualMachines = null;
+    this.selectedVirtualMachines = [];
     this.selectedAction = null;
   }
 
-  public onVirtualMachinesSelected(selection: { newVirtualMachineIds: string[]; existingVirtualMachineIds: string[] }): void {
-    this.selectedVirtualMachines = selection;
+  public onVirtualMachinesSelected(virtualMachines: ActifioApplicationDto[] = []): void {
+    this.selectedVirtualMachines = virtualMachines;
     this.currentDiscoveryStepTemplate = this.selectActionTemplate;
   }
 

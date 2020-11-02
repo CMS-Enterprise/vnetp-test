@@ -45,9 +45,15 @@ export class SelectVCenterComponent implements OnInit {
 
   private loadVCenters(): void {
     this.isLoading = true;
-    this.agmHostService.v1AgmHostsGet().subscribe(data => {
-      this.vCenters = data;
-      this.isLoading = false;
-    });
+    this.agmHostService.v1AgmHostsGet().subscribe(
+      data => {
+        this.vCenters = data;
+        this.isLoading = false;
+      },
+      () => {
+        this.vCenters = [];
+        this.isLoading = false;
+      },
+    );
   }
 }

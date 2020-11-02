@@ -1,4 +1,5 @@
-export * from './actifioAddApplicationDto';
+export * from './actifioAddApplicationsDto';
+export * from './actifioAddApplicationsToClusterDto';
 export * from './actifioAddOrUpdateLogicalGroupDto';
 export * from './actifioAddOrganizationDto';
 export * from './actifioAddTemplateDto';

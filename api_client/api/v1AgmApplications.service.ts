@@ -17,15 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioAddApplicationDto } from '../model/models';
+import { ActifioAddApplicationsDto } from '../model/models';
 import { ActifioApplicationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmApplicationsAddPostRequestParams {
-    actifioAddApplicationDto: ActifioAddApplicationDto;
+export interface V1AgmApplicationsBulkPostRequestParams {
+    actifioAddApplicationsDto: ActifioAddApplicationsDto;
 }
 
 export interface V1AgmApplicationsGetRequestParams {
@@ -104,18 +104,18 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * Add one ActifioApplication
+     * Import ActifioApplications
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const actifioAddApplicationDto = requestParameters.actifioAddApplicationDto;
-        if (actifioAddApplicationDto === null || actifioAddApplicationDto === undefined) {
-            throw new Error('Required parameter actifioAddApplicationDto was null or undefined when calling v1AgmApplicationsAddPost.');
+    public v1AgmApplicationsBulkPost(requestParameters: V1AgmApplicationsBulkPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmApplicationsBulkPost(requestParameters: V1AgmApplicationsBulkPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmApplicationsBulkPost(requestParameters: V1AgmApplicationsBulkPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmApplicationsBulkPost(requestParameters: V1AgmApplicationsBulkPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const actifioAddApplicationsDto = requestParameters.actifioAddApplicationsDto;
+        if (actifioAddApplicationsDto === null || actifioAddApplicationsDto === undefined) {
+            throw new Error('Required parameter actifioAddApplicationsDto was null or undefined when calling v1AgmApplicationsBulkPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -146,8 +146,8 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/add`,
-            actifioAddApplicationDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/bulk`,
+            actifioAddApplicationsDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
