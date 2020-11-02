@@ -5,8 +5,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1DatacentersService, V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-physical-server',
@@ -23,6 +23,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   private physicalServerModalSubscription: Subscription;
 
   constructor(
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
@@ -68,26 +69,12 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   }
 
   public deletePhysicalServer(physicalServer: PhysicalServer): void {
-    const { deletedAt, id, name } = physicalServer;
-    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!deletedAt) {
-        this.physicalServerService.v1PhysicalServersIdSoftDelete({ id }).subscribe(() => {
-          this.getPhysicalServers();
-        });
-      } else {
-        this.physicalServerService.v1PhysicalServersIdDelete({ id }).subscribe(() => {
-          this.getPhysicalServers();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+    this.entityService.deleteEntity(physicalServer, {
+      entityName: 'Physical Server',
+      delete$: this.physicalServerService.v1PhysicalServersIdDelete({ id: physicalServer.id }),
+      softDelete$: this.physicalServerService.v1PhysicalServersIdSoftDelete({ id: physicalServer.id }),
+      onSuccess: () => this.getPhysicalServers(),
+    });
   }
 
   public restorePhysicalServer(physicalServer: PhysicalServer): void {

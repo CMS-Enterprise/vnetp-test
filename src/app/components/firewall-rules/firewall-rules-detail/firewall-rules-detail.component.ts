@@ -25,11 +25,10 @@ import {
   FirewallRulePreview,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -89,6 +88,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private ngx: NgxSmartModalService,
+    private entityService: EntityService,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
@@ -225,29 +225,13 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public getNetworkObjectName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjects);
   public getNetworkObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjectGroups);
 
-  deleteFirewallRule(firewallRule: FirewallRule): void {
-    const deleteDescription = firewallRule.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!firewallRule.deletedAt) {
-        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }).subscribe(() => {
-          this.getFirewallRules();
-        });
-      } else {
-        this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }).subscribe(() => {
-          this.getFirewallRules();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Firewall Rule`,
-        `Do you want to ${deleteDescription} the firewall rule "${firewallRule.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteFirewallRule(firewallRule: FirewallRule): void {
+    this.entityService.deleteEntity(firewallRule, {
+      entityName: 'Firewall Rule',
+      delete$: this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }),
+      softDelete$: this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }),
+      onSuccess: () => this.getFirewallRules(),
+    });
   }
 
   restoreFirewallRule(firewallRule: FirewallRule): void {

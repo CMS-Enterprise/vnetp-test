@@ -19,6 +19,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -48,6 +49,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
@@ -134,32 +136,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public deleteServiceObject(serviceObject: ServiceObject): void {
-    if (serviceObject.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = serviceObject.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!serviceObject.deletedAt) {
-        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdSoftDelete({ id: serviceObject.id }).subscribe(() => {
-          this.getServiceObjects();
-        });
-      } else {
-        this.serviceObjectService.v1NetworkSecurityServiceObjectsIdDelete({ id: serviceObject.id }).subscribe(() => {
-          this.getServiceObjects();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Service Object?`,
-        `Do you want to ${deleteDescription} service object "${serviceObject.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+    this.entityService.deleteEntity(serviceObject, {
+      entityName: 'Service Object',
+      delete$: this.serviceObjectService.v1NetworkSecurityServiceObjectsIdDelete({ id: serviceObject.id }),
+      softDelete$: this.serviceObjectService.v1NetworkSecurityServiceObjectsIdSoftDelete({ id: serviceObject.id }),
+      onSuccess: () => this.getServiceObjects(),
+    });
   }
 
   restoreServiceObject(serviceObject: ServiceObject) {
@@ -171,40 +153,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public deleteServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup): void {
-    if (serviceObjectGroup.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = serviceObjectGroup.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!serviceObjectGroup.deletedAt) {
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsIdSoftDelete({
-            id: serviceObjectGroup.id,
-          })
-          .subscribe(() => {
-            this.getServiceObjectGroups();
-          });
-      } else {
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsIdDelete({
-            id: serviceObjectGroup.id,
-          })
-          .subscribe(() => {
-            this.getServiceObjectGroups();
-          });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Service Object Group`,
-        `Do you want to ${deleteDescription} the service object group "${serviceObjectGroup.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+    this.entityService.deleteEntity(serviceObjectGroup, {
+      entityName: 'Service Object Group',
+      delete$: this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsIdDelete({
+        id: serviceObjectGroup.id,
+      }),
+      softDelete$: this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsIdSoftDelete({
+        id: serviceObjectGroup.id,
+      }),
+      onSuccess: () => this.getServiceObjectGroups(),
+    });
   }
 
   restoreServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {

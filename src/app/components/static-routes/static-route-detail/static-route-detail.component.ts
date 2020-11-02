@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-static-route-detail',
@@ -24,22 +24,12 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private route: ActivatedRoute,
     private staticRouteService: V1NetworkStaticRoutesService,
     private tierService: V1TiersService,
   ) {}
-
-  ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.Id = this.route.snapshot.paramMap.get('id');
-        // TODO: Ensure Tier is in selected datacenter tiers.
-        this.staticRoutes = [];
-        this.getStaticRoutes();
-      }
-    });
-  }
 
   createStaticRoute() {
     this.openStaticRouteModal(ModalMode.Create);
@@ -71,30 +61,13 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.staticRouteModalSubscription]);
-  }
-
-  deleteStaticRoute(staticRoute: StaticRoute) {
-    const deleteDescription = staticRoute.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!staticRoute.deletedAt) {
-        this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }).subscribe(() => {
-          this.getStaticRoutes();
-        });
-      } else {
-        this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }).subscribe(() => {
-          this.getStaticRoutes();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Static Route`, `Do you want to ${deleteDescription} the static route "${staticRoute.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteStaticRoute(staticRoute: StaticRoute): void {
+    this.entityService.deleteEntity(staticRoute, {
+      entityName: 'Static Route',
+      delete$: this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }),
+      softDelete$: this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }),
+      onSuccess: () => this.getStaticRoutes(),
+    });
   }
 
   public restoreStaticRoute(staticRoute: StaticRoute): void {
@@ -111,5 +84,20 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
       this.tier = data;
       this.staticRoutes = data.staticRoutes;
     });
+  }
+
+  ngOnInit() {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.Id = this.route.snapshot.paramMap.get('id');
+        // TODO: Ensure Tier is in selected datacenter tiers.
+        this.staticRoutes = [];
+        this.getStaticRoutes();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.staticRouteModalSubscription]);
   }
 }

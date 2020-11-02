@@ -32,7 +32,6 @@ import {
   V1LoadBalancerSelfIpsService,
   V1LoadBalancerRoutesService,
 } from 'api_client';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
@@ -43,6 +42,7 @@ import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-mo
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { environment } from 'src/environments/environment';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-load-balancers',
@@ -110,6 +110,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterService: DatacenterContextService,
+    private entityService: EntityService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
@@ -666,260 +667,94 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    if (virtualServer.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = virtualServer.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!virtualServer.deletedAt) {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }).subscribe(() => {
-          this.getVirtualServers();
-        });
-      } else {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }).subscribe(() => {
-          this.getVirtualServers();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Virtual Server?`,
-        `Do you want to ${deleteDescription} virtual server "${virtualServer.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteVirtualServer(virtualServer: LoadBalancerVirtualServer): void {
+    this.entityService.deleteEntity(virtualServer, {
+      entityName: 'Virtual Server',
+      delete$: this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }),
+      softDelete$: this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }),
+      onSuccess: () => this.getVirtualServers(),
+    });
   }
 
-  deleteIrule(irule: LoadBalancerIrule) {
-    if (irule.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = irule.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!irule.deletedAt) {
-        this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }).subscribe(() => {
-          this.getIrules();
-        });
-      } else {
-        this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(() => {
-          this.getIrules();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Irule?`, `Do you want to ${deleteDescription} irule "${irule.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteIrule(irule: LoadBalancerIrule): void {
+    this.entityService.deleteEntity(irule, {
+      entityName: 'iRule',
+      delete$: this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }),
+      softDelete$: this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }),
+      onSuccess: () => this.getIrules(),
+    });
   }
 
-  deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (healthMonitor.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = healthMonitor.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!healthMonitor.deletedAt) {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }).subscribe(() => {
-          this.getHealthMonitors();
-        });
-      } else {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
-          this.getHealthMonitors();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Health Monitor?`,
-        `Do you want to ${deleteDescription} health monitor "${healthMonitor.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+    this.entityService.deleteEntity(healthMonitor, {
+      entityName: 'Health Monitor',
+      delete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }),
+      softDelete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }),
+      onSuccess: () => this.getHealthMonitors(),
+    });
   }
 
-  deletePool(pool: LoadBalancerPool) {
-    if (pool.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = pool.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!pool.deletedAt) {
-        this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }).subscribe(() => {
-          this.getPools();
-        });
-      } else {
-        this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }).subscribe(() => {
-          this.getPools();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Pool?`, `Do you want to ${deleteDescription} pool "${pool.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deletePool(pool: LoadBalancerPool): void {
+    this.entityService.deleteEntity(pool, {
+      entityName: 'Pool',
+      delete$: this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }),
+      softDelete$: this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }),
+      onSuccess: () => this.getPools(),
+    });
   }
 
-  deleteNode(node: LoadBalancerNode) {
-    if (node.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = node.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!node.deletedAt) {
-        this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }).subscribe(() => {
-          this.getNodes();
-        });
-      } else {
-        this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }).subscribe(() => {
-          this.getNodes();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Node?`, `Do you want to ${deleteDescription} node "${node.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteNode(node: LoadBalancerNode): void {
+    this.entityService.deleteEntity(node, {
+      entityName: 'Node',
+      delete$: this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }),
+      softDelete$: this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }),
+      onSuccess: () => this.getNodes(),
+    });
   }
 
-  deleteProfile(profile: LoadBalancerProfile) {
-    if (profile.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = profile.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!profile.deletedAt) {
-        this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }).subscribe(() => {
-          this.getProfiles();
-        });
-      } else {
-        this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
-          this.getProfiles();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Profile?`, `Do you want to ${deleteDescription} Profile "${profile.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteProfile(profile: LoadBalancerProfile): void {
+    this.entityService.deleteEntity(profile, {
+      entityName: 'Profile',
+      delete$: this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }),
+      softDelete$: this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }),
+      onSuccess: () => this.getProfiles(),
+    });
   }
 
-  deletePolicy(policy: LoadBalancerPolicy) {
-    if (policy.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = policy.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!policy.deletedAt) {
-        this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }).subscribe(() => {
-          this.getPolicies();
-        });
-      } else {
-        this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }).subscribe(() => {
-          this.getPolicies();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Policy?`, `Do you want to ${deleteDescription} Policy "${policy.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deletePolicy(policy: LoadBalancerPolicy): void {
+    this.entityService.deleteEntity(policy, {
+      entityName: 'Policy',
+      delete$: this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }),
+      softDelete$: this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }),
+      onSuccess: () => this.getPolicies(),
+    });
   }
 
-  deleteVlan(vlan: LoadBalancerVlan) {
-    if (vlan.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!vlan.deletedAt) {
-        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(() => {
-          this.getVlans();
-        });
-      } else {
-        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(() => {
-          this.getVlans();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} VLAN?`, `Do you want to ${deleteDescription} VLAN "${vlan.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteVlan(vlan: LoadBalancerVlan): void {
+    this.entityService.deleteEntity(vlan, {
+      entityName: 'VLAN',
+      delete$: this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }),
+      softDelete$: this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }),
+      onSuccess: () => this.getVlans(),
+    });
   }
 
-  deleteSelfIp(selfIp: LoadBalancerSelfIp) {
-    if (selfIp.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = selfIp.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!selfIp.deletedAt) {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(() => {
-          this.getSelfIps();
-        });
-      } else {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(() => {
-          this.getSelfIps();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Self IP?`, `Do you want to ${deleteDescription} Self IP "${selfIp.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteSelfIp(selfIp: LoadBalancerSelfIp): void {
+    this.entityService.deleteEntity(selfIp, {
+      entityName: 'Self IP',
+      delete$: this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }),
+      softDelete$: this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }),
+      onSuccess: () => this.getSelfIps(),
+    });
   }
 
-  deleteRoute(route: LoadBalancerRoute) {
-    if (route.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = route.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!route.deletedAt) {
-        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(() => {
-          this.getRoutes();
-        });
-      } else {
-        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(() => {
-          this.getRoutes();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Route?`, `Do you want to ${deleteDescription} Route "${route.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteRoute(route: LoadBalancerRoute): void {
+    this.entityService.deleteEntity(route, {
+      entityName: 'Route',
+      delete$: this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }),
+      softDelete$: this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }),
+      onSuccess: () => this.getRoutes(),
+    });
   }
 
   restoreVlan(vlan: LoadBalancerVlan) {

@@ -13,9 +13,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1DatacentersService, V1AppliancesService, Appliance } from 'api_client';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { EntityService } from 'src/app/services/entity.service';
 
 describe('ApplianceComponent', () => {
   let component: ApplianceComponent;
@@ -37,6 +37,7 @@ describe('ApplianceComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1AppliancesService),
         MockProvider(V1DatacentersService),
+        MockProvider(EntityService),
       ],
     });
 
@@ -90,41 +91,16 @@ describe('ApplianceComponent', () => {
     });
   });
 
-  describe('Delete', () => {
-    it('should soft-delete an appliance', () => {
-      const appliance = {
-        id: '1',
-        deletedAt: undefined,
-      } as Appliance;
+  it('should delete an appliance', () => {
+    const appliance = {
+      id: '1',
+      deletedAt: undefined,
+    } as Appliance;
 
-      const applianceService = TestBed.get(V1AppliancesService);
-      const softDelete = jest.spyOn(applianceService, 'v1AppliancesIdSoftDelete');
+    const entityService = TestBed.get(EntityService);
+    const deleteSpy = jest.spyOn(entityService, 'deleteEntity');
 
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
-        confirmFn();
-        return of().subscribe();
-      });
-
-      component.deleteAppliance(appliance);
-      expect(softDelete).toHaveBeenCalledWith({ id: '1' });
-    });
-
-    it('should delete an appliance', () => {
-      const appliance = {
-        id: '1',
-        deletedAt: {},
-      } as Appliance;
-
-      const applianceService = TestBed.get(V1AppliancesService);
-      const hardDelete = jest.spyOn(applianceService, 'v1AppliancesIdDelete');
-
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
-        confirmFn();
-        return of().subscribe();
-      });
-
-      component.deleteAppliance(appliance);
-      expect(hardDelete).toHaveBeenCalledWith({ id: '1' });
-    });
+    component.deleteAppliance(appliance);
+    expect(deleteSpy).toHaveBeenCalled();
   });
 });

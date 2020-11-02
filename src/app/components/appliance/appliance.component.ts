@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-appliance',
@@ -24,6 +24,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
     private applianceService: V1AppliancesService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
   ) {}
 
@@ -40,7 +41,6 @@ export class ApplianceComponent implements OnInit, OnDestroy {
 
   public createAppliance(): void {
     this.openApplianceModal(ModalMode.Create);
-    console.log('HERE');
   }
 
   public openApplianceModal(modalMode: ModalMode, a?: Appliance): void {
@@ -63,30 +63,12 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   }
 
   public deleteAppliance(appliance: Appliance): void {
-    const { deletedAt, id, name } = appliance;
-    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!deletedAt) {
-        this.applianceService.v1AppliancesIdSoftDelete({ id }).subscribe(() => {
-          this.getAppliances();
-        });
-      } else {
-        this.applianceService.v1AppliancesIdDelete({ id }).subscribe(() => {
-          this.getAppliances();
-        });
-      }
-    };
-
-    const dto = new YesNoModalDto(
-      `${deleteDescription} Appliance`,
-      `Do you want to ${deleteDescription} appliance "${name}"?`,
-      `${deleteDescription} Appliance`,
-      'Cancel',
-      'danger',
-    );
-
-    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, deleteFunction);
+    this.entityService.deleteEntity(appliance, {
+      entityName: 'Appliance',
+      delete$: this.applianceService.v1AppliancesIdDelete({ id: appliance.id }),
+      softDelete$: this.applianceService.v1AppliancesIdSoftDelete({ id: appliance.id }),
+      onSuccess: () => this.getAppliances(),
+    });
   }
 
   public restoreAppliance(appliance: Appliance): void {

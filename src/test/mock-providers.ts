@@ -110,5 +110,5 @@ function getFunctions(clazz: object): string[] {
     props = props.concat(Object.getOwnPropertyNames(obj));
   } while ((obj = Object.getPrototypeOf(obj)));
 
-  return props.sort().filter(prop => prop.startsWith('v1'));
+  return props.sort().filter(prop => prop !== 'constructor');
 }
