@@ -11,32 +11,42 @@ export class AuthService {
   private manager = new UserManager(environment.openId);
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   public currentUser: Observable<User> = this.user.asObservable();
+  // Used if user claims env var is set to false
+  private mockUser: User = {
+    id_token: 'fakeIdToken',
+    access_token: 'fakeAccessToken',
+    token_type: 'bearer',
+    scope: 'openid profile',
+    expires_at: 1234,
+    expires_in: 1234,
+    state: '123',
+    expired: false,
+    toStorageString: () => '',
+    scopes: ['fakeScopes'],
+    profile: {
+      iat: 1234,
+      iss: 'http://localhost:4200',
+      sub: 'Admin',
+      aud: 'fakeAud',
+      exp: 1234,
+    },
+  };
 
   constructor(private router: Router) {
     Log.logger = console;
     Log.level = Log.DEBUG;
-    console.log(environment);
     this.manager.getUser().then(user => {
       this.user.next(user);
     });
   }
 
   isLoggedIn(): boolean {
-    return (
-      (this.user && this.user.value !== null) ||
-      (this.user &&
-        this.user.value !== null &&
-        this.user.value.expires_at !== null &&
-        new Date(this.user.value.expires_at * 1000) > new Date())
-    );
-  }
+    if (!environment.userClaims) {
+      this.user.next(this.mockUser);
+      return true;
+    }
 
-  getUser(): Promise<User> {
-    return this.manager.getUser();
-  }
-
-  getClaims(): Profile {
-    return this.user.value.profile;
+    return this.user && this.user.value !== null && this.user.value.expires_at !== null;
   }
 
   getAuthorizationHeaderValue(): string {
@@ -46,7 +56,9 @@ export class AuthService {
   async startAuthentication(): Promise<void> {
     try {
       await this.manager.signinRedirect();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   logout(): void {
@@ -66,9 +78,5 @@ export class AuthService {
       const user = await this.manager.signinRedirectCallback();
       this.user.next(user);
     } catch (err) {}
-  }
-
-  public get fullName(): string {
-    return `${this.user.value.profile.given_name} ${this.user.value.profile.family_name}`;
   }
 }

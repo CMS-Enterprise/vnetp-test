@@ -12,7 +12,7 @@ export class HttpConfigInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isLoggedIn = this.authService.isLoggedIn();
-    if (isLoggedIn) {
+    if (isLoggedIn && environment.userClaims) {
       const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
       request = request.clone({ headers });
     }
