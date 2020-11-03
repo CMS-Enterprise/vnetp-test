@@ -13,8 +13,9 @@ import {
   V1AgmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-logical-group-modal',
@@ -42,6 +43,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
   public isLoadingProfiles = false;
 
   private logicalGroupId: string;
+  private clusterChangeSubscription: Subscription;
 
   constructor(
     private applicationService: V1AgmApplicationsService,
@@ -63,6 +65,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.reset();
+    SubscriptionUtil.unsubscribe([this.clusterChangeSubscription]);
   }
 
   public loadLogicalGroup(): void {
@@ -72,8 +75,23 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     const isNewLogicalGroup = !this.logicalGroupId;
     this.modalTitle = isNewLogicalGroup ? 'Create Logical Group' : 'Edit Logical Group';
 
-    this.loadLookups(isNewLogicalGroup);
-    this.loadLogicalGroupById(logicalGroup.id);
+    this.clusterChangeSubscription = this.form.controls.clusterId.valueChanges
+      .pipe(
+        tap(() => (this.isLoadingVirtualMachines = true)),
+        switchMap((clusterId: string) => {
+          if (!clusterId) {
+            return of([]);
+          }
+          return this.loadVirtualMachinesOnCluster(clusterId);
+        }),
+      )
+      .subscribe((virtualMachines: ActifioApplicationDto[]) => {
+        this.virtualMachines = virtualMachines;
+        this.isLoadingVirtualMachines = false;
+      });
+
+    this.loadLookups();
+    this.loadLogicalGroupById(this.logicalGroupId);
   }
 
   public onClose(): void {
@@ -131,39 +149,23 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     this.form.enable();
   }
 
-  private loadApplications(): void {
-    this.isLoadingVirtualMachines = true;
-    this.loadAllApplications().subscribe(applications => {
-      this.virtualMachines = applications;
-      this.isLoadingVirtualMachines = false;
-    });
-  }
-
-  private loadLookups(isNewLogicalGroup: boolean): void {
+  private loadLookups(): void {
     this.loadClusters();
     this.loadProfiles();
     this.loadTemplates();
-
-    if (isNewLogicalGroup) {
-      this.loadApplications();
-    } else {
-      this.loadLogicalGroupMembers(this.logicalGroupId);
-    }
+    this.loadLogicalGroupMembers(this.logicalGroupId);
   }
 
   private loadLogicalGroupMembers(logicalGroupId: string): void {
-    this.isLoadingVirtualMachines = true;
+    if (!logicalGroupId) {
+      return;
+    }
 
-    this.logicalGroupService
-      .v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId })
-      .pipe(
-        tap(virtualMachines => this.form.controls.virtualMachines.setValue(virtualMachines)),
-        switchMap(() => this.loadAllApplications()),
-      )
-      .subscribe((allApplications: ActifioApplicationDto[]) => {
-        this.virtualMachines = allApplications;
-        this.isLoadingVirtualMachines = false;
-      });
+    this.isLoadingVirtualMachines = true;
+    this.logicalGroupService.v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId }).subscribe((members: ActifioApplicationDto[]) => {
+      this.virtualMachines = members;
+      this.isLoadingVirtualMachines = false;
+    });
   }
 
   private loadTemplates(): void {
@@ -190,6 +192,10 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  private loadVirtualMachinesOnCluster(clusterId: string): Observable<ActifioApplicationDto[]> {
+    return this.applicationService.v1AgmApplicationsGet({ limit: 200, offset: 0, logicalGroupMember: false, clusterId });
+  }
+
   private createLogicalGroup(dto: ActifioAddOrUpdateLogicalGroupDto): void {
     this.logicalGroupService
       .v1AgmLogicalGroupsPost({
@@ -204,14 +210,14 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     }
     this.logicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
       const { logicalGroup, members } = detailedLogicalGroup;
-
       const { name, description, applianceId, sla } = logicalGroup;
 
       this.form.controls.name.setValue(name);
       this.form.controls.name.disable();
+      this.form.controls.clusterId.setValue(applianceId);
+      this.form.controls.clusterId.disable();
 
       this.form.controls.description.setValue(description);
-      this.form.controls.clusterId.setValue(applianceId);
       this.form.controls.templateId.setValue(sla ? sla.template.id : null);
       this.form.controls.profileId.setValue(sla ? sla.profile.id : null);
       this.form.controls.virtualMachines.setValue(members);

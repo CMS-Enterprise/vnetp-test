@@ -11372,6 +11372,14 @@ paths:
     get:
       summary: Get many ActifioApplicationDto
       parameters:
+        - type: string
+          name: clusterId
+          required: false
+          in: query
+        - type: boolean
+          name: logicalGroupMember
+          required: false
+          in: query
         - type: number
           name: limit
           required: true

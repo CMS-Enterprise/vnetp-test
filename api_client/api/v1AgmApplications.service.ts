@@ -31,6 +31,8 @@ export interface V1AgmApplicationsBulkPostRequestParams {
 export interface V1AgmApplicationsGetRequestParams {
     limit: number;
     offset: number;
+    clusterId?: string;
+    logicalGroupMember?: boolean;
 }
 
 export interface V1AgmApplicationsIdDeleteRequestParams {
@@ -176,8 +178,18 @@ export class V1AgmApplicationsService {
         if (offset === null || offset === undefined) {
             throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
         }
+        const clusterId = requestParameters.clusterId;
+        const logicalGroupMember = requestParameters.logicalGroupMember;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
+        if (clusterId !== undefined && clusterId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>clusterId, 'clusterId');
+        }
+        if (logicalGroupMember !== undefined && logicalGroupMember !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>logicalGroupMember, 'logicalGroupMember');
+        }
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
