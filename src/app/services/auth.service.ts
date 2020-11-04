@@ -17,7 +17,7 @@ export class AuthService {
     access_token: 'fakeAccessToken',
     token_type: 'bearer',
     scope: 'openid profile',
-    expires_at: 1234,
+    expires_at: null,
     expires_in: 1234,
     state: '123',
     expired: false,
