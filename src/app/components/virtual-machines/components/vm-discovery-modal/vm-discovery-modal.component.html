@@ -18,11 +18,11 @@
 <ng-template #selectVirtualMachines>
   <app-select-virtual-machines
     [vcenterId]="selectedVCenterId"
-    (virtualMachinesSelected)="onVirtualMachinesSelected($event)"
+    (virtualMachinesAdded)="onVirtualMachinesAdded($event)"
   ></app-select-virtual-machines>
 </ng-template>
 
 <!-- Step 3 - Select Action -->
 <ng-template #selectAction>
-  <app-select-action (actionSelected)="onActionSelected($event)"></app-select-action>
+  <app-select-action [virtualMachines]="selectedVirtualMachines" (actionComplete)="onActionComplete()"></app-select-action>
 </ng-template>

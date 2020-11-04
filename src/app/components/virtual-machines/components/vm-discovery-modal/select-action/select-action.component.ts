@@ -1,36 +1,27 @@
-import { OnDestroy, OnInit, Output, EventEmitter, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { OnDestroy, OnInit, Output, EventEmitter, Component, Input } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import {
+  ActifioApplicationDto,
+  ActifioDetailedLogicalGroupDto,
   ActifioLogicalGroupDto,
   ActifioProfileDto,
   ActifioTemplateDto,
   V1AgmLogicalGroupsService,
   V1AgmProfilesService,
+  V1AgmSlasService,
   V1AgmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-
-export interface Unmanaged {
-  type: 'none';
-}
-
-export interface ApplySla {
-  type: 'sla';
-  templateId: string;
-  profileId: string;
-}
-
-export interface AddToLogicalGroup {
-  type: 'logical-group';
-  logicalGroupId: string;
-}
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-select-action',
   templateUrl: './select-action.component.html',
 })
 export class SelectActionComponent implements OnInit, OnDestroy {
-  @Output() actionSelected = new EventEmitter<Unmanaged | ApplySla | AddToLogicalGroup>();
+  @Input() virtualMachines: ActifioApplicationDto[] = [];
+  @Output() actionComplete = new EventEmitter<void>();
 
   public submitted = false;
   public form: FormGroup;
@@ -55,6 +46,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     private logicalGroupService: V1AgmLogicalGroupsService,
     private ngx: NgxSmartModalService,
     private profileService: V1AgmProfilesService,
+    private agmSlaService: V1AgmSlasService,
     private templateService: V1AgmTemplatesService,
   ) {}
 
@@ -88,6 +80,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   }
 
   public onCancel(): void {
+    this.reset();
     this.ngx.close('vmDiscoveryModal');
   }
 
@@ -97,7 +90,9 @@ export class SelectActionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.actionSelected.emit(this.getEmitData());
+    this.handleAction().subscribe(() => {
+      this.actionComplete.emit();
+    });
   }
 
   private loadLogicalGroups(): void {
@@ -126,41 +121,85 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      actionType: [this.actions[0].type, Validators.required],
-      templateId: [null, this.optionallyRequired(() => this.f.actionType.value === 'sla')],
-      profileId: [null, this.optionallyRequired(() => this.f.actionType.value === 'sla')],
-      logicalGroupId: [null, this.optionallyRequired(() => this.f.actionType.value === 'logical-group')],
+      actionType: [this.actions[0].type],
+      templateId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
+      profileId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
+      logicalGroupId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'logical-group')],
     });
   }
 
-  private getEmitData(): Unmanaged | ApplySla | AddToLogicalGroup {
+  private handleAction(): Observable<any> {
     const { actionType } = this.form.value;
 
-    if (actionType === 'logical-group') {
-      return { type: 'logical-group', logicalGroupId: this.form.value.logicalGroupId };
-    }
-
     if (actionType === 'sla') {
-      const { templateId, profileId } = this.form.value;
-      return { type: 'sla', templateId, profileId };
+      const { profileId, templateId } = this.form.value;
+      return this.applySlas(templateId, profileId);
     }
 
-    return { type: 'none' };
+    if (actionType === 'logical-group') {
+      return this.updateLogicalGroup(this.form.value.logicalGroupId);
+    }
+
+    return of({});
   }
 
-  private optionallyRequired(isRequiredFn: () => boolean): (control: AbstractControl) => { required: true } | null {
+  private optionallyRequired(isRequiredFn: () => boolean): ValidatorFn {
     return (control: AbstractControl) => {
-      if (!control) {
+      if (!control.parent) {
         return null;
       }
-
-      const { value } = control;
-      if (!value) {
-        return null;
-      }
-
-      return isRequiredFn() ? { required: true } : null;
+      return isRequiredFn() ? Validators.required(control) : null;
     };
+  }
+
+  private updateLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
+    return this.logicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
+      switchMap((logicalGroup: ActifioDetailedLogicalGroupDto) => {
+        const {
+          logicalGroup: { applianceId, description, sla, name },
+          members,
+        } = logicalGroup;
+
+        const mapVM = (vm: ActifioApplicationDto) => {
+          return {
+            id: vm.id,
+            applianceId: vm.applianceId,
+          };
+        };
+
+        const currentMembers = members.map(mapVM);
+        const newMembers = this.virtualMachines.map(mapVM);
+
+        return this.logicalGroupService.v1AgmLogicalGroupsIdPut({
+          id: logicalGroupId,
+          actifioAddOrUpdateLogicalGroupDto: {
+            applianceId,
+            description,
+            name,
+            profileId: sla ? sla.profile.id : undefined,
+            templateId: sla ? sla.template.id : undefined,
+            members: [].concat(currentMembers, newMembers),
+          },
+        });
+      }),
+    );
+  }
+
+  private applySlas(templateId: string, profileId: string): Observable<any> {
+    const createSla = (vm: ActifioApplicationDto) => {
+      return this.agmSlaService.v1AgmSlasPost({
+        actifioCreateOrApplySlaDto: {
+          applicationId: vm.id,
+          applicationName: vm.name,
+          apply: true,
+          slpId: profileId,
+          sltId: templateId,
+        },
+      });
+    };
+
+    const slas = this.virtualMachines.map(vm => createSla(vm));
+    return forkJoin(slas);
   }
 
   private reset(): void {

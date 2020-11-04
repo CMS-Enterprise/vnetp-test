@@ -6,9 +6,17 @@
   <form [formGroup]="form">
     <!-- Action -->
     <div class="form-row">
-      <div class="form-group col-md-12">
+      <div class="form-group col-md-6">
         <label for="actions">Actions</label>
-        <ng-select id="actions" [items]="actions" bindLabel="name" [closeOnSelect]="true" bindValue="type" formControlName="actionType">
+        <ng-select
+          id="actions"
+          [items]="actions"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          bindValue="type"
+          formControlName="actionType"
+          [clearable]="false"
+        >
         </ng-select>
       </div>
     </div>
@@ -26,6 +34,7 @@
           bindValue="id"
           [loading]="isLoadingLogicalGroups"
           formControlName="logicalGroupId"
+          [clearable]="false"
           [class.is-invalid]="submitted && f.logicalGroupId.errors"
         >
         </ng-select>
@@ -48,6 +57,7 @@
           bindValue="id"
           [loading]="isLoadingTemplates"
           formControlName="templateId"
+          [clearable]="false"
           [class.is-invalid]="submitted && f.templateId.errors"
         >
         </ng-select>
@@ -67,6 +77,7 @@
           bindValue="id"
           [loading]="isLoadingProfiles"
           formControlName="profileId"
+          [clearable]="false"
           [class.is-invalid]="submitted && f.profileId.errors"
         >
         </ng-select>

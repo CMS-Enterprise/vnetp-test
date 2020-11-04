@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { ActifioApplicationDto } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Unmanaged, ApplySla, AddToLogicalGroup } from './select-action/select-action.component';
 
 @Component({
   selector: 'app-vm-discovery-modal',
@@ -16,7 +15,6 @@ export class VmDiscoveryModalComponent {
   public currentDiscoveryStepTemplate: TemplateRef<any>;
   public selectedVirtualMachines: ActifioApplicationDto[] = [];
   public selectedVCenterId: string;
-  public selectedAction: Unmanaged | ApplySla | AddToLogicalGroup;
 
   constructor(private changeRef: ChangeDetectorRef, private ngx: NgxSmartModalService) {}
 
@@ -31,10 +29,9 @@ export class VmDiscoveryModalComponent {
 
     this.selectedVCenterId = null;
     this.selectedVirtualMachines = [];
-    this.selectedAction = null;
   }
 
-  public onVirtualMachinesSelected(virtualMachines: ActifioApplicationDto[] = []): void {
+  public onVirtualMachinesAdded(virtualMachines: ActifioApplicationDto[] = []): void {
     this.selectedVirtualMachines = virtualMachines;
     this.currentDiscoveryStepTemplate = this.selectActionTemplate;
   }
@@ -44,7 +41,7 @@ export class VmDiscoveryModalComponent {
     this.currentDiscoveryStepTemplate = this.selectVirtualMachinesTemplate;
   }
 
-  public onActionSelected(action: Unmanaged | ApplySla | AddToLogicalGroup): void {
-    this.selectedAction = action;
+  public onActionComplete(): void {
+    this.onClose();
   }
 }

@@ -28,7 +28,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
   @Input() vcenterId: string;
-  @Output() virtualMachinesSelected = new EventEmitter<ActifioApplicationDto[]>();
+  @Output() virtualMachinesAdded = new EventEmitter<ActifioApplicationDto[]>();
 
   public config: TableConfig<SelectableVirtualMachine> = {
     description: 'List of Virtual Machines on vCenter',
@@ -55,6 +55,9 @@ export class SelectVirtualMachinesComponent implements OnInit {
   }
 
   public onCancel(): void {
+    this.selectedVirtualMachineIds = new Set();
+    this.selectableVirtualMachines = [];
+    this.isLoading = false;
     this.ngx.close('vmDiscoveryModal');
   }
 
@@ -89,11 +92,11 @@ export class SelectVirtualMachinesComponent implements OnInit {
       .subscribe(
         (applications: ActifioApplicationDto[]) => {
           this.isLoading = false;
-          this.virtualMachinesSelected.emit(applications);
+          this.virtualMachinesAdded.emit(applications);
         },
         () => {
           this.isLoading = false;
-          this.virtualMachinesSelected.emit([]);
+          this.virtualMachinesAdded.emit([]);
         },
       );
   }
