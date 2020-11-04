@@ -67,7 +67,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
     }
 
     const selectedVirtualMachines = this.selectableVirtualMachines.filter(vm => {
-      this.selectedVirtualMachineIds.has(vm.id);
+      return this.selectedVirtualMachineIds.has(vm.id);
     });
 
     const clusterNames = Array.from(new Set(selectedVirtualMachines.map(vm => vm.applianceName)));
