@@ -19,5 +19,6 @@ export interface ActifioDiscoveredVMDto {
     isManaged: boolean;
     isNewVirtualMachine: boolean;
     name: string;
+    sourceClusterId: string;
 }
 

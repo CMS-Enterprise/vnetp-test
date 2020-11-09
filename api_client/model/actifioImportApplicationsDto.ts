@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioAddApplicationsToClusterDto } from './actifioAddApplicationsToClusterDto';
+import { ActifioImportApplicationsToClusterDto } from './actifioImportApplicationsToClusterDto';
 
 
-export interface ActifioAddApplicationsDto { 
+export interface ActifioImportApplicationsDto { 
     hostId: string;
-    clusters: Array<ActifioAddApplicationsToClusterDto>;
+    clusters: Array<ActifioImportApplicationsToClusterDto>;
 }
 

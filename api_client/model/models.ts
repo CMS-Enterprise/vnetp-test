@@ -1,5 +1,3 @@
-export * from './actifioAddApplicationsDto';
-export * from './actifioAddApplicationsToClusterDto';
 export * from './actifioAddOrUpdateLogicalGroupDto';
 export * from './actifioAddOrganizationDto';
 export * from './actifioAddTemplateDto';
@@ -11,6 +9,8 @@ export * from './actifioDetailedLogicalGroupDto';
 export * from './actifioDiscoveredVMDto';
 export * from './actifioDiskPoolDto';
 export * from './actifioHostDto';
+export * from './actifioImportApplicationsDto';
+export * from './actifioImportApplicationsToClusterDto';
 export * from './actifioJobDto';
 export * from './actifioLogicalGroupDto';
 export * from './actifioModifyLgMemberDto';

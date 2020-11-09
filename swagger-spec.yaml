@@ -11434,15 +11434,15 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/applications/bulk:
+  /v1/agm/applications/import:
     post:
       summary: Import ActifioApplications
       parameters:
-        - name: ActifioAddApplicationsDto
+        - name: ActifioImportApplicationsDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioAddApplicationsDto'
+            $ref: '#/definitions/ActifioImportApplicationsDto'
       responses:
         '201':
           description: ''
@@ -15189,9 +15189,12 @@ definitions:
         type: string
       name:
         type: string
+      clusterId:
+        type: string
     required:
       - id
       - name
+      - clusterId
   ActifioProfileDto:
     type: object
     properties:
@@ -15305,7 +15308,7 @@ definitions:
       - applianceId
       - cluster
       - isManaged
-  ActifioAddApplicationsToClusterDto:
+  ActifioImportApplicationsToClusterDto:
     type: object
     properties:
       applicationUUIDs:
@@ -15316,13 +15319,16 @@ definitions:
         type: array
         items:
           type: string
+      sourceClusterId:
+        type: string
       clusterName:
         type: string
     required:
       - applicationUUIDs
       - applicationNames
+      - sourceClusterId
       - clusterName
-  ActifioAddApplicationsDto:
+  ActifioImportApplicationsDto:
     type: object
     properties:
       hostId:
@@ -15330,7 +15336,7 @@ definitions:
       clusters:
         type: array
         items:
-          $ref: '#/definitions/ActifioAddApplicationsToClusterDto'
+          $ref: '#/definitions/ActifioImportApplicationsToClusterDto'
     required:
       - hostId
       - clusters
@@ -15359,10 +15365,13 @@ definitions:
         type: string
       ipAddress:
         type: string
+      sourceClusterId:
+        type: string
     required:
       - id
       - name
       - ipAddress
+      - sourceClusterId
   ActifioDiscoveredVMDto:
     type: object
     properties:
@@ -15380,11 +15389,14 @@ definitions:
         type: boolean
       name:
         type: string
+      sourceClusterId:
+        type: string
     required:
       - clusterName
       - isManaged
       - isNewVirtualMachine
       - name
+      - sourceClusterId
   ActifioJobDto:
     type: object
     properties:

@@ -15,5 +15,6 @@ export interface ActifioHostDto {
     id: string;
     name: string;
     ipAddress: string;
+    sourceClusterId: string;
 }
 

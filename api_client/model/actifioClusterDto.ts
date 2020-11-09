@@ -14,5 +14,6 @@
 export interface ActifioClusterDto { 
     id: string;
     name: string;
+    clusterId: string;
 }
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
 import {
-  ActifioAddApplicationsToClusterDto,
+  ActifioImportApplicationsToClusterDto,
   ActifioApplicationDto,
   ActifioDiscoveredVMDto,
   V1AgmApplicationsService,
@@ -17,6 +17,7 @@ interface SelectableVirtualMachine {
   isManaged: boolean;
   isSelected: boolean;
   name: string;
+  sourceClusterId: string;
 }
 
 @Component({
@@ -70,12 +71,15 @@ export class SelectVirtualMachinesComponent implements OnInit {
       return this.selectedVirtualMachineIds.has(vm.id);
     });
 
-    const clusterNames = Array.from(new Set(selectedVirtualMachines.map(vm => vm.applianceName)));
+    const clusterObjects = Array.from(
+      new Set(selectedVirtualMachines.map(vm => ({ clusterName: vm.applianceName, sourceClusterId: vm.sourceClusterId }))),
+    );
 
-    const clusters: ActifioAddApplicationsToClusterDto[] = clusterNames.map((clusterName: string) => {
-      const virtualMachinesOnCluster = selectedVirtualMachines.filter(vm => vm.applianceName === clusterName);
+    const clusters: ActifioImportApplicationsToClusterDto[] = clusterObjects.map(cluster => {
+      const virtualMachinesOnCluster = selectedVirtualMachines.filter(vm => vm.applianceName === cluster.clusterName);
       return {
-        clusterName,
+        clusterName: cluster.clusterName,
+        sourceClusterId: cluster.sourceClusterId,
         applicationUUIDs: virtualMachinesOnCluster.map(vm => vm.id),
         applicationNames: virtualMachinesOnCluster.map(vm => vm.name),
       };
@@ -83,8 +87,8 @@ export class SelectVirtualMachinesComponent implements OnInit {
 
     this.isLoading = true;
     this.agmApplicationService
-      .v1AgmApplicationsBulkPost({
-        actifioAddApplicationsDto: {
+      .v1AgmApplicationsImportPost({
+        actifioImportApplicationsDto: {
           clusters,
           hostId: this.vcenterId,
         },
@@ -124,7 +128,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   }
 
   private mapDiscoveredVM(discoveredVM: ActifioDiscoveredVMDto): SelectableVirtualMachine {
-    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name } = discoveredVM;
+    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name, sourceClusterId } = discoveredVM;
     return {
       folderPath,
       isManaged,
@@ -133,6 +137,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
       isNew: !applicationId,
       id: applicationId || discoveredId,
       isSelected: false,
+      sourceClusterId,
     };
   }
 }
