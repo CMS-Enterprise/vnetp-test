@@ -16,10 +16,6 @@
   <app-table [config]="config" [data]="applicationGroups"></app-table>
 </ng-container>
 
-<ng-template #name let-applicationGroup="datum">
-  <a [routerLink]="applicationGroup.id" queryParamsHandling="merge">{{ applicationGroup.name }}</a>
-</ng-template>
-
 <app-yes-no-modal></app-yes-no-modal>
 
 <ng-template #actions let-applicationGroup="datum">

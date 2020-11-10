@@ -8,7 +8,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 export interface ApplicationGroupView {
   id: string;
   name: string;
-  description?: string;
+  virtualMachineCount: number;
 }
 
 @Component({
@@ -16,7 +16,6 @@ export interface ApplicationGroupView {
   templateUrl: './application-group-list.component.html',
 })
 export class ApplicationGroupListComponent implements OnInit {
-  @ViewChild('name', { static: false }) nameTemplate: TemplateRef<any>;
   @ViewChild('actions', { static: false }) actionsTemplate: TemplateRef<any>;
 
   public isLoading = false;
@@ -27,11 +26,11 @@ export class ApplicationGroupListComponent implements OnInit {
     columns: [
       {
         name: 'Name',
-        template: () => this.nameTemplate,
+        property: 'name',
       },
       {
-        name: 'Description',
-        property: 'description',
+        name: 'Virtual Machines',
+        property: 'virtualMachineCount',
       },
       {
         name: '',
@@ -69,8 +68,17 @@ export class ApplicationGroupListComponent implements OnInit {
     this.applicationGroups = [];
     this.isLoading = true;
     this.applicationGroupService.v1ActifioApplicationGroupsGet().subscribe(applicationGroups => {
-      this.applicationGroups = applicationGroups;
+      this.applicationGroups = applicationGroups.map(this.mapApplicationGroup);
       this.isLoading = false;
     });
+  }
+
+  // TODO: fix back-end return type
+  private mapApplicationGroup(applicationGroup: any): ApplicationGroupView {
+    const { id, name, sequenceOrder } = applicationGroup;
+    const virtualMachineCount = sequenceOrder.reduce((total: number, sequenceOrder: any) => {
+      return total + sequenceOrder.vmMembers.length;
+    }, 0);
+    return { id, name, virtualMachineCount };
   }
 }
