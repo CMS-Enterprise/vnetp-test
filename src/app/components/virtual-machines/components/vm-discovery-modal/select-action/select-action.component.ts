@@ -14,6 +14,8 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import ValidatorUtil from 'src/app/utils/ValidatorUtil';
+import FormUtil from 'src/app/utils/ValidatorUtil';
 
 @Component({
   selector: 'app-select-action',
@@ -42,12 +44,12 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   public isLoadingProfiles = false;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private logicalGroupService: V1AgmLogicalGroupsService,
-    private ngx: NgxSmartModalService,
-    private profileService: V1AgmProfilesService,
+    private agmLogicalGroupService: V1AgmLogicalGroupsService,
+    private agmProfileService: V1AgmProfilesService,
     private agmSlaService: V1AgmSlasService,
-    private templateService: V1AgmTemplatesService,
+    private agmTemplateService: V1AgmTemplatesService,
+    private formBuilder: FormBuilder,
+    private ngx: NgxSmartModalService,
   ) {}
 
   get f() {
@@ -97,7 +99,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadLogicalGroups(): void {
     this.isLoadingLogicalGroups = true;
-    this.logicalGroupService.v1AgmLogicalGroupsGet().subscribe(data => {
+    this.agmLogicalGroupService.v1AgmLogicalGroupsGet().subscribe(data => {
       this.logicalGroups = data;
       this.isLoadingLogicalGroups = false;
     });
@@ -105,7 +107,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadProfiles(): void {
     this.isLoadingProfiles = true;
-    this.profileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(data => {
+    this.agmProfileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(data => {
       this.profiles = data;
       this.isLoadingProfiles = false;
     });
@@ -113,7 +115,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.templateService.v1AgmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1AgmTemplatesGet().subscribe(data => {
       this.templates = data;
       this.isLoadingTemplates = false;
     });
@@ -122,9 +124,9 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   private initForm(): void {
     this.form = this.formBuilder.group({
       actionType: [this.actions[0].type],
-      templateId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
-      profileId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
-      logicalGroupId: [null, this.optionallyRequired(() => this.form.get('actionType').value === 'logical-group')],
+      templateId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
+      profileId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
+      logicalGroupId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'logical-group')],
     });
   }
 
@@ -143,17 +145,8 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     return of({});
   }
 
-  private optionallyRequired(isRequiredFn: () => boolean): ValidatorFn {
-    return (control: AbstractControl) => {
-      if (!control.parent) {
-        return null;
-      }
-      return isRequiredFn() ? Validators.required(control) : null;
-    };
-  }
-
   private updateLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
-    return this.logicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
+    return this.agmLogicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
       switchMap((logicalGroup: ActifioDetailedLogicalGroupDto) => {
         const {
           logicalGroup: { applianceId, description, sla, name },
@@ -170,7 +163,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
         const currentMembers = members.map(mapVM);
         const newMembers = this.virtualMachines.map(mapVM);
 
-        return this.logicalGroupService.v1AgmLogicalGroupsIdPut({
+        return this.agmLogicalGroupService.v1AgmLogicalGroupsIdPut({
           id: logicalGroupId,
           actifioAddOrUpdateLogicalGroupDto: {
             applianceId,

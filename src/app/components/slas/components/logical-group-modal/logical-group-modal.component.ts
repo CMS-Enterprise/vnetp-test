@@ -46,13 +46,13 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
   private clusterChangeSubscription: Subscription;
 
   constructor(
-    private applicationService: V1AgmApplicationsService,
-    private clusterService: V1AgmClustersService,
+    private agmApplicationService: V1AgmApplicationsService,
+    private agmClusterService: V1AgmClustersService,
+    private agmLogicalGroupService: V1AgmLogicalGroupsService,
+    private agmProfileService: V1AgmProfilesService,
+    private agmTemplateService: V1AgmTemplatesService,
     private formBuilder: FormBuilder,
-    private logicalGroupService: V1AgmLogicalGroupsService,
     private ngx: NgxSmartModalService,
-    private profileService: V1AgmProfilesService,
-    private templateService: V1AgmTemplatesService,
   ) {}
 
   get f() {
@@ -162,7 +162,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     }
 
     this.isLoadingVirtualMachines = true;
-    this.logicalGroupService.v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId }).subscribe((members: ActifioApplicationDto[]) => {
+    this.agmLogicalGroupService.v1AgmLogicalGroupsIdMembersGet({ id: logicalGroupId }).subscribe((members: ActifioApplicationDto[]) => {
       this.virtualMachines = members;
       this.isLoadingVirtualMachines = false;
     });
@@ -170,7 +170,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.templateService.v1AgmTemplatesGet().subscribe(templates => {
+    this.agmTemplateService.v1AgmTemplatesGet().subscribe(templates => {
       this.templates = templates;
       this.isLoadingTemplates = false;
     });
@@ -178,7 +178,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadProfiles(): void {
     this.isLoadingProfiles = true;
-    this.profileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
+    this.agmProfileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
       this.profiles = profiles;
       this.isLoadingProfiles = false;
     });
@@ -186,18 +186,18 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadClusters(): void {
     this.isLoadingClusters = true;
-    this.clusterService.v1AgmClustersGet({ limit: 100, offset: 0 }).subscribe(clusters => {
+    this.agmClusterService.v1AgmClustersGet({ limit: 100, offset: 0 }).subscribe(clusters => {
       this.clusters = clusters;
       this.isLoadingClusters = false;
     });
   }
 
   private loadVirtualMachinesOnCluster(clusterId: string): Observable<ActifioApplicationDto[]> {
-    return this.applicationService.v1AgmApplicationsGet({ limit: 200, offset: 0, logicalGroupMember: false, clusterId });
+    return this.agmApplicationService.v1AgmApplicationsGet({ limit: 200, offset: 0, logicalGroupMember: false, clusterId });
   }
 
   private createLogicalGroup(dto: ActifioAddOrUpdateLogicalGroupDto): void {
-    this.logicalGroupService
+    this.agmLogicalGroupService
       .v1AgmLogicalGroupsPost({
         actifioAddOrUpdateLogicalGroupDto: dto,
       })
@@ -208,7 +208,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     if (!logicalGroupId) {
       return;
     }
-    this.logicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
+    this.agmLogicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
       const { logicalGroup, members } = detailedLogicalGroup;
       const { name, description, applianceId, sla } = logicalGroup;
 
@@ -224,12 +224,8 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadAllApplications(): Observable<ActifioApplicationDto[]> {
-    return this.applicationService.v1AgmApplicationsGet({ limit: 400, offset: 0 });
-  }
-
   private updateLogicalGroup(logicalGroupId: string, dto: ActifioAddOrUpdateLogicalGroupDto): void {
-    this.logicalGroupService
+    this.agmLogicalGroupService
       .v1AgmLogicalGroupsIdPut({
         id: logicalGroupId,
         actifioAddOrUpdateLogicalGroupDto: dto,
