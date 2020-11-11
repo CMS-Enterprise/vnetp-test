@@ -1,9 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { V1ActifioApplicationGroupsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { Subscription } from 'rxjs';
 
 export interface ApplicationGroupView {
   id: string;
@@ -15,7 +16,7 @@ export interface ApplicationGroupView {
   selector: 'app-application-group-list',
   templateUrl: './application-group-list.component.html',
 })
-export class ApplicationGroupListComponent implements OnInit {
+export class ApplicationGroupListComponent implements OnInit, OnDestroy {
   @ViewChild('actions', { static: false }) actionsTemplate: TemplateRef<any>;
 
   public isLoading = false;
@@ -39,20 +40,32 @@ export class ApplicationGroupListComponent implements OnInit {
     ],
   };
 
+  private createSubscription: Subscription;
+
   constructor(private applicationGroupService: V1ActifioApplicationGroupsService, private ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.loadApplicationGroups();
   }
 
-  public createApplicationGroup(): void {
-    // DPT-5272
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.createSubscription]);
   }
 
+  public openApplicationGroupModal(applicationGroupId?: string): void {
+    this.ngx.setModalData({ id: applicationGroupId }, 'applicationGroupModal');
+
+    this.createSubscription = this.ngx.getModal('applicationGroupModal').onCloseFinished.subscribe(() => {
+      this.loadApplicationGroups();
+    });
+
+    this.ngx.getModal('applicationGroupModal').open();
+  }
+
+  // DPT-5274
   public deleteApplicationGroup(applicationGroup: ApplicationGroupView): void {
-    // DPT-5274
     const { name } = applicationGroup;
-    const deleteFunction = () => {};
+    const deleteFunction = () => this.loadApplicationGroups();
     const dto = new YesNoModalDto(
       'Delete Application Group',
       `Do you want to delete application group "${name}?"`,

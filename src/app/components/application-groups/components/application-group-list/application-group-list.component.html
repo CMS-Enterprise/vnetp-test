@@ -6,7 +6,7 @@
     <span>Refresh</span>
   </button>
 
-  <button type="button" class="btn btn-success" (click)="createApplicationGroup()">
+  <button type="button" class="btn btn-success" (click)="openApplicationGroupModal()">
     <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
     <span>Create Application Group</span>
   </button>
@@ -20,6 +20,14 @@
 
 <ng-template #actions let-applicationGroup="datum">
   <section class="table__actions">
+    <!-- Edit -->
+    <app-icon-button
+      icon="edit"
+      label="Edit Application Group"
+      (handleClick)="openApplicationGroupModal(applicationGroup.id)"
+    ></app-icon-button>
+
+    <!-- Delete -->
     <app-icon-button
       icon="delete"
       label="Delete Application Group"
@@ -31,3 +39,5 @@
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
+
+<app-application-group-modal></app-application-group-modal>

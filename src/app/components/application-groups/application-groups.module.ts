@@ -6,6 +6,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { ApplicationGroupListComponent } from './components/application-group-list/application-group-list.component';
+import { ApplicationGroupModalComponent } from './components/application-group-modal/application-group-modal.component';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -15,7 +18,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, IconButtonModule, TableModule, FontAwesomeModule, SharedModule, RouterModule.forChild(routes)],
-  declarations: [ApplicationGroupListComponent],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IconButtonModule,
+    NgxSmartModalModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TableModule,
+  ],
+  declarations: [ApplicationGroupListComponent, ApplicationGroupModalComponent],
 })
 export class ApplicationGroupModule {}
