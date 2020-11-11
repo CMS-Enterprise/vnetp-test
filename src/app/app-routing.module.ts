@@ -122,6 +122,10 @@ const routes: Routes = [
     loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
   },
   {
+    path: 'logout',
+    loadChildren: () => import('./components/logout/logout.module').then(m => m.LogoutModule),
+  },
+  {
     path: '**',
     loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
   },

@@ -70,11 +70,10 @@ export class HttpConfigInterceptor {
             toastrMessage = 'Bad Request';
             break;
           case 401:
-            console.log(request);
-            this.authService.logout();
+            this.authService.logout(true);
             break;
           case 403:
-            this.authService.logout();
+            this.authService.logout(true);
             break;
         }
 

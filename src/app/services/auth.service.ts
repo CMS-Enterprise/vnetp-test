@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private manager = new UserManager(environment.openId);
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  public isLoggedInBool = false;
   public currentUser: Observable<User> = this.user.asObservable();
   // Used if user claims env var is set to false
   private mockUser: User = {
@@ -36,7 +37,10 @@ export class AuthService {
     Log.logger = console;
     Log.level = Log.DEBUG;
     this.manager.getUser().then(user => {
-      this.user.next(user);
+      if (user) {
+        this.user.next(user);
+        this.isLoggedInBool = true;
+      }
     });
   }
 
@@ -45,8 +49,8 @@ export class AuthService {
       this.user.next(this.mockUser);
       return true;
     }
-
-    return this.user && this.user.value !== null && this.user.value.expires_at !== null;
+    console.log(this.user.value);
+    return this.user && this.user.value !== null;
   }
 
   getAuthorizationHeaderValue(): string {
@@ -56,18 +60,22 @@ export class AuthService {
   async startAuthentication(): Promise<void> {
     try {
       await this.manager.signinRedirect();
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   }
 
-  logout(): void {
+  logout(fromPermissions = false): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
     sessionStorage.setItem(`oidc.user:${environment.openId.client_id}`, null);
-    this.router.navigate(['/unauthorized'], {
-      queryParamsHandling: 'merge',
-    });
+    if (fromPermissions) {
+      this.router.navigate(['/unauthorized'], {
+        queryParamsHandling: 'merge',
+      });
+    } else {
+      this.router.navigate(['/logout'], {
+        queryParamsHandling: 'merge',
+      });
+    }
   }
 
   async completeAuthentication(): Promise<void> {
