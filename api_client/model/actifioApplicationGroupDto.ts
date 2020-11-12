@@ -9,17 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioSequenceOrderDto } from './actifioSequenceOrderDto';
 
 
-export interface ActifioDiscoveredVMDto { 
-    applicationId?: string;
-    clusterName: string;
-    discoveredId?: string;
-    folderPath?: string;
-    isManaged: boolean;
-    isNewVirtualMachine: boolean;
+export interface ActifioApplicationGroupDto { 
+    id: string;
     name: string;
-    clusterIds: Array<string>;
-    sourceClusterIds: Array<string>;
+    sequenceOrder: Array<ActifioSequenceOrderDto>;
+    startupSequence: number;
 }
 

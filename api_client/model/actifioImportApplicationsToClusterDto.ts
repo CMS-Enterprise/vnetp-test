@@ -14,7 +14,6 @@
 export interface ActifioImportApplicationsToClusterDto { 
     applicationUUIDs: Array<string>;
     applicationNames: Array<string>;
-    sourceClusterId: string;
     clusterName: string;
 }
 

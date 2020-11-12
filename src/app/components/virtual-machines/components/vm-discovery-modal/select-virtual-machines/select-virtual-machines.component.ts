@@ -17,7 +17,7 @@ interface SelectableVirtualMachine {
   isManaged: boolean;
   isSelected: boolean;
   name: string;
-  sourceClusterId: string;
+  sourceClusterIds: string[];
 }
 
 @Component({
@@ -71,17 +71,14 @@ export class SelectVirtualMachinesComponent implements OnInit {
       return this.selectedVirtualMachineIds.has(vm.id);
     });
 
-    const clusterObjects = Array.from(
-      new Set(selectedVirtualMachines.map(vm => ({ clusterName: vm.applianceName, sourceClusterId: vm.sourceClusterId }))),
-    );
+    const clusterNames = Array.from(new Set(selectedVirtualMachines.map(vm => vm.applianceName)));
 
-    const clusters: ActifioImportApplicationsToClusterDto[] = clusterObjects.map(cluster => {
-      const virtualMachinesOnCluster = selectedVirtualMachines.filter(vm => vm.applianceName === cluster.clusterName);
+    const clusters = clusterNames.map(clusterName => {
+      const applications = selectedVirtualMachines.filter(vm => vm.applianceName === clusterName);
       return {
-        clusterName: cluster.clusterName,
-        sourceClusterId: cluster.sourceClusterId,
-        applicationUUIDs: virtualMachinesOnCluster.map(vm => vm.id),
-        applicationNames: virtualMachinesOnCluster.map(vm => vm.name),
+        clusterName,
+        applicationUUIDs: applications.map(a => a.id),
+        applicationNames: applications.map(a => a.name),
       };
     });
 
@@ -128,7 +125,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   }
 
   private mapDiscoveredVM(discoveredVM: ActifioDiscoveredVMDto): SelectableVirtualMachine {
-    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name, sourceClusterId } = discoveredVM;
+    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name, sourceClusterIds } = discoveredVM;
     return {
       folderPath,
       isManaged,
@@ -137,7 +134,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
       isNew: !applicationId,
       id: applicationId || discoveredId,
       isSelected: false,
-      sourceClusterId,
+      sourceClusterIds,
     };
   }
 }

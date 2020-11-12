@@ -15,7 +15,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import ValidatorUtil from 'src/app/utils/ValidatorUtil';
-import FormUtil from 'src/app/utils/ValidatorUtil';
 
 @Component({
   selector: 'app-select-action',
@@ -99,7 +98,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadLogicalGroups(): void {
     this.isLoadingLogicalGroups = true;
-    this.agmLogicalGroupService.v1AgmLogicalGroupsGet().subscribe(data => {
+    this.agmLogicalGroupService.v1AgmLogicalGroupsGet({}).subscribe(data => {
       this.logicalGroups = data;
       this.isLoadingLogicalGroups = false;
     });

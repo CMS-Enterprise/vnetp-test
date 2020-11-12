@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 export interface V1AgmApplicationsGetRequestParams {
     limit: number;
     offset: number;
-    clusterId?: string;
+    clusterIds?: Array<string>;
     logicalGroupMember?: boolean;
 }
 
@@ -123,13 +123,13 @@ export class V1AgmApplicationsService {
         if (offset === null || offset === undefined) {
             throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
         }
-        const clusterId = requestParameters.clusterId;
+        const clusterIds = requestParameters.clusterIds;
         const logicalGroupMember = requestParameters.logicalGroupMember;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (clusterId !== undefined && clusterId !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>clusterId, 'clusterId');
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
         }
         if (logicalGroupMember !== undefined && logicalGroupMember !== null) {
           queryParameters = this.addToHttpParams(queryParameters,

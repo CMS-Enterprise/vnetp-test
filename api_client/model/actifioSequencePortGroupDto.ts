@@ -11,15 +11,8 @@
  */
 
 
-export interface ActifioDiscoveredVMDto { 
-    applicationId?: string;
-    clusterName: string;
-    discoveredId?: string;
-    folderPath?: string;
-    isManaged: boolean;
-    isNewVirtualMachine: boolean;
+export interface ActifioSequencePortGroupDto { 
+    id: string;
     name: string;
-    clusterIds: Array<string>;
-    sourceClusterIds: Array<string>;
 }
 

@@ -11372,10 +11372,13 @@ paths:
     get:
       summary: Get many ActifioApplicationDto
       parameters:
-        - type: string
-          name: clusterId
+        - type: array
+          name: clusterIds
           required: false
           in: query
+          items:
+            type: string
+          collectionFormat: csv
         - type: boolean
           name: logicalGroupMember
           required: false
@@ -11586,6 +11589,14 @@ paths:
   /v1/agm/logical-groups:
     get:
       summary: Get many ActifioLogicalGroupDto
+      parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
       responses:
         '200':
           description: ''
@@ -11840,10 +11851,13 @@ paths:
           name: limit
           required: false
           in: query
-        - type: string
-          name: clusterId
+        - type: array
+          name: clusterIds
           required: false
           in: query
+          items:
+            type: string
+          collectionFormat: csv
       responses:
         '200':
           description: ''
@@ -12236,6 +12250,10 @@ paths:
       responses:
         '200':
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationGroupDto'
       tags: &ref_51
         - v1/actifio/application-groups
       produces:
@@ -12243,11 +12261,13 @@ paths:
       consumes:
         - application/json
     post:
-      summary: Create one Application Group
+      summary: Create one ApplicationGroup
       parameters: []
       responses:
-        '201':
+        '200':
           description: ''
+          schema:
+            type: string
       tags: *ref_51
       produces:
         - application/json
@@ -12256,6 +12276,23 @@ paths:
   '/v1/actifio/application-groups/{id}':
     get:
       summary: Get one ActifioApplicationGroupDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one Application Group
       parameters:
         - type: string
           name: id
@@ -15319,14 +15356,11 @@ definitions:
         type: array
         items:
           type: string
-      sourceClusterId:
-        type: string
       clusterName:
         type: string
     required:
       - applicationUUIDs
       - applicationNames
-      - sourceClusterId
       - clusterName
   ActifioImportApplicationsDto:
     type: object
@@ -15365,13 +15399,20 @@ definitions:
         type: string
       ipAddress:
         type: string
-      sourceClusterId:
-        type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusterIds:
+        type: array
+        items:
+          type: string
     required:
       - id
       - name
       - ipAddress
-      - sourceClusterId
+      - clusterIds
+      - sourceClusterIds
   ActifioDiscoveredVMDto:
     type: object
     properties:
@@ -15389,14 +15430,21 @@ definitions:
         type: boolean
       name:
         type: string
-      sourceClusterId:
-        type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusterIds:
+        type: array
+        items:
+          type: string
     required:
       - clusterName
       - isManaged
       - isNewVirtualMachine
       - name
-      - sourceClusterId
+      - clusterIds
+      - sourceClusterIds
   ActifioJobDto:
     type: object
     properties:
@@ -15587,6 +15635,16 @@ definitions:
   ActifioServerNewRecoveryPlan:
     type: object
     properties: {}
+  ActifioSequencePortGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
   ActifioVMMemberDto:
     type: object
     properties:
@@ -15599,3 +15657,41 @@ definitions:
     required:
       - id
       - name
+  ActifioSequenceOrderDto:
+    type: object
+    properties:
+      delay:
+        type: number
+      memberOrderIndex:
+        type: number
+      sequencePortGroup:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequencePortGroupDto'
+      vmMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - delay
+      - memberOrderIndex
+      - sequencePortGroup
+      - vmMembers
+  ActifioApplicationGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      sequenceOrder:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      startupSequence:
+        type: number
+    required:
+      - id
+      - name
+      - sequenceOrder
+      - startupSequence

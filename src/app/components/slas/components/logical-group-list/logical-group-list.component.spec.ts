@@ -78,7 +78,7 @@ describe('LogicalGroupListComponent', () => {
 
     component.ngOnInit();
 
-    expect(spy).toHaveBeenCalledWith();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should map a logical group', () => {

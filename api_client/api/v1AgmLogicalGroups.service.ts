@@ -27,6 +27,10 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1AgmLogicalGroupsGetRequestParams {
+    clusterIds?: Array<string>;
+}
+
 export interface V1AgmLogicalGroupsIdDeleteRequestParams {
     id: string;
 }
@@ -121,13 +125,21 @@ export class V1AgmLogicalGroupsService {
 
     /**
      * Get many ActifioLogicalGroupDto
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioLogicalGroupDto>>;
-    public v1AgmLogicalGroupsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioLogicalGroupDto>>>;
-    public v1AgmLogicalGroupsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioLogicalGroupDto>>>;
-    public v1AgmLogicalGroupsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioLogicalGroupDto>>;
+    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioLogicalGroupDto>>>;
+    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioLogicalGroupDto>>>;
+    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const clusterIds = requestParameters.clusterIds;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -151,6 +163,7 @@ export class V1AgmLogicalGroupsService {
 
         return this.httpClient.get<Array<ActifioLogicalGroupDto>>(`${this.configuration.basePath}/v1/agm/logical-groups`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -55,11 +55,10 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     }
 
     const isNewApplicationGroup = !this.applicationGroupId;
-    const { description, name } = this.form.value;
+    const { name } = this.form.value;
 
     // TODO: Add types on back-end
     const dto: any = {
-      description,
       name,
     };
 
@@ -72,7 +71,6 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      description: '',
       name: ['', Validators.required],
     });
   }
@@ -94,12 +92,10 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
       return;
     }
     this.rdcApplicationGroupService.v1ActifioApplicationGroupsIdGet({ id: applicationGroupId }).subscribe(applicationGroup => {
-      const { name, description } = applicationGroup;
+      const { name } = applicationGroup;
 
       this.form.controls.name.setValue(name);
       this.form.controls.name.disable();
-
-      this.form.controls.description.setValue(description);
     });
   }
 

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/c
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { V1ActifioApplicationGroupsService } from 'api_client';
+import { ActifioApplicationGroupDto, V1ActifioApplicationGroupsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
 
@@ -62,10 +62,13 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
     this.ngx.getModal('applicationGroupModal').open();
   }
 
-  // DPT-5274
   public deleteApplicationGroup(applicationGroup: ApplicationGroupView): void {
-    const { name } = applicationGroup;
-    const deleteFunction = () => this.loadApplicationGroups();
+    const { id, name } = applicationGroup;
+    const deleteFunction = () => {
+      this.applicationGroupService.v1ActifioApplicationGroupsIdDelete({ id }).subscribe(() => {
+        this.loadApplicationGroups();
+      });
+    };
     const dto = new YesNoModalDto(
       'Delete Application Group',
       `Do you want to delete application group "${name}?"`,
@@ -86,8 +89,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // TODO: fix back-end return type
-  private mapApplicationGroup(applicationGroup: any): ApplicationGroupView {
+  private mapApplicationGroup(applicationGroup: ActifioApplicationGroupDto): ApplicationGroupView {
     const { id, name, sequenceOrder } = applicationGroup;
     const virtualMachineCount = sequenceOrder.reduce((total: number, sequenceOrder: any) => {
       return total + sequenceOrder.vmMembers.length;

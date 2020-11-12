@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 export interface V1AgmProfilesGetRequestParams {
     offset?: number;
     limit?: number;
-    clusterId?: string;
+    clusterIds?: Array<string>;
 }
 
 export interface V1AgmProfilesIdGetRequestParams {
@@ -107,7 +107,7 @@ export class V1AgmProfilesService {
     public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
         const limit = requestParameters.limit;
-        const clusterId = requestParameters.clusterId;
+        const clusterIds = requestParameters.clusterIds;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (offset !== undefined && offset !== null) {
@@ -118,9 +118,9 @@ export class V1AgmProfilesService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
         }
-        if (clusterId !== undefined && clusterId !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>clusterId, 'clusterId');
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
         }
 
         let headers = this.defaultHeaders;

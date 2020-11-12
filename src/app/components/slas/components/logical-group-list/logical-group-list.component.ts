@@ -80,7 +80,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
       this.cachedLogicalGroups = new Map();
     }
     this.isLoading = true;
-    this.agmLogicalGroupService.v1AgmLogicalGroupsGet().subscribe(logicalGroups => {
+    this.agmLogicalGroupService.v1AgmLogicalGroupsGet({}).subscribe(logicalGroups => {
       this.logicalGroups = logicalGroups.map(logicalGroup => {
         const { id, name, description = '--', sla } = logicalGroup;
         const template = sla ? sla.template : { name: '--', description: '--' };

@@ -193,7 +193,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
   }
 
   private loadVirtualMachinesOnCluster(clusterId: string): Observable<ActifioApplicationDto[]> {
-    return this.agmApplicationService.v1AgmApplicationsGet({ limit: 200, offset: 0, logicalGroupMember: false, clusterId });
+    return this.agmApplicationService.v1AgmApplicationsGet({ limit: 200, offset: 0, logicalGroupMember: false, clusterIds: [clusterId] });
   }
 
   private createLogicalGroup(dto: ActifioAddOrUpdateLogicalGroupDto): void {
