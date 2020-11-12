@@ -119,16 +119,12 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     const networkObjectGroup = dto.NetworkObjectGroup;

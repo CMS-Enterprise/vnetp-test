@@ -87,14 +87,11 @@ export class PhysicalServerModalComponent implements OnInit {
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
     }
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PhysicalServerId = dto.PhysicalServer.id;
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PhysicalServerId = dto.PhysicalServer.id;
     }
 
     const physicalServer = dto.PhysicalServer;

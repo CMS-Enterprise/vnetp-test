@@ -183,16 +183,6 @@ describe('TierModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createTierModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name field when creating a new tier', () => {
       const ngx = TestBed.get(NgxSmartModalService);
       const dto = createTierModalDto();

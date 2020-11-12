@@ -8,13 +8,7 @@
       <div class="form-group">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
-        <input
-          type="text"
-          formControlName="name"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-          aria-label="Name"
-        />
+        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -26,13 +20,7 @@
       <div class="form-group">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
-        <select
-          name="type"
-          formControlName="type"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-          aria-label="Type"
-        >
+        <select name="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
           <option></option>
           <option value="IpAddress">IP Address</option>
           <option value="Fqdn">FQDN</option>
@@ -49,7 +37,7 @@
           name="ipAddress"
           formControlName="ipAddress"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
+          [class.is-invalid]="submitted && f.ipAddress.errors"
           aria-label="IP Address"
         />
         <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
@@ -61,13 +49,7 @@
       <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
         <label for="fqdn">FQDN</label>
         <tooltip *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
-        <input
-          name="fqdn"
-          formControlName="fqdn"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.fqdn.errors }"
-          aria-label="FQDN"
-        />
+        <input name="fqdn" formControlName="fqdn" class="form-control" [class.is-invalid]="submitted && f.fqdn.errors" aria-label="FQDN" />
         <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
           <div *ngIf="f.fqdn.errors.required">FQDN is required.</div>
           <div *ngIf="f.fqdn.errors.invalidFqdn">Invalid FQDN.</div>

@@ -42,10 +42,6 @@ export class ServiceObjectModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
-
     this.ModalMode = dto.ModalMode;
 
     if (this.ModalMode === ModalMode.Edit) {

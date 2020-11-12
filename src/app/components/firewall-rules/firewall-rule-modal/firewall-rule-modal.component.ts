@@ -153,15 +153,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   getData() {
     const dto = this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
+    this.ModalMode = dto.ModalMode;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.FirewallRuleId = dto.FirewallRule.id;
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.FirewallRuleId = dto.FirewallRule.id;
     }
 
     this.TierId = dto.TierId;

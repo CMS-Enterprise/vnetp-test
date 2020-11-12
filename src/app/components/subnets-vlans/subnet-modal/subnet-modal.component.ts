@@ -13,18 +13,18 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './subnet-modal.component.html',
 })
 export class SubnetModalComponent implements OnInit {
-  form: FormGroup;
-  submitted: boolean;
-  ModalMode: ModalMode;
-  TierId: string;
-  SubnetId: string;
-  vlans: Vlan[];
+  public ModalMode: ModalMode;
+  public SubnetId: string;
+  public TierId: string;
+  public form: FormGroup;
+  public submitted: boolean;
+  public vlans: Vlan[] = [];
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public helpText: SubnetModalHelpText,
+    private ngx: NgxSmartModalService,
     private subnetService: V1NetworkSubnetsService,
+    public helpText: SubnetModalHelpText,
   ) {}
 
   get f() {
@@ -62,10 +62,6 @@ export class SubnetModalComponent implements OnInit {
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
-    }
-
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
     }
 
     this.ModalMode = dto.ModalMode;

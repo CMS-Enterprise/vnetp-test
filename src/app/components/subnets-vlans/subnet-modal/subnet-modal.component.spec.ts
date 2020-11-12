@@ -178,16 +178,6 @@ describe('SubnetModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createSubnetModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name, gateway, network and vlan when creating a new subnet', () => {
       const ngx = TestBed.get(NgxSmartModalService);
       const dto = createSubnetModalDto();

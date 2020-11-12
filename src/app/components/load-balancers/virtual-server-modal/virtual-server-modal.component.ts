@@ -191,9 +191,6 @@ export class VirtualServerModalComponent implements OnInit {
     if (dto.TierId) {
       this.TierId = dto.TierId;
     }
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
 
     this.ModalMode = dto.ModalMode;
 

@@ -122,15 +122,12 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     this.TierId = nodeDto.TierId;
     this.PoolId = nodeDto.PoolId;
     const node = nodeDto.node;
-    if (!nodeDto.ModalMode) {
-      throw Error('Modal Mode not Set.');
+
+    this.ModalMode = nodeDto.ModalMode;
+    if (nodeDto.ModalMode === ModalMode.Edit) {
+      this.Node = node;
     } else {
-      this.ModalMode = nodeDto.ModalMode;
-      if (nodeDto.ModalMode === ModalMode.Edit) {
-        this.Node = node;
-      } else {
-        this.form.controls.name.enable();
-      }
+      this.form.controls.name.enable();
     }
 
     if (node !== undefined) {

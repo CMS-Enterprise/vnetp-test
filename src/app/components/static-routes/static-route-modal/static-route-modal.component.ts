@@ -84,21 +84,17 @@ export class StaticRouteModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.StaticRouteId = dto.StaticRoute.id;
-        this.form.controls.name.disable();
-        this.form.controls.destinationNetwork.disable();
-        this.form.controls.nextHop.disable();
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.destinationNetwork.enable();
-        this.form.controls.nextHop.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.StaticRouteId = dto.StaticRoute.id;
+      this.form.controls.name.disable();
+      this.form.controls.destinationNetwork.disable();
+      this.form.controls.nextHop.disable();
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.destinationNetwork.enable();
+      this.form.controls.nextHop.enable();
     }
 
     const staticRoute = dto.StaticRoute;

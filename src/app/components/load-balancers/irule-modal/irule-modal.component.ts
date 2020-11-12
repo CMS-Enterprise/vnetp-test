@@ -84,19 +84,15 @@ export class IRuleModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.IruleId = dto.irule.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.IruleId = dto.irule.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
-    if (dto !== undefined && dto.irule) {
+    if (dto.irule) {
       this.form.controls.name.setValue(dto.irule.name);
       this.form.controls.name.disable();
       this.form.controls.content.setValue(dto.irule.content);

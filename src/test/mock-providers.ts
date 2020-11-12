@@ -1,4 +1,4 @@
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';

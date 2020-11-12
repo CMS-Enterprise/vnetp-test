@@ -205,10 +205,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.availableHealthMonitors = dto.healthMonitors;
     this.availableNodes = dto.nodes;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
-
     this.ModalMode = dto.ModalMode;
 
     if (this.ModalMode === ModalMode.Edit) {

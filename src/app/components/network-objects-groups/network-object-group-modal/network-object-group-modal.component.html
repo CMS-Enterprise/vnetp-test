@@ -19,7 +19,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
         />
@@ -38,7 +38,7 @@
           type="text"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
           id="description"
         />

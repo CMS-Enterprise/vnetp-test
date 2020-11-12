@@ -15,13 +15,7 @@
       <div class="form-group">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
-        <input
-          type="text"
-          formControlName="name"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-          aria-label="Name"
-        />
+        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -38,7 +32,7 @@
             type="text"
             formControlName="destination"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destination.errors }"
+            [class.is-invalid]="submitted && f.destination.errors"
             aria-label="Destination Address"
           />
           <div *ngIf="submitted && f.destination.errors" class="invalid-feedback">
@@ -54,7 +48,7 @@
             type="text"
             formControlName="gateway"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.gateway.errors }"
+            [class.is-invalid]="submitted && f.gateway.errors"
             aria-label="Gateway"
           />
           <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">

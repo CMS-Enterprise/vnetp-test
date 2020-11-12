@@ -13,7 +13,7 @@
           formControlName="name"
           id="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -31,7 +31,7 @@
           id="protocol"
           formControlName="protocol"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
+          [class.is-invalid]="submitted && f.protocol.errors"
           aria-label="Type"
         >
           <option></option>
@@ -51,7 +51,7 @@
           id="sourcePorts"
           formControlName="sourcePorts"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+          [class.is-invalid]="submitted && f.sourcePorts.errors"
           aria-label="Source Port"
         />
         <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
@@ -75,7 +75,7 @@
           id="destinationPorts"
           formControlName="destinationPorts"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+          [class.is-invalid]="submitted && f.destinationPorts.errors"
           aria-label="Destination Port"
         />
         <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">

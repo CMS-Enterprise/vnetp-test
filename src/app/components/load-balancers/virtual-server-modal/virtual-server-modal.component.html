@@ -15,7 +15,7 @@
       <div class="form-group">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
-        <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+        <input type="text" id="name" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
@@ -25,7 +25,7 @@
       <div class="form-group">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
-        <select id="type" formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
+        <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
           <option></option>
           <option value="standard">Standard</option>
         </select>
@@ -41,7 +41,7 @@
           id="sourceAddressTranslation"
           formControlName="sourceAddressTranslation"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.sourceAddressTranslation.errors }"
+          [class.is-invalid]="submitted && f.sourceAddressTranslation.errors"
         >
           <option></option>
           <option value="None">None</option>
@@ -61,7 +61,7 @@
             id="sourceAddress"
             formControlName="sourceAddress"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourceAddress.errors }"
+            [class.is-invalid]="submitted && f.sourceAddress.errors"
           />
           <div *ngIf="submitted && f.sourceAddress.errors" class="invalid-feedback">
             <div *ngIf="f.sourceAddress.errors.required">Source Address is required.</div>
@@ -95,7 +95,7 @@
             class="form-control"
             id="servicePort"
             formControlName="servicePort"
-            [ngClass]="{ 'is-invalid': submitted && f.servicePort.errors }"
+            [class.is-invalid]="submitted && f.servicePort.errors"
             mask="09999"
           />
         </div>
@@ -103,7 +103,7 @@
         <div class="form-group col-md-6">
           <label for="pool">Pool</label>
           <tooltip [message]="helpText.Pool"></tooltip>
-          <select class="form-control" id="pool" formControlName="pool" [ngClass]="{ 'is-invalid': submitted && f.pool.errors }">
+          <select class="form-control" id="pool" formControlName="pool" [class.is-invalid]="submitted && f.pool.errors">
             <option></option>
             <option *ngFor="let pool of pools" [ngValue]="pool.id">
               {{ pool.name }}
