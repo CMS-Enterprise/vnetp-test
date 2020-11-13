@@ -56,7 +56,6 @@ export class HttpConfigInterceptor {
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          console.log('debug-httpevent-->>', event);
           if (!environment.production) {
             // console.log('debug-httpevent-->>', event);
           }
