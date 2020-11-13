@@ -17,7 +17,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentFirewallRulePage = 1;
   public firewallRuleGroups: FirewallRuleGroup[] = [];
-  public navIndex = 'External';
+  public navIndex = FirewallRuleGroupType.External;
   public perPage = 20;
   public tiers: Tier[] = [];
 
@@ -43,8 +43,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   ) {}
 
   public handleTabChange(tab: Tab): void {
-    this.navIndex = tab.name;
-    // this.navIndex = tab.name === 'External' ? FirewallRuleGroupType.External : FirewallRuleGroupType.Intervrf;
+    this.navIndex = tab.name === 'External' ? FirewallRuleGroupType.External : FirewallRuleGroupType.Intervrf;
   }
 
   public getTiers(): void {
