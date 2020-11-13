@@ -13,8 +13,8 @@ import { ActifioAddTemplatePolicyDto } from './actifioAddTemplatePolicyDto';
 
 
 export interface ActifioAddTemplateDto { 
-    name: string;
     description?: string;
+    name: string;
     policies: Array<ActifioAddTemplatePolicyDto>;
 }
 

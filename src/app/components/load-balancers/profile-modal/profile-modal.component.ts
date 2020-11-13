@@ -151,10 +151,6 @@ export class ProfileModalComponent implements OnInit {
   getData() {
     const dto = this.ngx.getModalData('loadBalancerProfileModal') as ProfileModalDto;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
-
     this.ModalMode = dto.ModalMode;
     if (this.ModalMode === ModalMode.Edit) {
       this.ProfileId = dto.Profile.id;

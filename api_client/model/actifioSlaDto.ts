@@ -14,8 +14,8 @@ import { ActifioProfileDto } from './actifioProfileDto';
 
 
 export interface ActifioSlaDto { 
-    id: string;
-    template: ActifioTemplateDto;
+    id?: string;
     profile: ActifioProfileDto;
+    template: ActifioTemplateDto;
 }
 

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ActifioApplicationDto } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
@@ -7,11 +8,12 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class VmDiscoveryModalComponent {
-  @ViewChild('selectVCenterTemplate', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachinesTemplate', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenter', { static: false }) selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachines', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectAction', { static: false }) selectActionTemplate: TemplateRef<any>;
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
-  public selectedVirtualMachineIds = new Set<string>();
+  public selectedVirtualMachines: ActifioApplicationDto[] = [];
   public selectedVCenterId: string;
 
   constructor(private changeRef: ChangeDetectorRef, private ngx: NgxSmartModalService) {}
@@ -26,15 +28,20 @@ export class VmDiscoveryModalComponent {
     this.currentDiscoveryStepTemplate = this.selectVCenterTemplate;
 
     this.selectedVCenterId = null;
-    this.selectedVirtualMachineIds = new Set<string>();
+    this.selectedVirtualMachines = [];
   }
 
-  public onVirtualMachinesSelected(virtualMachineIds: Set<string>): void {
-    this.selectedVirtualMachineIds = virtualMachineIds;
+  public onVirtualMachinesAdded(virtualMachines: ActifioApplicationDto[] = []): void {
+    this.selectedVirtualMachines = virtualMachines;
+    this.currentDiscoveryStepTemplate = this.selectActionTemplate;
   }
 
   public onVCenterSelected(vCenterId: string): void {
     this.selectedVCenterId = vCenterId;
     this.currentDiscoveryStepTemplate = this.selectVirtualMachinesTemplate;
+  }
+
+  public onActionComplete(): void {
+    this.onClose();
   }
 }

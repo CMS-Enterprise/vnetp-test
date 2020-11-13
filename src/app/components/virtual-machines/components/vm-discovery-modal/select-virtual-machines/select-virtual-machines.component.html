@@ -21,13 +21,7 @@
     Cancel
   </button>
 
-  <button
-    type="button"
-    class="btn btn-success"
-    data-dismiss="modal"
-    (click)="selectVirtualMachines()"
-    [disabled]="selectedVirtualMachineIds.size === 0"
-  >
+  <button type="button" class="btn btn-success" data-dismiss="modal" (click)="selectVirtualMachines()">
     <span>Select Virtual Machines</span>
   </button>
 </footer>

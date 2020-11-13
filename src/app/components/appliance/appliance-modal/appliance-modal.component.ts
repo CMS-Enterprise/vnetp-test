@@ -105,16 +105,10 @@ export class ApplianceModalComponent implements OnInit {
       this.DatacenterId = dto.DatacenterId;
     }
 
-    // this.getNetworkPorts()
+    this.ModalMode = dto.ModalMode;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.ApplianceId = dto.Appliance.id;
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.ApplianceId = dto.Appliance.id;
     }
 
     const appliance = dto.Appliance;

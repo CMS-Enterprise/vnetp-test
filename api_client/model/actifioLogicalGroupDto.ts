@@ -15,6 +15,8 @@ import { ActifioSlaDto } from './actifioSlaDto';
 export interface ActifioLogicalGroupDto { 
     id: string;
     name: string;
+    applianceId?: string;
+    description?: string;
     sla?: ActifioSlaDto;
 }
 

@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioSequenceOrderDto } from './actifioSequenceOrderDto';
 
 
-export interface ActifioModifyMemberDto { 
+export interface ActifioApplicationGroupDto { 
     id: string;
     name: string;
-    srcid: string;
+    sequenceOrder: Array<ActifioSequenceOrderDto>;
+    startupSequence: number;
 }
 

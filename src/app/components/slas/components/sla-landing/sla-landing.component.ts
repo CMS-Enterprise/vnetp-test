@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 
-enum SLATab {
+export enum SlaTab {
   Templates = 'Templates',
   Profiles = 'Profiles',
   LogicalGroups = 'Logical Groups',
@@ -11,12 +11,12 @@ enum SLATab {
   selector: 'app-sla-landing',
   templateUrl: './sla-landing.component.html',
 })
-export class SLALandingComponent {
-  public activeTabName = SLATab.Templates;
-  public tabs: Tab[] = [{ name: SLATab.Templates }, { name: SLATab.Profiles }, { name: SLATab.LogicalGroups }];
-  public SLATab = SLATab;
+export class SlaLandingComponent {
+  public activeTabName = SlaTab.Templates;
+  public tabs: Tab[] = [{ name: SlaTab.Templates }, { name: SlaTab.Profiles }, { name: SlaTab.LogicalGroups }];
+  public SLATab = SlaTab;
 
   public handleTabChange(tab: Tab): void {
-    this.activeTabName = tab.name as SLATab;
+    this.activeTabName = tab.name as SlaTab;
   }
 }

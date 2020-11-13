@@ -37,7 +37,7 @@ describe('FirewallRulesDetailComponent', () => {
       declarations: [
         FirewallRulesDetailComponent,
         ImportExportComponent,
-        MockComponent({ selector: 'app-firewall-rule-modal' }),
+        MockComponent('app-firewall-rule-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,

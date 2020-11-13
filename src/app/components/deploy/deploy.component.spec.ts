@@ -41,9 +41,6 @@ describe('DeployComponent', () => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
-    const tiersService = {
-      v1DatacentersDatacenterIdTiersGet: jest.fn(() => of([testData.tier.item])),
-    };
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
@@ -52,8 +49,8 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
+        MockProvider(V1TiersService, { v1DatacentersDatacenterIdTiersGet: of([testData.tier.item]) }),
         { provide: DatacenterContextService, useValue: datacenterService },
-        { provide: V1TiersService, useValue: tiersService },
       ],
     })
       .compileComponents()

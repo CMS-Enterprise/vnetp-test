@@ -18,7 +18,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
           required
@@ -37,7 +37,7 @@
           type="text"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
           id="description"
         />
@@ -54,7 +54,7 @@
             type="number"
             formControlName="rackUnits"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.rackUnits.errors }"
+            [class.is-invalid]="submitted && f.rackUnits.errors"
             id="rackUnits"
             required
           />
@@ -69,7 +69,7 @@
             type="text"
             formControlName="serialNumber"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
+            [class.is-invalid]="submitted && f.serialNumber.errors"
             id="serialNumber"
             required
           />
@@ -86,7 +86,7 @@
           formControlName="deliveryDate"
           id="deliveryDate"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
+          [class.is-invalid]="submitted && f.deliveryDate.errors"
           required
         />
         <div *ngIf="submitted && f.deliveryDate.errors" class="invalid-feedback">
@@ -103,7 +103,7 @@
             formControlName="localStorageType"
             id="localStorageType"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
+            [class.is-invalid]="submitted && f.localStorageType.errors"
             required
           >
             <option></option>
@@ -123,7 +123,7 @@
             formControlName="localStorageRequired"
             id="localStorageRequired"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
+            [class.is-invalid]="submitted && f.localStorageRequired.errors"
             required
           >
             <option></option>
@@ -144,7 +144,7 @@
             formControlName="localStorageSize"
             id="localStorageSize"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
+            [class.is-invalid]="submitted && f.localStorageSize.errors"
             required
           />
           <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
@@ -158,13 +158,7 @@
       <div class="row">
         <div class="form-group col-md-4">
           <label for="sanType">SAN Type</label>
-          <select
-            formControlName="sanType"
-            id="sanType"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }"
-            required
-          >
+          <select formControlName="sanType" id="sanType" class="form-control" [class.is-invalid]="submitted && f.sanType.errors" required>
             <option></option>
             <option *ngFor="let opt of ['iSCSI', 'NFS']">
               {{ opt }}
@@ -181,7 +175,7 @@
             formControlName="sanRequired"
             id="sanRequired"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }"
+            [class.is-invalid]="submitted && f.sanRequired.errors"
             required
           >
             <option></option>
@@ -201,7 +195,7 @@
             formControlName="sanStorageSize"
             id="sanStorageSize"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"
+            [class.is-invalid]="submitted && f.sanStorageSize.errors"
             required
           />
           <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
@@ -220,7 +214,7 @@
             formControlName="powerSupplyVoltage"
             id="powerSupplyVoltage"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyVoltage.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyVoltage.errors"
             required
           />
           <div *ngIf="submitted && f.powerSupplyVoltage.errors" class="invalid-feedback">
@@ -235,7 +229,7 @@
             formControlName="powerSupplyWattage"
             id="powerSupplyWattage"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyWattage.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyWattage.errors"
             required
           />
           <div *ngIf="submitted && f.powerSupplyWattage.errors" class="invalid-feedback">
@@ -251,7 +245,7 @@
             formControlName="powerSupplyConnectionType"
             id="powerSupplyConnectionType"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyConnectionType.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyConnectionType.errors"
             required
           >
             <option></option>
@@ -271,7 +265,7 @@
             formControlName="powerSupplyCount"
             id="powerSupplyCount"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyCount.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyCount.errors"
             required
           />
           <div *ngIf="submitted && f.powerSupplyCount.errors" class="invalid-feedback">

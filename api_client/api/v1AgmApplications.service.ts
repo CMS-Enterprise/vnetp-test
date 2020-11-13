@@ -17,20 +17,18 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioAddApplicationDto } from '../model/models';
 import { ActifioApplicationDto } from '../model/models';
+import { ActifioImportApplicationsDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmApplicationsAddPostRequestParams {
-    actifioAddApplicationDto: ActifioAddApplicationDto;
-}
-
 export interface V1AgmApplicationsGetRequestParams {
     limit: number;
     offset: number;
+    clusterIds?: Array<string>;
+    logicalGroupMember?: boolean;
 }
 
 export interface V1AgmApplicationsIdDeleteRequestParams {
@@ -39,6 +37,10 @@ export interface V1AgmApplicationsIdDeleteRequestParams {
 
 export interface V1AgmApplicationsIdGetRequestParams {
     id: string;
+}
+
+export interface V1AgmApplicationsImportPostRequestParams {
+    actifioImportApplicationsDto: ActifioImportApplicationsDto;
 }
 
 
@@ -104,61 +106,6 @@ export class V1AgmApplicationsService {
     }
 
     /**
-     * add Application
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsAddPost(requestParameters: V1AgmApplicationsAddPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const actifioAddApplicationDto = requestParameters.actifioAddApplicationDto;
-        if (actifioAddApplicationDto === null || actifioAddApplicationDto === undefined) {
-            throw new Error('Required parameter actifioAddApplicationDto was null or undefined when calling v1AgmApplicationsAddPost.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/add`,
-            actifioAddApplicationDto,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * Get many ActifioApplicationDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -176,8 +123,18 @@ export class V1AgmApplicationsService {
         if (offset === null || offset === undefined) {
             throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
         }
+        const clusterIds = requestParameters.clusterIds;
+        const logicalGroupMember = requestParameters.logicalGroupMember;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
+        }
+        if (logicalGroupMember !== undefined && logicalGroupMember !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>logicalGroupMember, 'logicalGroupMember');
+        }
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
@@ -300,6 +257,61 @@ export class V1AgmApplicationsService {
         }
 
         return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Import ActifioApplications
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const actifioImportApplicationsDto = requestParameters.actifioImportApplicationsDto;
+        if (actifioImportApplicationsDto === null || actifioImportApplicationsDto === undefined) {
+            throw new Error('Required parameter actifioImportApplicationsDto was null or undefined when calling v1AgmApplicationsImportPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/import`,
+            actifioImportApplicationsDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -11,12 +11,10 @@
  */
 
 
-export interface ActifioAddApplicationDto { 
+export interface ActifioOrganizationDto { 
     id: string;
     name: string;
-    hostId: string;
-    clusterName: string;
-    clusterId: string;
-    applicationUUID: Array<string>;
+    createdate: number;
+    description?: string;
 }
 

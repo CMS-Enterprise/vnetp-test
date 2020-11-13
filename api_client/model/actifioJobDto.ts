@@ -13,9 +13,9 @@
 
 export interface ActifioJobDto { 
     applicationName: string;
-    startDate: string;
-    status: string;
     endDate?: string;
     id: string;
+    startDate: string;
+    status: string;
 }
 

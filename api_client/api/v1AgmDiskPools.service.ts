@@ -86,7 +86,7 @@ export class V1AgmDiskPoolsService {
     }
 
     /**
-     * Get many ActifioDiskPools
+     * Get many ActifioDiskPoolDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

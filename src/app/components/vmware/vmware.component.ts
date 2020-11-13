@@ -5,10 +5,10 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import { EntityService } from 'src/app/services/entity.service';
 
 enum TabName {
   VirtualMachines = 'Virtual Machines',
@@ -39,6 +39,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
   private virtualMachineModalSubscription: Subscription;
 
   constructor(
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
@@ -93,30 +94,13 @@ export class VmwareComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteVirtualMachine(vm: VmwareVirtualMachine) {
-    if (vm.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = vm.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!vm.deletedAt) {
-        this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }).subscribe(() => {
-          this.getVirtualMachines();
-        });
-      } else {
-        this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }).subscribe(() => {
-          this.getVirtualMachines();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Virtual Machine?`, `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteVirtualMachine(vm: VmwareVirtualMachine): void {
+    this.entityService.deleteEntity(vm, {
+      entityName: 'Virtual Machine',
+      delete$: this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }),
+      softDelete$: this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }),
+      onSuccess: () => this.getVirtualMachines(),
+    });
   }
 
   restoreVirtualMachine(vm: VmwareVirtualMachine) {

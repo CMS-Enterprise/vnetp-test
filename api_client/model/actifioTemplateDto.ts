@@ -15,7 +15,7 @@ import { ActifioPolicyDto } from './actifioPolicyDto';
 export interface ActifioTemplateDto { 
     id: string;
     name: string;
-    policies?: Array<ActifioPolicyDto>;
     description?: string;
+    policies?: Array<ActifioPolicyDto>;
 }
 

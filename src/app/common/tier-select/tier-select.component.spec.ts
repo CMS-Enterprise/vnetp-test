@@ -22,10 +22,6 @@ describe('TierSelectComponent', () => {
       currentUser: of({}),
     };
 
-    const datacenterService = {
-      v1DatacentersIdGet: jest.fn(() => of({ tiers: [] })),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, NgSelectModule],
       declarations: [TierSelectComponent, MockNgxSmartModalComponent],
@@ -34,7 +30,7 @@ describe('TierSelectComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(TierContextService),
         MockProvider(ToastrService),
-        { provide: V1DatacentersService, useValue: datacenterService },
+        MockProvider(V1DatacentersService, { v1DatacentersIdGet: of({ tiers: [] }) }),
         { provide: AuthService, useValue: authService },
       ],
     }).compileComponents();

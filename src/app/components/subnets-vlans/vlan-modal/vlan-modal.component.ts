@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Vlan, V1NetworkVlansService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
-import { VlanModalHelpText } from 'src/app/helptext/help-text-networking';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -12,19 +11,14 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './vlan-modal.component.html',
 })
 export class VlanModalComponent implements OnInit {
-  form: FormGroup;
-  submitted: boolean;
-  ModalMode: ModalMode;
-  TierId: string;
-  VlanId: string;
-  vlans: Vlan[];
+  public ModalMode: ModalMode;
+  public TierId: string;
+  public VlanId: string;
+  public form: FormGroup;
+  public submitted: boolean;
+  public vlans: Vlan[];
 
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    public helpText: VlanModalHelpText,
-    private vlanService: V1NetworkVlansService,
-  ) {}
+  constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService, private vlanService: V1NetworkVlansService) {}
 
   get f() {
     return this.form.controls;
@@ -40,10 +34,6 @@ export class VlanModalComponent implements OnInit {
 
     if (dto.TierId) {
       this.TierId = dto.TierId;
-    }
-
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
     }
 
     this.ModalMode = dto.ModalMode;
@@ -67,7 +57,7 @@ export class VlanModalComponent implements OnInit {
     this.ngx.resetModalData('vlanModal');
   }
 
-  public reset() {
+  public reset(): void {
     this.submitted = false;
     this.TierId = '';
     this.ngx.resetModalData('vlanModal');
@@ -102,10 +92,10 @@ export class VlanModalComponent implements OnInit {
     vlan.vlanNumber = this.form.value.vlanNumber;
     vlan.tierId = this.TierId;
     this.vlanService.v1NetworkVlansPost({ vlan }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -113,10 +103,10 @@ export class VlanModalComponent implements OnInit {
     vlan.name = null;
     vlan.vlanNumber = null;
     this.vlanService.v1NetworkVlansIdPut({ id: this.VlanId, vlan }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 

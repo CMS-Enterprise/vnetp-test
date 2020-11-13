@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouterModule, Routes } from '@angular/router';
@@ -12,6 +12,8 @@ import { VmDiscoveryModalComponent } from './components/vm-discovery-modal/vm-di
 import { VmListComponent } from './components/vm-list/vm-list.component';
 import { VmViewComponent } from './components/vm-view/vm-view.component';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { SelectActionComponent } from './components/vm-discovery-modal/select-action/select-action.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -30,13 +32,22 @@ const routes: Routes = [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
+    NgSelectModule,
     NgxSmartModalModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     TableModule,
     TabsModule,
     ViewFieldModule,
   ],
-  declarations: [SelectVCenterComponent, SelectVirtualMachinesComponent, VmDiscoveryModalComponent, VmListComponent, VmViewComponent],
+  declarations: [
+    SelectActionComponent,
+    SelectVCenterComponent,
+    SelectVirtualMachinesComponent,
+    VmDiscoveryModalComponent,
+    VmListComponent,
+    VmViewComponent,
+  ],
   providers: [DatePipe],
 })
 export class VirtualMachinesModule {}

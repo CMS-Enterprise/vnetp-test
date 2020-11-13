@@ -8,18 +8,19 @@ import { ProfileListComponent } from './components/profile-list/profile-list.com
 import { TemplateListComponent } from './components/template-list/template-list.component';
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
-import { SLALandingComponent } from './components/sla-landing/sla-landing.component';
+import { SlaLandingComponent } from './components/sla-landing/sla-landing.component';
 import { TemplateModalComponent } from './components/template-modal/template-modal.component';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { SharedModule } from 'src/app/common/shared.module';
 import { LogicalGroupListComponent } from './components/logical-group-list/logical-group-list.component';
 import { LogicalGroupViewModalComponent } from './components/logical-group-view-modal/logical-group-view-modal.component';
 import { LogicalGroupModalComponent } from './components/logical-group-modal/logical-group-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
     path: '',
-    component: SLALandingComponent,
+    component: SlaLandingComponent,
   },
 ];
 
@@ -29,6 +30,7 @@ const routes: Routes = [
     FontAwesomeModule,
     FormsModule,
     IconButtonModule,
+    NgSelectModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
@@ -41,7 +43,7 @@ const routes: Routes = [
     LogicalGroupModalComponent,
     LogicalGroupViewModalComponent,
     ProfileListComponent,
-    SLALandingComponent,
+    SlaLandingComponent,
     TemplateListComponent,
     TemplateModalComponent,
   ],

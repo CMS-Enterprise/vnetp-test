@@ -4,7 +4,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-priority-group-list',
@@ -20,7 +20,11 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
   private priorityGroupSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private priorityGroupService: V1PriorityGroupsService) {}
+  constructor(
+    private entityService: EntityService,
+    private ngx: NgxSmartModalService,
+    private priorityGroupService: V1PriorityGroupsService,
+  ) {}
 
   ngOnInit(): void {
     this.loadPriorityGroups();
@@ -35,25 +39,12 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   public deletePriorityGroup(priorityGroup: PriorityGroup): void {
-    if (priorityGroup.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const { deletedAt, id, name } = priorityGroup;
-    const deleteDescription = priorityGroup.deletedAt ? 'Delete' : 'Soft-Delete';
-    const deleteFn = () => {
-      if (deletedAt) {
-        this.priorityGroupService.v1PriorityGroupsIdDelete({ id }).subscribe(() => this.loadPriorityGroups());
-      } else {
-        this.priorityGroupService.v1PriorityGroupsIdSoftDelete({ id }).subscribe(() => this.loadPriorityGroups());
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Priority Group?`, `Do you want to ${deleteDescription} priority group "${name}"?`),
-      this.ngx,
-      deleteFn,
-    );
+    this.entityService.deleteEntity(priorityGroup, {
+      entityName: 'Priority Group',
+      delete$: this.priorityGroupService.v1PriorityGroupsIdDelete({ id: priorityGroup.id }),
+      softDelete$: this.priorityGroupService.v1PriorityGroupsIdSoftDelete({ id: priorityGroup.id }),
+      onSuccess: () => this.loadPriorityGroups(),
+    });
   }
 
   public loadPriorityGroups(): void {

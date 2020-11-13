@@ -125,7 +125,7 @@ export class V1AgmTemplatesService {
     }
 
     /**
-     * Get many ActifioTemplates
+     * Get many ActifioTemplateDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -211,7 +211,7 @@ export class V1AgmTemplatesService {
     }
 
     /**
-     * Get one ActifioTemplate
+     * Get one ActifioTemplateDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -443,7 +443,7 @@ export class V1AgmTemplatesService {
     }
 
     /**
-     * Update one ActifioTemplate
+     * Update ActifioTemplate
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

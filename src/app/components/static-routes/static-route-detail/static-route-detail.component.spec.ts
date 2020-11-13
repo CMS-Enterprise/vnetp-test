@@ -20,7 +20,7 @@ describe('StaticRouteDetailComponent', () => {
       declarations: [
         StaticRouteDetailComponent,
         YesNoModalComponent,
-        MockComponent({ selector: 'app-static-route-modal' }),
+        MockComponent('app-static-route-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

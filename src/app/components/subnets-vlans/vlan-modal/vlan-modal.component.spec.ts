@@ -166,16 +166,6 @@ describe('VlanModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const service = TestBed.get(NgxSmartModalService);
-      const dto = createDto();
-      dto.ModalMode = null;
-      jest.spyOn(service, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name and vlan number when creating a new vlan', () => {
       const service = TestBed.get(NgxSmartModalService);
       const dto = createDto();

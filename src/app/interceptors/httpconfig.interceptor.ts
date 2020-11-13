@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class HttpConfigInterceptor {
@@ -54,14 +54,6 @@ export class HttpConfigInterceptor {
     }
 
     return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (!environment.production) {
-            // console.log('debug-httpevent-->>', event);
-          }
-        }
-        return event;
-      }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
         switch (error.status) {
@@ -76,14 +68,9 @@ export class HttpConfigInterceptor {
             break;
         }
 
-        const data = {
-          error,
-          status: error.status,
-        };
-
-        console.error(data);
-
+        console.error({ error, status });
         this.toastr.error(toastrMessage);
+
         return throwError(error);
       }),
     );

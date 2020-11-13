@@ -20,6 +20,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -48,6 +49,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private ngx: NgxSmartModalService,
@@ -134,78 +136,34 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteNetworkObject(networkObject: NetworkObject) {
-    if (networkObject.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = networkObject.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!networkObject.deletedAt) {
-        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }).subscribe(data => {
-          this.getNetworkObjects();
-        });
-      } else {
-        this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }).subscribe(data => {
-          this.getNetworkObjects();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Network Object?`,
-        `Do you want to ${deleteDescription} network object "${networkObject.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteNetworkObject(networkObject: NetworkObject): void {
+    this.entityService.deleteEntity(networkObject, {
+      entityName: 'Network Object',
+      delete$: this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }),
+      softDelete$: this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }),
+      onSuccess: () => this.getNetworkObjects(),
+    });
   }
 
   restoreNetworkObject(networkObject: NetworkObject) {
     if (networkObject.deletedAt) {
-      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(data => {
+      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(() => {
         this.getNetworkObjects();
       });
     }
   }
 
-  deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
-    if (networkObjectGroup.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = networkObjectGroup.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!networkObjectGroup.deletedAt) {
-        this.networkObjectGroupService
-          .v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
-            id: networkObjectGroup.id,
-          })
-          .subscribe(data => {
-            this.getNetworkObjectGroups();
-          });
-      } else {
-        this.networkObjectGroupService
-          .v1NetworkSecurityNetworkObjectGroupsIdDelete({
-            id: networkObjectGroup.id,
-          })
-          .subscribe(data => {
-            this.getNetworkObjectGroups();
-          });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(
-        `${deleteDescription} Network Object Group`,
-        `Do you want to ${deleteDescription} the network object group "${networkObjectGroup.name}"?`,
-      ),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup): void {
+    this.entityService.deleteEntity(networkObjectGroup, {
+      entityName: 'Network Object Group',
+      delete$: this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsIdDelete({
+        id: networkObjectGroup.id,
+      }),
+      softDelete$: this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
+        id: networkObjectGroup.id,
+      }),
+      onSuccess: () => this.getNetworkObjects(),
+    });
   }
 
   restoreNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
@@ -214,7 +172,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityNetworkObjectGroupsIdRestorePatch({
           id: networkObjectGroup.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getNetworkObjectGroups();
         });
     }
@@ -293,7 +251,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         .v1NetworkSecurityNetworkObjectGroupsBulkPost({
           generatedNetworkObjectGroupBulkDto: { bulk: dto },
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getNetworkObjectGroups();
         });
     };

@@ -21,6 +21,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -49,6 +50,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   private vlanModalSubscription: Subscription;
 
   constructor(
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
     public tierContextService: TierContextService,
@@ -122,72 +124,34 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteSubnet(subnet: Subnet) {
-    if (subnet.provisionedAt) {
-      throw new Error('Cannot delete provisioned subnet.');
-    }
-
-    const deleteDescription = subnet.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!subnet.deletedAt) {
-        this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }).subscribe(data => {
-          this.getSubnets();
-        });
-      } else {
-        this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }).subscribe(data => {
-          this.getSubnets();
-        });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} Subnet?`, `Do you want to ${deleteDescription} subnet "${subnet.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteSubnet(subnet: Subnet): void {
+    this.entityService.deleteEntity(subnet, {
+      entityName: 'Subnet',
+      delete$: this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }),
+      softDelete$: this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }),
+      onSuccess: () => this.getSubnets(),
+    });
   }
 
   restoreSubnet(subnet: Subnet) {
     if (subnet.deletedAt) {
-      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(data => {
+      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(() => {
         this.getSubnets();
       });
     }
   }
 
-  deleteVlan(vlan: Vlan) {
-    if (vlan.provisionedAt) {
-      throw new Error('Cannot delete provisioned VLAN.');
-    }
-
-    const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!vlan.deletedAt) {
-        this.vlanService
-          .v1NetworkVlansIdSoftDelete({
-            id: vlan.id,
-          })
-          .subscribe(data => {
-            this.getVlans();
-          });
-      } else {
-        this.vlanService
-          .v1NetworkVlansIdDelete({
-            id: vlan.id,
-          })
-          .subscribe(data => {
-            this.getVlans();
-          });
-      }
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(
-      new YesNoModalDto(`${deleteDescription} VLAN`, `Do you want to ${deleteDescription} the VLAN "${vlan.name}"?`),
-      this.ngx,
-      deleteFunction,
-    );
+  public deleteVlan(vlan: Vlan): void {
+    this.entityService.deleteEntity(vlan, {
+      entityName: 'VLAN',
+      delete$: this.vlanService.v1NetworkVlansIdDelete({
+        id: vlan.id,
+      }),
+      softDelete$: this.vlanService.v1NetworkVlansIdSoftDelete({
+        id: vlan.id,
+      }),
+      onSuccess: () => this.getVlans(),
+    });
   }
 
   restoreVlan(vlan: Vlan) {
@@ -196,7 +160,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         .v1NetworkVlansIdRestorePatch({
           id: vlan.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVlans();
         });
     }
@@ -216,7 +180,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         .v1NetworkSubnetsBulkImportPost({
           subnetImportCollectionDto: subnetsDto,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVlans(true);
         });
     };
@@ -234,7 +198,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
     const onConfirm = () => {
-      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(data => {
+      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(() => {
         this.getVlans();
       });
     };
@@ -284,15 +248,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     return this.currentTier && !!this.currentTier.id;
   }
 
-  private unsubAll(): void {
-    SubscriptionUtil.unsubscribe([
-      this.subnetModalSubscription,
-      this.vlanModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
-  }
-
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
@@ -315,6 +270,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([
+      this.subnetModalSubscription,
+      this.vlanModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

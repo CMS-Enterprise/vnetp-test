@@ -51,10 +51,10 @@ export class NetworkObjectGroupModalComponent implements OnInit {
           networkObjectGroup: modalNetworkObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.networkObjectGroupService
@@ -63,10 +63,10 @@ export class NetworkObjectGroupModalComponent implements OnInit {
           networkObjectGroup: modalNetworkObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -91,7 +91,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         networkObjectGroupId: this.NetworkObjectGroupId,
         networkObjectId: this.selectedNetworkObject.id,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.selectedNetworkObject = null;
         this.getGroupNetworkObjects();
       });
@@ -119,16 +119,12 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.NetworkObjectGroupId = dto.NetworkObjectGroup.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     const networkObjectGroup = dto.NetworkObjectGroup;

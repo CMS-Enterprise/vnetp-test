@@ -18,9 +18,8 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidIpAny: true };
   }
+  return { invalidIpAny: true };
 }
 
 export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {

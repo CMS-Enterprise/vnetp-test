@@ -11372,6 +11372,17 @@ paths:
     get:
       summary: Get many ActifioApplicationDto
       parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+        - type: boolean
+          name: logicalGroupMember
+          required: false
+          in: query
         - type: number
           name: limit
           required: true
@@ -11426,15 +11437,15 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/applications/add:
+  /v1/agm/applications/import:
     post:
-      summary: add Application
+      summary: Import ActifioApplications
       parameters:
-        - name: ActifioAddApplicationDto
+        - name: ActifioImportApplicationsDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioAddApplicationDto'
+            $ref: '#/definitions/ActifioImportApplicationsDto'
       responses:
         '201':
           description: ''
@@ -11443,28 +11454,16 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/jobs:
+  /v1/agm/clusters:
     get:
-      summary: Get many ActifioJobDto
+      summary: Get many ActifioClusterDto
       parameters:
-        - type: string
-          name: status
-          required: true
-          in: query
         - type: number
-          name: jobClassCode
-          required: true
-          in: query
-        - type: string
-          name: applicationName
+          name: offset
           required: true
           in: query
         - type: number
           name: limit
-          required: true
-          in: query
-        - type: number
-          name: offset
           required: true
           in: query
       responses:
@@ -11473,9 +11472,25 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ActifioJobDto'
+              $ref: '#/definitions/ActifioClusterDto'
       tags:
-        - v1/agm/jobs
+        - v1/agm/clusters
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/agm/disk-pools:
+    get:
+      summary: Get many ActifioDiskPoolDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioDiskPoolDto'
+      tags:
+        - v1/agm/disk-pools
       produces:
         - application/json
       consumes:
@@ -11534,9 +11549,54 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/agm/jobs:
+    get:
+      summary: Get many ActifioJobDto
+      parameters:
+        - type: string
+          name: status
+          required: true
+          in: query
+        - type: number
+          name: jobClassCode
+          required: true
+          in: query
+        - type: string
+          name: applicationName
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
+        - type: number
+          name: offset
+          required: true
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioJobDto'
+      tags:
+        - v1/agm/jobs
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/agm/logical-groups:
     get:
       summary: Get many ActifioLogicalGroupDto
+      parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
       responses:
         '200':
           description: ''
@@ -11551,7 +11611,7 @@ paths:
       consumes:
         - application/json
     post:
-      summary: create logical group
+      summary: Create Logical Group
       parameters:
         - name: ActifioAddOrUpdateLogicalGroupDto
           required: true
@@ -11570,8 +11630,30 @@ paths:
         - application/json
   '/v1/agm/logical-groups/{id}':
     get:
-      summary: Get Logical Group
+      summary: Get one ActifioDetailedLogicalGroupDto
       parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Update Logical Group
+      parameters:
+        - name: ActifioAddOrUpdateLogicalGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrUpdateLogicalGroupDto'
         - type: string
           name: id
           required: true
@@ -11603,32 +11685,9 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/logical-groups/{id}/':
-    put:
-      summary: update logical group
-      parameters:
-        - name: ActifioAddOrUpdateLogicalGroupDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/ActifioAddOrUpdateLogicalGroupDto'
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
-      tags: *ref_45
-      produces:
-        - application/json
-      consumes:
-        - application/json
   '/v1/agm/logical-groups/{id}/members':
     get:
-      summary: Get members of Logical Group
+      summary: Get Members of Logical Group
       parameters:
         - type: string
           name: id
@@ -11646,31 +11705,9 @@ paths:
         - application/json
       consumes:
         - application/json
-    put:
-      summary: modify members of Logical Group
-      parameters:
-        - name: ActifioUpdateLogicalGroupMembersDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/ActifioUpdateLogicalGroupMembersDto'
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
-      tags: *ref_45
-      produces:
-        - application/json
-      consumes:
-        - application/json
   '/v1/agm/logical-groups/{id}/sla':
     post:
-      summary: Apply SLA to Logical Group
+      summary: Apply Sla to Logical Group
       parameters:
         - name: ActifioCreateOrApplySlaDto
           required: true
@@ -11690,7 +11727,7 @@ paths:
       consumes:
         - application/json
     delete:
-      summary: Remove SLA from Logical Group
+      summary: Remove Sla from Logical Group
       parameters:
         - type: string
           name: id
@@ -11704,43 +11741,34 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/slas:
+  /v1/agm/organizations:
     get:
-      summary: Get SLAs
+      summary: Get many ActifioOrganizationDto
+      parameters:
+        - type: number
+          name: limit
+          required: true
+          in: query
+        - type: number
+          name: offset
+          required: true
+          in: query
       responses:
         '200':
           description: ''
           schema:
             type: array
             items:
-              $ref: '#/definitions/ActifioSlaDto'
+              $ref: '#/definitions/ActifioOrganizationDto'
       tags: &ref_46
-        - v1/agm/slas
+        - v1/agm/organizations
       produces:
         - application/json
       consumes:
         - application/json
-    post:
-      summary: create SLA
-      parameters:
-        - name: ActifioCreateOrApplySlaDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/ActifioSlaDto'
-      tags: *ref_46
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/agm/slas/{id}':
+  '/v1/agm/organizations/{id}':
     get:
-      summary: Get SLA
+      summary: Get one ActifioOrganizationDto
       parameters:
         - type: string
           name: id
@@ -11750,36 +11778,14 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioSlaDto'
-      tags: *ref_46
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    put:
-      summary: apply SLA to VM
-      parameters:
-        - name: ActifioCreateOrApplySlaDto
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-          schema:
-            $ref: '#/definitions/ActifioSlaDto'
+            $ref: '#/definitions/ActifioOrganizationDto'
       tags: *ref_46
       produces:
         - application/json
       consumes:
         - application/json
     delete:
-      summary: remove SLA
+      summary: Delete one ActifioOrganization
       parameters:
         - type: string
           name: id
@@ -11788,8 +11794,46 @@ paths:
       responses:
         '200':
           description: ''
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/agm/organizations/add:
+    post:
+      summary: Create one ActifioOrganization
+      parameters:
+        - name: ActifioAddOrganizationDto
+          required: true
+          in: body
           schema:
-            $ref: '#/definitions/ActifioSLA'
+            $ref: '#/definitions/ActifioAddOrganizationDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/organizations/{id}/':
+    put:
+      summary: Update ActifioOrganization
+      parameters:
+        - name: ActifioAddOrganizationDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrganizationDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioOrganizationDto'
       tags: *ref_46
       produces:
         - application/json
@@ -11797,7 +11841,7 @@ paths:
         - application/json
   /v1/agm/profiles:
     get:
-      summary: Get many ActifioProfiles
+      summary: Get many ActifioProfileDto
       parameters:
         - type: number
           name: offset
@@ -11807,10 +11851,13 @@ paths:
           name: limit
           required: false
           in: query
-        - type: string
-          name: clusterId
+        - type: array
+          name: clusterIds
           required: false
           in: query
+          items:
+            type: string
+          collectionFormat: csv
       responses:
         '200':
           description: ''
@@ -11826,7 +11873,7 @@ paths:
         - application/json
   '/v1/agm/profiles/{id}':
     get:
-      summary: Get one ActifioProfile
+      summary: Get one ActifioProfileDto
       parameters:
         - type: string
           name: id
@@ -11842,9 +11889,100 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/agm/slas:
+    get:
+      summary: Get many ActifioSlaDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioSlaDto'
+      tags: &ref_48
+        - v1/agm/slas
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one Sla
+      parameters:
+        - name: ActifioCreateOrApplySlaDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/agm/slas/{id}':
+    get:
+      summary: Get one ActifioSlaDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Apply one Sla to VM
+      parameters:
+        - name: ActifioCreateOrApplySlaDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove one Sla
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSla'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/agm/templates:
     get:
-      summary: Get many ActifioTemplates
+      summary: Get many ActifioTemplateDto
       responses:
         '200':
           description: ''
@@ -11852,7 +11990,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioTemplateDto'
-      tags: &ref_48
+      tags: &ref_49
         - v1/agm/templates
       produces:
         - application/json
@@ -11871,14 +12009,14 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
         - application/json
   '/v1/agm/templates/{id}':
     get:
-      summary: Get one ActifioTemplate
+      summary: Get one ActifioTemplateDto
       parameters:
         - type: string
           name: id
@@ -11889,13 +12027,13 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
         - application/json
     put:
-      summary: Update one ActifioTemplate
+      summary: Update ActifioTemplate
       parameters:
         - name: ActifioUpdateTemplateDto
           required: true
@@ -11911,7 +12049,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -11926,7 +12064,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -11958,7 +12096,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioPolicyDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -11985,7 +12123,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12004,23 +12142,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_48
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/agm/disk-pools:
-    get:
-      summary: Get many ActifioDiskPools
-      responses:
-        '200':
-          description: ''
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ActifioDiskPoolDto'
-      tags:
-        - v1/agm/disk-pools
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12031,7 +12153,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_49
+      tags: &ref_50
         - v1/actifio/recovery-plans
       produces:
         - application/json
@@ -12042,7 +12164,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12058,7 +12180,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12066,14 +12188,14 @@ paths:
     delete:
       summary: delete 1 rec plan
       parameters:
-        - name: id
+        - type: string
+          name: id
           required: true
           in: path
-          type: number
       responses:
         '200':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12082,14 +12204,14 @@ paths:
     post:
       summary: execute 1 rec plan
       parameters:
-        - name: id
+        - type: string
+          name: id
           required: true
           in: path
-          type: number
       responses:
         '201':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12100,7 +12222,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12108,18 +12230,52 @@ paths:
   /v1/actifio/recovery-plans/create:
     post:
       summary: create recovery plan
-      parameters: []
+      parameters:
+        - name: ActifioServerNewRecoveryPlan
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioServerNewRecoveryPlan'
       responses:
         '201':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/application-groups:
+    get:
+      summary: Get many ActifioApplicationGroupDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: &ref_51
+        - v1/actifio/application-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one ApplicationGroup
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_51
       produces:
         - application/json
       consumes:
         - application/json
   '/v1/actifio/application-groups/{id}':
     get:
-      summary: Get Application Group
+      summary: Get one ActifioApplicationGroupDto
       parameters:
         - type: string
           name: id
@@ -12128,37 +12284,31 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_50
-        - v1/actifio/application-groups
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: *ref_51
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/application-groups:
-    get:
-      summary: Get Application Groups
+    delete:
+      summary: Delete one Application Group
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
       responses:
         '200':
           description: ''
-      tags: *ref_50
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    post:
-      summary: Create App Group
-      parameters: []
-      responses:
-        '201':
-          description: ''
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
         - application/json
   /v1/actifio/appliances:
     get:
-      summary: Get Appliances
+      summary: Get many ActifioCollectorApplianceDto
       responses:
         '200':
           description: ''
@@ -12170,7 +12320,7 @@ paths:
         - application/json
   '/v1/actifio/applications/{cdsId}/{serverId}':
     get:
-      summary: Get Applications
+      summary: Get many ActifioCollectorVMMemberDto
       parameters:
         - type: string
           name: serverId
@@ -12195,7 +12345,7 @@ paths:
         - application/json
   /v1/actifio/recovery-types:
     get:
-      summary: Get Recovery Types
+      summary: Get many ActifioRecoveryTypeDto
       responses:
         '200':
           description: ''
@@ -13193,17 +13343,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_51
+        enum: &ref_52
           - In
           - Out
       action:
         type: string
-        enum: &ref_52
+        enum: &ref_53
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_53
+        enum: &ref_54
           - IP
           - ICMP
           - TCP
@@ -13217,19 +13367,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_54
+        enum: &ref_55
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_55
+        enum: &ref_56
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_56
+        enum: &ref_57
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -13391,7 +13541,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_61
+        enum: &ref_62
           - IpAddress
           - Fqdn
       ipAddress:
@@ -13518,7 +13668,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_59
+        enum: &ref_60
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -13547,7 +13697,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_60
+          enum: &ref_61
             - UDP
             - TCP
             - HTTP
@@ -13744,13 +13894,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_57
+        enum: &ref_58
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_58
+        enum: &ref_59
           - Standard
       servicePort:
         type: number
@@ -14273,13 +14423,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_51
+        enum: *ref_52
       action:
         type: string
-        enum: *ref_52
+        enum: *ref_53
       protocol:
         type: string
-        enum: *ref_53
+        enum: *ref_54
       logging:
         type: boolean
       enabled:
@@ -14289,13 +14439,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_54
+        enum: *ref_55
       destinationAddressType:
         type: string
-        enum: *ref_55
+        enum: *ref_56
       serviceType:
         type: string
-        enum: *ref_56
+        enum: *ref_57
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -14765,10 +14915,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_57
+        enum: *ref_58
       type:
         type: string
-        enum: *ref_58
+        enum: *ref_59
       servicePort:
         type: number
         minimum: 1
@@ -14884,7 +15034,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_59
+        enum: *ref_60
       nodes:
         type: array
         items:
@@ -14897,7 +15047,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_60
+          enum: *ref_61
       tierId:
         type: string
       vrfName:
@@ -14974,7 +15124,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_61
+        enum: *ref_62
       ipAddress:
         type: string
       fqdn:
@@ -15076,9 +15226,12 @@ definitions:
         type: string
       name:
         type: string
+      clusterId:
+        type: string
     required:
       - id
       - name
+      - clusterId
   ActifioProfileDto:
     type: object
     properties:
@@ -15086,23 +15239,23 @@ definitions:
         type: string
       name:
         type: string
+      createdDate:
+        type: string
       description:
-        type: string
-      remoteClusterName:
-        type: string
-      localClusterName:
         type: string
       lastModifiedDate:
         type: string
-      createdDate:
+      localClusterName:
+        type: string
+      remoteClusterName:
         type: string
     required:
       - id
       - name
-      - remoteClusterName
-      - localClusterName
-      - lastModifiedDate
       - createdDate
+      - lastModifiedDate
+      - localClusterName
+      - remoteClusterName
   ActifioPolicyDto:
     type: object
     properties:
@@ -15110,17 +15263,17 @@ definitions:
         type: string
       name:
         type: string
-      startTime:
-        type: number
       endTime:
         type: number
       isSnapshot:
         type: boolean
+      startTime:
+        type: number
     required:
       - id
       - name
-      - startTime
       - isSnapshot
+      - startTime
   ActifioTemplateDto:
     type: object
     properties:
@@ -15128,12 +15281,12 @@ definitions:
         type: string
       name:
         type: string
+      description:
+        type: string
       policies:
         type: array
         items:
           $ref: '#/definitions/ActifioPolicyDto'
-      description:
-        type: string
     required:
       - id
       - name
@@ -15142,20 +15295,23 @@ definitions:
     properties:
       id:
         type: string
-      template:
-        $ref: '#/definitions/ActifioTemplateDto'
       profile:
         $ref: '#/definitions/ActifioProfileDto'
+      template:
+        $ref: '#/definitions/ActifioTemplateDto'
     required:
-      - id
-      - template
       - profile
+      - template
   ActifioLogicalGroupDto:
     type: object
     properties:
       id:
         type: string
       name:
+        type: string
+      applianceId:
+        type: string
+      description:
         type: string
       sla:
         $ref: '#/definitions/ActifioSlaDto'
@@ -15169,65 +15325,71 @@ definitions:
         type: string
       name:
         type: string
+      applianceId:
+        type: string
+      cluster:
+        $ref: '#/definitions/ActifioClusterDto'
       folderPath:
         type: string
       isManaged:
         type: boolean
-      cluster:
-        $ref: '#/definitions/ActifioClusterDto'
+      logicalGroup:
+        $ref: '#/definitions/ActifioLogicalGroupDto'
       slaProfile:
         $ref: '#/definitions/ActifioProfileDto'
       slaTemplate:
         $ref: '#/definitions/ActifioTemplateDto'
-      logicalGroup:
-        $ref: '#/definitions/ActifioLogicalGroupDto'
     required:
       - id
       - name
-      - isManaged
+      - applianceId
       - cluster
-  ActifioAddApplicationDto:
+      - isManaged
+  ActifioImportApplicationsToClusterDto:
+    type: object
+    properties:
+      applicationUUIDs:
+        type: array
+        items:
+          type: string
+      applicationNames:
+        type: array
+        items:
+          type: string
+      clusterName:
+        type: string
+    required:
+      - applicationUUIDs
+      - applicationNames
+      - clusterName
+  ActifioImportApplicationsDto:
+    type: object
+    properties:
+      hostId:
+        type: string
+      clusters:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioImportApplicationsToClusterDto'
+    required:
+      - hostId
+      - clusters
+  ActifioDiskPoolDto:
     type: object
     properties:
       id:
         type: string
       name:
         type: string
-      hostId:
+      href:
+        type: number
+      srcid:
         type: string
-      clusterName:
+      usduid:
         type: string
-      clusterId:
-        type: string
-      applicationUUID:
-        type: array
-        items:
-          type: string
     required:
       - id
       - name
-      - hostId
-      - clusterName
-      - clusterId
-      - applicationUUID
-  ActifioJobDto:
-    type: object
-    properties:
-      applicationName:
-        type: string
-      startDate:
-        type: string
-      status:
-        type: string
-      endDate:
-        type: string
-      id:
-        type: string
-    required:
-      - applicationName
-      - startDate
-      - status
-      - id
   ActifioHostDto:
     type: object
     properties:
@@ -15237,20 +15399,28 @@ definitions:
         type: string
       ipAddress:
         type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusterIds:
+        type: array
+        items:
+          type: string
     required:
       - id
       - name
       - ipAddress
+      - clusterIds
+      - sourceClusterIds
   ActifioDiscoveredVMDto:
     type: object
     properties:
       applicationId:
         type: string
-      discoveredId:
-        type: string
-      name:
-        type: string
       clusterName:
+        type: string
+      discoveredId:
         type: string
       folderPath:
         type: string
@@ -15258,11 +15428,41 @@ definitions:
         type: boolean
       isNewVirtualMachine:
         type: boolean
+      name:
+        type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusterIds:
+        type: array
+        items:
+          type: string
     required:
-      - name
       - clusterName
       - isManaged
       - isNewVirtualMachine
+      - name
+      - clusterIds
+      - sourceClusterIds
+  ActifioJobDto:
+    type: object
+    properties:
+      applicationName:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: string
+      startDate:
+        type: string
+      status:
+        type: string
+    required:
+      - applicationName
+      - id
+      - startDate
+      - status
   ActifioDetailedLogicalGroupDto:
     type: object
     properties:
@@ -15275,84 +15475,131 @@ definitions:
     required:
       - logicalGroup
       - members
+  ActifioModifyLgMemberDto:
+    type: object
+    properties:
+      id:
+        type: string
+      applianceId:
+        type: string
+    required:
+      - id
+      - applianceId
   ActifioAddOrUpdateLogicalGroupDto:
     type: object
     properties:
-      name:
+      applianceId:
         type: string
       description:
         type: string
-      clusterId:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioModifyLgMemberDto'
+      name:
         type: string
-      srcid:
+      profileId:
+        type: string
+      templateId:
         type: string
     required:
       - name
-      - description
-      - clusterId
-      - srcid
-  ActifioModifyMemberDto:
+  ActifioCreateOrApplySlaDto:
+    type: object
+    properties:
+      applicationId:
+        type: string
+      applicationName:
+        type: string
+      apply:
+        type: boolean
+      slpId:
+        type: string
+      sltId:
+        type: string
+    required:
+      - slpId
+      - sltId
+  ActifioOrganizationDto:
     type: object
     properties:
       id:
         type: string
       name:
         type: string
-      srcid:
+      createdate:
+        type: number
+      description:
         type: string
     required:
       - id
       - name
-      - srcid
-  ActifioUpdateLogicalGroupMembersDto:
+      - createdate
+  ActifioAddOrganizationDto:
     type: object
     properties:
-      members:
+      applicationIds:
         type: array
         items:
-          $ref: '#/definitions/ActifioModifyMemberDto'
+          type: string
+      description:
+        type: string
+      hostIds:
+        type: array
+        items:
+          type: string
+      logicalGroupIds:
+        type: array
+        items:
+          type: string
+      name:
+        type: string
+      slpIds:
+        type: array
+        items:
+          type: string
+      sltIds:
+        type: array
+        items:
+          type: string
+      storageArrayIds:
+        type: array
+        items:
+          type: string
+      storagePoolIds:
+        type: array
+        items:
+          type: string
+      userIds:
+        type: array
+        items:
+          type: string
     required:
-      - members
-  ActifioCreateOrApplySlaDto:
-    type: object
-    properties:
-      applicationName:
-        type: string
-      applicationId:
-        type: string
-      slpId:
-        type: string
-      sltId:
-        type: string
-      apply:
-        type: string
-    required:
-      - slpId
-      - sltId
-  ActifioSLA:
+      - name
+  ActifioSla:
     type: object
     properties: {}
   ActifioAddTemplatePolicyDto:
     type: object
     properties:
-      startTime:
-        type: number
       endTime:
         type: number
       isSnapshot:
         type: boolean
       isWindowed:
         type: boolean
+      startTime:
+        type: number
     required:
-      - startTime
       - isSnapshot
       - isWindowed
+      - startTime
   ActifioAddTemplateDto:
     type: object
     properties:
-      name:
-        type: string
       description:
+        type: string
+      name:
         type: string
       policies:
         type: array
@@ -15376,27 +15623,24 @@ definitions:
   ActifioUpdateTemplatePolicyDto:
     type: object
     properties:
-      id:
-        type: string
       endTime:
         type: number
+      id:
+        type: string
       startTime:
         type: number
     required:
       - id
       - startTime
-  ActifioDiskPoolDto:
+  ActifioServerNewRecoveryPlan:
+    type: object
+    properties: {}
+  ActifioSequencePortGroupDto:
     type: object
     properties:
       id:
         type: string
       name:
-        type: string
-      href:
-        type: number
-      srcid:
-        type: string
-      usduid:
         type: string
     required:
       - id
@@ -15413,3 +15657,41 @@ definitions:
     required:
       - id
       - name
+  ActifioSequenceOrderDto:
+    type: object
+    properties:
+      delay:
+        type: number
+      memberOrderIndex:
+        type: number
+      sequencePortGroup:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequencePortGroupDto'
+      vmMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - delay
+      - memberOrderIndex
+      - sequencePortGroup
+      - vmMembers
+  ActifioApplicationGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      sequenceOrder:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      startupSequence:
+        type: number
+    required:
+      - id
+      - name
+      - sequenceOrder
+      - startupSequence

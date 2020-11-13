@@ -24,7 +24,7 @@ describe('BreadcrumbComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
-      declarations: [BreadcrumbComponent, MockComponent({ selector: 'app-datacenter-select' })],
+      declarations: [BreadcrumbComponent, MockComponent('app-datacenter-select')],
       providers: [
         {
           provide: Router,

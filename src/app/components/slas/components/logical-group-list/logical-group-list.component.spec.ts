@@ -7,6 +7,7 @@ import { LogicalGroupListComponent } from './logical-group-list.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ToastrService } from 'ngx-toastr';
 
 describe('LogicalGroupListComponent', () => {
   let component: LogicalGroupListComponent;
@@ -39,24 +40,25 @@ describe('LogicalGroupListComponent', () => {
   };
 
   beforeEach(async(() => {
-    const logicalGroupService = {
-      v1AgmLogicalGroupsGet: jest.fn(() => of(createLogicalGroups())),
-      v1AgmLogicalGroupsIdDelete: jest.fn(() => of()),
-      v1AgmLogicalGroupsIdGet: jest.fn(() => of({ members: [] })),
-    };
-
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['data', 'config'] }),
-        MockComponent({ selector: 'app-logical-group-modal' }),
+        MockComponent('app-logical-group-modal'),
         MockComponent({ selector: 'app-logical-group-view-modal', inputs: ['logicalGroup'] }),
         MockYesNoModalComponent,
         MockIconButtonComponent,
         MockFontAwesomeComponent,
         LogicalGroupListComponent,
       ],
-      providers: [{ useValue: logicalGroupService, provide: V1AgmLogicalGroupsService }, MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(V1AgmLogicalGroupsService, {
+          v1AgmLogicalGroupsGet: of(createLogicalGroups()),
+          v1AgmLogicalGroupsIdGet: of({ members: [] }),
+        }),
+        MockProvider(NgxSmartModalService),
+        MockProvider(ToastrService),
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -76,7 +78,7 @@ describe('LogicalGroupListComponent', () => {
 
     component.ngOnInit();
 
-    expect(spy).toHaveBeenCalledWith();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should map a logical group', () => {
@@ -85,8 +87,6 @@ describe('LogicalGroupListComponent', () => {
     const [logicalGroup1] = component.logicalGroups;
     expect(logicalGroup1.id).toBe('1');
     expect(logicalGroup1.name).toBe('LogicalGroup-1');
-    expect(logicalGroup1.slaProfileDescription).toBe('--');
-    expect(logicalGroup1.slaTemplateDescription).toBe('--');
     expect(logicalGroup1.slaProfileName).toBe('Profile-1');
     expect(logicalGroup1.slaTemplateName).toEqual('Template-1');
   });

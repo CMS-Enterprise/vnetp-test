@@ -7,13 +7,12 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip [message]="helpText?.Name"></tooltip>
         <input
           type="text"
           id="name"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -26,13 +25,12 @@
 
       <div class="form-group">
         <label for="description">Description</label>
-        <tooltip [message]="helpText?.Description"></tooltip>
         <input
           type="text"
           id="description"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
@@ -43,7 +41,6 @@
 
       <div class="form-group">
         <label for="tierGroup">Tier Group</label>
-        <tooltip [message]="helpText?.TierGroup"></tooltip>
         <select id="tierGroup" formControlName="tierGroup" class="form-control" aria-label="Tier Group">
           <option></option>
           <option *ngFor="let tierGroup of tierGroups" [ngValue]="tierGroup.id">{{ tierGroup.name }}</option>

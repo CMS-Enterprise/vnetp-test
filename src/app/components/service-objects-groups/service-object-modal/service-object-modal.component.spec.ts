@@ -163,16 +163,6 @@ describe('ServiceObjectModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createServiceObjectModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
       const ngx = TestBed.get(NgxSmartModalService);
       const dto = createServiceObjectModalDto();

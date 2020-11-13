@@ -10,14 +10,19 @@
 </ngx-smart-modal>
 
 <!-- Step 1 - Select vCenter -->
-<ng-template #selectVCenterTemplate>
+<ng-template #selectVCenter>
   <app-select-vcenter (vcenterSelected)="onVCenterSelected($event)"></app-select-vcenter>
 </ng-template>
 
 <!-- Step 2 - Select Virtual Machines -->
-<ng-template #selectVirtualMachinesTemplate>
+<ng-template #selectVirtualMachines>
   <app-select-virtual-machines
     [vcenterId]="selectedVCenterId"
-    (virtualMachinesSelected)="onVirtualMachinesSelected($event)"
+    (virtualMachinesAdded)="onVirtualMachinesAdded($event)"
   ></app-select-virtual-machines>
+</ng-template>
+
+<!-- Step 3 - Select Action -->
+<ng-template #selectAction>
+  <app-select-action [virtualMachines]="selectedVirtualMachines" (actionComplete)="onActionComplete()"></app-select-action>
 </ng-template>

@@ -29,9 +29,9 @@ describe('NetworkObjectsGroupsComponent', () => {
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
-        MockComponent({ selector: 'app-network-object-group-modal' }),
-        MockComponent({ selector: 'app-network-object-modal' }),
-        MockComponent({ selector: 'app-tier-select' }),
+        MockComponent('app-network-object-group-modal'),
+        MockComponent('app-network-object-modal'),
+        MockComponent('app-tier-select'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterSelectComponent } from './datacenter-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -12,19 +12,17 @@ describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
   let fixture: ComponentFixture<DatacenterSelectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(DatacenterSelectComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+    });
+
+    fixture = TestBed.createComponent(DatacenterSelectComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

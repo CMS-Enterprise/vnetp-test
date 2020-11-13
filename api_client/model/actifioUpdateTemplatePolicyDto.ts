@@ -12,8 +12,8 @@
 
 
 export interface ActifioUpdateTemplatePolicyDto { 
-    id: string;
     endTime?: number;
+    id: string;
     startTime: number;
 }
 

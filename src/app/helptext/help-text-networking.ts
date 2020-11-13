@@ -26,31 +26,11 @@ export class SubnetsVlansHelpText {
   providedIn: 'root',
 })
 export class SubnetModalHelpText {
-  Name = `Name of the Subnet.`;
-  Description = 'Description of the Subnet.';
   Vrf = `Tier (VRF) that the subnet will be created within.`;
   Protocol = `IP Protocol of the Subnet.`;
   Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
   Gateway = `Gateway Address of the Subnet.`;
   Vlan = `VLAN associated with the Subnet.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class VlanModalHelpText {
-  Name = 'Name of the VLAN.';
-  Description = 'Description of the VLAN.';
-  Vlan = `VLAN Number.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class TierModalHelpText {
-  Name = 'Name of the Tier.';
-  Description = 'Description of the Tier.';
-  TierGroup = 'Tier Group that the Tier belongs to.';
 }
 
 @Injectable({

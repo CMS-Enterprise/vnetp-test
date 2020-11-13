@@ -12,10 +12,10 @@
 
 
 export interface ActifioCreateOrApplySlaDto { 
-    applicationName?: string;
     applicationId?: string;
+    applicationName?: string;
+    apply?: boolean;
     slpId: string;
     sltId: string;
-    apply?: string;
 }
 

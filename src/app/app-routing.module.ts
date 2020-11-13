@@ -93,6 +93,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/virtual-machines/virtual-machines.module').then(m => m.VirtualMachinesModule),
   },
   {
+    path: 'application-groups',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Application Groups', title: 'Automation - Application Groups' },
+    loadChildren: () => import('./components/application-groups/application-groups.module').then(m => m.ApplicationGroupModule),
+  },
+  {
     path: 'slas',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'SLAs', title: 'Automation - SLAs' },
@@ -127,7 +133,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule),
   },
 ];
 
