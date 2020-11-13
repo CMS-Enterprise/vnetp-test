@@ -3,8 +3,7 @@ import { BreadcrumbComponent } from './breadcrumb.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockComponent } from 'src/test/mock-components';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET, Event } from '@angular/router';
-import { of, Subject } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { Subject } from 'rxjs';
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
@@ -13,10 +12,6 @@ describe('BreadcrumbComponent', () => {
   const eventSubject = new Subject<Event>();
 
   beforeEach(async(() => {
-    const authService = {
-      currentUser: of({}),
-    };
-
     const activatedRoute = {
       root: {
         children: [],
@@ -31,10 +26,6 @@ describe('BreadcrumbComponent', () => {
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [BreadcrumbComponent, MockComponent('app-datacenter-select')],
       providers: [
-        {
-          provide: AuthService,
-          useValue: authService,
-        },
         {
           provide: Router,
           useValue: router,

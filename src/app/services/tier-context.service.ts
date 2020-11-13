@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { AuthService } from './auth.service';
 import { Message, MessageService } from './message.service';
 import { Tier, V1DatacentersService } from 'api_client';
 import { DatacenterContextService } from './datacenter-context.service';
@@ -33,7 +32,6 @@ export class TierContextService {
   currentDatacenterId: string;
 
   constructor(
-    private authService: AuthService,
     private DatacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
     private messageService: MessageService,
@@ -57,10 +55,6 @@ export class TierContextService {
     // Subscribe to the activatedRoute, validate that the
     // tier param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!this.authService.currentUserValue) {
-        return;
-      }
-
       if (this.ignoreNextQueryParamEvent) {
         this.ignoreNextQueryParamEvent = false;
         return;

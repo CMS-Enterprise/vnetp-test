@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { AuthService } from './auth.service';
 import { Message, MessageService } from './message.service';
 import { Datacenter, V1DatacentersService } from 'api_client';
 
@@ -31,7 +30,6 @@ export class DatacenterContextService {
   ignoreNextQueryParamEvent: boolean;
 
   constructor(
-    private authService: AuthService,
     private datacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
@@ -51,16 +49,11 @@ export class DatacenterContextService {
     // Subscribe to the activatedRoute, validate that the
     // datacenter param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!this.authService.currentUserValue) {
-        return;
-      }
-
       if (this.ignoreNextQueryParamEvent) {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
-
-      this.getDatacenters(queryParams.get('datacenter'));
+      setTimeout(() => this.getDatacenters(queryParams.get('datacenter')), 1200);
     });
   }
 

@@ -1,12 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard';
 import { NgModule } from '@angular/core';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  {
-    path: 'login',
-    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
-  },
   {
     path: 'subnets-vlans',
     canActivate: [AuthGuard],
@@ -68,6 +64,11 @@ const routes: Routes = [
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
   {
+    path: 'callback',
+    data: { title: 'Automation - Dashboard' },
+    loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
+  },
+  {
     path: 'wizard',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Wizard', title: 'Automation - Wizard' },
@@ -121,7 +122,15 @@ const routes: Routes = [
     data: { breadcrumb: 'Appliance as a Service', title: 'Automation - Appliance as a Service' },
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: 'unauthorized',
+    loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./components/logout/logout.module').then(m => m.LogoutModule),
+  },
   {
     path: '**',
     canActivate: [AuthGuard],

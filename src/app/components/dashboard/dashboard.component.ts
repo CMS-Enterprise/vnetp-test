@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
+    private authService: AuthService,
   ) {}
 
   datacenters: number;
@@ -38,9 +40,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dashboardPoller: any;
 
   ngOnInit() {
+    this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-    this.loadDashboard();
-
+    setTimeout(() => this.loadDashboard(), 1200);
     this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
 

@@ -1,4 +1,6 @@
-# ui
+# DCS User Interface
+
+API layer found at `draas/dmapi`.
 
 ## Setup
 
