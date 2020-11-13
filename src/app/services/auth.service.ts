@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserManager, User, Log, Profile } from 'oidc-client';
+import { UserManager, User, Log } from 'oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -12,6 +12,7 @@ export class AuthService {
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   public isLoggedInBool = false;
   public currentUser: Observable<User> = this.user.asObservable();
+
   // Used if user claims env var is set to false
   private mockUser: User = {
     id_token: 'fakeIdToken',
@@ -34,8 +35,10 @@ export class AuthService {
   };
 
   constructor(private router: Router) {
-    Log.logger = console;
-    Log.level = Log.DEBUG;
+    if (!environment.production) {
+      Log.logger = console;
+      Log.level = Log.DEBUG;
+    }
     this.manager.getUser().then(user => {
       if (user) {
         this.user.next(user);
@@ -49,7 +52,7 @@ export class AuthService {
       this.user.next(this.mockUser);
       return true;
     }
-    console.log(this.user.value);
+
     return this.user && this.user.value !== null;
   }
 
