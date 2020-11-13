@@ -4,8 +4,4 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-logout',
   templateUrl: './logout.component.html',
 })
-export class LogoutComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit() {}
-}
+export class LogoutComponent {}

@@ -66,19 +66,13 @@ export class AuthService {
     } catch (err) {}
   }
 
-  logout(fromPermissions = false): void {
+  logout(route: string): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
     sessionStorage.setItem(`oidc.user:${environment.openId.client_id}`, null);
-    if (fromPermissions) {
-      this.router.navigate(['/unauthorized'], {
-        queryParamsHandling: 'merge',
-      });
-    } else {
-      this.router.navigate(['/logout'], {
-        queryParamsHandling: 'merge',
-      });
-    }
+    this.router.navigate([`/${route}`], {
+      queryParamsHandling: 'merge',
+    });
   }
 
   async completeAuthentication(): Promise<void> {
