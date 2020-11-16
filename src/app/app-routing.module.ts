@@ -63,11 +63,11 @@ const routes: Routes = [
     data: { title: 'Automation - Dashboard' },
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
-  {
-    path: 'callback',
-    data: { title: 'Automation - Dashboard' },
-    loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
-  },
+  // {
+  //   path: 'callback',
+  //   data: { title: 'Automation - Dashboard' },
+  //   loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
+  // },
   {
     path: 'wizard',
     canActivate: [AuthGuard],
@@ -123,6 +123,14 @@ const routes: Routes = [
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: 'callback',
+    loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
+  },
+  {
+    path: 'tenant',
+    loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
+  },
   {
     path: 'unauthorized',
     loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),

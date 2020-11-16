@@ -1,18 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
+import { User } from 'oidc-client';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
 })
-export class BreadcrumbComponent implements OnInit {
+export class BreadcrumbComponent implements OnInit, OnDestroy {
   public breadcrumbs: Breadcrumb[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  public user: User;
+  public onTenantRoute = false;
+  private currentUserSubscription: Subscription;
+
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.currentUserSubscription = this.authService.currentUser.subscribe(user => {
+      this.user = user;
+    });
+
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',
@@ -34,6 +46,10 @@ export class BreadcrumbComponent implements OnInit {
     }
 
     for (const child of children) {
+      if (child.snapshot.url.length !== 0 && child.snapshot.url[0].path === 'tenant') {
+        this.onTenantRoute = true;
+      }
+
       if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {
         continue;
       }
@@ -54,6 +70,10 @@ export class BreadcrumbComponent implements OnInit {
       return this.getBreadcrumbs(child, url, breadcrumbs);
     }
     return breadcrumbs;
+  }
+
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
 }
 

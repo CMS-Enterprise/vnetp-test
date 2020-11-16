@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   async completeAuthentication(): Promise<void> {
-    this.router.navigate(['/dashboard'], {
+    this.router.navigate(['/tenant'], {
       queryParamsHandling: 'merge',
     });
     try {

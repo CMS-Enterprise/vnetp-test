@@ -12,7 +12,6 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public user: User;
-
   private currentUserSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
