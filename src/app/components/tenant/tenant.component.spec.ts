@@ -1,14 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Subject } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { TenantComponent } from './tenant.component';
 
 describe('TenantComponent', () => {
   let component: TenantComponent;
   let fixture: ComponentFixture<TenantComponent>;
 
+  const userSubject = new Subject();
+
   beforeEach(async(() => {
+    const authService = {
+      completeAuthentication: () => true,
+      currentUser: userSubject.asObservable(),
+    };
+
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [TenantComponent],
+      providers: [{ provide: AuthService, useValue: authService }],
     });
 
     fixture = TestBed.createComponent(TenantComponent);
@@ -18,10 +29,5 @@ describe('TenantComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should render a not found message', () => {
-    const message = fixture.debugElement.query(By.css('.jumbotron'));
-    expect(message.nativeElement.textContent).toBe('404 Not Found');
   });
 });
