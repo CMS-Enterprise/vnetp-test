@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/c
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ActifioApplicationGroupDto, V1ActifioApplicationGroupsService } from 'api_client';
+import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioApplicationGroupsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
 
@@ -90,8 +90,8 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
   }
 
   private mapApplicationGroup(applicationGroup: ActifioApplicationGroupDto): ApplicationGroupView {
-    const { id, name, sequenceOrder } = applicationGroup;
-    const virtualMachineCount = sequenceOrder.reduce((total: number, sequenceOrder: any) => {
+    const { id, name, sequenceOrders } = applicationGroup;
+    const virtualMachineCount = sequenceOrders.reduce((total: number, sequenceOrder: ActifioSequenceOrderDto) => {
       return total + sequenceOrder.vmMembers.length;
     }, 0);
     return { id, name, virtualMachineCount };

@@ -11,8 +11,9 @@
  */
 
 
-export interface UserPass { 
-    username: string;
-    password: string;
+export interface ActifioCollectorApplianceDto { 
+    name?: string;
+    hostOrIp: string;
+    id: string;
 }
 

@@ -17,10 +17,16 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { ActifioCollectorApplianceDto } from '../model/models';
+import { ActifioCollectorVirtualManagementServerDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
+
+export interface V1ActifioAppliancesIdVirtualManagementServersGetRequestParams {
+    id: string;
+}
 
 
 @Injectable({
@@ -89,10 +95,10 @@ export class V1ActifioAppliancesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioAppliancesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1ActifioAppliancesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1ActifioAppliancesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1ActifioAppliancesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioAppliancesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioCollectorApplianceDto>>;
+    public v1ActifioAppliancesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioCollectorApplianceDto>>>;
+    public v1ActifioAppliancesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioCollectorApplianceDto>>>;
+    public v1ActifioAppliancesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -100,6 +106,7 @@ export class V1ActifioAppliancesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -113,7 +120,53 @@ export class V1ActifioAppliancesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/actifio/appliances`,
+        return this.httpClient.get<Array<ActifioCollectorApplianceDto>>(`${this.configuration.basePath}/v1/actifio/appliances`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many ActifioCollectorVirtualManagementServers
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioCollectorVirtualManagementServerDto>>;
+    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioCollectorVirtualManagementServerDto>>>;
+    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioCollectorVirtualManagementServerDto>>>;
+    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioAppliancesIdVirtualManagementServersGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioCollectorVirtualManagementServerDto>>(`${this.configuration.basePath}/v1/actifio/appliances/${encodeURIComponent(String(id))}/virtual-management-servers`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

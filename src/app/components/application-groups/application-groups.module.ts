@@ -9,6 +9,7 @@ import { ApplicationGroupListComponent } from './components/application-group-li
 import { ApplicationGroupModalComponent } from './components/application-group-modal/application-group-modal.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     IconButtonModule,
+    NgSelectModule,
     NgxSmartModalModule,
     RouterModule.forChild(routes),
     SharedModule,

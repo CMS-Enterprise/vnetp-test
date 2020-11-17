@@ -11,8 +11,8 @@
  */
 
 
-export interface ActifioVMMemberDto { 
+export interface ActifioCollectorVirtualManagementServerDto { 
+    ipAddress: string;
     id: string;
-    name: string;
 }
 

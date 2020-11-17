@@ -28,6 +28,63 @@
             <div *ngIf="f.name.errors.required">Name is required</div>
           </div>
         </div>
+
+        <!-- Description -->
+        <div class="form-group col-md-6">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            formControlName="description"
+            class="form-control"
+            [class.is-invalid]="submitted && f.description.errors"
+            aria-label="Description"
+            id="description"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Appliance -->
+        <div class="form-group col-md-6">
+          <label for="appliance">Appliance</label>
+          <ng-select
+            id="appliance"
+            [items]="appliances"
+            [class.is-invalid]="submitted && f.applianceId.errors"
+            bindLabel="name"
+            [closeOnSelect]="true"
+            bindValue="id"
+            [loading]="isLoadingAppliances"
+            formControlName="applianceId"
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <span class="appliance--name">{{ item.name }}</span>
+              <span class="appliance--ip">{{ item.hostOrIp }} </span>
+            </ng-template>
+          </ng-select>
+          <div *ngIf="submitted && f.applianceId.errors" class="invalid-feedback">
+            <div *ngIf="f.applianceId.errors.required">Appliance is required</div>
+          </div>
+        </div>
+
+        <!-- Virtual Management Server -->
+        <div class="form-group col-md-6">
+          <label for="virtual-management-server">Virtual Management Server</label>
+          <ng-select
+            id="virtual-management-server"
+            [items]="virtualManagementServers"
+            [class.is-invalid]="submitted && f.virtualManagementServerId.errors"
+            bindLabel="ipAddress"
+            [closeOnSelect]="true"
+            bindValue="id"
+            [loading]="isLoadingVirtualManagementServers"
+            formControlName="virtualManagementServerId"
+          >
+          </ng-select>
+          <div *ngIf="submitted && f.virtualManagementServerId.errors" class="invalid-feedback">
+            <div *ngIf="f.virtualManagementServerId.errors.required">Virtual Management is required</div>
+          </div>
+        </div>
       </div>
     </form>
   </main>
