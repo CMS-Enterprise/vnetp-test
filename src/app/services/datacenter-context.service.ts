@@ -53,7 +53,8 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
-      setTimeout(() => this.getDatacenters(queryParams.get('datacenter')), 1200);
+
+      this.getDatacenters(queryParams.get('datacenter'));
     });
   }
 

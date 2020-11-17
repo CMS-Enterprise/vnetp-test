@@ -16,7 +16,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
-    private authService: AuthService,
   ) {}
 
   datacenters: number;
@@ -40,9 +39,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dashboardPoller: any;
 
   ngOnInit() {
-    // this.authService.completeAuthentication();
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-    // setTimeout(() => this.loadDashboard(), 1200);
     this.loadDashboard();
     this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
