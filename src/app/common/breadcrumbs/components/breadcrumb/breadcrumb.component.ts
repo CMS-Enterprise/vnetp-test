@@ -15,7 +15,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   public breadcrumbs: Breadcrumb[] = [];
 
   public user: User;
-  public onTenantRoute = false;
+  public isTenantRoute = false;
   private currentUserSubscription: Subscription;
 
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
@@ -47,7 +47,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     for (const child of children) {
       if (child.snapshot.url.length !== 0 && child.snapshot.url[0].path === 'tenant') {
-        this.onTenantRoute = true;
+        this.isTenantRoute = true;
       }
 
       if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {

@@ -63,11 +63,6 @@ const routes: Routes = [
     data: { title: 'Automation - Dashboard' },
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
-  // {
-  //   path: 'callback',
-  //   data: { title: 'Automation - Dashboard' },
-  //   loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
-  // },
   {
     path: 'wizard',
     canActivate: [AuthGuard],
