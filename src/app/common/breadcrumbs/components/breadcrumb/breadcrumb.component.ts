@@ -10,7 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
-  private routesToNotRender: string[] = ['/tenant', '/unauthorized', '/logout'];
+  private routesNotToRender: string[] = ['/tenant', '/unauthorized', '/logout'];
   public breadcrumbs: Breadcrumb[] = [];
   public shouldRender = true;
   private currentUserSubscription: Subscription;
@@ -25,7 +25,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
-      this.shouldRender = !this.routesToNotRender.some(route => route === this.router.url);
+      this.shouldRender = !this.routesNotToRender.some(route => route === this.router.url);
 
       this.breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];

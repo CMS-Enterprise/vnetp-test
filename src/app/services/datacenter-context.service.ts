@@ -27,7 +27,8 @@ export class DatacenterContextService {
   public lockCurrentDatacenter: Observable<boolean> = this.lockCurrentDatacenterSubject.asObservable();
 
   private _datacenters: Datacenter[] = new Array<Datacenter>();
-  ignoreNextQueryParamEvent: boolean;
+  private routesNotToRender: string[] = ['/', '/tenant', '/logout', '/unauthorized'];
+  private ignoreNextQueryParamEvent: boolean;
 
   constructor(
     private datacenterService: V1DatacentersService,
@@ -53,8 +54,11 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
+      const fetch = !this.routesNotToRender.some(route => route === this.router.url);
 
-      this.getDatacenters(queryParams.get('datacenter'));
+      if (fetch) {
+        this.getDatacenters(queryParams.get('datacenter'));
+      }
     });
   }
 
