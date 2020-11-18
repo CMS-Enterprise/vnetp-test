@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { TenantComponent } from './tenant.component';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('TenantComponent', () => {
   let component: TenantComponent;
@@ -19,7 +21,7 @@ describe('TenantComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [TenantComponent],
-      providers: [{ provide: AuthService, useValue: authService }],
+      providers: [MockProvider(ToastrService), { provide: AuthService, useValue: authService }],
     });
 
     fixture = TestBed.createComponent(TenantComponent);
