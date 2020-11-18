@@ -1,4 +1,5 @@
 import { OidcClientSettings } from 'oidc-client';
+import { DynamicEnvironment } from './dynamic-environment';
 
 const openId: OidcClientSettings = {
   authority: 'https://cfs01-dc01.draas.cdsvdc.lcl/cfs/oauth/draasui',
@@ -15,11 +16,20 @@ const openId: OidcClientSettings = {
     userinfo_endpoint: 'http://localhost:3000/cfs/oauth/draasui/userinfo',
   },
 };
+class Environment extends DynamicEnvironment {
+  public production: boolean;
+  public userClaims: boolean;
+  public openId: OidcClientSettings;
+  public apiBase: string;
+  public wikiBase: string;
+  constructor() {
+    super();
+    this.production = false;
+    this.userClaims = true;
+    this.openId = openId;
+    this.apiBase = 'http://localhost:3000/api';
+    this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
+  }
+}
 
-export const environment = {
-  production: false,
-  userClaims: true,
-  apiBase: 'http://localhost:3000/api',
-  wikiBase: 'http://wiki.draas.cdsvdc.lcl/index.php/UI',
-  openId,
-};
+export const environment = new Environment();
