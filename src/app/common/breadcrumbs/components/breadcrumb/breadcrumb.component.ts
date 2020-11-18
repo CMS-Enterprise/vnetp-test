@@ -10,7 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
-  private routesToNotRender: string[] = ['/tenant', '/unauthorized', 'logout'];
+  private routesToNotRender: string[] = ['/tenant', '/unauthorized', '/logout'];
   public breadcrumbs: Breadcrumb[] = [];
   public shouldRender = true;
   private currentUserSubscription: Subscription;
