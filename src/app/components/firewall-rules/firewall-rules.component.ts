@@ -61,12 +61,9 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       });
   }
 
-  public filterFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): boolean {
-    if (this && this.currentTab) {
-      return firewallRuleGroup.type === this.currentTab;
-    }
-    return true;
-  }
+  public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => {
+    return firewallRuleGroup.type === this.currentTab;
+  };
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
