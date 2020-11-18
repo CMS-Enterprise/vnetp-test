@@ -18,7 +18,7 @@ export class HttpConfigInterceptor {
     });
 
     const isLoggedIn = this.authService.isLoggedIn();
-    if (isLoggedIn && environment.userClaims) {
+    if (isLoggedIn && environment.environment.oidc_user_claims) {
       const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
       request = request.clone({
         headers,

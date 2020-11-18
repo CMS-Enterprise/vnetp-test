@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private manager = new UserManager(environment.openId);
+  private manager = new UserManager(environment.environment);
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   public isLoggedInBool = false;
   public currentUser: Observable<User> = this.user.asObservable();
@@ -39,6 +39,7 @@ export class AuthService {
       Log.logger = console;
       Log.level = Log.DEBUG;
     }
+    console.log(environment);
     this.manager.getUser().then(user => {
       if (user) {
         this.user.next(user);
@@ -48,7 +49,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    if (!environment.userClaims) {
+    if (!environment.environment.oidc_user_claims) {
       this.user.next(this.mockUser);
       return true;
     }
@@ -69,7 +70,7 @@ export class AuthService {
   logout(route: string): void {
     this.user.next(null);
     this.currentUser = this.user.asObservable();
-    sessionStorage.setItem(`oidc.user:${environment.openId.client_id}`, null);
+    sessionStorage.setItem(`oidc.user:${environment.environment.authority}:${environment.environment.client_id}`, null);
     this.router.navigate([`/${route}`], {
       queryParamsHandling: 'merge',
     });
