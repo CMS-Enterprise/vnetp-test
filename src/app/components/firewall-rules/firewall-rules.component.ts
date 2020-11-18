@@ -63,6 +63,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
 
   public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => {
     return firewallRuleGroup.type === this.currentTab;
+    // tslint:disable-next-line: semicolon
   };
 
   public getTierName(tierId: string): string {

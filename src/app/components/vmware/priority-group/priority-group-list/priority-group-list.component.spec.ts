@@ -43,7 +43,6 @@ describe('PriorityGroupListComponent', () => {
 
   it('should delete a priority group', () => {
     const entityService = TestBed.get(EntityService);
-    entityService;
     const deleteSpy = jest.spyOn(entityService, 'deleteEntity');
 
     const pg = { id: '1', deletedAt: {} } as PriorityGroup;
