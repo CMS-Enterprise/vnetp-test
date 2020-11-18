@@ -1,7 +1,5 @@
-import { AuthService } from 'src/app/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
-import { User } from 'oidc-client';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -12,19 +10,14 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
+  private routesToNotRender: string[] = ['/tenant', '/unauthorized', 'logout'];
   public breadcrumbs: Breadcrumb[] = [];
-
-  public user: User;
-  public isTenantRoute = false;
+  public shouldRender = true;
   private currentUserSubscription: Subscription;
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.currentUserSubscription = this.authService.currentUser.subscribe(user => {
-      this.user = user;
-    });
-
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',
@@ -32,6 +25,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
+      this.shouldRender = !this.routesToNotRender.some(route => route === this.router.url);
+
       this.breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
     });
@@ -46,10 +41,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
 
     for (const child of children) {
-      if (child.snapshot.url.length !== 0 && child.snapshot.url[0].path === 'tenant') {
-        this.isTenantRoute = true;
-      }
-
       if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {
         continue;
       }
