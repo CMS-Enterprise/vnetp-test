@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService } from 'api_client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,7 +41,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
     this.loadDashboard();
-
     this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
 

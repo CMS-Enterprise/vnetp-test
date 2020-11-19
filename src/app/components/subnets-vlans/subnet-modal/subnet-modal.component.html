@@ -7,13 +7,12 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip [message]="helpText?.Name"></tooltip>
         <input
           type="text"
           id="name"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -26,13 +25,12 @@
 
       <div class="form-group">
         <label for="description">Description</label>
-        <tooltip [message]="helpText?.Description"></tooltip>
         <input
           type="text"
           id="description"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
@@ -45,13 +43,7 @@
       <div class="form-group">
         <label for="vlan">VLAN</label>
         <tooltip [message]="helpText?.Vlan"></tooltip>
-        <select
-          id="vlan"
-          formControlName="vlan"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.vlan.errors }"
-          aria-label="VLAN"
-        >
+        <select id="vlan" formControlName="vlan" class="form-control" [class.is-invalid]="submitted && f.vlan.errors" aria-label="VLAN">
           <option></option>
           <option *ngFor="let vlan of vlans" [ngValue]="vlan?.id">{{ vlan?.name }} ({{ vlan?.vlanNumber }})</option>
         </select>
@@ -68,7 +60,7 @@
           id="network"
           formControlName="network"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.network.errors }"
+          [class.is-invalid]="submitted && f.network.errors"
           aria-label="Network"
         />
         <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
@@ -89,7 +81,7 @@
           id="gateway"
           formControlName="gateway"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.gateway.errors }"
+          [class.is-invalid]="submitted && f.gateway.errors"
           aria-label="Gateway"
         />
         <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
@@ -110,7 +102,7 @@
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        <span>Save</span>
+        <span>Save Subnet</span>
       </button>
     </footer>
   </form>

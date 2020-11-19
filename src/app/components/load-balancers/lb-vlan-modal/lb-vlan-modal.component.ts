@@ -37,10 +37,10 @@ export class LoadBalancerVlanModalComponent implements OnInit {
           loadBalancerVlan: vlan,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.vlanService
@@ -49,10 +49,10 @@ export class LoadBalancerVlanModalComponent implements OnInit {
           loadBalancerVlan: vlan,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -74,17 +74,13 @@ export class LoadBalancerVlanModalComponent implements OnInit {
   getData() {
     const dto = this.ngx.getModalData('loadBalancerVlanModal') as LoadBalancerVlanModalDto;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.VlanId = dto.Vlan.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.tag.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.VlanId = dto.Vlan.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.tag.enable();
     }
 
     this.TierId = dto.TierId;

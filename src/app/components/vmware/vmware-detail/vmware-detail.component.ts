@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'api_client';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-vmware-detail',
@@ -19,10 +18,10 @@ export class VmwareDetailComponent implements OnInit {
   ConversionUtil = ConversionUtil;
 
   constructor(
+    private entityService: EntityService,
     private route: ActivatedRoute,
     private router: Router,
     private virtualMachineService: V1VmwareVirtualMachinesService,
-    private ngxSmartModalService: NgxSmartModalService,
   ) {}
 
   getVirtualMachine() {
@@ -38,37 +37,23 @@ export class VmwareDetailComponent implements OnInit {
       });
   }
 
-  deleteVirtualMachine(vm: VmwareVirtualMachine) {
-    if (vm.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = vm.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!vm.deletedAt) {
-        this.virtualMachineService
-          .v1VmwareVirtualMachinesIdSoftDelete({
-            id: vm.id,
-          })
-          .subscribe(data => {
-            this.getVirtualMachine();
-          });
-      } else {
-        this.virtualMachineService
-          .v1VmwareVirtualMachinesIdDelete({
-            id: vm.id,
-          })
-          .subscribe(data => {
-            this.router.navigate(['/vmware'], { queryParamsHandling: 'merge' });
-          });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Virtual Machine?`, `Do you want to ${deleteDescription} virtual machine "${vm.name}"?`),
-      deleteFunction,
-    );
+  public deleteVirtualMachine(vm: VmwareVirtualMachine): void {
+    this.entityService.deleteEntity(vm, {
+      entityName: 'Virtual Machine',
+      delete$: this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({
+        id: vm.id,
+      }),
+      softDelete$: this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({
+        id: vm.id,
+      }),
+      onSuccess: () => {
+        if (vm.deletedAt) {
+          this.router.navigate(['/vmware'], { queryParamsHandling: 'merge' });
+        } else {
+          this.getVirtualMachine();
+        }
+      },
+    });
   }
 
   restoreVirtualMachine(vm: VmwareVirtualMachine) {
@@ -77,25 +62,10 @@ export class VmwareDetailComponent implements OnInit {
         .v1VmwareVirtualMachinesIdRestorePatch({
           id: vm.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getVirtualMachine();
         });
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngxSmartModalService.setModalData(modalDto, 'yesNoModal');
-    this.ngxSmartModalService.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngxSmartModalService
-      .getModal('yesNoModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        const data = modal.getData() as YesNoModalDto;
-        modal.removeData();
-        if (data && data.modalYes) {
-          deleteFunction();
-        }
-        yesNoModalSubscription.unsubscribe();
-      });
   }
 
   ngOnInit() {

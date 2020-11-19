@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { User } from 'src/app/models/user/user';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -10,21 +8,22 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
+  private routesNotToRender: string[] = ['/tenant', '/unauthorized', '/logout'];
   public breadcrumbs: Breadcrumb[] = [];
-  public currentUser: User;
+  public shouldRender = true;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const breadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',
     };
 
-    this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
+      this.shouldRender = !this.routesNotToRender.some(route => route === this.router.url);
+
       this.breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
     });

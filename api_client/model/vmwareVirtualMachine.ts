@@ -30,8 +30,8 @@ export interface VmwareVirtualMachine {
     memorySize: number;
     memoryReserved: boolean;
     datacenterId: string;
+    priorityGroupId: string;
     readonly networkAdapters?: Array<VmwareNetworkAdapter>;
     readonly virtualDisks?: Array<VmwareVirtualDisk>;
-    priorityGroupId: string;
 }
 

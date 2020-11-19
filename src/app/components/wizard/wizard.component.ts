@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WizardSection } from 'src/app/models/wizard/wizard-data';
 import { wizardSections } from './wizardSections';
+
 @Component({
   selector: 'app-wizard',
   templateUrl: './wizard.component.html',
@@ -10,8 +11,6 @@ export class WizardComponent implements OnInit {
   WizardSections = new Array<WizardSection>();
   WizardProgress = 50;
   currentPanel: string;
-
-  constructor() {}
 
   getSidePanel(param) {
     if (this.currentPanel === param) {

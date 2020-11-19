@@ -20,7 +20,7 @@
           id="name"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -38,7 +38,7 @@
           id="description"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
@@ -51,13 +51,7 @@
         <div class="form-group col-md-12">
           <label for="type">Type</label>
           <tooltip [message]="helpText.Type"></tooltip>
-          <select
-            id="type"
-            formControlName="type"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-            aria-label="Type"
-          >
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
             <option></option>
             <option value="TCPUDP">TCP/UDP</option>
             <option value="TCP">TCP</option>

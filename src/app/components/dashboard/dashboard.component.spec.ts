@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
 import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { of } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -26,6 +27,10 @@ describe('DashboardComponent', () => {
       v1LoadBalancerVirtualServersGet: jest.fn(() => of({ total: 1 })),
     };
 
+    const authService = {
+      completeAuthentication: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       declarations: [
         DashboardComponent,
@@ -39,6 +44,7 @@ describe('DashboardComponent', () => {
         { provide: V1TiersService, useValue: tierService },
         { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
         { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
+        { provide: AuthService, useValue: authService },
       ],
     })
       .compileComponents()

@@ -8,7 +8,7 @@ import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networkin
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-network-object-modal',
@@ -72,10 +72,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           networkObject: modalNetworkObject,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       modalNetworkObject.type = null;
@@ -85,10 +85,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           networkObject: modalNetworkObject,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -187,17 +187,13 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.NetworkObjectId = dto.NetworkObject.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.NetworkObjectId = dto.NetworkObject.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     const networkObject = dto.NetworkObject;

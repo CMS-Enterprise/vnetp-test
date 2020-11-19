@@ -45,10 +45,10 @@ export class LoadBalancerRouteModalComponent implements OnInit {
           loadBalancerRoute: route,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.routeService
@@ -57,10 +57,10 @@ export class LoadBalancerRouteModalComponent implements OnInit {
           loadBalancerRoute: route,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -82,16 +82,12 @@ export class LoadBalancerRouteModalComponent implements OnInit {
   getData() {
     const dto = this.ngx.getModalData('loadBalancerRouteModal') as LoadBalancerRouteModalDto;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.RouteId = dto.Route.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.RouteId = dto.Route.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     this.TierId = dto.TierId;

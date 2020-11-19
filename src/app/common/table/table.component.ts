@@ -1,14 +1,14 @@
 import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
-export interface TableColumn {
+export interface TableColumn<T> {
   name: string;
-  property?: string;
+  property?: keyof T;
   template?: () => TemplateRef<any>;
 }
 
-export interface TableConfig {
+export interface TableConfig<T> {
   description: string;
-  columns: TableColumn[];
+  columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
 }
 
@@ -33,15 +33,20 @@ export interface TableConfig {
   selector: 'app-table',
   templateUrl: './table.component.html',
 })
-export class TableComponent implements AfterViewInit {
-  @Input() config: TableConfig;
+export class TableComponent<T> implements AfterViewInit {
+  @Input() config: TableConfig<T>;
   @Input() data: object[] = [];
+
+  public itemsPerPage = 20;
+  public currentPage = 1;
   public show = false;
+  public uniqueTableId: string;
 
   constructor(private changeRef: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     this.show = true;
+    this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     this.changeRef.detectChanges();
   }
 }

@@ -75,7 +75,7 @@ export class ZosZvmRequestModalComponent implements OnInit {
       file: this.form.get('file').value,
     } as ConfigurationUpload;
 
-    this.configurationService.v1ConfigurationUploadPost({ configurationUpload }).subscribe(data => this.closeModal());
+    this.configurationService.v1ConfigurationUploadPost({ configurationUpload }).subscribe(() => this.closeModal());
   }
 
   private updateConfiguration(): void {
@@ -85,7 +85,7 @@ export class ZosZvmRequestModalComponent implements OnInit {
         id: this.uploadId,
         configurationDto: { configuration },
       })
-      .subscribe(data => this.closeModal());
+      .subscribe(() => this.closeModal());
   }
 
   ngOnInit() {

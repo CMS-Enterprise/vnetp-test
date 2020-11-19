@@ -10,7 +10,9 @@ const mock = () => {
     clear: () => (storage = {}),
   };
 };
+const envMock = { environment: { oidc: {} } };
 
+Object.defineProperty(window, 'config', { get: () => envMock });
 Object.defineProperty(window, 'setInterval', { value: () => {} });
 Object.defineProperty(window, 'clearInterval', { value: () => {} });
 Object.defineProperty(window, 'localStorage', { value: mock() });

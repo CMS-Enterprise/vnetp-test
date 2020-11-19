@@ -42,10 +42,6 @@ export class ServiceObjectModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
-
     this.ModalMode = dto.ModalMode;
 
     if (this.ModalMode === ModalMode.Edit) {
@@ -108,10 +104,10 @@ export class ServiceObjectModalComponent implements OnInit {
   private createServiceObject(serviceObject: ServiceObject): void {
     serviceObject.tierId = this.TierId;
     this.serviceObjectsService.v1NetworkSecurityServiceObjectsPost({ serviceObject }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -124,10 +120,11 @@ export class ServiceObjectModalComponent implements OnInit {
         serviceObject,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+
+        () => {},
       );
   }
 

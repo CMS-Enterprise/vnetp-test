@@ -721,10 +721,10 @@ export class V1PriorityGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PriorityGroup>;
-    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PriorityGroup>>;
-    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PriorityGroup>>;
-    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1PriorityGroupsPost(requestParameters: V1PriorityGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const createPriorityGroupDto = requestParameters.createPriorityGroupDto;
         if (createPriorityGroupDto === null || createPriorityGroupDto === undefined) {
             throw new Error('Required parameter createPriorityGroupDto was null or undefined when calling v1PriorityGroupsPost.');
@@ -736,7 +736,6 @@ export class V1PriorityGroupsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -759,7 +758,7 @@ export class V1PriorityGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<PriorityGroup>(`${this.configuration.basePath}/v1/priority-groups`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/priority-groups`,
             createPriorityGroupDto,
             {
                 responseType: <any>responseType,

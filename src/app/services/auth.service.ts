@@ -1,79 +1,89 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user/user';
-import { Userpass } from '../models/user/userpass';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { UserManager, User, Log } from 'oidc-client';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  public currentUser: Observable<User> = this.currentUserSubject.asObservable();
+  private manager = new UserManager(environment.environment.oidc);
+  private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  public isLoggedInBool = false;
+  public currentUser: Observable<User> = this.user.asObservable();
 
-  constructor(private http: HttpClient, private cs: CookieService) {
-    const user = this.getUserFromToken(localStorage.getItem('token'));
-    this.currentUserSubject.next(user);
-  }
+  // Used if user claims env var is set to false
+  private mockUser: User = {
+    id_token: 'fakeIdToken',
+    access_token: 'fakeAccessToken',
+    token_type: 'bearer',
+    scope: 'openid profile',
+    expires_at: null,
+    expires_in: 1234,
+    state: '123',
+    expired: false,
+    toStorageString: () => '',
+    scopes: ['fakeScopes'],
+    profile: {
+      iat: 1234,
+      iss: 'http://localhost:4200',
+      sub: 'Admin',
+      aud: 'fakeAud',
+      exp: 1234,
+    },
+  };
 
-  public get currentUserValue(): User {
-    return this.currentUserSubject.value;
-  }
-
-  login(userpass: Userpass): Observable<User> {
-    return this.http
-      .post<any>(environment.apiBase + '/v1/auth/login', {
-        username: userpass.Username,
-        password: userpass.Password,
-      })
-      .pipe(
-        map(result => {
-          const user = this.getUserFromToken(result.token);
-
-          if (user && user.Token) {
-            localStorage.setItem('token', result.token);
-            this.currentUserSubject.next(user);
-          }
-
-          return user;
-        }),
-      );
-  }
-
-  logout() {
-    localStorage.clear();
-    this.cs.deleteAll('/ ', window.location.hostname);
-    this.currentUserSubject.next(null);
-    location.reload();
-  }
-
-  getUserFromToken(jwtEncoded: string): User {
-    if (!jwtEncoded) {
-      return null;
+  constructor(private router: Router) {
+    if (!environment.production) {
+      Log.logger = console;
+      Log.level = Log.DEBUG;
     }
 
-    try {
-      const jwtHelper = new JwtHelperService();
-      const jwtDecoded = jwtHelper.decodeToken(jwtEncoded);
-
-      if (!jwtDecoded || !jwtDecoded.username || !jwtDecoded.email) {
-        console.error('Invalid Token');
-        return null;
+    this.manager.getUser().then(user => {
+      if (user) {
+        this.user.next(user);
+        this.isLoggedInBool = true;
       }
+    });
+  }
 
-      const user = new User();
-      user.Username = jwtDecoded.username;
-      user.Email = jwtDecoded.Email;
-      user.Roles = jwtDecoded.Roles;
-      user.Token = jwtEncoded;
-      return user;
-    } catch (exception) {
-      console.error(exception);
-      return null;
+  isLoggedIn(): boolean {
+    const userClaims = environment.environment.oidc_user_claims;
+    if (userClaims === 'False' || !userClaims) {
+      this.user.next(this.mockUser);
+      return true;
     }
+
+    return this.user && this.user.value !== null;
+  }
+
+  getAuthorizationHeaderValue(): string {
+    return `Bearer ${this.user.value.access_token}`;
+  }
+
+  async startAuthentication(): Promise<void> {
+    try {
+      await this.manager.signinRedirect();
+    } catch (err) {}
+  }
+
+  logout(route: string): void {
+    this.user.next(null);
+    this.currentUser = this.user.asObservable();
+    sessionStorage.setItem(`oidc.user:${environment.environment.oidc.authority}:${environment.environment.oidc.client_id}`, null);
+    this.router.navigate([`/${route}`], {
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  async completeAuthentication(): Promise<void> {
+    this.router.navigate(['/tenant'], {
+      queryParamsHandling: 'merge',
+    });
+    try {
+      const user = await this.manager.signinRedirectCallback();
+      this.user.next(user);
+    } catch (err) {}
   }
 }

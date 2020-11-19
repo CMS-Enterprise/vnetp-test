@@ -9,7 +9,6 @@ import {
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -21,16 +20,15 @@ import { V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client
 describe('VmwareComponent', () => {
   let component: VmwareComponent;
   let fixture: ComponentFixture<VmwareComponent>;
-  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([]), FormsModule, NgxPaginationModule, ReactiveFormsModule],
       declarations: [
         MockComponent({ selector: 'app-priority-group-list', inputs: ['datacenterId'] }),
-        MockComponent({ selector: 'app-network-adapter-modal' }),
-        MockComponent({ selector: 'app-virtual-disk-modal' }),
-        MockComponent({ selector: 'app-virtual-machine-modal' }),
+        MockComponent('app-network-adapter-modal'),
+        MockComponent('app-virtual-disk-modal'),
+        MockComponent('app-virtual-machine-modal'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
@@ -51,7 +49,6 @@ describe('VmwareComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(VmwareComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 

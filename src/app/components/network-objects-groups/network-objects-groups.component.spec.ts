@@ -8,7 +8,7 @@ import {
   MockComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -29,9 +29,9 @@ describe('NetworkObjectsGroupsComponent', () => {
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
-        MockComponent({ selector: 'app-network-object-group-modal' }),
-        MockComponent({ selector: 'app-network-object-modal' }),
-        MockComponent({ selector: 'app-tier-select' }),
+        MockComponent('app-network-object-group-modal'),
+        MockComponent('app-network-object-modal'),
+        MockComponent('app-tier-select'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

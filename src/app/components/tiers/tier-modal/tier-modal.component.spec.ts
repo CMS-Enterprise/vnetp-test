@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { TierModalComponent } from './tier-modal.component';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -15,22 +15,19 @@ describe('TierModalComponent', () => {
   let component: TierModalComponent;
   let fixture: ComponentFixture<TierModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [TierModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), MockProvider(V1TierGroupsService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TierModalComponent);
-        component = fixture.componentInstance;
-        component.DatacenterId = '1';
-        component.TierId = '2';
-        component.ModalMode = ModalMode.Edit;
-        fixture.detectChanges();
-      });
-  }));
+    });
+    fixture = TestBed.createComponent(TierModalComponent);
+    component = fixture.componentInstance;
+    component.DatacenterId = '1';
+    component.TierId = '2';
+    component.ModalMode = ModalMode.Edit;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -185,16 +182,6 @@ describe('TierModalComponent', () => {
         ModalMode: ModalMode.Edit,
       };
     };
-
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createTierModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
 
     it('should enable the name field when creating a new tier', () => {
       const ngx = TestBed.get(NgxSmartModalService);

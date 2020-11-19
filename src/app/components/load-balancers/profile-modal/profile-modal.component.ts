@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerProfile, V1LoadBalancerProfilesService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfilesHelpText } from 'src/app/helptext/help-text-networking';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-load-balancer-profile-modal',
@@ -67,10 +68,10 @@ export class ProfileModalComponent implements OnInit {
           loadBalancerProfile: profile,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.profileService
@@ -79,10 +80,10 @@ export class ProfileModalComponent implements OnInit {
           loadBalancerProfile: profile,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -101,21 +102,14 @@ export class ProfileModalComponent implements OnInit {
     return this.form.controls;
   }
 
-  removeProfile(profile: LoadBalancerProfile) {
+  removeProfile(profile: LoadBalancerProfile): void {
     const modalDto = new YesNoModalDto('Remove Profile', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.profileService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
-          this.getProfiles();
-        });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.profileService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(() => {
+        this.getProfiles();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   private getProfiles() {
@@ -144,15 +138,11 @@ export class ProfileModalComponent implements OnInit {
 
   private isUnencryptedPrivateKey(result: string): boolean {
     try {
-      if (
-        result.toUpperCase().includes('KEY') ||
-        atob(result)
-          .toUpperCase()
-          .includes('KEY')
-      ) {
-        return true;
-      }
-      return false;
+      const isKey = result.toUpperCase().includes('KEY');
+      const base64IsKey = atob(result)
+        .toUpperCase()
+        .includes('KEY');
+      return isKey || base64IsKey;
     } catch {
       return false;
     }
@@ -161,23 +151,16 @@ export class ProfileModalComponent implements OnInit {
   getData() {
     const dto = this.ngx.getModalData('loadBalancerProfileModal') as ProfileModalDto;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
+    this.ModalMode = dto.ModalMode;
+    if (this.ModalMode === ModalMode.Edit) {
+      this.ProfileId = dto.Profile.id;
     } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.ProfileId = dto.Profile.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     this.TierId = dto.TierId;
-    const profile = dto.Profile;
-
-    if (profile !== undefined) {
+    if (dto.Profile !== undefined) {
       this.form.controls.name.setValue(dto.Profile.name);
       this.form.controls.name.disable();
       this.form.controls.type.setValue(dto.Profile.type);

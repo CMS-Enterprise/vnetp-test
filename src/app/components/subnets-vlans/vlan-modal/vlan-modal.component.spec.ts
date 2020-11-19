@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { MockProvider } from 'src/test/mock-providers';
 import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { V1NetworkVlansService } from 'api_client';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
@@ -165,16 +165,6 @@ describe('VlanModalComponent', () => {
         ModalMode: ModalMode.Edit,
       };
     };
-
-    it('should throw an error if the modal mode is not set', () => {
-      const service = TestBed.get(NgxSmartModalService);
-      const dto = createDto();
-      dto.ModalMode = null;
-      jest.spyOn(service, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
 
     it('should enable the name and vlan number when creating a new vlan', () => {
       const service = TestBed.get(NgxSmartModalService);

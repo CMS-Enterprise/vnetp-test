@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   V1VmwareVirtualMachinesService,
   VmwareVirtualMachine,
@@ -14,10 +14,10 @@ import {
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { Subscription } from 'rxjs';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-virtual-machine-modal',
@@ -40,6 +40,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   private virtualDiskModalSubscription: Subscription;
 
   constructor(
+    private entityService: EntityService,
     private formBuilder: FormBuilder,
     private networkAdapterService: V1VmwareNetworkAdapterService,
     private ngx: NgxSmartModalService,
@@ -79,28 +80,12 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   public deleteVirtualDisk(virtualDisk: VmwareVirtualDisk): void {
-    if (virtualDisk.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const { deletedAt, id, name } = virtualDisk;
-    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
-    const deleteFunction = () => {
-      if (!deletedAt) {
-        this.virtualDiskService.v1VmwareVirtualDisksIdSoftDelete({ id }).subscribe(() => {
-          this.getVirtualDisks();
-        });
-      } else {
-        this.virtualDiskService.v1VmwareVirtualDisksIdDelete({ id }).subscribe(() => {
-          this.getVirtualDisks();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Virtual Disk?`, `Do you want to ${deleteDescription} virtual disk "${name}"?`),
-      deleteFunction,
-    );
+    this.entityService.deleteEntity(virtualDisk, {
+      entityName: 'Virtual Disk',
+      delete$: this.virtualDiskService.v1VmwareVirtualDisksIdDelete({ id: virtualDisk.id }),
+      softDelete$: this.virtualDiskService.v1VmwareVirtualDisksIdSoftDelete({ id: virtualDisk.id }),
+      onSuccess: () => this.getVirtualDisks(),
+    });
   }
 
   public restoreVirtualDisk(virtualDisk: VmwareVirtualDisk): void {
@@ -113,28 +98,12 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   public deleteNetworkAdapter(networkAdapter: VmwareNetworkAdapter): void {
-    if (networkAdapter.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const { deletedAt, id, name } = networkAdapter;
-    const deleteDescription = networkAdapter.deletedAt ? 'Delete' : 'Soft-Delete';
-    const deleteFunction = () => {
-      if (!deletedAt) {
-        this.networkAdapterService.v1VmwareNetworkAdapterIdSoftDelete({ id }).subscribe(() => {
-          this.getNetworkAdapters();
-        });
-      } else {
-        this.networkAdapterService.v1VmwareNetworkAdapterIdDelete({ id }).subscribe(() => {
-          this.getNetworkAdapters();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Network Adapter?`, `Do you want to ${deleteDescription} network adapter "${name}"?`),
-      deleteFunction,
-    );
+    this.entityService.deleteEntity(networkAdapter, {
+      entityName: 'Network Adapter',
+      delete$: this.networkAdapterService.v1VmwareNetworkAdapterIdDelete({ id: networkAdapter.id }),
+      softDelete$: this.networkAdapterService.v1VmwareNetworkAdapterIdSoftDelete({ id: networkAdapter.id }),
+      onSuccess: () => this.getVirtualDisks(),
+    });
   }
 
   public restoreNetworkAdapter(networkAdapter: VmwareNetworkAdapter): void {
@@ -185,9 +154,6 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       this.VirtualMachineId = dto.VmwareVirtualMachine.id;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    }
     this.ModalMode = dto.ModalMode;
     if (this.ModalMode === ModalMode.Edit) {
       this.VirtualMachineId = dto.VmwareVirtualMachine.id;
@@ -261,29 +227,16 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNetworkAdapterModal(): Subscription {
-    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('networkAdapterModal').onAnyCloseEvent.subscribe(() => {
       this.getNetworkAdapters();
       this.ngx.resetModalData('networkAdapterModal');
     });
   }
 
   private subscribeToVirtualDiskModal(): Subscription {
-    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe((modal: NgxSmartModalComponent) => {
+    return this.ngx.getModal('virtualDiskModal').onAnyCloseEvent.subscribe(() => {
       this.getVirtualDisks();
       this.ngx.resetModalData('virtualDiskModal');
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 
@@ -292,10 +245,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     vmwareVirtualMachine.datacenterId = this.DatacenterId;
 
     this.virtualMachineService.v1VmwareVirtualMachinesPost({ vmwareVirtualMachine }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -314,10 +267,10 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
         vmwareVirtualMachine,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 

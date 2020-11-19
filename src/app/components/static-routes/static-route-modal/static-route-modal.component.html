@@ -7,13 +7,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <input
-          type="text"
-          formControlName="name"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-          aria-label="Name"
-        />
+        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -29,7 +23,7 @@
           name="destinationNetwork"
           formControlName="destinationNetwork"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.destinationNetwork.errors }"
+          [class.is-invalid]="submitted && f.destinationNetwork.errors"
           aria-label="Destination Network"
         />
         <div *ngIf="submitted && f.destinationNetwork.errors" class="invalid-feedback">
@@ -45,7 +39,7 @@
           name="name"
           formControlName="nextHop"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.nextHop.errors }"
+          [class.is-invalid]="submitted && f.nextHop.errors"
           aria-label="Next Hop"
         />
         <div *ngIf="submitted && f.nextHop.errors" class="invalid-feedback">
@@ -63,7 +57,7 @@
           name="name"
           formControlName="metric"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.metric.errors }"
+          [class.is-invalid]="submitted && f.metric.errors"
           aria-label="Metric"
         />
         <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">

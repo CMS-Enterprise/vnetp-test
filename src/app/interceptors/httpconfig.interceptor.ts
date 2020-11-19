@@ -1,28 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService) {}
+  constructor(private authService: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const currentUser = this.auth.currentUserValue;
-    const isLogin = request.url.includes('auth/login');
+    let tenant = '';
+    this.route.queryParams.subscribe(qp => {
+      tenant = qp.tenant;
+    });
 
-    // Send the current token, if it is stale, we will get a 401
-    // back and the user will be logged out.
-    if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${currentUser.Token}`,
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
+    const isLoggedIn = this.authService.isLoggedIn();
+    const userClaims = environment.environment.oidc_user_claims;
+    if (isLoggedIn && (userClaims === 'True' || userClaims)) {
+      const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
+      request = request.clone({
+        headers,
+        params: request.params.set('tenant', tenant),
       });
-      request = request.clone({ headers });
     }
 
     if (!request.headers.has('Accept')) {
@@ -62,39 +64,23 @@ export class HttpConfigInterceptor {
     }
 
     return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (!environment.production) {
-            // console.log('debug-httpevent-->>', event);
-          }
-        }
-        return event;
-      }),
       catchError((error: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-
-        if (!isLogin) {
-          switch (error.status) {
-            case 400:
-              toastrMessage = 'Bad Request';
-              break;
-            case 401:
-              this.auth.logout();
-              return;
-            case 403:
-              toastrMessage = 'Unauthorized.';
-              break;
-          }
+        switch (error.status) {
+          case 400:
+            toastrMessage = 'Bad Request';
+            break;
+          case 401:
+            this.authService.logout('unauthorized');
+            break;
+          case 403:
+            this.authService.logout('unauthorized');
+            break;
         }
 
-        const data = {
-          error,
-          status: error.status,
-        };
-
-        console.error(data);
-
+        console.error({ error, status });
         this.toastr.error(toastrMessage);
+
         return throwError(error);
       }),
     );

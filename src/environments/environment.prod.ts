@@ -1,5 +1,15 @@
-export const environment = {
-  production: true,
-  apiBase: 'http://localhost:3000',
-  wikiBase: 'http://wiki.draas.cdsvdc.lcl/index.php/UI',
-};
+import { DynamicEnvironment } from './dynamic-environment';
+
+class Environment extends DynamicEnvironment {
+  public production: boolean;
+  public apiBase: string;
+  public wikiBase: string;
+  constructor() {
+    super();
+    this.production = true;
+    this.apiBase = '/api';
+    this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
+  }
+}
+
+export const environment = new Environment();

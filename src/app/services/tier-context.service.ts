@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { AuthService } from './auth.service';
-import { MessageService } from './message.service';
-import { AppMessageType } from '../models/app-message-type';
-import { AppMessage } from '../models/app-message';
+import { Message, MessageService } from './message.service';
 import { Tier, V1DatacentersService } from 'api_client';
 import { DatacenterContextService } from './datacenter-context.service';
 
@@ -35,7 +32,6 @@ export class TierContextService {
   currentDatacenterId: string;
 
   constructor(
-    private authService: AuthService,
     private DatacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
     private messageService: MessageService,
@@ -59,10 +55,6 @@ export class TierContextService {
     // Subscribe to the activatedRoute, validate that the
     // tier param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!this.authService.currentUserValue) {
-        return;
-      }
-
       if (this.ignoreNextQueryParamEvent) {
         this.ignoreNextQueryParamEvent = false;
         return;
@@ -72,7 +64,6 @@ export class TierContextService {
     });
   }
 
-  /** Current Tier */
   public get currentTierValue(): Tier {
     return this.currentTierSubject.value;
   }
@@ -87,53 +78,39 @@ export class TierContextService {
     return this.lockCurrentTierSubject.value;
   }
 
-  /** Locks the currentTier. This prevents the
-   * tier context switch from occurring.
-   */
   public lockTier() {
     this.lockCurrentTierSubject.next(true);
   }
 
-  /** Unlocks the currentTier. This allows the
-   * tier context switch to occur.
-   */
   public unlockTier() {
     this.lockCurrentTierSubject.next(false);
   }
 
-  /** Get tiers for the tenant.
-   * @param datacenterId Currently selected datacenter
-   * @param tierParam Optional currentTierId, this will be compared against the
-   * array of tiers returned from the API. If it is present then that tier will be selected.
-   */
-  private getTiers(tierParam?: string) {
+  private getTiers(currentTierId?: string): void {
     this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.currentDatacenterId = cd.id;
-        this.DatacenterService.v1DatacentersIdGet({
-          id: this.currentDatacenterId,
-          join: 'tiers',
-        }).subscribe(data => {
-          // Update internal tiers array and external subject.
-          this._tiers = data.tiers;
-          this.tiersSubject.next(data.tiers);
-
-          // If a tier matching currentTierId is present
-          // set currentTier to that tier.
-          if (tierParam) {
-            this.switchTier(tierParam);
-          }
-        });
-      } else {
-        console.log('No Datacenter Selected');
+      if (!cd) {
+        console.debug('DEBUG :: No Datacenter selected');
+        return;
       }
+
+      this.currentDatacenterId = cd.id;
+      this.DatacenterService.v1DatacentersIdGet({
+        id: this.currentDatacenterId,
+        join: 'tiers',
+      }).subscribe(data => {
+        this._tiers = data.tiers;
+        this.tiersSubject.next(data.tiers);
+
+        // If a tier matching currentTierId is present
+        // set currentTier to that tier.
+        if (currentTierId) {
+          this.switchTier(currentTierId);
+        }
+      });
     });
   }
 
-  /** Switch from the currentTier to the provided tier.
-   * @param tier Tier to switch to.
-   */
-  public switchTier(tierId: string) {
+  public switchTier(tierId: string): void {
     if (this.lockCurrentTierSubject.value) {
       throw Error('Current Tier Locked.');
     }
@@ -146,8 +123,9 @@ export class TierContextService {
       throw Error('Tier already Selected.');
     }
 
+    const oldTierId = this.currentTierValue ? this.currentTierValue.id : null;
+
     if (tier) {
-      // Update Subject
       this.currentTierSubject.next(tier);
 
       this.ignoreNextQueryParamEvent = true;
@@ -158,8 +136,7 @@ export class TierContextService {
         queryParamsHandling: 'merge',
       });
 
-      // Send Context Switch Message
-      this.messageService.sendMessage(new AppMessage(`Tier Context Switch ${tierId}`, AppMessageType.TierContextSwitch));
+      this.messageService.sendMessage(new Message(oldTierId, tierId, 'Tier Switched'));
     }
   }
 }

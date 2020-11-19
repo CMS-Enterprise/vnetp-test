@@ -2,7 +2,7 @@
 
 <main class="dashboard">
   <!-- Service Status -->
-  <aside class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Service Status">
     <h4 class="dashboard__heading">Service Status</h4>
     <div *ngFor="let service of status" class="status-item">
       <span>
@@ -13,7 +13,7 @@
   </aside>
 
   <!-- Job Status Today -->
-  <aside class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Job Status Today">
     <h4 class="dashboard__heading">Job Status Today</h4>
 
     <div class="chart-wrap">
@@ -53,7 +53,7 @@
   </aside>
 
   <!-- Overall Environment -->
-  <aside class="dashboard__card">
+  <aside class="dashboard__card" aria-label="Overall Environment">
     <h4 class="dashboard__heading">Overall Environment</h4>
     <ul class="dash-card">
       <li>

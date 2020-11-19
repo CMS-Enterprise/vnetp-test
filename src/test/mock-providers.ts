@@ -1,8 +1,9 @@
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { Router } from '@angular/router';
 
 const MockNgxSmartModalService = () => {
   return {
@@ -15,6 +16,9 @@ const MockNgxSmartModalService = () => {
         isVisible: jest.fn(),
         onOpen: of({}),
         onAnyCloseEvent: of({
+          getData: jest.fn(() => {}),
+        }),
+        onCloseFinished: of({
           getData: jest.fn(() => {}),
         }),
       };
@@ -35,10 +39,13 @@ const MockToastrService = () => {
 
 const MockDatacenterContextService = () => {
   return {
-    lockDatacenter: jest.fn(),
-    unlockDatacenter: jest.fn(),
     currentDatacenter: of({ id: '1' }),
     currentDatacenterValue: { id: '1' },
+    datacenters: of([{ id: '1', tiers: [] }]),
+    lockCurrentDatacenter: of(false),
+    lockDatacenter: jest.fn(),
+    switchDatacenter: jest.fn(),
+    unlockDatacenter: jest.fn(),
   };
 };
 
@@ -51,39 +58,58 @@ const MockTierContextService = () => {
   };
 };
 
+const MockRouter = () => {
+  return {
+    navigateByUrl: jest.fn(),
+  };
+};
+
 const MockProviders = new Map<any, () => object>([
   [NgxSmartModalService, MockNgxSmartModalService],
   [ToastrService, MockToastrService],
   [DatacenterContextService, MockDatacenterContextService],
   [TierContextService, MockTierContextService],
+  [Router, MockRouter],
 ]);
 
-export const MockProvider = <T>(provide: T, additionalProps: { [key: string]: Observable<any> } = {}) => {
+type Constructor<T> = new (...args: any[]) => T;
+type Props<T> = { [K in keyof T]?: Partial<T[K]> };
+
+export const MockProvider = <T extends object>(provide: Constructor<T>, additionalProps: Props<T> = {}) => {
   const value = MockProviders.get(provide);
   const useValue = !!value ? value() : generateMockProvider(provide, additionalProps);
   return { provide, useValue };
 };
 
-const generateMockProvider = (provider: any, additionalProps: { [key: string]: Observable<any> } = {}): object => {
+const generateMockProvider = <T extends object>(provider: Constructor<T>, additionalProps: Props<T> = {}): object => {
   const name = provider.prototype.constructor.name as string;
   if (!name.endsWith('Service')) {
     return {};
   }
 
-  const baseName = name.substring(0, name.length - 'Service'.length).replace('V', 'v');
-  const mockedProvider = {
-    [`${baseName}IdDelete`]: jest.fn(() => of({})),
-    [`${baseName}IdSoftDelete`]: jest.fn(() => of({})),
-    [`${baseName}IdRestorePatch`]: jest.fn(() => of({})),
-    [`${baseName}Post`]: jest.fn(() => of({})),
-    [`${baseName}IdPut`]: jest.fn(() => of({})),
-    [`${baseName}IdGet`]: jest.fn(() => of({})),
-    [`${baseName}Get`]: jest.fn(() => of([])),
-  };
+  const mockProvider = {} as any;
 
-  Object.keys(additionalProps).forEach(key => {
-    mockedProvider[key] = jest.fn(() => additionalProps[key]);
+  const functions = getFunctions(new provider());
+  functions.forEach(fn => {
+    const isGetList = fn.endsWith('Get') && !fn.endsWith('IdGet');
+    const returnType = isGetList ? [] : {};
+    mockProvider[fn] = jest.fn(() => of(returnType));
   });
 
-  return mockedProvider;
+  Object.keys(additionalProps).forEach(key => {
+    mockProvider[key] = jest.fn(() => additionalProps[key]);
+  });
+
+  return mockProvider;
 };
+
+function getFunctions(clazz: object): string[] {
+  let props = [];
+  let obj = clazz;
+  do {
+    props = props.concat(Object.getOwnPropertyNames(obj));
+    // tslint:disable-next-line:no-conditional-assignment
+  } while ((obj = Object.getPrototypeOf(obj)));
+
+  return props.sort().filter(prop => prop !== 'constructor');
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -32,7 +32,6 @@ import {
   V1LoadBalancerSelfIpsService,
   V1LoadBalancerRoutesService,
 } from 'api_client';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
@@ -40,9 +39,10 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerVlanModalDto } from 'src/app/models/network/lb-vlan-modal-dto';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { environment } from 'src/environments/environment';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-load-balancers',
@@ -110,6 +110,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   constructor(
     private datacenterService: DatacenterContextService,
+    private entityService: EntityService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
@@ -321,7 +322,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerVirtualServersBulkImportPost({
             virtualServerImportCollectionDto: virtualServerDto,
           })
-          .subscribe(results => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 1:
         const poolDto = {} as PoolImportCollectionDto;
@@ -331,7 +332,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerPoolsBulkImportPost({
             poolImportCollectionDto: poolDto,
           })
-          .subscribe(results => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 2:
         const nodeDto = {} as NodeImportCollectionDto;
@@ -341,7 +342,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerPoolsBulkUpdatePost({
             nodeImportCollectionDto: nodeDto,
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 3:
         const nodes = this.sanitizeData(data, true);
@@ -349,7 +350,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerNodesBulkPost({
             generatedLoadBalancerNodeBulkDto: { bulk: nodes },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 4:
         const irules = this.sanitizeData(data, true);
@@ -357,7 +358,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerIrulesBulkPost({
             generatedLoadBalancerIruleBulkDto: { bulk: irules },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       case 5:
         const healthMonitors = this.sanitizeData(data, true);
@@ -365,7 +366,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerHealthMonitorsBulkPost({
             generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
           })
-          .subscribe(result => this.getObjectsForNavIndex());
+          .subscribe(() => this.getObjectsForNavIndex());
         break;
       default:
         break;
@@ -575,7 +576,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVlanModal() {
-    this.routeModalSubscription = this.ngx.getModal('loadBalancerVlanModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerVlanModal').onCloseFinished.subscribe(() => {
       this.getVlans();
       this.ngx.resetModalData('loadBalancerVlanModal');
       this.vlanModalSubscription.unsubscribe();
@@ -584,18 +585,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToSelfIpModal() {
-    this.selfIpModalSubscription = this.ngx
-      .getModal('loadBalancerSelfIpModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getSelfIps();
-        this.ngx.resetModalData('loadBalancerSelfIpModal');
-        this.selfIpModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.selfIpModalSubscription = this.ngx.getModal('loadBalancerSelfIpModal').onCloseFinished.subscribe(() => {
+      this.getSelfIps();
+      this.ngx.resetModalData('loadBalancerSelfIpModal');
+      this.selfIpModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToRouteModal() {
-    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe(() => {
       this.getRoutes();
       this.ngx.resetModalData('loadBalancerRouteModal');
       this.routeModalSubscription.unsubscribe();
@@ -604,18 +603,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToVirtualServerModal() {
-    this.virtualServerModalSubscription = this.ngx
-      .getModal('virtualServerModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getVirtualServers();
-        this.ngx.resetModalData('virtualServerModal');
-        this.virtualServerModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.virtualServerModalSubscription = this.ngx.getModal('virtualServerModal').onCloseFinished.subscribe(() => {
+      this.getVirtualServers();
+      this.ngx.resetModalData('virtualServerModal');
+      this.virtualServerModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToPoolModal() {
-    this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.getPools();
       this.getHealthMonitors();
       this.getNodes();
@@ -626,7 +623,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNodeModal() {
-    this.nodeModalSubscription = this.ngx.getModal('nodeModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.nodeModalSubscription = this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
       this.getNodes();
       this.ngx.resetModalData('nodeModal');
       this.nodeModalSubscription.unsubscribe();
@@ -635,7 +632,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToIRuleModal() {
-    this.iruleModalSubscription = this.ngx.getModal('iruleModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+    this.iruleModalSubscription = this.ngx.getModal('iruleModal').onCloseFinished.subscribe(() => {
       this.getIrules();
       this.ngx.resetModalData('iruleModal');
       this.iruleModalSubscription.unsubscribe();
@@ -644,299 +641,137 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   subscribeToHealthMonitorModal() {
-    this.healthMonitorModalSubscription = this.ngx
-      .getModal('healthMonitorModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getHealthMonitors();
-        this.ngx.resetModalData('healthMonitorModal');
-        this.healthMonitorModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.healthMonitorModalSubscription = this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
+      this.getHealthMonitors();
+      this.ngx.resetModalData('healthMonitorModal');
+      this.healthMonitorModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToProfileModal() {
-    this.profileModalSubscription = this.ngx
-      .getModal('loadBalancerProfileModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getProfiles();
-        this.ngx.resetModalData('loadBalancerProfileModal');
-        this.profileModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.profileModalSubscription = this.ngx.getModal('loadBalancerProfileModal').onCloseFinished.subscribe(() => {
+      this.getProfiles();
+      this.ngx.resetModalData('loadBalancerProfileModal');
+      this.profileModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
   subscribeToPolicyModal() {
-    this.policyModalSubscription = this.ngx
-      .getModal('loadBalancerPolicyModal')
-      .onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-        this.getPolicies();
-        this.ngx.resetModalData('loadBalancerPolicyModal');
-        this.policyModalSubscription.unsubscribe();
-        this.datacenterService.unlockDatacenter();
-      });
+    this.policyModalSubscription = this.ngx.getModal('loadBalancerPolicyModal').onCloseFinished.subscribe(() => {
+      this.getPolicies();
+      this.ngx.resetModalData('loadBalancerPolicyModal');
+      this.policyModalSubscription.unsubscribe();
+      this.datacenterService.unlockDatacenter();
+    });
   }
 
-  deleteVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    if (virtualServer.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = virtualServer.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!virtualServer.deletedAt) {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }).subscribe(data => {
-          this.getVirtualServers();
-        });
-      } else {
-        this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }).subscribe(data => {
-          this.getVirtualServers();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Virtual Server?`,
-        `Do you want to ${deleteDescription} virtual server "${virtualServer.name}"?`,
-      ),
-      deleteFunction,
-    );
+  public deleteVirtualServer(virtualServer: LoadBalancerVirtualServer): void {
+    this.entityService.deleteEntity(virtualServer, {
+      entityName: 'Virtual Server',
+      delete$: this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }),
+      softDelete$: this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }),
+      onSuccess: () => this.getVirtualServers(),
+    });
   }
 
-  deleteIrule(irule: LoadBalancerIrule) {
-    if (irule.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = irule.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!irule.deletedAt) {
-        this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }).subscribe(data => {
-          this.getIrules();
-        });
-      } else {
-        this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }).subscribe(data => {
-          this.getIrules();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Irule?`, `Do you want to ${deleteDescription} irule "${irule.name}"?`),
-      deleteFunction,
-    );
+  public deleteIrule(irule: LoadBalancerIrule): void {
+    this.entityService.deleteEntity(irule, {
+      entityName: 'iRule',
+      delete$: this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }),
+      softDelete$: this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }),
+      onSuccess: () => this.getIrules(),
+    });
   }
 
-  deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (healthMonitor.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = healthMonitor.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!healthMonitor.deletedAt) {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }).subscribe(data => {
-          this.getHealthMonitors();
-        });
-      } else {
-        this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(data => {
-          this.getHealthMonitors();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(
-        `${deleteDescription} Health Monitor?`,
-        `Do you want to ${deleteDescription} health monitor "${healthMonitor.name}"?`,
-      ),
-      deleteFunction,
-    );
+  public deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+    this.entityService.deleteEntity(healthMonitor, {
+      entityName: 'Health Monitor',
+      delete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }),
+      softDelete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }),
+      onSuccess: () => this.getHealthMonitors(),
+    });
   }
 
-  deletePool(pool: LoadBalancerPool) {
-    if (pool.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = pool.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!pool.deletedAt) {
-        this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }).subscribe(data => {
-          this.getPools();
-        });
-      } else {
-        this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }).subscribe(data => {
-          this.getPools();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Pool?`, `Do you want to ${deleteDescription} pool "${pool.name}"?`),
-      deleteFunction,
-    );
+  public deletePool(pool: LoadBalancerPool): void {
+    this.entityService.deleteEntity(pool, {
+      entityName: 'Pool',
+      delete$: this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }),
+      softDelete$: this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }),
+      onSuccess: () => this.getPools(),
+    });
   }
 
-  deleteNode(node: LoadBalancerNode) {
-    if (node.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = node.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!node.deletedAt) {
-        this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }).subscribe(data => {
-          this.getNodes();
-        });
-      } else {
-        this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }).subscribe(data => {
-          this.getNodes();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Node?`, `Do you want to ${deleteDescription} node "${node.name}"?`),
-      deleteFunction,
-    );
+  public deleteNode(node: LoadBalancerNode): void {
+    this.entityService.deleteEntity(node, {
+      entityName: 'Node',
+      delete$: this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }),
+      softDelete$: this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }),
+      onSuccess: () => this.getNodes(),
+    });
   }
 
-  deleteProfile(profile: LoadBalancerProfile) {
-    if (profile.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = profile.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!profile.deletedAt) {
-        this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }).subscribe(data => {
-          this.getProfiles();
-        });
-      } else {
-        this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }).subscribe(data => {
-          this.getProfiles();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Profile?`, `Do you want to ${deleteDescription} Profile "${profile.name}"?`),
-      deleteFunction,
-    );
+  public deleteProfile(profile: LoadBalancerProfile): void {
+    this.entityService.deleteEntity(profile, {
+      entityName: 'Profile',
+      delete$: this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }),
+      softDelete$: this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }),
+      onSuccess: () => this.getProfiles(),
+    });
   }
 
-  deletePolicy(policy: LoadBalancerPolicy) {
-    if (policy.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = policy.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!policy.deletedAt) {
-        this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }).subscribe(data => {
-          this.getPolicies();
-        });
-      } else {
-        this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }).subscribe(data => {
-          this.getPolicies();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Policy?`, `Do you want to ${deleteDescription} Policy "${policy.name}"?`),
-      deleteFunction,
-    );
+  public deletePolicy(policy: LoadBalancerPolicy): void {
+    this.entityService.deleteEntity(policy, {
+      entityName: 'Policy',
+      delete$: this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }),
+      softDelete$: this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }),
+      onSuccess: () => this.getPolicies(),
+    });
   }
 
-  deleteVlan(vlan: LoadBalancerVlan) {
-    if (vlan.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = vlan.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!vlan.deletedAt) {
-        this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }).subscribe(data => {
-          this.getVlans();
-        });
-      } else {
-        this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }).subscribe(data => {
-          this.getVlans();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} VLAN?`, `Do you want to ${deleteDescription} VLAN "${vlan.name}"?`),
-      deleteFunction,
-    );
+  public deleteVlan(vlan: LoadBalancerVlan): void {
+    this.entityService.deleteEntity(vlan, {
+      entityName: 'VLAN',
+      delete$: this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }),
+      softDelete$: this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }),
+      onSuccess: () => this.getVlans(),
+    });
   }
 
-  deleteSelfIp(selfIp: LoadBalancerSelfIp) {
-    if (selfIp.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = selfIp.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!selfIp.deletedAt) {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }).subscribe(data => {
-          this.getSelfIps();
-        });
-      } else {
-        this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }).subscribe(data => {
-          this.getSelfIps();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Self IP?`, `Do you want to ${deleteDescription} Self IP "${selfIp.name}"?`),
-      deleteFunction,
-    );
+  public deleteSelfIp(selfIp: LoadBalancerSelfIp): void {
+    this.entityService.deleteEntity(selfIp, {
+      entityName: 'Self IP',
+      delete$: this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }),
+      softDelete$: this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }),
+      onSuccess: () => this.getSelfIps(),
+    });
   }
 
-  deleteRoute(route: LoadBalancerRoute) {
-    if (route.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-    const deleteDescription = route.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!route.deletedAt) {
-        this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }).subscribe(data => {
-          this.getRoutes();
-        });
-      } else {
-        this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }).subscribe(data => {
-          this.getRoutes();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Route?`, `Do you want to ${deleteDescription} Route "${route.name}"?`),
-      deleteFunction,
-    );
+  public deleteRoute(route: LoadBalancerRoute): void {
+    this.entityService.deleteEntity(route, {
+      entityName: 'Route',
+      delete$: this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }),
+      softDelete$: this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }),
+      onSuccess: () => this.getRoutes(),
+    });
   }
 
   restoreVlan(vlan: LoadBalancerVlan) {
     if (vlan.deletedAt) {
-      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(data => this.getVlans());
+      this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(() => this.getVlans());
     }
   }
 
   restoreSelfIp(selfIp: LoadBalancerSelfIp) {
     if (selfIp.deletedAt) {
-      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(data => this.getSelfIps());
+      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.getSelfIps());
     }
   }
 
   restoreRoute(route: LoadBalancerRoute) {
     if (route.deletedAt) {
-      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(data => this.getRoutes());
+      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(() => this.getRoutes());
     }
   }
 
@@ -944,25 +779,25 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     if (virtualServer.deletedAt) {
       this.virtualServersService
         .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
-        .subscribe(data => this.getVirtualServers());
+        .subscribe(() => this.getVirtualServers());
     }
   }
 
   restorePool(pool: LoadBalancerPool) {
     if (pool.deletedAt) {
-      this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(data => this.getPools());
+      this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.getPools());
     }
   }
 
   restoreNode(node: LoadBalancerNode) {
     if (node.deletedAt) {
-      this.nodeService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(data => this.getNodes());
+      this.nodeService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(() => this.getNodes());
     }
   }
 
   restoreIrule(irule: LoadBalancerIrule) {
     if (irule.deletedAt) {
-      this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(data => this.getIrules());
+      this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(() => this.getIrules());
     }
   }
 
@@ -970,51 +805,24 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     if (healthMonitor.deletedAt) {
       this.healthMonitorsService
         .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
-        .subscribe(data => this.getHealthMonitors());
+        .subscribe(() => this.getHealthMonitors());
     }
   }
 
   restoreProfile(profile: LoadBalancerProfile) {
     if (profile.deletedAt) {
-      this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(data => this.getProfiles());
+      this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.getProfiles());
     }
   }
 
   restorePolicy(policy: LoadBalancerPolicy) {
     if (policy.deletedAt) {
-      this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(data => this.getPolicies());
+      this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.getPolicies());
     }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   private hasCurrentTier(): boolean {
     return this.currentTier && !!this.currentTier.id;
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([
-      this.virtualServerModalSubscription,
-      this.poolModalSubscription,
-      this.healthMonitorModalSubscription,
-      this.nodeModalSubscription,
-      this.profileModalSubscription,
-      this.policyModalSubscription,
-      this.iruleModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
   }
 
   ngOnInit() {
@@ -1040,6 +848,16 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([
+      this.virtualServerModalSubscription,
+      this.poolModalSubscription,
+      this.healthMonitorModalSubscription,
+      this.nodeModalSubscription,
+      this.profileModalSubscription,
+      this.policyModalSubscription,
+      this.iruleModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

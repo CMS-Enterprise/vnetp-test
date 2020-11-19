@@ -5,7 +5,7 @@ import { ServiceObjectModalComponent } from '../service-object-modal/service-obj
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -162,16 +162,6 @@ describe('ServiceObjectModalComponent', () => {
         ModalMode: ModalMode.Edit,
       };
     };
-
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createServiceObjectModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
       const ngx = TestBed.get(NgxSmartModalService);

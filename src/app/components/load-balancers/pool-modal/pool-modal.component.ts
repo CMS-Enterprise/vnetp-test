@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
@@ -13,6 +13,7 @@ import {
 } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-pool-modal',
@@ -60,10 +61,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
           loadBalancerPool: pool,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.poolService
@@ -72,10 +73,10 @@ export class PoolModalComponent implements OnInit, OnDestroy {
           loadBalancerPool: pool,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -123,41 +124,34 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   removeHealthMonitor(healthMonitorId: string) {
     const modalDto = new YesNoModalDto('Remove Health Monitor', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        if (this.isDefaultHealthMonitor(healthMonitorId)) {
-          this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
-          this.poolService
-            .v1LoadBalancerPoolsIdPatch({
-              id: this.PoolId,
-              loadBalancerPool: {
-                defaultHealthMonitors: this.selectedDefaultHealthMonitors,
-              } as LoadBalancerPool,
-            })
-            .subscribe(() => {
-              this.getPool();
-            });
-        } else {
-          this.poolService
-            .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
-              poolId: this.PoolId,
-              healthMonitorId,
-            })
-            .subscribe(() => {
-              this.getPool();
-            });
-        }
+    const onConfirm = () => {
+      if (this.isDefaultHealthMonitor(healthMonitorId)) {
+        this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
+        this.poolService
+          .v1LoadBalancerPoolsIdPatch({
+            id: this.PoolId,
+            loadBalancerPool: {
+              defaultHealthMonitors: this.selectedDefaultHealthMonitors,
+            } as LoadBalancerPool,
+          })
+          .subscribe(() => {
+            this.getPool();
+          });
+      } else {
+        this.poolService
+          .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
+            poolId: this.PoolId,
+            healthMonitorId,
+          })
+          .subscribe(() => {
+            this.getPool();
+          });
       }
-      yesNoModalSubscription.unsubscribe();
-    });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private isDefaultHealthMonitor(value: string) {
+  private isDefaultHealthMonitor(value: string): boolean {
     return this.defaultHealthMonitors.includes(value);
   }
 
@@ -171,25 +165,18 @@ export class PoolModalComponent implements OnInit, OnDestroy {
 
   removeNode(nodeToPool: any) {
     const modalDto = new YesNoModalDto('Remove Node', `Are you sure you would like to delete "${nodeToPool.loadBalancerNode.name}" node?`);
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.poolService
-          .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
-            poolId: this.PoolId,
-            nodeId: nodeToPool.loadBalancerNode.id,
-            servicePort: nodeToPool.servicePort,
-          })
-          .subscribe(() => {
-            this.getPool();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    const onConfirm = () => {
+      this.poolService
+        .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
+          poolId: this.PoolId,
+          nodeId: nodeToPool.loadBalancerNode.id,
+          servicePort: nodeToPool.servicePort,
+        })
+        .subscribe(() => {
+          this.getPool();
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   addNode() {
@@ -200,7 +187,7 @@ export class PoolModalComponent implements OnInit, OnDestroy {
         servicePort: this.f.servicePort.value,
         ratio: this.f.ratio.value,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.getPool();
         this.f.selectedNode.setValue('');
         this.f.servicePort.setValue('');
@@ -218,17 +205,14 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     this.availableHealthMonitors = dto.healthMonitors;
     this.availableNodes = dto.nodes;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PoolId = dto.pool.id;
-      } else {
-        this.form.controls.name.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PoolId = dto.pool.id;
+    } else {
+      this.form.controls.name.enable();
     }
+
     if (pool !== undefined) {
       this.form.controls.name.setValue(pool.name);
       this.form.controls.name.disable();
@@ -252,11 +236,6 @@ export class PoolModalComponent implements OnInit, OnDestroy {
     }
 
     this.ngx.resetModalData('poolModal');
-  }
-
-  // not currently filtering properly, also need to add this type of logic to virtual servers -> profiles, policies
-  private removeIntersection(all: any[], selected: any[]) {
-    return all.filter(allEntity => !selected.includes(allEntity));
   }
 
   private buildForm() {

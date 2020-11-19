@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { V1NetworkSubnetsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -177,16 +177,6 @@ describe('SubnetModalComponent', () => {
         ModalMode: ModalMode.Edit,
       };
     };
-
-    it('should throw an error if the modal mode is not set', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
-      const dto = createSubnetModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
 
     it('should enable the name, gateway, network and vlan when creating a new subnet', () => {
       const ngx = TestBed.get(NgxSmartModalService);

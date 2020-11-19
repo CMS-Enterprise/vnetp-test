@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Papa } from 'ngx-papaparse';
 
@@ -6,7 +6,7 @@ import { Papa } from 'ngx-papaparse';
   selector: 'app-import-export',
   templateUrl: './import-export.component.html',
 })
-export class ImportExportComponent implements OnInit {
+export class ImportExportComponent {
   downloadHref: SafeUrl;
   currentDate: string;
   fileInput: any;
@@ -23,8 +23,6 @@ export class ImportExportComponent implements OnInit {
   @Output() import = new EventEmitter<any>();
 
   constructor(private sanitizer: DomSanitizer, private papa: Papa) {}
-
-  ngOnInit() {}
 
   importFile(evt) {
     this.Import(evt, importObjects => this.importCallback(importObjects));

@@ -1,0 +1,28 @@
+<ngx-smart-modal
+  #vmDiscoveryModal
+  identifier="vmDiscoveryModal"
+  [dismissable]="false"
+  (onOpen)="onLoad()"
+  (onClose)="onClose()"
+  customClass="large-modal"
+>
+  <ng-container *ngTemplateOutlet="currentDiscoveryStepTemplate"></ng-container>
+</ngx-smart-modal>
+
+<!-- Step 1 - Select vCenter -->
+<ng-template #selectVCenter>
+  <app-select-vcenter (vcenterSelected)="onVCenterSelected($event)"></app-select-vcenter>
+</ng-template>
+
+<!-- Step 2 - Select Virtual Machines -->
+<ng-template #selectVirtualMachines>
+  <app-select-virtual-machines
+    [vcenterId]="selectedVCenterId"
+    (virtualMachinesAdded)="onVirtualMachinesAdded($event)"
+  ></app-select-virtual-machines>
+</ng-template>
+
+<!-- Step 3 - Select Action -->
+<ng-template #selectAction>
+  <app-select-action [virtualMachines]="selectedVirtualMachines" (actionComplete)="onActionComplete()"></app-select-action>
+</ng-template>

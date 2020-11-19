@@ -3,8 +3,22 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { V1ActifioAppliancesService } from './api/v1ActifioAppliances.service';
+import { V1ActifioApplicationGroupsService } from './api/v1ActifioApplicationGroups.service';
+import { V1ActifioApplicationsService } from './api/v1ActifioApplications.service';
+import { V1ActifioRecoveryPlansService } from './api/v1ActifioRecoveryPlans.service';
+import { V1ActifioRecoveryTypesService } from './api/v1ActifioRecoveryTypes.service';
+import { V1AgmApplicationsService } from './api/v1AgmApplications.service';
+import { V1AgmClustersService } from './api/v1AgmClusters.service';
+import { V1AgmDiskPoolsService } from './api/v1AgmDiskPools.service';
+import { V1AgmHostsService } from './api/v1AgmHosts.service';
+import { V1AgmJobsService } from './api/v1AgmJobs.service';
+import { V1AgmLogicalGroupsService } from './api/v1AgmLogicalGroups.service';
+import { V1AgmOrganizationsService } from './api/v1AgmOrganizations.service';
+import { V1AgmProfilesService } from './api/v1AgmProfiles.service';
+import { V1AgmSlasService } from './api/v1AgmSlas.service';
+import { V1AgmTemplatesService } from './api/v1AgmTemplates.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
-import { V1AuthService } from './api/v1Auth.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1JobsService } from './api/v1Jobs.service';

@@ -5,7 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
 
 @Component({
   selector: 'app-physical-server-modal',
@@ -53,10 +53,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.physicalServerService
@@ -65,10 +65,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -87,14 +87,11 @@ export class PhysicalServerModalComponent implements OnInit {
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
     }
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PhysicalServerId = dto.PhysicalServer.id;
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PhysicalServerId = dto.PhysicalServer.id;
     }
 
     const physicalServer = dto.PhysicalServer;
@@ -116,17 +113,6 @@ export class PhysicalServerModalComponent implements OnInit {
       this.form.controls.sanStorageSize.setValue(ConversionUtil.convertBytesToGb(physicalServer.sanStorageSize));
     }
     this.ngx.resetModalData('physicalServerModal');
-  }
-
-  private stringToBoolean(str: string): boolean {
-    switch (str) {
-      case 'true':
-        return true;
-      case 'false':
-        return false;
-      default:
-        return Boolean(str);
-    }
   }
 
   private buildForm() {

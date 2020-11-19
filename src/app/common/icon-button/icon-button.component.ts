@@ -13,6 +13,7 @@ export class IconButtonComponent {
   @Output() handleClick = new EventEmitter<Event>();
 
   public iconLookup: Record<Icon, string[]> = {
+    add: ['fas', 'plus'],
     edit: ['fas', 'pencil-alt'],
     delete: ['fas', 'trash'],
     download: ['fas', 'download'],
@@ -27,5 +28,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'edit' | 'undo' | 'delete' | 'upload' | 'download';
+export type Icon = 'add' | 'edit' | 'undo' | 'delete' | 'upload' | 'download';
 export type IconType = 'default' | 'danger' | 'success';

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VmwareVirtualDisk, V1VmwareVirtualDisksService } from 'api_client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
 
 @Component({
   selector: 'app-virtual-disk-modal',
@@ -48,10 +48,10 @@ export class VirtualDiskModalComponent implements OnInit {
     this.ngx.setModalData(Object.assign({}, vmwareVirtualDisk), 'virtualDiskModal');
 
     this.virtualDiskService.v1VmwareVirtualDisksPost({ vmwareVirtualDisk }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 

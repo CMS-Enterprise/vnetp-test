@@ -1,12 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard';
 import { NgModule } from '@angular/core';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  {
-    path: 'login',
-    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
-  },
   {
     path: 'subnets-vlans',
     canActivate: [AuthGuard],
@@ -86,6 +82,24 @@ const routes: Routes = [
     loadChildren: () => import('./components/vmware/vmware.module').then(m => m.VmwareModule),
   },
   {
+    path: 'virtual-machines',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Virtual Machines', title: 'Automation - Virtual Machines' },
+    loadChildren: () => import('./components/virtual-machines/virtual-machines.module').then(m => m.VirtualMachinesModule),
+  },
+  {
+    path: 'application-groups',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Application Groups', title: 'Automation - Application Groups' },
+    loadChildren: () => import('./components/application-groups/application-groups.module').then(m => m.ApplicationGroupModule),
+  },
+  {
+    path: 'slas',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'SLAs', title: 'Automation - SLAs' },
+    loadChildren: () => import('./components/slas/sla.module').then(m => m.SlaModule),
+  },
+  {
     path: 'zvm',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'z/VM', title: 'Automation - z/VM' },
@@ -103,11 +117,27 @@ const routes: Routes = [
     data: { breadcrumb: 'Appliance as a Service', title: 'Automation - Appliance as a Service' },
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: 'callback',
+    loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
+  },
+  {
+    path: 'tenant',
+    loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
+  },
+  {
+    path: 'unauthorized',
+    loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./components/logout/logout.module').then(m => m.LogoutModule),
+  },
   {
     path: '**',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./components/notfound/notfound.module').then(m => m.NotFoundModule),
+    loadChildren: () => import('./components/not-found/not-found.module').then(m => m.NotFoundModule),
   },
 ];
 

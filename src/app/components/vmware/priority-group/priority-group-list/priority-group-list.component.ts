@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { PriorityGroup, V1PriorityGroupsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-priority-group-list',
@@ -20,7 +20,11 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
   private priorityGroupSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private priorityGroupService: V1PriorityGroupsService) {}
+  constructor(
+    private entityService: EntityService,
+    private ngx: NgxSmartModalService,
+    private priorityGroupService: V1PriorityGroupsService,
+  ) {}
 
   ngOnInit(): void {
     this.loadPriorityGroups();
@@ -35,24 +39,12 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   public deletePriorityGroup(priorityGroup: PriorityGroup): void {
-    if (priorityGroup.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const { deletedAt, id, name } = priorityGroup;
-    const deleteDescription = priorityGroup.deletedAt ? 'Delete' : 'Soft-Delete';
-    const deleteFn = () => {
-      if (deletedAt) {
-        this.priorityGroupService.v1PriorityGroupsIdDelete({ id }).subscribe(() => this.loadPriorityGroups());
-      } else {
-        this.priorityGroupService.v1PriorityGroupsIdSoftDelete({ id }).subscribe(() => this.loadPriorityGroups());
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Priority Group?`, `Do you want to ${deleteDescription} priority group "${name}"?`),
-      deleteFn,
-    );
+    this.entityService.deleteEntity(priorityGroup, {
+      entityName: 'Priority Group',
+      delete$: this.priorityGroupService.v1PriorityGroupsIdDelete({ id: priorityGroup.id }),
+      softDelete$: this.priorityGroupService.v1PriorityGroupsIdSoftDelete({ id: priorityGroup.id }),
+      onSuccess: () => this.loadPriorityGroups(),
+    });
   }
 
   public loadPriorityGroups(): void {
@@ -82,19 +74,6 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
 
     this.priorityGroupService.v1PriorityGroupsIdRestorePatch({ id: priorityGroup.id }).subscribe(() => {
       this.loadPriorityGroups();
-    });
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void): void {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
     });
   }
 

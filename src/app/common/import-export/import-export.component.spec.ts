@@ -7,14 +7,11 @@ describe('ImportExportComponent', () => {
   let component: ImportExportComponent;
   let fixture: ComponentFixture<ImportExportComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [ImportExportComponent, MockFontAwesomeComponent],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
+    });
     fixture = TestBed.createComponent(ImportExportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
