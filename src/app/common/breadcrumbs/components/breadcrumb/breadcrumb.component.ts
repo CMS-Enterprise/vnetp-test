@@ -1,19 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
 })
-export class BreadcrumbComponent implements OnInit, OnDestroy {
+export class BreadcrumbComponent implements OnInit {
   private routesNotToRender: string[] = ['/tenant', '/unauthorized', '/logout'];
   public breadcrumbs: Breadcrumb[] = [];
   public shouldRender = true;
-  private currentUserSubscription: Subscription;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -61,10 +58,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       return this.getBreadcrumbs(child, url, breadcrumbs);
     }
     return breadcrumbs;
-  }
-
-  ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
 }
 
