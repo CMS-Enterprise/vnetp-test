@@ -7,7 +7,7 @@ declare var window: any;
 export class AppInitService {
   public init() {
     return from(
-      fetch('assets/config.json').then(function(response) {
+      fetch('assets/config.json').then(response => {
         return response.json();
       }),
     )
