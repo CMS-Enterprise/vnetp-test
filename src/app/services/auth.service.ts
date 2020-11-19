@@ -49,8 +49,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    const userClaims = environment.environment.oidc_user_claims;
-    if (userClaims === 'False' || !userClaims) {
+    if (!environment.environment.oidc_user_claims) {
       this.user.next(this.mockUser);
       return true;
     }
