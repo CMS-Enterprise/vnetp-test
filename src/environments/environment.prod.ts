@@ -7,7 +7,7 @@ class Environment extends DynamicEnvironment {
   constructor() {
     super();
     this.production = true;
-    this.apiBase = 'http://localhost:3000/api';
+    this.apiBase = '/api';
     this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
   }
 }
