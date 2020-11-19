@@ -1,7 +1,79 @@
+@import '../../../../../assets/styles/variables';
+
 .appliance {
   &--name {
     font-weight: 600;
     display: block;
     margin: 0;
+  }
+}
+
+%list {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+  max-height: 600px;
+}
+
+.virtual-machines {
+  margin-top: 20px;
+  display: flex;
+
+  &__list {
+    @extend %list;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $c-gray-100;
+    margin-top: 2px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__section {
+    flex-grow: 1;
+
+    &:first-child {
+      padding-right: 20px;
+      border-right: 1px solid $c-gray-100;
+    }
+
+    &:last-child {
+      padding-left: 20px;
+    }
+  }
+}
+
+.sequence-order {
+  &__list {
+    @extend %list;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  &__item {
+    border: 1px solid $c-gray-300;
+    border-radius: 4px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    margin-bottom: 10px;
+
+    &--selected {
+      border-color: $c-gray-700;
+    }
+
+    input[type='radio'] {
+      width: 40px;
+    }
   }
 }
