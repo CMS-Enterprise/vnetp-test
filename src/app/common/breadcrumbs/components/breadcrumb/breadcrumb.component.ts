@@ -8,7 +8,9 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
+  private routesNotToRender: string[] = ['/tenant', '/unauthorized', '/logout'];
   public breadcrumbs: Breadcrumb[] = [];
+  public shouldRender = true;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -20,6 +22,8 @@ export class BreadcrumbComponent implements OnInit {
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
+      this.shouldRender = !this.routesNotToRender.some(route => route === this.router.url);
+
       this.breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
     });

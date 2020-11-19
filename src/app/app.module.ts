@@ -40,12 +40,18 @@ import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
 import { environment } from 'src/environments/environment';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
+import { AppInitService } from './app.init';
+import { APP_INITIALIZER } from '@angular/core';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
     basePath: environment.apiBase,
   };
   return new Configuration(params);
+}
+
+export function init_app(appLoadService: AppInitService) {
+  return () => appLoadService.init();
 }
 
 @NgModule({
@@ -69,6 +75,13 @@ export function apiConfigFactory(): Configuration {
     }),
   ],
   providers: [
+    AppInitService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: init_app,
+      deps: [AppInitService],
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,

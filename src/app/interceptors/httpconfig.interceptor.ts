@@ -5,16 +5,26 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private authService: AuthService, private toastr: ToastrService) {}
+  constructor(private authService: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    let tenant = '';
+    this.route.queryParams.subscribe(qp => {
+      tenant = qp.tenant;
+    });
+
     const isLoggedIn = this.authService.isLoggedIn();
-    if (isLoggedIn && environment.userClaims) {
+    const userClaims = environment.environment.oidc_user_claims;
+    if (isLoggedIn && (userClaims === 'True' || userClaims)) {
       const headers = new HttpHeaders({ Authorization: this.authService.getAuthorizationHeaderValue() });
-      request = request.clone({ headers });
+      request = request.clone({
+        headers,
+        params: request.params.set('tenant', tenant),
+      });
     }
 
     if (!request.headers.has('Accept')) {
