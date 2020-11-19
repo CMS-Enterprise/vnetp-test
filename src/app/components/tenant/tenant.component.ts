@@ -11,7 +11,7 @@ export class TenantComponent implements OnInit {
   // This should be automated to pull tenants from ldap query
   public currentTenants = [
     { name: 'CDS', dbName: 'dcs_cds' },
-    { name: 'ThirdPacket', dbName: 'dcs_thirdpacket' },
+    { name: 'ThirdPacket', dbName: 'draas' },
   ];
 
   constructor(private authService: AuthService, private router: Router, public toastrService: ToastrService) {}

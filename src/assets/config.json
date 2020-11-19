@@ -1,6 +1,6 @@
 {
     "environment": {
-        "oidc_user_claims": true,
+        "oidc_user_claims": "True",
         "oidc": {
             "authority": "https://cfs01-dc01.draas.cdsvdc.lcl/cfs/oauth/draasui",
             "client_id": "lS12GPO6lWGJ8e7Ocjbo0z",

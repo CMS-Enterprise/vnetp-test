@@ -14,7 +14,6 @@ export class AppInitService {
       .pipe(
         map(config => {
           window.config = config;
-          console.log(config);
           return config;
         }),
       )

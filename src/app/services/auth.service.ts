@@ -39,7 +39,7 @@ export class AuthService {
       Log.logger = console;
       Log.level = Log.DEBUG;
     }
-    console.log(environment);
+
     this.manager.getUser().then(user => {
       if (user) {
         this.user.next(user);
