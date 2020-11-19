@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ActifioApplicationGroupDto } from '../model/models';
+import { ActifioCollectorEditApplicationGroupDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -27,8 +28,16 @@ export interface V1ActifioApplicationGroupsIdDeleteRequestParams {
     id: string;
 }
 
+export interface V1ActifioApplicationGroupsIdEditGetRequestParams {
+    id: string;
+}
+
 export interface V1ActifioApplicationGroupsIdGetRequestParams {
     id: string;
+}
+
+export interface V1ActifioApplicationGroupsPostRequestParams {
+    actifioApplicationGroupDto: ActifioApplicationGroupDto;
 }
 
 
@@ -180,6 +189,52 @@ export class V1ActifioApplicationGroupsService {
     }
 
     /**
+     * Get one ActifioCollectorEditAppalicationGroupDto
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioApplicationGroupsIdEditGet(requestParameters: V1ActifioApplicationGroupsIdEditGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioCollectorEditApplicationGroupDto>;
+    public v1ActifioApplicationGroupsIdEditGet(requestParameters: V1ActifioApplicationGroupsIdEditGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioCollectorEditApplicationGroupDto>>;
+    public v1ActifioApplicationGroupsIdEditGet(requestParameters: V1ActifioApplicationGroupsIdEditGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioCollectorEditApplicationGroupDto>>;
+    public v1ActifioApplicationGroupsIdEditGet(requestParameters: V1ActifioApplicationGroupsIdEditGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioApplicationGroupsIdEditGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ActifioCollectorEditApplicationGroupDto>(`${this.configuration.basePath}/v1/actifio/application-groups/${encodeURIComponent(String(id))}/edit`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get one ActifioApplicationGroupDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -226,14 +281,19 @@ export class V1ActifioApplicationGroupsService {
     }
 
     /**
-     * Create one ApplicationGroup
+     * Update one ApplicationGroup
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioApplicationGroupsPost(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1ActifioApplicationGroupsPost(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1ActifioApplicationGroupsPost(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
-    public v1ActifioApplicationGroupsPost(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioApplicationGroupsPost(requestParameters: V1ActifioApplicationGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
+    public v1ActifioApplicationGroupsPost(requestParameters: V1ActifioApplicationGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
+    public v1ActifioApplicationGroupsPost(requestParameters: V1ActifioApplicationGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
+    public v1ActifioApplicationGroupsPost(requestParameters: V1ActifioApplicationGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const actifioApplicationGroupDto = requestParameters.actifioApplicationGroupDto;
+        if (actifioApplicationGroupDto === null || actifioApplicationGroupDto === undefined) {
+            throw new Error('Required parameter actifioApplicationGroupDto was null or undefined when calling v1ActifioApplicationGroupsPost.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -250,13 +310,22 @@ export class V1ActifioApplicationGroupsService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.post<string>(`${this.configuration.basePath}/v1/actifio/application-groups`,
-            null,
+            actifioApplicationGroupDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

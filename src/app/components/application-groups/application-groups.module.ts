@@ -10,6 +10,7 @@ import { ApplicationGroupModalComponent } from './components/application-group-m
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SortPipe } from 'src/app/pipes/sort.pipe';
 
 const routes: Routes = [
   {
@@ -31,6 +32,6 @@ const routes: Routes = [
     SharedModule,
     TableModule,
   ],
-  declarations: [ApplicationGroupListComponent, ApplicationGroupModalComponent],
+  declarations: [ApplicationGroupListComponent, ApplicationGroupModalComponent, SortPipe],
 })
 export class ApplicationGroupModule {}

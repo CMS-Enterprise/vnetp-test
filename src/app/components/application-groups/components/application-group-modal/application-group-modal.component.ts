@@ -1,15 +1,29 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  ActifioApplicationGroupDto,
   ActifioCollectorApplianceDto,
   ActifioCollectorVirtualManagementServerDto,
+  ActifioSequenceOrderDto,
+  ActifioVMMemberDto,
   V1ActifioAppliancesService,
   V1ActifioApplicationGroupsService,
+  V1ActifioApplicationsService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+
+class SequenceOrder {
+  public id: number;
+
+  constructor(public order: number, public delay = 0, public virtualMachines: ActifioVMMemberDto[] = []) {
+    this.id = order;
+  }
+}
+
+type CreateApplicationGroupDto = Pick<ActifioApplicationGroupDto, 'description' | 'name' | 'serverId' | 'cdsId' | 'sequenceOrders'>;
 
 @Component({
   selector: 'app-application-group-modal',
@@ -17,16 +31,20 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./application-group-modal.component.scss'],
 })
 export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
+  public selectedSequenceOrderId: number;
   public form: FormGroup;
   public modalTitle: string;
   public submitted = false;
+  public sequenceOrders: SequenceOrder[] = [];
 
-  // Lookups
   public appliances: ActifioCollectorApplianceDto[] = [];
   public isLoadingAppliances = false;
+
   public virtualManagementServers: ActifioCollectorVirtualManagementServerDto[] = [];
   public isLoadingVirtualManagementServers = false;
-  public virtualMachines: any[] = [];
+
+  public allVirtualMachines: ActifioVMMemberDto[] = [];
+  public virtualMachines: ActifioVMMemberDto[] = [];
   public isLoadingVirtualMachines = false;
 
   private applicationGroupId: string;
@@ -39,8 +57,9 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private rdcApplicationGroupService: V1ActifioApplicationGroupsService,
     private rdcApplianceService: V1ActifioAppliancesService,
+    private rdcApplicationGroupService: V1ActifioApplicationGroupsService,
+    private rdcApplicationService: V1ActifioApplicationsService,
   ) {}
 
   get f() {
@@ -57,6 +76,25 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.applianceChanges, this.nameChanges, this.virtualManagementServerChanges]);
   }
 
+  public addVirtualMachine(virtualMachine: ActifioVMMemberDto): void {
+    const sequenceOrder = this.sequenceOrders.find(so => so.id === this.selectedSequenceOrderId);
+    if (!sequenceOrder) {
+      return;
+    }
+    sequenceOrder.virtualMachines = [].concat(sequenceOrder.virtualMachines, virtualMachine);
+    this.virtualMachines = this.virtualMachines.filter(vm => vm.id !== virtualMachine.id);
+  }
+
+  public removeVirtualMachine(virtualMachineId: string, sequenceOrderId: number): void {
+    const sequenceOrder = this.sequenceOrders.find(so => so.id === sequenceOrderId);
+    if (!sequenceOrder) {
+      return;
+    }
+    const virtualMachine = this.allVirtualMachines.find(vm => vm.id === virtualMachineId);
+    this.virtualMachines.push(virtualMachine);
+    sequenceOrder.virtualMachines = sequenceOrder.virtualMachines.filter(vm => vm.id !== virtualMachineId);
+  }
+
   public loadApplicationGroup(): void {
     const applicationGroup = this.ngx.getModalData('applicationGroupModal');
     this.applicationGroupId = applicationGroup.id;
@@ -68,6 +106,10 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     const isNewApplicationGroup = !this.applicationGroupId;
     this.modalTitle = isNewApplicationGroup ? 'Create Application Group' : 'Edit Application Group';
 
+    if (isNewApplicationGroup) {
+      this.addSequenceOrder();
+    }
+
     this.loadApplicationGroupById(this.applicationGroupId);
   }
 
@@ -77,6 +119,12 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
+  public addSequenceOrder(): void {
+    const order = this.sequenceOrders.length + 1;
+    this.sequenceOrders = [].concat(this.sequenceOrders, new SequenceOrder(order));
+    this.selectedSequenceOrderId = this.sequenceOrders[order - 1].id;
+  }
+
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
@@ -84,11 +132,14 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     }
 
     const isNewApplicationGroup = !this.applicationGroupId;
-    const { name } = this.form.value;
+    const { name, description, applianceId: cdsId, virtualManagementServerId: serverId } = this.form.value;
 
-    // TODO: Add types on back-end
-    const dto: any = {
+    const dto: CreateApplicationGroupDto = {
       name,
+      description,
+      cdsId,
+      serverId,
+      sequenceOrders: this.sequenceOrders.map(this.mapSequenceOrder),
     };
 
     if (isNewApplicationGroup) {
@@ -104,12 +155,10 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
       description: [''],
       applianceId: ['', Validators.required],
       virtualManagementServerId: ['', Validators.required],
-      virtualMachineIds: [null, Validators.required],
     });
 
     this.form.controls.applianceId.disable();
     this.form.controls.virtualManagementServerId.disable();
-    this.form.controls.virtualMachineIds.disable();
   }
 
   private reset(): void {
@@ -151,17 +200,21 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
   private subscribeToVirtualManagementServerChanges(): Subscription {
     return this.form.controls.virtualManagementServerId.valueChanges
       .pipe(
+        tap(() => (this.isLoadingVirtualMachines = true)),
         switchMap((virtualManagementServerId: string) => {
           const { applianceId } = this.form.value;
           if (!applianceId || !virtualManagementServerId) {
             return of([]);
           }
-          return this.loadVirtualMachines(virtualManagementServerId);
+          return this.loadVirtualMachines(applianceId, virtualManagementServerId);
         }),
       )
-      .subscribe((virtualMachines: VirtualMachine[]) => {
+      .subscribe((virtualMachines: ActifioVMMemberDto[]) => {
         this.virtualMachines = virtualMachines;
-        this.form.controls.virtualMachineIds.setValue(null);
+        this.allVirtualMachines = virtualMachines;
+        this.sequenceOrders = [new SequenceOrder(1)];
+
+        this.isLoadingVirtualMachines = false;
       });
   }
 
@@ -173,16 +226,16 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadVirtualMachines(virtualMachineServerId: string): Observable<any[]> {
-    return of([
-      { id: '1', name: '1' },
-      { id: '2', name: '2' },
-    ]);
+  private loadVirtualMachines(applianceId: string, virtualMachineServerId: string): Observable<ActifioVMMemberDto[]> {
+    return this.rdcApplicationService.v1ActifioApplicationsCdsIdServerIdGet({ cdsId: applianceId, serverId: virtualMachineServerId });
   }
 
-  // TODO: Add types on back-end
-  private createApplicationGroup(dto: any): void {
-    this.rdcApplicationGroupService.v1ActifioApplicationGroupsPost().subscribe(() => this.onClose());
+  private createApplicationGroup(dto: CreateApplicationGroupDto): void {
+    this.rdcApplicationGroupService
+      .v1ActifioApplicationGroupsPost({
+        actifioApplicationGroupDto: dto,
+      })
+      .subscribe(() => this.onClose());
   }
 
   private loadApplicationGroupById(applicationGroupId: string): void {
@@ -203,12 +256,15 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     return this.rdcApplianceService.v1ActifioAppliancesIdVirtualManagementServersGet({ id: applianceId });
   }
 
+  private mapSequenceOrder(sequenceOrder: SequenceOrder): ActifioSequenceOrderDto {
+    return {
+      delay: sequenceOrder.delay,
+      memberOrderIndex: sequenceOrder.order,
+      sequencePortGroup: [],
+      vmMembers: sequenceOrder.virtualMachines,
+    };
+  }
+
   // TODO: Add types on back-end, implement PUT on back-end
   private updateApplicationGroup(applicationGroupId: string, dto: any): void {}
-}
-
-interface VirtualMachine {
-  id: string;
-  name: string;
-  isSelected: boolean;
 }

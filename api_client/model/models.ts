@@ -6,6 +6,7 @@ export * from './actifioApplicationDto';
 export * from './actifioApplicationGroupDto';
 export * from './actifioClusterDto';
 export * from './actifioCollectorApplianceDto';
+export * from './actifioCollectorEditApplicationGroupDto';
 export * from './actifioCollectorVirtualManagementServerDto';
 export * from './actifioCreateOrApplySlaDto';
 export * from './actifioDetailedLogicalGroupDto';

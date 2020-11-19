@@ -2,7 +2,7 @@
   #applicationGroupModal
   identifier="applicationGroupModal"
   [dismissable]="false"
-  customClass="large-modal"
+  customClass="xlarge-modal"
   (onOpen)="loadApplicationGroup()"
   (onClose)="onClose()"
 >
@@ -87,6 +87,78 @@
         </div>
       </div>
     </form>
+
+    <section class="virtual-machines" *ngIf="f.virtualManagementServerId.value">
+      <div class="virtual-machines__section">
+        <header class="sequence-order__header">
+          <label>Virtual Machines</label>
+        </header>
+
+        <ul class="virtual-machines__list">
+          <li class="virtual-machines__item" *ngFor="let virtualMachine of virtualMachines | sort: 'name'">
+            <span> {{ virtualMachine.name }}</span>
+            <app-icon-button icon="add" label="Add Virtual Machine" (handleClick)="addVirtualMachine(virtualMachine)"></app-icon-button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="virtual-machines__section">
+        <header class="sequence-order__header">
+          <label>Sequence Orders</label>
+          <button type="button" class="btn btn-warning" (click)="addSequenceOrder()">
+            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+            <span>Add Sequence Order</span>
+          </button>
+        </header>
+
+        <ul class="sequence-order__list">
+          <li
+            class="sequence-order__item"
+            [class.sequence-order__item--selected]="sequenceOrder.id === selectedSequenceOrderId"
+            *ngFor="let sequenceOrder of sequenceOrders | sort: 'order'; let i = index"
+          >
+            <div class="form-row">
+              <!-- Selected -->
+              <div class="form-group col-md-2">
+                <label for="selected-{{ i }}">Selected</label>
+                <input
+                  id="active-{{ i }}"
+                  class="form-control"
+                  name="selected-sequence-order"
+                  [value]="sequenceOrder.id"
+                  type="radio"
+                  [(ngModel)]="selectedSequenceOrderId"
+                  aria-label="Select sequence order"
+                />
+              </div>
+
+              <!-- Order -->
+              <div class="form-group col-md-5">
+                <label for="order-{{ i }}">Order</label>
+                <input type="number" [(ngModel)]="sequenceOrder.order" class="form-control" id="order-{{ i }}" />
+              </div>
+
+              <!-- Delay -->
+              <div class="form-group col-md-5">
+                <label for="delay-{{ i }}">Delay</label>
+                <input type="number" [(ngModel)]="sequenceOrder.delay" class="form-control" id="delay-{{ i }}" />
+              </div>
+            </div>
+
+            <ul class="virtual-machines__list">
+              <li class="virtual-machines__item" *ngFor="let virtualMachine of sequenceOrder.virtualMachines | sort: 'name'">
+                <span> {{ virtualMachine.name }}</span>
+                <app-icon-button
+                  icon="delete"
+                  label="Remove Virtual Machine"
+                  (handleClick)="removeVirtualMachine(virtualMachine.id, sequenceOrder.id)"
+                ></app-icon-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
   </main>
 
   <footer class="modal-footer">

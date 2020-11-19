@@ -12224,8 +12224,13 @@ paths:
       consumes:
         - application/json
     post:
-      summary: Create one ApplicationGroup
-      parameters: []
+      summary: Update one ApplicationGroup
+      parameters:
+        - name: ActifioApplicationGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
       responses:
         '200':
           description: ''
@@ -12264,6 +12269,24 @@ paths:
       responses:
         '200':
           description: ''
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/application-groups/{id}/edit':
+    get:
+      summary: Get one ActifioCollectorEditAppalicationGroupDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioCollectorEditApplicationGroupDto'
       tags: *ref_50
       produces:
         - application/json
@@ -15636,6 +15659,19 @@ definitions:
       - serverId
       - sequenceOrders
       - cdsId
+  ActifioCollectorEditApplicationGroupDto:
+    type: object
+    properties:
+      sequenceOrders:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      newVMMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - sequenceOrders
   ActifioCollectorApplianceDto:
     type: object
     properties:
