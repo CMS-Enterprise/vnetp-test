@@ -108,6 +108,7 @@ function getFunctions(clazz: object): string[] {
   let obj = clazz;
   do {
     props = props.concat(Object.getOwnPropertyNames(obj));
+    // tslint:disable-next-line:no-conditional-assignment
   } while ((obj = Object.getPrototypeOf(obj)));
 
   return props.sort().filter(prop => prop !== 'constructor');

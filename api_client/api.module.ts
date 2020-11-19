@@ -19,7 +19,6 @@ import { V1AgmProfilesService } from './api/v1AgmProfiles.service';
 import { V1AgmSlasService } from './api/v1AgmSlas.service';
 import { V1AgmTemplatesService } from './api/v1AgmTemplates.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
-import { V1AuthService } from './api/v1Auth.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1JobsService } from './api/v1Jobs.service';

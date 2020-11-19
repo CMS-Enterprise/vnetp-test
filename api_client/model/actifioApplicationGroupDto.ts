@@ -13,9 +13,12 @@ import { ActifioSequenceOrderDto } from './actifioSequenceOrderDto';
 
 
 export interface ActifioApplicationGroupDto { 
-    id: string;
+    description?: string;
+    id?: string;
     name: string;
-    sequenceOrder: Array<ActifioSequenceOrderDto>;
-    startupSequence: number;
+    serverId: string;
+    sequenceOrders: Array<ActifioSequenceOrderDto>;
+    startupSequence?: number;
+    cdsId: string;
 }
 
