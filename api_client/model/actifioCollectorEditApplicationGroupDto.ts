@@ -14,6 +14,11 @@ import { ActifioVMMemberDto } from './actifioVMMemberDto';
 
 
 export interface ActifioCollectorEditApplicationGroupDto { 
+    id: string;
+    name: string;
+    description: string;
+    serverId: string;
+    cdsId: string;
     sequenceOrders: Array<ActifioSequenceOrderDto>;
     newVMMembers?: Array<ActifioVMMemberDto>;
 }

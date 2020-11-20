@@ -83,7 +83,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
   public loadApplicationGroups(): void {
     this.applicationGroups = [];
     this.isLoading = true;
-    this.applicationGroupService.v1ActifioApplicationGroupsGet().subscribe(applicationGroups => {
+    this.applicationGroupService.v1ActifioApplicationGroupsGet({}).subscribe(applicationGroups => {
       this.applicationGroups = applicationGroups.map(this.mapApplicationGroup);
       this.isLoading = false;
     });
