@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import ObjectUtil from '../utils/ObjectUtil';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class MessageService {
 
   public sendMessage(m: Message): void {
     if (!environment.production) {
-      console.debug('DEBUG :: MessageService :: ', m);
+      console.debug('DEBUG :: MessageService :: ', ObjectUtil.removeEmptyProps(m));
     }
 
     this.subject.next(m);
