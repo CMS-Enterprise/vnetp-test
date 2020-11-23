@@ -8,9 +8,9 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class VmDiscoveryModalComponent {
-  @ViewChild('selectVCenter', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachines', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
-  @ViewChild('selectAction', { static: false }) selectActionTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenter') selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachines') selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectAction') selectActionTemplate: TemplateRef<any>;
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
   public selectedVirtualMachines: ActifioApplicationDto[] = [];

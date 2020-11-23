@@ -9,8 +9,8 @@ import { TableConfig } from 'src/app/common/table/table.component';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class SelectVCenterComponent implements OnInit {
-  @ViewChild('selectVCenterTemplate', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVCenterToggleTemplate', { static: false }) selectVCenterToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterTemplate') selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterToggleTemplate') selectVCenterToggleTemplate: TemplateRef<any>;
 
   @Output() vcenterSelected = new EventEmitter<number>();
 

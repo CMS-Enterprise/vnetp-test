@@ -17,7 +17,7 @@ export interface ApplicationGroupView {
   templateUrl: './application-group-list.component.html',
 })
 export class ApplicationGroupListComponent implements OnInit, OnDestroy {
-  @ViewChild('actions', { static: false }) actionsTemplate: TemplateRef<any>;
+  @ViewChild('actions') actionsTemplate: TemplateRef<any>;
 
   public isLoading = false;
   public applicationGroups: ApplicationGroupView[] = [];

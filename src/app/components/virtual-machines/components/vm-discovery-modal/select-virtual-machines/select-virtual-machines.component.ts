@@ -20,7 +20,7 @@ interface SelectableVirtualMachine {
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class SelectVirtualMachinesComponent implements OnInit {
-  @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachineToggleTemplate') selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
   @Input() vcenterId: string;
   @Output() virtualMachinesAdded = new EventEmitter<ActifioApplicationDto[]>();
