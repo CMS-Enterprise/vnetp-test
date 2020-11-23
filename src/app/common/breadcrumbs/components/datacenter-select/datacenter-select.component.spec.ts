@@ -69,7 +69,7 @@ describe('DatacenterSelectComponent', () => {
       };
       component.switchDatacenter();
 
-      expect(successSpy).toHaveBeenCalledWith('Datacenter Switched');
+      expect(successSpy).toHaveBeenCalledWith('Datacenter switched');
     });
 
     it('should display a toastr error message when changing datacenters fails', () => {
