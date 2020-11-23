@@ -76,4 +76,33 @@ describe('ObjectUtil', () => {
       expect(test).toEqual(testCopy);
     });
   });
+
+  describe('removeEmptyProps', () => {
+    it('should return an object with undefined props removed', () => {
+      expect(ObjectUtil.removeEmptyProps({ a: undefined })).toEqual({});
+    });
+
+    it('should return an object with null props removed', () => {
+      expect(ObjectUtil.removeEmptyProps({ a: null })).toEqual({});
+    });
+
+    it('should return all object props that exist', () => {
+      const object = {
+        a: 1,
+        b: '2',
+        c: true,
+        d: [],
+        e: {},
+        f: undefined,
+        g: null,
+      };
+      expect(ObjectUtil.removeEmptyProps(object)).toEqual({
+        a: 1,
+        b: '2',
+        c: true,
+        d: [],
+        e: {},
+      });
+    });
+  });
 });
