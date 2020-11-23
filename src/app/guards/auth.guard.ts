@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
   canActivate(): Observable<boolean> | boolean {
-    return true;
     if (this.authService.isLoggedIn()) {
       return true;
     }
