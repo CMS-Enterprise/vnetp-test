@@ -17,19 +17,18 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioProfileDto } from '../model/models';
+import { ActifioDiscoveredVMDto } from '../model/models';
+import { ActifioHostDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmProfilesGetRequestParams {
-    offset?: number;
-    limit?: number;
-    clusterIds?: Array<string>;
+export interface V1ActifioGmHostsHostIdDiscoveredApplicationsGetRequestParams {
+    hostId: string;
 }
 
-export interface V1AgmProfilesIdGetRequestParams {
+export interface V1ActifioGmHostsIdGetRequestParams {
     id: string;
 }
 
@@ -37,7 +36,7 @@ export interface V1AgmProfilesIdGetRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmProfilesService {
+export class V1ActifioGmHostsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -96,32 +95,14 @@ export class V1AgmProfilesService {
     }
 
     /**
-     * Delete one ActifioOrganization
-     * @param requestParameters
+     * Get many ActifioHostDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioProfileDto>>;
-    public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioProfileDto>>>;
-    public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
-    public v1AgmProfilesGet(requestParameters: V1AgmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const offset = requestParameters.offset;
-        const limit = requestParameters.limit;
-        const clusterIds = requestParameters.clusterIds;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (clusterIds) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
-        }
+    public v1ActifioGmHostsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioHostDto>>;
+    public v1ActifioGmHostsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioHostDto>>>;
+    public v1ActifioGmHostsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioHostDto>>>;
+    public v1ActifioGmHostsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -143,9 +124,8 @@ export class V1AgmProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioProfileDto>>(`${this.configuration.basePath}/v1/agm/profiles`,
+        return this.httpClient.get<Array<ActifioHostDto>>(`${this.configuration.basePath}/v1/actifio/gm/hosts`,
             {
-                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -156,18 +136,18 @@ export class V1AgmProfilesService {
     }
 
     /**
-     * Get one ActifioProfileDto
+     * Get many discoveredVMDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmProfilesIdGet(requestParameters: V1AgmProfilesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioProfileDto>;
-    public v1AgmProfilesIdGet(requestParameters: V1AgmProfilesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioProfileDto>>;
-    public v1AgmProfilesIdGet(requestParameters: V1AgmProfilesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioProfileDto>>;
-    public v1AgmProfilesIdGet(requestParameters: V1AgmProfilesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmProfilesIdGet.');
+    public v1ActifioGmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1ActifioGmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioDiscoveredVMDto>>;
+    public v1ActifioGmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1ActifioGmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioDiscoveredVMDto>>>;
+    public v1ActifioGmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1ActifioGmHostsHostIdDiscoveredApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioDiscoveredVMDto>>>;
+    public v1ActifioGmHostsHostIdDiscoveredApplicationsGet(requestParameters: V1ActifioGmHostsHostIdDiscoveredApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const hostId = requestParameters.hostId;
+        if (hostId === null || hostId === undefined) {
+            throw new Error('Required parameter hostId was null or undefined when calling v1ActifioGmHostsHostIdDiscoveredApplicationsGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -190,7 +170,53 @@ export class V1AgmProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioProfileDto>(`${this.configuration.basePath}/v1/agm/profiles/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<Array<ActifioDiscoveredVMDto>>(`${this.configuration.basePath}/v1/actifio/gm/hosts/${encodeURIComponent(String(hostId))}/discovered-applications`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get one ActifioHostDto
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioGmHostsIdGet(requestParameters: V1ActifioGmHostsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioHostDto>;
+    public v1ActifioGmHostsIdGet(requestParameters: V1ActifioGmHostsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioHostDto>>;
+    public v1ActifioGmHostsIdGet(requestParameters: V1ActifioGmHostsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioHostDto>>;
+    public v1ActifioGmHostsIdGet(requestParameters: V1ActifioGmHostsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmHostsIdGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ActifioHostDto>(`${this.configuration.basePath}/v1/actifio/gm/hosts/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

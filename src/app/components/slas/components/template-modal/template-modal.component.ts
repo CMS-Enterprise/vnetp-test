@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActifioPolicyDto, ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { ActifioPolicyDto, ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -27,7 +27,7 @@ export class TemplateModalComponent implements OnInit {
   private template: ActifioTemplateDto;
 
   constructor(
-    private agmTemplateService: V1AgmTemplatesService,
+    private agmTemplateService: V1ActifioGmTemplatesService,
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
@@ -102,7 +102,7 @@ export class TemplateModalComponent implements OnInit {
 
   private createTemplate(name: string, description: string, endTime: string, startTime: string): void {
     this.agmTemplateService
-      .v1AgmTemplatesPost({
+      .v1ActifioGmTemplatesPost({
         actifioAddTemplateDto: {
           name,
           description,
@@ -124,7 +124,7 @@ export class TemplateModalComponent implements OnInit {
 
   private loadSnapshotPolicy(templateId: string): void {
     this.agmTemplateService
-      .v1AgmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 })
+      .v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 })
       .subscribe((policies: ActifioPolicyDto[]) => {
         this.policies = policies;
         if (policies.length === 0) {
@@ -140,7 +140,7 @@ export class TemplateModalComponent implements OnInit {
   private updateTemplate(name: string, description: string, endTime: string, startTime: string): void {
     const { id } = this.template;
 
-    const template$ = this.agmTemplateService.v1AgmTemplatesIdPut({
+    const template$ = this.agmTemplateService.v1ActifioGmTemplatesIdPut({
       id,
       actifioUpdateTemplateDto: {
         id,
@@ -155,7 +155,7 @@ export class TemplateModalComponent implements OnInit {
     const snapshotPolicy = this.policies[0];
     const policyId = snapshotPolicy.id;
 
-    const snapshotPolicy$ = this.agmTemplateService.v1AgmTemplatesIdPolicyPolicyIdPut({
+    const snapshotPolicy$ = this.agmTemplateService.v1ActifioGmTemplatesIdPolicyPolicyIdPut({
       id,
       policyId,
       actifioUpdateTemplatePolicyDto: {

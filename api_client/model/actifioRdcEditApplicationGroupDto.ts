@@ -13,7 +13,7 @@ import { ActifioSequenceOrderDto } from './actifioSequenceOrderDto';
 import { ActifioVMMemberDto } from './actifioVMMemberDto';
 
 
-export interface ActifioCollectorEditApplicationGroupDto { 
+export interface ActifioRdcEditApplicationGroupDto { 
     id: string;
     name: string;
     description: string;

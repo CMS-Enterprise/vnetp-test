@@ -1,10 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.service';
-import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
-import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
-import { ActifioJobDto } from 'api_client/model/actifioJobDto';
+import { ActifioApplicationDto, ActifioJobDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService } from 'api_client';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -27,8 +24,8 @@ export class VmViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private agmApplicationService: V1AgmApplicationsService,
-    private agmJobService: V1AgmJobsService,
+    private agmApplicationService: V1ActifioGmApplicationsService,
+    private agmJobService: V1ActifioGmJobsService,
     private datePipe: DatePipe,
   ) {}
 
@@ -58,12 +55,12 @@ export class VmViewComponent implements OnInit, OnDestroy {
   }
 
   private loadVirtualMachine(virtualMachineId: string): Observable<ActifioApplicationDto> {
-    return this.agmApplicationService.v1AgmApplicationsIdGet({ id: virtualMachineId });
+    return this.agmApplicationService.v1ActifioGmApplicationsIdGet({ id: virtualMachineId });
   }
 
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
-      .v1AgmJobsGet({
+      .v1ActifioGmJobsGet({
         jobClassCode,
         limit: 10,
         offset: 0,

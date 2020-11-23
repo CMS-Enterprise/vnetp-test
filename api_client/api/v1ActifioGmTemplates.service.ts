@@ -27,38 +27,38 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmTemplatesIdDeleteRequestParams {
+export interface V1ActifioGmTemplatesIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmTemplatesIdGetRequestParams {
+export interface V1ActifioGmTemplatesIdGetRequestParams {
     id: string;
 }
 
-export interface V1AgmTemplatesIdPolicyGetRequestParams {
+export interface V1ActifioGmTemplatesIdPolicyGetRequestParams {
     offset: number;
     limit: number;
     isSnapshot: boolean;
     id: string;
 }
 
-export interface V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams {
+export interface V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams {
     policyId: string;
     id: string;
 }
 
-export interface V1AgmTemplatesIdPolicyPolicyIdPutRequestParams {
+export interface V1ActifioGmTemplatesIdPolicyPolicyIdPutRequestParams {
     policyId: string;
     id: string;
     actifioUpdateTemplatePolicyDto: ActifioUpdateTemplatePolicyDto;
 }
 
-export interface V1AgmTemplatesIdPutRequestParams {
+export interface V1ActifioGmTemplatesIdPutRequestParams {
     id: string;
     actifioUpdateTemplateDto: ActifioUpdateTemplateDto;
 }
 
-export interface V1AgmTemplatesPostRequestParams {
+export interface V1ActifioGmTemplatesPostRequestParams {
     actifioAddTemplateDto: ActifioAddTemplateDto;
 }
 
@@ -66,7 +66,7 @@ export interface V1AgmTemplatesPostRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmTemplatesService {
+export class V1ActifioGmTemplatesService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -129,10 +129,10 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioTemplateDto>>;
-    public v1AgmTemplatesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioTemplateDto>>>;
-    public v1AgmTemplatesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioTemplateDto>>>;
-    public v1AgmTemplatesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioTemplateDto>>>;
+    public v1ActifioGmTemplatesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioTemplateDto>>>;
+    public v1ActifioGmTemplatesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -154,7 +154,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioTemplateDto>>(`${this.configuration.basePath}/v1/agm/templates`,
+        return this.httpClient.get<Array<ActifioTemplateDto>>(`${this.configuration.basePath}/v1/actifio/gm/templates`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -171,13 +171,13 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmTemplatesIdDelete(requestParameters: V1AgmTemplatesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmTemplatesIdDelete(requestParameters: V1ActifioGmTemplatesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmTemplatesIdDelete(requestParameters: V1ActifioGmTemplatesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmTemplatesIdDelete(requestParameters: V1ActifioGmTemplatesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmTemplatesIdDelete(requestParameters: V1ActifioGmTemplatesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -199,7 +199,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -216,13 +216,13 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdGet(requestParameters: V1AgmTemplatesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
-    public v1AgmTemplatesIdGet(requestParameters: V1AgmTemplatesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdGet(requestParameters: V1AgmTemplatesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdGet(requestParameters: V1AgmTemplatesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesIdGet(requestParameters: V1ActifioGmTemplatesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
+    public v1ActifioGmTemplatesIdGet(requestParameters: V1ActifioGmTemplatesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdGet(requestParameters: V1ActifioGmTemplatesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdGet(requestParameters: V1ActifioGmTemplatesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -245,7 +245,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioTemplateDto>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -262,25 +262,25 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioPolicyDto>>;
-    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioPolicyDto>>>;
-    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioPolicyDto>>>;
-    public v1AgmTemplatesIdPolicyGet(requestParameters: V1AgmTemplatesIdPolicyGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioPolicyDto>>;
+    public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioPolicyDto>>>;
+    public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioPolicyDto>>>;
+    public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
         if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
         const limit = requestParameters.limit;
         if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
         const isSnapshot = requestParameters.isSnapshot;
         if (isSnapshot === null || isSnapshot === undefined) {
-            throw new Error('Required parameter isSnapshot was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+            throw new Error('Required parameter isSnapshot was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -317,7 +317,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioPolicyDto>>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy`,
+        return this.httpClient.get<Array<ActifioPolicyDto>>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}/policy`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -335,17 +335,17 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1AgmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdDelete(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const policyId = requestParameters.policyId;
         if (policyId === null || policyId === undefined) {
-            throw new Error('Required parameter policyId was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdDelete.');
+            throw new Error('Required parameter policyId was null or undefined when calling v1ActifioGmTemplatesIdPolicyPolicyIdDelete.');
         }
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPolicyPolicyIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -367,7 +367,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -384,21 +384,21 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdPolicyPolicyIdPut(requestParameters: V1AgmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
-    public v1AgmTemplatesIdPolicyPolicyIdPut(requestParameters: V1AgmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdPolicyPolicyIdPut(requestParameters: V1AgmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdPolicyPolicyIdPut(requestParameters: V1AgmTemplatesIdPolicyPolicyIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesIdPolicyPolicyIdPut(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdPut(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdPut(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdPolicyPolicyIdPut(requestParameters: V1ActifioGmTemplatesIdPolicyPolicyIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const policyId = requestParameters.policyId;
         if (policyId === null || policyId === undefined) {
-            throw new Error('Required parameter policyId was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
+            throw new Error('Required parameter policyId was null or undefined when calling v1ActifioGmTemplatesIdPolicyPolicyIdPut.');
         }
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPolicyPolicyIdPut.');
         }
         const actifioUpdateTemplatePolicyDto = requestParameters.actifioUpdateTemplatePolicyDto;
         if (actifioUpdateTemplatePolicyDto === null || actifioUpdateTemplatePolicyDto === undefined) {
-            throw new Error('Required parameter actifioUpdateTemplatePolicyDto was null or undefined when calling v1AgmTemplatesIdPolicyPolicyIdPut.');
+            throw new Error('Required parameter actifioUpdateTemplatePolicyDto was null or undefined when calling v1ActifioGmTemplatesIdPolicyPolicyIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -430,7 +430,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
+        return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}/policy/${encodeURIComponent(String(policyId))}`,
             actifioUpdateTemplatePolicyDto,
             {
                 responseType: <any>responseType,
@@ -448,17 +448,17 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesIdPut(requestParameters: V1AgmTemplatesIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
-    public v1AgmTemplatesIdPut(requestParameters: V1AgmTemplatesIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdPut(requestParameters: V1AgmTemplatesIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
-    public v1AgmTemplatesIdPut(requestParameters: V1AgmTemplatesIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesIdPut(requestParameters: V1ActifioGmTemplatesIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
+    public v1ActifioGmTemplatesIdPut(requestParameters: V1ActifioGmTemplatesIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdPut(requestParameters: V1ActifioGmTemplatesIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesIdPut(requestParameters: V1ActifioGmTemplatesIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmTemplatesIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPut.');
         }
         const actifioUpdateTemplateDto = requestParameters.actifioUpdateTemplateDto;
         if (actifioUpdateTemplateDto === null || actifioUpdateTemplateDto === undefined) {
-            throw new Error('Required parameter actifioUpdateTemplateDto was null or undefined when calling v1AgmTemplatesIdPut.');
+            throw new Error('Required parameter actifioUpdateTemplateDto was null or undefined when calling v1ActifioGmTemplatesIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -490,7 +490,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<ActifioTemplateDto>(`${this.configuration.basePath}/v1/actifio/gm/templates/${encodeURIComponent(String(id))}`,
             actifioUpdateTemplateDto,
             {
                 responseType: <any>responseType,
@@ -508,13 +508,13 @@ export class V1AgmTemplatesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmTemplatesPost(requestParameters: V1AgmTemplatesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
-    public v1AgmTemplatesPost(requestParameters: V1AgmTemplatesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
-    public v1AgmTemplatesPost(requestParameters: V1AgmTemplatesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
-    public v1AgmTemplatesPost(requestParameters: V1AgmTemplatesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesPost(requestParameters: V1ActifioGmTemplatesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioTemplateDto>;
+    public v1ActifioGmTemplatesPost(requestParameters: V1ActifioGmTemplatesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesPost(requestParameters: V1ActifioGmTemplatesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesPost(requestParameters: V1ActifioGmTemplatesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const actifioAddTemplateDto = requestParameters.actifioAddTemplateDto;
         if (actifioAddTemplateDto === null || actifioAddTemplateDto === undefined) {
-            throw new Error('Required parameter actifioAddTemplateDto was null or undefined when calling v1AgmTemplatesPost.');
+            throw new Error('Required parameter actifioAddTemplateDto was null or undefined when calling v1ActifioGmTemplatesPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -546,7 +546,7 @@ export class V1AgmTemplatesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ActifioTemplateDto>(`${this.configuration.basePath}/v1/agm/templates`,
+        return this.httpClient.post<ActifioTemplateDto>(`${this.configuration.basePath}/v1/actifio/gm/templates`,
             actifioAddTemplateDto,
             {
                 responseType: <any>responseType,

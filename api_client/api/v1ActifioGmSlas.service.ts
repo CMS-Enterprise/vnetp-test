@@ -24,20 +24,20 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmSlasIdDeleteRequestParams {
+export interface V1ActifioGmSlasIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmSlasIdGetRequestParams {
+export interface V1ActifioGmSlasIdGetRequestParams {
     id: string;
 }
 
-export interface V1AgmSlasIdPutRequestParams {
+export interface V1ActifioGmSlasIdPutRequestParams {
     id: string;
     actifioCreateOrApplySlaDto: ActifioCreateOrApplySlaDto;
 }
 
-export interface V1AgmSlasPostRequestParams {
+export interface V1ActifioGmSlasPostRequestParams {
     actifioCreateOrApplySlaDto: ActifioCreateOrApplySlaDto;
 }
 
@@ -45,7 +45,7 @@ export interface V1AgmSlasPostRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmSlasService {
+export class V1ActifioGmSlasService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -108,10 +108,10 @@ export class V1AgmSlasService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmSlasGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioSlaDto>>;
-    public v1AgmSlasGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioSlaDto>>>;
-    public v1AgmSlasGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
-    public v1AgmSlasGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioSlaDto>>;
+    public v1ActifioGmSlasGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioSlaDto>>>;
+    public v1ActifioGmSlasGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
+    public v1ActifioGmSlasGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -133,7 +133,7 @@ export class V1AgmSlasService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioSlaDto>>(`${this.configuration.basePath}/v1/agm/slas`,
+        return this.httpClient.get<Array<ActifioSlaDto>>(`${this.configuration.basePath}/v1/actifio/gm/slas`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -150,13 +150,13 @@ export class V1AgmSlasService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public v1AgmSlasIdDelete(requestParameters: V1AgmSlasIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasIdDelete(requestParameters: V1ActifioGmSlasIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public v1ActifioGmSlasIdDelete(requestParameters: V1ActifioGmSlasIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public v1ActifioGmSlasIdDelete(requestParameters: V1ActifioGmSlasIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public v1ActifioGmSlasIdDelete(requestParameters: V1ActifioGmSlasIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmSlasIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -179,7 +179,7 @@ export class V1AgmSlasService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<object>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<object>(`${this.configuration.basePath}/v1/actifio/gm/slas/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -196,13 +196,13 @@ export class V1AgmSlasService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
-    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
-    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
-    public v1AgmSlasIdGet(requestParameters: V1AgmSlasIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasIdGet(requestParameters: V1ActifioGmSlasIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1ActifioGmSlasIdGet(requestParameters: V1ActifioGmSlasIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1ActifioGmSlasIdGet(requestParameters: V1ActifioGmSlasIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1ActifioGmSlasIdGet(requestParameters: V1ActifioGmSlasIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmSlasIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -225,7 +225,7 @@ export class V1AgmSlasService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioSlaDto>(`${this.configuration.basePath}/v1/actifio/gm/slas/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -242,17 +242,17 @@ export class V1AgmSlasService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
-    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
-    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
-    public v1AgmSlasIdPut(requestParameters: V1AgmSlasIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasIdPut(requestParameters: V1ActifioGmSlasIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1ActifioGmSlasIdPut(requestParameters: V1ActifioGmSlasIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1ActifioGmSlasIdPut(requestParameters: V1ActifioGmSlasIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1ActifioGmSlasIdPut(requestParameters: V1ActifioGmSlasIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmSlasIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmSlasIdPut.');
         }
         const actifioCreateOrApplySlaDto = requestParameters.actifioCreateOrApplySlaDto;
         if (actifioCreateOrApplySlaDto === null || actifioCreateOrApplySlaDto === undefined) {
-            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1AgmSlasIdPut.');
+            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1ActifioGmSlasIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -284,7 +284,7 @@ export class V1AgmSlasService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<ActifioSlaDto>(`${this.configuration.basePath}/v1/actifio/gm/slas/${encodeURIComponent(String(id))}`,
             actifioCreateOrApplySlaDto,
             {
                 responseType: <any>responseType,
@@ -302,13 +302,13 @@ export class V1AgmSlasService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
-    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
-    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
-    public v1AgmSlasPost(requestParameters: V1AgmSlasPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasPost(requestParameters: V1ActifioGmSlasPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioSlaDto>;
+    public v1ActifioGmSlasPost(requestParameters: V1ActifioGmSlasPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioSlaDto>>;
+    public v1ActifioGmSlasPost(requestParameters: V1ActifioGmSlasPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioSlaDto>>;
+    public v1ActifioGmSlasPost(requestParameters: V1ActifioGmSlasPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const actifioCreateOrApplySlaDto = requestParameters.actifioCreateOrApplySlaDto;
         if (actifioCreateOrApplySlaDto === null || actifioCreateOrApplySlaDto === undefined) {
-            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1AgmSlasPost.');
+            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1ActifioGmSlasPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -340,7 +340,7 @@ export class V1AgmSlasService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ActifioSlaDto>(`${this.configuration.basePath}/v1/agm/slas`,
+        return this.httpClient.post<ActifioSlaDto>(`${this.configuration.basePath}/v1/actifio/gm/slas`,
             actifioCreateOrApplySlaDto,
             {
                 responseType: <any>responseType,

@@ -11,7 +11,7 @@
  */
 
 
-export interface ActifioCollectorVirtualManagementServerDto { 
+export interface ActifioVirtualManagementServerDto { 
     ipAddress: string;
     id: string;
 }

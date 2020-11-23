@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActifioProfileDto, V1AgmProfilesService } from 'api_client';
+import { ActifioProfileDto, V1ActifioGmProfilesService } from 'api_client';
 
 interface ProfileView extends ActifioProfileDto {
   mostRecentChangeDate: string;
@@ -39,7 +39,7 @@ export class ProfileListComponent implements OnInit {
   public isLoading = false;
   public profiles: ProfileView[] = [];
 
-  constructor(private agmProfileService: V1AgmProfilesService, private datePipe: DatePipe) {}
+  constructor(private agmProfileService: V1ActifioGmProfilesService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -47,7 +47,7 @@ export class ProfileListComponent implements OnInit {
 
   public loadProfiles(): void {
     this.isLoading = true;
-    this.agmProfileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
+    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
       this.profiles = profiles.map(profile => {
         return {
           ...profile,

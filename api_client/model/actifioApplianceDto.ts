@@ -11,7 +11,7 @@
  */
 
 
-export interface ActifioCollectorApplianceDto { 
+export interface ActifioApplianceDto { 
     name?: string;
     hostOrIp: string;
     id: string;

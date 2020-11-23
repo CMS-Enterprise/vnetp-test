@@ -2,7 +2,7 @@ import { ActivatedRoute, convertToParamMap, ParamMap } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MockFontAwesomeComponent, MockViewFieldComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1AgmApplicationsService, V1AgmJobsService } from 'api_client';
+import { V1ActifioGmApplicationsService, V1ActifioGmJobsService } from 'api_client';
 import { VmViewComponent } from './vm-view.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
@@ -21,8 +21,8 @@ describe('VmViewComponent', () => {
     TestBed.configureTestingModule({
       declarations: [VmViewComponent, MockViewFieldComponent, MockFontAwesomeComponent],
       providers: [
-        MockProvider(V1AgmApplicationsService),
-        MockProvider(V1AgmJobsService),
+        MockProvider(V1ActifioGmApplicationsService),
+        MockProvider(V1ActifioGmJobsService),
         DatePipe,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
@@ -40,8 +40,8 @@ describe('VmViewComponent', () => {
   });
 
   it('should call to get a single application based on the param', () => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    const spy = jest.spyOn(applicationService, 'v1AgmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    const spy = jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
     const newParamMap = convertToParamMap({ id: '3' });
     paramMapSubject.next(newParamMap);
@@ -50,11 +50,11 @@ describe('VmViewComponent', () => {
   });
 
   it('should default the last sync date to "--" when jobs are empty', done => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    jest.spyOn(applicationService, 'v1AgmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
-    const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([]));
+    const jobService = TestBed.get(V1ActifioGmJobsService);
+    jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([]));
 
     const newParamMap = convertToParamMap({ id: '3' });
     paramMapSubject.next(newParamMap);
@@ -67,11 +67,11 @@ describe('VmViewComponent', () => {
   });
 
   it('should set the last sync date', done => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    jest.spyOn(applicationService, 'v1AgmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
-    const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
+    const jobService = TestBed.get(V1ActifioGmJobsService);
+    jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
 
     const newParamMap = convertToParamMap({ id: '3' });
     paramMapSubject.next(newParamMap);

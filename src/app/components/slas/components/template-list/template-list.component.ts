@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private agmTemplateService: V1AgmTemplatesService, private ngx: NgxSmartModalService) {}
+  constructor(private agmTemplateService: V1ActifioGmTemplatesService, private ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.loadTemplates();
@@ -69,7 +69,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public loadTemplates(): void {
     this.isLoading = true;
-    this.agmTemplateService.v1AgmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(data => {
       this.templates = data.map(d => {
         return {
           ...d,
@@ -83,7 +83,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public deleteTemplate(template: ActifioTemplateDto): void {
     const deleteFunction = () => {
-      this.agmTemplateService.v1AgmTemplatesIdDelete({ id: template.id }).subscribe(() => {
+      this.agmTemplateService.v1ActifioGmTemplatesIdDelete({ id: template.id }).subscribe(() => {
         this.loadTemplates();
       });
     };
@@ -98,7 +98,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getSnapshotPolicyTimeWindow(templateId: string): Observable<string> {
-    return this.agmTemplateService.v1AgmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 }).pipe(
+    return this.agmTemplateService.v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 }).pipe(
       map(policies => (policies.length > 0 ? policies[0] : null)),
       map(snapshotPolicy => {
         if (!snapshotPolicy) {

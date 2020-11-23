@@ -27,37 +27,37 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmLogicalGroupsGetRequestParams {
+export interface V1ActifioGmLogicalGroupsGetRequestParams {
     clusterIds?: Array<string>;
 }
 
-export interface V1AgmLogicalGroupsIdDeleteRequestParams {
+export interface V1ActifioGmLogicalGroupsIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmLogicalGroupsIdGetRequestParams {
+export interface V1ActifioGmLogicalGroupsIdGetRequestParams {
     id: string;
 }
 
-export interface V1AgmLogicalGroupsIdMembersGetRequestParams {
+export interface V1ActifioGmLogicalGroupsIdMembersGetRequestParams {
     id: string;
 }
 
-export interface V1AgmLogicalGroupsIdPutRequestParams {
+export interface V1ActifioGmLogicalGroupsIdPutRequestParams {
     id: string;
     actifioAddOrUpdateLogicalGroupDto: ActifioAddOrUpdateLogicalGroupDto;
 }
 
-export interface V1AgmLogicalGroupsIdSlaDeleteRequestParams {
+export interface V1ActifioGmLogicalGroupsIdSlaDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmLogicalGroupsIdSlaPostRequestParams {
+export interface V1ActifioGmLogicalGroupsIdSlaPostRequestParams {
     id: string;
     actifioCreateOrApplySlaDto: ActifioCreateOrApplySlaDto;
 }
 
-export interface V1AgmLogicalGroupsPostRequestParams {
+export interface V1ActifioGmLogicalGroupsPostRequestParams {
     actifioAddOrUpdateLogicalGroupDto: ActifioAddOrUpdateLogicalGroupDto;
 }
 
@@ -65,7 +65,7 @@ export interface V1AgmLogicalGroupsPostRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmLogicalGroupsService {
+export class V1ActifioGmLogicalGroupsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -129,10 +129,10 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioLogicalGroupDto>>;
-    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioLogicalGroupDto>>>;
-    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioLogicalGroupDto>>>;
-    public v1AgmLogicalGroupsGet(requestParameters: V1AgmLogicalGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsGet(requestParameters: V1ActifioGmLogicalGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsGet(requestParameters: V1ActifioGmLogicalGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioLogicalGroupDto>>>;
+    public v1ActifioGmLogicalGroupsGet(requestParameters: V1ActifioGmLogicalGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioLogicalGroupDto>>>;
+    public v1ActifioGmLogicalGroupsGet(requestParameters: V1ActifioGmLogicalGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const clusterIds = requestParameters.clusterIds;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -161,7 +161,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioLogicalGroupDto>>(`${this.configuration.basePath}/v1/agm/logical-groups`,
+        return this.httpClient.get<Array<ActifioLogicalGroupDto>>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -179,13 +179,13 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdDelete(requestParameters: V1AgmLogicalGroupsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1AgmLogicalGroupsIdDelete(requestParameters: V1AgmLogicalGroupsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1AgmLogicalGroupsIdDelete(requestParameters: V1AgmLogicalGroupsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
-    public v1AgmLogicalGroupsIdDelete(requestParameters: V1AgmLogicalGroupsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdDelete(requestParameters: V1ActifioGmLogicalGroupsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
+    public v1ActifioGmLogicalGroupsIdDelete(requestParameters: V1ActifioGmLogicalGroupsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
+    public v1ActifioGmLogicalGroupsIdDelete(requestParameters: V1ActifioGmLogicalGroupsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
+    public v1ActifioGmLogicalGroupsIdDelete(requestParameters: V1ActifioGmLogicalGroupsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -208,7 +208,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<string>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<string>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -225,13 +225,13 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdGet(requestParameters: V1AgmLogicalGroupsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
-    public v1AgmLogicalGroupsIdGet(requestParameters: V1AgmLogicalGroupsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsIdGet(requestParameters: V1AgmLogicalGroupsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsIdGet(requestParameters: V1AgmLogicalGroupsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdGet(requestParameters: V1ActifioGmLogicalGroupsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
+    public v1ActifioGmLogicalGroupsIdGet(requestParameters: V1ActifioGmLogicalGroupsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsIdGet(requestParameters: V1ActifioGmLogicalGroupsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsIdGet(requestParameters: V1ActifioGmLogicalGroupsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -254,7 +254,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -271,13 +271,13 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdMembersGet(requestParameters: V1AgmLogicalGroupsIdMembersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmLogicalGroupsIdMembersGet(requestParameters: V1AgmLogicalGroupsIdMembersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmLogicalGroupsIdMembersGet(requestParameters: V1AgmLogicalGroupsIdMembersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
-    public v1AgmLogicalGroupsIdMembersGet(requestParameters: V1AgmLogicalGroupsIdMembersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdMembersGet(requestParameters: V1ActifioGmLogicalGroupsIdMembersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
+    public v1ActifioGmLogicalGroupsIdMembersGet(requestParameters: V1ActifioGmLogicalGroupsIdMembersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
+    public v1ActifioGmLogicalGroupsIdMembersGet(requestParameters: V1ActifioGmLogicalGroupsIdMembersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
+    public v1ActifioGmLogicalGroupsIdMembersGet(requestParameters: V1ActifioGmLogicalGroupsIdMembersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdMembersGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdMembersGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -300,7 +300,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}/members`,
+        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}/members`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -317,17 +317,17 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdPut(requestParameters: V1AgmLogicalGroupsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
-    public v1AgmLogicalGroupsIdPut(requestParameters: V1AgmLogicalGroupsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsIdPut(requestParameters: V1AgmLogicalGroupsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsIdPut(requestParameters: V1AgmLogicalGroupsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdPut(requestParameters: V1ActifioGmLogicalGroupsIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
+    public v1ActifioGmLogicalGroupsIdPut(requestParameters: V1ActifioGmLogicalGroupsIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsIdPut(requestParameters: V1ActifioGmLogicalGroupsIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsIdPut(requestParameters: V1ActifioGmLogicalGroupsIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdPut.');
         }
         const actifioAddOrUpdateLogicalGroupDto = requestParameters.actifioAddOrUpdateLogicalGroupDto;
         if (actifioAddOrUpdateLogicalGroupDto === null || actifioAddOrUpdateLogicalGroupDto === undefined) {
-            throw new Error('Required parameter actifioAddOrUpdateLogicalGroupDto was null or undefined when calling v1AgmLogicalGroupsIdPut.');
+            throw new Error('Required parameter actifioAddOrUpdateLogicalGroupDto was null or undefined when calling v1ActifioGmLogicalGroupsIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -359,7 +359,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}`,
             actifioAddOrUpdateLogicalGroupDto,
             {
                 responseType: <any>responseType,
@@ -377,13 +377,13 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdSlaDelete(requestParameters: V1AgmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmLogicalGroupsIdSlaDelete(requestParameters: V1AgmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmLogicalGroupsIdSlaDelete(requestParameters: V1AgmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmLogicalGroupsIdSlaDelete(requestParameters: V1AgmLogicalGroupsIdSlaDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdSlaDelete(requestParameters: V1ActifioGmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmLogicalGroupsIdSlaDelete(requestParameters: V1ActifioGmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmLogicalGroupsIdSlaDelete(requestParameters: V1ActifioGmLogicalGroupsIdSlaDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmLogicalGroupsIdSlaDelete(requestParameters: V1ActifioGmLogicalGroupsIdSlaDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdSlaDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdSlaDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -405,7 +405,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}/sla`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}/sla`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -422,17 +422,17 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsIdSlaPost(requestParameters: V1AgmLogicalGroupsIdSlaPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmLogicalGroupsIdSlaPost(requestParameters: V1AgmLogicalGroupsIdSlaPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmLogicalGroupsIdSlaPost(requestParameters: V1AgmLogicalGroupsIdSlaPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmLogicalGroupsIdSlaPost(requestParameters: V1AgmLogicalGroupsIdSlaPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmLogicalGroupsIdSlaPost(requestParameters: V1ActifioGmLogicalGroupsIdSlaPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmLogicalGroupsIdSlaPost(requestParameters: V1ActifioGmLogicalGroupsIdSlaPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmLogicalGroupsIdSlaPost(requestParameters: V1ActifioGmLogicalGroupsIdSlaPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmLogicalGroupsIdSlaPost(requestParameters: V1ActifioGmLogicalGroupsIdSlaPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmLogicalGroupsIdSlaPost.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmLogicalGroupsIdSlaPost.');
         }
         const actifioCreateOrApplySlaDto = requestParameters.actifioCreateOrApplySlaDto;
         if (actifioCreateOrApplySlaDto === null || actifioCreateOrApplySlaDto === undefined) {
-            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1AgmLogicalGroupsIdSlaPost.');
+            throw new Error('Required parameter actifioCreateOrApplySlaDto was null or undefined when calling v1ActifioGmLogicalGroupsIdSlaPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -463,7 +463,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/logical-groups/${encodeURIComponent(String(id))}/sla`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups/${encodeURIComponent(String(id))}/sla`,
             actifioCreateOrApplySlaDto,
             {
                 responseType: <any>responseType,
@@ -481,13 +481,13 @@ export class V1AgmLogicalGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmLogicalGroupsPost(requestParameters: V1AgmLogicalGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
-    public v1AgmLogicalGroupsPost(requestParameters: V1AgmLogicalGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsPost(requestParameters: V1AgmLogicalGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
-    public v1AgmLogicalGroupsPost(requestParameters: V1AgmLogicalGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmLogicalGroupsPost(requestParameters: V1ActifioGmLogicalGroupsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioDetailedLogicalGroupDto>;
+    public v1ActifioGmLogicalGroupsPost(requestParameters: V1ActifioGmLogicalGroupsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsPost(requestParameters: V1ActifioGmLogicalGroupsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioDetailedLogicalGroupDto>>;
+    public v1ActifioGmLogicalGroupsPost(requestParameters: V1ActifioGmLogicalGroupsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const actifioAddOrUpdateLogicalGroupDto = requestParameters.actifioAddOrUpdateLogicalGroupDto;
         if (actifioAddOrUpdateLogicalGroupDto === null || actifioAddOrUpdateLogicalGroupDto === undefined) {
-            throw new Error('Required parameter actifioAddOrUpdateLogicalGroupDto was null or undefined when calling v1AgmLogicalGroupsPost.');
+            throw new Error('Required parameter actifioAddOrUpdateLogicalGroupDto was null or undefined when calling v1ActifioGmLogicalGroupsPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -519,7 +519,7 @@ export class V1AgmLogicalGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/agm/logical-groups`,
+        return this.httpClient.post<ActifioDetailedLogicalGroupDto>(`${this.configuration.basePath}/v1/actifio/gm/logical-groups`,
             actifioAddOrUpdateLogicalGroupDto,
             {
                 responseType: <any>responseType,

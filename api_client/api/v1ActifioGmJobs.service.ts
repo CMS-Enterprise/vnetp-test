@@ -23,7 +23,7 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmJobsGetRequestParams {
+export interface V1ActifioGmJobsGetRequestParams {
     status: string;
     jobClassCode: number;
     applicationName: string;
@@ -35,7 +35,7 @@ export interface V1AgmJobsGetRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmJobsService {
+export class V1ActifioGmJobsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -99,29 +99,29 @@ export class V1AgmJobsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioJobDto>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioJobDto>>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioJobDto>>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmJobsGet(requestParameters: V1ActifioGmJobsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioJobDto>>;
+    public v1ActifioGmJobsGet(requestParameters: V1ActifioGmJobsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioJobDto>>>;
+    public v1ActifioGmJobsGet(requestParameters: V1ActifioGmJobsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioJobDto>>>;
+    public v1ActifioGmJobsGet(requestParameters: V1ActifioGmJobsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const status = requestParameters.status;
         if (status === null || status === undefined) {
-            throw new Error('Required parameter status was null or undefined when calling v1AgmJobsGet.');
+            throw new Error('Required parameter status was null or undefined when calling v1ActifioGmJobsGet.');
         }
         const jobClassCode = requestParameters.jobClassCode;
         if (jobClassCode === null || jobClassCode === undefined) {
-            throw new Error('Required parameter jobClassCode was null or undefined when calling v1AgmJobsGet.');
+            throw new Error('Required parameter jobClassCode was null or undefined when calling v1ActifioGmJobsGet.');
         }
         const applicationName = requestParameters.applicationName;
         if (applicationName === null || applicationName === undefined) {
-            throw new Error('Required parameter applicationName was null or undefined when calling v1AgmJobsGet.');
+            throw new Error('Required parameter applicationName was null or undefined when calling v1ActifioGmJobsGet.');
         }
         const limit = requestParameters.limit;
         if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmJobsGet.');
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmJobsGet.');
         }
         const offset = requestParameters.offset;
         if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmJobsGet.');
+            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmJobsGet.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -166,7 +166,7 @@ export class V1AgmJobsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioJobDto>>(`${this.configuration.basePath}/v1/agm/jobs`,
+        return this.httpClient.get<Array<ActifioJobDto>>(`${this.configuration.basePath}/v1/actifio/gm/jobs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

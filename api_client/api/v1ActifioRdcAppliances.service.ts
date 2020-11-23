@@ -17,17 +17,22 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioDiskPoolDto } from '../model/models';
+import { ActifioApplianceDto } from '../model/models';
+import { ActifioVirtualManagementServerDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1ActifioRdcAppliancesIdVirtualManagementServersGetRequestParams {
+    id: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmDiskPoolsService {
+export class V1ActifioRdcAppliancesService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -86,14 +91,14 @@ export class V1AgmDiskPoolsService {
     }
 
     /**
-     * Get many ActifioDiskPoolDto
+     * Get many ActifioCollectorApplianceDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmDiskPoolsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioDiskPoolDto>>;
-    public v1AgmDiskPoolsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioDiskPoolDto>>>;
-    public v1AgmDiskPoolsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioDiskPoolDto>>>;
-    public v1AgmDiskPoolsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioRdcAppliancesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplianceDto>>;
+    public v1ActifioRdcAppliancesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplianceDto>>>;
+    public v1ActifioRdcAppliancesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplianceDto>>>;
+    public v1ActifioRdcAppliancesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -115,7 +120,53 @@ export class V1AgmDiskPoolsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioDiskPoolDto>>(`${this.configuration.basePath}/v1/agm/disk-pools`,
+        return this.httpClient.get<Array<ActifioApplianceDto>>(`${this.configuration.basePath}/v1/actifio/rdc/appliances`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many ActifioCollectorVirtualManagementServers
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioRdcAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioRdcAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioVirtualManagementServerDto>>;
+    public v1ActifioRdcAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioRdcAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioVirtualManagementServerDto>>>;
+    public v1ActifioRdcAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioRdcAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioVirtualManagementServerDto>>>;
+    public v1ActifioRdcAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioRdcAppliancesIdVirtualManagementServersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdcAppliancesIdVirtualManagementServersGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioVirtualManagementServerDto>>(`${this.configuration.basePath}/v1/actifio/rdc/appliances/${encodeURIComponent(String(id))}/virtual-management-servers`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

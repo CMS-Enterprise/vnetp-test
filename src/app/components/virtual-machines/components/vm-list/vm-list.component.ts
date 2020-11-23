@@ -1,14 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { V1AgmApplicationsService } from 'api_client/api/v1AgmApplications.service';
-import { V1AgmJobsService } from 'api_client/api/v1AgmJobs.service';
-import { ActifioApplicationDto } from 'api_client/model/actifioApplicationDto';
-import { ActifioJobDto } from 'api_client/model/actifioJobDto';
 import { concat, Observable, Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { map, take } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ActifioApplicationDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService, ActifioJobDto } from 'api_client';
 
 enum JobClassCode {
   Snapshot = 1,
@@ -56,8 +53,8 @@ export class VmListComponent implements OnInit, OnDestroy {
   private virtualMachineSubscription: Subscription;
 
   constructor(
-    private agmApplicationService: V1AgmApplicationsService,
-    private agmJobService: V1AgmJobsService,
+    private agmApplicationService: V1ActifioGmApplicationsService,
+    private agmJobService: V1ActifioGmJobsService,
     private datePipe: DatePipe,
     private ngx: NgxSmartModalService,
   ) {}
@@ -93,7 +90,7 @@ export class VmListComponent implements OnInit, OnDestroy {
     const virtualMachineChunks = Array(virtualMachineCount / chunkSize)
       .fill(null)
       .map((value: null, index: number) => {
-        return this.agmApplicationService.v1AgmApplicationsGet({ limit: chunkSize, offset: index * chunkSize });
+        return this.agmApplicationService.v1ActifioGmApplicationsGet({ limit: chunkSize, offset: index * chunkSize });
       });
 
     return concat(...virtualMachineChunks).subscribe((data: ActifioApplicationDto[] = []) => {
@@ -112,7 +109,7 @@ export class VmListComponent implements OnInit, OnDestroy {
 
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
-      .v1AgmJobsGet({
+      .v1ActifioGmJobsGet({
         jobClassCode,
         limit: 10,
         offset: 0,

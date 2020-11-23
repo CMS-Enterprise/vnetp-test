@@ -11331,7 +11331,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/applications:
+  /v1/actifio/gm/applications:
     get:
       summary: Get many ActifioApplicationDto
       parameters:
@@ -11362,12 +11362,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioApplicationDto'
       tags: &ref_42
-        - v1/agm/applications
+        - v1/actifio/gm/applications
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/applications/{id}':
+  '/v1/actifio/gm/applications/{id}':
     get:
       summary: Get one ActifioApplicationDto
       parameters:
@@ -11400,7 +11400,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/applications/import:
+  /v1/actifio/gm/applications/import:
     post:
       summary: Add one ActifioApplication
       parameters:
@@ -11417,7 +11417,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/clusters:
+  /v1/actifio/gm/clusters:
     get:
       summary: Get many ActifioClusterDto
       parameters:
@@ -11437,12 +11437,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioClusterDto'
       tags:
-        - v1/agm/clusters
+        - v1/actifio/gm/clusters
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/agm/disk-pools:
+  /v1/actifio/gm/disk-pools:
     get:
       summary: Get many ActifioDiskPoolDto
       responses:
@@ -11453,12 +11453,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioDiskPoolDto'
       tags:
-        - v1/agm/disk-pools
+        - v1/actifio/gm/disk-pools
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/agm/hosts:
+  /v1/actifio/gm/hosts:
     get:
       summary: Get many ActifioHostDto
       responses:
@@ -11469,12 +11469,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioHostDto'
       tags: &ref_43
-        - v1/agm/hosts
+        - v1/actifio/gm/hosts
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/hosts/{id}':
+  '/v1/actifio/gm/hosts/{id}':
     get:
       summary: Get one ActifioHostDto
       parameters:
@@ -11492,7 +11492,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/hosts/{hostId}/discovered-applications':
+  '/v1/actifio/gm/hosts/{hostId}/discovered-applications':
     get:
       summary: Get many discoveredVMDto
       parameters:
@@ -11512,7 +11512,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/jobs:
+  /v1/actifio/gm/jobs:
     get:
       summary: Get many ActifioJobDto
       parameters:
@@ -11544,12 +11544,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioJobDto'
       tags:
-        - v1/agm/jobs
+        - v1/actifio/gm/jobs
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/agm/logical-groups:
+  /v1/actifio/gm/logical-groups:
     get:
       summary: Get many ActifioLogicalGroupDto
       parameters:
@@ -11568,7 +11568,7 @@ paths:
             items:
               $ref: '#/definitions/ActifioLogicalGroupDto'
       tags: &ref_44
-        - v1/agm/logical-groups
+        - v1/actifio/gm/logical-groups
       produces:
         - application/json
       consumes:
@@ -11591,7 +11591,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/logical-groups/{id}':
+  '/v1/actifio/gm/logical-groups/{id}':
     get:
       summary: Get one ActifioDetailedLogicalGroupDto
       parameters:
@@ -11648,7 +11648,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/logical-groups/{id}/members':
+  '/v1/actifio/gm/logical-groups/{id}/members':
     get:
       summary: Get Members of Logical Group
       parameters:
@@ -11668,7 +11668,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/logical-groups/{id}/sla':
+  '/v1/actifio/gm/logical-groups/{id}/sla':
     post:
       summary: Apply Sla to Logical Group
       parameters:
@@ -11704,7 +11704,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/organizations:
+  /v1/actifio/gm/organizations:
     get:
       summary: Get many ActifioOrganizationDto
       parameters:
@@ -11724,12 +11724,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioOrganizationDto'
       tags: &ref_45
-        - v1/agm/organizations
+        - v1/actifio/gm/organizations
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/organizations/{id}':
+  '/v1/actifio/gm/organizations/{id}':
     get:
       summary: Get one ActifioOrganizationDto
       parameters:
@@ -11762,7 +11762,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/organizations/add:
+  /v1/actifio/gm/organizations/add:
     post:
       summary: Create one ActifioOrganization
       parameters:
@@ -11779,7 +11779,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/organizations/{id}/':
+  '/v1/actifio/gm/organizations/{id}/':
     put:
       summary: Update ActifioOrganization
       parameters:
@@ -11802,7 +11802,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/profiles:
+  /v1/actifio/gm/profiles:
     get:
       summary: Delete one ActifioOrganization
       parameters:
@@ -11829,12 +11829,12 @@ paths:
             items:
               $ref: '#/definitions/ActifioProfileDto'
       tags: &ref_46
-        - v1/agm/profiles
+        - v1/actifio/gm/profiles
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/profiles/{id}':
+  '/v1/actifio/gm/profiles/{id}':
     get:
       summary: Get one ActifioProfileDto
       parameters:
@@ -11852,7 +11852,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/slas:
+  /v1/actifio/gm/slas:
     get:
       summary: Get many ActifioSlaDto
       responses:
@@ -11863,7 +11863,7 @@ paths:
             items:
               $ref: '#/definitions/ActifioSlaDto'
       tags: &ref_47
-        - v1/agm/slas
+        - v1/actifio/gm/slas
       produces:
         - application/json
       consumes:
@@ -11886,7 +11886,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/slas/{id}':
+  '/v1/actifio/gm/slas/{id}':
     get:
       summary: Get one ActifioSlaDto
       parameters:
@@ -11943,7 +11943,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/agm/templates:
+  /v1/actifio/gm/templates:
     get:
       summary: Get many ActifioTemplateDto
       responses:
@@ -11954,7 +11954,7 @@ paths:
             items:
               $ref: '#/definitions/ActifioTemplateDto'
       tags: &ref_48
-        - v1/agm/templates
+        - v1/actifio/gm/templates
       produces:
         - application/json
       consumes:
@@ -11977,7 +11977,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/templates/{id}':
+  '/v1/actifio/gm/templates/{id}':
     get:
       summary: Get one ActifioTemplateDto
       parameters:
@@ -12032,7 +12032,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/templates/{id}/policy':
+  '/v1/actifio/gm/templates/{id}/policy':
     get:
       summary: Get many ActifioPolicyDto
       parameters:
@@ -12064,7 +12064,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/agm/templates/{id}/policy/{policyId}':
+  '/v1/actifio/gm/templates/{id}/policy/{policyId}':
     put:
       summary: Update one ActifioPolicy
       parameters:
@@ -12110,14 +12110,14 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/recovery-plans:
+  /v1/actifio/rds/recovery-plans:
     get:
       summary: get all recovery plans
       responses:
         '200':
           description: ''
       tags: &ref_49
-        - v1/actifio/recovery-plans
+        - v1/actifio/rds/recovery-plans
       produces:
         - application/json
       consumes:
@@ -12132,7 +12132,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/recovery-plans/{id}':
+  '/v1/actifio/rds/recovery-plans/{id}':
     get:
       summary: get 1 recovery plan
       parameters:
@@ -12163,7 +12163,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/recovery-plans/execute/{id}':
+  '/v1/actifio/rds/recovery-plans/execute/{id}':
     post:
       summary: execute 1 rec plan
       parameters:
@@ -12179,7 +12179,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/recovery-plans/execute:
+  /v1/actifio/rds/recovery-plans/execute:
     post:
       summary: execute all recovery plans
       responses:
@@ -12190,15 +12190,15 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/recovery-plans/create:
+  /v1/actifio/rds/recovery-plans/create:
     post:
       summary: create recovery plan
       parameters:
-        - name: ActifioServerNewRecoveryPlan
+        - name: ActifioRdsNewRecoveryPlan
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioServerNewRecoveryPlan'
+            $ref: '#/definitions/ActifioRdsNewRecoveryPlan'
       responses:
         '201':
           description: ''
@@ -12207,7 +12207,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/application-groups:
+  /v1/actifio/rdc/application-groups:
     get:
       summary: Get many ActifioApplicationGroupDto
       parameters:
@@ -12223,7 +12223,7 @@ paths:
             items:
               $ref: '#/definitions/ActifioApplicationGroupDto'
       tags: &ref_50
-        - v1/actifio/application-groups
+        - v1/actifio/rdc/application-groups
       produces:
         - application/json
       consumes:
@@ -12246,7 +12246,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/application-groups/{id}':
+  '/v1/actifio/rdc/application-groups/{id}':
     get:
       summary: Get one ActifioApplicationGroupDto
       parameters:
@@ -12301,7 +12301,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/application-groups/{id}/edit':
+  '/v1/actifio/rdc/application-groups/{id}/edit':
     get:
       summary: Get one ActifioCollectorEditAppalicationGroupDto
       parameters:
@@ -12313,13 +12313,13 @@ paths:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ActifioCollectorEditApplicationGroupDto'
+            $ref: '#/definitions/ActifioRdcEditApplicationGroupDto'
       tags: *ref_50
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/appliances:
+  /v1/actifio/rdc/appliances:
     get:
       summary: Get many ActifioCollectorApplianceDto
       responses:
@@ -12328,14 +12328,14 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ActifioCollectorApplianceDto'
+              $ref: '#/definitions/ActifioApplianceDto'
       tags: &ref_51
-        - v1/actifio/appliances
+        - v1/actifio/rdc/appliances
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/appliances/{id}/virtual-management-servers':
+  '/v1/actifio/rdc/appliances/{id}/virtual-management-servers':
     get:
       summary: Get many ActifioCollectorVirtualManagementServers
       parameters:
@@ -12349,13 +12349,13 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ActifioCollectorVirtualManagementServerDto'
+              $ref: '#/definitions/ActifioVirtualManagementServerDto'
       tags: *ref_51
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/applications/{cdsId}/{serverId}':
+  '/v1/actifio/rdc/applications/{cdsId}/{serverId}':
     get:
       summary: Get many ActifioCollectorVMMemberDto
       parameters:
@@ -12375,19 +12375,19 @@ paths:
             items:
               $ref: '#/definitions/ActifioVMMemberDto'
       tags:
-        - v1/actifio/applications
+        - v1/actifio/rdc/applications
       produces:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/recovery-types:
+  /v1/actifio/rdc/recovery-types:
     get:
       summary: Get many ActifioRecoveryTypeDto
       responses:
         '200':
           description: ''
       tags:
-        - v1/actifio/recovery-types
+        - v1/actifio/rdc/recovery-types
       produces:
         - application/json
       consumes:
@@ -15619,7 +15619,7 @@ definitions:
     required:
       - id
       - startTime
-  ActifioServerNewRecoveryPlan:
+  ActifioRdsNewRecoveryPlan:
     type: object
     properties: {}
   ActifioSequencePortGroupDto:
@@ -15686,7 +15686,7 @@ definitions:
       - serverId
       - sequenceOrders
       - cdsId
-  ActifioCollectorEditApplicationGroupDto:
+  ActifioRdcEditApplicationGroupDto:
     type: object
     properties:
       id:
@@ -15714,7 +15714,7 @@ definitions:
       - serverId
       - cdsId
       - sequenceOrders
-  ActifioCollectorApplianceDto:
+  ActifioApplianceDto:
     type: object
     properties:
       name:
@@ -15726,7 +15726,7 @@ definitions:
     required:
       - hostOrIp
       - id
-  ActifioCollectorVirtualManagementServerDto:
+  ActifioVirtualManagementServerDto:
     type: object
     properties:
       ipAddress:

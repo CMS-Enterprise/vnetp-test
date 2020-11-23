@@ -1,15 +1,15 @@
 import { OnDestroy, OnInit, Output, EventEmitter, Component, Input } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ActifioApplicationDto,
   ActifioDetailedLogicalGroupDto,
   ActifioLogicalGroupDto,
   ActifioProfileDto,
   ActifioTemplateDto,
-  V1AgmLogicalGroupsService,
-  V1AgmProfilesService,
-  V1AgmSlasService,
-  V1AgmTemplatesService,
+  V1ActifioGmLogicalGroupsService,
+  V1ActifioGmProfilesService,
+  V1ActifioGmSlasService,
+  V1ActifioGmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -43,10 +43,10 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   public isLoadingProfiles = false;
 
   constructor(
-    private agmLogicalGroupService: V1AgmLogicalGroupsService,
-    private agmProfileService: V1AgmProfilesService,
-    private agmSlaService: V1AgmSlasService,
-    private agmTemplateService: V1AgmTemplatesService,
+    private agmLogicalGroupService: V1ActifioGmLogicalGroupsService,
+    private agmProfileService: V1ActifioGmProfilesService,
+    private agmSlaService: V1ActifioGmSlasService,
+    private agmTemplateService: V1ActifioGmTemplatesService,
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
   ) {}
@@ -98,7 +98,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadLogicalGroups(): void {
     this.isLoadingLogicalGroups = true;
-    this.agmLogicalGroupService.v1AgmLogicalGroupsGet({}).subscribe(data => {
+    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(data => {
       this.logicalGroups = data;
       this.isLoadingLogicalGroups = false;
     });
@@ -106,7 +106,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadProfiles(): void {
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1AgmProfilesGet({ limit: 100, offset: 0 }).subscribe(data => {
+    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(data => {
       this.profiles = data;
       this.isLoadingProfiles = false;
     });
@@ -114,7 +114,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1AgmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(data => {
       this.templates = data;
       this.isLoadingTemplates = false;
     });
@@ -145,7 +145,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   }
 
   private updateLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
-    return this.agmLogicalGroupService.v1AgmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
+    return this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
       switchMap((logicalGroup: ActifioDetailedLogicalGroupDto) => {
         const {
           logicalGroup: { applianceId, description, sla, name },
@@ -162,7 +162,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
         const currentMembers = members.map(mapVM);
         const newMembers = this.virtualMachines.map(mapVM);
 
-        return this.agmLogicalGroupService.v1AgmLogicalGroupsIdPut({
+        return this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdPut({
           id: logicalGroupId,
           actifioAddOrUpdateLogicalGroupDto: {
             applianceId,
@@ -179,7 +179,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private applySlas(templateId: string, profileId: string): Observable<any> {
     const createSla = (vm: ActifioApplicationDto) => {
-      return this.agmSlaService.v1AgmSlasPost({
+      return this.agmSlaService.v1ActifioGmSlasPost({
         actifioCreateOrApplySlaDto: {
           applicationId: vm.id,
           applicationName: vm.name,
