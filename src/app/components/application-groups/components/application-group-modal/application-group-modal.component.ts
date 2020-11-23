@@ -72,7 +72,6 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.reset();
-    SubscriptionUtil.unsubscribe([this.applianceChanges, this.nameChanges, this.virtualManagementServerChanges]);
   }
 
   public addVirtualMachine(virtualMachine: ActifioVMMemberDto): void {
@@ -156,8 +155,10 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
   private reset(): void {
     this.applicationGroupId = null;
     this.submitted = false;
+
     this.form.reset();
     this.form.enable();
+    SubscriptionUtil.unsubscribe([this.applianceChanges, this.nameChanges, this.virtualManagementServerChanges]);
   }
 
   private subscribeToNameChanges(): Subscription {
