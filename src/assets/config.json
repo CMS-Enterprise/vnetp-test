@@ -1,7 +1,7 @@
 {
     "environment": {
         "oidc_user_claims": "True",
-        "current_tenants": [
+        "oidc_current_tenants": [
             {
                 "name": "CDS",
                 "db_name": "dcs_cds"
