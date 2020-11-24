@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -8,11 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './tenant.component.html',
 })
 export class TenantComponent implements OnInit {
-  // This should be automated to pull tenants from ldap query
-  public currentTenants = [
-    { name: 'CDS', dbName: 'dcs_cds' },
-    { name: 'ThirdPacket', dbName: 'dcs_thirdpacket' },
-  ];
+  public currentTenants = environment.environment.oidc_current_tenants;
 
   constructor(private authService: AuthService, private router: Router, public toastrService: ToastrService) {}
 
