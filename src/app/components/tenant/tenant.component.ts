@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './tenant.component.html',
 })
 export class TenantComponent implements OnInit {
-  public currentTenants = environment.environment.oidc_current_tenants;
+  public currentTenants = environment.environment.current_tenants;
 
   constructor(private authService: AuthService, private router: Router, public toastrService: ToastrService) {}
 
