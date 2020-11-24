@@ -14,7 +14,6 @@ export class TenantComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, public toastrService: ToastrService) {}
 
   ngOnInit() {
-    console.log(this.currentTenants);
     this.authService.completeAuthentication();
   }
 
