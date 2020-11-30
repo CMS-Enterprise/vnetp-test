@@ -17,6 +17,7 @@ import { V1ActifioRdcAppliancesService } from './api/v1ActifioRdcAppliances.serv
 import { V1ActifioRdcApplicationGroupsService } from './api/v1ActifioRdcApplicationGroups.service';
 import { V1ActifioRdcApplicationsService } from './api/v1ActifioRdcApplications.service';
 import { V1ActifioRdcRecoveryTypesService } from './api/v1ActifioRdcRecoveryTypes.service';
+import { V1ActifioRdsArmServersService } from './api/v1ActifioRdsArmServers.service';
 import { V1ActifioRdsRecoveryPlansService } from './api/v1ActifioRdsRecoveryPlans.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';

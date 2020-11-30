@@ -12110,89 +12110,68 @@ paths:
         - application/json
       consumes:
         - application/json
-  /v1/actifio/rds/recovery-plans:
+  /v1/actifio/rds/arm-servers:
     get:
-      summary: get all recovery plans
+      summary: Get many ActifioRdsArmServerDto
       responses:
         '200':
           description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsArmServerDto'
       tags: &ref_49
+        - v1/actifio/rds/arm-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/arm-servers/{id}':
+    get:
+      summary: Get one ActifioRdsArmServerDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsArmServerDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/recovery-plans:
+    get:
+      summary: Get many ActifioRdsRecoveryPlanDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
+      tags: &ref_50
         - v1/actifio/rds/recovery-plans
       produces:
         - application/json
       consumes:
         - application/json
     delete:
-      summary: delete all rec plans
+      summary: Delete all Recovery Plans
       responses:
         '200':
           description: ''
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/rds/recovery-plans/{id}':
-    get:
-      summary: get 1 recovery plan
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-      tags: *ref_49
-      produces:
-        - application/json
-      consumes:
-        - application/json
-    delete:
-      summary: delete 1 rec plan
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '200':
-          description: ''
-      tags: *ref_49
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/actifio/rds/recovery-plans/execute/{id}':
     post:
-      summary: execute 1 rec plan
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-      responses:
-        '201':
-          description: ''
-      tags: *ref_49
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/actifio/rds/recovery-plans/execute:
-    post:
-      summary: execute all recovery plans
-      responses:
-        '201':
-          description: ''
-      tags: *ref_49
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/actifio/rds/recovery-plans/create:
-    post:
-      summary: create recovery plan
+      summary: Create one ActifioRdsNewRecoveryPlan
       parameters:
         - name: ActifioRdsNewRecoveryPlan
           required: true
@@ -12200,9 +12179,115 @@ paths:
           schema:
             $ref: '#/definitions/ActifioRdsNewRecoveryPlan'
       responses:
-        '201':
+        '200':
           description: ''
-      tags: *ref_49
+          schema:
+            type: string
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}':
+    get:
+      summary: Get one ActifioRdsRecoveryPlanDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one Recovery Plan
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}/state':
+    get:
+      summary: Get one ActifioRdsRecoveryPlanStateDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsRecoveryPlanStateDto'
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}/execution':
+    get:
+      summary: Get many ActifioRdsRecoveryPlanExecutionDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsRecoveryPlanExecutionDto'
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/execute/{id}':
+    post:
+      summary: Execute one Recovery Plan
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/recovery-plans/execute:
+    post:
+      summary: Execute all Recovery Plans
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              type: string
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12222,7 +12307,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: &ref_50
+      tags: &ref_51
         - v1/actifio/rdc/application-groups
       produces:
         - application/json
@@ -12241,7 +12326,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12259,7 +12344,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12281,7 +12366,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12296,7 +12381,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12314,7 +12399,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdcEditApplicationGroupDto'
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12329,7 +12414,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplianceDto'
-      tags: &ref_51
+      tags: &ref_52
         - v1/actifio/rdc/appliances
       produces:
         - application/json
@@ -12350,7 +12435,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioVirtualManagementServerDto'
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -13380,17 +13465,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_52
+        enum: &ref_53
           - In
           - Out
       action:
         type: string
-        enum: &ref_53
+        enum: &ref_54
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_54
+        enum: &ref_55
           - IP
           - ICMP
           - TCP
@@ -13404,19 +13489,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_55
+        enum: &ref_56
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_56
+        enum: &ref_57
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_57
+        enum: &ref_58
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -13578,7 +13663,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_62
+        enum: &ref_63
           - IpAddress
           - Fqdn
       ipAddress:
@@ -13705,7 +13790,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_60
+        enum: &ref_61
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -13734,7 +13819,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_61
+          enum: &ref_62
             - UDP
             - TCP
             - HTTP
@@ -13931,13 +14016,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_58
+        enum: &ref_59
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_59
+        enum: &ref_60
           - Standard
       servicePort:
         type: number
@@ -14460,13 +14545,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_52
+        enum: *ref_53
       action:
         type: string
-        enum: *ref_53
+        enum: *ref_54
       protocol:
         type: string
-        enum: *ref_54
+        enum: *ref_55
       logging:
         type: boolean
       enabled:
@@ -14476,13 +14561,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_55
+        enum: *ref_56
       destinationAddressType:
         type: string
-        enum: *ref_56
+        enum: *ref_57
       serviceType:
         type: string
-        enum: *ref_57
+        enum: *ref_58
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -14902,10 +14987,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_58
+        enum: *ref_59
       type:
         type: string
-        enum: *ref_59
+        enum: *ref_60
       servicePort:
         type: number
         minimum: 1
@@ -15021,7 +15106,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_60
+        enum: *ref_61
       nodes:
         type: array
         items:
@@ -15034,7 +15119,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_61
+          enum: *ref_62
       tierId:
         type: string
       vrfName:
@@ -15111,7 +15196,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_62
+        enum: *ref_63
       ipAddress:
         type: string
       fqdn:
@@ -15619,6 +15704,98 @@ definitions:
     required:
       - id
       - startTime
+  ActifioRdsArmServerDto:
+    type: object
+    properties:
+      id:
+        type: string
+      hostOrIp:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+      - hostOrIp
+      - description
+  ActifioRdsRecoveryPlanDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      appliances:
+        type: array
+        items:
+          type: string
+      armServerId:
+        type: string
+      armServerName:
+        type: string
+      description:
+        type: string
+      isScheduled:
+        type: boolean
+      lastModifiedDate:
+        type: string
+      lastRunDate:
+        type: string
+      scheduleId:
+        type: string
+      state:
+        type: string
+    required:
+      - id
+      - name
+      - appliances
+      - armServerId
+      - armServerName
+      - description
+      - isScheduled
+      - lastModifiedDate
+      - lastRunDate
+      - state
+  ActifioRdsRecoveryPlanStateDto:
+    type: object
+    properties:
+      description:
+        type: string
+      duration:
+        type: string
+      recoveryPlanId:
+        type: string
+      recoveryPlanName:
+        type: string
+      status:
+        type: string
+    required:
+      - description
+      - duration
+      - recoveryPlanId
+      - recoveryPlanName
+      - status
+  ActifioRdsRecoveryPlanExecutionDto:
+    type: object
+    properties:
+      detailedStatus:
+        type: string
+      endDateTime:
+        type: number
+      id:
+        type: number
+      isTest:
+        type: boolean
+      startDateTime:
+        type: number
+      status:
+        type: string
+    required:
+      - detailedStatus
+      - endDateTime
+      - id
+      - isTest
+      - startDateTime
+      - status
   ActifioRdsNewRecoveryPlan:
     type: object
     properties: {}

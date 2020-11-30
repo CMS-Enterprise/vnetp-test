@@ -1,0 +1,18 @@
+<h1>Recovery Plans</h1>
+
+<section class="btn-toolbar" role="toolbar">
+  <button type="button" class="btn btn-info" (click)="loadRecoveryPlans()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="recoveryPlans"></app-table>
+</ng-container>
+
+<app-yes-no-modal></app-yes-no-modal>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
