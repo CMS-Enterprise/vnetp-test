@@ -101,7 +101,7 @@ export class TierModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
       tierClass: [null],

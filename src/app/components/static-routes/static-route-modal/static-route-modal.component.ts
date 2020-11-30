@@ -110,7 +110,7 @@ export class StaticRouteModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       destinationNetwork: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       nextHop: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],

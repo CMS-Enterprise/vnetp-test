@@ -299,13 +299,13 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 7:
         this.getPolicies();
         break;
-      case 7:
+      case 8:
         this.getVlans();
         break;
-      case 8:
+      case 9:
         this.getSelfIps();
         break;
-      case 9:
+      case 10:
         this.getRoutes();
         break;
     }

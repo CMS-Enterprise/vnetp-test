@@ -27,41 +27,27 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     private vlansService: V1LoadBalancerVlansService,
   ) {}
 
+  get f() {
+    return this.form.controls;
+  }
+
   save() {
     this.submitted = true;
     if (this.form.invalid) {
       return;
     }
 
-    const selfIp = {} as LoadBalancerSelfIp;
-    selfIp.name = this.form.controls.name.value;
-    selfIp.ipAddress = this.form.controls.ipAddress.value;
-    selfIp.loadBalancerVlanId = this.form.controls.vlan.value;
+    const selfIp: LoadBalancerSelfIp = {
+      name: this.form.controls.name.value,
+      ipAddress: this.form.controls.ipAddress.value,
+      loadBalancerVlanId: this.form.controls.vlan.value,
+      tierId: this.TierId,
+    };
 
     if (this.ModalMode === ModalMode.Create) {
-      selfIp.tierId = this.TierId;
-      this.selfIpService
-        .v1LoadBalancerSelfIpsPost({
-          loadBalancerSelfIp: selfIp,
-        })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+      this.createSelfIp(selfIp);
     } else {
-      this.selfIpService
-        .v1LoadBalancerSelfIpsIdPut({
-          id: this.SelfIpId,
-          loadBalancerSelfIp: selfIp,
-        })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+      this.updateSelfIp(this.SelfIpId, selfIp);
     }
   }
 
@@ -85,10 +71,6 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     this.reset();
   }
 
-  get f() {
-    return this.form.controls;
-  }
-
   getData() {
     const dto = this.ngx.getModalData('loadBalancerSelfIpModal') as LoadBalancerSelfIpModalDto;
 
@@ -101,10 +83,9 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
     }
 
     this.TierId = dto.TierId;
-    const selfIp = dto.SelfIp;
     this.getVlans();
 
-    if (selfIp !== undefined) {
+    if (dto.SelfIp !== undefined) {
       this.form.controls.name.setValue(dto.SelfIp.name);
       this.form.controls.name.disable();
       this.form.controls.ipAddress.setValue(dto.SelfIp.ipAddress);
@@ -116,15 +97,35 @@ export class LoadBalancerSelfIpModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
-      ipAddress: ['', Validators.compose([IpAddressIpValidator])],
-      vlan: [''],
+      name: ['', NameValidator()],
+      ipAddress: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
+      vlan: ['', Validators.required],
     });
   }
 
-  public reset() {
+  public reset(): void {
     this.submitted = false;
     this.buildForm();
+  }
+
+  private createSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
+    this.selfIpService.v1LoadBalancerSelfIpsPost({ loadBalancerSelfIp }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
+  }
+
+  private updateSelfIp(id: string, loadBalancerSelfIp: LoadBalancerSelfIp): void {
+    loadBalancerSelfIp.tierId = null;
+    this.selfIpService
+      .v1LoadBalancerSelfIpsIdPut({
+        id,
+        loadBalancerSelfIp,
+      })
+      .subscribe(
+        () => this.closeModal(),
+        () => {},
+      );
   }
 
   ngOnInit() {

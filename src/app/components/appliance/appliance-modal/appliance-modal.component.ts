@@ -139,7 +139,7 @@ export class ApplianceModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       rackUnits: [0, Validators.compose([Validators.required, Validators.min(1)])],
       serialNumber: ['', Validators.required],
