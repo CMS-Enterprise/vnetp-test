@@ -5,6 +5,7 @@ import { V1ActifioRdsRecoveryPlansService } from 'api_client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ActifioRdsRecoveryPlanDto } from 'api_client/model/actifioRdsRecoveryPlanDto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 export interface RecoveryPlanView {
   id: string;
@@ -38,6 +39,10 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
         name: 'Appliances',
         property: 'appliances',
       },
+      {
+        name: '',
+        template: () => this.actionsTemplate,
+      },
     ],
   };
 
@@ -51,6 +56,24 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.createSubscription]);
+  }
+
+  public deleteRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
+    const { id, name } = recoveryPlan;
+    const deleteFunction = () => {
+      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdDelete({ id }).subscribe(() => {
+        this.loadRecoveryPlans();
+      });
+    };
+    const dto = new YesNoModalDto(
+      'Delete Recovery Plan',
+      `Do you want to delete recovery plan "${name}?"`,
+      'Delete Recovery Plan',
+      'Cancel',
+      'danger',
+    );
+
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, deleteFunction);
   }
 
   public loadRecoveryPlans(): void {
