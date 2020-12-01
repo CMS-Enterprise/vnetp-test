@@ -17,6 +17,7 @@ export class IconButtonComponent {
     edit: ['fas', 'pencil-alt'],
     delete: ['fas', 'trash'],
     download: ['fas', 'download'],
+    execute: ['fas', 'play'],
     upload: ['fas', 'upload'],
     undo: ['fas', 'undo'],
   };
@@ -28,5 +29,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'add' | 'edit' | 'undo' | 'delete' | 'upload' | 'download';
+export type Icon = 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download';
 export type IconType = 'default' | 'danger' | 'success';

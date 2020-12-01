@@ -58,6 +58,41 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.createSubscription]);
   }
 
+  public executeAllRecoveryPlans(): void {
+    const executeAllFunction = () => {
+      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansExecutePost().subscribe(() => {
+        this.loadRecoveryPlans();
+      });
+    };
+    const dto = new YesNoModalDto(
+      'Execute All Recovery Plans',
+      `Do you want to execute all recovery plans?`,
+      'Execute',
+      'Cancel',
+      'success',
+    );
+
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, executeAllFunction);
+  }
+
+  public executeRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
+    const { id, name } = recoveryPlan;
+    const executeFunction = () => {
+      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansExecuteIdPost({ id }).subscribe(() => {
+        this.loadRecoveryPlans();
+      });
+    };
+    const dto = new YesNoModalDto(
+      'Execute Recovery Plan',
+      `Do you want to execute recovery plan "${name}"?`,
+      'Execute Recovery Plan',
+      'Cancel',
+      'success',
+    );
+
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, executeFunction);
+  }
+
   public deleteRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
     const { id, name } = recoveryPlan;
     const deleteFunction = () => {
@@ -67,7 +102,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
     };
     const dto = new YesNoModalDto(
       'Delete Recovery Plan',
-      `Do you want to delete recovery plan "${name}?"`,
+      `Do you want to delete recovery plan "${name}"?`,
       'Delete Recovery Plan',
       'Cancel',
       'danger',

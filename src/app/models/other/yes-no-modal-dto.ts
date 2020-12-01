@@ -4,7 +4,7 @@ export class YesNoModalDto {
     public modalBody: string,
     public confirmText = 'Yes',
     public cancelText = 'No',
-    public confirmButtonType: 'primary' | 'danger' = 'primary',
+    public confirmButtonType: 'primary' | 'danger' | 'success' = 'primary',
   ) {}
   modalYes: boolean;
   allowTierChecked: boolean;

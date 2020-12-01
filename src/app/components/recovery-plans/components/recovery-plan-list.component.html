@@ -5,6 +5,10 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+  <button type="button" class="btn btn-warning" (click)="executeAllRecoveryPlans()">
+    <fa-icon class="icon" [icon]="['fas', 'play']"></fa-icon>
+    <span>Execute</span>
+  </button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -15,6 +19,13 @@
 
 <ng-template #actions let-recoveryPlan="datum">
   <section class="table__actions">
+    <!-- Execute -->
+    <app-icon-button
+      icon="execute"
+      label="Execute Recovery Plan"
+      (handleClick)="executeRecoveryPlan(recoveryPlan)"
+    ></app-icon-button>
+
     <!-- Delete -->
     <app-icon-button
       icon="delete"
