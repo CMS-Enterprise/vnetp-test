@@ -14,7 +14,8 @@
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
     "lint": "ng lint",
     "sonar": "sonar-scanner",
-    "generate-client": "openapi-generator generate -c generator-config.json -g typescript-angular -i ./swagger-spec.yaml -o ./api_client"
+    "generate-client": "openapi-generator generate -c generator-config.json -g typescript-angular -i ./swagger-spec.yaml -o ./api_client",
+    "update:angular": "ng update @angular/core@9 @angular/cli@9"
   },
   "private": true,
   "dependencies": {
