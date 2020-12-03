@@ -100,10 +100,9 @@ export class TiersComponent implements OnInit, OnDestroy {
       'Cancel',
     );
     const onConfirm = () => {
-      const bulk = this.sanitizeTiers(tiers);
       this.tierService
         .v1TiersBulkPost({
-          generatedTierBulkDto: { bulk },
+          generatedTierBulkDto: { bulk: this.sanitizeTiers(tiers) },
         })
         .subscribe(() => {
           this.getTiers();
