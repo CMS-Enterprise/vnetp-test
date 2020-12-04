@@ -17,14 +17,19 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioCollectorApplianceDto } from '../model/models';
-import { ActifioCollectorVirtualManagementServerDto } from '../model/models';
+import { ActifioProfileDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1ActifioAppliancesIdVirtualManagementServersGetRequestParams {
+export interface V1ActifioGmProfilesGetRequestParams {
+    offset?: number;
+    limit?: number;
+    clusterIds?: Array<string>;
+}
+
+export interface V1ActifioGmProfilesIdGetRequestParams {
     id: string;
 }
 
@@ -32,7 +37,7 @@ export interface V1ActifioAppliancesIdVirtualManagementServersGetRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1ActifioAppliancesService {
+export class V1ActifioGmProfilesService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -91,14 +96,32 @@ export class V1ActifioAppliancesService {
     }
 
     /**
-     * Get many ActifioCollectorApplianceDto
+     * Delete one ActifioOrganization
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioAppliancesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioCollectorApplianceDto>>;
-    public v1ActifioAppliancesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioCollectorApplianceDto>>>;
-    public v1ActifioAppliancesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioCollectorApplianceDto>>>;
-    public v1ActifioAppliancesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioProfileDto>>;
+    public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioProfileDto>>>;
+    public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
+    public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
+        const clusterIds = requestParameters.clusterIds;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -120,8 +143,9 @@ export class V1ActifioAppliancesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioCollectorApplianceDto>>(`${this.configuration.basePath}/v1/actifio/appliances`,
+        return this.httpClient.get<Array<ActifioProfileDto>>(`${this.configuration.basePath}/v1/actifio/gm/profiles`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -132,18 +156,18 @@ export class V1ActifioAppliancesService {
     }
 
     /**
-     * Get many ActifioCollectorVirtualManagementServers
+     * Get one ActifioProfileDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioCollectorVirtualManagementServerDto>>;
-    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioCollectorVirtualManagementServerDto>>>;
-    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioCollectorVirtualManagementServerDto>>>;
-    public v1ActifioAppliancesIdVirtualManagementServersGet(requestParameters: V1ActifioAppliancesIdVirtualManagementServersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmProfilesIdGet(requestParameters: V1ActifioGmProfilesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioProfileDto>;
+    public v1ActifioGmProfilesIdGet(requestParameters: V1ActifioGmProfilesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioProfileDto>>;
+    public v1ActifioGmProfilesIdGet(requestParameters: V1ActifioGmProfilesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioProfileDto>>;
+    public v1ActifioGmProfilesIdGet(requestParameters: V1ActifioGmProfilesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1ActifioAppliancesIdVirtualManagementServersGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmProfilesIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -166,7 +190,7 @@ export class V1ActifioAppliancesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioCollectorVirtualManagementServerDto>>(`${this.configuration.basePath}/v1/actifio/appliances/${encodeURIComponent(String(id))}/virtual-management-servers`,
+        return this.httpClient.get<ActifioProfileDto>(`${this.configuration.basePath}/v1/actifio/gm/profiles/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

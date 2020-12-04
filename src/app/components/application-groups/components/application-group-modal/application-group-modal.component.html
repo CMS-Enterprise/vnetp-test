@@ -94,12 +94,16 @@
           <label>Virtual Machines</label>
         </header>
 
-        <ul class="virtual-machines__list">
-          <li class="virtual-machines__item" *ngFor="let virtualMachine of virtualMachines | sort: 'name'">
-            <span> {{ virtualMachine.name }}</span>
-            <app-icon-button icon="add" label="Add Virtual Machine" (handleClick)="addVirtualMachine(virtualMachine)"></app-icon-button>
-          </li>
-        </ul>
+        <ng-container *ngIf="!isLoadingVirtualMachines; else loading">
+          <ul class="virtual-machines__list">
+            <li class="virtual-machines__item" *ngFor="let virtualMachine of virtualMachines | sort: 'name'">
+              <span> {{ virtualMachine.name }}</span>
+              <app-icon-button icon="add" label="Add Virtual Machine" (handleClick)="addVirtualMachine(virtualMachine)"></app-icon-button>
+            </li>
+          </ul>
+
+          <span *ngIf="virtualMachines.length === 0">No virtual machines available</span>
+        </ng-container>
       </div>
 
       <div class="virtual-machines__section">
@@ -151,7 +155,7 @@
                 <app-icon-button
                   icon="delete"
                   label="Remove Virtual Machine"
-                  (handleClick)="removeVirtualMachine(virtualMachine.id, sequenceOrder.id)"
+                  (handleClick)="removeVirtualMachine(sequenceOrder, virtualMachine)"
                 ></app-icon-button>
               </li>
             </ul>
@@ -172,3 +176,7 @@
     </button>
   </footer>
 </ngx-smart-modal>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>

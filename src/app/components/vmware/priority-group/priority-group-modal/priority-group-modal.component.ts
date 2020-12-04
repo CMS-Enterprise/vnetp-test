@@ -104,7 +104,7 @@ export class PriorityGroupModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       priority: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }

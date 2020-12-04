@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
-  V1AgmApplicationsService,
-  V1AgmClustersService,
-  V1AgmLogicalGroupsService,
-  V1AgmProfilesService,
-  V1AgmTemplatesService,
+  V1ActifioGmApplicationsService,
+  V1ActifioGmClustersService,
+  V1ActifioGmLogicalGroupsService,
+  V1ActifioGmProfilesService,
+  V1ActifioGmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
@@ -34,11 +34,11 @@ describe('LogicalGroupModalComponent', () => {
       ],
       providers: [
         MockProvider(NgxSmartModalService),
-        MockProvider(V1AgmApplicationsService),
-        MockProvider(V1AgmClustersService),
-        MockProvider(V1AgmLogicalGroupsService),
-        MockProvider(V1AgmProfilesService),
-        MockProvider(V1AgmTemplatesService),
+        MockProvider(V1ActifioGmApplicationsService),
+        MockProvider(V1ActifioGmClustersService),
+        MockProvider(V1ActifioGmLogicalGroupsService),
+        MockProvider(V1ActifioGmProfilesService),
+        MockProvider(V1ActifioGmTemplatesService),
       ],
     });
     fixture = TestBed.createComponent(LogicalGroupModalComponent);

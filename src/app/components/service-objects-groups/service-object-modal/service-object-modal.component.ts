@@ -94,7 +94,7 @@ export class ServiceObjectModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       protocol: ['', Validators.required],
       destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
       sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],

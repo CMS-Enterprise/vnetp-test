@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/c
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioApplicationGroupsService } from 'api_client';
+import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioRdcApplicationGroupsService } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
 
@@ -42,7 +42,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
 
   private createSubscription: Subscription;
 
-  constructor(private applicationGroupService: V1ActifioApplicationGroupsService, private ngx: NgxSmartModalService) {}
+  constructor(private rdcApplicationGroupService: V1ActifioRdcApplicationGroupsService, private ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.loadApplicationGroups();
@@ -65,7 +65,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
   public deleteApplicationGroup(applicationGroup: ApplicationGroupView): void {
     const { id, name } = applicationGroup;
     const deleteFunction = () => {
-      this.applicationGroupService.v1ActifioApplicationGroupsIdDelete({ id }).subscribe(() => {
+      this.rdcApplicationGroupService.v1ActifioRdcApplicationGroupsIdDelete({ id }).subscribe(() => {
         this.loadApplicationGroups();
       });
     };
@@ -83,7 +83,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
   public loadApplicationGroups(): void {
     this.applicationGroups = [];
     this.isLoading = true;
-    this.applicationGroupService.v1ActifioApplicationGroupsGet().subscribe(applicationGroups => {
+    this.rdcApplicationGroupService.v1ActifioRdcApplicationGroupsGet({}).subscribe(applicationGroups => {
       this.applicationGroups = applicationGroups.map(this.mapApplicationGroup);
       this.isLoading = false;
     });

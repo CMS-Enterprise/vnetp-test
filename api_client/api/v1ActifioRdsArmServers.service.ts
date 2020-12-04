@@ -17,25 +17,21 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioJobDto } from '../model/models';
+import { ActifioRdsArmServerDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmJobsGetRequestParams {
-    status: string;
-    jobClassCode: number;
-    applicationName: string;
-    limit: number;
-    offset: number;
+export interface V1ActifioRdsArmServersIdGetRequestParams {
+    id: string;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmJobsService {
+export class V1ActifioRdsArmServersService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -94,56 +90,59 @@ export class V1AgmJobsService {
     }
 
     /**
-     * Get many ActifioJobDto
+     * Get many ActifioRdsArmServerDto
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioRdsArmServersGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioRdsArmServerDto>>;
+    public v1ActifioRdsArmServersGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioRdsArmServerDto>>>;
+    public v1ActifioRdsArmServersGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioRdsArmServerDto>>>;
+    public v1ActifioRdsArmServersGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioRdsArmServerDto>>(`${this.configuration.basePath}/v1/actifio/rds/arm-servers`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get one ActifioRdsArmServerDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioJobDto>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioJobDto>>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioJobDto>>>;
-    public v1AgmJobsGet(requestParameters: V1AgmJobsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const status = requestParameters.status;
-        if (status === null || status === undefined) {
-            throw new Error('Required parameter status was null or undefined when calling v1AgmJobsGet.');
-        }
-        const jobClassCode = requestParameters.jobClassCode;
-        if (jobClassCode === null || jobClassCode === undefined) {
-            throw new Error('Required parameter jobClassCode was null or undefined when calling v1AgmJobsGet.');
-        }
-        const applicationName = requestParameters.applicationName;
-        if (applicationName === null || applicationName === undefined) {
-            throw new Error('Required parameter applicationName was null or undefined when calling v1AgmJobsGet.');
-        }
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmJobsGet.');
-        }
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmJobsGet.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (status !== undefined && status !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>status, 'status');
-        }
-        if (jobClassCode !== undefined && jobClassCode !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>jobClassCode, 'jobClassCode');
-        }
-        if (applicationName !== undefined && applicationName !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>applicationName, 'applicationName');
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioRdsArmServerDto>;
+    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioRdsArmServerDto>>;
+    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioRdsArmServerDto>>;
+    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsArmServersIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -166,9 +165,8 @@ export class V1AgmJobsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioJobDto>>(`${this.configuration.basePath}/v1/agm/jobs`,
+        return this.httpClient.get<ActifioRdsArmServerDto>(`${this.configuration.basePath}/v1/actifio/rds/arm-servers/${encodeURIComponent(String(id))}`,
             {
-                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

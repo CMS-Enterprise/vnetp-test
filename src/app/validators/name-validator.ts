@@ -1,6 +1,6 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
-export function NameValidator(control: FormControl): { invalidName: boolean } {
+function ValidName(control: FormControl): { invalidName: boolean } | null {
   if (!control || !control.value) {
     return null;
   }
@@ -13,3 +13,7 @@ export function NameValidator(control: FormControl): { invalidName: boolean } {
   }
   return { invalidName: true };
 }
+
+export const NameValidator = (minLength = 3, maxLength = 100) => {
+  return Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);
+};

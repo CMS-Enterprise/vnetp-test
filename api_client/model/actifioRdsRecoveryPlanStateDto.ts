@@ -11,8 +11,11 @@
  */
 
 
-export interface ActifioCollectorVirtualManagementServerDto { 
-    ipAddress: string;
-    id: string;
+export interface ActifioRdsRecoveryPlanStateDto { 
+    description: string;
+    duration: string;
+    recoveryPlanId: string;
+    recoveryPlanName: string;
+    status: string;
 }
 

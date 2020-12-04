@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1AgmApplicationsService, V1AgmJobsService } from 'api_client';
+import { V1ActifioGmApplicationsService, V1ActifioGmJobsService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { from, of } from 'rxjs';
 import { VmListComponent } from './vm-list.component';
@@ -22,7 +22,12 @@ describe('VmListComponent', () => {
         MockFontAwesomeComponent,
         VmListComponent,
       ],
-      providers: [MockProvider(V1AgmApplicationsService), MockProvider(V1AgmJobsService), DatePipe, MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(V1ActifioGmApplicationsService),
+        MockProvider(V1ActifioGmJobsService),
+        DatePipe,
+        MockProvider(NgxSmartModalService),
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -48,8 +53,8 @@ describe('VmListComponent', () => {
   });
 
   it('should call to get applications in chunks on init', () => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    const spy = jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    const spy = jest.spyOn(applicationService, 'v1ActifioGmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
     component.ngOnInit();
 
@@ -57,11 +62,11 @@ describe('VmListComponent', () => {
   });
 
   it('should default to get the last sync date when jobs are empty', done => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    jest.spyOn(applicationService, 'v1ActifioGmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
-    const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([]));
+    const jobService = TestBed.get(V1ActifioGmJobsService);
+    jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([]));
 
     component.ngOnInit();
 
@@ -74,11 +79,11 @@ describe('VmListComponent', () => {
   });
 
   it('should call to get the last sync date for each VM', done => {
-    const applicationService = TestBed.get(V1AgmApplicationsService);
-    jest.spyOn(applicationService, 'v1AgmApplicationsGet').mockImplementation(() => from([createApplications()]));
+    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    jest.spyOn(applicationService, 'v1ActifioGmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
-    const jobService = TestBed.get(V1AgmJobsService);
-    jest.spyOn(jobService, 'v1AgmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
+    const jobService = TestBed.get(V1ActifioGmJobsService);
+    jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
 
     component.ngOnInit();
 

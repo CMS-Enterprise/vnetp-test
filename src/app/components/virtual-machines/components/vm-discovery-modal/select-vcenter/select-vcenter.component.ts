@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
-import { ActifioHostDto, V1AgmHostsService } from 'api_client';
+import { ActifioHostDto, V1ActifioGmHostsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
@@ -26,7 +26,7 @@ export class SelectVCenterComponent implements OnInit {
   public isLoading = false;
   public selectedVCenterId: number;
 
-  constructor(private agmHostService: V1AgmHostsService, private ngx: NgxSmartModalService) {}
+  constructor(private agmHostService: V1ActifioGmHostsService, private ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.loadVCenters();
@@ -45,7 +45,7 @@ export class SelectVCenterComponent implements OnInit {
 
   private loadVCenters(): void {
     this.isLoading = true;
-    this.agmHostService.v1AgmHostsGet().subscribe(
+    this.agmHostService.v1ActifioGmHostsGet().subscribe(
       data => {
         this.vCenters = data;
         this.isLoading = false;

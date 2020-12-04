@@ -1,6 +1,6 @@
 import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { ActifioTemplateDto, V1AgmTemplatesService } from 'api_client';
+import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -14,12 +14,6 @@ describe('TemplateListComponent', () => {
   let fixture: ComponentFixture<TemplateListComponent>;
 
   beforeEach(async(() => {
-    const templateService = {
-      v1AgmTemplatesGet: jest.fn(() => of(createTemplates())),
-      v1AgmTemplatesIdPolicyGet: jest.fn(() => of({})),
-      v1AgmTemplatesIdDelete: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
@@ -30,7 +24,7 @@ describe('TemplateListComponent', () => {
         MockYesNoModalComponent,
         TemplateListComponent,
       ],
-      providers: [{ useValue: templateService, provide: V1AgmTemplatesService }, MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(V1ActifioGmTemplatesService), MockProvider(NgxSmartModalService)],
     })
       .compileComponents()
       .then(() => {
@@ -58,8 +52,8 @@ describe('TemplateListComponent', () => {
   });
 
   it('should call to get templates on init', () => {
-    const templateService = TestBed.get(V1AgmTemplatesService);
-    const spy = jest.spyOn(templateService, 'v1AgmTemplatesGet').mockImplementation(() => of(createTemplates()));
+    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const spy = jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
 
     component.ngOnInit();
 
@@ -67,8 +61,8 @@ describe('TemplateListComponent', () => {
   });
 
   it('should default an empty description to be "--"', () => {
-    const templateService = TestBed.get(V1AgmTemplatesService);
-    jest.spyOn(templateService, 'v1AgmTemplatesGet').mockImplementation(() => {
+    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => {
       const templates = createTemplates();
       templates[0].description = undefined;
       return of(templates);
@@ -80,9 +74,9 @@ describe('TemplateListComponent', () => {
   });
 
   it('should set the time window to "--" when a snapshot policy does not exist', done => {
-    const templateService = TestBed.get(V1AgmTemplatesService);
-    jest.spyOn(templateService, 'v1AgmTemplatesGet').mockImplementation(() => of(createTemplates()));
-    jest.spyOn(templateService, 'v1AgmTemplatesIdPolicyGet').mockImplementation(() => of([]));
+    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
+    jest.spyOn(templateService, 'v1ActifioGmTemplatesIdPolicyGet').mockImplementation(() => of([]));
 
     component.ngOnInit();
 
@@ -94,9 +88,9 @@ describe('TemplateListComponent', () => {
   });
 
   it('should set the time window of a template snapshot policy', done => {
-    const templateService = TestBed.get(V1AgmTemplatesService);
-    jest.spyOn(templateService, 'v1AgmTemplatesGet').mockImplementation(() => of(createTemplates()));
-    jest.spyOn(templateService, 'v1AgmTemplatesIdPolicyGet').mockImplementation(() => {
+    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
+    jest.spyOn(templateService, 'v1ActifioGmTemplatesIdPolicyGet').mockImplementation(() => {
       const snapshotPolicy = {
         startTime: 10 * 60 * 60,
         endTime: 20 * 60 * 60,
@@ -114,14 +108,14 @@ describe('TemplateListComponent', () => {
   });
 
   it('should call to delete a template after confirming', () => {
-    const templateService = TestBed.get(V1AgmTemplatesService);
+    const templateService = TestBed.get(V1ActifioGmTemplatesService);
 
     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
       confirmFn();
       return of().subscribe();
     });
 
-    const deleteSpy = jest.spyOn(templateService, 'v1AgmTemplatesIdDelete');
+    const deleteSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesIdDelete');
 
     component.deleteTemplate({ id: '1', name: 'Test' });
 

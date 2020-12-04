@@ -97,7 +97,7 @@ export class LoadBalancerVlanModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       tag: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });
   }

@@ -12,7 +12,7 @@ export class YesNoModalComponent {
 
   public allowEmptyTierRadio = false;
   public cancelText = 'No';
-  public confirmButtonType: 'primary' | 'danger' = 'primary';
+  public confirmButtonType: 'primary' | 'danger' | 'success' = 'primary';
   public confirmText = 'Yes';
   public form: FormGroup;
   public modalBody = 'Title';

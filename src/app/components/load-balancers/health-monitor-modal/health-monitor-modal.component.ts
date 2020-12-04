@@ -128,7 +128,7 @@ export class HealthMonitorModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       type: ['', Validators.required],
       servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
       interval: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],

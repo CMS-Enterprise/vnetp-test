@@ -24,22 +24,22 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmApplicationsGetRequestParams {
+export interface V1ActifioGmApplicationsGetRequestParams {
     limit: number;
     offset: number;
     clusterIds?: Array<string>;
     logicalGroupMember?: boolean;
 }
 
-export interface V1AgmApplicationsIdDeleteRequestParams {
+export interface V1ActifioGmApplicationsIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1AgmApplicationsIdGetRequestParams {
+export interface V1ActifioGmApplicationsIdGetRequestParams {
     id: string;
 }
 
-export interface V1AgmApplicationsImportPostRequestParams {
+export interface V1ActifioGmApplicationsImportPostRequestParams {
     actifioImportApplicationsDto: ActifioImportApplicationsDto;
 }
 
@@ -47,7 +47,7 @@ export interface V1AgmApplicationsImportPostRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmApplicationsService {
+export class V1ActifioGmApplicationsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -111,17 +111,17 @@ export class V1AgmApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
-    public v1AgmApplicationsGet(requestParameters: V1AgmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationDto>>;
+    public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
+    public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
+    public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const limit = requestParameters.limit;
         if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmApplicationsGet.');
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmApplicationsGet.');
         }
         const offset = requestParameters.offset;
         if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmApplicationsGet.');
+            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmApplicationsGet.');
         }
         const clusterIds = requestParameters.clusterIds;
         const logicalGroupMember = requestParameters.logicalGroupMember;
@@ -164,7 +164,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/agm/applications`,
+        return this.httpClient.get<Array<ActifioApplicationDto>>(`${this.configuration.basePath}/v1/actifio/gm/applications`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -182,13 +182,13 @@ export class V1AgmApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsIdDelete(requestParameters: V1AgmApplicationsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmApplicationsIdDelete(requestParameters: V1ActifioGmApplicationsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmApplicationsIdDelete(requestParameters: V1ActifioGmApplicationsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmApplicationsIdDelete(requestParameters: V1ActifioGmApplicationsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmApplicationsIdDelete(requestParameters: V1ActifioGmApplicationsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmApplicationsIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -210,7 +210,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/actifio/gm/applications/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -227,13 +227,13 @@ export class V1AgmApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
-    public v1AgmApplicationsIdGet(requestParameters: V1AgmApplicationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmApplicationsIdGet(requestParameters: V1ActifioGmApplicationsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioApplicationDto>;
+    public v1ActifioGmApplicationsIdGet(requestParameters: V1ActifioGmApplicationsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioApplicationDto>>;
+    public v1ActifioGmApplicationsIdGet(requestParameters: V1ActifioGmApplicationsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioApplicationDto>>;
+    public v1ActifioGmApplicationsIdGet(requestParameters: V1ActifioGmApplicationsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1AgmApplicationsIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioGmApplicationsIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -256,7 +256,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/agm/applications/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ActifioApplicationDto>(`${this.configuration.basePath}/v1/actifio/gm/applications/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -273,13 +273,13 @@ export class V1AgmApplicationsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AgmApplicationsImportPost(requestParameters: V1AgmApplicationsImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1ActifioGmApplicationsImportPost(requestParameters: V1ActifioGmApplicationsImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1ActifioGmApplicationsImportPost(requestParameters: V1ActifioGmApplicationsImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1ActifioGmApplicationsImportPost(requestParameters: V1ActifioGmApplicationsImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1ActifioGmApplicationsImportPost(requestParameters: V1ActifioGmApplicationsImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const actifioImportApplicationsDto = requestParameters.actifioImportApplicationsDto;
         if (actifioImportApplicationsDto === null || actifioImportApplicationsDto === undefined) {
-            throw new Error('Required parameter actifioImportApplicationsDto was null or undefined when calling v1AgmApplicationsImportPost.');
+            throw new Error('Required parameter actifioImportApplicationsDto was null or undefined when calling v1ActifioGmApplicationsImportPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -310,7 +310,7 @@ export class V1AgmApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/agm/applications/import`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/actifio/gm/applications/import`,
             actifioImportApplicationsDto,
             {
                 responseType: <any>responseType,

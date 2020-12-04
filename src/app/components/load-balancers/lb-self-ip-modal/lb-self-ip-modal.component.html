@@ -34,6 +34,10 @@
             class="form-control"
             [class.is-invalid]="submitted && f.ipAddress.errors"
           />
+          <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.ipAddress.errors.required">IP Address is Required</div>
+            <div *ngIf="f.ipAddress.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
@@ -42,6 +46,9 @@
             <option></option>
             <option *ngFor="let vlan of availableVlans" [ngValue]="vlan.id"> {{ vlan.name }} ({{ vlan.tag }}) </option>
           </select>
+          <div *ngIf="submitted && f.vlan.errors" class="invalid-feedback">
+            <div *ngIf="f.vlan.errors.required">VLAN is Required</div>
+          </div>
         </div>
       </div>
     </div>

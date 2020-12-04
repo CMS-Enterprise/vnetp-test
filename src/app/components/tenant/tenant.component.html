@@ -1,7 +1,7 @@
 <div class="mt-5">
   <h3 class="text-center">Select a Tenant</h3>
   <div class="d-flex justify-content-center">
-    <div *ngFor="let tenant of currentTenants" class="btn-group mr-2" (click)="selectTenant(tenant.dbName)">
+    <div *ngFor="let tenant of currentTenants" class="btn-group mr-2" (click)="selectTenant(tenant.db_name)">
       <button type="button" class="btn btn-info">
         <span>{{ tenant.name }}</span>
       </button>

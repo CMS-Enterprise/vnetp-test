@@ -17,22 +17,22 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioVMMemberDto } from '../model/models';
+import { ActifioClusterDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1ActifioApplicationsCdsIdServerIdGetRequestParams {
-    serverId: string;
-    cdsId: string;
+export interface V1ActifioGmClustersGetRequestParams {
+    offset: number;
+    limit: number;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1ActifioApplicationsService {
+export class V1ActifioGmClustersService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -91,22 +91,32 @@ export class V1ActifioApplicationsService {
     }
 
     /**
-     * Get many ActifioCollectorVMMemberDto
+     * Get many ActifioClusterDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioVMMemberDto>>;
-    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioVMMemberDto>>>;
-    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioVMMemberDto>>>;
-    public v1ActifioApplicationsCdsIdServerIdGet(requestParameters: V1ActifioApplicationsCdsIdServerIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const serverId = requestParameters.serverId;
-        if (serverId === null || serverId === undefined) {
-            throw new Error('Required parameter serverId was null or undefined when calling v1ActifioApplicationsCdsIdServerIdGet.');
+    public v1ActifioGmClustersGet(requestParameters: V1ActifioGmClustersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioClusterDto>>;
+    public v1ActifioGmClustersGet(requestParameters: V1ActifioGmClustersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioClusterDto>>>;
+    public v1ActifioGmClustersGet(requestParameters: V1ActifioGmClustersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioClusterDto>>>;
+    public v1ActifioGmClustersGet(requestParameters: V1ActifioGmClustersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        if (offset === null || offset === undefined) {
+            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmClustersGet.');
         }
-        const cdsId = requestParameters.cdsId;
-        if (cdsId === null || cdsId === undefined) {
-            throw new Error('Required parameter cdsId was null or undefined when calling v1ActifioApplicationsCdsIdServerIdGet.');
+        const limit = requestParameters.limit;
+        if (limit === null || limit === undefined) {
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmClustersGet.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;
@@ -129,8 +139,9 @@ export class V1ActifioApplicationsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioVMMemberDto>>(`${this.configuration.basePath}/v1/actifio/applications/${encodeURIComponent(String(cdsId))}/${encodeURIComponent(String(serverId))}`,
+        return this.httpClient.get<Array<ActifioClusterDto>>(`${this.configuration.basePath}/v1/actifio/gm/clusters`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

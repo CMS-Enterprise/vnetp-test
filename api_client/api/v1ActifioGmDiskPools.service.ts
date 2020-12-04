@@ -17,22 +17,17 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioClusterDto } from '../model/models';
+import { ActifioDiskPoolDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AgmClustersGetRequestParams {
-    offset: number;
-    limit: number;
-}
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1AgmClustersService {
+export class V1ActifioGmDiskPoolsService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -91,33 +86,14 @@ export class V1AgmClustersService {
     }
 
     /**
-     * Get many ActifioClusterDto
-     * @param requestParameters
+     * Get many ActifioDiskPoolDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AgmClustersGet(requestParameters: V1AgmClustersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioClusterDto>>;
-    public v1AgmClustersGet(requestParameters: V1AgmClustersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioClusterDto>>>;
-    public v1AgmClustersGet(requestParameters: V1AgmClustersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioClusterDto>>>;
-    public v1AgmClustersGet(requestParameters: V1AgmClustersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1AgmClustersGet.');
-        }
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1AgmClustersGet.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
+    public v1ActifioGmDiskPoolsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioDiskPoolDto>>;
+    public v1ActifioGmDiskPoolsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioDiskPoolDto>>>;
+    public v1ActifioGmDiskPoolsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioDiskPoolDto>>>;
+    public v1ActifioGmDiskPoolsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -139,9 +115,8 @@ export class V1AgmClustersService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioClusterDto>>(`${this.configuration.basePath}/v1/agm/clusters`,
+        return this.httpClient.get<Array<ActifioDiskPoolDto>>(`${this.configuration.basePath}/v1/actifio/gm/disk-pools`,
             {
-                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -1,5 +1,5 @@
 import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
-import { ActifioLogicalGroupDto, V1AgmLogicalGroupsService } from 'api_client';
+import { ActifioLogicalGroupDto, V1ActifioGmLogicalGroupsService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -52,9 +52,9 @@ describe('LogicalGroupListComponent', () => {
         LogicalGroupListComponent,
       ],
       providers: [
-        MockProvider(V1AgmLogicalGroupsService, {
-          v1AgmLogicalGroupsGet: of(createLogicalGroups()),
-          v1AgmLogicalGroupsIdGet: of({ members: [] }),
+        MockProvider(V1ActifioGmLogicalGroupsService, {
+          v1ActifioGmLogicalGroupsGet: of(createLogicalGroups()),
+          v1ActifioGmLogicalGroupsIdGet: of({ members: [] }),
         }),
         MockProvider(NgxSmartModalService),
         MockProvider(ToastrService),
@@ -73,8 +73,8 @@ describe('LogicalGroupListComponent', () => {
   });
 
   it('should call to get logical groups on init', () => {
-    const logicalGroupService = TestBed.get(V1AgmLogicalGroupsService);
-    const spy = jest.spyOn(logicalGroupService, 'v1AgmLogicalGroupsGet');
+    const logicalGroupService = TestBed.get(V1ActifioGmLogicalGroupsService);
+    const spy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsGet');
 
     component.ngOnInit();
 
@@ -92,8 +92,8 @@ describe('LogicalGroupListComponent', () => {
   });
 
   it('should delete a single logical group', () => {
-    const logicalGroupService = TestBed.get(V1AgmLogicalGroupsService);
-    const deleteSpy = jest.spyOn(logicalGroupService, 'v1AgmLogicalGroupsIdDelete');
+    const logicalGroupService = TestBed.get(V1ActifioGmLogicalGroupsService);
+    const deleteSpy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsIdDelete');
     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
       confirmFn();
       return of().subscribe();
