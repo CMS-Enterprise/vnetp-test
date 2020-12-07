@@ -77,9 +77,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ];
 
   // Templates
-  @ViewChild('sourceAddress', { static: false }) sourceAddressTemplate: TemplateRef<any>;
-  @ViewChild('destinationAddress', { static: false }) destinationAddressTemplate: TemplateRef<any>;
-  @ViewChild('serviceType', { static: false }) serviceTemplate: TemplateRef<any>;
+  @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
+  @ViewChild('destinationAddress') destinationAddressTemplate: TemplateRef<any>;
+  @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
 
   get scopeString() {
     return this.scope;

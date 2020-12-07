@@ -19,6 +19,16 @@ export default class ObjectUtil {
     return null;
   }
 
+  static removeEmptyProps<T>(object: T): T {
+    const copy = ObjectUtil.deepCopy(object);
+    return Object.entries(copy).reduce((newObject, [key, value]) => {
+      if (value === undefined || value === null) {
+        return newObject;
+      }
+      return Object.assign(newObject, { [key]: value });
+    }, {} as T);
+  }
+
   static deepCopy<T>(object: T): T {
     if (!object) {
       throw new Error('Null Object.');

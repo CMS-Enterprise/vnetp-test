@@ -58,6 +58,8 @@ describe('DatacenterSelectComponent', () => {
     });
 
     it('should display a toastr success message when changing datacenters succeeds', () => {
+      const datacenterContextService = TestBed.get(DatacenterContextService);
+      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => true);
       const toastrService = TestBed.get(ToastrService);
       const successSpy = jest.spyOn(toastrService, 'success');
 
@@ -67,7 +69,7 @@ describe('DatacenterSelectComponent', () => {
       };
       component.switchDatacenter();
 
-      expect(successSpy).toHaveBeenCalledWith('Datacenter Switched');
+      expect(successSpy).toHaveBeenCalledWith('Datacenter switched');
     });
 
     it('should display a toastr error message when changing datacenters fails', () => {
@@ -75,9 +77,7 @@ describe('DatacenterSelectComponent', () => {
       const datacenterContextService = TestBed.get(DatacenterContextService);
 
       const errorSpy = jest.spyOn(toastrService, 'error');
-      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => {
-        throw Error();
-      });
+      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => false);
 
       component.selectedDatacenter = {
         id: '2',

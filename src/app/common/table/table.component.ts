@@ -16,7 +16,7 @@ export interface TableConfig<T> {
  * Usage:
  *
  * - in component:
- *  @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
+ *  @ViewChild('nameTemplate') nameTemplate: TemplateRef<any>;
  *
  *  public config: TableConfig = {
  *     description: 'Table',

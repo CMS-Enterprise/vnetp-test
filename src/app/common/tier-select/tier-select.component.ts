@@ -44,11 +44,11 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   public switchTier(): void {
-    try {
-      this.tierContextService.switchTier(this.selectedTier);
-      this.toastrService.success('Tier Switched');
-    } catch (error) {
-      this.toastrService.error(error);
+    const isSwitched = this.tierContextService.switchTier(this.selectedTier);
+    if (isSwitched) {
+      this.toastrService.success('Tier switched');
+    } else {
+      this.toastrService.error('Unable to switch tier');
     }
   }
 

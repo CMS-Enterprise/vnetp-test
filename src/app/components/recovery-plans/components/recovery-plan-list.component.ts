@@ -19,7 +19,7 @@ export interface RecoveryPlanView {
   templateUrl: './recovery-plan-list.component.html',
 })
 export class RecoveryPlanListComponent implements OnInit, OnDestroy {
-  @ViewChild('actions', { static: false }) actionsTemplate: TemplateRef<any>;
+  @ViewChild('actions') actionsTemplate: TemplateRef<any>;
 
   public isLoading = false;
   public recoveryPlans: RecoveryPlanView[] = [];

@@ -62,7 +62,9 @@ describe('TierSelectComponent', () => {
   });
 
   it('should switch tiers', () => {
+    const tierContextService = TestBed.get(TierContextService);
     const toastrService = TestBed.get(ToastrService);
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => true);
     const successSpy = jest.spyOn(toastrService, 'success');
 
     component.selectedTier = '1';
@@ -73,9 +75,7 @@ describe('TierSelectComponent', () => {
 
   it('should not switch tiers when an error occurs', () => {
     const tierContextService = TestBed.get(TierContextService);
-    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => {
-      throw Error();
-    });
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => false);
 
     const toastrService = TestBed.get(ToastrService);
     const successSpy = jest.spyOn(toastrService, 'success');

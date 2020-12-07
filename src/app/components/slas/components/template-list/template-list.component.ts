@@ -16,8 +16,8 @@ interface TemplateView extends ActifioTemplateDto {
   templateUrl: './template-list.component.html',
 })
 export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('snapshotPolicyTemplate', { static: false }) snapshotPolicyTemplate: TemplateRef<any>;
-  @ViewChild('actionsTemplate', { static: false }) actionsTemplate: TemplateRef<any>;
+  @ViewChild('snapshotPolicyTemplate') snapshotPolicyTemplate: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config = {
     description: 'List of SLA Templates',

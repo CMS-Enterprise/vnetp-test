@@ -22,9 +22,9 @@ export interface VirtualMachineView extends ActifioApplicationDto {
   templateUrl: './vm-list.component.html',
 })
 export class VmListComponent implements OnInit, OnDestroy {
-  @ViewChild('nameTemplate', { static: false }) nameTemplate: TemplateRef<any>;
-  @ViewChild('lastSyncTemplate', { static: false }) lastSyncTemplate: TemplateRef<any>;
-  @ViewChild('lastBackupTemplate', { static: false }) lastBackupTemplate: TemplateRef<any>;
+  @ViewChild('nameTemplate') nameTemplate: TemplateRef<any>;
+  @ViewChild('lastSyncTemplate') lastSyncTemplate: TemplateRef<any>;
+  @ViewChild('lastBackupTemplate') lastBackupTemplate: TemplateRef<any>;
 
   public isLoading = false;
   public virtualMachines: VirtualMachineView[] = [];
