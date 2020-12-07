@@ -1,8 +1,13 @@
+# CSS Support 
 # This file is currently used by autoprefixer to adjust CSS to support the below specified browsers
 # For additional information regarding the format and rule options, please see:
 # https://github.com/browserslist/browserslist#queries
 #
 # For IE 9-11 support, please remove 'not' from the last line of the file and adjust as needed
+
+# Angular Support
+# Used by Angular 9+ to determine if an ES5 build is needed
+# https://update.angular.io/?l=3&v=8.2-9.1
 
 > 0.5%
 last 2 versions

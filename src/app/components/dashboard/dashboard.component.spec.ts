@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
 import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { of } from 'rxjs';
@@ -39,7 +38,6 @@ describe('DashboardComponent', () => {
         MockFontAwesomeComponent,
       ],
       providers: [
-        CookieService,
         { provide: V1DatacentersService, useValue: datacenterService },
         { provide: V1TiersService, useValue: tierService },
         { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
