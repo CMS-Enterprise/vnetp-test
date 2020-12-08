@@ -42,7 +42,7 @@ describe('PriorityGroupListComponent', () => {
   });
 
   it('should delete a priority group', () => {
-    const entityService = TestBed.get(EntityService);
+    const entityService = TestBed.inject(EntityService);
     const deleteSpy = jest.spyOn(entityService, 'deleteEntity');
 
     const pg = { id: '1', deletedAt: {} } as PriorityGroup;
@@ -54,7 +54,7 @@ describe('PriorityGroupListComponent', () => {
   describe('Restoring', () => {
     it('should not restore a priority group when it is not soft-deleted', () => {
       const pg = { id: '1' } as PriorityGroup;
-      const restoreSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
+      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
 
       component.restorePriorityGroup(pg);
       expect(restoreSpy).not.toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('PriorityGroupListComponent', () => {
 
     it('should restore a soft-deleted priority group', () => {
       const pg = { id: '1', deletedAt: {} } as PriorityGroup;
-      const restoreSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
+      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
 
       component.restorePriorityGroup(pg);
       expect(restoreSpy).toHaveBeenCalledWith({ id: '1' });
@@ -71,7 +71,7 @@ describe('PriorityGroupListComponent', () => {
 
   describe('Modal', () => {
     it('should open the priority group modal in create mode', () => {
-      const setModalDataSpy = jest.spyOn(TestBed.get(NgxSmartModalService), 'setModalData');
+      const setModalDataSpy = jest.spyOn(TestBed.inject(NgxSmartModalService), 'setModalData');
       const createButton = fixture.debugElement.query(By.css('.btn-toolbar .btn.btn-success'));
       createButton.nativeElement.click();
       expect(setModalDataSpy).toHaveBeenCalledWith(

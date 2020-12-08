@@ -29,7 +29,7 @@ describe('DatacenterSelectComponent', () => {
   });
 
   it('should call to open the datacenter switch modal on click', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
     jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return {
@@ -45,7 +45,7 @@ describe('DatacenterSelectComponent', () => {
 
   describe('switchDatacenter', () => {
     it('should call to switch the datacenter', () => {
-      const datacenterContextService = TestBed.get(DatacenterContextService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
       const spy = jest.spyOn(datacenterContextService, 'switchDatacenter');
 
       component.selectedDatacenter = {
@@ -58,9 +58,9 @@ describe('DatacenterSelectComponent', () => {
     });
 
     it('should display a toastr success message when changing datacenters succeeds', () => {
-      const datacenterContextService = TestBed.get(DatacenterContextService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
       jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => true);
-      const toastrService = TestBed.get(ToastrService);
+      const toastrService = TestBed.inject(ToastrService);
       const successSpy = jest.spyOn(toastrService, 'success');
 
       component.selectedDatacenter = {
@@ -73,8 +73,8 @@ describe('DatacenterSelectComponent', () => {
     });
 
     it('should display a toastr error message when changing datacenters fails', () => {
-      const toastrService = TestBed.get(ToastrService);
-      const datacenterContextService = TestBed.get(DatacenterContextService);
+      const toastrService = TestBed.inject(ToastrService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
 
       const errorSpy = jest.spyOn(toastrService, 'error');
       jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => false);

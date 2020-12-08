@@ -52,7 +52,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should call to get profiles on init', () => {
-    const profileService = TestBed.get(V1ActifioGmProfilesService);
+    const profileService = TestBed.inject(V1ActifioGmProfilesService);
     const spy = jest.spyOn(profileService, 'v1ActifioGmProfilesGet');
 
     component.ngOnInit();
@@ -61,7 +61,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should default an empty description to be "--"', () => {
-    const profileService = TestBed.get(V1ActifioGmProfilesService);
+    const profileService = TestBed.inject(V1ActifioGmProfilesService) as any;
     jest.spyOn(profileService, 'v1ActifioGmProfilesGet').mockImplementation(() => {
       const profiles = createProfiles();
       profiles[0].description = undefined;
@@ -74,7 +74,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should default an empty remote cluster name to be "--"', () => {
-    const profileService = TestBed.get(V1ActifioGmProfilesService);
+    const profileService = TestBed.inject(V1ActifioGmProfilesService) as any;
     jest.spyOn(profileService, 'v1ActifioGmProfilesGet').mockImplementation(() => {
       const profiles = createProfiles();
       profiles[0].remoteClusterName = undefined;
@@ -87,7 +87,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should set the most recent change date to the created date when modified date is not defined', () => {
-    const profileService = TestBed.get(V1ActifioGmProfilesService);
+    const profileService = TestBed.inject(V1ActifioGmProfilesService) as any;
     jest.spyOn(profileService, 'v1ActifioGmProfilesGet').mockImplementation(() => {
       const profiles = createProfiles();
       profiles[0].lastModifiedDate = undefined;
@@ -100,7 +100,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should set the most recent change date to the modified date', () => {
-    const profileService = TestBed.get(V1ActifioGmProfilesService);
+    const profileService = TestBed.inject(V1ActifioGmProfilesService) as any;
     jest.spyOn(profileService, 'v1ActifioGmProfilesGet').mockImplementation(() => {
       const profiles = createProfiles();
       return of(profiles);

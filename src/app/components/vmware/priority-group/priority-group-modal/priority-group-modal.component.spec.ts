@@ -32,7 +32,7 @@ describe('PriorityGroupModalComponent', () => {
   });
 
   it('should update an existing priority group', () => {
-    jest.spyOn(TestBed.get(NgxSmartModalService), 'getModalData').mockImplementation(() => {
+    jest.spyOn(TestBed.inject(NgxSmartModalService), 'getModalData').mockImplementation(() => {
       return {
         modalMode: ModalMode.Edit,
         datacenterId: '1',
@@ -46,7 +46,7 @@ describe('PriorityGroupModalComponent', () => {
     });
     fixture.detectChanges();
 
-    const updateSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsIdPut');
+    const updateSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdPut');
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
@@ -61,7 +61,7 @@ describe('PriorityGroupModalComponent', () => {
   });
 
   it('should create a new priority group with virtual machines', () => {
-    jest.spyOn(TestBed.get(NgxSmartModalService), 'getModalData').mockImplementation(() => {
+    jest.spyOn(TestBed.inject(NgxSmartModalService), 'getModalData').mockImplementation(() => {
       return {
         modalMode: ModalMode.Create,
         datacenterId: '1',
@@ -76,7 +76,7 @@ describe('PriorityGroupModalComponent', () => {
     });
     fixture.detectChanges();
 
-    const createSpy = jest.spyOn(TestBed.get(V1PriorityGroupsService), 'v1PriorityGroupsPost');
+    const createSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsPost');
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 

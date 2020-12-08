@@ -102,7 +102,7 @@ describe('VirtualDiskModalComponent', () => {
     const clickSaveButton = () => fixture.debugElement.query(By.css('.btn.btn-success')).nativeElement.click();
 
     it('should not create a vmware virtual disk when the form is invalid', () => {
-      const service = TestBed.get(V1VmwareVirtualDisksService);
+      const service = TestBed.inject(V1VmwareVirtualDisksService);
       const createVirtualDiskSpy = jest.spyOn(service, 'v1VmwareVirtualDisksPost');
 
       component.form.setValue({
@@ -118,7 +118,7 @@ describe('VirtualDiskModalComponent', () => {
     });
 
     it('should create a vmware virtual disk', () => {
-      const service = TestBed.get(V1VmwareVirtualDisksService);
+      const service = TestBed.inject(V1VmwareVirtualDisksService);
       const createVirtualDiskSpy = jest.spyOn(service, 'v1VmwareVirtualDisksPost');
 
       component.form.setValue({
@@ -164,7 +164,7 @@ describe('VirtualDiskModalComponent', () => {
     };
 
     it('should initialize the virtual machine', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       const dto = createDto();
       dto.VirtualMachineId = '123';
       jest.spyOn(service, 'getModalData').mockImplementation(() => dto);

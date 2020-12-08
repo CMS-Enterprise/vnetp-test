@@ -51,7 +51,7 @@ describe('ApplianceComponent', () => {
   });
 
   it('should open the create appliance modal', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
     jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return { onAnyCloseEvent: of(), open: openSpy };
@@ -70,7 +70,7 @@ describe('ApplianceComponent', () => {
         deletedAt: undefined,
       } as Appliance;
 
-      const applianceService = TestBed.get(V1AppliancesService);
+      const applianceService = TestBed.inject(V1AppliancesService);
       const restoreSpy = jest.spyOn(applianceService, 'v1AppliancesIdRestorePatch');
 
       component.restoreAppliance(appliance);
@@ -83,7 +83,7 @@ describe('ApplianceComponent', () => {
         deletedAt: {},
       } as Appliance;
 
-      const applianceService = TestBed.get(V1AppliancesService);
+      const applianceService = TestBed.inject(V1AppliancesService);
       const restoreSpy = jest.spyOn(applianceService, 'v1AppliancesIdRestorePatch');
 
       component.restoreAppliance(appliance);
@@ -97,7 +97,7 @@ describe('ApplianceComponent', () => {
       deletedAt: undefined,
     } as Appliance;
 
-    const entityService = TestBed.get(EntityService);
+    const entityService = TestBed.inject(EntityService);
     const deleteSpy = jest.spyOn(entityService, 'deleteEntity');
 
     component.deleteAppliance(appliance);

@@ -86,7 +86,7 @@ describe('SubnetModalComponent', () => {
   });
 
   it('should not call to create a subnet when the form is invalid', () => {
-    const service = TestBed.get(V1NetworkSubnetsService);
+    const service = TestBed.inject(V1NetworkSubnetsService);
     const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -105,7 +105,7 @@ describe('SubnetModalComponent', () => {
   });
 
   it('should call to create a subnet when in create mode', () => {
-    const service = TestBed.get(V1NetworkSubnetsService);
+    const service = TestBed.inject(V1NetworkSubnetsService);
     const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -133,7 +133,7 @@ describe('SubnetModalComponent', () => {
   });
 
   it('should call to edit an existing subnet when in edit mode', () => {
-    const service = TestBed.get(V1NetworkSubnetsService);
+    const service = TestBed.inject(V1NetworkSubnetsService);
     const updateSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsIdPut');
 
     component.ModalMode = ModalMode.Edit;
@@ -179,7 +179,7 @@ describe('SubnetModalComponent', () => {
     };
 
     it('should enable the name, gateway, network and vlan when creating a new subnet', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       const dto = createSubnetModalDto();
       dto.Subnet = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -194,7 +194,7 @@ describe('SubnetModalComponent', () => {
     });
 
     it('should disable the name, gateway, network and vlan field when editing an existing subnet', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createSubnetModalDto());
 
       component.getData();

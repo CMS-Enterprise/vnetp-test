@@ -62,7 +62,7 @@ describe('BreadcrumbComponent', () => {
   });
 
   it('should create a list of breadcrumbs', () => {
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [createRoute('Example Breadcrumb', [{ path: 'path' }, { path: 'to' }, { path: 'page' }])],
     };
@@ -75,7 +75,7 @@ describe('BreadcrumbComponent', () => {
   });
 
   it('should create a single breadcrumb for the dashboard', () => {
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [],
     };
@@ -90,7 +90,7 @@ describe('BreadcrumbComponent', () => {
   it('should not include children with a non-primary outlet', () => {
     const childRoute = createRoute('Non-Primary', [{ path: 'hello' }]);
     childRoute.outlet = null;
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [childRoute],
     };
@@ -101,7 +101,7 @@ describe('BreadcrumbComponent', () => {
 
   it('should not include children without a url', () => {
     const childRoute = createRoute('Primary', []);
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [childRoute],
     };
@@ -113,7 +113,7 @@ describe('BreadcrumbComponent', () => {
   it('should not include children without a breadcrumb property', () => {
     const childRoute = createRoute('Primary', [{ path: 'hello' }]);
     childRoute.snapshot.data = {};
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [childRoute],
     };
@@ -127,7 +127,7 @@ describe('BreadcrumbComponent', () => {
     const grandchildRoute = createRoute('2', [{ path: '2' }]);
     childRoute.children = [grandchildRoute];
 
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.root = {
       children: [childRoute],
     };
