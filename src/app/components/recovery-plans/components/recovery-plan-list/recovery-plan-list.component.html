@@ -5,9 +5,13 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+  <button type="button" class="btn btn-success" (click)="openRecoveryPlanModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Recovery Plan</span>
+  </button>
   <button type="button" class="btn btn-warning" (click)="executeAllRecoveryPlans()">
     <fa-icon class="icon" [icon]="['fas', 'play']"></fa-icon>
-    <span>Execute</span>
+    <span>Execute All</span>
   </button>
 </section>
 
@@ -38,3 +42,5 @@
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
+
+<app-recovery-plan-modal></app-recovery-plan-modal>

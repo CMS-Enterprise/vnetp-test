@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { ActifioRdsAddRecoveryPlanDto } from '../model/models';
 import { ActifioRdsRecoveryPlanDto } from '../model/models';
 import { ActifioRdsRecoveryPlanExecutionDto } from '../model/models';
 import { ActifioRdsRecoveryPlanStateDto } from '../model/models';
@@ -25,11 +26,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1ActifioRdsRecoveryPlansExecuteIdPostRequestParams {
+export interface V1ActifioRdsRecoveryPlansIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1ActifioRdsRecoveryPlansIdDeleteRequestParams {
+export interface V1ActifioRdsRecoveryPlansIdExecutePostRequestParams {
     id: string;
 }
 
@@ -41,12 +42,17 @@ export interface V1ActifioRdsRecoveryPlansIdGetRequestParams {
     id: string;
 }
 
+export interface V1ActifioRdsRecoveryPlansIdPutRequestParams {
+    id: string;
+    actifioRdsAddRecoveryPlanDto: ActifioRdsAddRecoveryPlanDto;
+}
+
 export interface V1ActifioRdsRecoveryPlansIdStateGetRequestParams {
     id: string;
 }
 
 export interface V1ActifioRdsRecoveryPlansPostRequestParams {
-    actifioRdsNewRecoveryPlan: object;
+    actifioRdsAddRecoveryPlanDto: ActifioRdsAddRecoveryPlanDto;
 }
 
 
@@ -141,53 +147,6 @@ export class V1ActifioRdsRecoveryPlansService {
         }
 
         return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Execute one Recovery Plan
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1ActifioRdsRecoveryPlansExecuteIdPost(requestParameters: V1ActifioRdsRecoveryPlansExecuteIdPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1ActifioRdsRecoveryPlansExecuteIdPost(requestParameters: V1ActifioRdsRecoveryPlansExecuteIdPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1ActifioRdsRecoveryPlansExecuteIdPost(requestParameters: V1ActifioRdsRecoveryPlansExecuteIdPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
-    public v1ActifioRdsRecoveryPlansExecuteIdPost(requestParameters: V1ActifioRdsRecoveryPlansExecuteIdPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsRecoveryPlansExecuteIdPost.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<string>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans/execute/${encodeURIComponent(String(id))}`,
-            null,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -327,6 +286,53 @@ export class V1ActifioRdsRecoveryPlansService {
     }
 
     /**
+     * Execute one Recovery Plan
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioRdsRecoveryPlansIdExecutePost(requestParameters: V1ActifioRdsRecoveryPlansIdExecutePostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
+    public v1ActifioRdsRecoveryPlansIdExecutePost(requestParameters: V1ActifioRdsRecoveryPlansIdExecutePostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
+    public v1ActifioRdsRecoveryPlansIdExecutePost(requestParameters: V1ActifioRdsRecoveryPlansIdExecutePostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
+    public v1ActifioRdsRecoveryPlansIdExecutePost(requestParameters: V1ActifioRdsRecoveryPlansIdExecutePostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsRecoveryPlansIdExecutePost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<string>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans/${encodeURIComponent(String(id))}/execute`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get many ActifioRdsRecoveryPlanExecutionDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -419,6 +425,66 @@ export class V1ActifioRdsRecoveryPlansService {
     }
 
     /**
+     * Create one ActifioRdsAddRecoveryPlanDto
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioRdsRecoveryPlansIdPut(requestParameters: V1ActifioRdsRecoveryPlansIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<boolean>;
+    public v1ActifioRdsRecoveryPlansIdPut(requestParameters: V1ActifioRdsRecoveryPlansIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<boolean>>;
+    public v1ActifioRdsRecoveryPlansIdPut(requestParameters: V1ActifioRdsRecoveryPlansIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<boolean>>;
+    public v1ActifioRdsRecoveryPlansIdPut(requestParameters: V1ActifioRdsRecoveryPlansIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsRecoveryPlansIdPut.');
+        }
+        const actifioRdsAddRecoveryPlanDto = requestParameters.actifioRdsAddRecoveryPlanDto;
+        if (actifioRdsAddRecoveryPlanDto === null || actifioRdsAddRecoveryPlanDto === undefined) {
+            throw new Error('Required parameter actifioRdsAddRecoveryPlanDto was null or undefined when calling v1ActifioRdsRecoveryPlansIdPut.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.put<boolean>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans/${encodeURIComponent(String(id))}`,
+            actifioRdsAddRecoveryPlanDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get one ActifioRdsRecoveryPlanStateDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -465,18 +531,18 @@ export class V1ActifioRdsRecoveryPlansService {
     }
 
     /**
-     * Create one ActifioRdsNewRecoveryPlan
+     * Create one ActifioRdsAddRecoveryPlanDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<string>;
-    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<string>>;
-    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<string>>;
+    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<boolean>;
+    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<boolean>>;
+    public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<boolean>>;
     public v1ActifioRdsRecoveryPlansPost(requestParameters: V1ActifioRdsRecoveryPlansPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const actifioRdsNewRecoveryPlan = requestParameters.actifioRdsNewRecoveryPlan;
-        if (actifioRdsNewRecoveryPlan === null || actifioRdsNewRecoveryPlan === undefined) {
-            throw new Error('Required parameter actifioRdsNewRecoveryPlan was null or undefined when calling v1ActifioRdsRecoveryPlansPost.');
+        const actifioRdsAddRecoveryPlanDto = requestParameters.actifioRdsAddRecoveryPlanDto;
+        if (actifioRdsAddRecoveryPlanDto === null || actifioRdsAddRecoveryPlanDto === undefined) {
+            throw new Error('Required parameter actifioRdsAddRecoveryPlanDto was null or undefined when calling v1ActifioRdsRecoveryPlansPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -508,8 +574,8 @@ export class V1ActifioRdsRecoveryPlansService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<string>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans`,
-            actifioRdsNewRecoveryPlan,
+        return this.httpClient.post<boolean>(`${this.configuration.basePath}/v1/actifio/rds/recovery-plans`,
+            actifioRdsAddRecoveryPlanDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

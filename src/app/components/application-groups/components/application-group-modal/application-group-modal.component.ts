@@ -155,9 +155,7 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
   private reset(): void {
     this.applicationGroupId = null;
     this.submitted = false;
-
     this.form.reset();
-    this.form.enable();
     SubscriptionUtil.unsubscribe([this.applianceChanges, this.nameChanges, this.virtualManagementServerChanges]);
   }
 

@@ -58,6 +58,16 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.createSubscription]);
   }
 
+  public openRecoveryPlanModal(recoveryPlanId?: string): void {
+    this.ngx.setModalData({ id: recoveryPlanId }, 'recoveryPlanModal');
+
+    this.createSubscription = this.ngx.getModal('recoveryPlanModal').onCloseFinished.subscribe(() => {
+      this.loadRecoveryPlans();
+    });
+
+    this.ngx.getModal('recoveryPlanModal').open();
+  }
+
   public executeAllRecoveryPlans(): void {
     const executeAllFunction = () => {
       this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansExecutePost().subscribe(() => {
@@ -78,7 +88,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   public executeRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
     const { id, name } = recoveryPlan;
     const executeFunction = () => {
-      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansExecuteIdPost({ id }).subscribe(() => {
+      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdExecutePost({ id }).subscribe(() => {
         this.loadRecoveryPlans();
       });
     };

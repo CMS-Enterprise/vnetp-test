@@ -17,19 +17,26 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ActifioApplicationGroupDto } from '../model/models';
-import { ActifioRdsArmServerDto } from '../model/models';
+import { ActifioPortGroupDto } from '../model/models';
+import { ActifioRdsResourcePoolDto } from '../model/models';
+import { ActifioRdsVirtualManagementServerDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1ActifioRdsArmServersIdApplicationGroupsGetRequestParams {
-    id: string;
+export interface V1ActifioRdsVirtualManagementServersGetRequestParams {
+    armServerId: string;
     recoveryPlanId?: string;
+    applicationGroupIds?: Array<string>;
 }
 
-export interface V1ActifioRdsArmServersIdGetRequestParams {
+export interface V1ActifioRdsVirtualManagementServersIdResourcePoolsGetRequestParams {
+    id: string;
+}
+
+export interface V1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGetRequestParams {
+    resourcePoolId: string;
     id: string;
 }
 
@@ -37,7 +44,7 @@ export interface V1ActifioRdsArmServersIdGetRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1ActifioRdsArmServersService {
+export class V1ActifioRdsVirtualManagementServersService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -96,67 +103,35 @@ export class V1ActifioRdsArmServersService {
     }
 
     /**
-     * Get many ActifioRdsArmServerDto
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1ActifioRdsArmServersGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioRdsArmServerDto>>;
-    public v1ActifioRdsArmServersGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioRdsArmServerDto>>>;
-    public v1ActifioRdsArmServersGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioRdsArmServerDto>>>;
-    public v1ActifioRdsArmServersGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<Array<ActifioRdsArmServerDto>>(`${this.configuration.basePath}/v1/actifio/rds/arm-servers`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Get many ActifioApplicationGroupDto
+     * Get many ActifioRdsVirtualManagementServerDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioRdsArmServersIdApplicationGroupsGet(requestParameters: V1ActifioRdsArmServersIdApplicationGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioApplicationGroupDto>>;
-    public v1ActifioRdsArmServersIdApplicationGroupsGet(requestParameters: V1ActifioRdsArmServersIdApplicationGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationGroupDto>>>;
-    public v1ActifioRdsArmServersIdApplicationGroupsGet(requestParameters: V1ActifioRdsArmServersIdApplicationGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationGroupDto>>>;
-    public v1ActifioRdsArmServersIdApplicationGroupsGet(requestParameters: V1ActifioRdsArmServersIdApplicationGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsArmServersIdApplicationGroupsGet.');
+    public v1ActifioRdsVirtualManagementServersGet(requestParameters: V1ActifioRdsVirtualManagementServersGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioRdsVirtualManagementServerDto>>;
+    public v1ActifioRdsVirtualManagementServersGet(requestParameters: V1ActifioRdsVirtualManagementServersGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioRdsVirtualManagementServerDto>>>;
+    public v1ActifioRdsVirtualManagementServersGet(requestParameters: V1ActifioRdsVirtualManagementServersGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioRdsVirtualManagementServerDto>>>;
+    public v1ActifioRdsVirtualManagementServersGet(requestParameters: V1ActifioRdsVirtualManagementServersGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const armServerId = requestParameters.armServerId;
+        if (armServerId === null || armServerId === undefined) {
+            throw new Error('Required parameter armServerId was null or undefined when calling v1ActifioRdsVirtualManagementServersGet.');
         }
         const recoveryPlanId = requestParameters.recoveryPlanId;
+        const applicationGroupIds = requestParameters.applicationGroupIds;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (recoveryPlanId !== undefined && recoveryPlanId !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>recoveryPlanId, 'recoveryPlanId');
         }
+        if (applicationGroupIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                applicationGroupIds.join(COLLECTION_FORMATS['csv']), 'applicationGroupIds');
+        }
+        if (armServerId !== undefined && armServerId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>armServerId, 'armServerId');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -178,7 +153,7 @@ export class V1ActifioRdsArmServersService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ActifioApplicationGroupDto>>(`${this.configuration.basePath}/v1/actifio/rds/arm-servers/${encodeURIComponent(String(id))}/application-groups`,
+        return this.httpClient.get<Array<ActifioRdsVirtualManagementServerDto>>(`${this.configuration.basePath}/v1/actifio/rds/virtual-management-servers`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -191,18 +166,18 @@ export class V1ActifioRdsArmServersService {
     }
 
     /**
-     * Get one ActifioRdsArmServerDto
+     * Get many ActifioRdsResourcePoolDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ActifioRdsArmServerDto>;
-    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ActifioRdsArmServerDto>>;
-    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ActifioRdsArmServerDto>>;
-    public v1ActifioRdsArmServersIdGet(requestParameters: V1ActifioRdsArmServersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioRdsResourcePoolDto>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioRdsResourcePoolDto>>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioRdsResourcePoolDto>>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsArmServersIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsVirtualManagementServersIdResourcePoolsGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -225,7 +200,57 @@ export class V1ActifioRdsArmServersService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ActifioRdsArmServerDto>(`${this.configuration.basePath}/v1/actifio/rds/arm-servers/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<Array<ActifioRdsResourcePoolDto>>(`${this.configuration.basePath}/v1/actifio/rds/virtual-management-servers/${encodeURIComponent(String(id))}/resource-pools`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many ActifioPortGroupDto
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioPortGroupDto>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioPortGroupDto>>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioPortGroupDto>>>;
+    public v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet(requestParameters: V1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const resourcePoolId = requestParameters.resourcePoolId;
+        if (resourcePoolId === null || resourcePoolId === undefined) {
+            throw new Error('Required parameter resourcePoolId was null or undefined when calling v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet.');
+        }
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ActifioPortGroupDto>>(`${this.configuration.basePath}/v1/actifio/rds/virtual-management-servers/${encodeURIComponent(String(id))}/resource-pools/${encodeURIComponent(String(resourcePoolId))}/port-groups`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

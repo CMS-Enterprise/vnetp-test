@@ -9,12 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioApplicationGroupDto } from './actifioApplicationGroupDto';
 
 
 export interface ActifioRdsRecoveryPlanDto { 
     id: string;
     name: string;
     appliances: Array<string>;
+    applicationGroups: Array<ActifioApplicationGroupDto>;
     armServerId: string;
     armServerName: string;
     description: string;

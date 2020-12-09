@@ -1161,24 +1161,6 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/network-security/firewall-rule-groups/{id}/rules':
-    get:
-      summary: Get Firewall Rules w/ Object Relations for Firewall Rule Group.
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-          description: UUID.
-      responses:
-        '201':
-          description: ''
-      tags: &ref_4
-        - v1/network-security/firewall-rule-groups
-      produces:
-        - application/json
-      consumes:
-        - application/json
   /v1/network-security/firewall-rule-groups:
     get:
       summary: Retrieve many FirewallRuleGroup
@@ -1319,7 +1301,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: &ref_4
+        - v1/network-security/firewall-rule-groups
       produces:
         - application/json
       consumes:
@@ -12144,6 +12127,30 @@ paths:
         - application/json
       consumes:
         - application/json
+  '/v1/actifio/rds/arm-servers/{id}/application-groups':
+    get:
+      summary: Get many ActifioApplicationGroupDto
+      parameters:
+        - type: string
+          name: recoveryPlanId
+          required: false
+          in: query
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/actifio/rds/recovery-plans:
     get:
       summary: Get many ActifioRdsRecoveryPlanDto
@@ -12171,18 +12178,18 @@ paths:
       consumes:
         - application/json
     post:
-      summary: Create one ActifioRdsNewRecoveryPlan
+      summary: Create one ActifioRdsAddRecoveryPlanDto
       parameters:
-        - name: ActifioRdsNewRecoveryPlan
+        - name: ActifioRdsAddRecoveryPlanDto
           required: true
           in: body
           schema:
-            $ref: '#/definitions/ActifioRdsNewRecoveryPlan'
+            $ref: '#/definitions/ActifioRdsAddRecoveryPlanDto'
       responses:
         '200':
           description: ''
           schema:
-            type: string
+            type: boolean
       tags: *ref_50
       produces:
         - application/json
@@ -12216,6 +12223,28 @@ paths:
       responses:
         '200':
           description: ''
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Create one ActifioRdsAddRecoveryPlanDto
+      parameters:
+        - name: ActifioRdsAddRecoveryPlanDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioRdsAddRecoveryPlanDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: boolean
       tags: *ref_50
       produces:
         - application/json
@@ -12259,7 +12288,7 @@ paths:
         - application/json
       consumes:
         - application/json
-  '/v1/actifio/rds/recovery-plans/execute/{id}':
+  '/v1/actifio/rds/recovery-plans/{id}/execute':
     post:
       summary: Execute one Recovery Plan
       parameters:
@@ -12292,6 +12321,82 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/actifio/rds/virtual-management-servers:
+    get:
+      summary: Get many ActifioRdsVirtualManagementServerDto
+      parameters:
+        - type: string
+          name: recoveryPlanId
+          required: false
+          in: query
+        - type: array
+          name: applicationGroupIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+        - type: string
+          name: armServerId
+          required: true
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsVirtualManagementServerDto'
+      tags: &ref_51
+        - v1/actifio/rds/virtual-management-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/virtual-management-servers/{id}/resource-pools':
+    get:
+      summary: Get many ActifioRdsResourcePoolDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsResourcePoolDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/virtual-management-servers/{id}/resource-pools/{resourcePoolId}/port-groups':
+    get:
+      summary: Get many ActifioPortGroupDto
+      parameters:
+        - type: string
+          name: resourcePoolId
+          required: true
+          in: path
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioPortGroupDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/actifio/rdc/application-groups:
     get:
       summary: Get many ActifioApplicationGroupDto
@@ -12307,7 +12412,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: &ref_51
+      tags: &ref_52
         - v1/actifio/rdc/application-groups
       produces:
         - application/json
@@ -12326,7 +12431,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12344,7 +12449,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12366,7 +12471,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12381,7 +12486,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12399,7 +12504,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdcEditApplicationGroupDto'
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12414,7 +12519,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplianceDto'
-      tags: &ref_52
+      tags: &ref_53
         - v1/actifio/rdc/appliances
       produces:
         - application/json
@@ -12435,7 +12540,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioVirtualManagementServerDto'
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -13465,17 +13570,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_53
+        enum: &ref_54
           - In
           - Out
       action:
         type: string
-        enum: &ref_54
+        enum: &ref_55
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_55
+        enum: &ref_56
           - IP
           - ICMP
           - TCP
@@ -13489,19 +13594,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_56
+        enum: &ref_57
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_57
+        enum: &ref_58
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_58
+        enum: &ref_59
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -13663,7 +13768,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_63
+        enum: &ref_64
           - IpAddress
           - Fqdn
       ipAddress:
@@ -13790,7 +13895,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_61
+        enum: &ref_62
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -13819,7 +13924,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_62
+          enum: &ref_63
             - UDP
             - TCP
             - HTTP
@@ -14016,13 +14121,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_59
+        enum: &ref_60
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_60
+        enum: &ref_61
           - Standard
       servicePort:
         type: number
@@ -14545,13 +14650,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_53
+        enum: *ref_54
       action:
         type: string
-        enum: *ref_54
+        enum: *ref_55
       protocol:
         type: string
-        enum: *ref_55
+        enum: *ref_56
       logging:
         type: boolean
       enabled:
@@ -14561,13 +14666,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_56
+        enum: *ref_57
       destinationAddressType:
         type: string
-        enum: *ref_57
+        enum: *ref_58
       serviceType:
         type: string
-        enum: *ref_58
+        enum: *ref_59
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -14987,10 +15092,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_59
+        enum: *ref_60
       type:
         type: string
-        enum: *ref_60
+        enum: *ref_61
       servicePort:
         type: number
         minimum: 1
@@ -15106,7 +15211,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_61
+        enum: *ref_62
       nodes:
         type: array
         items:
@@ -15119,7 +15224,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_62
+          enum: *ref_63
       tierId:
         type: string
       vrfName:
@@ -15196,7 +15301,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_63
+        enum: *ref_64
       ipAddress:
         type: string
       fqdn:
@@ -15717,6 +15822,74 @@ definitions:
       - id
       - hostOrIp
       - description
+  ActifioSequencePortGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioVMMemberDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioSequenceOrderDto:
+    type: object
+    properties:
+      delay:
+        type: number
+      memberOrderIndex:
+        type: number
+      sequencePortGroup:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequencePortGroupDto'
+      vmMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - delay
+      - memberOrderIndex
+      - sequencePortGroup
+      - vmMembers
+  ActifioApplicationGroupDto:
+    type: object
+    properties:
+      armServerId:
+        type: string
+      cdsId:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      recoveryPlanId:
+        type: string
+      serverId:
+        type: string
+      sequenceOrders:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      startupSequence:
+        type: number
+    required:
+      - cdsId
+      - name
+      - serverId
+      - sequenceOrders
   ActifioRdsRecoveryPlanDto:
     type: object
     properties:
@@ -15728,6 +15901,10 @@ definitions:
         type: array
         items:
           type: string
+      applicationGroups:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioApplicationGroupDto'
       armServerId:
         type: string
       armServerName:
@@ -15748,6 +15925,7 @@ definitions:
       - id
       - name
       - appliances
+      - applicationGroups
       - armServerId
       - armServerName
       - description
@@ -15796,73 +15974,63 @@ definitions:
       - isTest
       - startDateTime
       - status
-  ActifioRdsNewRecoveryPlan:
-    type: object
-    properties: {}
-  ActifioSequencePortGroupDto:
+  ActifioRdsAddRecoveryPlanDto:
     type: object
     properties:
-      id:
-        type: string
-      name:
-        type: string
-    required:
-      - id
-      - name
-  ActifioVMMemberDto:
-    type: object
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-    required:
-      - id
-      - name
-  ActifioSequenceOrderDto:
-    type: object
-    properties:
-      delay:
-        type: number
-      memberOrderIndex:
-        type: number
-      sequencePortGroup:
+      applicationGroupIds:
         type: array
         items:
-          $ref: '#/definitions/ActifioSequencePortGroupDto'
-      vmMembers:
-        type: array
-        items:
-          $ref: '#/definitions/ActifioVMMemberDto'
-    required:
-      - delay
-      - memberOrderIndex
-      - sequencePortGroup
-      - vmMembers
-  ActifioApplicationGroupDto:
-    type: object
-    properties:
-      description:
+          type: string
+      armServerId:
         type: string
-      id:
+      defaultResourcePoolId:
+        type: string
+      defaultPortGroupUniqueName:
         type: string
       name:
         type: string
       serverId:
         type: string
-      sequenceOrders:
-        type: array
-        items:
-          $ref: '#/definitions/ActifioSequenceOrderDto'
-      startupSequence:
-        type: number
-      cdsId:
-        type: string
     required:
+      - applicationGroupIds
+      - armServerId
+      - defaultResourcePoolId
+      - defaultPortGroupUniqueName
       - name
       - serverId
-      - sequenceOrders
-      - cdsId
+  ActifioRdsVirtualManagementServerDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioRdsResourcePoolDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioPortGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uniqueName:
+        type: string
+    required:
+      - id
+      - name
+      - uniqueName
   ActifioRdcEditApplicationGroupDto:
     type: object
     properties:

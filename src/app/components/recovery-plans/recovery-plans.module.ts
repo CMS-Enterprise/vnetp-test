@@ -8,7 +8,8 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { RecoveryPlanListComponent } from './components/recovery-plan-list.component';
+import { RecoveryPlanListComponent } from './components/recovery-plan-list/recovery-plan-list.component';
+import { RecoveryPlanModalComponent } from './components/recovery-plan-modal/recovery-plan-modal.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,6 @@ const routes: Routes = [
     SharedModule,
     TableModule,
   ],
-  declarations: [RecoveryPlanListComponent],
+  declarations: [RecoveryPlanListComponent, RecoveryPlanModalComponent],
 })
 export class RecoveryPlanModule {}
