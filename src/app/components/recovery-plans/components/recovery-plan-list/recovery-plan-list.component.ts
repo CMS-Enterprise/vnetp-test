@@ -23,6 +23,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
 
   public isLoading = false;
   public recoveryPlans: RecoveryPlanView[] = [];
+  public recoveryPlanDtos: ActifioRdsRecoveryPlanDto[] = [];
 
   public config: TableConfig<RecoveryPlanView> = {
     description: 'List of Recovery Plans',
@@ -59,7 +60,8 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   }
 
   public openRecoveryPlanModal(recoveryPlanId?: string): void {
-    this.ngx.setModalData({ id: recoveryPlanId }, 'recoveryPlanModal');
+    const recPlanMatch = this.recoveryPlanDtos.find(recPlan => recPlan.id === recoveryPlanId);
+    this.ngx.setModalData({ id: recoveryPlanId, recPlanMatch }, 'recoveryPlanModal');
 
     this.createSubscription = this.ngx.getModal('recoveryPlanModal').onCloseFinished.subscribe(() => {
       this.loadRecoveryPlans();
@@ -125,6 +127,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
     this.recoveryPlans = [];
     this.isLoading = true;
     this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansGet().subscribe(recoveryPlans => {
+      this.recoveryPlanDtos = recoveryPlans;
       this.recoveryPlans = recoveryPlans.map(this.mapRecoveryPlan);
       this.isLoading = false;
     });

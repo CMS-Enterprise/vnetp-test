@@ -30,7 +30,7 @@
       <div class="form-row">
         <!-- Virtual Management Server -->
         <div class="form-group col-md-3">
-          <label for="virtual-management-server">Virtual Management Servers</label>
+          <label for="virtual-management-server">Virtual Management Server</label>
           <ng-select id="virtual-management-server" [items]="virtualManagementServers" [class.is-invalid]="submitted && f.virtualManagementServerId.errors" bindLabel="name" [closeOnSelect]="true" bindValue="id"
             [loading]="isLoadingVirtualManagementServers" formControlName="virtualManagementServerId">
           </ng-select>

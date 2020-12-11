@@ -251,18 +251,19 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
         this.sequenceOrders = sequenceOrders.map(so => new SequenceOrder(so.memberOrderIndex, +so.delay, so.vmMembers));
         this.selectedSequenceOrderId = this.sequenceOrders[this.sequenceOrders.length - 1].id;
 
-        const setAndDisable = (prop: string, value: any) => {
+        const setField = (prop: string, value: any, disable = false) => {
           const field = this.form.controls[prop];
           field.setValue(value);
-          field.disable();
           field.updateValueAndValidity();
+          if (disable) {
+            field.disable();
+          }
         };
 
-        setAndDisable('name', name);
-        setAndDisable('applianceId', cdsId);
-        setAndDisable('virtualManagementServerId', +serverId);
-
-        this.form.controls.description.setValue(description);
+        setField('name', name, true);
+        setField('applianceId', cdsId, true);
+        setField('virtualManagementServerId', +serverId, true);
+        setField('description', description, false);
       });
   }
 
@@ -274,7 +275,7 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     return {
       delay: sequenceOrder.delay,
       memberOrderIndex: sequenceOrder.order,
-      sequencePortGroup: [],
+      sequencePortGroups: [],
       vmMembers: sequenceOrder.virtualMachines,
     };
   }

@@ -15849,7 +15849,7 @@ definitions:
         type: number
       memberOrderIndex:
         type: number
-      sequencePortGroup:
+      sequencePortGroups:
         type: array
         items:
           $ref: '#/definitions/ActifioSequencePortGroupDto'
@@ -15860,8 +15860,6 @@ definitions:
     required:
       - delay
       - memberOrderIndex
-      - sequencePortGroup
-      - vmMembers
   ActifioApplicationGroupDto:
     type: object
     properties:
@@ -15909,7 +15907,9 @@ definitions:
         type: string
       armServerName:
         type: string
-      description:
+      defaultPortGroupUniqueName:
+        type: string
+      defaultResourcePoolId:
         type: string
       isScheduled:
         type: boolean
@@ -15918,6 +15918,8 @@ definitions:
       lastRunDate:
         type: string
       scheduleId:
+        type: string
+      serverId:
         type: string
       state:
         type: string
@@ -15928,10 +15930,12 @@ definitions:
       - applicationGroups
       - armServerId
       - armServerName
-      - description
+      - defaultPortGroupUniqueName
+      - defaultResourcePoolId
       - isScheduled
       - lastModifiedDate
       - lastRunDate
+      - serverId
       - state
   ActifioRdsRecoveryPlanStateDto:
     type: object

@@ -25,6 +25,12 @@
   <section class="table__actions">
     <!-- Execute -->
     <app-icon-button
+      icon="edit"
+      label="Edit Recovery Plan"
+      (handleClick)="openRecoveryPlanModal(recoveryPlan.id)"
+    ></app-icon-button>
+    <!-- Execute -->
+    <app-icon-button
       icon="execute"
       label="Execute Recovery Plan"
       (handleClick)="executeRecoveryPlan(recoveryPlan)"

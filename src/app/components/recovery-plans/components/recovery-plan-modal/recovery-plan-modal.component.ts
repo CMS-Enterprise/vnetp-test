@@ -9,8 +9,9 @@ import {
   ActifioRdsAddRecoveryPlanDto,
   ActifioPortGroupDto,
   V1ActifioRdsRecoveryPlansService,
+  ActifioRdsRecoveryPlanDto,
 } from 'api_client';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription, of, forkJoin } from 'rxjs';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -38,7 +39,7 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   private nameChanges: Subscription;
-  private armServerChangesForApplicationGroups: Subscription;
+  private armServerChanges: Subscription;
   private virtualManagementServerChanges: Subscription;
   private resourcePoolChanges: Subscription;
 
@@ -99,12 +100,7 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
     this.form.controls.virtualManagementServerId.disable();
     this.submitted = false;
     this.form.reset();
-    SubscriptionUtil.unsubscribe([
-      this.nameChanges,
-      this.armServerChangesForApplicationGroups,
-      this.virtualManagementServerChanges,
-      this.resourcePoolChanges,
-    ]);
+    SubscriptionUtil.unsubscribe([this.nameChanges, this.armServerChanges, this.virtualManagementServerChanges, this.resourcePoolChanges]);
   }
 
   private loadArmServers(): void {
@@ -119,22 +115,27 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
   }
 
   private loadVirtualManagementServers(armServerId: string, applicationGroupIds?: string[]): void {
-    this.form.controls.virtualManagementServerId.setValue(null);
-    this.rdsVirtualManagementService.v1ActifioRdsVirtualManagementServersGet({ armServerId, applicationGroupIds }).subscribe(armServers => {
-      this.virtualManagementServers = armServers;
-      this.isLoadingVirtualManagementServers = false;
-    });
+    this.rdsVirtualManagementService
+      .v1ActifioRdsVirtualManagementServersGet({ armServerId, applicationGroupIds })
+      .subscribe(virtualManagementServers => {
+        this.virtualManagementServers = virtualManagementServers;
+        this.isLoadingVirtualManagementServers = false;
+      });
   }
 
   private loadResourcePools(virtualManagementServerId: string): Observable<ActifioRdsResourcePoolDto[]> {
     return this.rdsVirtualManagementService.v1ActifioRdsVirtualManagementServersIdResourcePoolsGet({ id: virtualManagementServerId });
   }
 
-  private loadPortGroups(virtualManagementServerId: string, resourcePoolId: string): Observable<ActifioRdsResourcePoolDto[]> {
+  private loadPortGroups(virtualManagementServerId: string, resourcePoolId: string): Observable<ActifioPortGroupDto[]> {
     return this.rdsVirtualManagementService.v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet({
       id: virtualManagementServerId,
       resourcePoolId,
     });
+  }
+
+  private editRecoveryPlan(id: string, dto: ActifioRdsAddRecoveryPlanDto): void {
+    this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdPut({ id, actifioRdsAddRecoveryPlanDto: dto }).subscribe(() => this.onClose());
   }
 
   private createRecoveryPlan(dto: ActifioRdsAddRecoveryPlanDto): void {
@@ -148,7 +149,7 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private subscribeToArmServerChangesForApplicationGroups(): Subscription {
+  private subscribeToArmServerChanges(): Subscription {
     return this.form.controls.armServerId.valueChanges
       .pipe(
         tap(() => (this.isLoadingApplicationGroups = true)),
@@ -218,13 +219,45 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
 
     if (isNewRecoveryPlan) {
       this.nameChanges = this.subscribeToNameChanges();
-      this.armServerChangesForApplicationGroups = this.subscribeToArmServerChangesForApplicationGroups();
+      this.armServerChanges = this.subscribeToArmServerChanges();
       this.virtualManagementServerChanges = this.subscribeToVirtualManagementServerChanges();
       this.resourcePoolChanges = this.subscribeToResourcePoolChanges();
     } else {
-      return null;
+      this.loadRecoveryPlanById(recoveryPlan.recPlanMatch);
     }
     this.modalTitle = isNewRecoveryPlan ? 'Create Recovery Plan' : 'Edit Recovery Plan';
+  }
+
+  private loadRecoveryPlanById(recoveryPlan: ActifioRdsRecoveryPlanDto): void {
+    const { armServerId, applicationGroups, defaultResourcePoolId, defaultPortGroupUniqueName, name, serverId } = recoveryPlan;
+    this.selectedApplicationGroups = applicationGroups;
+    const selectedApplicationGroupIds = this.selectedApplicationGroups.map(appGroup => appGroup.id);
+
+    const availableApplicationGroups$ = this.loadAvailableApplicationGroups(armServerId);
+    const resourcePools$ = this.loadResourcePools(serverId);
+    const portGroups$ = this.loadPortGroups(serverId, defaultResourcePoolId);
+
+    forkJoin([availableApplicationGroups$, resourcePools$, portGroups$]).subscribe(resp => {
+      const [availableApplicationGroups, resourcePools, portGroups] = resp;
+      this.resourcePools = resourcePools;
+      this.portGroups = portGroups;
+      this.availableApplicationGroups = availableApplicationGroups;
+      const setField = (prop: string, value: any, disable = false) => {
+        const field = this.form.controls[prop];
+        field.setValue(value);
+        field.updateValueAndValidity();
+        if (disable) {
+          field.disable();
+        }
+      };
+
+      setField('armServerId', armServerId, true);
+      setField('resourcePoolId', defaultResourcePoolId, true);
+      setField('portGroupName', defaultPortGroupUniqueName, true);
+      setField('name', name);
+      setField('virtualManagementServerId', +serverId, true);
+      this.loadVirtualManagementServers(armServerId, selectedApplicationGroupIds);
+    });
   }
 
   public addApplicationGroup(applicationGroup: ActifioApplicationGroupDto): void {
@@ -235,8 +268,8 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
     const fn: keyof AbstractControl = this.selectedApplicationGroups.length === 0 ? 'disable' : 'enable';
     this.form.controls.virtualManagementServerId[fn]();
 
-    const { armServerId } = this.form.value;
-    return this.loadVirtualManagementServers(armServerId, selectedApplicationGroupIds);
+    const armServerId = this.form.controls.armServerId.value;
+    this.loadVirtualManagementServers(armServerId, selectedApplicationGroupIds);
   }
 
   public removeApplicationGroup(applicationGroup: ActifioApplicationGroupDto): void {
@@ -250,8 +283,8 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
       this.form.controls.virtualManagementServerId[fn]();
     } else {
       const selectedApplicationGroupIds = this.selectedApplicationGroups.map(appGroup => appGroup.id);
-      const { armServerId } = this.form.value;
-      return this.loadVirtualManagementServers(armServerId, selectedApplicationGroupIds);
+      const armServerId = this.form.controls.armServerId.value;
+      this.loadVirtualManagementServers(armServerId, selectedApplicationGroupIds);
     }
   }
 
@@ -271,8 +304,11 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
       defaultResourcePoolId: this.f.resourcePoolId.value,
       defaultPortGroupUniqueName: this.f.portGroupName.value,
     };
+
     if (isNewRecoveryPlan) {
       this.createRecoveryPlan(dto);
+    } else {
+      this.editRecoveryPlan(this.recoveryPlanId, dto);
     }
   }
 }

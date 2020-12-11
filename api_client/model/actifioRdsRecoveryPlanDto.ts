@@ -19,11 +19,13 @@ export interface ActifioRdsRecoveryPlanDto {
     applicationGroups: Array<ActifioApplicationGroupDto>;
     armServerId: string;
     armServerName: string;
-    description: string;
+    defaultPortGroupUniqueName: string;
+    defaultResourcePoolId: string;
     isScheduled: boolean;
     lastModifiedDate: string;
     lastRunDate: string;
     scheduleId?: string;
+    serverId: string;
     state: string;
 }
 
