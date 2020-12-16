@@ -27,8 +27,8 @@ export interface V1ActifioGmJobsGetRequestParams {
     status: string;
     jobClassCode: number;
     applicationName: string;
-    limit: number;
     offset: number;
+    limit: number;
 }
 
 
@@ -115,13 +115,13 @@ export class V1ActifioGmJobsService {
         if (applicationName === null || applicationName === undefined) {
             throw new Error('Required parameter applicationName was null or undefined when calling v1ActifioGmJobsGet.');
         }
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmJobsGet.');
-        }
         const offset = requestParameters.offset;
         if (offset === null || offset === undefined) {
             throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmJobsGet.');
+        }
+        const limit = requestParameters.limit;
+        if (limit === null || limit === undefined) {
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmJobsGet.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -137,13 +137,13 @@ export class V1ActifioGmJobsService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>applicationName, 'applicationName');
         }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;

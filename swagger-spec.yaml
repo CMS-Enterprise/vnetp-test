@@ -11330,11 +11330,11 @@ paths:
           required: false
           in: query
         - type: number
-          name: limit
+          name: offset
           required: true
           in: query
         - type: number
-          name: offset
+          name: limit
           required: true
           in: query
       responses:
@@ -11512,11 +11512,11 @@ paths:
           required: true
           in: query
         - type: number
-          name: limit
+          name: offset
           required: true
           in: query
         - type: number
-          name: offset
+          name: limit
           required: true
           in: query
       responses:
@@ -11692,11 +11692,11 @@ paths:
       summary: Get many ActifioOrganizationDto
       parameters:
         - type: number
-          name: limit
+          name: offset
           required: true
           in: query
         - type: number
-          name: offset
+          name: limit
           required: true
           in: query
       responses:
@@ -11789,14 +11789,6 @@ paths:
     get:
       summary: Delete one ActifioOrganization
       parameters:
-        - type: number
-          name: offset
-          required: false
-          in: query
-        - type: number
-          name: limit
-          required: false
-          in: query
         - type: array
           name: clusterIds
           required: false
@@ -11804,6 +11796,14 @@ paths:
           items:
             type: string
           collectionFormat: csv
+        - type: number
+          name: offset
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
       responses:
         '200':
           description: ''
@@ -11838,6 +11838,15 @@ paths:
   /v1/actifio/gm/slas:
     get:
       summary: Get many ActifioSlaDto
+      parameters:
+        - type: number
+          name: offset
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
       responses:
         '200':
           description: ''
@@ -11929,6 +11938,15 @@ paths:
   /v1/actifio/gm/templates:
     get:
       summary: Get many ActifioTemplateDto
+      parameters:
+        - type: number
+          name: offset
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
       responses:
         '200':
           description: ''
@@ -12019,14 +12037,6 @@ paths:
     get:
       summary: Get many ActifioPolicyDto
       parameters:
-        - type: number
-          name: offset
-          required: true
-          in: query
-        - type: number
-          name: limit
-          required: true
-          in: query
         - type: boolean
           name: isSnapshot
           required: true
@@ -12035,6 +12045,14 @@ paths:
           name: id
           required: true
           in: path
+        - type: number
+          name: offset
+          required: true
+          in: query
+        - type: number
+          name: limit
+          required: true
+          in: query
       responses:
         '200':
           description: ''

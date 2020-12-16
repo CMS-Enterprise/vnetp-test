@@ -69,7 +69,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public loadTemplates(): void {
     this.isLoading = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({ limit: 100, offset: 0 }).subscribe(data => {
       this.templates = data.map(d => {
         return {
           ...d,

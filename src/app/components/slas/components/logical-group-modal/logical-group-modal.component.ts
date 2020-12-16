@@ -172,7 +172,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(templates => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({ limit: 100, offset: 0 }).subscribe(templates => {
       this.templates = templates;
       this.isLoadingTemplates = false;
     });

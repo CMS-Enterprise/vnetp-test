@@ -165,7 +165,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({ limit: 100, offset: 0 }).subscribe(data => {
       this.templates = data;
       this.isLoadingTemplates = false;
     });

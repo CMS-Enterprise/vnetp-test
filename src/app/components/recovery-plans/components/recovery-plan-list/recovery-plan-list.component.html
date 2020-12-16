@@ -24,24 +24,12 @@
 <ng-template #actions let-recoveryPlan="datum">
   <section class="table__actions">
     <!-- Execute -->
-    <app-icon-button
-      icon="edit"
-      label="Edit Recovery Plan"
-      (handleClick)="openRecoveryPlanModal(recoveryPlan.id)"
-    ></app-icon-button>
+    <app-icon-button icon="edit" label="Edit Recovery Plan" (handleClick)="openRecoveryPlanModal(recoveryPlan.id)"></app-icon-button>
     <!-- Execute -->
-    <app-icon-button
-      icon="execute"
-      label="Execute Recovery Plan"
-      (handleClick)="executeRecoveryPlan(recoveryPlan)"
-    ></app-icon-button>
+    <app-icon-button icon="execute" label="Execute Recovery Plan" (handleClick)="executeRecoveryPlan(recoveryPlan)"></app-icon-button>
 
     <!-- Delete -->
-    <app-icon-button
-      icon="delete"
-      label="Delete Recovery Plan"
-      (handleClick)="deleteRecoveryPlan(recoveryPlan)"
-    ></app-icon-button>
+    <app-icon-button icon="delete" label="Delete Recovery Plan" (handleClick)="deleteRecoveryPlan(recoveryPlan)"></app-icon-button>
   </section>
 </ng-template>
 

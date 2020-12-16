@@ -1,4 +1,11 @@
-<ngx-smart-modal #recoveryPlanModal identifier="recoveryPlanModal" [dismissable]="false" customClass="xlarge-modal" (onOpen)="loadRecoveryPlan()" (onClose)="onClose()">
+<ngx-smart-modal
+  #recoveryPlanModal
+  identifier="recoveryPlanModal"
+  [dismissable]="false"
+  customClass="xlarge-modal"
+  (onOpen)="loadRecoveryPlan()"
+  (onClose)="onClose()"
+>
   <header class="modal-header">
     <h4 class="modal-title">{{ modalTitle }}</h4>
   </header>
@@ -9,7 +16,14 @@
         <!-- Name -->
         <div class="form-group col-md-5">
           <label for="name">Name</label>
-          <input type="text" id="name" formControlName="name" class="form-control" aria-label="Name" [class.is-invalid]="submitted && f.name.errors" />
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+            aria-label="Name"
+            [class.is-invalid]="submitted && f.name.errors"
+          />
           <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
             <div *ngIf="f.name.errors.required">Name is required</div>
           </div>
@@ -18,8 +32,16 @@
         <!-- Arm Server -->
         <div class="form-group col-md-5">
           <label for="arm-server">RD Collector</label>
-          <ng-select id="arm-server" [items]="armServers" [class.is-invalid]="submitted && f.armServerId.errors" bindLabel="hostOrIp" [closeOnSelect]="true" bindValue="id"
-            [loading]="isLoadingArmServers" formControlName="armServerId">
+          <ng-select
+            id="arm-server"
+            [items]="armServers"
+            [class.is-invalid]="submitted && f.armServerId.errors"
+            bindLabel="hostOrIp"
+            [closeOnSelect]="true"
+            bindValue="id"
+            [loading]="isLoadingArmServers"
+            formControlName="armServerId"
+          >
           </ng-select>
           <div *ngIf="submitted && f.armServerId.errors" class="invalid-feedback">
             <div *ngIf="f.armServerId.errors.required">RD Collector is required</div>
@@ -31,8 +53,16 @@
         <!-- Virtual Management Server -->
         <div class="form-group col-md-3">
           <label for="virtual-management-server">Virtual Management Server</label>
-          <ng-select id="virtual-management-server" [items]="virtualManagementServers" [class.is-invalid]="submitted && f.virtualManagementServerId.errors" bindLabel="name" [closeOnSelect]="true" bindValue="id"
-            [loading]="isLoadingVirtualManagementServers" formControlName="virtualManagementServerId">
+          <ng-select
+            id="virtual-management-server"
+            [items]="virtualManagementServers"
+            [class.is-invalid]="submitted && f.virtualManagementServerId.errors"
+            bindLabel="name"
+            [closeOnSelect]="true"
+            bindValue="id"
+            [loading]="isLoadingVirtualManagementServers"
+            formControlName="virtualManagementServerId"
+          >
           </ng-select>
           <div *ngIf="submitted && f.virtualManagementServerId.errors" class="invalid-feedback">
             <div *ngIf="f.virtualManagementServerId.errors.required">Virtual Management Server is required</div>
@@ -42,8 +72,16 @@
         <!-- Resource Pool -->
         <div class="form-group col-md-3">
           <label for="resource-pool">Default Resource Pool</label>
-          <ng-select id="resource-pool" [items]="resourcePools" [class.is-invalid]="submitted && f.resourcePoolId.errors" bindLabel="name" [closeOnSelect]="true" bindValue="id"
-            [loading]="isLoadingResourcePools" formControlName="resourcePoolId">
+          <ng-select
+            id="resource-pool"
+            [items]="resourcePools"
+            [class.is-invalid]="submitted && f.resourcePoolId.errors"
+            bindLabel="name"
+            [closeOnSelect]="true"
+            bindValue="id"
+            [loading]="isLoadingResourcePools"
+            formControlName="resourcePoolId"
+          >
           </ng-select>
           <div *ngIf="submitted && f.resourcePoolId.errors" class="invalid-feedback">
             <div *ngIf="f.resourcePoolId.errors.required">Default Resource Pool is required</div>
@@ -53,8 +91,16 @@
         <!-- Port Group -->
         <div class="form-group col-md-4">
           <label for="port-group">Default Port Group</label>
-          <ng-select id="port-group" [items]="portGroups" [class.is-invalid]="submitted && f.portGroupName.errors" bindLabel="name" [closeOnSelect]="true" bindValue="uniqueName"
-            [loading]="isLoadingPortGroups" formControlName="portGroupName">
+          <ng-select
+            id="port-group"
+            [items]="portGroups"
+            [class.is-invalid]="submitted && f.portGroupName.errors"
+            bindLabel="name"
+            [closeOnSelect]="true"
+            bindValue="uniqueName"
+            [loading]="isLoadingPortGroups"
+            formControlName="portGroupName"
+          >
           </ng-select>
           <div *ngIf="submitted && f.portGroupName.errors" class="invalid-feedback">
             <div *ngIf="f.portGroupName.errors.required">Default Port Group is required</div>
@@ -73,7 +119,11 @@
           <ul class="application-groups__list">
             <li class="application-groups__item" *ngFor="let applicationGroup of availableApplicationGroups">
               <span> {{ applicationGroup.name }}</span>
-              <app-icon-button icon="add" label="Add Application Group" (handleClick)="addApplicationGroup(applicationGroup)"></app-icon-button>
+              <app-icon-button
+                icon="add"
+                label="Add Application Group"
+                (handleClick)="addApplicationGroup(applicationGroup)"
+              ></app-icon-button>
             </li>
           </ul>
 
@@ -92,7 +142,11 @@
             <li class="application-groups__item" *ngFor="let applicationGroup of selectedApplicationGroups; let i = index">
               <span> {{ i + 1 }}</span>
               <span> {{ applicationGroup.name }}</span>
-              <app-icon-button icon="delete" label="Remove Application Group" (handleClick)="removeApplicationGroup(applicationGroup)"></app-icon-button>
+              <app-icon-button
+                icon="delete"
+                label="Remove Application Group"
+                (handleClick)="removeApplicationGroup(applicationGroup)"
+              ></app-icon-button>
             </li>
           </ul>
 
@@ -113,7 +167,6 @@
     </button>
   </footer>
 </ngx-smart-modal>
-
 
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

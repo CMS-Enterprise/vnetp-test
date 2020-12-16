@@ -24,8 +24,8 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmProfilesGetRequestParams {
-    offset?: number;
-    limit?: number;
+    offset: number;
+    limit: number;
     clusterIds?: Array<string>;
 }
 
@@ -106,10 +106,20 @@ export class V1ActifioGmProfilesService {
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
+        if (offset === null || offset === undefined) {
+            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmProfilesGet.');
+        }
         const limit = requestParameters.limit;
+        if (limit === null || limit === undefined) {
+            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmProfilesGet.');
+        }
         const clusterIds = requestParameters.clusterIds;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
+        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
@@ -117,10 +127,6 @@ export class V1ActifioGmProfilesService {
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
-        }
-        if (clusterIds) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
         }
 
         let headers = this.defaultHeaders;
