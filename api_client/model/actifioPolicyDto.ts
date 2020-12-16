@@ -15,7 +15,21 @@ export interface ActifioPolicyDto {
     id: string;
     name: string;
     endTime?: number;
-    isSnapshot: boolean;
+    operation: ActifioPolicyDtoOperation;
+    remoteRetention: number;
     startTime: number;
 }
+export enum ActifioPolicyDtoOperation {
+    Async = 'async',
+    Dedup = 'dedup',
+    DedupAsync = 'dedup_async',
+    Directdedup = 'directdedup',
+    Replicate = 'replicate',
+    Remotereplicate = 'remotereplicate',
+    StreamSnap = 'stream_snap',
+    Snap = 'snap',
+    Sync = 'sync'
+};
+
+
 

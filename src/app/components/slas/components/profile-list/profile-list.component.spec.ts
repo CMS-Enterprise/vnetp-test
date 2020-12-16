@@ -29,6 +29,7 @@ describe('ProfileListComponent', () => {
           localClusterName: setProp('localClusterName', index),
           lastModifiedDate: dates.modified,
           createdDate: dates.created,
+          sourceClusterId: setProp('sourceClusterId', index),
         };
       });
   };

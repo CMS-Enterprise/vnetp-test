@@ -142,7 +142,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleService
       .v1NetworkSecurityFirewallRulesGet({
         filter: `firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`,
-        perPage: this.perPage,
+        limit: this.perPage,
         page: this.currentFirewallRulePage,
       })
       .subscribe(data => {

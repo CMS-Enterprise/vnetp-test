@@ -111,7 +111,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
     );
   }
 
-  public deleteLogicalGroup(logicalGroup: ActifioLogicalGroupDto): void {
+  public deleteLogicalGroup(logicalGroup: LogicalGroupView): void {
     const { id, name } = logicalGroup;
     const dto = new YesNoModalDto(
       'Delete Logical Group',

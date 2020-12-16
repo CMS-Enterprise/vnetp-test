@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActifioPolicyDto, ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioAddTemplatePolicyDtoOperation, ActifioPolicyDto, ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -108,10 +108,11 @@ export class TemplateModalComponent implements OnInit {
           description,
           policies: [
             {
+              name: 'S-Daily',
               startTime: this.convertTimeToSeconds(startTime),
               endTime: this.convertTimeToSeconds(endTime),
               isWindowed: true,
-              isSnapshot: true,
+              operation: ActifioAddTemplatePolicyDtoOperation.Snap,
             },
           ],
         },

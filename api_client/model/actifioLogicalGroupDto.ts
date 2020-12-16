@@ -18,5 +18,6 @@ export interface ActifioLogicalGroupDto {
     applianceId?: string;
     description?: string;
     sla?: ActifioSlaDto;
+    sourceClusterId: string;
 }
 

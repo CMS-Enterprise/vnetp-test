@@ -20,6 +20,7 @@ describe('LogicalGroupListComponent', () => {
         return {
           id: `${index + 1}`,
           name: `LogicalGroup-${index + 1}`,
+          sourceClusterId: `sourceClusterId-${index + 1}`,
           sla: {
             id: `${index + 1}-1`,
             template: {
@@ -33,6 +34,7 @@ describe('LogicalGroupListComponent', () => {
               localClusterName: '',
               lastModifiedDate: '',
               createdDate: '',
+              sourceClusterId: `sourceClusterId-${index + 1}`,
             },
           },
         };

@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ActifioApplicationDto,
   ActifioDetailedLogicalGroupDto,
+  ActifioHostDto,
   ActifioLogicalGroupDto,
-  ActifioProfileDto,
+  ActifioPolicyDtoOperation,
   ActifioTemplateDto,
   V1ActifioGmLogicalGroupsService,
   V1ActifioGmProfilesService,
@@ -12,15 +13,25 @@ import {
   V1ActifioGmTemplatesService,
 } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import ValidatorUtil from 'src/app/utils/ValidatorUtil';
+
+export interface Profile {
+  id: string;
+  name: string;
+  type: 'Local' | 'Remote';
+  clusterName: string;
+  displayName: string;
+}
 
 @Component({
   selector: 'app-select-action',
   templateUrl: './select-action.component.html',
 })
 export class SelectActionComponent implements OnInit, OnDestroy {
+  @Input() vCenter: ActifioHostDto;
   @Input() virtualMachines: ActifioApplicationDto[] = [];
   @Output() actionComplete = new EventEmitter<void>();
 
@@ -39,8 +50,11 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   public templates: ActifioTemplateDto[] = [];
   public isLoadingTemplates = false;
 
-  public profiles: ActifioProfileDto[] = [];
+  public allProfiles: Profile[] = [];
+  public shownProfiles: Profile[] = [];
   public isLoadingProfiles = false;
+
+  private templateChanges: Subscription;
 
   constructor(
     private agmLogicalGroupService: V1ActifioGmLogicalGroupsService,
@@ -60,10 +74,13 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     this.loadProfiles();
     this.loadTemplates();
     this.initForm();
+
+    this.templateChanges = this.subscribeToTemplateChanges();
   }
 
   ngOnDestroy(): void {
     this.reset();
+    SubscriptionUtil.unsubscribe([this.templateChanges]);
   }
 
   public getConfirmText(): string {
@@ -97,17 +114,51 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   }
 
   private loadLogicalGroups(): void {
+    const sourceClusterIds = new Set(this.vCenter.sourceClusterIds);
+
     this.isLoadingLogicalGroups = true;
-    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(data => {
-      this.logicalGroups = data;
+    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(logicalGroups => {
+      this.logicalGroups = logicalGroups
+        .filter(l => sourceClusterIds.has(l.sourceClusterId))
+        .sort((lg1, lg2) => lg1.name.localeCompare(lg2.name));
       this.isLoadingLogicalGroups = false;
     });
   }
 
   private loadProfiles(): void {
+    const sourceClusterIds = new Set(this.vCenter.sourceClusterIds);
+
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(data => {
-      this.profiles = data;
+    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
+      this.allProfiles = profiles
+        .filter(p => sourceClusterIds.has(p.sourceClusterId))
+        .reduce((profiles, profile) => {
+          const { id, name, localClusterName, remoteClusterName } = profile;
+          const localProfile: Profile = {
+            id,
+            name,
+            displayName: `Local: ${localClusterName}`,
+            clusterName: localClusterName,
+            type: 'Local',
+          };
+          const remoteProfile: Profile = {
+            id,
+            name,
+            displayName: `Remote: ${localClusterName}`,
+            clusterName: remoteClusterName,
+            type: 'Remote',
+          };
+
+          if (remoteClusterName) {
+            return profiles.concat(localProfile, remoteProfile);
+          }
+          return profiles.concat(localProfile);
+        }, [])
+        .sort((p1, p2) => {
+          const getIdentifier = profile => profile.name + profile.displayName;
+          return getIdentifier(p1).localeCompare(getIdentifier(p2));
+        });
+      this.shownProfiles = [...this.allProfiles];
       this.isLoadingProfiles = false;
     });
   }
@@ -124,17 +175,19 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       actionType: [this.actions[0].type],
       templateId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
-      profileId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
+      profile: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'sla')],
       logicalGroupId: [null, ValidatorUtil.optionallyRequired(() => this.form.get('actionType').value === 'logical-group')],
     });
+
+    this.form.get('profile').disable();
   }
 
   private handleAction(): Observable<any> {
     const { actionType } = this.form.value;
 
     if (actionType === 'sla') {
-      const { profileId, templateId } = this.form.value;
-      return this.applySlas(templateId, profileId);
+      const { profile, templateId } = this.form.value;
+      return this.applySlas(templateId, profile);
     }
 
     if (actionType === 'logical-group') {
@@ -177,14 +230,14 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     );
   }
 
-  private applySlas(templateId: string, profileId: string): Observable<any> {
+  private applySlas(templateId: string, profile: Profile): Observable<any> {
     const createSla = (vm: ActifioApplicationDto) => {
       return this.agmSlaService.v1ActifioGmSlasPost({
         actifioCreateOrApplySlaDto: {
           applicationId: vm.id,
           applicationName: vm.name,
           apply: true,
-          slpId: profileId,
+          slpId: profile.id,
           sltId: templateId,
         },
       });
@@ -192,6 +245,28 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
     const slas = this.virtualMachines.map(vm => createSla(vm));
     return forkJoin(slas);
+  }
+
+  private subscribeToTemplateChanges(): Subscription {
+    const profile = this.form.get('profile');
+
+    return this.form.get('templateId').valueChanges.subscribe(templateId => {
+      if (!!templateId) {
+        profile.enable();
+
+        const template = this.templates.find(t => t.id === templateId);
+
+        const requiresRemoteProfile = template.policies.some(p => {
+          return p.remoteRetention > 0 || p.operation === ActifioPolicyDtoOperation.Replicate;
+        });
+
+        this.shownProfiles = requiresRemoteProfile ? this.allProfiles.filter(p => p.type === 'Remote') : this.allProfiles;
+      } else {
+        this.shownProfiles = this.allProfiles;
+        profile.disable();
+        profile.setValue(null);
+      }
+    });
   }
 
   private reset(): void {

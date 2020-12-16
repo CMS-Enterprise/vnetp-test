@@ -1,5 +1,5 @@
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioPolicyDtoOperation, V1ActifioGmTemplatesService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -87,7 +87,7 @@ describe('TemplateModalComponent', () => {
     component.form.controls.startTime.setValue('00:00');
     component.form.controls.endTime.setValue('10:00');
 
-    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const templateService = TestBed.inject(V1ActifioGmTemplatesService);
     const saveSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesPost');
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -99,7 +99,8 @@ describe('TemplateModalComponent', () => {
         description: 'Description',
         policies: [
           {
-            isSnapshot: true,
+            name: 'S-Daily',
+            operation: ActifioPolicyDtoOperation.Snap,
             isWindowed: true,
             startTime: 0,
             endTime: 10 * 60 * 60,
