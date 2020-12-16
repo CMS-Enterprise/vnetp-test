@@ -89,7 +89,7 @@ describe('VlanModalComponent', () => {
     const clickSaveButton = () => fixture.debugElement.query(By.css('.btn.btn-success')).nativeElement.click();
 
     it('should not create a vlan when the form is invalid', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService);
       const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
 
       component.ModalMode = ModalMode.Create;
@@ -105,7 +105,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should create a vlan when in create mode', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService);
       const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
 
       component.ModalMode = ModalMode.Create;
@@ -128,7 +128,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should edit an existing vlan when in edit mode', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService) as any;
       const updateVlanSpy = jest.spyOn(service, 'v1NetworkVlansIdPut');
 
       component.ModalMode = ModalMode.Edit;
@@ -167,7 +167,7 @@ describe('VlanModalComponent', () => {
     };
 
     it('should enable the name and vlan number when creating a new vlan', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       const dto = createDto();
       dto.Vlan = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -180,7 +180,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should disable the name and vlan number when editing an existing vlan', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       jest.spyOn(service, 'getModalData').mockImplementation(() => createDto());
 
       component.getData();

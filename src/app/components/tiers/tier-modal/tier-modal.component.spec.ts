@@ -95,7 +95,7 @@ describe('TierModalComponent', () => {
   });
 
   it('should not call to create a tier when the form is invalid', () => {
-    const service = TestBed.get(V1TiersService);
+    const service = TestBed.inject(V1TiersService);
     const createTierSpy = jest.spyOn(service, 'v1TiersPost');
 
     component.ModalMode = ModalMode.Create;
@@ -114,7 +114,7 @@ describe('TierModalComponent', () => {
   });
 
   it('should call to create a tier when in create mode', () => {
-    const service = TestBed.get(V1TiersService);
+    const service = TestBed.inject(V1TiersService) as any;
     const createTierSpy = jest.spyOn(service, 'v1TiersPost');
 
     component.ModalMode = ModalMode.Create;
@@ -142,7 +142,7 @@ describe('TierModalComponent', () => {
   });
 
   it('should call to edit an existing tier when in edit mode', () => {
-    const service = TestBed.get(V1TiersService);
+    const service = TestBed.inject(V1TiersService) as any;
     const updateTierSpy = jest.spyOn(service, 'v1TiersIdPut');
 
     component.ModalMode = ModalMode.Edit;
@@ -184,7 +184,7 @@ describe('TierModalComponent', () => {
     };
 
     it('should enable the name field when creating a new tier', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       const dto = createTierModalDto();
       dto.Tier = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -196,7 +196,7 @@ describe('TierModalComponent', () => {
     });
 
     it('should disable the name field when editing an existing tier', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
 
       component.getData();
@@ -205,9 +205,9 @@ describe('TierModalComponent', () => {
     });
 
     it('should load tier groups when opening the modal', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService) as any;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
-      const tierGroupsService = TestBed.get(V1TierGroupsService);
+      const tierGroupsService = TestBed.inject(V1TierGroupsService) as any;
       const loadTierGroupsSpy = jest.spyOn(tierGroupsService, 'v1TierGroupsGet').mockImplementation(() => of([] as TierGroup[]));
 
       component.getData();

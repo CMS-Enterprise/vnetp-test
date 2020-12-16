@@ -32,7 +32,7 @@ describe('YesNoModalComponent', () => {
     const clickYesButton = () => fixture.debugElement.query(By.css('.btn.btn-primary')).nativeElement.click();
 
     it('should set modal yes to "true" when clicked', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       const setModalSpy = jest.spyOn(service, 'setModalData');
 
       component.allowEmptyTier = false;
@@ -48,7 +48,7 @@ describe('YesNoModalComponent', () => {
     });
 
     it('should set all tier selected to true when clicked', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       const setModalSpy = jest.spyOn(service, 'setModalData');
 
       component.allowEmptyTier = true;
@@ -70,7 +70,7 @@ describe('YesNoModalComponent', () => {
     const clickNoButton = () => fixture.debugElement.query(By.css('.btn.btn-link')).nativeElement.click();
 
     it('should close and reset the modal when clicked', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
 
       const resetSpy = jest.spyOn(service, 'resetModalData');
       const closeSpy = jest.spyOn(service, 'close');
@@ -84,7 +84,7 @@ describe('YesNoModalComponent', () => {
 
   describe('getData', () => {
     it('should default the modal title to "Title"', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
 
       jest.spyOn(service, 'getModalData').mockImplementation(() => {
         return {};
@@ -101,7 +101,7 @@ describe('YesNoModalComponent', () => {
     });
 
     it('should update the modal title and body', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
 
       jest.spyOn(service, 'getModalData').mockImplementation(() => {
         return {

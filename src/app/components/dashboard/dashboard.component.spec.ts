@@ -58,10 +58,10 @@ describe('DashboardComponent', () => {
   });
 
   it('should load data on init', () => {
-    const datacenterService = TestBed.get(V1DatacentersService);
-    const tierService = TestBed.get(V1TiersService);
-    const vmwareService = TestBed.get(V1VmwareVirtualMachinesService);
-    const loadBalancerService = TestBed.get(V1LoadBalancerVirtualServersService);
+    const datacenterService = TestBed.inject(V1DatacentersService);
+    const tierService = TestBed.inject(V1TiersService);
+    const vmwareService = TestBed.inject(V1VmwareVirtualMachinesService);
+    const loadBalancerService = TestBed.inject(V1LoadBalancerVirtualServersService);
 
     component.ngOnInit();
 

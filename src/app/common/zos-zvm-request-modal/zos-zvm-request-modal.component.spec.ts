@@ -32,7 +32,7 @@ describe('ZosZvmRequestModalComponent', () => {
 
   describe('save', () => {
     it('should call to save a z/OS request', () => {
-      const service = TestBed.get(V1ConfigurationUploadService);
+      const service = TestBed.inject(V1ConfigurationUploadService);
 
       component.uploadType = 'request';
       component.configurationType = ConfigurationUploadType.OS;
@@ -50,7 +50,7 @@ describe('ZosZvmRequestModalComponent', () => {
     });
 
     it('should call to configure a z/OS request', () => {
-      const service = TestBed.get(V1ConfigurationUploadService);
+      const service = TestBed.inject(V1ConfigurationUploadService);
 
       component.uploadId = '1';
       component.uploadType = 'configuration';
@@ -67,7 +67,7 @@ describe('ZosZvmRequestModalComponent', () => {
     });
 
     it('should not call to create or update when the upload type is invalid', () => {
-      const service = TestBed.get(V1ConfigurationUploadService);
+      const service = TestBed.inject(V1ConfigurationUploadService);
 
       component.uploadId = '1';
       component.uploadType = 'something-else';
@@ -80,7 +80,7 @@ describe('ZosZvmRequestModalComponent', () => {
   });
 
   it('should call to close the modal when cancelling', () => {
-    const service = TestBed.get(NgxSmartModalService);
+    const service = TestBed.inject(NgxSmartModalService);
     const closeSpy = jest.spyOn(service, 'close');
 
     const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
@@ -90,7 +90,7 @@ describe('ZosZvmRequestModalComponent', () => {
   });
 
   it('should setup the configuration modal', () => {
-    const service = TestBed.get(NgxSmartModalService);
+    const service = TestBed.inject(NgxSmartModalService);
     jest.spyOn(service, 'getModalData').mockImplementation(() => {
       return {
         id: '1',

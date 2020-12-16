@@ -75,7 +75,7 @@ describe('LogicalGroupListComponent', () => {
   });
 
   it('should call to get logical groups on init', () => {
-    const logicalGroupService = TestBed.get(V1ActifioGmLogicalGroupsService);
+    const logicalGroupService = TestBed.inject(V1ActifioGmLogicalGroupsService);
     const spy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsGet');
 
     component.ngOnInit();
@@ -94,7 +94,7 @@ describe('LogicalGroupListComponent', () => {
   });
 
   it('should delete a single logical group', () => {
-    const logicalGroupService = TestBed.get(V1ActifioGmLogicalGroupsService);
+    const logicalGroupService = TestBed.inject(V1ActifioGmLogicalGroupsService);
     const deleteSpy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsIdDelete');
     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
       confirmFn();

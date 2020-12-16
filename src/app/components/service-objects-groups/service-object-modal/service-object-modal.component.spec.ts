@@ -78,7 +78,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should not create a service object when the form is invalid', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
     const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -96,7 +96,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should call to create a service object when in create mode', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
     const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -122,7 +122,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should call to edit an existing service object when in edit mode', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService) as any;
     const updateServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsIdPut');
 
     component.ModalMode = ModalMode.Edit;
@@ -164,7 +164,7 @@ describe('ServiceObjectModalComponent', () => {
     };
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       const dto = createServiceObjectModalDto();
       dto.ServiceObject = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -179,7 +179,7 @@ describe('ServiceObjectModalComponent', () => {
     });
 
     it('should disable the name and protocol when editing an existing service object', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createServiceObjectModalDto());
 
       component.getData();

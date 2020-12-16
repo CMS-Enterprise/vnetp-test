@@ -10,7 +10,7 @@ describe('AuthService', () => {
       imports: [RouterTestingModule],
       providers: [AuthService],
     });
-    service = TestBed.get(AuthService);
+    service = TestBed.inject(AuthService);
   });
   afterEach(() => {
     TestBed.resetTestingModule();
