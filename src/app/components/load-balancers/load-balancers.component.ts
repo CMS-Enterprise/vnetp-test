@@ -402,9 +402,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         return this.nodes;
       case 4:
         return this.irules;
-      case 5:
-        // TODO: Remove once all lists are moved to own modules/components
-        return [];
       case 6:
         return this.profiles;
       case 7:
@@ -806,6 +803,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         this.tiers = cd.tiers;
         this.virtualServers = [];
         this.pools = [];
+        this.healthMonitors = [];
         this.nodes = [];
         this.policies = [];
         this.profiles = [];
