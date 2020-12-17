@@ -304,80 +304,7 @@
 </div>
 
 <div *ngIf="navIndex === 5">
-  <section class="btn-toolbar" role="toolbar">
-    <!-- Create Health Monitor -->
-    <button type="button" class="btn btn-success" (click)="openHealthMonitorModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create Health Monitor</span>
-    </button>
-  </section>
-
-  <table class="table table-striped">
-    <caption>
-      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-      <span>Manage Health Monitors</span>
-    </caption>
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Type</th>
-        <th scope="col">Service Port</th>
-        <th scope="col">Interval</th>
-        <th scope="col">Timeout</th>
-        <th scope="col">State</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let healthMonitor of healthMonitors | paginate: { itemsPerPage: perPage, currentPage: currentHMPage }">
-        <td>
-          <span>{{ healthMonitor?.name }}</span>
-        </td>
-        <td>
-          <span>{{ healthMonitor?.type }}</span>
-        </td>
-        <td>
-          <span>{{ healthMonitor?.servicePort }}</span>
-        </td>
-        <td>
-          <span>{{ healthMonitor?.interval }}</span>
-        </td>
-        <td>
-          <span>{{ healthMonitor?.timeout }}</span>
-        </td>
-        <td>
-          <span>{{ healthMonitor?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-        </td>
-        <td class="table__actions">
-          <app-icon-button
-            *ngIf="!healthMonitor?.deletedAt"
-            icon="edit"
-            label="Edit Health Monitor"
-            (handleClick)="openHealthMonitorModal(ModalMode.Edit, healthMonitor)"
-          ></app-icon-button>
-
-          <app-icon-button
-            *ngIf="healthMonitor?.deletedAt"
-            icon="undo"
-            label="Restore Health Monitor"
-            type="success"
-            (handleClick)="restoreHealthMonitor(healthMonitor)"
-          ></app-icon-button>
-
-          <app-icon-button
-            icon="delete"
-            label="Soft-Delete/Delete Health Monitor"
-            [type]="healthMonitor?.deletedAt ? 'danger' : 'default'"
-            (handleClick)="deleteHealthMonitor(healthMonitor)"
-          ></app-icon-button>
-        </td>
-      </tr>
-      <tr *ngIf="!healthMonitors?.length" class="text-center">
-        <td colspan="7">No Health Monitors in this Tier</td>
-      </tr>
-    </tbody>
-  </table>
-  <pagination-controls (pageChange)="currentHMPage = $event"></pagination-controls>
+  <app-health-monitor-list [currentTier]="currentTier" [tiers]="tiers"></app-health-monitor-list>
 </div>
 
 <div *ngIf="navIndex === 6">
@@ -701,7 +628,7 @@
   <pagination-controls (pageChange)="currentRoutesPage = $event"></pagination-controls>
 </div>
 
-<section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
+<section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="enablePerPage()">
   <span class="mr-3">Entities per page</span>
   <div class="btn-group" role="group">
     <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
@@ -712,7 +639,8 @@
 
 <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
   <app-import-export
-    [disableExport]="navIndex === 2"
+    [disableImport]="disableImport()"
+    [disableExport]="disableExport()"
     [exportObject]="exportLoadBalancerConfig()"
     exportFileName="loadBalancers-{{ currentTier.name }}"
     (import)="importLoadBalancerConfig($event)"
@@ -723,7 +651,6 @@
 <app-pool-modal></app-pool-modal>
 <app-node-modal></app-node-modal>
 <app-irule-modal></app-irule-modal>
-<app-health-monitor-modal></app-health-monitor-modal>
 <app-load-balancer-profile-modal></app-load-balancer-profile-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
 <app-load-balancer-vlan-modal></app-load-balancer-vlan-modal>

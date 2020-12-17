@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadBalancersComponent } from './load-balancers.component';
-import { HealthMonitorModalComponent } from './health-monitor-modal/health-monitor-modal.component';
 import { IRuleModalComponent } from './irule-modal/irule-modal.component';
 import { LoadBalancerVlanModalComponent } from './lb-vlan-modal/lb-vlan-modal.component';
 import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
@@ -20,6 +19,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { HealthMonitorModule } from './health-monitors/health-monitor.module';
 
 const routes: Routes = [
   {
@@ -41,10 +41,10 @@ const routes: Routes = [
     SharedModule,
     TabsModule,
     TooltipModule,
+    HealthMonitorModule,
   ],
   declarations: [
     LoadBalancersComponent,
-    HealthMonitorModalComponent,
     IRuleModalComponent,
     LoadBalancerRouteModalComponent,
     LoadBalancerSelfIpModalComponent,

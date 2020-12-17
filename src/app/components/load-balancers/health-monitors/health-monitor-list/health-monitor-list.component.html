@@ -1,0 +1,51 @@
+<section class="btn-toolbar" role="toolbar">
+  <button type="button" class="btn btn-success" (click)="openHealthMonitorModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Health Monitor</span>
+  </button>
+</section>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="healthMonitors"></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-healthMonitor="datum">
+  <section class="table__actions">
+    <app-icon-button
+      *ngIf="!healthMonitor?.deletedAt"
+      icon="edit"
+      label="Edit Health Monitor"
+      (handleClick)="openHealthMonitorModal(healthMonitor)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="healthMonitor?.deletedAt"
+      icon="undo"
+      label="Restore Health Monitor"
+      type="success"
+      (handleClick)="restoreHealthMonitor(healthMonitor)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Health Monitor"
+      [type]="healthMonitor?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteHealthMonitor(healthMonitor)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
+  <app-import-export
+    [exportObject]="healthMonitors"
+    exportFileName="loadBalancerHealthMonitors-{{ currentTier.name }}"
+    (import)="importHealthMonitors($event)"
+  ></app-import-export>
+</section>
+
+<app-health-monitor-modal></app-health-monitor-modal>
+<app-yes-no-modal></app-yes-no-modal>

@@ -43,7 +43,6 @@ describe('LoadBalancersComponent', () => {
       imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule, RouterTestingModule.withRoutes([])],
       declarations: [
         LoadBalancersComponent,
-        MockComponent('app-health-monitor-modal'),
         MockComponent('app-irule-modal'),
         MockComponent('app-load-balancer-policy-modal'),
         MockComponent('app-load-balancer-profile-modal'),
@@ -54,6 +53,10 @@ describe('LoadBalancersComponent', () => {
         MockComponent('app-pool-modal'),
         MockComponent('app-tier-select'),
         MockComponent('app-virtual-server-modal'),
+        MockComponent({
+          selector: 'app-health-monitor-list',
+          inputs: ['currentTier', 'tiers'],
+        }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -111,13 +114,6 @@ describe('LoadBalancersComponent', () => {
       component.openIRuleModal(ModalMode.Edit, null);
     };
     expect(throwsError).toThrowError('IRule required');
-  });
-
-  it('should throw an error when editing a health monitory without a health monitor provided', () => {
-    const throwsError = () => {
-      component.openHealthMonitorModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('Health Monitor required');
   });
 
   it('should throw an error when editing a profile without a profile provided', () => {

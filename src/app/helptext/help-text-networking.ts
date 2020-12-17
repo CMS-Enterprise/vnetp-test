@@ -221,11 +221,9 @@ export class IRuleModalHelpText {
 export class HealthMonitorModalHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Name = `Name of Health Monitor.`;
-  Type = 'Health Monitor Type (TCP, HTTP, HTTPS).';
   ServicePort = 'Port that Health Monitor attempts to connect to.';
-  Interval = 'Interval (seconds) that Health Monitor performs checks.';
-  Timeout = 'Timeout (seconds) for checks before considering them failed.';
+  Interval = 'Interval that Health Monitor performs checks.';
+  Timeout = 'Timeout for checks before considering them failed.';
 }
 
 @Injectable({

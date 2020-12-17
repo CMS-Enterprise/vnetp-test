@@ -12,11 +12,8 @@ export default class ObjectUtil {
       return null;
     }
 
-    const filteredObjects = objects.filter(o => o.name === nameOrId || o.id === nameOrId);
-    if (filteredObjects.length === 1) {
-      return filteredObjects[0].id;
-    }
-    return null;
+    const object = objects.find(o => o.name === nameOrId || o.id === nameOrId);
+    return object ? object.id : null;
   }
 
   static removeEmptyProps<T>(object: T): T {

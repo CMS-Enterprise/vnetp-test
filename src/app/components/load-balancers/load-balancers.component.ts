@@ -15,7 +15,6 @@ import {
   V1LoadBalancerIrulesService,
   V1LoadBalancerVirtualServersService,
   V1LoadBalancerPoolsService,
-  V1LoadBalancerHealthMonitorsService,
   LoadBalancerNode,
   V1LoadBalancerNodesService,
   V1LoadBalancerProfilesService,
@@ -44,6 +43,20 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 import { environment } from 'src/environments/environment';
 import { EntityService } from 'src/app/services/entity.service';
 
+enum Indices {
+  VirtualServers = 1,
+  Pools = 2,
+  PoolRelations = 3,
+  Nodes = 4,
+  iRules = 5,
+  HealthMonitors = 5,
+  Profiles = 6,
+  Policies = 7,
+  VLANs = 8,
+  SelfIPs = 9,
+  Routes = 10,
+}
+
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
@@ -51,10 +64,9 @@ import { EntityService } from 'src/app/services/entity.service';
 export class LoadBalancersComponent implements OnInit, OnDestroy {
   navIndex = 0;
 
-  tiers: Tier[];
-  currentTier: Tier;
+  public tiers: Tier[];
+  public currentTier: Tier;
 
-  currentHMPage = 1;
   currentIrulePage = 1;
   currentNodePage = 1;
   currentPoliciesPage = 1;
@@ -97,7 +109,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private healthMonitorModalSubscription: Subscription;
   private iruleModalSubscription: Subscription;
   private nodeModalSubscription: Subscription;
   private policyModalSubscription: Subscription;
@@ -111,7 +122,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   constructor(
     private datacenterService: DatacenterContextService,
     private entityService: EntityService,
-    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
     private nodeService: V1LoadBalancerNodesService,
@@ -125,6 +135,21 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private virtualServersService: V1LoadBalancerVirtualServersService,
     private vlansService: V1LoadBalancerVlansService,
   ) {}
+
+  // TODO: Remove once split into modules
+  public disableExport(): boolean {
+    return new Set([Indices.Pools, Indices.HealthMonitors]).has(this.navIndex);
+  }
+
+  // TODO: Remove once split into modules
+  public disableImport(): boolean {
+    return new Set([Indices.HealthMonitors]).has(this.navIndex);
+  }
+
+  // TODO: Remove once split into modules
+  public enablePerPage(): boolean {
+    return !new Set([Indices.Pools, Indices.HealthMonitors]).has(this.navIndex);
+  }
 
   public handleTabChange(tab: Tab): void {
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
@@ -291,7 +316,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         this.getIrules();
         break;
       case 5:
-        this.getHealthMonitors();
         break;
       case 6:
         this.getProfiles();
@@ -360,14 +384,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           })
           .subscribe(() => this.getObjectsForNavIndex());
         break;
-      case 5:
-        const healthMonitors = this.sanitizeData(data, true);
-        this.healthMonitorsService
-          .v1LoadBalancerHealthMonitorsBulkPost({
-            generatedLoadBalancerHealthMonitorBulkDto: { bulk: healthMonitors },
-          })
-          .subscribe(() => this.getObjectsForNavIndex());
-        break;
       default:
         break;
 
@@ -375,7 +391,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  exportLoadBalancerConfig() {
+  exportLoadBalancerConfig(): any[] {
     // TODO: Export Relationships
     switch (this.navIndex) {
       case 0:
@@ -387,7 +403,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 4:
         return this.irules;
       case 5:
-        return this.healthMonitors;
+        // TODO: Remove once all lists are moved to own modules/components
+        return [];
       case 6:
         return this.profiles;
       case 7:
@@ -477,22 +494,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'iruleModal');
     this.ngx.getModal('iruleModal').open();
-  }
-
-  openHealthMonitorModal(modalMode: ModalMode, healthMonitor?: LoadBalancerHealthMonitor) {
-    if (modalMode === ModalMode.Edit && !healthMonitor) {
-      throw new Error('Health Monitor required');
-    }
-
-    const dto = {} as any;
-    dto.healthMonitor = healthMonitor;
-    dto.ModalMode = modalMode;
-    dto.TierId = this.currentTier.id;
-
-    this.subscribeToHealthMonitorModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'healthMonitorModal');
-    this.ngx.getModal('healthMonitorModal').open();
   }
 
   openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
@@ -640,15 +641,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToHealthMonitorModal() {
-    this.healthMonitorModalSubscription = this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
-      this.getHealthMonitors();
-      this.ngx.resetModalData('healthMonitorModal');
-      this.healthMonitorModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
   subscribeToProfileModal() {
     this.profileModalSubscription = this.ngx.getModal('loadBalancerProfileModal').onCloseFinished.subscribe(() => {
       this.getProfiles();
@@ -682,15 +674,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       delete$: this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }),
       softDelete$: this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }),
       onSuccess: () => this.getIrules(),
-    });
-  }
-
-  public deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
-    this.entityService.deleteEntity(healthMonitor, {
-      entityName: 'Health Monitor',
-      delete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }),
-      softDelete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdSoftDelete({ id: healthMonitor.id }),
-      onSuccess: () => this.getHealthMonitors(),
     });
   }
 
@@ -801,14 +784,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  restoreHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    if (healthMonitor.deletedAt) {
-      this.healthMonitorsService
-        .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
-        .subscribe(() => this.getHealthMonitors());
-    }
-  }
-
   restoreProfile(profile: LoadBalancerProfile) {
     if (profile.deletedAt) {
       this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.getProfiles());
@@ -832,7 +807,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         this.virtualServers = [];
         this.pools = [];
         this.nodes = [];
-        this.healthMonitors = [];
         this.policies = [];
         this.profiles = [];
         this.getObjectsForNavIndex();
@@ -851,7 +825,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([
       this.virtualServerModalSubscription,
       this.poolModalSubscription,
-      this.healthMonitorModalSubscription,
       this.nodeModalSubscription,
       this.profileModalSubscription,
       this.policyModalSubscription,
