@@ -210,6 +210,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODO: Remove once split into modules, currently required by Pools tab
   getHealthMonitors() {
     if (!this.hasCurrentTier()) {
       return;
