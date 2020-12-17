@@ -12,11 +12,14 @@ export default class ObjectUtil {
       return null;
     }
 
-    const object = objects.find(o => o.name === nameOrId || o.id === nameOrId);
-    return object ? object.id : null;
+    const filteredObjects = objects.filter(o => o.name === nameOrId || o.id === nameOrId);
+    if (filteredObjects.length === 1) {
+      return filteredObjects[0].id;
+    }
+    return null;
   }
 
-  static removeEmptyProps<T>(object: T): T {
+  static removeEmptyProps<T extends object>(object: T): T {
     const copy = ObjectUtil.deepCopy(object);
     return Object.entries(copy).reduce((newObject, [key, value]) => {
       if (value === undefined || value === null) {
@@ -26,7 +29,7 @@ export default class ObjectUtil {
     }, {} as T);
   }
 
-  static deepCopy<T>(object: T): T {
+  static deepCopy<T extends object>(object: T): T {
     if (!object) {
       throw new Error('Null Object.');
     }

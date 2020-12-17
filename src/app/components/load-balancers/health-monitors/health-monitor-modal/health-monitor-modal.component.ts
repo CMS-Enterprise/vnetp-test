@@ -4,9 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { HealthMonitorModalDto } from './health-monitor-modal.dto';
 
 @Component({
@@ -29,102 +27,70 @@ export class HealthMonitorModalComponent implements OnInit {
     public helpText: HealthMonitorModalHelpText,
   ) {}
 
-  save() {
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    const healthMonitor = {} as LoadBalancerHealthMonitor;
-    healthMonitor.name = this.form.value.name;
-    healthMonitor.type = this.form.value.type;
-    healthMonitor.servicePort = this.form.value.servicePort;
-    healthMonitor.interval = this.form.value.interval;
-    healthMonitor.timeout = this.form.value.timeout;
-
-    if (this.modalMode === ModalMode.Create) {
-      healthMonitor.tierId = this.tierId;
-      this.healthMonitorService
-        .v1LoadBalancerHealthMonitorsPost({
-          loadBalancerHealthMonitor: healthMonitor,
-        })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
-    } else {
-      this.healthMonitorService
-        .v1LoadBalancerHealthMonitorsIdPut({
-          id: this.healthMonitorId,
-          loadBalancerHealthMonitor: healthMonitor,
-        })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
-    }
-  }
-
-  private closeModal() {
-    this.ngx.close('healthMonitorModal');
-    this.reset();
-  }
-
-  cancel() {
-    this.ngx.close('healthMonitorModal');
-    this.reset();
+  ngOnInit(): void {
+    this.buildForm();
   }
 
   get f() {
     return this.form.controls;
   }
 
-  removeHealthMonitor(healthMonitor: LoadBalancerHealthMonitor) {
-    const modalDto = new YesNoModalDto('Remove Health Monitor', '');
-    const onConfirm = () => {
-      this.healthMonitorService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }).subscribe(() => {
-        this.getHealthMonitors();
-      });
+  public closeModal(): void {
+    this.ngx.close('healthMonitorModal');
+    this.submitted = false;
+    this.buildForm();
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { name, type, servicePort, interval, timeout } = this.form.value;
+
+    const healthMonitor: LoadBalancerHealthMonitor = {
+      tierId: this.tierId,
+      interval,
+      name,
+      servicePort,
+      timeout,
+      type,
     };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    if (this.modalMode === ModalMode.Create) {
+      this.createHealthMonitor(healthMonitor);
+    } else {
+      this.updateHealthMonitor(healthMonitor);
+    }
   }
 
-  private getHealthMonitors() {
-    this.healthMonitorService.v1LoadBalancerHealthMonitorsIdGet({ id: this.healthMonitor.id }).subscribe(data => {
-      this.healthMonitor = data;
-    });
-  }
-
-  getData() {
+  public getData(): void {
     const dto: HealthMonitorModalDto = Object.assign({}, this.ngx.getModalData('healthMonitorModal'));
-    this.tierId = dto.tierId;
-    this.modalMode = dto.healthMonitor ? ModalMode.Edit : ModalMode.Create;
+    const { healthMonitor, tierId } = dto;
+    this.tierId = tierId;
+    this.modalMode = healthMonitor ? ModalMode.Edit : ModalMode.Create;
 
     if (this.modalMode === ModalMode.Edit) {
-      this.healthMonitorId = dto.healthMonitor.id;
+      this.healthMonitorId = healthMonitor.id;
     } else {
       this.form.controls.name.enable();
       this.form.controls.type.enable();
     }
 
-    if (dto.healthMonitor !== undefined) {
-      this.form.controls.name.setValue(dto.healthMonitor.name);
+    if (healthMonitor !== undefined) {
+      this.form.controls.name.setValue(healthMonitor.name);
       this.form.controls.name.disable();
-      this.form.controls.type.setValue(dto.healthMonitor.type);
+      this.form.controls.type.setValue(healthMonitor.type);
       this.form.controls.type.disable();
-      this.form.controls.servicePort.setValue(dto.healthMonitor.servicePort);
-      this.form.controls.interval.setValue(dto.healthMonitor.interval);
-      this.form.controls.timeout.setValue(dto.healthMonitor.timeout);
+      this.form.controls.servicePort.setValue(healthMonitor.servicePort);
+      this.form.controls.interval.setValue(healthMonitor.interval);
+      this.form.controls.timeout.setValue(healthMonitor.timeout);
     }
     this.ngx.resetModalData('healthMonitorModal');
   }
 
-  private buildForm() {
+  private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       type: ['', Validators.required],
@@ -134,12 +100,31 @@ export class HealthMonitorModalComponent implements OnInit {
     });
   }
 
-  public reset() {
-    this.submitted = false;
-    this.buildForm();
+  private createHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+    this.healthMonitorService
+      .v1LoadBalancerHealthMonitorsPost({
+        loadBalancerHealthMonitor: healthMonitor,
+      })
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 
-  ngOnInit() {
-    this.buildForm();
+  private updateHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+    healthMonitor.tierId = undefined;
+    this.healthMonitorService
+      .v1LoadBalancerHealthMonitorsIdPut({
+        id: this.healthMonitorId,
+        loadBalancerHealthMonitor: healthMonitor,
+      })
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 }

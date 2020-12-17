@@ -3,7 +3,7 @@
   identifier="healthMonitorModal"
   [dismissable]="false"
   (onOpen)="getData()"
-  (onClose)="reset()"
+  (onClose)="closeModal()"
   customClass="medium-modal"
 >
   <header class="modal-header">
@@ -41,13 +41,16 @@
           <label for="servicePort">Service Port</label>
           <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
+            type="number"
             class="form-control"
             name="servicePort"
             formControlName="servicePort"
             [class.is-invalid]="submitted && f.servicePort.errors"
-            mask="09999"
-            aria-label="Service Port"
           />
+          <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+            <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
+            <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
+          </div>
         </div>
       </div>
 
@@ -56,32 +59,38 @@
           <label for="interval">Interval (seconds)</label>
           <tooltip [message]="helpText.Interval"></tooltip>
           <input
+            type="number"
             class="form-control"
             name="interval"
             formControlName="interval"
             [class.is-invalid]="submitted && f.interval.errors"
-            mask="099"
-            aria-label="Interval"
           />
+          <div *ngIf="submitted && f.interval.errors" class="invalid-feedback">
+            <div *ngIf="f.interval.errors.required">Interval is required</div>
+            <div *ngIf="f.interval.errors.min || f.interval.errors.max">Interval must be between 5-300 seconds</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
           <label for="timeout">Timeout (seconds)</label>
           <tooltip [message]="helpText.Timeout"></tooltip>
           <input
+            type="number"
             class="form-control"
             name="timeout"
             formControlName="timeout"
             [class.is-invalid]="submitted && f.timeout.errors"
-            mask="099"
-            aria-label="Interval"
           />
+          <div *ngIf="submitted && f.timeout.errors" class="invalid-feedback">
+            <div *ngIf="f.timeout.errors.required">Timeout is required</div>
+            <div *ngIf="f.timeout.errors.min || f.timeout.errors.max">Timeout must be between 5-300 seconds</div>
+          </div>
         </div>
       </div>
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
 
