@@ -1,13 +1,11 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, Type, ViewChild } from '@angular/core';
 import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
-import { constructor } from 'events';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { EntityService } from 'src/app/services/entity.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { LoadBalancerRouteModalComponent } from '../../lb-route-modal/lb-route-modal.component';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 
 interface HealthMonitorView extends LoadBalancerHealthMonitor {
@@ -43,8 +41,8 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
 
   constructor(
     private entityService: EntityService,
-    private ngx: NgxSmartModalService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit() {
@@ -136,6 +134,6 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
   }
 }
 
-interface ImportHealthMonitor extends LoadBalancerHealthMonitor {
-  vrfName: string;
+export interface ImportHealthMonitor extends LoadBalancerHealthMonitor {
+  vrfName?: string;
 }
