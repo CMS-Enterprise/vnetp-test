@@ -120,7 +120,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   constructor(
     private datacenterService: DatacenterContextService,
     private entityService: EntityService,
-    private irulesService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
     private nodeService: V1LoadBalancerNodesService,
     private policiesService: V1LoadBalancerPoliciesService,
