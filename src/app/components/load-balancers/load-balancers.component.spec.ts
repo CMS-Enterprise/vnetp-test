@@ -109,13 +109,6 @@ describe('LoadBalancersComponent', () => {
     expect(throwsError).toThrowError('Node required');
   });
 
-  it('should throw an error when editing a iRule without an iRule provided', () => {
-    const throwsError = () => {
-      component.openIRuleModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('IRule required');
-  });
-
   it('should throw an error when editing a profile without a profile provided', () => {
     const throwsError = () => {
       component.openProfileModal(ModalMode.Edit, null);

@@ -44,11 +44,11 @@ import { environment } from 'src/environments/environment';
 import { EntityService } from 'src/app/services/entity.service';
 
 enum Indices {
-  VirtualServers = 1,
-  Pools = 2,
-  PoolRelations = 3,
-  Nodes = 4,
-  iRules = 5,
+  VirtualServers = 0,
+  Pools = 1,
+  PoolRelations = 2,
+  Nodes = 3,
+  iRules = 4,
   HealthMonitors = 5,
   Profiles = 6,
   Policies = 7,
@@ -67,7 +67,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   public tiers: Tier[];
   public currentTier: Tier;
 
-  currentIrulePage = 1;
   currentNodePage = 1;
   currentPoliciesPage = 1;
   currentPoolPage = 1;
@@ -109,7 +108,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private iruleModalSubscription: Subscription;
   private nodeModalSubscription: Subscription;
   private policyModalSubscription: Subscription;
   private poolModalSubscription: Subscription;
@@ -314,7 +312,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         this.getNodes();
         break;
       case 4:
-        this.getIrules();
         break;
       case 5:
         break;
@@ -336,7 +333,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  importLoadBalancerConfig(data) {
+  importLoadBalancerConfig(data: any[]) {
+    // TODO: Bulk Import of Policies, Profiles, Vlans, SelfIps, Routes
+
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 0:
@@ -377,18 +376,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           })
           .subscribe(() => this.getObjectsForNavIndex());
         break;
-      case 4:
-        const irules = this.sanitizeData(data, true);
-        this.irulesService
-          .v1LoadBalancerIrulesBulkPost({
-            generatedLoadBalancerIruleBulkDto: { bulk: irules },
-          })
-          .subscribe(() => this.getObjectsForNavIndex());
-        break;
       default:
         break;
-
-      // TODO: Bulk Import of Policies, Profiles, Vlans, SelfIps, Routes
     }
   }
 
@@ -401,8 +390,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         return this.pools;
       case 3:
         return this.nodes;
-      case 4:
-        return this.irules;
       case 6:
         return this.profiles;
       case 7:
@@ -476,22 +463,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'nodeModal');
     this.ngx.getModal('nodeModal').open();
-  }
-
-  openIRuleModal(modalMode: ModalMode, irule?: LoadBalancerIrule) {
-    if (modalMode === ModalMode.Edit && !irule) {
-      throw new Error('IRule required');
-    }
-
-    const dto = {} as any;
-    dto.irule = irule;
-    dto.ModalMode = modalMode;
-    dto.TierId = this.currentTier.id;
-
-    this.subscribeToIRuleModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'iruleModal');
-    this.ngx.getModal('iruleModal').open();
   }
 
   openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
@@ -630,15 +601,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToIRuleModal() {
-    this.iruleModalSubscription = this.ngx.getModal('iruleModal').onCloseFinished.subscribe(() => {
-      this.getIrules();
-      this.ngx.resetModalData('iruleModal');
-      this.iruleModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
   subscribeToProfileModal() {
     this.profileModalSubscription = this.ngx.getModal('loadBalancerProfileModal').onCloseFinished.subscribe(() => {
       this.getProfiles();
@@ -663,15 +625,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       delete$: this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }),
       softDelete$: this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }),
       onSuccess: () => this.getVirtualServers(),
-    });
-  }
-
-  public deleteIrule(irule: LoadBalancerIrule): void {
-    this.entityService.deleteEntity(irule, {
-      entityName: 'iRule',
-      delete$: this.irulesService.v1LoadBalancerIrulesIdDelete({ id: irule.id }),
-      softDelete$: this.irulesService.v1LoadBalancerIrulesIdSoftDelete({ id: irule.id }),
-      onSuccess: () => this.getIrules(),
     });
   }
 
@@ -776,12 +729,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  restoreIrule(irule: LoadBalancerIrule) {
-    if (irule.deletedAt) {
-      this.irulesService.v1LoadBalancerIrulesIdRestorePatch({ id: irule.id }).subscribe(() => this.getIrules());
-    }
-  }
-
   restoreProfile(profile: LoadBalancerProfile) {
     if (profile.deletedAt) {
       this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.getProfiles());
@@ -827,7 +774,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       this.nodeModalSubscription,
       this.profileModalSubscription,
       this.policyModalSubscription,
-      this.iruleModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
     ]);

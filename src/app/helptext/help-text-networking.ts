@@ -211,7 +211,6 @@ export class NodeModalHelpText {
 export class IRuleModalHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Name = `Name of iRule.`;
   Content = `iRule content in valid F5 format.`;
 }
 

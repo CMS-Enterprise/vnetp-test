@@ -15,7 +15,6 @@ export class HealthMonitorModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
 
-  private healthMonitor: LoadBalancerHealthMonitor;
   private healthMonitorId: string;
   private modalMode: ModalMode;
   private tierId: string;
