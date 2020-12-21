@@ -1,9 +1,9 @@
 <ngx-smart-modal
-  #loadBalancerRouteModal
-  identifier="loadBalancerRouteModal"
+  #routeModal
+  identifier="routeModal"
   [dismissable]="false"
   (onOpen)="getData()"
-  (onClose)="reset()"
+  (onClose)="closeModal()"
   customClass="large-modal"
 >
   <header class="modal-header">
@@ -14,8 +14,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="name">Name</label>
-        <tooltip [message]="helpText.Name"></tooltip>
-        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
+        <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -27,13 +26,12 @@
       <div class="row">
         <div class="form-group col-md-6">
           <label for="destination">Destination Address</label>
-          <tooltip [message]="helpText.Destination"></tooltip>
           <input
+            id="destination"
             type="text"
             formControlName="destination"
             class="form-control"
             [class.is-invalid]="submitted && f.destination.errors"
-            aria-label="Destination Address"
           />
           <div *ngIf="submitted && f.destination.errors" class="invalid-feedback">
             <div *ngIf="f.destination.errors.required">Destination is required</div>
@@ -43,13 +41,12 @@
 
         <div class="form-group col-md-6">
           <label for="gateway">Gateway</label>
-          <tooltip [message]="helpText.Gateway"></tooltip>
           <input
+            id="gateway"
             type="text"
             formControlName="gateway"
             class="form-control"
             [class.is-invalid]="submitted && f.gateway.errors"
-            aria-label="Gateway"
           />
           <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
             <div *ngIf="f.gateway.errors.required">Gateway is required</div>
@@ -60,7 +57,7 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
 

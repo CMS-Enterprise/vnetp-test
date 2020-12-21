@@ -16,10 +16,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { HealthMonitorModule } from './health-monitors/health-monitor.module';
 import { VlanModule } from './vlans/vlan.module';
-import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
 import { VirtualServerModule } from './virtual-servers/virtual-server.module';
 import { IRuleModule } from './irules/irule.module';
 import { ProfileModule } from './profiles/profile.module';
+import { RouteModule } from './routes/route.module';
 
 const routes: Routes = [
   {
@@ -46,14 +46,8 @@ const routes: Routes = [
     VlanModule,
     VirtualServerModule,
     ProfileModule,
+    RouteModule,
   ],
-  declarations: [
-    LoadBalancersComponent,
-    LoadBalancerSelfIpModalComponent,
-    NodeModalComponent,
-    PolicyModalComponent,
-    PoolModalComponent,
-    LoadBalancerRouteModalComponent,
-  ],
+  declarations: [LoadBalancersComponent, LoadBalancerSelfIpModalComponent, NodeModalComponent, PolicyModalComponent, PoolModalComponent],
 })
 export class LoadBalancersModule {}

@@ -235,12 +235,3 @@ export class DashboardHelpText {
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';
 }
-
-@Injectable({
-  providedIn: 'root',
-})
-export class LoadBalancerRouteModalHelpText {
-  Name = 'Name of Load Balancer Route';
-  Destination = 'Destination of Load Balancer Route';
-  Gateway = 'Gateway of Load Balancer Route';
-}

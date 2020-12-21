@@ -310,68 +310,7 @@
   </div>
 
   <div *ngIf="navIndex === 10">
-    <section class="btn-toolbar" role="toolbar">
-      <!-- Create Route -->
-      <button type="button" class="btn btn-success" (click)="openRouteModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Route</span>
-      </button>
-    </section>
-
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Manage Load Balancer Routes</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Destination</th>
-          <th scope="col">Gateway</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let route of routes | paginate: { itemsPerPage: perPage, currentPage: currentRoutesPage }">
-          <td>
-            <span>{{ route?.name }}</span>
-          </td>
-          <td>
-            <span>{{ route?.destination }}</span>
-          </td>
-          <td>
-            <span>{{ route?.gateway }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!route?.deletedAt"
-              icon="edit"
-              label="Edit Route"
-              (handleClick)="openRouteModal(ModalMode.Edit, route)"
-            ></app-icon-button>
-
-            <app-icon-button
-              *ngIf="route?.deletedAt"
-              icon="undo"
-              label="Restore Route"
-              type="success"
-              (handleClick)="restoreRoute(route)"
-            ></app-icon-button>
-
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete/Delete Route"
-              [type]="route?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteRoute(route)"
-            ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!routes?.length" class="text-center">
-          <td colspan="4">No Routes in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentRoutesPage = $event"></pagination-controls>
+    <app-route-list [currentTier]="currentTier" [tiers]="tiers"></app-route-list>
   </div>
 
   <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="enablePerPage()">
@@ -398,5 +337,4 @@
 <app-node-modal></app-node-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
 <app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
-<app-load-balancer-route-modal></app-load-balancer-route-modal>
 <app-yes-no-modal></app-yes-no-modal>

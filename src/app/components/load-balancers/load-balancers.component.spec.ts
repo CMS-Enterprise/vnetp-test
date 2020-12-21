@@ -109,13 +109,6 @@ describe('LoadBalancersComponent', () => {
     expect(throwsError).toThrowError('Node required');
   });
 
-  it('should throw an error when editing a profile without a profile provided', () => {
-    const throwsError = () => {
-      component.openProfileModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('Profile required');
-  });
-
   it('should throw an error when editing a policy without a policy provided', () => {
     const throwsError = () => {
       component.openPolicyModal(ModalMode.Edit, null);
@@ -123,24 +116,10 @@ describe('LoadBalancersComponent', () => {
     expect(throwsError).toThrowError('Policy required');
   });
 
-  it('should throw an error when editing a vlan without a vlan provided', () => {
-    const throwsError = () => {
-      component.openVlanModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('VLAN required');
-  });
-
   it('should throw an error when editing a self ip without a self ip provided', () => {
     const throwsError = () => {
       component.openSelfIpModal(ModalMode.Edit, null);
     };
     expect(throwsError).toThrowError('Self IP required');
-  });
-
-  it('should throw an error when editing a route without a route provided', () => {
-    const throwsError = () => {
-      component.openRouteModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('Route required');
   });
 });

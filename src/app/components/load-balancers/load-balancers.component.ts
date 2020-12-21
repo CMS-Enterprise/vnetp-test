@@ -17,14 +17,11 @@ import {
   PoolImportCollectionDto,
   NodeImportCollectionDto,
   LoadBalancerSelfIp,
-  LoadBalancerRoute,
   V1LoadBalancerSelfIpsService,
-  V1LoadBalancerRoutesService,
 } from 'api_client';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
 import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -59,7 +56,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   currentNodePage = 1;
   currentPoliciesPage = 1;
   currentPoolPage = 1;
-  currentRoutesPage = 1;
   currentSelfIpsPage = 1;
 
   perPage = 20;
@@ -69,7 +65,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
   pools: LoadBalancerPool[];
-  routes: LoadBalancerRoute[];
   selfIps: LoadBalancerSelfIp[];
 
   public wikiBase = environment.wikiBase;
@@ -93,7 +88,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private nodeModalSubscription: Subscription;
   private policyModalSubscription: Subscription;
   private poolModalSubscription: Subscription;
-  private routeModalSubscription: Subscription;
   private selfIpModalSubscription: Subscription;
 
   constructor(
@@ -103,7 +97,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private nodeService: V1LoadBalancerNodesService,
     private policiesService: V1LoadBalancerPoliciesService,
     private poolsService: V1LoadBalancerPoolsService,
-    private routesService: V1LoadBalancerRoutesService,
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
@@ -199,20 +192,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       });
   }
 
-  getRoutes() {
-    if (!this.hasCurrentTier()) {
-      return;
-    }
-
-    this.routesService
-      .v1LoadBalancerRoutesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
-      })
-      .subscribe(data => {
-        this.routes = data;
-      });
-  }
-
   getObjectsForNavIndex() {
     switch (this.navIndex) {
       case 1:
@@ -229,14 +208,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 9:
         this.getSelfIps();
         break;
-      case 10:
-        this.getRoutes();
-        break;
     }
   }
 
   importLoadBalancerConfig(data: any[]) {
-    // TODO: Bulk Import of Policies, SelfIps, Routes
+    // TODO: Bulk Import of Policies, SelfIps
 
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
@@ -371,36 +347,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('loadBalancerSelfIpModal').open();
   }
 
-  openRouteModal(modalMode: ModalMode, route?: LoadBalancerRoute) {
-    if (modalMode === ModalMode.Edit && !route) {
-      throw new Error('Route required');
-    }
-
-    const dto = new LoadBalancerRouteModalDto();
-    dto.TierId = this.currentTier.id;
-    dto.Route = route;
-    dto.ModalMode = modalMode;
-
-    this.subscribeToRouteModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'loadBalancerRouteModal');
-    this.ngx.getModal('loadBalancerRouteModal').open();
-  }
-
   subscribeToSelfIpModal() {
     this.selfIpModalSubscription = this.ngx.getModal('loadBalancerSelfIpModal').onCloseFinished.subscribe(() => {
       this.getSelfIps();
       this.ngx.resetModalData('loadBalancerSelfIpModal');
       this.selfIpModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
-  subscribeToRouteModal() {
-    this.routeModalSubscription = this.ngx.getModal('loadBalancerRouteModal').onCloseFinished.subscribe(() => {
-      this.getRoutes();
-      this.ngx.resetModalData('loadBalancerRouteModal');
-      this.routeModalSubscription.unsubscribe();
       this.datacenterService.unlockDatacenter();
     });
   }
@@ -470,24 +421,9 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  public deleteRoute(route: LoadBalancerRoute): void {
-    this.entityService.deleteEntity(route, {
-      entityName: 'Route',
-      delete$: this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }),
-      softDelete$: this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }),
-      onSuccess: () => this.getRoutes(),
-    });
-  }
-
   restoreSelfIp(selfIp: LoadBalancerSelfIp) {
     if (selfIp.deletedAt) {
       this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.getSelfIps());
-    }
-  }
-
-  restoreRoute(route: LoadBalancerRoute) {
-    if (route.deletedAt) {
-      this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(() => this.getRoutes());
     }
   }
 
