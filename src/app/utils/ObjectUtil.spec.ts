@@ -77,6 +77,15 @@ describe('ObjectUtil', () => {
     });
   });
 
+  describe('sortByName', () => {
+    it('should return a number when sorting objects with a name property', () => {
+      const obj1 = { id: '1', name: 'B' };
+      const obj2 = { id: '2', name: 'A' };
+
+      expect(ObjectUtil.sortByName(obj1, obj2)).toBe(1);
+    });
+  });
+
   describe('removeEmptyProps', () => {
     it('should return an object with undefined props removed', () => {
       expect(ObjectUtil.removeEmptyProps({ a: undefined })).toEqual({});

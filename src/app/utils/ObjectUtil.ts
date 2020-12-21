@@ -35,6 +35,10 @@ export default class ObjectUtil {
     }
     return JSON.parse(JSON.stringify(object));
   }
+
+  static sortByName<T extends Lookup>(obj1: T, obj2: T): number {
+    return obj1.name.localeCompare(obj2.name);
+  }
 }
 
 export interface Lookup {

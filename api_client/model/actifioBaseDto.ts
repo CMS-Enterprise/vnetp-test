@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ActifioBaseDto } from './actifioBaseDto';
 
 
-export interface ActifioHostDto { 
+export interface ActifioBaseDto { 
     id: string;
     name: string;
-    ipAddress: string;
-    clusterIds: Array<string>;
-    sourceClusters: Array<ActifioBaseDto>;
 }
 

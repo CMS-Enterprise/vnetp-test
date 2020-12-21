@@ -29,8 +29,8 @@ export interface V1ActifioGmOrganizationsAddPostRequestParams {
 }
 
 export interface V1ActifioGmOrganizationsGetRequestParams {
-    offset: number;
-    limit: number;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmOrganizationsIdDeleteRequestParams {
@@ -174,13 +174,7 @@ export class V1ActifioGmOrganizationsService {
     public v1ActifioGmOrganizationsGet(requestParameters: V1ActifioGmOrganizationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioOrganizationDto>>>;
     public v1ActifioGmOrganizationsGet(requestParameters: V1ActifioGmOrganizationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmOrganizationsGet.');
-        }
         const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmOrganizationsGet.');
-        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (offset !== undefined && offset !== null) {

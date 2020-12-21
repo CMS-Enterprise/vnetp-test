@@ -5,6 +5,7 @@ export * from './actifioAddTemplatePolicyDto';
 export * from './actifioApplianceDto';
 export * from './actifioApplicationDto';
 export * from './actifioApplicationGroupDto';
+export * from './actifioBaseDto';
 export * from './actifioClusterDto';
 export * from './actifioCreateOrApplySlaDto';
 export * from './actifioDetailedLogicalGroupDto';

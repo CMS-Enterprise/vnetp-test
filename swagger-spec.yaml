@@ -11331,11 +11331,11 @@ paths:
           in: query
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -11406,11 +11406,11 @@ paths:
       parameters:
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -11499,6 +11499,14 @@ paths:
     get:
       summary: Get many ActifioJobDto
       parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
         - type: string
           name: status
           required: true
@@ -11509,14 +11517,6 @@ paths:
           in: query
         - type: string
           name: applicationName
-          required: true
-          in: query
-        - type: number
-          name: offset
-          required: true
-          in: query
-        - type: number
-          name: limit
           required: true
           in: query
       responses:
@@ -11693,11 +11693,11 @@ paths:
       parameters:
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -11787,7 +11787,7 @@ paths:
         - application/json
   /v1/actifio/gm/profiles:
     get:
-      summary: Delete one ActifioOrganization
+      summary: Get many ActifioProfileDto
       parameters:
         - type: array
           name: clusterIds
@@ -11798,11 +11798,11 @@ paths:
           collectionFormat: csv
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -11841,11 +11841,11 @@ paths:
       parameters:
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -11941,11 +11941,11 @@ paths:
       parameters:
         - type: number
           name: offset
-          required: true
+          required: false
           in: query
         - type: number
           name: limit
-          required: true
+          required: false
           in: query
       responses:
         '200':
@@ -15604,6 +15604,16 @@ definitions:
     required:
       - id
       - name
+  ActifioBaseDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
   ActifioHostDto:
     type: object
     properties:
@@ -15617,16 +15627,16 @@ definitions:
         type: array
         items:
           type: string
-      sourceClusterIds:
+      sourceClusters:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/ActifioBaseDto'
     required:
       - id
       - name
       - ipAddress
       - clusterIds
-      - sourceClusterIds
+      - sourceClusters
   ActifioDiscoveredVMDto:
     type: object
     properties:
@@ -15648,17 +15658,17 @@ definitions:
         type: array
         items:
           type: string
-      sourceClusterIds:
+      sourceClusters:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/ActifioBaseDto'
     required:
       - clusterName
       - isManaged
       - isNewVirtualMachine
       - name
       - clusterIds
-      - sourceClusterIds
+      - sourceClusters
   ActifioJobDto:
     type: object
     properties:

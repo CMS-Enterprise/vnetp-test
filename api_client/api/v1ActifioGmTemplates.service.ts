@@ -28,8 +28,8 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmTemplatesGetRequestParams {
-    offset: number;
-    limit: number;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmTemplatesIdDeleteRequestParams {
@@ -140,13 +140,7 @@ export class V1ActifioGmTemplatesService {
     public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioTemplateDto>>>;
     public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmTemplatesGet.');
-        }
         const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmTemplatesGet.');
-        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (offset !== undefined && offset !== null) {

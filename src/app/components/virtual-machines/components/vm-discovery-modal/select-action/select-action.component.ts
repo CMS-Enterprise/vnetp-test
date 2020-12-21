@@ -6,6 +6,7 @@ import {
   ActifioHostDto,
   ActifioLogicalGroupDto,
   ActifioPolicyDtoOperation,
+  ActifioProfileDto,
   ActifioTemplateDto,
   V1ActifioGmLogicalGroupsService,
   V1ActifioGmProfilesService,
@@ -15,15 +16,12 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import ValidatorUtil from 'src/app/utils/ValidatorUtil';
 
-export interface Profile {
-  id: string;
-  name: string;
-  type: 'Local' | 'Remote';
-  clusterName: string;
-  displayName: string;
+interface Profile extends ActifioProfileDto {
+  sourceClusterName: string;
 }
 
 @Component({
@@ -114,49 +112,28 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   }
 
   private loadLogicalGroups(): void {
-    const sourceClusterIds = new Set(this.vCenter.sourceClusterIds);
+    const sourceClusterIds = new Set(this.vCenter.sourceClusters.map(c => c.id));
 
     this.isLoadingLogicalGroups = true;
     this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(logicalGroups => {
-      this.logicalGroups = logicalGroups
-        .filter(l => sourceClusterIds.has(l.sourceClusterId))
-        .sort((lg1, lg2) => lg1.name.localeCompare(lg2.name));
+      this.logicalGroups = logicalGroups.filter(l => sourceClusterIds.has(l.sourceClusterId)).sort(ObjectUtil.sortByName);
       this.isLoadingLogicalGroups = false;
     });
   }
 
   private loadProfiles(): void {
-    const sourceClusterIds = new Set(this.vCenter.sourceClusterIds);
+    const sourceClusterIds = new Set(this.vCenter.sourceClusters.map(c => c.id));
 
     this.isLoadingProfiles = true;
     this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
       this.allProfiles = profiles
         .filter(p => sourceClusterIds.has(p.sourceClusterId))
-        .reduce((profiles, profile) => {
-          const { id, name, localClusterName, remoteClusterName } = profile;
-          const localProfile: Profile = {
-            id,
-            name,
-            displayName: `Local: ${localClusterName}`,
-            clusterName: localClusterName,
-            type: 'Local',
+        .sort(ObjectUtil.sortByName)
+        .map(p => {
+          return {
+            ...p,
+            sourceClusterName: this.getSourceClusterName(p.sourceClusterId),
           };
-          const remoteProfile: Profile = {
-            id,
-            name,
-            displayName: `Remote: ${localClusterName}`,
-            clusterName: remoteClusterName,
-            type: 'Remote',
-          };
-
-          if (remoteClusterName) {
-            return profiles.concat(localProfile, remoteProfile);
-          }
-          return profiles.concat(localProfile);
-        }, [])
-        .sort((p1, p2) => {
-          const getIdentifier = profile => profile.name + profile.displayName;
-          return getIdentifier(p1).localeCompare(getIdentifier(p2));
         });
       this.shownProfiles = [...this.allProfiles];
       this.isLoadingProfiles = false;
@@ -230,7 +207,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     );
   }
 
-  private applySlas(templateId: string, profile: Profile): Observable<any> {
+  private applySlas(templateId: string, profile: ActifioProfileDto): Observable<any> {
     const createSla = (vm: ActifioApplicationDto) => {
       return this.agmSlaService.v1ActifioGmSlasPost({
         actifioCreateOrApplySlaDto: {
@@ -260,7 +237,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
           return p.remoteRetention > 0 || p.operation === ActifioPolicyDtoOperation.Replicate;
         });
 
-        this.shownProfiles = requiresRemoteProfile ? this.allProfiles.filter(p => p.type === 'Remote') : this.allProfiles;
+        this.shownProfiles = requiresRemoteProfile ? this.allProfiles.filter(p => !!p.remoteClusterName) : this.allProfiles;
       } else {
         this.shownProfiles = this.allProfiles;
         profile.disable();
@@ -273,5 +250,9 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.form.reset();
     this.form.controls.actionType.setValue(this.actions[0].type);
+  }
+
+  private getSourceClusterName(sourceClusterId: string): string {
+    return ObjectUtil.getObjectName(sourceClusterId, this.vCenter.sourceClusters, 'Other');
   }
 }

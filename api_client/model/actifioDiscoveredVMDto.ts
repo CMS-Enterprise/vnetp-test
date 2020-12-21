@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioBaseDto } from './actifioBaseDto';
 
 
 export interface ActifioDiscoveredVMDto { 
@@ -20,6 +21,6 @@ export interface ActifioDiscoveredVMDto {
     isNewVirtualMachine: boolean;
     name: string;
     clusterIds: Array<string>;
-    sourceClusterIds: Array<string>;
+    sourceClusters: Array<ActifioBaseDto>;
 }
 

@@ -24,9 +24,9 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmProfilesGetRequestParams {
-    offset: number;
-    limit: number;
     clusterIds?: Array<string>;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmProfilesIdGetRequestParams {
@@ -96,7 +96,7 @@ export class V1ActifioGmProfilesService {
     }
 
     /**
-     * Delete one ActifioOrganization
+     * Get many ActifioProfileDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -105,15 +105,9 @@ export class V1ActifioGmProfilesService {
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioProfileDto>>>;
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmProfilesGet.');
-        }
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmProfilesGet.');
-        }
         const clusterIds = requestParameters.clusterIds;
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (clusterIds) {

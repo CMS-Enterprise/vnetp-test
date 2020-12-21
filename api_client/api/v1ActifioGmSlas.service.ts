@@ -25,8 +25,8 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmSlasGetRequestParams {
-    offset: number;
-    limit: number;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmSlasIdDeleteRequestParams {
@@ -119,13 +119,7 @@ export class V1ActifioGmSlasService {
     public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
     public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmSlasGet.');
-        }
         const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmSlasGet.');
-        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (offset !== undefined && offset !== null) {

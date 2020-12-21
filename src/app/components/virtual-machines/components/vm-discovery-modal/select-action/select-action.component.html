@@ -72,8 +72,8 @@
         <ng-select
           id="profile"
           [items]="shownProfiles"
-          bindLabel="displayName"
-          groupBy="name"
+          bindLabel="name"
+          groupBy="sourceClusterName"
           [closeOnSelect]="true"
           [loading]="isLoadingProfiles"
           formControlName="profile"
@@ -81,7 +81,7 @@
           [class.is-invalid]="submitted && f.profile.errors"
         >
           <ng-template ng-optgroup-tmp let-group="item">
-            {{ group.name || 'Unnamed group' }}
+            {{ group.sourceClusterName }}
           </ng-template>
         </ng-select>
         <div *ngIf="submitted && f.profile.errors" class="invalid-feedback">
