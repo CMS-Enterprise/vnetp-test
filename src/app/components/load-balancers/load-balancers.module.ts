@@ -19,6 +19,7 @@ import { HealthMonitorModule } from './health-monitors/health-monitor.module';
 import { VlanModule } from './vlans/vlan.module';
 import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
 import { VirtualServerModule } from './virtual-servers/virtual-server.module';
+import { IRuleModule } from './irules/irule.module';
 
 const routes: Routes = [
   {
@@ -40,7 +41,7 @@ const routes: Routes = [
     SharedModule,
     TabsModule,
     TooltipModule,
-    // IRuleModule,
+    IRuleModule,
     HealthMonitorModule,
     VlanModule,
     VirtualServerModule,

@@ -37,7 +37,7 @@
 <section class="btn-toolbar" role="toolbar">
   <app-import-export
     [exportObject]="vlans"
-    exportFileName="LoadBalancers_VLANs_{{ currentTier.name }}"
+    exportFileName="LoadBalancer_VLANs_{{ currentTier.name }}"
     (import)="import($event)"
   ></app-import-export>
 </section>

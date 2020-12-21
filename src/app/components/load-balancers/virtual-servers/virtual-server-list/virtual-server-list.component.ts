@@ -58,7 +58,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     this.loadVirtualServers();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.virtualServerChanges = this.subscribeToVirtualServerModal();
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, Type, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, Type, ViewChild } from '@angular/core';
 import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ interface HealthMonitorView extends LoadBalancerHealthMonitor {
   selector: 'app-health-monitor-list',
   templateUrl: './health-monitor-list.component.html',
 })
-export class HealthMonitorListComponent implements OnInit, OnDestroy {
+export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() currentTier: Tier;
   @Input() tiers: Tier[] = [];
 
@@ -47,6 +47,9 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadHealthMonitors();
+  }
+
+  ngAfterViewInit() {
     this.healthMonitorChanges = this.subscribeToHealthMonitorModal();
   }
 

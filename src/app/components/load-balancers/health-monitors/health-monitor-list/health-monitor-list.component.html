@@ -42,7 +42,7 @@
 <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
   <app-import-export
     [exportObject]="healthMonitors"
-    exportFileName="loadBalancerHealthMonitors-{{ currentTier.name }}"
+    exportFileName="LoadBalancer_HealthMonitors_{{ currentTier.name }}"
     (import)="importHealthMonitors($event)"
   ></app-import-export>
 </section>

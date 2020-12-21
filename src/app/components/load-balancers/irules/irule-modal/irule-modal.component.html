@@ -12,14 +12,40 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+      <div class="form-row">
+        <!-- Name -->
+        <div class="form-group col-md-6">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="submitted && f.name.errors"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+            <div *ngIf="f.name.errors.required">Name is required</div>
+            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group col-md-6">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            formControlName="description"
+            class="form-control"
+            [class.is-invalid]="submitted && f.description.errors"
+            aria-label="Description"
+            id="description"
+          />
+          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+            <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+            <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+          </div>
         </div>
       </div>
 

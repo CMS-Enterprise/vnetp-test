@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ interface IRuleView extends LoadBalancerIrule {
   selector: 'app-irule-list',
   templateUrl: './irule-list.component.html',
 })
-export class IRuleListComponent implements OnInit, OnDestroy {
+export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() currentTier: Tier;
   @Input() tiers: Tier[] = [];
 
@@ -26,6 +26,7 @@ export class IRuleListComponent implements OnInit, OnDestroy {
     description: 'Health Monitors in the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
+      { name: 'Description', property: 'description' },
       { name: 'Content', property: 'content' },
       { name: 'Provisioned', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
@@ -40,6 +41,9 @@ export class IRuleListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadIRules();
+  }
+
+  ngAfterViewInit() {
     this.iRuleChanges = this.subscribeToIRuleModal();
   }
 
@@ -64,10 +68,11 @@ export class IRuleListComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         iRules => {
-          this.iRules = iRules.map(iRule => {
+          this.iRules = iRules.map(i => {
             return {
-              ...iRule,
-              provisionedState: iRule.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              ...i,
+              description: i.description || '--',
+              provisionedState: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

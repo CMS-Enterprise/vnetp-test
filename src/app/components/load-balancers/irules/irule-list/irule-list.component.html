@@ -37,7 +37,7 @@
 <section class="btn-toolbar" role="toolbar">
   <app-import-export
     [exportObject]="iRules"
-    exportFileName="loadBalancerIRules-{{ currentTier.name }}"
+    exportFileName="LoadBalancer_iRules_{{ currentTier.name }}"
     (import)="import($event)"
   ></app-import-export>
 </section>

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ interface VlanView extends LoadBalancerVlan {
   selector: 'app-vlan-list',
   templateUrl: './vlan-list.component.html',
 })
-export class VlanListComponent implements OnInit, OnDestroy {
+export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() currentTier: Tier;
   @Input() tiers: Tier[] = [];
 
@@ -40,6 +40,9 @@ export class VlanListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadVlans();
+  }
+
+  ngAfterViewInit() {
     this.vlanChanges = this.subscribeToVlanModal();
   }
 

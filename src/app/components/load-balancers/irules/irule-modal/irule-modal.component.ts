@@ -47,15 +47,15 @@ export class IRuleModalComponent implements OnInit {
     this.modalMode = iRule ? ModalMode.Edit : ModalMode.Create;
 
     if (this.modalMode === ModalMode.Edit) {
-      this.iRuleId = iRule.id;
+      const { name, description, content, id } = iRule;
+
+      this.iRuleId = id;
+      this.form.controls.name.setValue(name);
+      this.form.controls.name.disable();
+      this.form.controls.content.setValue(content);
+      this.form.controls.description.setValue(description);
     } else {
       this.form.controls.name.enable();
-    }
-
-    if (iRule) {
-      this.form.controls.name.setValue(iRule.name);
-      this.form.controls.name.disable();
-      this.form.controls.content.setValue(iRule.content);
     }
     this.ngx.resetModalData('iRuleModal');
   }
@@ -66,10 +66,11 @@ export class IRuleModalComponent implements OnInit {
       return;
     }
 
-    const { content, name } = this.form.value;
+    const { content, description, name } = this.form.value;
     const iRule: LoadBalancerIrule = {
       tierId: this.tierId,
       content,
+      description,
       name,
     };
 
@@ -84,6 +85,7 @@ export class IRuleModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       content: ['', Validators.required],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(100)])],
     });
   }
 
