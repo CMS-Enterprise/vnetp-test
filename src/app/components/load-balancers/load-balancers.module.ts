@@ -6,7 +6,6 @@ import { NodeModalComponent } from './node-modal/node-modal.component';
 import { PolicyModalComponent } from './policy-modal/policy-modal.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
-import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
@@ -19,6 +18,7 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { HealthMonitorModule } from './health-monitors/health-monitor.module';
 import { VlanModule } from './vlans/vlan.module';
 import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
+import { VirtualServerModule } from './virtual-servers/virtual-server.module';
 
 const routes: Routes = [
   {
@@ -43,6 +43,7 @@ const routes: Routes = [
     // IRuleModule,
     HealthMonitorModule,
     VlanModule,
+    VirtualServerModule,
   ],
   declarations: [
     LoadBalancersComponent,
@@ -51,7 +52,6 @@ const routes: Routes = [
     PolicyModalComponent,
     PoolModalComponent,
     ProfileModalComponent,
-    VirtualServerModalComponent,
     LoadBalancerRouteModalComponent,
   ],
 })

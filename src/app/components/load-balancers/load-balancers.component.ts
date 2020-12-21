@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { VirtualServerModalDto } from 'src/app/models/loadbalancer/virtual-server-modal-dto';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
@@ -10,8 +9,6 @@ import {
   V1TiersService,
   LoadBalancerPool,
   LoadBalancerHealthMonitor,
-  LoadBalancerVirtualServer,
-  V1LoadBalancerVirtualServersService,
   V1LoadBalancerPoolsService,
   LoadBalancerNode,
   V1LoadBalancerNodesService,
@@ -20,9 +17,7 @@ import {
   LoadBalancerPolicy,
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
-  VirtualServerImportCollectionDto,
   NodeImportCollectionDto,
-  LoadBalancerVlan,
   LoadBalancerSelfIp,
   LoadBalancerRoute,
   V1LoadBalancerSelfIpsService,
@@ -60,8 +55,9 @@ enum Indices {
 export class LoadBalancersComponent implements OnInit, OnDestroy {
   navIndex = 0;
 
-  public tiers: Tier[];
   public currentTier: Tier;
+  public datacenterId: string;
+  public tiers: Tier[];
 
   currentNodePage = 1;
   currentPoliciesPage = 1;
@@ -69,7 +65,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   currentProfilesPage = 1;
   currentRoutesPage = 1;
   currentSelfIpsPage = 1;
-  currentVSPage = 1;
 
   perPage = 20;
   ModalMode = ModalMode;
@@ -81,7 +76,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   profiles: LoadBalancerProfile[];
   routes: LoadBalancerRoute[];
   selfIps: LoadBalancerSelfIp[];
-  virtualServers: LoadBalancerVirtualServer[];
 
   public wikiBase = environment.wikiBase;
 
@@ -107,7 +101,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private profileModalSubscription: Subscription;
   private routeModalSubscription: Subscription;
   private selfIpModalSubscription: Subscription;
-  private virtualServerModalSubscription: Subscription;
 
   constructor(
     private datacenterService: DatacenterContextService,
@@ -121,7 +114,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
-    private virtualServersService: V1LoadBalancerVirtualServersService,
   ) {}
 
   // TODO: Remove once split into modules
@@ -144,22 +136,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getVirtualServers() {
-    if (!this.hasCurrentTier()) {
-      return;
-    }
-
-    this.virtualServersService
-      .v1LoadBalancerVirtualServersGet({
-        join: 'irules',
-        filter: `tierId||eq||${this.currentTier.id}`,
-      })
-      .subscribe(data => {
-        this.virtualServers = data;
-      });
-  }
-
-  getPools(getVirtualServers = false) {
+  getPools() {
     if (this.currentTier && this.currentTier.id) {
       this.poolsService
         .v1LoadBalancerPoolsIdTierIdGet({
@@ -167,10 +144,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         })
         .subscribe(data => {
           this.pools = data;
-
-          if (getVirtualServers) {
-            this.getVirtualServers();
-          }
         });
     }
   }
@@ -264,9 +237,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   getObjectsForNavIndex() {
     switch (this.navIndex) {
-      case 0:
-        this.getPools(true);
-        break;
       case 1:
         this.getPools();
         this.getHealthMonitors();
@@ -275,17 +245,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 3:
         this.getNodes();
         break;
-      case 4:
-        break;
-      case 5:
-        break;
       case 6:
         this.getProfiles();
         break;
       case 7:
         this.getPolicies();
-        break;
-      case 8:
         break;
       case 9:
         this.getSelfIps();
@@ -301,16 +265,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
-      case 0:
-        const virtualServerDto = {} as VirtualServerImportCollectionDto;
-        virtualServerDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        virtualServerDto.virtualServers = this.sanitizeData(data);
-        this.virtualServersService
-          .v1LoadBalancerVirtualServersBulkImportPost({
-            virtualServerImportCollectionDto: virtualServerDto,
-          })
-          .subscribe(() => this.getObjectsForNavIndex());
-        break;
       case 1:
         const poolDto = {} as PoolImportCollectionDto;
         poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
@@ -347,8 +301,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   exportLoadBalancerConfig(): any[] {
     // TODO: Export Relationships
     switch (this.navIndex) {
-      case 0:
-        return this.virtualServers;
       case 1:
         return this.pools;
       case 3:
@@ -381,20 +333,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     return this.pools.find(p => p.id === poolId).name || 'Error Resolving Name';
     // tslint:disable-next-line: semicolon
   };
-
-  openVirtualServerModal(modalMode: ModalMode, virtualServer?: LoadBalancerVirtualServer) {
-    const dto = new VirtualServerModalDto();
-    dto.TierId = this.currentTier.id;
-    dto.Pools = this.pools;
-    dto.VirtualServer = virtualServer;
-    dto.IRules = []; //this.irules;
-    dto.ModalMode = modalMode;
-
-    this.subscribeToVirtualServerModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'virtualServerModal');
-    this.ngx.getModal('virtualServerModal').open();
-  }
 
   openPoolModal(modalMode: ModalMode, pool?: LoadBalancerPool) {
     if (modalMode === ModalMode.Edit && !pool) {
@@ -510,15 +448,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToVirtualServerModal() {
-    this.virtualServerModalSubscription = this.ngx.getModal('virtualServerModal').onCloseFinished.subscribe(() => {
-      this.getVirtualServers();
-      this.ngx.resetModalData('virtualServerModal');
-      this.virtualServerModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
   subscribeToPoolModal() {
     this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.getPools();
@@ -554,15 +483,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('loadBalancerPolicyModal');
       this.policyModalSubscription.unsubscribe();
       this.datacenterService.unlockDatacenter();
-    });
-  }
-
-  public deleteVirtualServer(virtualServer: LoadBalancerVirtualServer): void {
-    this.entityService.deleteEntity(virtualServer, {
-      entityName: 'Virtual Server',
-      delete$: this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }),
-      softDelete$: this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }),
-      onSuccess: () => this.getVirtualServers(),
     });
   }
 
@@ -632,14 +552,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  restoreVirtualServer(virtualServer: LoadBalancerVirtualServer) {
-    if (virtualServer.deletedAt) {
-      this.virtualServersService
-        .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
-        .subscribe(() => this.getVirtualServers());
-    }
-  }
-
   restorePool(pool: LoadBalancerPool) {
     if (pool.deletedAt) {
       this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.getPools());
@@ -672,13 +584,13 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.virtualServers = [];
         this.pools = [];
         this.healthMonitors = [];
         this.nodes = [];
         this.policies = [];
         this.profiles = [];
         this.getObjectsForNavIndex();
+        this.datacenterId = cd.id;
       }
     });
 
@@ -692,7 +604,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     SubscriptionUtil.unsubscribe([
-      this.virtualServerModalSubscription,
       this.poolModalSubscription,
       this.nodeModalSubscription,
       this.profileModalSubscription,

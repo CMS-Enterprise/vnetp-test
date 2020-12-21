@@ -167,8 +167,6 @@ export class ServiceObjectGroupModalHelpText {
   providedIn: 'root',
 })
 export class VirtualServerModalHelpText {
-  Name = `Name of Virtual Server.`;
-  Type = `Type of Virtual Server.`;
   SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
   SourceAddressTranslation = `Source Address type.`;
   DestinationAddress = `Address that the Virtual Server accepts traffic at.`;
