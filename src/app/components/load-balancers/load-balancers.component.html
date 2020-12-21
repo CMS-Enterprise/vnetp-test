@@ -236,71 +236,8 @@
 </div>
 
 <div *ngIf="navIndex === 4">
-  <section class="btn-toolbar" role="toolbar">
-    <!-- Create iRule -->
-    <button type="button" class="btn btn-success" (click)="openIRuleModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create iRule</span>
-    </button>
-  </section>
-
-  <table class="table table-striped">
-    <caption>
-      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-      <span
-        >Manage iRules in F5 format. More info:
-        <a target="_blank" rel="noopener noreferrer" [attr.href]="wikiBase + '/load-balancer#iRules'">wiki</a></span
-      >
-    </caption>
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Content</th>
-        <th scope="col">State</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let irule of irules | paginate: { itemsPerPage: perPage, currentPage: currentIrulePage }">
-        <td>
-          <span>{{ irule?.name }}</span>
-        </td>
-        <td>
-          <span>{{ irule?.content }}</span>
-        </td>
-        <td>
-          <span>{{ irule?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-        </td>
-        <td class="table__actions">
-          <app-icon-button
-            *ngIf="!irule?.deletedAt"
-            icon="edit"
-            label="Edit iRule"
-            (handleClick)="openIRuleModal(ModalMode.Edit, irule)"
-          ></app-icon-button>
-
-          <app-icon-button
-            *ngIf="irule?.deletedAt"
-            icon="undo"
-            label="Restore iRule"
-            type="success"
-            (handleClick)="restoreIrule(irule)"
-          ></app-icon-button>
-
-          <app-icon-button
-            icon="delete"
-            label="Soft-Delete/Delete iRule"
-            [type]="irule?.deletedAt ? 'danger' : 'default'"
-            (handleClick)="deleteIrule(irule)"
-          ></app-icon-button>
-        </td>
-      </tr>
-      <tr *ngIf="!irules?.length" class="text-center">
-        <td colspan="4">No iRules in this Tier</td>
-      </tr>
-    </tbody>
-  </table>
-  <pagination-controls (pageChange)="currentIrulePage = $event"></pagination-controls>
+  iRules
+  <!-- <app-irule-list [currentTier]="currentTier" [tiers]="tiers"></app-irule-list> -->
 </div>
 
 <div *ngIf="navIndex === 5">
@@ -438,64 +375,7 @@
 </div>
 
 <div *ngIf="navIndex === 8">
-  <section class="btn-toolbar" role="toolbar">
-    <!-- Create VLAN -->
-    <button type="button" class="btn btn-success" (click)="openVlanModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create VLAN</span>
-    </button>
-  </section>
-
-  <table class="table table-striped">
-    <caption>
-      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-      <span>Manage Load Balancer VLANs</span>
-    </caption>
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Tag</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
-        <td>
-          <span>{{ vlan?.name }}</span>
-        </td>
-        <td>
-          <span>{{ vlan?.tag }}</span>
-        </td>
-        <td class="table__actions">
-          <app-icon-button
-            *ngIf="!vlan?.deletedAt"
-            icon="edit"
-            label="Edit VLAN"
-            (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
-          ></app-icon-button>
-
-          <app-icon-button
-            *ngIf="vlan?.deletedAt"
-            icon="undo"
-            label="Restore VLAN"
-            type="success"
-            (handleClick)="restoreVlan(vlan)"
-          ></app-icon-button>
-
-          <app-icon-button
-            icon="delete"
-            label="Soft-Delete/Delete VLAN"
-            [type]="vlan?.deletedAt ? 'danger' : 'default'"
-            (handleClick)="deleteVlan(vlan)"
-          ></app-icon-button>
-        </td>
-      </tr>
-      <tr *ngIf="!vlans?.length" class="text-center">
-        <td colspan="4">No VLANs in this Tier</td>
-      </tr>
-    </tbody>
-  </table>
-  <pagination-controls (pageChange)="currentVlansPage = $event"></pagination-controls>
+  <app-vlan-list [currentTier]="currentTier" [tiers]="tiers"></app-vlan-list>
 </div>
 
 <div *ngIf="navIndex === 9">
@@ -650,10 +530,8 @@
 <app-virtual-server-modal></app-virtual-server-modal>
 <app-pool-modal></app-pool-modal>
 <app-node-modal></app-node-modal>
-<app-irule-modal></app-irule-modal>
 <app-load-balancer-profile-modal></app-load-balancer-profile-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
-<app-load-balancer-vlan-modal></app-load-balancer-vlan-modal>
 <app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
 <app-load-balancer-route-modal></app-load-balancer-route-modal>
 <app-yes-no-modal></app-yes-no-modal>
