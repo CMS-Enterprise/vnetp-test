@@ -58,7 +58,7 @@ describe('VmListComponent', () => {
 
     component.ngOnInit();
 
-    expect(spy).toHaveBeenCalledWith({ limit: 20, offset: 0 });
+    expect(spy).toHaveBeenCalledWith({});
   });
 
   it('should default to get the last sync date when jobs are empty', done => {

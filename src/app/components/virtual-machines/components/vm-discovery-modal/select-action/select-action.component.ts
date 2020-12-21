@@ -125,7 +125,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     const sourceClusterIds = new Set(this.vCenter.sourceClusters.map(c => c.id));
 
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
+    this.agmProfileService.v1ActifioGmProfilesGet({}).subscribe(profiles => {
       this.allProfiles = profiles
         .filter(p => sourceClusterIds.has(p.sourceClusterId))
         .sort(ObjectUtil.sortByName)
@@ -142,7 +142,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet({ limit: 100, offset: 0 }).subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(data => {
       this.templates = data;
       this.isLoadingTemplates = false;
     });

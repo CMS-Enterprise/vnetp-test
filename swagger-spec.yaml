@@ -132,11 +132,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -425,11 +425,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -713,11 +713,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -907,11 +907,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -1261,11 +1261,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -1635,11 +1635,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -1935,11 +1935,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -2358,11 +2358,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -2712,11 +2712,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -3135,11 +3135,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -3493,11 +3493,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -3687,11 +3687,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -4045,11 +4045,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -4243,11 +4243,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -4455,11 +4455,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -4787,11 +4787,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -5141,11 +5141,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -5495,11 +5495,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -5817,11 +5817,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -6156,11 +6156,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -6491,11 +6491,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -6813,11 +6813,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -7164,11 +7164,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -7640,11 +7640,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -7994,11 +7994,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -8348,11 +8348,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -9035,11 +9035,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -9424,11 +9424,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -9777,11 +9777,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -10131,11 +10131,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -10485,11 +10485,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -10839,11 +10839,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -11069,11 +11069,11 @@ paths:
           required: false
           in: query
           type: string
-        - name: limit
+        - name: per_page
           description: >-
             <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
-            <strong>?limit=number</strong><br/><i>Example:</i>
-            <strong>?limit=10</strong>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
           required: false
           in: query
           type: number
@@ -12037,6 +12037,14 @@ paths:
     get:
       summary: Get many ActifioPolicyDto
       parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
         - type: boolean
           name: isSnapshot
           required: true
@@ -12045,14 +12053,6 @@ paths:
           name: id
           required: true
           in: path
-        - type: number
-          name: offset
-          required: true
-          in: query
-        - type: number
-          name: limit
-          required: true
-          in: query
       responses:
         '200':
           description: ''

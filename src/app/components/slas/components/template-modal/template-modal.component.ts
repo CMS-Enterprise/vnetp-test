@@ -125,7 +125,7 @@ export class TemplateModalComponent implements OnInit {
 
   private loadSnapshotPolicy(templateId: string): void {
     this.agmTemplateService
-      .v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 })
+      .v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true })
       .subscribe((policies: ActifioPolicyDto[]) => {
         this.policies = policies;
         if (policies.length === 0) {
