@@ -48,18 +48,6 @@ export class FirewallRulesHelpText {
 @Injectable({
   providedIn: 'root',
 })
-export class ProfilesHelpText {
-  wikiBase: string = environment.wikiBase;
-
-  Name = `Name of Profile.`;
-  Type = `Type of Profile (Http or ClientSSL).`;
-  Certificate = `ClientSSL certificate of the profile.`;
-  ReverseProxy = `Reverse Proxy Type of the profile.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
 export class NetworkInterfacesHelpText {
   wikiBase: string = environment.wikiBase;
 

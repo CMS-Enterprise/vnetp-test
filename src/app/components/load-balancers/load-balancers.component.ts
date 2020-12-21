@@ -12,8 +12,6 @@ import {
   V1LoadBalancerPoolsService,
   LoadBalancerNode,
   V1LoadBalancerNodesService,
-  V1LoadBalancerProfilesService,
-  LoadBalancerProfile,
   LoadBalancerPolicy,
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
@@ -24,7 +22,6 @@ import {
   V1LoadBalancerRoutesService,
 } from 'api_client';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
-import { ProfileModalDto } from 'src/app/models/loadbalancer/profile-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { LoadBalancerRouteModalDto } from 'src/app/models/network/lb-route-modal-dto';
@@ -62,7 +59,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   currentNodePage = 1;
   currentPoliciesPage = 1;
   currentPoolPage = 1;
-  currentProfilesPage = 1;
   currentRoutesPage = 1;
   currentSelfIpsPage = 1;
 
@@ -73,7 +69,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
   pools: LoadBalancerPool[];
-  profiles: LoadBalancerProfile[];
   routes: LoadBalancerRoute[];
   selfIps: LoadBalancerSelfIp[];
 
@@ -98,7 +93,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private nodeModalSubscription: Subscription;
   private policyModalSubscription: Subscription;
   private poolModalSubscription: Subscription;
-  private profileModalSubscription: Subscription;
   private routeModalSubscription: Subscription;
   private selfIpModalSubscription: Subscription;
 
@@ -109,7 +103,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private nodeService: V1LoadBalancerNodesService,
     private policiesService: V1LoadBalancerPoliciesService,
     private poolsService: V1LoadBalancerPoolsService,
-    private profilesService: V1LoadBalancerProfilesService,
     private routesService: V1LoadBalancerRoutesService,
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
@@ -176,21 +169,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       });
   }
 
-  getProfiles() {
-    if (!this.hasCurrentTier()) {
-      return;
-    }
-
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerProfiles',
-      })
-      .subscribe(data => {
-        this.profiles = data.loadBalancerProfiles;
-      });
-  }
-
   getPolicies() {
     if (!this.hasCurrentTier()) {
       return;
@@ -245,9 +223,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 3:
         this.getNodes();
         break;
-      case 6:
-        this.getProfiles();
-        break;
       case 7:
         this.getPolicies();
         break;
@@ -261,7 +236,7 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   importLoadBalancerConfig(data: any[]) {
-    // TODO: Bulk Import of Policies, Profiles, SelfIps, Routes
+    // TODO: Bulk Import of Policies, SelfIps, Routes
 
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
@@ -305,8 +280,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         return this.pools;
       case 3:
         return this.nodes;
-      case 6:
-        return this.profiles;
       case 7:
         return this.policies;
       default:
@@ -364,22 +337,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.datacenterService.lockDatacenter();
     this.ngx.setModalData(dto, 'nodeModal');
     this.ngx.getModal('nodeModal').open();
-  }
-
-  openProfileModal(modalMode: ModalMode, profile?: LoadBalancerProfile) {
-    if (modalMode === ModalMode.Edit && !profile) {
-      throw new Error('Profile required');
-    }
-
-    const dto = new ProfileModalDto();
-    dto.TierId = this.currentTier.id;
-    dto.Profile = profile;
-    dto.ModalMode = modalMode;
-
-    this.subscribeToProfileModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'loadBalancerProfileModal');
-    this.ngx.getModal('loadBalancerProfileModal').open();
   }
 
   openPolicyModal(modalMode: ModalMode, policy?: LoadBalancerPolicy) {
@@ -468,15 +425,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToProfileModal() {
-    this.profileModalSubscription = this.ngx.getModal('loadBalancerProfileModal').onCloseFinished.subscribe(() => {
-      this.getProfiles();
-      this.ngx.resetModalData('loadBalancerProfileModal');
-      this.profileModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
   subscribeToPolicyModal() {
     this.policyModalSubscription = this.ngx.getModal('loadBalancerPolicyModal').onCloseFinished.subscribe(() => {
       this.getPolicies();
@@ -501,15 +449,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       delete$: this.nodeService.v1LoadBalancerNodesIdDelete({ id: node.id }),
       softDelete$: this.nodeService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }),
       onSuccess: () => this.getNodes(),
-    });
-  }
-
-  public deleteProfile(profile: LoadBalancerProfile): void {
-    this.entityService.deleteEntity(profile, {
-      entityName: 'Profile',
-      delete$: this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }),
-      softDelete$: this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }),
-      onSuccess: () => this.getProfiles(),
     });
   }
 
@@ -564,12 +503,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  restoreProfile(profile: LoadBalancerProfile) {
-    if (profile.deletedAt) {
-      this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.getProfiles());
-    }
-  }
-
   restorePolicy(policy: LoadBalancerPolicy) {
     if (policy.deletedAt) {
       this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.getPolicies());
@@ -588,7 +521,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
         this.healthMonitors = [];
         this.nodes = [];
         this.policies = [];
-        this.profiles = [];
         this.getObjectsForNavIndex();
         this.datacenterId = cd.id;
       }
@@ -606,7 +538,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([
       this.poolModalSubscription,
       this.nodeModalSubscription,
-      this.profileModalSubscription,
       this.policyModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,

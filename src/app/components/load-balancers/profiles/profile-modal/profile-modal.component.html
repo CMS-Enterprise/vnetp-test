@@ -1,9 +1,9 @@
 <ngx-smart-modal
-  #loadBalancerProfileModal
-  identifier="loadBalancerProfileModal"
+  #profileModal
+  identifier="profileModal"
   [dismissable]="false"
   (onOpen)="getData()"
-  (onClose)="reset()"
+  (onClose)="closeModal()"
   customClass="large-modal"
 >
   <header class="modal-header">
@@ -12,24 +12,46 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <tooltip [message]="helpText.Name"></tooltip>
-        <input type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+      <div class="form-row">
+        <!-- Name -->
+        <div class="form-group col-md-6">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="submitted && f.name.errors"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+            <div *ngIf="f.name.errors.required">Name is required</div>
+            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group col-md-6">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            formControlName="description"
+            class="form-control"
+            [class.is-invalid]="submitted && f.description.errors"
+            aria-label="Description"
+            id="description"
+          />
+          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+            <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+            <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+          </div>
         </div>
       </div>
-
-      <hr />
 
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="type">Type</label>
-          <tooltip [message]="helpText.Type"></tooltip>
           <select formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
             <option></option>
             <option value="ClientSSL">ClientSSL</option>
@@ -41,7 +63,7 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === 'Http'">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.Http">
         <div class="form-group col-md-6">
           <label for="reverseProxy">Reverse Proxy</label>
           <tooltip [message]="helpText.ReverseProxy"></tooltip>
@@ -57,25 +79,26 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
         <div class="form-group col-md-12">
-          <label for="publicKey">Certificate</label>
-          <tooltip [message]="helpText.Certificate"></tooltip>
+          <label for="publicKey">Client SSL Certificate</label>
           <textarea
+            id="publicKey"
             rows="8"
             formControlName="certificate"
             class="form-control"
-            aria-label="Certificate"
-            placeholder="Paste Public Certificate Here"
+            placeholder="Paste Public Certificate..."
+            [class.is-invalid]="submitted && f.certificate.errors"
           >
           </textarea>
-        </div>
-        <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
-          <div *ngIf="f.certificate.errors.required">Public Certificate is required</div>
+          <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
+            <div *ngIf="f.certificate.errors.required">Certificate is required</div>
+            <div *ngIf="f.certificate.errors.minLength">Certificate must be at least 50 characters.</div>
+          </div>
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === 'ClientSSL'">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
         <div class="form-group col-md-6">
           <button class="btn btn-warning" (click)="privateKeyCipherUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
@@ -88,13 +111,13 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        <span>Save</span>
+        <span>Save Profile</span>
       </button>
     </footer>
   </form>

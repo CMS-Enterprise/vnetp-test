@@ -5,7 +5,6 @@ import { LoadBalancerSelfIpModalComponent } from './lb-self-ip-modal/lb-self-ip-
 import { NodeModalComponent } from './node-modal/node-modal.component';
 import { PolicyModalComponent } from './policy-modal/policy-modal.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
-import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
@@ -20,6 +19,7 @@ import { VlanModule } from './vlans/vlan.module';
 import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
 import { VirtualServerModule } from './virtual-servers/virtual-server.module';
 import { IRuleModule } from './irules/irule.module';
+import { ProfileModule } from './profiles/profile.module';
 
 const routes: Routes = [
   {
@@ -45,6 +45,7 @@ const routes: Routes = [
     HealthMonitorModule,
     VlanModule,
     VirtualServerModule,
+    ProfileModule,
   ],
   declarations: [
     LoadBalancersComponent,
@@ -52,7 +53,6 @@ const routes: Routes = [
     NodeModalComponent,
     PolicyModalComponent,
     PoolModalComponent,
-    ProfileModalComponent,
     LoadBalancerRouteModalComponent,
   ],
 })

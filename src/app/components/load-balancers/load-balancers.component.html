@@ -172,68 +172,7 @@
   </div>
 
   <div *ngIf="navIndex === 6">
-    <section class="btn-toolbar" role="toolbar">
-      <!-- Create Profile -->
-      <button type="button" class="btn btn-success" (click)="openProfileModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Profile</span>
-      </button>
-    </section>
-
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Manage Profiles</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let profile of profiles | paginate: { itemsPerPage: perPage, currentPage: currentProfilesPage }">
-          <td>
-            <span>{{ profile?.name }}</span>
-          </td>
-          <td>
-            <span>{{ profile?.type }}</span>
-          </td>
-          <td>
-            <span>{{ profile?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!profile?.deletedAt"
-              icon="edit"
-              label="Edit Profile"
-              (handleClick)="openProfileModal(ModalMode.Edit, profile)"
-            ></app-icon-button>
-
-            <app-icon-button
-              *ngIf="profile?.deletedAt"
-              icon="undo"
-              label="Restore Profile"
-              type="success"
-              (handleClick)="restoreProfile(profile)"
-            ></app-icon-button>
-
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete/Delete Profile"
-              [type]="profile?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteProfile(profile)"
-            ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!profiles?.length" class="text-center">
-          <td colspan="4">No Profiles in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentProfilesPage = $event"></pagination-controls>
+    <app-profile-list [currentTier]="currentTier" [tiers]="tiers"></app-profile-list>
   </div>
 
   <div *ngIf="navIndex === 7">
@@ -457,7 +396,6 @@
 
 <app-pool-modal></app-pool-modal>
 <app-node-modal></app-node-modal>
-<app-load-balancer-profile-modal></app-load-balancer-profile-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
 <app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
 <app-load-balancer-route-modal></app-load-balancer-route-modal>
