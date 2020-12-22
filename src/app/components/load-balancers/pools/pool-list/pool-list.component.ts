@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
 import { EntityService } from 'src/app/services/entity.service';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
@@ -130,8 +129,4 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ngx.resetModalData('poolModal');
     });
   }
-}
-
-export interface ImportPool extends LoadBalancerPool {
-  vrfName?: string;
 }

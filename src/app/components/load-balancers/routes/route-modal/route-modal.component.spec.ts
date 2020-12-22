@@ -2,23 +2,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { LoadBalancerRouteModalComponent } from './lb-route-modal.component';
+import { RouteModalComponent } from './route-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1LoadBalancerRoutesService } from 'api_client';
 
-describe('LoadBalancerRouteModalComponent', () => {
-  let component: LoadBalancerRouteModalComponent;
-  let fixture: ComponentFixture<LoadBalancerRouteModalComponent>;
+describe('RouteModalComponent', () => {
+  let component: RouteModalComponent;
+  let fixture: ComponentFixture<RouteModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [LoadBalancerRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [RouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerRoutesService)],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(LoadBalancerRouteModalComponent);
+        fixture = TestBed.createComponent(RouteModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });

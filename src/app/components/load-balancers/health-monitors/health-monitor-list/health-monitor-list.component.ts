@@ -57,7 +57,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     SubscriptionUtil.unsubscribe([this.healthMonitorChanges]);
   }
 
-  public deleteHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+  public delete(healthMonitor: LoadBalancerHealthMonitor): void {
     this.entityService.deleteEntity(healthMonitor, {
       entityName: 'Health Monitor',
       delete$: this.healthMonitorsService.v1LoadBalancerHealthMonitorsIdDelete({ id: healthMonitor.id }),
@@ -90,7 +90,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       );
   }
 
-  public importHealthMonitors(healthMonitors: ImportHealthMonitor[]): void {
+  public import(healthMonitors: ImportHealthMonitor[]): void {
     const bulk = healthMonitors.map(healthMonitor => {
       const { vrfName } = healthMonitor;
       if (!vrfName) {
@@ -111,7 +111,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       .subscribe(() => this.loadHealthMonitors());
   }
 
-  public openHealthMonitorModal(healthMonitor?: LoadBalancerHealthMonitor): void {
+  public openModal(healthMonitor?: LoadBalancerHealthMonitor): void {
     const dto: HealthMonitorModalDto = {
       tierId: this.currentTier.id,
       healthMonitor,
@@ -120,7 +120,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     this.ngx.getModal('healthMonitorModal').open();
   }
 
-  public restoreHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
+  public restore(healthMonitor: LoadBalancerHealthMonitor): void {
     if (!healthMonitor.deletedAt) {
       return;
     }

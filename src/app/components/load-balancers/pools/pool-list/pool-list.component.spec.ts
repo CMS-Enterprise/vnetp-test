@@ -8,8 +8,8 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerPool, Tier, V1LoadBalancerPoolsService } from 'api_client';
-import { PoolListComponent, ImportPool } from './pool-list.component';
+import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'api_client';
+import { PoolListComponent } from './pool-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
@@ -71,9 +71,9 @@ describe('PoolListComponent', () => {
   it('should import health monitors', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
-    const newPools = [{ name: 'Pool1', vrfName: 'Tier1' }, { name: 'Pool2' }] as ImportPool[];
+    const newPools = [{ name: 'Pool1', vrfName: 'Tier1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];
     const poolService = TestBed.inject(V1LoadBalancerPoolsService);
-    const spy = jest.spyOn(poolService, 'v1LoadBalancerPoolsBulkPost');
+    const spy = jest.spyOn(poolService, 'v1LoadBalancerPoolsBulkImportPost');
 
     component.import(newPools);
 

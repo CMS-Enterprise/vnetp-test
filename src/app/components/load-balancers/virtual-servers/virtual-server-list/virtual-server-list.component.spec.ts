@@ -8,8 +8,8 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService } from 'api_client';
-import { VirtualServerListComponent, ImportVirtualServer } from './virtual-server-list.component';
+import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
+import { VirtualServerListComponent } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
@@ -71,14 +71,14 @@ describe('VirtualServerListComponent', () => {
   it('should import health monitors', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
-    const newVirtualServers = [{ name: 'VirtualServer1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }] as ImportVirtualServer[];
+    const newVirtualServers = [{ name: 'VirtualServer1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'v1LoadBalancerVirtualServersBulkPost');
+    const spy = jest.spyOn(virtualServerService, 'v1LoadBalancerVirtualServersBulkImportPost');
 
     component.import(newVirtualServers);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerVirtualServerBulkDto: {
+      virtualServerImportCollectionDto: {
         bulk: [{ name: 'VirtualServer1', tierId: '1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }],
       },
     });

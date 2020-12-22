@@ -2,23 +2,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { LoadBalancerSelfIpModalComponent } from './lb-self-ip-modal.component';
+import { SelfIpModalComponent } from './self-ip-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'api_client';
 
-describe('LoadBalancerSelfIpModalComponent', () => {
-  let component: LoadBalancerSelfIpModalComponent;
-  let fixture: ComponentFixture<LoadBalancerSelfIpModalComponent>;
+describe('SelfIpModalComponent', () => {
+  let component: SelfIpModalComponent;
+  let fixture: ComponentFixture<SelfIpModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [LoadBalancerSelfIpModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [SelfIpModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerSelfIpsService), MockProvider(V1LoadBalancerVlansService)],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(LoadBalancerSelfIpModalComponent);
+        fixture = TestBed.createComponent(SelfIpModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });

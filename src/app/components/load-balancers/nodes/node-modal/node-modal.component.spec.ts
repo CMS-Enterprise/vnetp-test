@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NodeModalComponent } from '../../node-modal/node-modal.component';
+import { NodeModalComponent } from './node-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1LoadBalancerPoolsService, V1LoadBalancerNodesService } from 'api_client';

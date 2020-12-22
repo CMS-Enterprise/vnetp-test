@@ -8,19 +8,19 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerSelfIP, Tier, V1LoadBalancerSelfIPsService } from 'api_client';
-import { SelfIPListComponent, ImportSelfIP } from './self-ip-list.component';
+import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
+import { SelfIpListComponent, ImportSelfIp } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
-describe('SelfIPListComponent', () => {
-  let component: SelfIPListComponent;
-  let fixture: ComponentFixture<SelfIPListComponent>;
+describe('SelfIpListComponent', () => {
+  let component: SelfIpListComponent;
+  let fixture: ComponentFixture<SelfIpListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SelfIPListComponent,
+        SelfIpListComponent,
         MockComponent('app-self-ip-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
         MockFontAwesomeComponent,
@@ -28,10 +28,10 @@ describe('SelfIPListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerSelfIPsService), MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerSelfIpsService), MockProvider(NgxSmartModalService)],
     });
 
-    fixture = TestBed.createComponent(SelfIPListComponent);
+    fixture = TestBed.createComponent(SelfIpListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1' } as Tier;
     component.tiers = [component.currentTier];
@@ -42,44 +42,44 @@ describe('SelfIPListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
-    const selfIPService = TestBed.inject(V1LoadBalancerSelfIPsService);
-    const spy = jest.spyOn(selfIPService, 'v1LoadBalancerSelfIPsGet').mockImplementation(() => {
+  it('should map self ips', () => {
+    const selfIPService = TestBed.inject(V1LoadBalancerSelfIpsService);
+    jest.spyOn(selfIPService, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'SelfIP1', provisionedAt: {} },
-        { id: '2', name: 'SelfIP2' },
-      ] as LoadBalancerSelfIP[]) as any);
+        { id: '1', name: 'SelfIp1', provisionedAt: {} },
+        { id: '2', name: 'SelfIp2' },
+      ] as LoadBalancerSelfIp[]) as any);
     });
 
     component.ngOnInit();
 
-    const [selfIP1, selfIP2] = component.selfIPs;
-    expect(selfIP1).toEqual({
+    const [selfIp1, selfIp2] = component.selfIps;
+    expect(selfIp1).toEqual({
       id: '1',
-      name: 'SelfIP1',
+      name: 'SelfIp1',
       provisionedAt: {},
       provisionedState: 'Provisioned',
     });
 
-    expect(selfIP2).toEqual({
+    expect(selfIp2).toEqual({
       id: '2',
-      name: 'SelfIP2',
+      name: 'SelfIp2',
       provisionedState: 'Not Provisioned',
     });
   });
 
-  it('should import health monitors', () => {
+  it('should import self ips', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
-    const newSelfIPs = [{ name: 'SelfIP1', vrfName: 'Tier1' }, { name: 'SelfIP2' }] as ImportSelfIP[];
-    const selfIPService = TestBed.inject(V1LoadBalancerSelfIPsService);
-    const spy = jest.spyOn(selfIPService, 'v1LoadBalancerSelfIPsBulkPost');
+    const newSelfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
+    const selfIPService = TestBed.inject(V1LoadBalancerSelfIpsService);
+    const spy = jest.spyOn(selfIPService, 'v1LoadBalancerSelfIpsBulkPost');
 
-    component.import(newSelfIPs);
+    component.import(newSelfIps);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerSelfIPBulkDto: {
-        bulk: [{ name: 'SelfIP1', tierId: '1', vrfName: 'Tier1' }, { name: 'SelfIP2' }],
+      generatedLoadBalancerSelfIpBulkDto: {
+        bulk: [{ name: 'SelfIp1', tierId: '1', vrfName: 'Tier1' }, { name: 'SelfIp2' }],
       },
     });
   });

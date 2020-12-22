@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorType, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { HealthMonitorListComponent, ImportHealthMonitor } from './health-monitor-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
@@ -43,8 +43,8 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should map health monitors', () => {
-    const healthMonitorService = TestBed.inject(V1LoadBalancerHealthMonitorsService);
-    const spy = jest.spyOn(healthMonitorService, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => {
+    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    jest.spyOn(service, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => {
       return of(([
         { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
         { id: '2', name: 'HealthMonitor2' },
@@ -72,15 +72,35 @@ describe('HealthMonitorListComponent', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
     const newHealthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
-    const healthMonitorService = TestBed.inject(V1LoadBalancerHealthMonitorsService);
-    const spy = jest.spyOn(healthMonitorService, 'v1LoadBalancerHealthMonitorsBulkPost');
+    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsBulkPost');
 
-    component.importHealthMonitors(newHealthMonitors);
+    component.import(newHealthMonitors);
 
     expect(spy).toHaveBeenCalledWith({
       generatedLoadBalancerHealthMonitorBulkDto: {
         bulk: [{ name: 'HealthMonitor1', tierId: '1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }],
       },
     });
+  });
+
+  it('should delete a health monitor', () => {
+    const service = TestBed.inject(EntityService);
+    const spy = jest.spyOn(service, 'deleteEntity');
+
+    component.delete({} as LoadBalancerHealthMonitor);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a health monitor', () => {
+    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsIdRestorePatch');
+
+    component.restore({} as LoadBalancerHealthMonitor);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as LoadBalancerHealthMonitor);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

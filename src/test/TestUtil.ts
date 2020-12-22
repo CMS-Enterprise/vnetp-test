@@ -1,4 +1,5 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 export default class TestUtil {
   static isFormControlRequired(control: AbstractControl): boolean {
@@ -11,5 +12,34 @@ export default class TestUtil {
       return false;
     }
     return !!errors.required;
+  }
+
+  static hasNameValidator(control: AbstractControl): boolean {
+    const errorValues = [
+      'A', // too short
+      'A'.repeat(1000), // too long
+      'A*A*A', // Invalid characters
+      '', // required
+    ];
+
+    const validValues = ['AAA', 'AAAAAA'];
+
+    errorValues.forEach(v => {
+      control.setValue(v);
+      control.updateValueAndValidity();
+      if (!control.errors) {
+        return false;
+      }
+    });
+
+    validValues.forEach(v => {
+      control.setValue(v);
+      control.updateValueAndValidity();
+      if (control.errors) {
+        return false;
+      }
+    });
+
+    return true;
   }
 }

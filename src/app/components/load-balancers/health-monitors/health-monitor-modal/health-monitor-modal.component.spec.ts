@@ -4,69 +4,160 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorType, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { HealthMonitorModalDto } from './health-monitor-modal.dto';
 
 describe('HealthMonitorModalComponent', () => {
   let component: HealthMonitorModalComponent;
   let fixture: ComponentFixture<HealthMonitorModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [HealthMonitorModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerHealthMonitorsService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(HealthMonitorModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+    });
+    fixture = TestBed.createComponent(HealthMonitorModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Name', () => {
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.form.controls.name)).toBe(true);
+  });
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+  it('should require name, type, servicePort, interval, and timeout', () => {
+    const requiredFields: (keyof LoadBalancerHealthMonitor)[] = ['name', 'type', 'servicePort', 'interval', 'timeout'];
+    requiredFields.forEach(f => {
+      const control = component.form.controls[f];
+      control.setValue(null);
+      control.updateValueAndValidity();
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
-
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
-    });
-
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
-
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+      expect(control.valid).toBe(false);
     });
   });
 
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
+  it('should enable name and type when creating a new health monitor', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: HealthMonitorModalDto = {
+        tierId: '1',
+      };
+      return dto;
+    });
+
+    expect(component.form.controls.name.enabled).toBe(true);
+    expect(component.form.controls.type.enabled).toBe(true);
   });
 
-  it('service port should be required', () => {
-    const servicePort = component.form.controls.servicePort;
-    expect(servicePort.valid).toBeFalsy();
+  it('should disable name and type when editing an existing health monitor', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: HealthMonitorModalDto = {
+        tierId: '1',
+        healthMonitor: {
+          id: '2',
+          name: 'HealthMonitor2',
+          type: LoadBalancerHealthMonitorType.HTTP,
+          servicePort: 5,
+          interval: 5,
+          timeout: 5,
+          tierId: '1',
+        },
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.type.disabled).toBe(true);
   });
 
-  it('interval should be required', () => {
-    const interval = component.form.controls.interval;
-    expect(interval.valid).toBeFalsy();
+  it('should create a new health monitor', () => {
+    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsPost');
+    const ngx = TestBed.inject(NgxSmartModalService);
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: HealthMonitorModalDto = {
+        tierId: '1',
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      name: 'HealthMonitor1',
+      type: LoadBalancerHealthMonitorType.HTTP,
+      servicePort: 5,
+      interval: 5,
+      timeout: 5,
+    });
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerHealthMonitor: {
+        tierId: '1',
+        name: 'HealthMonitor1',
+        type: LoadBalancerHealthMonitorType.HTTP,
+        servicePort: 5,
+        interval: 5,
+        timeout: 5,
+      },
+    });
   });
 
-  it('timeout should be required', () => {
-    const timeout = component.form.controls.timeout;
-    expect(timeout.valid).toBeFalsy();
+  it('should update an existing health monitor', () => {
+    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsIdPut');
+    const ngx = TestBed.inject(NgxSmartModalService);
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: HealthMonitorModalDto = {
+        tierId: '1',
+        healthMonitor: {
+          id: '2',
+          name: 'HealthMonitor2',
+          type: LoadBalancerHealthMonitorType.HTTP,
+          servicePort: 5,
+          interval: 5,
+          timeout: 5,
+          tierId: '1',
+        },
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      name: 'HealthMonitor100',
+      type: LoadBalancerHealthMonitorType.TCP,
+      servicePort: 10,
+      interval: 10,
+      timeout: 10,
+    });
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerHealthMonitor: {
+        tierId: null,
+        name: 'HealthMonitor100',
+        type: LoadBalancerHealthMonitorType.TCP,
+        servicePort: 10,
+        interval: 10,
+        timeout: 10,
+      },
+    });
   });
 });

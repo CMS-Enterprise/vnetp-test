@@ -6,6 +6,7 @@ import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from '
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { HealthMonitorModalDto } from './health-monitor-modal.dto';
+import { RangeValidator } from 'src/app/validators/range-validator';
 
 @Component({
   selector: 'app-health-monitor-modal',
@@ -20,9 +21,9 @@ export class HealthMonitorModalComponent implements OnInit {
   private tierId: string;
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private healthMonitorService: V1LoadBalancerHealthMonitorsService,
+    private ngx: NgxSmartModalService,
     public helpText: HealthMonitorModalHelpText,
   ) {}
 
@@ -71,58 +72,51 @@ export class HealthMonitorModalComponent implements OnInit {
     this.modalMode = healthMonitor ? ModalMode.Edit : ModalMode.Create;
 
     if (this.modalMode === ModalMode.Edit) {
-      this.healthMonitorId = healthMonitor.id;
+      const { id, interval, servicePort, type, name, timeout } = healthMonitor;
+      this.healthMonitorId = id;
+
+      this.form.controls.name.disable();
+      this.form.controls.type.disable();
+
+      this.form.controls.name.setValue(name);
+      this.form.controls.type.setValue(type);
+      this.form.controls.servicePort.setValue(servicePort);
+      this.form.controls.interval.setValue(interval);
+      this.form.controls.timeout.setValue(timeout);
     } else {
       this.form.controls.name.enable();
       this.form.controls.type.enable();
     }
 
-    if (healthMonitor !== undefined) {
-      this.form.controls.name.setValue(healthMonitor.name);
-      this.form.controls.name.disable();
-      this.form.controls.type.setValue(healthMonitor.type);
-      this.form.controls.type.disable();
-      this.form.controls.servicePort.setValue(healthMonitor.servicePort);
-      this.form.controls.interval.setValue(healthMonitor.interval);
-      this.form.controls.timeout.setValue(healthMonitor.timeout);
-    }
     this.ngx.resetModalData('healthMonitorModal');
   }
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
+      interval: ['', Validators.compose([Validators.required, RangeValidator(5, 300)])],
       name: ['', NameValidator()],
+      servicePort: ['', Validators.compose([Validators.required, RangeValidator(1, 65535)])],
+      timeout: ['', Validators.compose([Validators.required, RangeValidator(5, 300)])],
       type: ['', Validators.required],
-      servicePort: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(65535)])],
-      interval: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],
-      timeout: ['', Validators.compose([Validators.required, Validators.min(5), Validators.max(300)])],
     });
   }
 
-  private createHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
-    this.healthMonitorService
-      .v1LoadBalancerHealthMonitorsPost({
-        loadBalancerHealthMonitor: healthMonitor,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
+    this.healthMonitorService.v1LoadBalancerHealthMonitorsPost({ loadBalancerHealthMonitor }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateHealthMonitor(healthMonitor: LoadBalancerHealthMonitor): void {
-    healthMonitor.tierId = undefined;
+  private updateHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
+    loadBalancerHealthMonitor.tierId = null;
     this.healthMonitorService
       .v1LoadBalancerHealthMonitorsIdPut({
         id: this.healthMonitorId,
-        loadBalancerHealthMonitor: healthMonitor,
+        loadBalancerHealthMonitor,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }
