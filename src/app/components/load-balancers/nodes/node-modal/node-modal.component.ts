@@ -143,7 +143,7 @@ export class NodeModalComponent implements OnInit {
   }
 
   private getNodeForSave(): LoadBalancerNode {
-    const { name, type, ipAddress, autoPopulate, fqdn } = this.form.value;
+    const { name, type, ipAddress, autoPopulate, fqdn } = this.form.getRawValue();
 
     if (type === LoadBalancerNodeType.IpAddress) {
       return {

@@ -10,6 +10,7 @@ import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
 interface IRuleView extends LoadBalancerIrule {
   provisionedState: string;
+  descriptionView: string;
 }
 
 @Component({
@@ -26,7 +27,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     description: 'Health Monitors in the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Description', property: 'description' },
+      { name: 'Description', property: 'descriptionView' },
       { name: 'Content', property: 'content' },
       { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
@@ -71,7 +72,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.iRules = iRules.map(i => {
             return {
               ...i,
-              description: i.description || '--',
+              descriptionView: i.description || '--',
               provisionedState: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });

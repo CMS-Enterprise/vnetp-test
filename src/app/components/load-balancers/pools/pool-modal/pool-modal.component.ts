@@ -96,8 +96,9 @@ export class PoolModalComponent implements OnInit {
     const pool: LoadBalancerPool = {
       loadBalancingMethod,
       name,
+      healthMonitors: [],
+      defaultHealthMonitors: [],
       tierId: this.tierId,
-      defaultHealthMonitors: null,
     };
 
     if (this.modalMode === ModalMode.Create) {

@@ -41,7 +41,7 @@ export class VlanModalComponent implements OnInit {
       return;
     }
 
-    const { name, tag } = this.form.value;
+    const { name, tag } = this.form.getRawValue();
 
     const vLAN: LoadBalancerVlan = {
       tierId: this.tierId,

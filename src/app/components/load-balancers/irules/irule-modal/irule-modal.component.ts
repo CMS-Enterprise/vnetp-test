@@ -66,7 +66,7 @@ export class IRuleModalComponent implements OnInit {
       return;
     }
 
-    const { content, description, name } = this.form.value;
+    const { content, description, name } = this.form.getRawValue();
     const iRule: LoadBalancerIrule = {
       tierId: this.tierId,
       content,

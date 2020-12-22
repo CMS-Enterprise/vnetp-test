@@ -41,7 +41,7 @@ export class RouteModalComponent implements OnInit {
       return;
     }
 
-    const { destination, gateway, name } = this.form.value;
+    const { destination, gateway, name } = this.form.getRawValue();
 
     const route: LoadBalancerRoute = {
       tierId: this.tierId,

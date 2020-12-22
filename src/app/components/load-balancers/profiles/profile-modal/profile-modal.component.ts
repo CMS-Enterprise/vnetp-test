@@ -165,7 +165,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   private getProfileForSave(): LoadBalancerProfile {
-    const { name, type, reverseProxy, certificate } = this.form.value;
+    const { name, type, reverseProxy, certificate } = this.form.getRawValue();
 
     if (type === LoadBalancerProfileType.ClientSSL) {
       if (!this.privateKeyCipher) {
