@@ -87,80 +87,7 @@
   </div>
 
   <div *ngIf="navIndex === 3">
-    <section class="btn-toolbar" role="toolbar">
-      <!-- Create Node -->
-      <button type="button" class="btn btn-success" (click)="openNodeModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Node</span>
-      </button>
-    </section>
-
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Manage Nodes</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">IP Address</th>
-          <th scope="col">FQDN</th>
-          <th scope="col">Autopopulate</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let node of nodes | paginate: { itemsPerPage: perPage, currentPage: currentNodePage }">
-          <td>
-            <span>{{ node?.name }}</span>
-          </td>
-          <td>
-            <span>{{ node?.type }}</span>
-          </td>
-          <td>
-            <span>{{ node?.ipAddress }}</span>
-          </td>
-          <td>
-            <span>{{ node?.fqdn }}</span>
-          </td>
-          <td>
-            <span>{{ node?.autoPopulate }}</span>
-          </td>
-          <td>
-            <span>{{ node?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!node?.deletedAt"
-              icon="edit"
-              label="Edit Node"
-              (handleClick)="openNodeModal(ModalMode.Edit, node)"
-            ></app-icon-button>
-
-            <app-icon-button
-              *ngIf="node?.deletedAt"
-              icon="undo"
-              label="Restore Node"
-              type="success"
-              (handleClick)="restoreNode(node)"
-            ></app-icon-button>
-
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete/Delete Node"
-              [type]="node?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteNode(node)"
-            ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!nodes?.length" class="text-center">
-          <td colspan="7">No Nodes in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentNodePage = $event"></pagination-controls>
+    <app-node-list [currentTier]="currentTier" [tiers]="tiers"></app-node-list>
   </div>
 
   <div *ngIf="navIndex === 4">
@@ -273,6 +200,5 @@
 </ng-container>
 
 <app-pool-modal></app-pool-modal>
-<app-node-modal></app-node-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
 <app-yes-no-modal></app-yes-no-modal>

@@ -182,12 +182,6 @@ export class PoolModalHelpText {
   providedIn: 'root',
 })
 export class NodeModalHelpText {
-  Name = `Name of Node.`;
-  Type = `Node Type (FQDN, IP Address).`;
-  IpAddress = `IP Address of Node.`;
-  Fqdn = `FQDN of Node.`;
-  ServicePort = `Port that the Node is listening for requests on.`;
-  Priority = `Priority of node.`;
   AutoPopulate = `Determines whether the pool member will be auto-populated from the FQDN.`;
 }
 
