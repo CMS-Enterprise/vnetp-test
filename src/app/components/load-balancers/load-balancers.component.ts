@@ -4,17 +4,7 @@ import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { PoolModalDto } from 'src/app/models/loadbalancer/pool-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import {
-  Tier,
-  V1TiersService,
-  LoadBalancerPool,
-  V1LoadBalancerPoolsService,
-  LoadBalancerPolicy,
-  V1LoadBalancerPoliciesService,
-  PoolImportCollectionDto,
-  NodeImportCollectionDto,
-} from 'api_client';
-import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
+import { Tier, LoadBalancerPool, V1LoadBalancerPoolsService, PoolImportCollectionDto, NodeImportCollectionDto } from 'api_client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -46,13 +36,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   public datacenterId: string;
   public tiers: Tier[];
 
-  currentPoliciesPage = 1;
   currentPoolPage = 1;
 
   perPage = 20;
   ModalMode = ModalMode;
 
-  policies: LoadBalancerPolicy[];
   pools: LoadBalancerPool[];
 
   public wikiBase = environment.wikiBase;
@@ -73,17 +61,14 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private policyModalSubscription: Subscription;
   private poolModalSubscription: Subscription;
 
   constructor(
     private datacenterService: DatacenterContextService,
     private entityService: EntityService,
     private ngx: NgxSmartModalService,
-    private policiesService: V1LoadBalancerPoliciesService,
     private poolsService: V1LoadBalancerPoolsService,
     private tierContextService: TierContextService,
-    private tierService: V1TiersService,
   ) {}
 
   // TODO: Remove once split into modules
@@ -118,35 +103,15 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     }
   }
 
-  getPolicies() {
-    if (!this.hasCurrentTier()) {
-      return;
-    }
-
-    this.tierService
-      .v1TiersIdGet({
-        id: this.currentTier.id,
-        join: 'loadBalancerPolicies',
-      })
-      .subscribe(data => {
-        this.policies = data.loadBalancerPolicies;
-      });
-  }
-
   getObjectsForNavIndex() {
     switch (this.navIndex) {
       case 1:
         this.getPools();
         break;
-      case 7:
-        this.getPolicies();
-        break;
     }
   }
 
   importLoadBalancerConfig(data: any[]) {
-    // TODO: Bulk Import of Policies
-
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
       case 1:
@@ -180,8 +145,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     switch (this.navIndex) {
       case 1:
         return this.pools;
-      case 7:
-        return this.policies;
       default:
         break;
     }
@@ -224,36 +187,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('poolModal').open();
   }
 
-  openPolicyModal(modalMode: ModalMode, policy?: LoadBalancerPolicy) {
-    if (modalMode === ModalMode.Edit && !policy) {
-      throw new Error('Policy required');
-    }
-
-    const dto = new PolicyModalDto();
-    dto.TierId = this.currentTier.id;
-    dto.Policy = policy;
-    dto.ModalMode = modalMode;
-
-    this.subscribeToPolicyModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'loadBalancerPolicyModal');
-    this.ngx.getModal('loadBalancerPolicyModal').open();
-  }
-
   subscribeToPoolModal() {
     this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.getPools();
       this.ngx.resetModalData('poolModal');
       this.poolModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
-  subscribeToPolicyModal() {
-    this.policyModalSubscription = this.ngx.getModal('loadBalancerPolicyModal').onCloseFinished.subscribe(() => {
-      this.getPolicies();
-      this.ngx.resetModalData('loadBalancerPolicyModal');
-      this.policyModalSubscription.unsubscribe();
       this.datacenterService.unlockDatacenter();
     });
   }
@@ -266,30 +204,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       onSuccess: () => this.getPools(),
     });
   }
-
-  public deletePolicy(policy: LoadBalancerPolicy): void {
-    this.entityService.deleteEntity(policy, {
-      entityName: 'Policy',
-      delete$: this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }),
-      softDelete$: this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }),
-      onSuccess: () => this.getPolicies(),
-    });
-  }
-
   restorePool(pool: LoadBalancerPool) {
     if (pool.deletedAt) {
       this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.getPools());
     }
-  }
-
-  restorePolicy(policy: LoadBalancerPolicy) {
-    if (policy.deletedAt) {
-      this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.getPolicies());
-    }
-  }
-
-  private hasCurrentTier(): boolean {
-    return this.currentTier && !!this.currentTier.id;
   }
 
   ngOnInit() {
@@ -297,7 +215,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       if (cd) {
         this.tiers = cd.tiers;
         this.pools = [];
-        this.policies = [];
         this.getObjectsForNavIndex();
         this.datacenterId = cd.id;
       }
@@ -312,11 +229,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([
-      this.poolModalSubscription,
-      this.policyModalSubscription,
-      this.currentDatacenterSubscription,
-      this.currentTierSubscription,
-    ]);
+    SubscriptionUtil.unsubscribe([this.poolModalSubscription, this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadBalancersComponent } from './load-balancers.component';
-import { PolicyModalComponent } from './policy-modal/policy-modal.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
@@ -20,6 +19,7 @@ import { ProfileModule } from './profiles/profile.module';
 import { RouteModule } from './routes/route.module';
 import { SelfIpModule } from './self-ips/self-ip.module';
 import { NodeModule } from './nodes/node.module';
+import { PolicyModule } from './policies/policy.module';
 
 const routes: Routes = [
   {
@@ -49,7 +49,8 @@ const routes: Routes = [
     RouteModule,
     SelfIpModule,
     NodeModule,
+    PolicyModule,
   ],
-  declarations: [LoadBalancersComponent, PolicyModalComponent, PoolModalComponent],
+  declarations: [LoadBalancersComponent, PoolModalComponent],
 })
 export class LoadBalancersModule {}

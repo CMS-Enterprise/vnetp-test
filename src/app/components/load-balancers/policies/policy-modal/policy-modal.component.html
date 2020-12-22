@@ -1,0 +1,84 @@
+<ngx-smart-modal
+  #policyModal
+  identifier="policyModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="closeModal()"
+  customClass="large-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Load Balancer Policy</h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="type">Type</label>
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
+            <option></option>
+            <option value="ASM">ASM</option>
+            <option value="APM">APM</option>
+          </select>
+          <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+            <div *ngIf="f.type.errors.required">Type is required</div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="f.type.value">
+        <div class="form-row" *ngIf="f.type.value === PolicyType.ASM">
+          <div class="form-group col-md-12">
+            <label for="asmContent">ASM Policy XML</label>
+            <textarea
+              id="asmContent"
+              rows="8"
+              formControlName="asmContent"
+              class="form-control"
+              placeholder="Paste ASM Policy XML or Upload"
+            >
+            </textarea>
+          </div>
+          <div *ngIf="submitted && f.asmContent.errors" class="invalid-feedback">
+            <div *ngIf="f.asmContent.errors.required">
+              ASM Policy XML is Required.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <button class="btn btn-warning" (click)="policyContentUploader.click()" type="button">
+              <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
+              <span>{{ f.type.value === PolicyType.ASM ? 'Upload ASM XML Export' : 'Upload APM Base64 Export' }}</span>
+            </button>
+
+            <input hidden type="file" #policyContentUploader (change)="importPolicyContent($event)" />
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save Policy</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>
