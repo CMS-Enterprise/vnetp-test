@@ -36,12 +36,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   public datacenterId: string;
   public tiers: Tier[];
 
-  currentPoolPage = 1;
-
   perPage = 20;
   ModalMode = ModalMode;
-
-  pools: LoadBalancerPool[];
 
   public wikiBase = environment.wikiBase;
 
@@ -61,7 +57,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private poolModalSubscription: Subscription;
 
   constructor(
     private datacenterService: DatacenterContextService,
@@ -71,59 +66,12 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
   ) {}
 
-  // TODO: Remove once split into modules
-  public disableExport(): boolean {
-    return new Set([Indices.Pools, Indices.HealthMonitors]).has(this.navIndex);
-  }
-
-  // TODO: Remove once split into modules
-  public disableImport(): boolean {
-    return new Set([Indices.HealthMonitors]).has(this.navIndex);
-  }
-
-  // TODO: Remove once split into modules
-  public enablePerPage(): boolean {
-    return !new Set([Indices.Pools, Indices.HealthMonitors]).has(this.navIndex);
-  }
-
   public handleTabChange(tab: Tab): void {
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
-    this.getObjectsForNavIndex();
-  }
-
-  getPools() {
-    if (this.currentTier && this.currentTier.id) {
-      this.poolsService
-        .v1LoadBalancerPoolsIdTierIdGet({
-          id: this.currentTier.id,
-        })
-        .subscribe(data => {
-          this.pools = data;
-        });
-    }
-  }
-
-  getObjectsForNavIndex() {
-    switch (this.navIndex) {
-      case 1:
-        this.getPools();
-        break;
-    }
   }
 
   importLoadBalancerConfig(data: any[]) {
-    // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
-      case 1:
-        const poolDto = {} as PoolImportCollectionDto;
-        poolDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-        poolDto.pools = this.sanitizeData(data);
-        this.poolsService
-          .v1LoadBalancerPoolsBulkImportPost({
-            poolImportCollectionDto: poolDto,
-          })
-          .subscribe(() => this.getObjectsForNavIndex());
-        break;
       // Pool Relations
       case 2:
         const nodeDto = {} as NodeImportCollectionDto;
@@ -133,18 +81,8 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
           .v1LoadBalancerPoolsBulkUpdatePost({
             nodeImportCollectionDto: nodeDto,
           })
-          .subscribe(() => this.getObjectsForNavIndex());
+          .subscribe(() => {});
         break;
-      default:
-        break;
-    }
-  }
-
-  exportLoadBalancerConfig(): any[] {
-    // TODO: Export Relationships
-    switch (this.navIndex) {
-      case 1:
-        return this.pools;
       default:
         break;
     }

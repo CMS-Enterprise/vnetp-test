@@ -10,76 +10,7 @@
   </div>
 
   <div *ngIf="navIndex === 1">
-    <section class="btn-toolbar" role="toolbar">
-      <!-- Create Pool -->
-      <button type="button" class="btn btn-success" (click)="openPoolModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Pool</span>
-      </button>
-    </section>
-
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Manage Pools</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">LB Method</th>
-          <th scope="col">Nodes</th>
-          <th scope="col">Health Monitors</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let pool of pools | paginate: { itemsPerPage: perPage, currentPage: currentPoolPage }">
-          <td>
-            <span>{{ pool?.name }}</span>
-          </td>
-          <td>
-            <span>{{ pool?.loadBalancingMethod }}</span>
-          </td>
-          <td>
-            <span>{{ pool?.nodes?.length }}</span>
-          </td>
-          <td>
-            <span>{{ pool?.healthMonitors?.length + pool?.defaultHealthMonitors?.length }}</span>
-          </td>
-          <td>
-            <span>{{ pool?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!pool?.deletedAt"
-              icon="edit"
-              label="Edit Pool"
-              (handleClick)="openPoolModal(ModalMode.Edit, pool)"
-            ></app-icon-button>
-
-            <app-icon-button
-              *ngIf="pool?.deletedAt"
-              icon="undo"
-              label="Restore Pool"
-              type="success"
-              (handleClick)="restorePool(pool)"
-            ></app-icon-button>
-
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete/Delete Pool"
-              [type]="pool?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deletePool(pool)"
-            ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!pools?.length" class="text-center">
-          <td colspan="6">No Pools in this tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentPoolPage = $event"></pagination-controls>
+    <app-pool-list [currentTier]="currentTier" [datacenterId]="datacenterId" [tiers]="tiers"></app-pool-list>
   </div>
 
   <div *ngIf="navIndex === 2">
@@ -117,26 +48,4 @@
   <div *ngIf="navIndex === 10">
     <app-route-list [currentTier]="currentTier" [tiers]="tiers"></app-route-list>
   </div>
-
-  <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="enablePerPage()">
-    <span class="mr-3">Entities per page</span>
-    <div class="btn-group" role="group">
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    </div>
-  </section>
-
-  <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
-    <app-import-export
-      [disableImport]="disableImport()"
-      [disableExport]="disableExport()"
-      [exportObject]="exportLoadBalancerConfig()"
-      exportFileName="loadBalancers-{{ currentTier.name }}"
-      (import)="importLoadBalancerConfig($event)"
-    ></app-import-export>
-  </section>
 </ng-container>
-
-<app-pool-modal></app-pool-modal>
-<app-yes-no-modal></app-yes-no-modal>

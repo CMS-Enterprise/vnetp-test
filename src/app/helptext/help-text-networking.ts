@@ -169,9 +169,7 @@ export class VirtualServerModalHelpText {
   providedIn: 'root',
 })
 export class PoolModalHelpText {
-  Name = `Name of Pool.`;
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
-  Nodes = `Nodes of the Pool.`;
   AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
   AvailableNodes = `Nodes that can be added to the Pool.`;
   Ratio = 'Ratio of traffic that will be sent to the node.';
