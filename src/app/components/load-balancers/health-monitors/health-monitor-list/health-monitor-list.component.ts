@@ -30,7 +30,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Interval', property: 'interval' },
       { name: 'Timeout', property: 'timeout' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

@@ -28,7 +28,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

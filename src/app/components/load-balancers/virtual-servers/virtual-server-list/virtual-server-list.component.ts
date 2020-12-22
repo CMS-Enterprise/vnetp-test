@@ -39,7 +39,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       { name: 'Destination Address', property: 'destinationIpAddress' },
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Pool', property: 'defaultPoolName' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

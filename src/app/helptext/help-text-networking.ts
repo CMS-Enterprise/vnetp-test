@@ -170,8 +170,6 @@ export class VirtualServerModalHelpText {
 })
 export class PoolModalHelpText {
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
-  AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
-  AvailableNodes = `Nodes that can be added to the Pool.`;
   Ratio = 'Ratio of traffic that will be sent to the node.';
   ServicePort = `Port that the node provides service on.`;
 }

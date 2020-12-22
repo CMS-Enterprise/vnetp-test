@@ -27,7 +27,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

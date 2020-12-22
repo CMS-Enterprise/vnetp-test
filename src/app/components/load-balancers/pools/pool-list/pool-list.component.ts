@@ -3,12 +3,14 @@ import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPo
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
 import { EntityService } from 'src/app/services/entity.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
 interface PoolView extends LoadBalancerPool {
+  methodName: string;
   totalHealthMonitors: number;
   totalNodes: number;
   provisionedState: string;
@@ -29,10 +31,10 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     description: 'Pools in the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Load Balancing Method', property: 'loadBalancingMethod' },
+      { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -79,6 +81,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.pools = pools.map(p => {
             return {
               ...p,
+              methodName: methodsLookup[p.loadBalancingMethod],
               provisionedState: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               totalNodes: getTotal(p.nodes),
               totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),

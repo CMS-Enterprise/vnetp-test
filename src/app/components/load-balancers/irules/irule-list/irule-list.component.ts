@@ -28,7 +28,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
       { name: 'Content', property: 'content' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

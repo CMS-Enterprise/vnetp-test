@@ -29,7 +29,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'VLAN', property: 'vlanName' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

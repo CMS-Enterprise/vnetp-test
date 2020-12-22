@@ -9,6 +9,7 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { PoolListComponent } from './pool-list/pool-list.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
+import { PoolRelationsComponent } from './pool-relations/pool-relations.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { PoolModalComponent } from './pool-modal/pool-modal.component';
     TableModule,
     TooltipModule,
   ],
-  declarations: [PoolListComponent, PoolModalComponent],
-  exports: [PoolListComponent],
+  declarations: [PoolListComponent, PoolModalComponent, PoolRelationsComponent],
+  exports: [PoolListComponent, PoolRelationsComponent],
 })
 export class PoolModule {}

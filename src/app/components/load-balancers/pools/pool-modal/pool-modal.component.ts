@@ -9,6 +9,8 @@ import {
   LoadBalancerPool,
   LoadBalancerPoolDefaultHealthMonitors,
   LoadBalancerPoolLoadBalancingMethod,
+  V1LoadBalancerHealthMonitorsService,
+  V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -19,6 +21,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RangeValidator } from 'src/app/validators/range-validator';
 import ValidatorUtil from 'src/app/utils/ValidatorUtil';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
 
 @Component({
   selector: 'app-pool-modal',
@@ -43,27 +46,12 @@ export class PoolModalComponent implements OnInit {
     LoadBalancerPoolDefaultHealthMonitors.TCP,
     LoadBalancerPoolDefaultHealthMonitors.UDP,
   ];
-  public methods: LoadBalancerPoolLoadBalancingMethod[] = Object.keys(LoadBalancerPoolLoadBalancingMethod).map(k => {
-    return LoadBalancerPoolLoadBalancingMethod[k];
-  });
-  public methodsLookup: Record<LoadBalancerPoolLoadBalancingMethod, string> = {
-    [LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember]: 'Dynamic Ratio Member',
-    [LoadBalancerPoolLoadBalancingMethod.DynamicRatioNode]: 'Dynamic Ratio Node',
-    [LoadBalancerPoolLoadBalancingMethod.FastestAppResponse]: 'Fastest App Response',
-    [LoadBalancerPoolLoadBalancingMethod.FastestNode]: 'Fastest Node',
-    [LoadBalancerPoolLoadBalancingMethod.LeastConnectionsNode]: 'Least Connections Node',
-    [LoadBalancerPoolLoadBalancingMethod.LeastSessions]: 'Least Sessions',
-    [LoadBalancerPoolLoadBalancingMethod.ObservedMember]: 'Observed Member',
-    [LoadBalancerPoolLoadBalancingMethod.ObservedNode]: 'Observed Node',
-    [LoadBalancerPoolLoadBalancingMethod.PredictiveMember]: 'Predictive Member',
-    [LoadBalancerPoolLoadBalancingMethod.PredictiveNode]: 'Predictive Node',
-    [LoadBalancerPoolLoadBalancingMethod.RatioLeastConnectionsMember]: 'Ratio Least Connections Member',
-    [LoadBalancerPoolLoadBalancingMethod.RatioLeastConnectionsNode]: 'Ratio Least Connections Node',
-    [LoadBalancerPoolLoadBalancingMethod.RatioMember]: 'Ratio Member',
-    [LoadBalancerPoolLoadBalancingMethod.RatioNode]: 'Ratio Node',
-    [LoadBalancerPoolLoadBalancingMethod.RatioSession]: 'Ratio Session',
-    [LoadBalancerPoolLoadBalancingMethod.RoundRobin]: 'Round Robin',
-  };
+  public methods: LoadBalancerPoolLoadBalancingMethod[] = Object.keys(LoadBalancerPoolLoadBalancingMethod)
+    .map(k => {
+      return LoadBalancerPoolLoadBalancingMethod[k];
+    })
+    .sort();
+  public methodsLookup = methodsLookup;
 
   private poolId: string;
   private tierId: string;
@@ -72,6 +60,8 @@ export class PoolModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private poolService: V1LoadBalancerPoolsService,
+    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private nodesService: V1LoadBalancerNodesService,
     public helpText: PoolModalHelpText,
   ) {}
 
@@ -248,6 +238,9 @@ export class PoolModalComponent implements OnInit {
     } else {
       this.form.controls.name.enable();
     }
+
+    this.loadAvailableResources();
+    this.loadPoolResources();
     this.ngx.resetModalData('poolModal');
   }
 
@@ -256,15 +249,15 @@ export class PoolModalComponent implements OnInit {
   }
 
   private buildForm(): void {
-    const requiredInEditMode = () => this.modalMode === ModalMode.Edit;
+    const requiredWhenAddingNode = () => this.modalMode === ModalMode.Edit && !!this.form.get('selectedNode').value;
 
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       loadBalancingMethod: ['', Validators.required],
       selectedHealthMonitor: [''],
       selectedNode: [''],
-      servicePort: ['', Validators.compose([ValidatorUtil.optionallyRequired(requiredInEditMode), RangeValidator(1, 65535)])],
-      ratio: ['', Validators.compose([ValidatorUtil.optionallyRequired(requiredInEditMode), RangeValidator(1, 100)])],
+      servicePort: ['', Validators.compose([ValidatorUtil.optionallyRequired(requiredWhenAddingNode), RangeValidator(1, 65535)])],
+      ratio: ['', Validators.compose([ValidatorUtil.optionallyRequired(requiredWhenAddingNode), RangeValidator(1, 100)])],
     });
   }
 
@@ -297,11 +290,32 @@ export class PoolModalComponent implements OnInit {
   }
 
   private loadPoolResources(): void {
+    if (!this.poolId) {
+      return;
+    }
     this.poolService.v1LoadBalancerPoolsIdPoolIdGet({ id: this.poolId }).subscribe((pools: LoadBalancerPool[]) => {
       const [pool] = pools;
       this.selectedHealthMonitors = pool.healthMonitors;
       this.selectedNodes = pool.nodes;
     });
+  }
+
+  private loadAvailableResources(): void {
+    this.nodesService
+      .v1LoadBalancerNodesGet({
+        filter: `tierId||eq||${this.tierId}`,
+      })
+      .subscribe(nodes => {
+        this.availableNodes = nodes;
+      });
+
+    this.healthMonitorsService
+      .v1LoadBalancerHealthMonitorsGet({
+        filter: `tierId||eq||${this.tierId}`,
+      })
+      .subscribe(healthMonitors => {
+        this.availableHealthMonitors = healthMonitors;
+      });
   }
 }
 

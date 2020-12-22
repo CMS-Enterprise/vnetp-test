@@ -31,7 +31,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'FQDN', property: 'fqdn' },
       { name: 'Auto-Populate', property: 'autoPopulateView' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

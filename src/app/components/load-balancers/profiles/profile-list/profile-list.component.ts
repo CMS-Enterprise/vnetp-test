@@ -28,7 +28,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Reverse Proxy', property: 'reverseProxy' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

@@ -45,11 +45,12 @@
       <ng-container *ngIf="modalMode === ModalMode.Edit">
         <hr />
 
+        <h5 class="mb-10">Nodes</h5>
+
         <!-- Available Nodes -->
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="availableNodes">Available Nodes</label>
-            <tooltip [message]="helpText.AvailableNodes"></tooltip>
 
             <div class="input-group align-items-center">
               <select class="form-control" id="availableNodes" formControlName="selectedNode">
@@ -133,9 +134,10 @@
 
         <hr />
 
+        <h5 class="mb-10">Health Monitors</h5>
+
         <div class="form-group">
           <label for="availableHealthMonitors">Available Health Monitors</label>
-          <tooltip [message]="helpText.AvailableHealthMonitors"></tooltip>
 
           <div class="input-group align-items-center">
             <select class="form-control mr-3" id="availableHealthMonitors" formControlName="selectedHealthMonitor">
@@ -146,7 +148,7 @@
               >
             </select>
 
-            <button type="button" class="btn btn-info" (click)="addHealthMonitor()">
+            <button type="button" class="btn btn-info" (click)="addHealthMonitor()" [disabled]="!f.selectedHealthMonitor.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add Health Monitor</span>
             </button>
@@ -183,7 +185,7 @@
                 <app-icon-button
                   icon="delete"
                   label="Remove Default Health Monitor"
-                  (handleClick)="removeHealthMonitor(defaultHealthMonitor.id, true)"
+                  (handleClick)="removeHealthMonitor(defaultHealthMonitor, true)"
                 ></app-icon-button>
               </td>
             </tr>

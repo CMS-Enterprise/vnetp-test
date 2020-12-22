@@ -27,7 +27,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Tag', property: 'tag' },
-      { name: 'Provisioned', property: 'provisionedState' },
+      { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
