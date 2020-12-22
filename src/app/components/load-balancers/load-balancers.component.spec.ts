@@ -115,11 +115,4 @@ describe('LoadBalancersComponent', () => {
     };
     expect(throwsError).toThrowError('Policy required');
   });
-
-  it('should throw an error when editing a self ip without a self ip provided', () => {
-    const throwsError = () => {
-      component.openSelfIpModal(ModalMode.Edit, null);
-    };
-    expect(throwsError).toThrowError('Self IP required');
-  });
 });

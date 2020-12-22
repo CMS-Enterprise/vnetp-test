@@ -16,13 +16,10 @@ import {
   V1LoadBalancerPoliciesService,
   PoolImportCollectionDto,
   NodeImportCollectionDto,
-  LoadBalancerSelfIp,
-  V1LoadBalancerSelfIpsService,
 } from 'api_client';
 import { NodeModalDto } from 'src/app/models/loadbalancer/node-modal-dto';
 import { PolicyModalDto } from 'src/app/models/loadbalancer/policy-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { LoadBalancerSelfIpModalDto } from 'src/app/models/network/lb-self-ip-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { environment } from 'src/environments/environment';
@@ -56,7 +53,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   currentNodePage = 1;
   currentPoliciesPage = 1;
   currentPoolPage = 1;
-  currentSelfIpsPage = 1;
 
   perPage = 20;
   ModalMode = ModalMode;
@@ -65,7 +61,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   nodes: LoadBalancerNode[];
   policies: LoadBalancerPolicy[];
   pools: LoadBalancerPool[];
-  selfIps: LoadBalancerSelfIp[];
 
   public wikiBase = environment.wikiBase;
 
@@ -88,7 +83,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
   private nodeModalSubscription: Subscription;
   private policyModalSubscription: Subscription;
   private poolModalSubscription: Subscription;
-  private selfIpModalSubscription: Subscription;
 
   constructor(
     private datacenterService: DatacenterContextService,
@@ -97,7 +91,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     private nodeService: V1LoadBalancerNodesService,
     private policiesService: V1LoadBalancerPoliciesService,
     private poolsService: V1LoadBalancerPoolsService,
-    private selfIpsService: V1LoadBalancerSelfIpsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
   ) {}
@@ -177,21 +170,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       });
   }
 
-  getSelfIps() {
-    if (!this.hasCurrentTier()) {
-      return;
-    }
-
-    this.selfIpsService
-      .v1LoadBalancerSelfIpsGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
-        join: 'loadBalancerVlan',
-      })
-      .subscribe(data => {
-        this.selfIps = data;
-      });
-  }
-
   getObjectsForNavIndex() {
     switch (this.navIndex) {
       case 1:
@@ -205,14 +183,11 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       case 7:
         this.getPolicies();
         break;
-      case 9:
-        this.getSelfIps();
-        break;
     }
   }
 
   importLoadBalancerConfig(data: any[]) {
-    // TODO: Bulk Import of Policies, SelfIps
+    // TODO: Bulk Import of Policies
 
     // Choose Datatype to Import based on navindex.
     switch (this.navIndex) {
@@ -331,31 +306,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('loadBalancerPolicyModal').open();
   }
 
-  openSelfIpModal(modalMode: ModalMode, selfIp?: LoadBalancerSelfIp) {
-    if (modalMode === ModalMode.Edit && !selfIp) {
-      throw new Error('Self IP required');
-    }
-
-    const dto = new LoadBalancerSelfIpModalDto();
-    dto.TierId = this.currentTier.id;
-    dto.SelfIp = selfIp;
-    dto.ModalMode = modalMode;
-
-    this.subscribeToSelfIpModal();
-    this.datacenterService.lockDatacenter();
-    this.ngx.setModalData(dto, 'loadBalancerSelfIpModal');
-    this.ngx.getModal('loadBalancerSelfIpModal').open();
-  }
-
-  subscribeToSelfIpModal() {
-    this.selfIpModalSubscription = this.ngx.getModal('loadBalancerSelfIpModal').onCloseFinished.subscribe(() => {
-      this.getSelfIps();
-      this.ngx.resetModalData('loadBalancerSelfIpModal');
-      this.selfIpModalSubscription.unsubscribe();
-      this.datacenterService.unlockDatacenter();
-    });
-  }
-
   subscribeToPoolModal() {
     this.poolModalSubscription = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.getPools();
@@ -410,21 +360,6 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       softDelete$: this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }),
       onSuccess: () => this.getPolicies(),
     });
-  }
-
-  public deleteSelfIp(selfIp: LoadBalancerSelfIp): void {
-    this.entityService.deleteEntity(selfIp, {
-      entityName: 'Self IP',
-      delete$: this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }),
-      softDelete$: this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }),
-      onSuccess: () => this.getSelfIps(),
-    });
-  }
-
-  restoreSelfIp(selfIp: LoadBalancerSelfIp) {
-    if (selfIp.deletedAt) {
-      this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.getSelfIps());
-    }
   }
 
   restorePool(pool: LoadBalancerPool) {

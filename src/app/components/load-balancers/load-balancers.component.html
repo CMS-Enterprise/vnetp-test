@@ -245,68 +245,7 @@
   </div>
 
   <div *ngIf="navIndex === 9">
-    <section class="btn-toolbar" role="toolbar">
-      <!-- Create Self IP -->
-      <button type="button" class="btn btn-success" (click)="openSelfIpModal(ModalMode.Create)">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Create Self IP</span>
-      </button>
-    </section>
-
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Manage Load Balancer Self IPs</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">IP Address</th>
-          <th scope="col">VLAN</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let selfIp of selfIps | paginate: { itemsPerPage: perPage, currentPage: currentSelfIpsPage }">
-          <td>
-            <span>{{ selfIp?.name }}</span>
-          </td>
-          <td>
-            <span>{{ selfIp?.ipAddress }}</span>
-          </td>
-          <td>
-            <span>{{ selfIp?.loadBalancerVlan?.name }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!selfIp?.deletedAt"
-              icon="edit"
-              label="Edit Self IP"
-              (handleClick)="openSelfIpModal(ModalMode.Edit, selfIp)"
-            ></app-icon-button>
-
-            <app-icon-button
-              *ngIf="selfIp?.deletedAt"
-              icon="undo"
-              label="Restore Self IP"
-              type="success"
-              (handleClick)="restoreSelfIp(selfIp)"
-            ></app-icon-button>
-
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete/Delete Self IP"
-              [type]="selfIp?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteSelfIp(selfIp)"
-            ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!selfIps?.length" class="text-center">
-          <td colspan="4">No Self IPs in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentSelfIpsPage = $event"></pagination-controls>
+    <app-self-ip-list [currentTier]="currentTier" [tiers]="tiers"></app-self-ip-list>
   </div>
 
   <div *ngIf="navIndex === 10">
@@ -336,5 +275,4 @@
 <app-pool-modal></app-pool-modal>
 <app-node-modal></app-node-modal>
 <app-load-balancer-policy-modal></app-load-balancer-policy-modal>
-<app-load-balancer-self-ip-modal></app-load-balancer-self-ip-modal>
 <app-yes-no-modal></app-yes-no-modal>
