@@ -48,12 +48,13 @@ export class IRuleModalComponent implements OnInit {
 
     if (this.modalMode === ModalMode.Edit) {
       const { name, description, content, id } = iRule;
-
       this.iRuleId = id;
-      this.form.controls.name.setValue(name);
+
       this.form.controls.name.disable();
+
       this.form.controls.content.setValue(content);
       this.form.controls.description.setValue(description);
+      this.form.controls.name.setValue(name);
     } else {
       this.form.controls.name.enable();
     }
@@ -89,30 +90,22 @@ export class IRuleModalComponent implements OnInit {
     });
   }
 
-  private createIRule(iRule: LoadBalancerIrule): void {
-    this.iRuleService
-      .v1LoadBalancerIrulesPost({
-        loadBalancerIrule: iRule,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createIRule(loadBalancerIrule: LoadBalancerIrule): void {
+    this.iRuleService.v1LoadBalancerIrulesPost({ loadBalancerIrule }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateIRule(iRule: LoadBalancerIrule): void {
-    iRule.tierId = undefined;
+  private updateIRule(loadBalancerIrule: LoadBalancerIrule): void {
+    loadBalancerIrule.tierId = null;
     this.iRuleService
       .v1LoadBalancerIrulesIdPut({
         id: this.iRuleId,
-        loadBalancerIrule: iRule,
+        loadBalancerIrule,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

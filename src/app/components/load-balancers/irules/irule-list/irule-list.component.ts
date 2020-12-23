@@ -8,7 +8,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
-interface IRuleView extends LoadBalancerIrule {
+export interface IRuleView extends LoadBalancerIrule {
   provisionedState: string;
   descriptionView: string;
 }

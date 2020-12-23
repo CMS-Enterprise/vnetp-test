@@ -16,13 +16,7 @@
         <!-- Name -->
         <div class="form-group col-md-6">
           <label for="name">Name</label>
-          <input
-            type="text"
-            formControlName="name"
-            class="form-control"
-            [class.is-invalid]="submitted && f.name.errors"
-            aria-label="Name"
-          />
+          <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
           <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
             <div *ngIf="f.name.errors.required">Name is required</div>
             <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -35,12 +29,11 @@
         <div class="form-group col-md-6">
           <label for="description">Description</label>
           <input
+            id="description"
             type="text"
             formControlName="description"
             class="form-control"
             [class.is-invalid]="submitted && f.description.errors"
-            aria-label="Description"
-            id="description"
           />
           <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
             <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
@@ -49,16 +42,11 @@
         </div>
       </div>
 
+      <!-- Content -->
       <div class="form-group">
         <label for="content">Content</label>
         <tooltip [message]="helpText.Content"></tooltip>
-        <textarea
-          rows="15"
-          formControlName="content"
-          class="form-control"
-          [class.is-invalid]="submitted && f.content.errors"
-          aria-label="Content"
-        >
+        <textarea id="content" rows="15" formControlName="content" class="form-control" [class.is-invalid]="submitted && f.content.errors">
         </textarea>
         <div *ngIf="submitted && f.content.errors" class="invalid-feedback">
           <div *ngIf="f.content.errors.required">Content is required</div>

@@ -77,6 +77,9 @@ describe('HealthMonitorModalComponent', () => {
 
     expect(component.form.controls.name.disabled).toBe(true);
     expect(component.form.controls.type.disabled).toBe(true);
+    expect(component.form.controls.servicePort.disabled).toBe(false);
+    expect(component.form.controls.interval.disabled).toBe(false);
+    expect(component.form.controls.timeout.disabled).toBe(false);
   });
 
   it('should create a new health monitor', () => {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerHealthMonitor, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorType, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { HealthMonitorModalDto } from './health-monitor-modal.dto';
@@ -15,6 +15,12 @@ import { RangeValidator } from 'src/app/validators/range-validator';
 export class HealthMonitorModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
+
+  public healthMonitorTypes: LoadBalancerHealthMonitorType[] = [
+    LoadBalancerHealthMonitorType.HTTP,
+    LoadBalancerHealthMonitorType.HTTPS,
+    LoadBalancerHealthMonitorType.TCP,
+  ];
 
   private healthMonitorId: string;
   private modalMode: ModalMode;
