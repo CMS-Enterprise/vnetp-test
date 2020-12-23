@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -9,15 +9,16 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
-import { VirtualServerListComponent } from './virtual-server-list.component';
+import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
 describe('VirtualServerListComponent', () => {
   let component: VirtualServerListComponent;
   let fixture: ComponentFixture<VirtualServerListComponent>;
+  let service: V1LoadBalancerVirtualServersService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         VirtualServerListComponent,
@@ -33,20 +34,22 @@ describe('VirtualServerListComponent', () => {
 
     fixture = TestBed.createComponent(VirtualServerListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+
+    service = TestBed.inject(V1LoadBalancerVirtualServersService);
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
+  it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
     const spy = jest.spyOn(virtualServerService, 'v1LoadBalancerVirtualServersGet').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'VirtualServer1', provisionedAt: {} },
+        { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
         { id: '2', name: 'VirtualServer2' },
       ] as LoadBalancerVirtualServer[]) as any);
     });
@@ -59,28 +62,47 @@ describe('VirtualServerListComponent', () => {
       name: 'VirtualServer1',
       provisionedAt: {},
       state: 'Provisioned',
+      defaultPool: { name: 'Pool1' },
+      defaultPoolName: 'Pool1',
     });
 
     expect(virtualServer2).toEqual({
       id: '2',
       name: 'VirtualServer2',
       state: 'Not Provisioned',
+      defaultPoolName: '--',
     });
   });
 
-  it('should import health monitors', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
+  it('should import virtual servers', () => {
+    const virtualServers = [{ name: 'VirtualServer1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
+    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersBulkImportPost');
 
-    const newVirtualServers = [{ name: 'VirtualServer1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
-    const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'v1LoadBalancerVirtualServersBulkImportPost');
-
-    component.import(newVirtualServers);
+    component.import(virtualServers);
 
     expect(spy).toHaveBeenCalledWith({
       virtualServerImportCollectionDto: {
         bulk: [{ name: 'VirtualServer1', tierId: '1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }],
       },
     });
+  });
+
+  it('should delete a virtual server', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as VirtualServerView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a virtual server', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersIdRestorePatch');
+
+    component.restore({} as VirtualServerView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as VirtualServerView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

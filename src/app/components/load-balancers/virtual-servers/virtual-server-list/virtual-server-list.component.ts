@@ -8,7 +8,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 
-interface VirtualServerView extends LoadBalancerVirtualServer {
+export interface VirtualServerView extends LoadBalancerVirtualServer {
   defaultPoolName: string;
   state: string;
 }
