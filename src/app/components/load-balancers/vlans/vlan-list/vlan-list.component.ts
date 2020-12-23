@@ -8,7 +8,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
 
-interface VlanView extends LoadBalancerVlan {
+export interface VlanView extends LoadBalancerVlan {
   state: string;
 }
 
@@ -117,7 +117,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!vlan.deletedAt) {
       return;
     }
-    this.vlansService.v1LoadBalancerVlansIdDeprovisionPatch({ id: vlan.id }).subscribe(() => this.loadVlans());
+    this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(() => this.loadVlans());
   }
 
   private subscribeToVlanModal(): Subscription {

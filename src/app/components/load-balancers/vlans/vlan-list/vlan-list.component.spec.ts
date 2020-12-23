@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -11,13 +11,14 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'api_client';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
-import { ImportVlan, VlanListComponent } from './vlan-list.component';
+import { ImportVlan, VlanListComponent, VlanView } from './vlan-list.component';
 
 describe('VlanListComponent', () => {
   let component: VlanListComponent;
   let fixture: ComponentFixture<VlanListComponent>;
+  let service: V1LoadBalancerVlansService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         VlanListComponent,
@@ -33,18 +34,19 @@ describe('VlanListComponent', () => {
 
     fixture = TestBed.createComponent(VlanListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+
+    service = TestBed.inject(V1LoadBalancerVlansService);
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
-    const vLANService = TestBed.inject(V1LoadBalancerVlansService);
-    const spy = jest.spyOn(vLANService, 'v1LoadBalancerVlansGet').mockImplementation(() => {
+  it('should map vlans', () => {
+    jest.spyOn(service, 'v1LoadBalancerVlansGet').mockImplementation(() => {
       return of(([
         { id: '1', name: 'VLAN1', provisionedAt: {} },
         { id: '2', name: 'VLAN2' },
@@ -68,19 +70,35 @@ describe('VlanListComponent', () => {
     });
   });
 
-  it('should import health monitors', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
+  it('should import vlans', () => {
+    const vlans = [{ name: 'VLAN1', vrfName: 'Tier1' }, { name: 'VLAN2' }] as ImportVlan[];
+    const spy = jest.spyOn(service, 'v1LoadBalancerVlansBulkPost');
 
-    const newVLANs = [{ name: 'VLAN1', vrfName: 'Tier1' }, { name: 'VLAN2' }] as ImportVlan[];
-    const vLANService = TestBed.inject(V1LoadBalancerVlansService);
-    const spy = jest.spyOn(vLANService, 'v1LoadBalancerVlansBulkPost');
-
-    component.import(newVLANs);
+    component.import(vlans);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerVLANBulkDto: {
+      generatedLoadBalancerVlanBulkDto: {
         bulk: [{ name: 'VLAN1', tierId: '1', vrfName: 'Tier1' }, { name: 'VLAN2' }],
       },
     });
+  });
+
+  it('should delete a vlan', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as VlanView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a vlan', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVlansIdRestorePatch');
+
+    component.restore({} as VlanView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as VlanView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });
