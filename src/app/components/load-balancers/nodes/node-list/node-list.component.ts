@@ -73,7 +73,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
         nodes => {
           this.nodes = nodes.map(n => {
             const defaultVal = (key: keyof LoadBalancerNode) => {
-              return n[key] === null ? '--' : n[key].toString();
+              const val = n[key];
+              return val === null || val === undefined ? '--' : n[key].toString();
             };
             return {
               ...n,

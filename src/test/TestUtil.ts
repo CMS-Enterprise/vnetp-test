@@ -14,6 +14,14 @@ export default class TestUtil {
     return !!errors.required;
   }
 
+  static areRequiredFields(form: FormGroup, fields: string[]): boolean {
+    return fields.map(f => form.controls[f]).every(control => TestUtil.isFormControlRequired(control));
+  }
+
+  static areOptionalFields(form: FormGroup, fields: string[]): boolean {
+    return fields.map(f => form.controls[f]).every(control => !TestUtil.isFormControlRequired(control));
+  }
+
   static hasNameValidator(control: AbstractControl): boolean {
     const errorValues = [
       'A', // too short

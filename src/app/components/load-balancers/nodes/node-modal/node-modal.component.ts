@@ -10,6 +10,7 @@ import ValidatorUtil from 'src/app/utils/ValidatorUtil';
 import { FqdnValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { nodeTypeLookup } from 'src/app/lookups/load-balancer-node-type.lookup';
 
 @Component({
   selector: 'app-node-modal',
@@ -18,7 +19,12 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 export class NodeModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
+
   public NodeType = LoadBalancerNodeType;
+  public nodeTypeLookup = nodeTypeLookup;
+  public nodeTypes: LoadBalancerNodeType[] = Object.keys(LoadBalancerNodeType).map(k => {
+    return LoadBalancerNodeType[k];
+  });
 
   private nodeId: string;
   private modalMode: ModalMode;
@@ -114,30 +120,22 @@ export class NodeModalComponent implements OnInit {
     });
   }
 
-  private createNode(node: LoadBalancerNode): void {
-    this.nodeService
-      .v1LoadBalancerNodesPost({
-        loadBalancerNode: node,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createNode(loadBalancerNode: LoadBalancerNode): void {
+    this.nodeService.v1LoadBalancerNodesPost({ loadBalancerNode }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateNode(node: LoadBalancerNode): void {
-    node.tierId = undefined;
+  private updateNode(loadBalancerNode: LoadBalancerNode): void {
+    loadBalancerNode.tierId = null;
     this.nodeService
       .v1LoadBalancerNodesIdPut({
         id: this.nodeId,
-        loadBalancerNode: node,
+        loadBalancerNode,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

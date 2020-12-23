@@ -4,90 +4,164 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NodeModalComponent } from './node-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerPoolsService, V1LoadBalancerNodesService } from 'api_client';
+import { V1LoadBalancerPoolsService, V1LoadBalancerNodesService, LoadBalancerNodeType, LoadBalancerNode } from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { NodeModalDto } from './node-modal.dto';
 
 describe('NodeModalComponent', () => {
   let component: NodeModalComponent;
   let fixture: ComponentFixture<NodeModalComponent>;
 
-  beforeEach(async(() => {
+  let service: V1LoadBalancerNodesService;
+  let ngx: NgxSmartModalService;
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [NodeModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerPoolsService), MockProvider(V1LoadBalancerNodesService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(NodeModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+    });
+    fixture = TestBed.createComponent(NodeModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerNodesService);
+    ngx = TestBed.inject(NgxSmartModalService);
+  });
+
+  const createNode = (): LoadBalancerNode => {
+    return {
+      tierId: '1',
+      id: '2',
+      name: 'Node2',
+      autoPopulate: true,
+      fqdn: 'www.google.com',
+      ipAddress: null,
+      type: LoadBalancerNodeType.Fqdn,
+    };
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.form.controls.name)).toBe(true);
   });
 
-  it('ip address should not be required', () => {
-    const ipAddress = component.form.controls.ipAddress;
-    expect(ipAddress.valid).toBeTruthy();
+  it('name and type should be required', () => {
+    const fields = ['name', 'type'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
-  it('fqdn should not be required', () => {
-    const fqdn = component.form.controls.fqdn;
-    expect(fqdn.valid).toBeTruthy();
+  it('ipAddress, fqdn and auto populate should be optional', () => {
+    const fields = ['ipAddress', 'fqdn', 'autoPopulate'];
+    expect(TestUtil.areOptionalFields(component.form, fields)).toBe(true);
   });
 
-  it('auto populate should not be required', () => {
-    const autoPopulate = component.form.controls.autoPopulate;
-    expect(autoPopulate.valid).toBeTruthy();
+  it('ipAddress should be required when type is "IpAddress"', () => {
+    const { type } = component.f;
+    type.setValue(LoadBalancerNodeType.IpAddress);
+    fixture.detectChanges();
+
+    expect(TestUtil.isFormControlRequired(component.f.ipAddress)).toBe(true);
   });
 
-  // Form State when Type: FQDN selected
-  it('ipaddress should be required', () => {
-    const type = component.form.controls.type;
-    type.setValue('IpAddress');
-    const ipAddress = component.form.controls.ipAddress;
-    expect(ipAddress.valid).toBeFalsy();
+  it('fqdn should be required when type is "Fqdn"', () => {
+    const { type } = component.f;
+    type.setValue(LoadBalancerNodeType.Fqdn);
+    fixture.detectChanges();
+
+    expect(TestUtil.isFormControlRequired(component.f.fqdn)).toBe(true);
   });
 
-  // Form State when Type: FQDN selected
-  it('fqdn should be required', () => {
-    const type = component.form.controls.type;
-    type.setValue('Fqdn');
-    const fqdn = component.form.controls.fqdn;
-    expect(fqdn.valid).toBeFalsy();
-  });
-
-  describe('Name', () => {
-    it('should be required', () => {
-      const name = component.form.controls.name;
-      expect(name.valid).toBeFalsy();
+  it('should disable name when editing an existing node', () => {
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: NodeModalDto = {
+        tierId: '1',
+        node: createNode(),
+      };
+      return dto;
     });
 
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.ipAddress.disabled).toBe(false);
+    expect(component.form.controls.fqdn.disabled).toBe(false);
+    expect(component.form.controls.autoPopulate.disabled).toBe(false);
+    expect(component.form.controls.type.disabled).toBe(false);
+  });
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
-
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
+  it('should create a new node', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerNodesPost');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: NodeModalDto = {
+        tierId: '1',
+      };
+      return dto;
     });
 
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+    component.form.setValue({
+      autoPopulate: false,
+      fqdn: null,
+      ipAddress: null,
+      name: 'Node1',
+      type: LoadBalancerNodeType.IpAddress,
+    });
+    component.f.ipAddress.setValue('192.168.1.1');
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerNode: {
+        autoPopulate: null,
+        fqdn: null,
+        ipAddress: '192.168.1.1',
+        name: 'Node1',
+        tierId: '1',
+        type: LoadBalancerNodeType.IpAddress,
+      },
+    });
+  });
+
+  it('should update an existing node', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerNodesIdPut');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: NodeModalDto = {
+        tierId: '1',
+        node: createNode(),
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      autoPopulate: false,
+      fqdn: null,
+      ipAddress: null,
+      name: 'New Name',
+      type: LoadBalancerNodeType.IpAddress,
+    });
+    component.f.ipAddress.setValue('192.168.1.2');
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerNode: {
+        autoPopulate: null,
+        fqdn: null,
+        ipAddress: '192.168.1.2',
+        name: 'New Name',
+        tierId: null,
+        type: LoadBalancerNodeType.IpAddress,
+      },
     });
   });
 });

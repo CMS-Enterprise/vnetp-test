@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -17,7 +17,7 @@ describe('NodeListComponent', () => {
   let component: NodeListComponent;
   let fixture: ComponentFixture<NodeListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         NodeListComponent,
@@ -36,18 +36,18 @@ describe('NodeListComponent', () => {
     component.currentTier = { id: '1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
+  it('should map nodes', () => {
     const nodeService = TestBed.inject(V1LoadBalancerNodesService);
-    const spy = jest.spyOn(nodeService, 'v1LoadBalancerNodesGet').mockImplementation(() => {
+    jest.spyOn(nodeService, 'v1LoadBalancerNodesGet').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'Node1', provisionedAt: {} },
-        { id: '2', name: 'Node2' },
+        { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
+        { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
       ] as LoadBalancerNode[]) as any);
     });
 
@@ -55,20 +55,27 @@ describe('NodeListComponent', () => {
 
     const [node1, node2] = component.nodes;
     expect(node1).toEqual({
+      autoPopulate: true,
+      autoPopulateView: 'true',
+      fqdn: 'www.google.com',
       id: '1',
+      ipAddress: '--',
       name: 'Node1',
       provisionedAt: {},
       provisionedState: 'Provisioned',
     });
 
     expect(node2).toEqual({
+      autoPopulateView: '--',
+      fqdn: '--',
       id: '2',
+      ipAddress: '192.168.1.1',
       name: 'Node2',
       provisionedState: 'Not Provisioned',
     });
   });
 
-  it('should import health monitors', () => {
+  it('should import nodes', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
     const newNodes = [{ name: 'Node1', vrfName: 'Tier1' }, { name: 'Node2' }] as ImportNode[];
