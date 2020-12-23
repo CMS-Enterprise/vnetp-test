@@ -1,63 +1,169 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { ProfileModalComponent } from './profile-modal.component';
+import { ProfileModalComponent, ProfileReverseProxyType } from './profile-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerProfilesService } from 'api_client';
+import { LoadBalancerProfile, LoadBalancerProfileType, V1LoadBalancerProfilesService } from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { ProfileModalDto } from './profile-modal.dto';
 
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;
   let fixture: ComponentFixture<ProfileModalComponent>;
 
-  beforeEach(async(() => {
+  let service: V1LoadBalancerProfilesService;
+  let ngx: NgxSmartModalService;
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ProfileModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(V1LoadBalancerProfilesService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ProfileModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+    });
+
+    fixture = TestBed.createComponent(ProfileModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerProfilesService);
+    ngx = TestBed.inject(NgxSmartModalService);
+  });
+
+  const createProfile = (): LoadBalancerProfile => {
+    return {
+      tierId: '1',
+      id: '2',
+      name: 'Profile2',
+      type: LoadBalancerProfileType.ClientSSL,
+      certificate: 'a'.repeat(60),
+      reverseProxy: null,
+      properties: [],
+      key: 'key',
+    };
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.f.name)).toBe(true);
   });
 
-  describe('Name', () => {
-    it('should be required', () => {
-      const name = component.form.controls.name;
-      expect(name.valid).toBeFalsy();
+  it('name and type should be required', () => {
+    const fields = ['name', 'type'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
+
+  it('certificate should be required when type is "ClientSSL"', () => {
+    const { type } = component.f;
+    type.setValue(LoadBalancerProfileType.ClientSSL);
+    fixture.detectChanges();
+
+    const fields = ['certificate'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
+
+  it('reverseProxy should be required when type is "Http"', () => {
+    const { type } = component.f;
+    type.setValue(LoadBalancerProfileType.Http);
+    fixture.detectChanges();
+
+    const fields = ['reverseProxy'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
+
+  it('should disable name and type when editing an existing profile', () => {
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: ProfileModalDto = {
+        tierId: '1',
+        profile: createProfile(),
+      };
+      return dto;
     });
 
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.type.disabled).toBe(true);
+    expect(component.form.controls.certificate.disabled).toBe(false);
+    expect(component.form.controls.description.disabled).toBe(false);
+    expect(component.form.controls.reverseProxy.disabled).toBe(false);
+  });
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
-
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
+  it('should create a new profile', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesPost');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: ProfileModalDto = {
+        tierId: '1',
+      };
+      return dto;
     });
 
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+    component.form.setValue({
+      certificate: null,
+      description: 'Description',
+      name: 'NewName',
+      reverseProxy: ProfileReverseProxyType.Explicit,
+      type: LoadBalancerProfileType.Http,
+    });
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerProfile: {
+        certificate: null,
+        description: 'Description',
+        key: null,
+        name: 'NewName',
+        properties: null,
+        reverseProxy: ProfileReverseProxyType.Explicit,
+        tierId: '1',
+        type: LoadBalancerProfileType.Http,
+      },
+    });
+  });
+
+  it('should update an existing profile', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesIdPut');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: ProfileModalDto = {
+        tierId: '1',
+        profile: createProfile(),
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      certificate: null,
+      description: 'Description',
+      name: 'NewName',
+      reverseProxy: ProfileReverseProxyType.Explicit,
+      type: LoadBalancerProfileType.Http,
+    });
+    component.form.updateValueAndValidity();
+
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerProfile: {
+        certificate: null,
+        description: 'Description',
+        key: null,
+        name: 'NewName',
+        properties: null,
+        reverseProxy: ProfileReverseProxyType.Explicit,
+        tierId: null,
+        type: LoadBalancerProfileType.Http,
+      },
     });
   });
 });

@@ -16,13 +16,7 @@
         <!-- Name -->
         <div class="form-group col-md-6">
           <label for="name">Name</label>
-          <input
-            type="text"
-            formControlName="name"
-            class="form-control"
-            [class.is-invalid]="submitted && f.name.errors"
-            aria-label="Name"
-          />
+          <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
           <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
             <div *ngIf="f.name.errors.required">Name is required</div>
             <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -35,12 +29,11 @@
         <div class="form-group col-md-6">
           <label for="description">Description</label>
           <input
+            id="description"
             type="text"
             formControlName="description"
             class="form-control"
             [class.is-invalid]="submitted && f.description.errors"
-            aria-label="Description"
-            id="description"
           />
           <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
             <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
@@ -50,9 +43,10 @@
       </div>
 
       <div class="form-row">
+        <!-- Type -->
         <div class="form-group col-md-6">
           <label for="type">Type</label>
-          <select formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
             <option></option>
             <option value="ClientSSL">ClientSSL</option>
             <option value="Http">HTTP</option>
@@ -64,13 +58,12 @@
       </div>
 
       <div class="form-row" *ngIf="f.type.value === ProfileType.Http">
+        <!-- Reverse Proxy -->
         <div class="form-group col-md-6">
           <label for="reverseProxy">Reverse Proxy</label>
           <select formControlName="reverseProxy" class="form-control" [class.is-invalid]="submitted && f.reverseProxy.errors">
             <option></option>
-            <option value="Explicit">Explicit</option>
-            <option value="Reverse">Reverse</option>
-            <option value="Transparent">Transparent</option>
+            <option *ngFor="let type of reverseProxyTypes" [ngValue]="type">{{ type }}</option>
           </select>
           <div *ngIf="submitted && f.reverseProxy.errors" class="invalid-feedback">
             <div *ngIf="f.reverseProxy.errors.required">Reverse Proxy is required</div>

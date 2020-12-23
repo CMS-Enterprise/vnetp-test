@@ -19,6 +19,9 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   public submitted: boolean;
   public ProfileType = LoadBalancerProfileType;
 
+  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => {
+    return ProfileReverseProxyType[k];
+  });
   public privateKeyCipher: string;
 
   private profileId: string;
@@ -79,12 +82,13 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
     this.modalMode = profile ? ModalMode.Edit : ModalMode.Create;
 
     if (this.modalMode === ModalMode.Edit) {
-      const { name, type, id, certificate, reverseProxy, key } = profile;
+      const { name, type, id, certificate, reverseProxy, key, description } = profile;
       this.profileId = id;
 
       this.form.controls.name.disable();
       this.form.controls.type.disable();
 
+      this.form.controls.description.setValue(description);
       this.form.controls.name.setValue(name);
       this.form.controls.type.setValue(type);
 
@@ -122,9 +126,6 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', NameValidator()],
-      type: ['', Validators.required],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       certificate: [
         null,
         Validators.compose([
@@ -132,40 +133,35 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
           ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileType.ClientSSL),
         ]),
       ],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      name: ['', NameValidator()],
       reverseProxy: [null, ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileType.Http)],
+      type: ['', Validators.required],
     });
   }
 
-  private createProfile(profile: LoadBalancerProfile): void {
-    this.profileService
-      .v1LoadBalancerProfilesPost({
-        loadBalancerProfile: profile,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createProfile(loadBalancerProfile: LoadBalancerProfile): void {
+    this.profileService.v1LoadBalancerProfilesPost({ loadBalancerProfile }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateProfile(profile: LoadBalancerProfile): void {
-    profile.tierId = undefined;
+  private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
+    loadBalancerProfile.tierId = null;
     this.profileService
       .v1LoadBalancerProfilesIdPut({
         id: this.profileId,
-        loadBalancerProfile: profile,
+        loadBalancerProfile,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }
 
   private getProfileForSave(): LoadBalancerProfile {
-    const { name, type, reverseProxy, certificate } = this.form.getRawValue();
+    const { name, type, reverseProxy, certificate, description } = this.form.getRawValue();
 
     if (type === LoadBalancerProfileType.ClientSSL) {
       if (!this.privateKeyCipher) {
@@ -180,23 +176,25 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
 
       return {
         certificate,
+        description,
         name,
         type,
         key: this.privateKeyCipher,
-        properties: undefined,
-        reverseProxy: undefined,
+        properties: null,
+        reverseProxy: null,
         tierId: this.tierId,
       };
     }
 
     if (type === LoadBalancerProfileType.Http) {
       return {
+        description,
         name,
         reverseProxy,
         type,
-        certificate: undefined,
-        key: undefined,
-        properties: undefined,
+        certificate: null,
+        key: null,
+        properties: null,
         tierId: this.tierId,
       };
     }
@@ -224,4 +222,11 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
       certificate.updateValueAndValidity();
     });
   }
+}
+
+// TODO: Generate from API
+export enum ProfileReverseProxyType {
+  Explicit = 'Explicit',
+  Reverse = 'Reverse',
+  Transparent = 'Transparent',
 }

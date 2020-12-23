@@ -10,6 +10,7 @@ import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 
 interface ProfileView extends LoadBalancerProfile {
   provisionedState: string;
+  reverseProxyView: string;
 }
 
 @Component({
@@ -27,7 +28,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
-      { name: 'Reverse Proxy', property: 'reverseProxy' },
+      { name: 'Reverse Proxy', property: 'reverseProxyView' },
       { name: 'State', property: 'provisionedState' },
       { name: '', template: () => this.actionsTemplate },
     ],
@@ -76,7 +77,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               ...p,
               provisionedState: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              reverseProxy: p.reverseProxy || '--',
+              reverseProxyView: p.reverseProxy || '--',
             };
           });
         },
