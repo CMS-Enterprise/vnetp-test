@@ -9,7 +9,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 
 interface HealthMonitorView extends LoadBalancerHealthMonitor {
-  provisionedState: string;
+  state: string;
 }
 
 @Component({
@@ -30,7 +30,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Interval', property: 'interval' },
       { name: 'Timeout', property: 'timeout' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -77,7 +77,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
           this.healthMonitors = healthMonitors.map(h => {
             return {
               ...h,
-              provisionedState: h.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: h.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

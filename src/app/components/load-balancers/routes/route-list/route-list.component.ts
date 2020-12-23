@@ -9,7 +9,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 
 interface RouteView extends LoadBalancerRoute {
-  provisionedState: string;
+  state: string;
 }
 
 @Component({
@@ -28,7 +28,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -76,7 +76,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.routes = routes.map(r => {
             return {
               ...r,
-              provisionedState: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

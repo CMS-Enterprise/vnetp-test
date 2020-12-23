@@ -9,7 +9,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
 export interface IRuleView extends LoadBalancerIrule {
-  provisionedState: string;
+  state: string;
   descriptionView: string;
 }
 
@@ -29,7 +29,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'descriptionView' },
       { name: 'Content', property: 'content' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -73,7 +73,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               ...i,
               descriptionView: i.description || '--',
-              provisionedState: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

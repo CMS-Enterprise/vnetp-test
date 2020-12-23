@@ -58,13 +58,13 @@ describe('VirtualServerListComponent', () => {
       id: '1',
       name: 'VirtualServer1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(virtualServer2).toEqual({
       id: '2',
       name: 'VirtualServer2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 

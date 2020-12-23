@@ -58,13 +58,13 @@ describe('VlanListComponent', () => {
       id: '1',
       name: 'VLAN1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(vlan2).toEqual({
       id: '2',
       name: 'VLAN2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 

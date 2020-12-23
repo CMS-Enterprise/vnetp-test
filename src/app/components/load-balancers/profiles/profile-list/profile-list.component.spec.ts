@@ -9,14 +9,13 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'api_client';
-import { ProfileListComponent, ImportProfile } from './profile-list.component';
+import { ProfileListComponent, ImportProfile, ProfileView } from './profile-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;
   let fixture: ComponentFixture<ProfileListComponent>;
-
   let service: V1LoadBalancerProfilesService;
 
   beforeEach(() => {
@@ -61,7 +60,7 @@ describe('ProfileListComponent', () => {
       id: '1',
       name: 'Profile1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
       reverseProxy: 'Explicit',
       reverseProxyView: 'Explicit',
     });
@@ -69,12 +68,12 @@ describe('ProfileListComponent', () => {
     expect(profile2).toEqual({
       id: '2',
       name: 'Profile2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
       reverseProxyView: '--',
     });
   });
 
-  it('should import health monitors', () => {
+  it('should import profiles', () => {
     const newProfiles = [{ name: 'Profile1', vrfName: 'Tier1' }, { name: 'Profile2' }] as ImportProfile[];
     const spy = jest.spyOn(service, 'v1LoadBalancerProfilesBulkPost');
 
@@ -85,5 +84,24 @@ describe('ProfileListComponent', () => {
         bulk: [{ name: 'Profile1', tierId: '1', vrfName: 'Tier1' }, { name: 'Profile2' }],
       },
     });
+  });
+
+  it('should delete a profile', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as ProfileView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a profile', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesIdRestorePatch');
+
+    component.restore({} as ProfileView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as ProfileView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

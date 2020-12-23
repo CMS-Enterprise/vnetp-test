@@ -15,13 +15,14 @@ import {
   Tier,
   V1LoadBalancerPoolsService,
 } from 'api_client';
-import { PoolListComponent } from './pool-list.component';
+import { PoolListComponent, PoolView } from './pool-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
 describe('PoolListComponent', () => {
   let component: PoolListComponent;
   let fixture: ComponentFixture<PoolListComponent>;
+  let service: V1LoadBalancerPoolsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,10 +40,12 @@ describe('PoolListComponent', () => {
 
     fixture = TestBed.createComponent(PoolListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.datacenterId = '3';
     component.tiers = [component.currentTier];
     fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerPoolsService);
   });
 
   it('should create', () => {
@@ -50,8 +53,7 @@ describe('PoolListComponent', () => {
   });
 
   it('should map pools', () => {
-    const poolService = TestBed.inject(V1LoadBalancerPoolsService);
-    jest.spyOn(poolService, 'v1LoadBalancerPoolsIdTierIdGet').mockImplementation(() => {
+    jest.spyOn(service, 'v1LoadBalancerPoolsIdTierIdGet').mockImplementation(() => {
       return of(([
         {
           id: '1',
@@ -78,7 +80,7 @@ describe('PoolListComponent', () => {
       name: 'Pool1',
       nodes: [{}],
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
       totalHealthMonitors: 2,
       totalNodes: 1,
     });
@@ -88,20 +90,17 @@ describe('PoolListComponent', () => {
       loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember,
       methodName: 'Dynamic Ratio Member',
       name: 'Pool2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
       totalHealthMonitors: 0,
       totalNodes: 0,
     });
   });
 
   it('should import pools', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
+    const pools = [{ name: 'Pool1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];
+    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsBulkImportPost');
 
-    const newPools = [{ name: 'Pool1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];
-    const poolService = TestBed.inject(V1LoadBalancerPoolsService);
-    const spy = jest.spyOn(poolService, 'v1LoadBalancerPoolsBulkImportPost');
-
-    component.import(newPools);
+    component.import(pools);
 
     expect(spy).toHaveBeenCalledWith({
       poolImportCollectionDto: {
@@ -109,5 +108,24 @@ describe('PoolListComponent', () => {
         pools: [{ name: 'Pool1' }, { name: 'Pool2' }],
       },
     });
+  });
+
+  it('should delete a pool', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as PoolView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a pool', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsIdRestorePatch');
+
+    component.restore({} as PoolView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as PoolView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

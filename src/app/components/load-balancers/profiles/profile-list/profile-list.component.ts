@@ -8,8 +8,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 
-interface ProfileView extends LoadBalancerProfile {
-  provisionedState: string;
+export interface ProfileView extends LoadBalancerProfile {
+  state: string;
   reverseProxyView: string;
 }
 
@@ -29,7 +29,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Reverse Proxy', property: 'reverseProxyView' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -76,7 +76,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.profiles = profiles.map(p => {
             return {
               ...p,
-              provisionedState: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               reverseProxyView: p.reverseProxy || '--',
             };
           });

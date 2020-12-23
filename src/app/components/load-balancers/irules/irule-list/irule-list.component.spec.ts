@@ -16,6 +16,7 @@ import { of } from 'rxjs';
 describe('IRuleListComponent', () => {
   let component: IRuleListComponent;
   let fixture: ComponentFixture<IRuleListComponent>;
+  let service: V1LoadBalancerIrulesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -33,9 +34,11 @@ describe('IRuleListComponent', () => {
 
     fixture = TestBed.createComponent(IRuleListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerIrulesService);
   });
 
   it('should create', () => {
@@ -43,7 +46,6 @@ describe('IRuleListComponent', () => {
   });
 
   it('should map iRules', () => {
-    const service = TestBed.inject(V1LoadBalancerIrulesService);
     jest.spyOn(service, 'v1LoadBalancerIrulesGet').mockImplementation(() => {
       return of(([
         { id: '1', name: 'iRule1', provisionedAt: {} },
@@ -60,7 +62,7 @@ describe('IRuleListComponent', () => {
       id: '1',
       name: 'iRule1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(iRule2).toEqual({
@@ -68,18 +70,15 @@ describe('IRuleListComponent', () => {
       descriptionView: 'Description',
       id: '2',
       name: 'iRule2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 
   it('should import iRules', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
-
-    const newIRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
-    const service = TestBed.inject(V1LoadBalancerIrulesService);
+    const iRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
     const spy = jest.spyOn(service, 'v1LoadBalancerIrulesBulkPost');
 
-    component.import(newIRules);
+    component.import(iRules);
 
     expect(spy).toHaveBeenCalledWith({
       generatedLoadBalancerIruleBulkDto: {
@@ -88,17 +87,16 @@ describe('IRuleListComponent', () => {
     });
   });
 
-  it('should delete a iRule', () => {
-    const service = TestBed.inject(EntityService);
-    const spy = jest.spyOn(service, 'deleteEntity');
+  it('should delete an iRule', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
 
     component.delete({} as IRuleView);
 
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should restore a iRule', () => {
-    const service = TestBed.inject(V1LoadBalancerIrulesService);
+  it('should restore an iRule', () => {
     const spy = jest.spyOn(service, 'v1LoadBalancerIrulesIdRestorePatch');
 
     component.restore({} as IRuleView);

@@ -8,11 +8,11 @@ import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
-interface PoolView extends LoadBalancerPool {
+export interface PoolView extends LoadBalancerPool {
   methodName: string;
   totalHealthMonitors: number;
   totalNodes: number;
-  provisionedState: string;
+  state: string;
 }
 
 @Component({
@@ -33,7 +33,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -81,7 +81,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               ...p,
               methodName: methodsLookup[p.loadBalancingMethod],
-              provisionedState: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               totalNodes: getTotal(p.nodes),
               totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
             };

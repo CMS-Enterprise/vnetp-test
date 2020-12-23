@@ -58,13 +58,13 @@ describe('RouteListComponent', () => {
       id: '1',
       name: 'Route1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(route2).toEqual({
       id: '2',
       name: 'Route2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 

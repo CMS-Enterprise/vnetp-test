@@ -8,8 +8,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 
-interface NodeView extends LoadBalancerNode {
-  provisionedState: string;
+export interface NodeView extends LoadBalancerNode {
+  state: string;
   autoPopulateView: string;
 }
 
@@ -31,7 +31,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'FQDN', property: 'fqdn' },
       { name: 'Auto-Populate', property: 'autoPopulateView' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -78,7 +78,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
             };
             return {
               ...n,
-              provisionedState: n.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: n.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               ipAddress: defaultVal('ipAddress'),
               fqdn: defaultVal('fqdn'),
               autoPopulateView: defaultVal('autoPopulate'),

@@ -8,8 +8,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
 
-interface PolicyView extends LoadBalancerPolicy {
-  provisionedState: string;
+export interface PolicyView extends LoadBalancerPolicy {
+  state: string;
 }
 
 @Component({
@@ -27,7 +27,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -74,7 +74,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.policies = policies.map(p => {
             return {
               ...p,
-              provisionedState: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

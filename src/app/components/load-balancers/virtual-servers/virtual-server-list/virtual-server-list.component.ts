@@ -10,7 +10,7 @@ import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-mo
 
 interface VirtualServerView extends LoadBalancerVirtualServer {
   defaultPoolName: string;
-  provisionedState: string;
+  state: string;
 }
 
 @Component({
@@ -33,7 +33,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       { name: 'Destination Address', property: 'destinationIpAddress' },
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Pool', property: 'defaultPoolName' },
-      { name: 'State', property: 'provisionedState' },
+      { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -82,7 +82,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
             return {
               ...v,
               defaultPoolName: v.defaultPool ? v.defaultPool.name : '--',
-              provisionedState: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
         },

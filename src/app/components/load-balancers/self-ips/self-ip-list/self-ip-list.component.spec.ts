@@ -58,13 +58,13 @@ describe('SelfIpListComponent', () => {
       id: '1',
       name: 'SelfIp1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(selfIp2).toEqual({
       id: '2',
       name: 'SelfIp2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 

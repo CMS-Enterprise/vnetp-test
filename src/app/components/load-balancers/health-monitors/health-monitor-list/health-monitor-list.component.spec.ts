@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -16,8 +16,9 @@ import { of } from 'rxjs';
 describe('HealthMonitorListComponent', () => {
   let component: HealthMonitorListComponent;
   let fixture: ComponentFixture<HealthMonitorListComponent>;
+  let service: V1LoadBalancerHealthMonitorsService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         HealthMonitorListComponent,
@@ -33,17 +34,18 @@ describe('HealthMonitorListComponent', () => {
 
     fixture = TestBed.createComponent(HealthMonitorListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+
+    service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should map health monitors', () => {
-    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
     jest.spyOn(service, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => {
       return of(([
         { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
@@ -58,24 +60,21 @@ describe('HealthMonitorListComponent', () => {
       id: '1',
       name: 'HealthMonitor1',
       provisionedAt: {},
-      provisionedState: 'Provisioned',
+      state: 'Provisioned',
     });
 
     expect(healthMonitor2).toEqual({
       id: '2',
       name: 'HealthMonitor2',
-      provisionedState: 'Not Provisioned',
+      state: 'Not Provisioned',
     });
   });
 
   it('should import health monitors', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
-
-    const newHealthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
-    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
+    const healthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
     const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsBulkPost');
 
-    component.import(newHealthMonitors);
+    component.import(healthMonitors);
 
     expect(spy).toHaveBeenCalledWith({
       generatedLoadBalancerHealthMonitorBulkDto: {
@@ -85,8 +84,8 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should delete a health monitor', () => {
-    const service = TestBed.inject(EntityService);
-    const spy = jest.spyOn(service, 'deleteEntity');
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
 
     component.delete({} as LoadBalancerHealthMonitor);
 
@@ -94,7 +93,6 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should restore a health monitor', () => {
-    const service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
     const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsIdRestorePatch');
 
     component.restore({} as LoadBalancerHealthMonitor);
