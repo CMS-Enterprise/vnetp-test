@@ -1,5 +1,4 @@
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { NameValidator } from 'src/app/validators/name-validator';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 export default class TestUtil {
   static isFormControlRequired(control: AbstractControl): boolean {

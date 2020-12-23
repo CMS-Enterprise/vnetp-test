@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LoadBalancerNodeBulkImportDto, NodeImportCollectionDto, V1LoadBalancerPoolsService } from 'api_client';
+import { LoadBalancerNodeBulkImportDto, V1LoadBalancerPoolsService } from 'api_client';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
