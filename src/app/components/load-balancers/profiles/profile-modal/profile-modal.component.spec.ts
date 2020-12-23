@@ -12,7 +12,6 @@ import { ProfileModalDto } from './profile-modal.dto';
 describe('ProfileModalComponent', () => {
   let component: ProfileModalComponent;
   let fixture: ComponentFixture<ProfileModalComponent>;
-
   let service: V1LoadBalancerProfilesService;
   let ngx: NgxSmartModalService;
 
@@ -103,7 +102,6 @@ describe('ProfileModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       certificate: null,
       description: 'Description',
@@ -111,8 +109,6 @@ describe('ProfileModalComponent', () => {
       reverseProxy: ProfileReverseProxyType.Explicit,
       type: LoadBalancerProfileType.Http,
     });
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
@@ -140,7 +136,6 @@ describe('ProfileModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       certificate: null,
       description: 'Description',
@@ -148,8 +143,6 @@ describe('ProfileModalComponent', () => {
       reverseProxy: ProfileReverseProxyType.Explicit,
       type: LoadBalancerProfileType.Http,
     });
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({

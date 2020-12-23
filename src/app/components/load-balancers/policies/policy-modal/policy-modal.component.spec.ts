@@ -11,7 +11,6 @@ import { PolicyModalDto } from './policy-modal.dto';
 describe('PolicyModalComponent', () => {
   let component: PolicyModalComponent;
   let fixture: ComponentFixture<PolicyModalComponent>;
-
   let service: V1LoadBalancerPoliciesService;
   let ngx: NgxSmartModalService;
 
@@ -98,7 +97,6 @@ describe('PolicyModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       apmContent: null,
       asmContent: null,
@@ -106,8 +104,6 @@ describe('PolicyModalComponent', () => {
       type: LoadBalancerPolicyType.APM,
     });
     component.f.apmContent.setValue('APM Content');
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
@@ -132,7 +128,6 @@ describe('PolicyModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       apmContent: null,
       asmContent: null,
@@ -140,7 +135,6 @@ describe('PolicyModalComponent', () => {
       type: LoadBalancerPolicyType.APM,
     });
     component.f.apmContent.setValue('APM Content');
-    component.form.updateValueAndValidity();
     component.save();
 
     expect(spy).toHaveBeenCalledWith({

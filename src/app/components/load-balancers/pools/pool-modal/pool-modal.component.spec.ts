@@ -23,7 +23,6 @@ import { PoolModalDto } from './pool-modal.dto';
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;
   let fixture: ComponentFixture<PoolModalComponent>;
-
   let ngx: NgxSmartModalService;
   let service: V1LoadBalancerPoolsService;
 
@@ -111,7 +110,6 @@ describe('PoolModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
       name: 'NewName',
@@ -120,8 +118,6 @@ describe('PoolModalComponent', () => {
       selectedNode: null,
       servicePort: null,
     });
-    component.form.updateValueAndValidity();
-    fixture.detectChanges();
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
@@ -146,7 +142,6 @@ describe('PoolModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
       name: 'New Name',
@@ -155,7 +150,6 @@ describe('PoolModalComponent', () => {
       selectedNode: null,
       servicePort: null,
     });
-    component.form.updateValueAndValidity();
     component.save();
 
     expect(spy).toHaveBeenCalledWith({

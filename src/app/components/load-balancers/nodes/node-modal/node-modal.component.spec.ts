@@ -11,7 +11,6 @@ import { NodeModalDto } from './node-modal.dto';
 describe('NodeModalComponent', () => {
   let component: NodeModalComponent;
   let fixture: ComponentFixture<NodeModalComponent>;
-
   let service: V1LoadBalancerNodesService;
   let ngx: NgxSmartModalService;
 
@@ -62,7 +61,6 @@ describe('NodeModalComponent', () => {
   it('ipAddress should be required when type is "IpAddress"', () => {
     const { type } = component.f;
     type.setValue(LoadBalancerNodeType.IpAddress);
-    fixture.detectChanges();
 
     expect(TestUtil.isFormControlRequired(component.f.ipAddress)).toBe(true);
   });
@@ -70,7 +68,6 @@ describe('NodeModalComponent', () => {
   it('fqdn should be required when type is "Fqdn"', () => {
     const { type } = component.f;
     type.setValue(LoadBalancerNodeType.Fqdn);
-    fixture.detectChanges();
 
     expect(TestUtil.isFormControlRequired(component.f.fqdn)).toBe(true);
   });
@@ -103,7 +100,6 @@ describe('NodeModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       autoPopulate: false,
       fqdn: null,
@@ -112,8 +108,6 @@ describe('NodeModalComponent', () => {
       type: LoadBalancerNodeType.IpAddress,
     });
     component.f.ipAddress.setValue('192.168.1.1');
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
@@ -139,7 +133,6 @@ describe('NodeModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       autoPopulate: false,
       fqdn: null,
@@ -148,8 +141,6 @@ describe('NodeModalComponent', () => {
       type: LoadBalancerNodeType.IpAddress,
     });
     component.f.ipAddress.setValue('192.168.1.2');
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({

@@ -11,7 +11,6 @@ import { IRuleModalDto } from './irule-modal.dto';
 describe('IRuleModalComponent', () => {
   let component: IRuleModalComponent;
   let fixture: ComponentFixture<IRuleModalComponent>;
-
   let service: V1LoadBalancerIrulesService;
   let ngx: NgxSmartModalService;
 
@@ -49,22 +48,13 @@ describe('IRuleModalComponent', () => {
   });
 
   it('name and content should be required', () => {
-    const requiredFields: (keyof LoadBalancerIrule)[] = ['name', 'content'];
-    requiredFields.forEach(f => {
-      const control = component.f[f];
-      control.setValue(null);
-      control.updateValueAndValidity();
-
-      expect(control.valid).toBe(false);
-    });
+    const fields: (keyof LoadBalancerIrule)[] = ['name', 'content'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
   it('description should be optional', () => {
-    const control = component.f.description;
-    control.setValue(null);
-    control.updateValueAndValidity();
-
-    expect(control.valid).toBe(true);
+    const fields: (keyof LoadBalancerIrule)[] = ['description'];
+    expect(TestUtil.areOptionalFields(component.form, fields)).toBe(true);
   });
 
   it('should disable name when editing an existing iRule', () => {
@@ -93,14 +83,11 @@ describe('IRuleModalComponent', () => {
     });
 
     component.getData();
-
     component.form.setValue({
       name: 'iRule1',
       content: 'Content',
       description: 'Description',
     });
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
@@ -118,26 +105,17 @@ describe('IRuleModalComponent', () => {
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: IRuleModalDto = {
         tierId: '1',
-        iRule: {
-          id: '2',
-          name: 'iRule2',
-          content: 'Content',
-          description: 'Description',
-          tierId: '1',
-        },
+        iRule: createIRule(),
       };
       return dto;
     });
 
     component.getData();
-
     component.form.setValue({
       name: 'iRule100',
       content: 'New Content',
       description: 'New Description',
     });
-    component.form.updateValueAndValidity();
-
     component.save();
 
     expect(spy).toHaveBeenCalledWith({
