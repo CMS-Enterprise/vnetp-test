@@ -106,30 +106,22 @@ export class SelfIpModalComponent implements OnInit {
     });
   }
 
-  private createSelfIp(selfIp: LoadBalancerSelfIp): void {
-    this.selfIpService
-      .v1LoadBalancerSelfIpsPost({
-        loadBalancerSelfIp: selfIp,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
+    this.selfIpService.v1LoadBalancerSelfIpsPost({ loadBalancerSelfIp }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateSelfIp(selfIp: LoadBalancerSelfIp): void {
-    selfIp.tierId = undefined;
+  private updateSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
+    loadBalancerSelfIp.tierId = null;
     this.selfIpService
       .v1LoadBalancerSelfIpsIdPut({
         id: this.selfIpId,
-        loadBalancerSelfIp: selfIp,
+        loadBalancerSelfIp,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

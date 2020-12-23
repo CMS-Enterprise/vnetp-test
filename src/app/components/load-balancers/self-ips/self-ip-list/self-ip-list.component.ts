@@ -8,7 +8,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 
-interface SelfIpView extends LoadBalancerSelfIp {
+export interface SelfIpView extends LoadBalancerSelfIp {
   state: string;
   vlanName: string;
 }

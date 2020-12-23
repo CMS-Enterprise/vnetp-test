@@ -52,7 +52,7 @@ describe('RouteModalComponent', () => {
     expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
-  it('should disable name, destination and gateway when editing an existing profile', () => {
+  it('should disable name, destination and gateway when editing an existing route', () => {
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: RouteModalDto = {
         tierId: '1',

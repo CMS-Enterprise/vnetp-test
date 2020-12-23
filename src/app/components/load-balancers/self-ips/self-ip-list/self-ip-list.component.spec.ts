@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -9,15 +9,16 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
-import { SelfIpListComponent, ImportSelfIp } from './self-ip-list.component';
+import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
 describe('SelfIpListComponent', () => {
   let component: SelfIpListComponent;
   let fixture: ComponentFixture<SelfIpListComponent>;
+  let service: V1LoadBalancerSelfIpsService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         SelfIpListComponent,
@@ -33,20 +34,21 @@ describe('SelfIpListComponent', () => {
 
     fixture = TestBed.createComponent(SelfIpListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+
+    service = TestBed.inject(V1LoadBalancerSelfIpsService);
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should map self ips', () => {
-    const selfIPService = TestBed.inject(V1LoadBalancerSelfIpsService);
-    jest.spyOn(selfIPService, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => {
+    jest.spyOn(service, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'SelfIp1', provisionedAt: {} },
+        { id: '1', name: 'SelfIp1', provisionedAt: {}, loadBalancerVlan: { name: 'VLAN' } },
         { id: '2', name: 'SelfIp2' },
       ] as LoadBalancerSelfIp[]) as any);
     });
@@ -59,28 +61,47 @@ describe('SelfIpListComponent', () => {
       name: 'SelfIp1',
       provisionedAt: {},
       state: 'Provisioned',
+      loadBalancerVlan: { name: 'VLAN' },
+      vlanName: 'VLAN',
     });
 
     expect(selfIp2).toEqual({
       id: '2',
       name: 'SelfIp2',
       state: 'Not Provisioned',
+      vlanName: '--',
     });
   });
 
   it('should import self ips', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
+    const selfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
+    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsBulkPost');
 
-    const newSelfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
-    const selfIPService = TestBed.inject(V1LoadBalancerSelfIpsService);
-    const spy = jest.spyOn(selfIPService, 'v1LoadBalancerSelfIpsBulkPost');
-
-    component.import(newSelfIps);
+    component.import(selfIps);
 
     expect(spy).toHaveBeenCalledWith({
       generatedLoadBalancerSelfIpBulkDto: {
         bulk: [{ name: 'SelfIp1', tierId: '1', vrfName: 'Tier1' }, { name: 'SelfIp2' }],
       },
     });
+  });
+
+  it('should delete a self ip', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as SelfIpView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a self ip', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsIdRestorePatch');
+
+    component.restore({} as SelfIpView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as SelfIpView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

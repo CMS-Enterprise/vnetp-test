@@ -77,7 +77,7 @@ describe('PoolModalComponent', () => {
     expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
-  it('servicePort and ratio should be required when editing and adding a node', () => {
+  it('servicePort and ratio should be required when editing and adding a pool', () => {
     component.modalMode = ModalMode.Edit;
     component.f.selectedNode.setValue({ id: '1' });
 
