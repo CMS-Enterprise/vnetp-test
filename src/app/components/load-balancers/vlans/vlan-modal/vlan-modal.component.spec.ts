@@ -4,49 +4,117 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { VlanModalComponent } from './vlan-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { VlanModalDto } from './vlan-modal.dto';
 
 describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
+  let service: V1LoadBalancerVlansService;
+  let ngx: NgxSmartModalService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerVlansService)],
     });
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(VlanModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerVlansService);
+    ngx = TestBed.inject(NgxSmartModalService);
   });
+
+  const createVlan = (): LoadBalancerVlan => {
+    return {
+      tierId: '1',
+      id: '2',
+      tag: 3,
+      name: 'Vlan2',
+    };
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Name', () => {
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.f.name)).toBe(true);
+  });
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+  it('name and tag should be required', () => {
+    const fields = ['name', 'tag'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
-
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
+  it('name and tag should be disabled when editing an existing virtual server', () => {
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VlanModalDto = {
+        tierId: '1',
+        vlan: createVlan(),
+      };
+      return dto;
     });
 
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.tag.disabled).toBe(true);
+  });
+
+  it('should create a new vlan', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVlansPost');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VlanModalDto = {
+        tierId: '1',
+      };
+      return dto;
+    });
+
+    component.getData();
+    component.form.setValue({
+      name: 'NewName',
+      tag: 5,
+    });
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerVlan: {
+        name: 'NewName',
+        tag: 5,
+        tierId: '1',
+      },
+    });
+  });
+
+  it('should update an existing vlan', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVlansIdPut');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VlanModalDto = {
+        tierId: '1',
+        vlan: createVlan(),
+      };
+      return dto;
+    });
+
+    component.getData();
+    component.form.setValue({
+      name: 'NewName',
+      tag: 5,
+    });
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerVlan: {
+        name: 'NewName',
+        tag: 5,
+        tierId: null,
+      },
     });
   });
 });

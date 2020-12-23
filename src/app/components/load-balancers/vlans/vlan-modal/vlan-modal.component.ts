@@ -43,16 +43,16 @@ export class VlanModalComponent implements OnInit {
 
     const { name, tag } = this.form.getRawValue();
 
-    const vLAN: LoadBalancerVlan = {
+    const vlan: LoadBalancerVlan = {
       tierId: this.tierId,
       name,
       tag,
     };
 
     if (this.modalMode === ModalMode.Create) {
-      this.createVLAN(vLAN);
+      this.createVlan(vlan);
     } else {
-      this.updateVLAN(vLAN);
+      this.updateVlan(vlan);
     }
   }
 
@@ -85,30 +85,22 @@ export class VlanModalComponent implements OnInit {
     });
   }
 
-  private createVLAN(vlan: LoadBalancerVlan): void {
-    this.vlansService
-      .v1LoadBalancerVlansPost({
-        loadBalancerVlan: vlan,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createVlan(loadBalancerVlan: LoadBalancerVlan): void {
+    this.vlansService.v1LoadBalancerVlansPost({ loadBalancerVlan }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateVLAN(vlan: LoadBalancerVlan): void {
-    vlan.tierId = undefined;
+  private updateVlan(loadBalancerVlan: LoadBalancerVlan): void {
+    loadBalancerVlan.tierId = null;
     this.vlansService
       .v1LoadBalancerVlansIdPut({
         id: this.vlanId,
-        loadBalancerVlan: vlan,
+        loadBalancerVlan,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

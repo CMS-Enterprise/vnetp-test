@@ -35,6 +35,7 @@ describe('VirtualServerListComponent', () => {
     fixture = TestBed.createComponent(VirtualServerListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
+    component.datacenterId = '3';
     component.tiers = [component.currentTier];
     fixture.detectChanges();
 
@@ -75,14 +76,15 @@ describe('VirtualServerListComponent', () => {
   });
 
   it('should import virtual servers', () => {
-    const virtualServers = [{ name: 'VirtualServer1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
+    const virtualServers = [{ name: 'VirtualServer1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
     const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersBulkImportPost');
 
     component.import(virtualServers);
 
     expect(spy).toHaveBeenCalledWith({
       virtualServerImportCollectionDto: {
-        bulk: [{ name: 'VirtualServer1', tierId: '1', vrfName: 'Tier1' }, { name: 'VirtualServer2' }],
+        datacenterId: '3',
+        virtualServers: [{ name: 'VirtualServer1' }, { name: 'VirtualServer2' }],
       },
     });
   });

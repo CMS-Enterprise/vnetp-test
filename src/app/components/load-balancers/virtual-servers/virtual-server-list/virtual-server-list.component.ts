@@ -96,22 +96,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   public import(virtualServers: VirtualServerImportDto[]): void {
-    const mapTierId = (virtualServer: VirtualServerImportDto): VirtualServerImportDto => {
-      const { vrfName } = virtualServer;
-      if (!vrfName) {
-        return virtualServer;
-      }
-
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
-      return {
-        ...virtualServer,
-        tierId,
-      };
-    };
-
     this.virtualServersService
       .v1LoadBalancerVirtualServersBulkImportPost({
-        virtualServerImportCollectionDto: { datacenterId: this.datacenterId, virtualServers: virtualServers.map(mapTierId) },
+        virtualServerImportCollectionDto: { datacenterId: this.datacenterId, virtualServers },
       })
       .subscribe(() => this.loadVirtualServers());
   }
