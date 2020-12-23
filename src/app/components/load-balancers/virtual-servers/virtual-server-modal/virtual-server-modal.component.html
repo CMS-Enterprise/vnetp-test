@@ -12,9 +12,10 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
+      <!-- Name -->
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
+        <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -23,6 +24,7 @@
         </div>
       </div>
 
+      <!-- Type -->
       <div class="form-group">
         <label for="type">Type</label>
         <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
@@ -34,6 +36,7 @@
         </div>
       </div>
 
+      <!-- Source Address Translation -->
       <div class="form-group">
         <label for="sourceAddressTranslation">Source Address Translation</label>
         <tooltip [message]="helpText.SourceAddressTranslation"></tooltip>
@@ -53,6 +56,7 @@
         </div>
       </div>
 
+      <!-- Source Address -->
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="sourceAddress">Source Address</label>
@@ -69,6 +73,7 @@
           </div>
         </div>
 
+        <!-- Destination Address -->
         <div class="form-group col-md-6">
           <label for="destinationAddress">Destination Address</label>
           <tooltip [message]="helpText.DestinationAddress"></tooltip>
@@ -86,13 +91,14 @@
       </div>
 
       <div class="form-row">
+        <!-- Service Port -->
         <div class="form-group col-md-6">
           <label for="servicePort">Service Port</label>
           <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
+            id="servicePort"
             type="number"
             class="form-control"
-            id="servicePort"
             formControlName="servicePort"
             [class.is-invalid]="submitted && f.servicePort.errors"
           />
@@ -102,10 +108,11 @@
           </div>
         </div>
 
+        <!-- Pool -->
         <div class="form-group col-md-6">
           <label for="pool">Pool</label>
           <tooltip [message]="helpText.Pool"></tooltip>
-          <select class="form-control" id="pool" formControlName="defaultPoolId">
+          <select id="pool" class="form-control" formControlName="defaultPoolId">
             <option></option>
             <option *ngFor="let pool of pools" [ngValue]="pool.id">
               {{ pool.name }}

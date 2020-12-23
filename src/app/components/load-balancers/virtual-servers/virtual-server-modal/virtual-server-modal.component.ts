@@ -156,18 +156,20 @@ export class VirtualServerModalComponent implements OnInit {
     }
 
     const {
-      name,
       defaultPoolId,
-      servicePort,
-      sourceIpAddress,
-      sourceAddressTranslation,
-      type,
+      description,
       destinationIpAddress,
+      name,
+      servicePort,
+      sourceAddressTranslation,
+      sourceIpAddress,
+      type,
     } = this.form.getRawValue();
 
     const virtualServer: LoadBalancerVirtualServer = {
       tierId: this.tierId,
       defaultPoolId,
+      description,
       destinationIpAddress,
       name,
       servicePort,
@@ -275,30 +277,22 @@ export class VirtualServerModalComponent implements OnInit {
       });
   }
 
-  private createVirtualServer(virtualServer: LoadBalancerVirtualServer): void {
-    this.virtualServerService
-      .v1LoadBalancerVirtualServersPost({
-        loadBalancerVirtualServer: virtualServer,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
+    this.virtualServerService.v1LoadBalancerVirtualServersPost({ loadBalancerVirtualServer }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateVirtualServer(virtualServer: LoadBalancerVirtualServer): void {
-    virtualServer.tierId = undefined;
+  private updateVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
+    loadBalancerVirtualServer.tierId = null;
     this.virtualServerService
       .v1LoadBalancerVirtualServersIdPut({
         id: this.virtualServerId,
-        loadBalancerVirtualServer: virtualServer,
+        loadBalancerVirtualServer,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

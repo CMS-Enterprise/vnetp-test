@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VirtualServerModalComponent } from './virtual-server-modal.component';
@@ -9,13 +9,24 @@ import {
   MockIconButtonComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerVirtualServersService, V1TiersService } from 'api_client';
+import {
+  LoadBalancerVirtualServer,
+  LoadBalancerVirtualServerSourceAddressTranslation,
+  LoadBalancerVirtualServerType,
+  V1LoadBalancerPoolsService,
+  V1LoadBalancerVirtualServersService,
+  V1TiersService,
+} from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { VirtualServerModalDto } from './virtual-server-modal.dto';
 
 describe('VirtualServerModalComponent', () => {
   let component: VirtualServerModalComponent;
   let fixture: ComponentFixture<VirtualServerModalComponent>;
+  let service: V1LoadBalancerVirtualServersService;
+  let ngx: NgxSmartModalService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -25,81 +36,147 @@ describe('VirtualServerModalComponent', () => {
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerVirtualServersService), MockProvider(V1TiersService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(VirtualServerModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1LoadBalancerPoolsService),
+        MockProvider(V1LoadBalancerVirtualServersService),
+        MockProvider(V1TiersService),
+      ],
+    });
+
+    fixture = TestBed.createComponent(VirtualServerModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerVirtualServersService);
+    ngx = TestBed.inject(NgxSmartModalService);
+  });
+
+  const createVirtualServer = (): LoadBalancerVirtualServer => {
+    return {
+      tierId: '1',
+      id: '2',
+      destinationIpAddress: '192.168.1.2',
+      name: 'VirtualServer2',
+      servicePort: 5,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceIpAddress: '192.168.1.1/11',
+      type: LoadBalancerVirtualServerType.Standard,
+    };
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Name', () => {
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.f.name)).toBe(true);
+  });
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+  it('name, destinationIpAddress, sourceAddressTranslation, sourceIpAddress and type should be required', () => {
+    const fields = ['name', 'destinationIpAddress', 'sourceAddressTranslation', 'sourceIpAddress', 'type'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
+  it('description and defaultPoolId should be optional', () => {
+    const fields = ['description', 'defaultPoolId'];
+    expect(TestUtil.areOptionalFields(component.form, fields)).toBe(true);
+  });
 
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
+  it('name and type should be disabled when editing an existing virtual server', () => {
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VirtualServerModalDto = {
+        tierId: '1',
+        virtualServer: createVirtualServer(),
+      };
+      return dto;
     });
 
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.type.disabled).toBe(true);
+  });
+
+  it('should create a new virtual server', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersPost');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VirtualServerModalDto = {
+        tierId: '1',
+      };
+      return dto;
+    });
+
+    component.getData();
+    component.form.setValue({
+      description: 'Description',
+      defaultPoolId: '1',
+      destinationIpAddress: '192.168.1.2',
+      name: 'NewName',
+      selectedIRuleId: '1',
+      selectedPolicyId: '1',
+      selectedProfileId: '1',
+      servicePort: 5,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceIpAddress: '192.168.1.1/11',
+      type: LoadBalancerVirtualServerType.Standard,
+    });
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerVirtualServer: {
+        description: 'Description',
+        defaultPoolId: '1',
+        destinationIpAddress: '192.168.1.2',
+        name: 'NewName',
+        servicePort: 5,
+        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+        sourceIpAddress: '192.168.1.1/11',
+        type: LoadBalancerVirtualServerType.Standard,
+        tierId: '1',
+      },
     });
   });
 
-  describe('Description', () => {
-    it('should be optional', () => {
-      const { description } = component.form.controls;
-
-      description.setValue(null);
-      expect(description.valid).toBe(true);
+  it('should update an existing virtual server', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersIdPut');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: VirtualServerModalDto = {
+        tierId: '1',
+        virtualServer: createVirtualServer(),
+      };
+      return dto;
     });
 
-    it('should have a minimum length of 3 and maximum length of 500', () => {
-      const { description } = component.form.controls;
-
-      description.setValue('a');
-      expect(description.valid).toBe(false);
-
-      description.setValue('a'.repeat(3));
-      expect(description.valid).toBe(true);
-
-      description.setValue('a'.repeat(501));
-      expect(description.valid).toBe(false);
+    component.getData();
+    component.form.setValue({
+      description: 'Description',
+      defaultPoolId: '1',
+      destinationIpAddress: '192.168.1.2',
+      name: 'NewName',
+      selectedIRuleId: '1',
+      selectedPolicyId: '1',
+      selectedProfileId: '1',
+      servicePort: 5,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceIpAddress: '192.168.1.1/11',
+      type: LoadBalancerVirtualServerType.Standard,
     });
-  });
+    component.save();
 
-  it('type should be required', () => {
-    const type = component.form.controls.type;
-    expect(type.valid).toBeFalsy();
-  });
-
-  it('source address should not be required', () => {
-    const sourceAddress = component.form.controls.sourceAddress;
-    expect(sourceAddress.valid).toBeTruthy();
-  });
-
-  it('destination address should be required', () => {
-    const destinationAddress = component.form.controls.destinationAddress;
-    expect(destinationAddress.valid).toBeFalsy();
-  });
-
-  it('service port should be required', () => {
-    const servicePort = component.form.controls.servicePort;
-    expect(servicePort.valid).toBeFalsy();
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerVirtualServer: {
+        description: 'Description',
+        defaultPoolId: '1',
+        destinationIpAddress: '192.168.1.2',
+        name: 'NewName',
+        servicePort: 5,
+        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+        sourceIpAddress: '192.168.1.1/11',
+        type: LoadBalancerVirtualServerType.Standard,
+        tierId: null,
+      },
+    });
   });
 });

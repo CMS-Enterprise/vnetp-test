@@ -54,7 +54,7 @@ describe('SelfIpModalComponent', () => {
     expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
-  it('name and ipAddress when editing an existing self ip', () => {
+  it('name and ipAddress should be disabled when editing an existing self ip', () => {
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: SelfIpModalDto = {
         tierId: '1',
