@@ -110,30 +110,22 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createPolicy(policy: LoadBalancerPolicy): void {
-    this.policyService
-      .v1LoadBalancerPoliciesPost({
-        loadBalancerPolicy: policy,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createPolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
+    this.policyService.v1LoadBalancerPoliciesPost({ loadBalancerPolicy }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updatePolicy(policy: LoadBalancerPolicy): void {
-    policy.tierId = undefined;
+  private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
+    loadBalancerPolicy.tierId = null;
     this.policyService
       .v1LoadBalancerPoliciesIdPut({
         id: this.policyId,
-        loadBalancerPolicy: policy,
+        loadBalancerPolicy,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

@@ -12,6 +12,7 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
+      <!-- Name -->
       <div class="form-group">
         <label for="name">Name</label>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
@@ -24,6 +25,7 @@
       </div>
 
       <div class="form-row">
+        <!-- Type -->
         <div class="form-group col-md-6">
           <label for="type">Type</label>
           <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
@@ -38,6 +40,7 @@
       </div>
 
       <ng-container *ngIf="f.type.value">
+        <!-- ASM -->
         <div class="form-row" *ngIf="f.type.value === PolicyType.ASM">
           <div class="form-group col-md-12">
             <label for="asmContent">ASM Policy XML</label>
@@ -57,6 +60,7 @@
           </div>
         </div>
 
+        <!-- Upload Button-->
         <div class="form-row">
           <div class="form-group col-md-6">
             <button class="btn btn-warning" (click)="policyContentUploader.click()" type="button">

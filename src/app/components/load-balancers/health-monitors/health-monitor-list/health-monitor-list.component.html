@@ -43,7 +43,7 @@
   <app-import-export
     [exportObject]="healthMonitors"
     exportFileName="LoadBalancer_HealthMonitors_{{ currentTier.name }}"
-    (import)="importHealthMonitors($event)"
+    (import)="import($event)"
   ></app-import-export>
 </section>
 

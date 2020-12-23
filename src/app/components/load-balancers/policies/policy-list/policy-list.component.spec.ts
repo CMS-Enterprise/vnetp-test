@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'api_client';
+import { LoadBalancerPolicy, LoadBalancerPolicyType, Tier, V1LoadBalancerPoliciesService } from 'api_client';
 import { PolicyListComponent, ImportPolicy } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
@@ -17,7 +17,7 @@ describe('PolicyListComponent', () => {
   let component: PolicyListComponent;
   let fixture: ComponentFixture<PolicyListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         PolicyListComponent,
@@ -36,17 +36,17 @@ describe('PolicyListComponent', () => {
     component.currentTier = { id: '1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
+  it('should map policies', () => {
     const policyService = TestBed.inject(V1LoadBalancerPoliciesService);
-    const spy = jest.spyOn(policyService, 'v1LoadBalancerPoliciesGet').mockImplementation(() => {
+    jest.spyOn(policyService, 'v1LoadBalancerPoliciesGet').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'Policy1', provisionedAt: {} },
+        { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyType.APM },
         { id: '2', name: 'Policy2' },
       ] as LoadBalancerPolicy[]) as any);
     });
@@ -59,6 +59,7 @@ describe('PolicyListComponent', () => {
       name: 'Policy1',
       provisionedAt: {},
       provisionedState: 'Provisioned',
+      type: 'APM',
     });
 
     expect(policy2).toEqual({
@@ -68,7 +69,7 @@ describe('PolicyListComponent', () => {
     });
   });
 
-  it('should import health monitors', () => {
+  it('should import policies', () => {
     component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
 
     const newPolicies = [{ name: 'Policy1', vrfName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];
