@@ -136,7 +136,7 @@ describe('PolicyModalComponent', () => {
     component.form.setValue({
       apmContent: null,
       asmContent: null,
-      name: 'New Name',
+      name: 'NewName',
       type: LoadBalancerPolicyType.APM,
     });
     component.f.apmContent.setValue('APM Content');
@@ -148,7 +148,7 @@ describe('PolicyModalComponent', () => {
       loadBalancerPolicy: {
         apmContent: 'APM Content',
         asmContent: null,
-        name: 'New Name',
+        name: 'NewName',
         tierId: null,
         type: LoadBalancerPolicyType.APM,
       },

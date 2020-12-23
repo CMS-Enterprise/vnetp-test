@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PoolModalComponent } from './pool-modal.component';
@@ -9,13 +9,25 @@ import {
   MockIconButtonComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerPoolsService } from 'api_client';
+import {
+  LoadBalancerPool,
+  LoadBalancerPoolLoadBalancingMethod,
+  V1LoadBalancerHealthMonitorsService,
+  V1LoadBalancerNodesService,
+  V1LoadBalancerPoolsService,
+} from 'api_client';
+import TestUtil from 'src/test/TestUtil';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { PoolModalDto } from './pool-modal.dto';
 
 describe('PoolModalComponent', () => {
   let component: PoolModalComponent;
   let fixture: ComponentFixture<PoolModalComponent>;
 
-  beforeEach(async(() => {
+  let ngx: NgxSmartModalService;
+  let service: V1LoadBalancerPoolsService;
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -25,47 +37,136 @@ describe('PoolModalComponent', () => {
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerPoolsService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(PoolModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1LoadBalancerHealthMonitorsService),
+        MockProvider(V1LoadBalancerNodesService),
+        MockProvider(V1LoadBalancerPoolsService),
+      ],
+    });
+
+    fixture = TestBed.createComponent(PoolModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    ngx = TestBed.inject(NgxSmartModalService);
+    service = TestBed.inject(V1LoadBalancerPoolsService);
+  });
+
+  const createPool = (): LoadBalancerPool => {
+    return {
+      defaultHealthMonitors: [],
+      healthMonitors: [],
+      id: '2',
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember,
+      name: 'Pool2',
+      nodes: [],
+      tierId: '1',
+    };
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Name', () => {
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
+  it('name should have NameValidator', () => {
+    expect(TestUtil.hasNameValidator(component.f.name)).toBe(true);
+  });
 
-      name.setValue('a');
-      expect(name.valid).toBe(false);
+  it('name and loadBalancingMethod should be required', () => {
+    const fields = ['name', 'loadBalancingMethod'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
 
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
+  it('servicePort and ratio should be required when editing and adding a node', () => {
+    component.modalMode = ModalMode.Edit;
+    component.f.selectedNode.setValue({ id: '1' });
 
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
+    const fields = ['servicePort', 'ratio'];
+    expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
+  });
+
+  it('should disable name when editing an existing pool', () => {
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: PoolModalDto = {
+        tierId: '1',
+        pool: createPool(),
+      };
+      return dto;
     });
 
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
+    component.getData();
 
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
+    expect(component.form.controls.name.disabled).toBe(true);
+    expect(component.form.controls.loadBalancingMethod.disabled).toBe(false);
+  });
+
+  it('should create a new pool', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsPost');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: PoolModalDto = {
+        tierId: '1',
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+      name: 'NewName',
+      ratio: null,
+      selectedHealthMonitor: null,
+      selectedNode: null,
+      servicePort: null,
+    });
+    component.form.updateValueAndValidity();
+    fixture.detectChanges();
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      loadBalancerPool: {
+        defaultHealthMonitors: [],
+        healthMonitors: [],
+        name: 'NewName',
+        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+        tierId: '1',
+      },
     });
   });
 
-  describe('Load Balancing Method', () => {
-    it('should be required', () => {
-      const loadBalancingMethod = component.form.controls.loadBalancingMethod;
-      loadBalancingMethod.updateValueAndValidity();
-      expect(loadBalancingMethod.errors.required).toBeTruthy();
+  it('should update an existing pool', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsIdPut');
+    jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
+      const dto: PoolModalDto = {
+        tierId: '1',
+        pool: createPool(),
+      };
+      return dto;
+    });
+
+    component.getData();
+
+    component.form.setValue({
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+      name: 'New Name',
+      ratio: null,
+      selectedHealthMonitor: null,
+      selectedNode: null,
+      servicePort: null,
+    });
+    component.form.updateValueAndValidity();
+    component.save();
+
+    expect(spy).toHaveBeenCalledWith({
+      id: '2',
+      loadBalancerPool: {
+        defaultHealthMonitors: [],
+        healthMonitors: [],
+        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+        name: 'New Name',
+        tierId: null,
+      },
     });
   });
 });

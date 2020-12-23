@@ -57,11 +57,11 @@ export class PoolModalComponent implements OnInit {
   private tierId: string;
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private poolService: V1LoadBalancerPoolsService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
+    private ngx: NgxSmartModalService,
     private nodesService: V1LoadBalancerNodesService,
+    private poolService: V1LoadBalancerPoolsService,
     public helpText: PoolModalHelpText,
   ) {}
 
@@ -96,8 +96,8 @@ export class PoolModalComponent implements OnInit {
     const pool: LoadBalancerPool = {
       loadBalancingMethod,
       name,
-      healthMonitors: [],
-      defaultHealthMonitors: [],
+      healthMonitors: this.selectedHealthMonitors || [],
+      defaultHealthMonitors: this.selectedDefaultHealthMonitors || [],
       tierId: this.tierId,
     };
 
@@ -262,30 +262,22 @@ export class PoolModalComponent implements OnInit {
     });
   }
 
-  private createPool(pool: LoadBalancerPool): void {
-    this.poolService
-      .v1LoadBalancerPoolsPost({
-        loadBalancerPool: pool,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createPool(loadBalancerPool: LoadBalancerPool): void {
+    this.poolService.v1LoadBalancerPoolsPost({ loadBalancerPool }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updatePool(pool: LoadBalancerPool): void {
-    pool.tierId = undefined;
+  private updatePool(loadBalancerPool: LoadBalancerPool): void {
+    loadBalancerPool.tierId = null;
     this.poolService
       .v1LoadBalancerPoolsIdPut({
         id: this.poolId,
-        loadBalancerPool: pool,
+        loadBalancerPool,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }

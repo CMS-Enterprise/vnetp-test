@@ -51,9 +51,8 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="availableNodes">Available Nodes</label>
-
             <div class="input-group align-items-center">
-              <select class="form-control" id="availableNodes" formControlName="selectedNode">
+              <select id="avaiableNodes" class="form-control" id="availableNodes" formControlName="selectedNode">
                 <option></option>
                 <option *ngFor="let node of availableNodes" [ngValue]="node"> {{ node.name }}</option>
               </select>
@@ -140,7 +139,7 @@
           <label for="availableHealthMonitors">Available Health Monitors</label>
 
           <div class="input-group align-items-center">
-            <select class="form-control mr-3" id="availableHealthMonitors" formControlName="selectedHealthMonitor">
+            <select id="availableHealthMonitors" class="form-control mr-3" formControlName="selectedHealthMonitor">
               <option></option>
               <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor.id">{{ healthMonitor.name }}</option>
               <option *ngFor="let defaultHealthMonitor of defaultHealthMonitors" [ngValue]="defaultHealthMonitor"

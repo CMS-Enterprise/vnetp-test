@@ -144,7 +144,7 @@ describe('NodeModalComponent', () => {
       autoPopulate: false,
       fqdn: null,
       ipAddress: null,
-      name: 'New Name',
+      name: 'NewName',
       type: LoadBalancerNodeType.IpAddress,
     });
     component.f.ipAddress.setValue('192.168.1.2');
@@ -158,7 +158,7 @@ describe('NodeModalComponent', () => {
         autoPopulate: null,
         fqdn: null,
         ipAddress: '192.168.1.2',
-        name: 'New Name',
+        name: 'NewName',
         tierId: null,
         type: LoadBalancerNodeType.IpAddress,
       },
