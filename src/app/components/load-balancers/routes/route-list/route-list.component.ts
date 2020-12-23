@@ -8,7 +8,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 
-interface RouteView extends LoadBalancerRoute {
+export interface RouteView extends LoadBalancerRoute {
   state: string;
 }
 

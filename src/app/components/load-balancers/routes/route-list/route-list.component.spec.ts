@@ -9,13 +9,14 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'api_client';
-import { RouteListComponent, ImportRoute } from './route-list.component';
+import { RouteListComponent, ImportRoute, RouteView } from './route-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of } from 'rxjs';
 
 describe('RouteListComponent', () => {
   let component: RouteListComponent;
   let fixture: ComponentFixture<RouteListComponent>;
+  let service: V1LoadBalancerRoutesService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,18 +34,19 @@ describe('RouteListComponent', () => {
 
     fixture = TestBed.createComponent(RouteListComponent);
     component = fixture.componentInstance;
-    component.currentTier = { id: '1' } as Tier;
+    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
     component.tiers = [component.currentTier];
     fixture.detectChanges();
+
+    service = TestBed.inject(V1LoadBalancerRoutesService);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should map health monitors', () => {
-    const routeService = TestBed.inject(V1LoadBalancerRoutesService);
-    const spy = jest.spyOn(routeService, 'v1LoadBalancerRoutesGet').mockImplementation(() => {
+  it('should map routes', () => {
+    jest.spyOn(service, 'v1LoadBalancerRoutesGet').mockImplementation(() => {
       return of(([
         { id: '1', name: 'Route1', provisionedAt: {} },
         { id: '2', name: 'Route2' },
@@ -68,19 +70,35 @@ describe('RouteListComponent', () => {
     });
   });
 
-  it('should import health monitors', () => {
-    component.tiers = [{ id: '1', name: 'Tier1' }] as Tier[];
+  it('should import routes', () => {
+    const routes = [{ name: 'Route1', vrfName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
+    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesBulkPost');
 
-    const newRoutes = [{ name: 'Route1', vrfName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
-    const routeService = TestBed.inject(V1LoadBalancerRoutesService);
-    const spy = jest.spyOn(routeService, 'v1LoadBalancerRoutesBulkPost');
-
-    component.import(newRoutes);
+    component.import(routes);
 
     expect(spy).toHaveBeenCalledWith({
       generatedLoadBalancerRouteBulkDto: {
         bulk: [{ name: 'Route1', tierId: '1', vrfName: 'Tier1' }, { name: 'Route2' }],
       },
     });
+  });
+
+  it('should delete a route', () => {
+    const entityService = TestBed.inject(EntityService);
+    const spy = jest.spyOn(entityService, 'deleteEntity');
+
+    component.delete({} as RouteView);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should restore a route', () => {
+    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesIdRestorePatch');
+
+    component.restore({} as RouteView);
+    expect(spy).not.toHaveBeenCalled();
+
+    component.restore({ id: '1', deletedAt: {} } as RouteView);
+    expect(spy).toHaveBeenCalledWith({ id: '1' });
   });
 });

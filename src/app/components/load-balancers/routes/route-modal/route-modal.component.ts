@@ -90,30 +90,22 @@ export class RouteModalComponent implements OnInit {
     });
   }
 
-  private createRoute(route: LoadBalancerRoute): void {
-    this.routeService
-      .v1LoadBalancerRoutesPost({
-        loadBalancerRoute: route,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+  private createRoute(loadBalancerRoute: LoadBalancerRoute): void {
+    this.routeService.v1LoadBalancerRoutesPost({ loadBalancerRoute }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
   }
 
-  private updateRoute(route: LoadBalancerRoute): void {
-    route.tierId = undefined;
+  private updateRoute(loadBalancerRoute: LoadBalancerRoute): void {
+    loadBalancerRoute.tierId = null;
     this.routeService
       .v1LoadBalancerRoutesIdPut({
         id: this.routeId,
-        loadBalancerRoute: route,
+        loadBalancerRoute,
       })
       .subscribe(
-        () => {
-          this.closeModal();
-        },
+        () => this.closeModal(),
         () => {},
       );
   }
