@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { LoadBalancerNodeBulkImportDto, V1LoadBalancerPoolsService } from 'api_client';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pool-relations',
@@ -9,10 +8,9 @@ import { ToastrService } from 'ngx-toastr';
 export class PoolRelationsComponent {
   @Input() datacenterId: string;
 
-  constructor(private poolsService: V1LoadBalancerPoolsService, private toastr: ToastrService) {}
+  constructor(private poolsService: V1LoadBalancerPoolsService) {}
 
   public import(nodes: LoadBalancerNodeBulkImportDto[]): void {
-    debugger;
     this.poolsService
       .v1LoadBalancerPoolsBulkUpdatePost({
         nodeImportCollectionDto: {
@@ -20,13 +18,6 @@ export class PoolRelationsComponent {
           datacenterId: this.datacenterId,
         },
       })
-      .subscribe(
-        resp => {
-          debugger;
-        },
-        err => {
-          debugger;
-        },
-      );
+      .subscribe();
   }
 }
