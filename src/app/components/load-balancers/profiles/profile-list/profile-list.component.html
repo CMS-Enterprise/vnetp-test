@@ -1,0 +1,46 @@
+<section class="btn-toolbar" role="toolbar">
+  <button type="button" class="btn btn-success" (click)="openModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Profile</span>
+  </button>
+</section>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="profiles"></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-profile="datum">
+  <section class="table__actions">
+    <app-icon-button *ngIf="!profile?.deletedAt" icon="edit" label="Edit Profile" (handleClick)="openModal(profile)"></app-icon-button>
+
+    <app-icon-button
+      *ngIf="profile?.deletedAt"
+      icon="undo"
+      label="Restore Profile"
+      type="success"
+      (handleClick)="restore(profile)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Profile"
+      [type]="profile?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="delete(profile)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<section class="btn-toolbar" role="toolbar">
+  <app-import-export
+    [exportObject]="profiles"
+    exportFileName="LoadBalancer_Profiles_{{ currentTier.name }}"
+    (import)="import($event)"
+  ></app-import-export>
+</section>
+
+<app-profile-modal></app-profile-modal>
+<app-yes-no-modal></app-yes-no-modal>

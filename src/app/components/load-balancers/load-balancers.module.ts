@@ -1,16 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadBalancersComponent } from './load-balancers.component';
-import { HealthMonitorModalComponent } from './health-monitor-modal/health-monitor-modal.component';
-import { IRuleModalComponent } from './irule-modal/irule-modal.component';
-import { LoadBalancerVlanModalComponent } from './lb-vlan-modal/lb-vlan-modal.component';
-import { LoadBalancerRouteModalComponent } from './lb-route-modal/lb-route-modal.component';
-import { LoadBalancerSelfIpModalComponent } from './lb-self-ip-modal/lb-self-ip-modal.component';
-import { NodeModalComponent } from './node-modal/node-modal.component';
-import { PolicyModalComponent } from './policy-modal/policy-modal.component';
-import { PoolModalComponent } from './pool-modal/pool-modal.component';
-import { ProfileModalComponent } from './profile-modal/profile-modal.component';
-import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
@@ -20,6 +10,16 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { HealthMonitorModule } from './health-monitors/health-monitor.module';
+import { VlanModule } from './vlans/vlan.module';
+import { VirtualServerModule } from './virtual-servers/virtual-server.module';
+import { IRuleModule } from './irules/irule.module';
+import { ProfileModule } from './profiles/profile.module';
+import { RouteModule } from './routes/route.module';
+import { SelfIpModule } from './self-ips/self-ip.module';
+import { NodeModule } from './nodes/node.module';
+import { PolicyModule } from './policies/policy.module';
+import { PoolModule } from './pools/pool.module';
 
 const routes: Routes = [
   {
@@ -41,19 +41,17 @@ const routes: Routes = [
     SharedModule,
     TabsModule,
     TooltipModule,
+    IRuleModule,
+    HealthMonitorModule,
+    VlanModule,
+    VirtualServerModule,
+    ProfileModule,
+    RouteModule,
+    SelfIpModule,
+    NodeModule,
+    PolicyModule,
+    PoolModule,
   ],
-  declarations: [
-    LoadBalancersComponent,
-    HealthMonitorModalComponent,
-    IRuleModalComponent,
-    LoadBalancerRouteModalComponent,
-    LoadBalancerSelfIpModalComponent,
-    LoadBalancerVlanModalComponent,
-    NodeModalComponent,
-    PolicyModalComponent,
-    PoolModalComponent,
-    ProfileModalComponent,
-    VirtualServerModalComponent,
-  ],
+  declarations: [LoadBalancersComponent],
 })
 export class LoadBalancersModule {}
