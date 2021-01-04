@@ -1,68 +1,92 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ContentChild, Query, AfterContentChecked, AfterContentInit } from '@angular/core';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'api_client';
+import { Datacenter, Tier } from 'api_client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Tab } from 'src/app/common/tabs/tabs.component';
-import { environment } from 'src/environments/environment';
+import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';
+import { ActivatedRoute, Router } from '@angular/router';
+
+const tabs = [
+  { name: 'Virtual Servers', route: ['virtual-servers'] },
+  { name: 'Pools', route: ['pools'] },
+  { name: 'Pool Relations', route: ['pools', 'relations'] },
+  { name: 'Nodes', route: ['nodes'] },
+  { name: 'iRules', route: ['irules'] },
+  { name: 'Health Monitors', route: ['health-monitors'] },
+  { name: 'Profiles', route: ['profiles'] },
+  { name: 'Policies', route: ['policies'] },
+  { name: 'VLANs', route: ['vlans'] },
+  { name: 'Self IPs', route: ['self-ips'] },
+  { name: 'Routes', route: ['routes'] },
+];
 
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
 })
 export class LoadBalancersComponent implements OnInit, OnDestroy {
-  navIndex = 0;
+  @ContentChild('tabsRef') tabsRef: TabsComponent;
 
+  public currentDatacenter: Datacenter;
   public currentTier: Tier;
-  public datacenterId: string;
-  public tiers: Tier[];
+  public initialTabIndex = 0;
 
-  perPage = 20;
-  ModalMode = ModalMode;
+  public tabs: Tab[] = tabs.map(t => {
+    return { name: t.name };
+  });
 
-  public wikiBase = environment.wikiBase;
+  private dataChanges: Subscription;
 
-  public tabs: Tab[] = [
-    { name: 'Virtual Servers' },
-    { name: 'Pools' },
-    { name: 'Pool Relations' },
-    { name: 'Nodes' },
-    { name: 'iRules' },
-    { name: 'Health Monitors' },
-    { name: 'Profiles' },
-    { name: 'Policies' },
-    { name: 'VLANs' },
-    { name: 'Self IPs' },
-    { name: 'Routes' },
-  ];
-
-  private currentDatacenterSubscription: Subscription;
-  private currentTierSubscription: Subscription;
-
-  constructor(private datacenterService: DatacenterContextService, private tierContextService: TierContextService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private datacenterContextService: DatacenterContextService,
+    private router: Router,
+    private tierContextService: TierContextService,
+  ) {}
 
   public handleTabChange(tab: Tab): void {
-    this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    if (!this.currentDatacenter || !this.currentTier) {
+      return;
+    }
+
+    const tabRoute = tabs.find(t => t.name === tab.name);
+    this.router.navigate([{ outlets: { 'load-balancer': tabRoute.route } }], {
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentDatacenter = datacenter;
+      this.currentTier = tier;
+    });
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.tiers = cd.tiers;
-        this.datacenterId = cd.id;
-      }
-    });
-
-    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
-      if (ct) {
-        this.currentTier = ct;
-      }
-    });
+    this.dataChanges = this.subscribeToDataChanges();
+    this.initialTabIndex = this.getInitialTabIndex();
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
+    SubscriptionUtil.unsubscribe([this.dataChanges]);
+  }
+
+  private getInitialTabIndex(): number {
+    const regex = /\(load-balancer:([\w\/-]+)\)/g;
+    const page = regex.exec(this.router.url);
+    if (!page || !page[1]) {
+      return 0;
+    }
+
+    const tab = tabs.find(t => {
+      return t.route.join('') === page[1];
+    });
+    return this.tabs.findIndex(t => t.name === tab.name);
   }
 }

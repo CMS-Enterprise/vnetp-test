@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
@@ -17,8 +19,8 @@ export interface RouteView extends LoadBalancerRoute {
   templateUrl: './route-list.component.html',
 })
 export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -35,16 +37,19 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public routes: RouteView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private routeChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private routesService: V1LoadBalancerRoutesService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadRoutes();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -116,7 +121,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       route,
     };
     this.ngx.setModalData(dto, 'routeModal');
-    this.ngx.getModal('routeModal').open();
+    this.ngx.open('routeModal');
   }
 
   public restore(route: RouteView): void {
@@ -124,6 +129,18 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(() => this.loadRoutes());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.tiers = datacenter.tiers;
+      this.loadRoutes();
+    });
   }
 
   private subscribeToRouteModal(): Subscription {

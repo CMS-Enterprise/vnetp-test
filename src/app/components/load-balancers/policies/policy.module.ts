@@ -9,6 +9,14 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { PolicyListComponent } from './policy-list/policy-list.component';
 import { PolicyModalComponent } from './policy-modal/policy-modal.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: PolicyListComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -18,11 +26,11 @@ import { PolicyModalComponent } from './policy-modal/policy-modal.component';
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [PolicyListComponent, PolicyModalComponent],
-  exports: [PolicyListComponent],
 })
 export class PolicyModule {}

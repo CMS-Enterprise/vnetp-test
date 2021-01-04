@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'api_client';
 import { IRuleListComponent, ImportIRule, IRuleView } from './irule-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
+import { By } from '@angular/platform-browser';
 
 describe('IRuleListComponent', () => {
   let component: IRuleListComponent;
@@ -29,13 +32,18 @@ describe('IRuleListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerIrulesService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(V1LoadBalancerIrulesService),
+        MockProvider(TierContextService),
+        MockProvider(NgxSmartModalService),
+      ],
     });
 
     fixture = TestBed.createComponent(IRuleListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerIrulesService);
@@ -74,6 +82,15 @@ describe('IRuleListComponent', () => {
     });
   });
 
+  it('should default iRules to be empty on error', () => {
+    component.iRules = [{ id: '1', name: 'iRule1' }] as IRuleView[];
+    jest.spyOn(service, 'v1LoadBalancerIrulesGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.iRules).toEqual([]);
+  });
+
   it('should import iRules', () => {
     const iRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
     const spy = jest.spyOn(service, 'v1LoadBalancerIrulesBulkPost');
@@ -104,5 +121,15 @@ describe('IRuleListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as IRuleView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create an iRule', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('iRuleModal');
   });
 });

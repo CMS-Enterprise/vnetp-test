@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 
-interface HealthMonitorView extends LoadBalancerHealthMonitor {
+export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   state: string;
 }
 
@@ -17,8 +19,8 @@ interface HealthMonitorView extends LoadBalancerHealthMonitor {
   templateUrl: './health-monitor-list.component.html',
 })
 export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -38,15 +40,18 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   public isLoading = false;
 
   private healthMonitorChanges: Subscription;
+  private dataChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadHealthMonitors();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -54,7 +59,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.healthMonitorChanges]);
+    SubscriptionUtil.unsubscribe([this.healthMonitorChanges, this.dataChanges]);
   }
 
   public delete(healthMonitor: LoadBalancerHealthMonitor): void {
@@ -117,7 +122,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       healthMonitor,
     };
     this.ngx.setModalData(dto, 'healthMonitorModal');
-    this.ngx.getModal('healthMonitorModal').open();
+    this.ngx.open('healthMonitorModal');
   }
 
   public restore(healthMonitor: LoadBalancerHealthMonitor): void {
@@ -127,6 +132,18 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     this.healthMonitorsService
       .v1LoadBalancerHealthMonitorsIdRestorePatch({ id: healthMonitor.id })
       .subscribe(() => this.loadHealthMonitors());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.tiers = datacenter.tiers;
+      this.currentTier = tier;
+      this.loadHealthMonitors();
+    });
   }
 
   private subscribeToHealthMonitorModal(): Subscription {

@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
 import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('VirtualServerListComponent', () => {
   let component: VirtualServerListComponent;
@@ -29,14 +32,18 @@ describe('VirtualServerListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerVirtualServersService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerVirtualServersService),
+      ],
     });
 
     fixture = TestBed.createComponent(VirtualServerListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.datacenterId = '3';
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerVirtualServersService);
@@ -75,6 +82,15 @@ describe('VirtualServerListComponent', () => {
     });
   });
 
+  it('should default virtual servers to be empty on error', () => {
+    component.virtualServers = [{ id: '1', name: 'VirtualServer1' }] as VirtualServerView[];
+    jest.spyOn(service, 'v1LoadBalancerVirtualServersGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.virtualServers).toEqual([]);
+  });
+
   it('should import virtual servers', () => {
     const virtualServers = [{ name: 'VirtualServer1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
     const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersBulkImportPost');
@@ -83,7 +99,7 @@ describe('VirtualServerListComponent', () => {
 
     expect(spy).toHaveBeenCalledWith({
       virtualServerImportCollectionDto: {
-        datacenterId: '3',
+        datacenterId: '1',
         virtualServers: [{ name: 'VirtualServer1' }, { name: 'VirtualServer2' }],
       },
     });
@@ -106,5 +122,15 @@ describe('VirtualServerListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as VirtualServerView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a virtual server', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('virtualServerModal');
   });
 });

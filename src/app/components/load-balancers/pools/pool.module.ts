@@ -10,6 +10,18 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { PoolListComponent } from './pool-list/pool-list.component';
 import { PoolModalComponent } from './pool-modal/pool-modal.component';
 import { PoolRelationsComponent } from './pool-relations/pool-relations.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: PoolListComponent,
+  },
+  {
+    path: 'relations',
+    component: PoolRelationsComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -19,11 +31,11 @@ import { PoolRelationsComponent } from './pool-relations/pool-relations.componen
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [PoolListComponent, PoolModalComponent, PoolRelationsComponent],
-  exports: [PoolListComponent, PoolRelationsComponent],
 })
 export class PoolModule {}

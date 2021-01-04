@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
@@ -18,8 +20,8 @@ export interface ProfileView extends LoadBalancerProfile {
   templateUrl: './profile-list.component.html',
 })
 export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -36,16 +38,19 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public profiles: ProfileView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private profileChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private profilesService: V1LoadBalancerProfilesService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadProfiles();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -53,7 +58,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.profileChanges]);
+    SubscriptionUtil.unsubscribe([this.profileChanges, this.dataChanges]);
   }
 
   public delete(profile: ProfileView): void {
@@ -117,7 +122,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       profile,
     };
     this.ngx.setModalData(dto, 'profileModal');
-    this.ngx.getModal('profileModal').open();
+    this.ngx.open('profileModal');
   }
 
   public restore(profile: ProfileView): void {
@@ -125,6 +130,18 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.loadProfiles());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.tiers = datacenter.tiers;
+      this.loadProfiles();
+    });
   }
 
   private subscribeToProfileModal(): Subscription {

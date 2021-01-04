@@ -9,6 +9,14 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { VirtualServerListComponent } from './virtual-server-list/virtual-server-list.component';
 import { VirtualServerModalComponent } from './virtual-server-modal/virtual-server-modal.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: VirtualServerListComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -18,11 +26,11 @@ import { VirtualServerModalComponent } from './virtual-server-modal/virtual-serv
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [VirtualServerListComponent, VirtualServerModalComponent],
-  exports: [VirtualServerListComponent],
 })
 export class VirtualServerModule {}

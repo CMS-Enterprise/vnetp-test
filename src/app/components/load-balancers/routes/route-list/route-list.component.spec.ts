@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'api_client';
 import { RouteListComponent, ImportRoute, RouteView } from './route-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('RouteListComponent', () => {
   let component: RouteListComponent;
@@ -29,7 +32,13 @@ describe('RouteListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerRoutesService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerRoutesService),
+      ],
     });
 
     fixture = TestBed.createComponent(RouteListComponent);
@@ -70,6 +79,15 @@ describe('RouteListComponent', () => {
     });
   });
 
+  it('should default routes to be empty on error', () => {
+    component.routes = [{ id: '1', name: 'Route1' }] as RouteView[];
+    jest.spyOn(service, 'v1LoadBalancerRoutesGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.routes).toEqual([]);
+  });
+
   it('should import routes', () => {
     const routes = [{ name: 'Route1', vrfName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
     const spy = jest.spyOn(service, 'v1LoadBalancerRoutesBulkPost');
@@ -100,5 +118,15 @@ describe('RouteListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as RouteView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a route', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('routeModal');
   });
 });

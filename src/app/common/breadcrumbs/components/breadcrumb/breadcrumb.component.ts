@@ -1,32 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
 })
-export class BreadcrumbComponent implements OnInit {
-  private routesNotToRender: string[] = ['/tenant', '/unauthorized', '/logout'];
+export class BreadcrumbComponent implements OnInit, OnDestroy {
   public breadcrumbs: Breadcrumb[] = [];
   public shouldRender = true;
+
+  private routesNotToRender = new Set(['/tenant', '/unauthorized', '/logout']);
+  private routeChanges: Subscription;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const breadcrumb: Breadcrumb = {
+    const dashboardBreadcrumb: Breadcrumb = {
       label: 'Dashboard',
       url: '/dashboard',
     };
 
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+    this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
-      this.shouldRender = !this.routesNotToRender.some(route => route === this.router.url);
+      this.shouldRender = !this.routesNotToRender.has(this.router.url);
 
-      this.breadcrumbs = this.getBreadcrumbs(root);
-      this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
+      const breadcrumbs = this.getBreadcrumbs(root);
+      this.breadcrumbs = [dashboardBreadcrumb, ...breadcrumbs];
     });
+  }
+
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.routeChanges]);
   }
 
   private getBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
@@ -54,7 +62,11 @@ export class BreadcrumbComponent implements OnInit {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
         url,
       };
-      breadcrumbs.push(breadcrumb);
+
+      const existingBreadcrumbLabels = breadcrumbs.map(b => b.label);
+      if (!existingBreadcrumbLabels.includes(breadcrumb.label)) {
+        breadcrumbs.push(breadcrumb);
+      }
       return this.getBreadcrumbs(child, url, breadcrumbs);
     }
     return breadcrumbs;

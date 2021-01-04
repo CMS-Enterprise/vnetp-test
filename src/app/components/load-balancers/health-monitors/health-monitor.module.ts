@@ -9,6 +9,14 @@ import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module'
 import { TableModule } from 'src/app/common/table/table.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: HealthMonitorListComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -18,11 +26,11 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [HealthMonitorListComponent, HealthMonitorModalComponent],
-  exports: [HealthMonitorListComponent],
 })
 export class HealthMonitorModule {}

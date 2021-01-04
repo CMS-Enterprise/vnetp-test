@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
@@ -17,8 +19,8 @@ export interface VlanView extends LoadBalancerVlan {
   templateUrl: './vlan-list.component.html',
 })
 export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -34,12 +36,19 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public vlans: VlanView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private vlanChanges: Subscription;
 
-  constructor(private entityService: EntityService, private vlansService: V1LoadBalancerVlansService, private ngx: NgxSmartModalService) {}
+  constructor(
+    private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
+    private vlansService: V1LoadBalancerVlansService,
+    private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
+  ) {}
 
   ngOnInit() {
-    this.loadVlans();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -47,7 +56,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.vlanChanges]);
+    SubscriptionUtil.unsubscribe([this.vlanChanges, this.dataChanges]);
   }
 
   public delete(vlan: VlanView): void {
@@ -110,7 +119,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       vlan,
     };
     this.ngx.setModalData(dto, 'vlanModal');
-    this.ngx.getModal('vlanModal').open();
+    this.ngx.open('vlanModal');
   }
 
   public restore(vlan: VlanView): void {
@@ -118,6 +127,18 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(() => this.loadVlans());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.tiers = datacenter.tiers;
+      this.loadVlans();
+    });
   }
 
   private subscribeToVlanModal(): Subscription {

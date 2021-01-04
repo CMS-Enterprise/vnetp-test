@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'api_client';
 import { ProfileListComponent, ImportProfile, ProfileView } from './profile-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;
@@ -29,13 +32,18 @@ describe('ProfileListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerProfilesService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerProfilesService),
+      ],
     });
 
     fixture = TestBed.createComponent(ProfileListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerProfilesService);
@@ -73,6 +81,15 @@ describe('ProfileListComponent', () => {
     });
   });
 
+  it('should default profiles to be empty on error', () => {
+    component.profiles = [{ id: '1', name: 'Profile1' }] as ProfileView[];
+    jest.spyOn(service, 'v1LoadBalancerProfilesGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.profiles).toEqual([]);
+  });
+
   it('should import profiles', () => {
     const newProfiles = [{ name: 'Profile1', vrfName: 'Tier1' }, { name: 'Profile2' }] as ImportProfile[];
     const spy = jest.spyOn(service, 'v1LoadBalancerProfilesBulkPost');
@@ -103,5 +120,15 @@ describe('ProfileListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as ProfileView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a profile', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('profileModal');
   });
 });

@@ -17,7 +17,10 @@ import {
 } from 'api_client';
 import { PoolListComponent, PoolView } from './pool-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('PoolListComponent', () => {
   let component: PoolListComponent;
@@ -35,14 +38,18 @@ describe('PoolListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerPoolsService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerPoolsService),
+      ],
     });
 
     fixture = TestBed.createComponent(PoolListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.datacenterId = '3';
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerPoolsService);
@@ -96,6 +103,15 @@ describe('PoolListComponent', () => {
     });
   });
 
+  it('should default pools to be empty on error', () => {
+    component.pools = [{ id: '1', name: 'Pool1' }] as PoolView[];
+    jest.spyOn(service, 'v1LoadBalancerPoolsIdTierIdGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.pools).toEqual([]);
+  });
+
   it('should import pools', () => {
     const pools = [{ name: 'Pool1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];
     const spy = jest.spyOn(service, 'v1LoadBalancerPoolsBulkImportPost');
@@ -104,7 +120,7 @@ describe('PoolListComponent', () => {
 
     expect(spy).toHaveBeenCalledWith({
       poolImportCollectionDto: {
-        datacenterId: '3',
+        datacenterId: '1',
         pools: [{ name: 'Pool1' }, { name: 'Pool2' }],
       },
     });
@@ -127,5 +143,15 @@ describe('PoolListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as PoolView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a pool', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('poolModal');
   });
 });

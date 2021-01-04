@@ -1,51 +1,11 @@
 <app-tier-select></app-tier-select>
-
 <h1>Load Balancers</h1>
 
-<ng-container *ngIf="currentTier">
-  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
-
-  <div *ngIf="navIndex === 0">
-    <app-virtual-server-list [currentTier]="currentTier" [datacenterId]="datacenterId" [tiers]="tiers"></app-virtual-server-list>
-  </div>
-
-  <div *ngIf="navIndex === 1">
-    <app-pool-list [currentTier]="currentTier" [datacenterId]="datacenterId" [tiers]="tiers"></app-pool-list>
-  </div>
-
-  <div *ngIf="navIndex === 2">
-    <app-pool-relations [datacenterId]="datacenterId"></app-pool-relations>
-  </div>
-
-  <div *ngIf="navIndex === 3">
-    <app-node-list [currentTier]="currentTier" [tiers]="tiers"></app-node-list>
-  </div>
-
-  <div *ngIf="navIndex === 4">
-    <app-irule-list [currentTier]="currentTier" [tiers]="tiers"></app-irule-list>
-  </div>
-
-  <div *ngIf="navIndex === 5">
-    <app-health-monitor-list [currentTier]="currentTier" [tiers]="tiers"></app-health-monitor-list>
-  </div>
-
-  <div *ngIf="navIndex === 6">
-    <app-profile-list [currentTier]="currentTier" [tiers]="tiers"></app-profile-list>
-  </div>
-
-  <div *ngIf="navIndex === 7">
-    <app-policy-list [currentTier]="currentTier" [tiers]="tiers"></app-policy-list>
-  </div>
-
-  <div *ngIf="navIndex === 8">
-    <app-vlan-list [currentTier]="currentTier" [tiers]="tiers"></app-vlan-list>
-  </div>
-
-  <div *ngIf="navIndex === 9">
-    <app-self-ip-list [currentTier]="currentTier" [tiers]="tiers"></app-self-ip-list>
-  </div>
-
-  <div *ngIf="navIndex === 10">
-    <app-route-list [currentTier]="currentTier" [tiers]="tiers"></app-route-list>
-  </div>
+<ng-container *ngIf="currentDatacenter && currentTier; else warningMessage">
+  <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+  <router-outlet name="load-balancer"></router-outlet>
 </ng-container>
+
+<ng-template #warningMessage>
+  <p>Select a datacenter and tier to display Load Balancer details.</p>
+</ng-template>

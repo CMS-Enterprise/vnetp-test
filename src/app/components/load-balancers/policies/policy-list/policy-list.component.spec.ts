@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerPolicy, LoadBalancerPolicyType, Tier, V1LoadBalancerPoliciesService } from 'api_client';
 import { PolicyListComponent, ImportPolicy, PolicyView } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('PolicyListComponent', () => {
   let component: PolicyListComponent;
@@ -29,13 +32,18 @@ describe('PolicyListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerPoliciesService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerPoliciesService),
+      ],
     });
 
     fixture = TestBed.createComponent(PolicyListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerPoliciesService);
@@ -71,6 +79,15 @@ describe('PolicyListComponent', () => {
     });
   });
 
+  it('should default policies to be empty on error', () => {
+    component.policies = [{ id: '1', name: 'Policy1' }] as PolicyView[];
+    jest.spyOn(service, 'v1LoadBalancerPoliciesGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.policies).toEqual([]);
+  });
+
   it('should import policies', () => {
     const policies = [{ name: 'Policy1', vrfName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];
     const spy = jest.spyOn(service, 'v1LoadBalancerPoliciesBulkPost');
@@ -101,5 +118,15 @@ describe('PolicyListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as PolicyView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a policy', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('policyModal');
   });
 });

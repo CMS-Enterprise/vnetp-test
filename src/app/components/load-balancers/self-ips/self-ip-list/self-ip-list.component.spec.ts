@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
 import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('SelfIpListComponent', () => {
   let component: SelfIpListComponent;
@@ -29,13 +32,18 @@ describe('SelfIpListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerSelfIpsService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerSelfIpsService),
+      ],
     });
 
     fixture = TestBed.createComponent(SelfIpListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerSelfIpsService);
@@ -73,6 +81,15 @@ describe('SelfIpListComponent', () => {
     });
   });
 
+  it('should default self ips to be empty on error', () => {
+    component.selfIps = [{ id: '1', name: 'SelfIp1' }] as SelfIpView[];
+    jest.spyOn(service, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.selfIps).toEqual([]);
+  });
+
   it('should import self ips', () => {
     const selfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
     const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsBulkPost');
@@ -103,5 +120,15 @@ describe('SelfIpListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as SelfIpView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a self ip', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('selfIpModal');
   });
 });

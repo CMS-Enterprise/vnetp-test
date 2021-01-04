@@ -9,9 +9,12 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
-import { HealthMonitorListComponent, ImportHealthMonitor } from './health-monitor-list.component';
+import { HealthMonitorListComponent, HealthMonitorView, ImportHealthMonitor } from './health-monitor-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { TierContextService } from 'src/app/services/tier-context.service';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { By } from '@angular/platform-browser';
 
 describe('HealthMonitorListComponent', () => {
   let component: HealthMonitorListComponent;
@@ -29,13 +32,18 @@ describe('HealthMonitorListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerHealthMonitorsService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerHealthMonitorsService),
+      ],
     });
 
     fixture = TestBed.createComponent(HealthMonitorListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerHealthMonitorsService);
@@ -70,6 +78,15 @@ describe('HealthMonitorListComponent', () => {
     });
   });
 
+  it('should default health monitors to be empty on error', () => {
+    component.healthMonitors = [{ id: '1', name: 'HealthMonitor1' }] as HealthMonitorView[];
+    jest.spyOn(service, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.healthMonitors).toEqual([]);
+  });
+
   it('should import health monitors', () => {
     const healthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
     const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsBulkPost');
@@ -100,5 +117,15 @@ describe('HealthMonitorListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as LoadBalancerHealthMonitor);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a health monitor', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('healthMonitorModal');
   });
 });

@@ -1,10 +1,12 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
@@ -20,9 +22,9 @@ export interface PoolView extends LoadBalancerPool {
   templateUrl: './pool-list.component.html',
 })
 export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() datacenterId: string;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public datacenterId: string;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -40,12 +42,19 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public pools: PoolView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private poolChanges: Subscription;
 
-  constructor(private entityService: EntityService, private poolsService: V1LoadBalancerPoolsService, private ngx: NgxSmartModalService) {}
+  constructor(
+    private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
+    private poolsService: V1LoadBalancerPoolsService,
+    private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
+  ) {}
 
   ngOnInit() {
-    this.loadPools();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -53,7 +62,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.poolChanges]);
+    SubscriptionUtil.unsubscribe([this.poolChanges, this.dataChanges]);
   }
 
   public delete(pool: PoolView): void {
@@ -113,7 +122,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       pool,
     };
     this.ngx.setModalData(dto, 'poolModal');
-    this.ngx.getModal('poolModal').open();
+    this.ngx.open('poolModal');
   }
 
   public restore(pool: PoolView): void {
@@ -121,6 +130,19 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.loadPools());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.datacenterId = datacenter.id;
+      this.tiers = datacenter.tiers;
+      this.loadPools();
+    });
   }
 
   private subscribeToPoolModal(): Subscription {

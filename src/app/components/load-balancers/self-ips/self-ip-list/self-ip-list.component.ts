@@ -1,9 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
@@ -18,8 +20,8 @@ export interface SelfIpView extends LoadBalancerSelfIp {
   templateUrl: './self-ip-list.component.html',
 })
 export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -36,16 +38,19 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public selfIps: SelfIpView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private selfIpChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadSelfIps();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -120,7 +125,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       selfIp,
     };
     this.ngx.setModalData(dto, 'selfIpModal');
-    this.ngx.getModal('selfIpModal').open();
+    this.ngx.open('selfIpModal');
   }
 
   public restore(selfIp: SelfIpView): void {
@@ -128,6 +133,18 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.loadSelfIps());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.tiers = datacenter.tiers;
+      this.loadSelfIps();
+    });
   }
 
   private subscribeToSelfIpModal(): Subscription {

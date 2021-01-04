@@ -1,9 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
@@ -17,8 +19,8 @@ export interface PolicyView extends LoadBalancerPolicy {
   templateUrl: './policy-list.component.html',
 })
 export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -34,16 +36,19 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public policies: PolicyView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private policyChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private policiesService: V1LoadBalancerPoliciesService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadPolicies();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -51,7 +56,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.policyChanges]);
+    SubscriptionUtil.unsubscribe([this.policyChanges, this.dataChanges]);
   }
 
   public delete(policy: PolicyView): void {
@@ -114,7 +119,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       policy,
     };
     this.ngx.setModalData(dto, 'policyModal');
-    this.ngx.getModal('policyModal').open();
+    this.ngx.open('policyModal');
   }
 
   public restore(policy: PolicyView): void {
@@ -122,6 +127,18 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.loadPolicies());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.tiers = datacenter.tiers;
+      this.currentTier = tier;
+      this.loadPolicies();
+    });
   }
 
   private subscribeToPolicyModal(): Subscription {

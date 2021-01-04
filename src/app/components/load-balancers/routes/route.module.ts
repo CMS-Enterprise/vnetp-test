@@ -9,6 +9,14 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouteListComponent } from './route-list/route-list.component';
 import { RouteModalComponent } from './route-modal/route-modal.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: RouteListComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -18,11 +26,11 @@ import { RouteModalComponent } from './route-modal/route-modal.component';
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [RouteListComponent, RouteModalComponent],
-  exports: [RouteListComponent],
 })
 export class RouteModule {}

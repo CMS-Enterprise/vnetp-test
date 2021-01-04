@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 
@@ -17,9 +19,9 @@ export interface VirtualServerView extends LoadBalancerVirtualServer {
   templateUrl: './virtual-server-list.component.html',
 })
 export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() currentTier: Tier;
-  @Input() datacenterId: string;
-  @Input() tiers: Tier[] = [];
+  public currentTier: Tier;
+  public datacenterId: string;
+  public tiers: Tier[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('defaultPoolTemplate') defaultPoolTemplate: TemplateRef<any>;
@@ -39,16 +41,19 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public virtualServers: VirtualServerView[] = [];
   public isLoading = false;
 
+  private dataChanges: Subscription;
   private virtualServerChanges: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
     private virtualServersService: V1LoadBalancerVirtualServersService,
     private ngx: NgxSmartModalService,
+    private tierContextService: TierContextService,
   ) {}
 
   ngOnInit() {
-    this.loadVirtualServers();
+    this.dataChanges = this.subscribeToDataChanges();
   }
 
   ngAfterViewInit() {
@@ -56,7 +61,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.virtualServerChanges]);
+    SubscriptionUtil.unsubscribe([this.virtualServerChanges, this.dataChanges]);
   }
 
   public delete(virtualServer: VirtualServerView): void {
@@ -108,7 +113,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       virtualServer,
     };
     this.ngx.setModalData(dto, 'virtualServerModal');
-    this.ngx.getModal('virtualServerModal').open();
+    this.ngx.open('virtualServerModal');
   }
 
   public restore(virtualServer: VirtualServerView): void {
@@ -118,6 +123,19 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     this.virtualServersService
       .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
       .subscribe(() => this.loadVirtualServers());
+  }
+
+  private subscribeToDataChanges(): Subscription {
+    const datacenter$ = this.datacenterContextService.currentDatacenter;
+    const tier$ = this.tierContextService.currentTier;
+
+    return combineLatest([datacenter$, tier$]).subscribe(data => {
+      const [datacenter, tier] = data;
+      this.currentTier = tier;
+      this.datacenterId = datacenter.id;
+      this.tiers = datacenter.tiers;
+      this.loadVirtualServers();
+    });
   }
 
   private subscribeToVirtualServerModal(): Subscription {

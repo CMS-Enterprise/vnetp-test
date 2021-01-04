@@ -11,7 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'api_client';
 import { NodeListComponent, ImportNode, NodeView } from './node-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('NodeListComponent', () => {
   let component: NodeListComponent;
@@ -29,13 +32,18 @@ describe('NodeListComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      providers: [MockProvider(EntityService), MockProvider(V1LoadBalancerNodesService), MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(EntityService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(V1LoadBalancerNodesService),
+      ],
     });
 
     fixture = TestBed.createComponent(NodeListComponent);
     component = fixture.componentInstance;
     component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerNodesService);
@@ -77,6 +85,15 @@ describe('NodeListComponent', () => {
     });
   });
 
+  it('should default nodes to be empty on error', () => {
+    component.nodes = [{ id: '1', name: 'Node1' }] as NodeView[];
+    jest.spyOn(service, 'v1LoadBalancerNodesGet').mockImplementation(() => throwError(''));
+
+    component.ngOnInit();
+
+    expect(component.nodes).toEqual([]);
+  });
+
   it('should import nodes', () => {
     const nodes = [{ name: 'Node1', vrfName: 'Tier1' }, { name: 'Node2' }] as ImportNode[];
     const spy = jest.spyOn(service, 'v1LoadBalancerNodesBulkPost');
@@ -107,5 +124,15 @@ describe('NodeListComponent', () => {
 
     component.restore({ id: '1', deletedAt: {} } as NodeView);
     expect(spy).toHaveBeenCalledWith({ id: '1' });
+  });
+
+  it('should open the modal to create a node', () => {
+    const ngx = TestBed.inject(NgxSmartModalService);
+    const spy = jest.spyOn(ngx, 'open');
+
+    const createButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    createButton.nativeElement.click();
+
+    expect(spy).toHaveBeenCalledWith('nodeModal');
   });
 });

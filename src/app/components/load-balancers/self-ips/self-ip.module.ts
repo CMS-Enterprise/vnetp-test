@@ -9,6 +9,14 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { SelfIpListComponent } from './self-ip-list/self-ip-list.component';
 import { SelfIpModalComponent } from './self-ip-modal/self-ip-modal.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: SelfIpListComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -18,11 +26,11 @@ import { SelfIpModalComponent } from './self-ip-modal/self-ip-modal.component';
     IconButtonModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
     TableModule,
     TooltipModule,
   ],
   declarations: [SelfIpListComponent, SelfIpModalComponent],
-  exports: [SelfIpListComponent],
 })
 export class SelfIpModule {}
