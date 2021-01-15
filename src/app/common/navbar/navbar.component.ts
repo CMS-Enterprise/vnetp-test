@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public logout(): void {
     this.ngx.close('logoutModal');
-    this.auth.logout('logout');
+    // this.auth.logout('logout');
   }
 
   ngOnInit(): void {

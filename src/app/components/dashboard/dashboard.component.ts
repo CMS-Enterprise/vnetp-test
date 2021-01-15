@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.v1DatacentersGet({ page: 1, limit: 1 }).subscribe(data => {
+    this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
       const paged: any = data;
       this.datacenters = paged.total;
       try {
@@ -65,21 +65,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getTiers(): void {
-    this.tierService.v1TiersGet({ page: 1, limit: 1 }).subscribe(data => {
+    this.tierService.v1TiersGet({ page: 1, perPage: 1 }).subscribe(data => {
       const paged: any = data;
       this.tiers = paged.total;
     });
   }
 
   private getVmwareVirtualMachines(): void {
-    this.vmwareService.v1VmwareVirtualMachinesGet({ page: 1, limit: 1 }).subscribe(data => {
+    this.vmwareService.v1VmwareVirtualMachinesGet({ page: 1, perPage: 1 }).subscribe(data => {
       const paged = data as any;
       this.vmwareVirtualMachines = paged.total;
     });
   }
 
   private getLoadBalancerVirtualServers(): void {
-    this.loadBalancerService.v1LoadBalancerVirtualServersGet({ page: 1, limit: 1 }).subscribe(data => {
+    this.loadBalancerService.v1LoadBalancerVirtualServersGet({ page: 1, perPage: 1 }).subscribe(data => {
       const paged = data as any;
       this.loadBalancerVirtualServers = paged.total;
     });
