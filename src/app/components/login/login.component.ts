@@ -80,14 +80,18 @@ export class LoginComponent implements OnInit {
 
   setTenantAndNavigate(tenant: string) {
     this.toastr.success(`Welcome ${this.userpass.username}!`);
-    // this.router.navigateByUrl(this.returnUrl, {
-    //   queryParams: { tenant },
-    //   queryParamsHandling: 'merge'
-    //   });
-    // TODO: Resolve issue with navigation and query params.
-    this.router.navigate([this.returnUrl], {
-      queryParams: { tenant },
-      queryParamsHandling: 'merge',
-    });
+    // if the returnUrl is /dashboard then we assume the user is starting a brand new session
+    // when they login we allow them to select a tenant and then they are brought to the dashboard
+    if (this.returnUrl === '/dashboard') {
+      this.router.navigate([this.returnUrl], {
+        queryParams: { tenant },
+        // queryParamsHandling: 'merge',
+      });
+    } else {
+      // else, if the returnURL is more than just /dashboard we can assume the user came from a previous session
+      // when they login, currently we still allow them to select tenant (being taken out) and then
+      // we navigate them to the returnURL, however the selected tenant is overwritten by what is in the returnURL
+      this.router.navigateByUrl(this.returnUrl);
+    }
   }
 }
