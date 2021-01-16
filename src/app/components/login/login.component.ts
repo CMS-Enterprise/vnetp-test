@@ -4,7 +4,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { first } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { UserPass } from 'api_client/model/userPass';
-import { UserDto } from 'api_client/model/userDto';
+import { environment } from 'src/environments/environment';
+import { TenantName } from '../../models/other/tenant-name';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,9 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
   returnUrl: string;
   loading: boolean;
+  tenantSelect: boolean;
+  availableTenants: Array<TenantName>;
+  selectedTenant: string;
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
@@ -46,8 +50,25 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          this.toastr.success(`Welcome ${this.userpass.username}!`);
-          this.router.navigateByUrl(this.returnUrl);
+          const userTenants = data.dcsPermissions.map(p => p.tenant);
+          // Read Tenants from Environment Config.
+          const currentTenants = environment.environment.current_tenants as TenantName[];
+
+          // If the user doesn't have global access and only has one Tenant
+          if (!userTenants.some(t => t === '*') && userTenants.length === 1) {
+            this.setTenantAndNavigate(userTenants[0]);
+          } else {
+            if (userTenants.some(t => t === '*')) {
+              // If the user is a global admin, they have access to all available tenants.
+              this.availableTenants = currentTenants;
+            } else {
+              // If the user is not a global admin, filter current tenats based on their tenants.
+              this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.db_name === ut));
+            }
+
+            this.tenantSelect = true;
+            console.log('sdf');
+          }
         },
         error => {
           this.toastr.error('Invalid Username/Password');
@@ -55,5 +76,18 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
       );
+  }
+
+  setTenantAndNavigate(tenant: string) {
+    this.toastr.success(`Welcome ${this.userpass.username}!`);
+    // this.router.navigateByUrl(this.returnUrl, {
+    //   queryParams: { tenant },
+    //   queryParamsHandling: 'merge'
+    //   });
+    // TODO: Resolve issue with navigation and query params.
+    this.router.navigate([this.returnUrl], {
+      queryParams: { tenant },
+      queryParamsHandling: 'merge',
+    });
   }
 }

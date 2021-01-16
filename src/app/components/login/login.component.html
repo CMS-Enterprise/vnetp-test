@@ -1,8 +1,8 @@
 <div class="offset-3 col-md-6 mt-5">
   <div class="text-center">
-    <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
-      <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
+    <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
 
+    <form *ngIf="!tenantSelect" name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -51,6 +51,28 @@
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">
         {{ errorMessage }}
       </div>
+    </form>
+
+    <form
+      *ngIf="tenantSelect"
+      name="tenantForm"
+      (ngSubmit)="form.form.valid && setTenantAndNavigate(selectedTenant)"
+      #form="ngForm"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="tenant">Tenant</label>
+        <select [(ngModel)]="selectedTenant" id="tenant" name="tenant" class="form-control" aria-label="Tenant">
+          <option></option>
+          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.db_name">
+            {{ availableTenant.name }}
+          </option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary btn-lg" type="submit">
+        Select Tenant
+      </button>
     </form>
   </div>
 </div>

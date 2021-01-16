@@ -42,7 +42,6 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    // this.cs.deleteAll('/ ', window.location.hostname);
     this.currentUserSubject.next(null);
     location.reload();
   }
