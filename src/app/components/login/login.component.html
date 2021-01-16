@@ -11,7 +11,7 @@
           id="username"
           class="form-control"
           #username="ngModel"
-          [(ngModel)]="userpass.Username"
+          [(ngModel)]="userpass.username"
           aria-label="Username"
           [ngClass]="{ 'is-invalid': form.submitted && username.invalid }"
           required
@@ -29,7 +29,7 @@
           id="password"
           class="form-control"
           #password="ngModel"
-          [(ngModel)]="userpass.Password"
+          [(ngModel)]="userpass.password"
           aria-label="Password"
           [ngClass]="{ 'is-invalid': form.submitted && password.invalid }"
           required
@@ -40,9 +40,9 @@
         </div>
       </div>
 
-      <div>
+      <!-- <div>
         <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
-      </div>
+      </div> -->
 
       <button class="btn btn-primary btn-lg" type="submit">
         Login

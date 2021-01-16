@@ -12,12 +12,12 @@ import { UserDto } from 'api_client/model/userDto';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  userpass: UserPass;
+  userpass = {} as UserPass;
   errorMessage: string;
   returnUrl: string;
   loading: boolean;
 
-  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.returnUrl = '/dashboard';
@@ -26,10 +26,10 @@ export class LoginComponent implements OnInit {
       this.returnUrl = decodeURIComponent(this.route.snapshot.queryParams.returnUrl);
     }
 
-    if (!this.auth.currentUser) {
-      this.auth.logout();
+    if (!this.authService.currentUser) {
+      this.authService.logout();
     } else {
-      this.router.navigateByUrl(this.returnUrl);
+      // this.router.navigateByUrl(this.returnUrl);
     }
   }
 
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     this.errorMessage = null;
     this.loading = true;
 
-    this.auth
+    this.authService
       .login(this.userpass)
       .pipe(first())
       .subscribe(

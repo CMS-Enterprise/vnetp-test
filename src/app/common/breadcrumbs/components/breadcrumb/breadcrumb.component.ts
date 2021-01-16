@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
+import { colorSets } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -11,9 +12,9 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
   public breadcrumbs: Breadcrumb[] = [];
-  public shouldRender = true;
+  public render = true;
 
-  private routesNotToRender = new Set(['/tenant', '/unauthorized', '/logout']);
+  private routesNotToRender = ['/tenant', '/unauthorized', '/logout', '/login'];
   private routeChanges: Subscription;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
@@ -26,7 +27,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
-      this.shouldRender = !this.routesNotToRender.has(this.router.url);
+      const currentRoute = this.router.url.split('?')[0];
+      this.render = !this.routesNotToRender.some(r => r.includes(currentRoute));
 
       const breadcrumbs = this.getBreadcrumbs(root);
       this.breadcrumbs = [dashboardBreadcrumb, ...breadcrumbs];

@@ -14,18 +14,18 @@ export class TenantComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, public toastrService: ToastrService) {}
 
   ngOnInit() {
-    this.authService.getCurrentUserValue();
+    // this.authService.getCurrentUserValue();
   }
 
   selectTenant(tenant: string) {
-    try {
-      this.router.navigate(['/dashboard'], {
-        queryParams: { tenant },
-        queryParamsHandling: 'merge',
-      });
-      this.toastrService.success('Tenant Selected');
-    } catch (error) {
-      this.toastrService.error(error);
-    }
+    // try {
+    //   this.router.navigate(['/dashboard'], {
+    //     queryParams: { tenant },
+    //     queryParamsHandling: 'merge',
+    //   });
+    //   this.toastrService.success('Tenant Selected');
+    // } catch (error) {
+    //   this.toastrService.error(error);
+    // }
   }
 }

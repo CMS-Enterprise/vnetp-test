@@ -1,9 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
-import { LoginComponent } from './components/login/login.component';
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
+  },
   {
     path: 'subnets-vlans',
     canActivate: [AuthGuard],
@@ -124,7 +126,6 @@ const routes: Routes = [
     data: { breadcrumb: 'Appliance as a Service', title: 'Automation - Appliance as a Service' },
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   // {
   //   path: 'callback',
   //   loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
@@ -141,6 +142,7 @@ const routes: Routes = [
     path: 'logout',
     loadChildren: () => import('./components/logout/logout.module').then(m => m.LogoutModule),
   },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: '**',
     canActivate: [AuthGuard],
