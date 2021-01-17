@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   tenantSelect: boolean;
   availableTenants: Array<TenantName>;
   selectedTenant: string;
+  returnTenant: string;
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
@@ -33,7 +34,16 @@ export class LoginComponent implements OnInit {
     if (!this.authService.currentUser) {
       this.authService.logout();
     } else {
-      // this.router.navigateByUrl(this.returnUrl);
+      // If the user is logged in, navigate them to the Return URL.
+      this.router.navigateByUrl(this.returnUrl);
+    }
+
+    // Attempt to extract the tenant parameter from the return URL.
+    const tenantRegex = /tenant=([a-z_]*)/g;
+    const tenantExec = tenantRegex.exec(this.returnUrl);
+
+    if (tenantExec) {
+      this.selectedTenant = this.returnTenant = tenantExec[1];
     }
   }
 
