@@ -45,8 +45,6 @@ export class LoginComponent implements OnInit {
     if (tenantExec) {
       this.selectedTenant = this.oldTenant = tenantExec[1];
     }
-    console.log('this.selectedTenant-0', this.selectedTenant);
-    console.log('this.oldTenant-0', this.oldTenant);
   }
 
   login() {
@@ -79,7 +77,6 @@ export class LoginComponent implements OnInit {
             }
 
             this.tenantSelect = true;
-            console.log('sdf');
           }
         },
         error => {
@@ -92,6 +89,7 @@ export class LoginComponent implements OnInit {
 
   setTenantAndNavigate(tenant: string) {
     this.toastr.success(`Welcome ${this.userpass.username}!`);
+    this.authService.currentTenantValue = tenant;
     // if the user had a session expire, and they can choose from multiple tenants, we pre-select their old tenant for them above ^
     // if they stay with that same tenant, we will apply the returnURL from that session, to redirect them back to whatever page they were on after login
     // if they choose a different tenant, we redirect them to the dashboard after they login
@@ -103,7 +101,6 @@ export class LoginComponent implements OnInit {
     if (this.returnUrl === '/dashboard') {
       this.router.navigate([this.returnUrl], {
         queryParams: { tenant },
-        // queryParamsHandling: 'merge',
       });
     } else {
       // else, if the returnURL is more than just /dashboard we can assume the user came from a previous session
