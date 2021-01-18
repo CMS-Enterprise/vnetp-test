@@ -12,18 +12,23 @@ export class HttpConfigInterceptor {
   constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Get tenant from the tenant query param.
-    let tenant = '';
-    this.route.queryParams.subscribe(qp => {
-      tenant = qp.tenant;
-    });
-
     const currentUser = this.auth.currentUserValue;
     const isLogin = request.url.includes('auth/token');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
     if (!isLogin && !request.headers.has('Authorization') && currentUser.token) {
+      // Get tenant from the tenant query param.
+      let tenant = '';
+      this.route.queryParams.subscribe(qp => {
+        tenant = qp.tenant;
+      });
+
+      // If no tenant is selected, log the user out and allow them to reselect a tenant.
+      if (!tenant) {
+        this.auth.logout();
+      }
+
       const headers = new HttpHeaders({
         Authorization: `Bearer ${currentUser.token}`,
         'Cache-Control': 'no-cache',

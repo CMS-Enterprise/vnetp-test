@@ -12,13 +12,31 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
   public currentUser: Observable<UserDto> = this.currentUserSubject.asObservable();
 
+  private currentTenantSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  public currentTenant: Observable<string> = this.currentTenantSubject.asObservable();
+
   constructor(private http: HttpClient) {
     const user = JSON.parse(localStorage.getItem('user'));
+
+    if (user) {
+      // Since we aren't storing the tenant in local storage,
+      // it will be null on bootstrap. If the user is not
+      // null, set the tenant to a generic value.
+      this.currentTenantSubject.next('tenant');
+    }
     this.currentUserSubject.next(user);
   }
 
   public get currentUserValue(): UserDto {
     return this.currentUserSubject.value;
+  }
+
+  public get currentTenantValue(): string {
+    return this.currentTenantSubject.value;
+  }
+
+  public set currentTenantValue(tenant: string) {
+    this.currentTenantSubject.next(tenant);
   }
 
   login(userpass: UserPass) {
@@ -43,6 +61,6 @@ export class AuthService {
   logout() {
     localStorage.clear();
     this.currentUserSubject.next(null);
-    location.reload();
+    location.href = '/login';
   }
 }

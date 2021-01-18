@@ -12,7 +12,9 @@ import { UserDto } from '../../../../api_client/model/models';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;
+  public tenant: string;
   private currentUserSubscription: Subscription;
+  private currentTenantSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 
@@ -29,9 +31,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
       this.user = user;
     });
+    this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
+      this.tenant = tenant;
+    });
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
   }
 }
