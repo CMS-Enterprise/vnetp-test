@@ -14,7 +14,13 @@ export class AuthGuard implements CanActivate {
     }
 
     // not logged in so redirect to login page with the return url
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+
+    // if dashboard is in the returnURL, clear the returnURL to make for a clean login URL
+    if (state.url.includes('dashboard')) {
+      this.router.navigateByUrl('/login');
+    } else {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    }
     return false;
   }
 }

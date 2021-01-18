@@ -43,6 +43,7 @@ export class AuthService {
   logout() {
     localStorage.clear();
     this.currentUserSubject.next(null);
-    location.reload();
+    location.href = '/login';
+    // location.reload();
   }
 }
