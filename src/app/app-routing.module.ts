@@ -126,14 +126,6 @@ const routes: Routes = [
     data: { breadcrumb: 'Appliance as a Service', title: 'Automation - Appliance as a Service' },
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
-  // {
-  //   path: 'callback',
-  //   loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
-  // },
-  // {
-  //   path: 'tenant',
-  //   loadChildren: () => import('./components/tenant/tenant.module').then(m => m.TenantModule),
-  // },
   {
     path: 'unauthorized',
     loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),

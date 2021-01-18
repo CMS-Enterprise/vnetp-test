@@ -93,6 +93,10 @@ export class TierContextService {
         return;
       }
 
+      if (cd.id != this.currentDatacenterId) {
+        console.log('dc Switched');
+      }
+
       this.currentDatacenterId = cd.id;
       this.DatacenterService.v1DatacentersIdGet({
         id: this.currentDatacenterId,
@@ -105,6 +109,8 @@ export class TierContextService {
         // set currentTier to that tier.
         if (currentTierId) {
           this.switchTier(currentTierId);
+        } else {
+          this.switchTier(null);
         }
       });
     });
@@ -118,7 +124,7 @@ export class TierContextService {
 
     const tier = this._tiers.find(t => t.id === tierId);
     if (!tier) {
-      return false;
+      // return false;
     }
 
     const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;

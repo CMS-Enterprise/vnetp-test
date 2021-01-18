@@ -44,6 +44,5 @@ export class AuthService {
     localStorage.clear();
     this.currentUserSubject.next(null);
     location.href = '/login';
-    // location.reload();
   }
 }
