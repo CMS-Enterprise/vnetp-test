@@ -62,12 +62,25 @@
     >
       <div class="form-group">
         <label for="tenant">Tenant</label>
-        <select [(ngModel)]="selectedTenant" id="tenant" name="tenant" class="form-control" aria-label="Tenant" required>
+        <select
+          id="tenant"
+          name="tenant"
+          class="form-control"
+          #tenant="ngModel"
+          [(ngModel)]="selectedTenant"
+          aria-label="Tenant"
+          [ngClass]="{ 'is-invalid': form.submitted && tenant.invalid }"
+          required
+        >
           <option></option>
           <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.db_name">
             {{ availableTenant.name }}
           </option>
         </select>
+
+        <div *ngIf="form.submitted && tenant.invalid" class="invalid-feedback">
+          <div *ngIf="tenant.errors.required">Select a Tenant</div>
+        </div>
       </div>
 
       <button class="btn btn-primary btn-lg" type="submit">
