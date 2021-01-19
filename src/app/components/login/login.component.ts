@@ -90,9 +90,11 @@ export class LoginComponent implements OnInit {
   setTenantAndNavigate(tenant: string) {
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenant;
-    // if the user had a session expire, and they can choose from multiple tenants, we pre-select their old tenant for them above ^
-    // if they stay with that same tenant, we will apply the returnURL from that session, to redirect them back to whatever page they were on after login
-    // if they choose a different tenant, we redirect them to the dashboard after they login
+    // if the user had a session expire, and they can choose from multiple tenants,
+    // we pre-select their old tenant for them above if they stay with that same tenant,
+    // we will apply the returnURL from that session, to redirect them back to whatever
+    // page they were on after login if they choose a different tenant, we redirect them
+    // to the dashboard after they login
     if (tenant !== this.oldTenant) {
       this.returnUrl = '/dashboard';
     }
@@ -103,9 +105,10 @@ export class LoginComponent implements OnInit {
         queryParams: { tenant },
       });
     } else {
-      // else, if the returnURL is more than just /dashboard we can assume the user came from a previous session
-      // when they login, currently we still allow them to select tenant (being taken out) and then
-      // we navigate them to the returnURL, however the selected tenant is overwritten by what is in the returnURL
+      // else, if the returnURL is more than just /dashboard we can assume the user came from a
+      // previous session when they login, currently we still allow them to select tenant (being taken out)
+      // and then we navigate them to the returnURL, however the selected tenant is overwritten by what is
+      // in the returnURL
       this.router.navigateByUrl(this.returnUrl);
     }
   }

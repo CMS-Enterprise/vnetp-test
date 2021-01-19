@@ -65,9 +65,9 @@ describe('DashboardComponent', () => {
 
     component.ngOnInit();
 
-    expect(datacenterService.v1DatacentersGet).toHaveBeenCalledWith({ page: 1, limit: 1 });
-    expect(tierService.v1TiersGet).toHaveBeenCalledWith({ page: 1, limit: 1 });
-    expect(vmwareService.v1VmwareVirtualMachinesGet).toHaveBeenCalledWith({ page: 1, limit: 1 });
-    expect(loadBalancerService.v1LoadBalancerVirtualServersGet).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(datacenterService.v1DatacentersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(tierService.v1TiersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(vmwareService.v1VmwareVirtualMachinesGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(loadBalancerService.v1LoadBalancerVirtualServersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
   });
 });

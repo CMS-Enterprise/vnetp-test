@@ -147,8 +147,8 @@ export class PoolModalComponent implements OnInit {
       .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost({
         poolId: this.poolId,
         nodeId: selectedNode.id,
-        servicePort: servicePort,
-        ratio: ratio,
+        servicePort,
+        ratio,
       })
       .subscribe(() => {
         this.loadPoolResources();
