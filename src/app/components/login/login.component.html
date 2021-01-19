@@ -8,6 +8,8 @@
         <input
           type="text"
           name="username"
+          placeholder="EUA Username"
+          aria-placeholder="EUA Username"
           id="username"
           class="form-control"
           #username="ngModel"
@@ -26,6 +28,8 @@
         <input
           type="password"
           name="password"
+          placeholder="EUA Password"
+          aria-placeholder="EUA Password"
           id="password"
           class="form-control"
           #password="ngModel"
@@ -39,10 +43,6 @@
           <div *ngIf="password.errors.required">Password is required</div>
         </div>
       </div>
-
-      <!-- <div>
-        <fa name="spinner fa-spin fa-2x" [hidden]="!loading"></fa>
-      </div> -->
 
       <button class="btn btn-primary btn-lg" type="submit">
         Login
@@ -62,7 +62,7 @@
     >
       <div class="form-group">
         <label for="tenant">Tenant</label>
-        <select [(ngModel)]="selectedTenant" id="tenant" name="tenant" class="form-control" aria-label="Tenant">
+        <select [(ngModel)]="selectedTenant" id="tenant" name="tenant" class="form-control" aria-label="Tenant" required>
           <option></option>
           <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.db_name">
             {{ availableTenant.name }}
