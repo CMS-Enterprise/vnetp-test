@@ -58,9 +58,16 @@ export class AuthService {
       );
   }
 
-  logout() {
+  // if the user token is invalid we will send a boolean variable to this logout function
+  // if the variable is evaluated to be true then we reload the browser which keeps the returnURL in the /login URL
+  // if there is passed in no variable or it is false, we redirect the user the the clean /login page
+  logout(keepReturnUrl?: boolean) {
     localStorage.clear();
     this.currentUserSubject.next(null);
-    location.href = '/login';
+    if (keepReturnUrl) {
+      location.reload();
+    } else {
+      location.href = '/login';
+    }
   }
 }
