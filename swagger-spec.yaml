@@ -10,6 +10,26 @@ tags:
 schemes:
   - http
 paths:
+  /v1/auth/token:
+    post:
+      summary: Token
+      parameters:
+        - name: UserPass
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/UserPass'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDto'
+      tags:
+        - v1/auth
+      produces:
+        - application/json
+      consumes:
+        - application/json
   '/v1/configuration-upload/{id}/configure':
     patch:
       summary: Provisions an Entity.
@@ -12601,6 +12621,64 @@ paths:
       consumes:
         - application/json
 definitions:
+  UserPass:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - username
+      - password
+  DcsPermissions:
+    type: object
+    properties:
+      tenant:
+        type: string
+      roles:
+        type: array
+        items:
+          type: string
+    required:
+      - tenant
+      - roles
+  UserDto:
+    type: object
+    properties:
+      dn:
+        type: string
+      uid:
+        type: string
+      cn:
+        type: string
+      givenname:
+        type: string
+      mail:
+        type: string
+      dcsrole:
+        type: string
+      ismemberof:
+        type: object
+      token:
+        type: string
+      expiresIn:
+        type: number
+      dcsPermissions:
+        type: array
+        items:
+          $ref: '#/definitions/DcsPermissions'
+    required:
+      - dn
+      - uid
+      - cn
+      - givenname
+      - mail
+      - dcsrole
+      - ismemberof
+      - token
+      - expiresIn
+      - dcsPermissions
   Buffer:
     type: object
     properties: {}

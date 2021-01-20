@@ -27,6 +27,7 @@ const MockNgxSmartModalService = () => {
     setModalData: jest.fn(),
     getModalData: jest.fn(),
     resetModalData: jest.fn(),
+    open: jest.fn(),
   };
 };
 
@@ -38,10 +39,14 @@ const MockToastrService = () => {
 };
 
 const MockDatacenterContextService = () => {
+  const datacenter = {
+    id: '1',
+    tiers: [{ id: '1', name: 'Tier1' }],
+  };
   return {
-    currentDatacenter: of({ id: '1' }),
-    currentDatacenterValue: { id: '1' },
-    datacenters: of([{ id: '1', tiers: [] }]),
+    currentDatacenter: of(datacenter),
+    currentDatacenterValue: datacenter,
+    datacenters: of([datacenter]),
     lockCurrentDatacenter: of(false),
     lockDatacenter: jest.fn(),
     switchDatacenter: jest.fn(),

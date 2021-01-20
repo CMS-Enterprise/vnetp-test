@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { User } from 'oidc-client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { UserDto } from '../../../../api_client/model/models';
 
 @Component({
   selector: 'app-navbar',
@@ -11,8 +11,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  public user: User;
+  public user: UserDto;
+  public tenant: string;
   private currentUserSubscription: Subscription;
+  private currentTenantSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 
@@ -22,16 +24,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public logout(): void {
     this.ngx.close('logoutModal');
-    this.auth.logout('logout');
+    this.auth.logout();
   }
 
   ngOnInit(): void {
     this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
       this.user = user;
     });
+    this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
+      this.tenant = tenant;
+    });
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
   }
 }
