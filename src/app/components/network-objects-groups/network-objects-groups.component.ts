@@ -162,7 +162,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       softDelete$: this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
         id: networkObjectGroup.id,
       }),
-      onSuccess: () => this.getNetworkObjects(),
+      onSuccess: () => this.getNetworkObjectGroups(),
     });
   }
 
