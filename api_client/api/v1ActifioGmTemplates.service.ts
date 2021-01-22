@@ -43,8 +43,8 @@ export interface V1ActifioGmTemplatesIdGetRequestParams {
 export interface V1ActifioGmTemplatesIdPolicyGetRequestParams {
     isSnapshot: boolean;
     id: string;
-    offset: number;
-    limit: number;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams {
@@ -294,19 +294,9 @@ export class V1ActifioGmTemplatesService {
             throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
         const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
-        }
         const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
-        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (isSnapshot !== undefined && isSnapshot !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>isSnapshot, 'isSnapshot');
-        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
@@ -314,6 +304,10 @@ export class V1ActifioGmTemplatesService {
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
+        }
+        if (isSnapshot !== undefined && isSnapshot !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>isSnapshot, 'isSnapshot');
         }
 
         let headers = this.defaultHeaders;

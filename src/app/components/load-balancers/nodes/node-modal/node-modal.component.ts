@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -16,7 +16,7 @@ import { nodeTypeLookup } from 'src/app/lookups/load-balancer-node-type.lookup';
   selector: 'app-node-modal',
   templateUrl: './node-modal.component.html',
 })
-export class NodeModalComponent implements OnInit {
+export class NodeModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public submitted: boolean;
 

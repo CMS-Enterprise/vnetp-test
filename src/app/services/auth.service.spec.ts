@@ -1,21 +1,22 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from './auth.service';
+import { CookieService } from 'ngx-cookie-service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('AuthService', () => {
-  let service: AuthService;
-
-  beforeAll(() => {
+describe('AuthServiceService', () => {
+  beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      providers: [AuthService],
-    });
-    service = TestBed.inject(AuthService);
-  });
+      imports: [HttpClientTestingModule],
+      providers: [CookieService],
+    }),
+  );
+
   afterEach(() => {
     TestBed.resetTestingModule();
   });
+
   it('should be created', () => {
+    const service: AuthService = TestBed.inject(AuthService);
     expect(service).toBeTruthy();
   });
 });
