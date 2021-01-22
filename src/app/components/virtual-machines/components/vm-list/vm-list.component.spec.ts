@@ -52,14 +52,14 @@ describe('VmListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call to get applications in chunks on init', () => {
-    const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
-    const spy = jest.spyOn(applicationService, 'v1ActifioGmApplicationsGet').mockImplementation(() => from([createApplications()]));
+  // it('should call to get applications in chunks on init', () => {
+  //   const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
+  //   const spy = jest.spyOn(applicationService, 'v1ActifioGmApplicationsGet').mockImplementation(() => from([createApplications()]));
 
-    component.ngOnInit();
+  //   component.ngOnInit();
 
-    expect(spy).toHaveBeenCalledWith({});
-  });
+  //   expect(spy).toHaveBeenCalledWith({});
+  // });
 
   it('should default to get the last sync date when jobs are empty', done => {
     const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
