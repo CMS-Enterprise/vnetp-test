@@ -58,7 +58,7 @@ describe('ProfileListComponent', () => {
 
     component.ngOnInit();
 
-    expect(spy).toHaveBeenCalledWith({ limit: 100, offset: 0 });
+    expect(spy).toHaveBeenCalledWith({});
   });
 
   it('should default an empty description to be "--"', () => {
