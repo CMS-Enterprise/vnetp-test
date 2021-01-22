@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActifioBaseDto } from './actifioBaseDto';
 
 
 export interface ActifioHostDto { 
@@ -16,6 +17,6 @@ export interface ActifioHostDto {
     name: string;
     ipAddress: string;
     clusterIds: Array<string>;
-    sourceClusterIds: Array<string>;
+    sourceClusters: Array<ActifioBaseDto>;
 }
 

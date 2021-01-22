@@ -61,10 +61,8 @@ export class VmViewComponent implements OnInit, OnDestroy {
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
       .v1ActifioGmJobsGet({
-        jobClassCode,
-        limit: 10,
-        offset: 0,
         applicationName: virtualMachineName,
+        jobClassCode,
         status: 'succeeded',
       })
       .pipe(

@@ -22,8 +22,8 @@ interface LogicalGroupView {
   templateUrl: './logical-group-list.component.html',
 })
 export class LogicalGroupListComponent implements OnInit, OnDestroy {
-  @ViewChild('detailsTemplate', { static: false }) detailsTemplate: TemplateRef<any>;
-  @ViewChild('actionsTemplate', { static: false }) actionsTemplate: TemplateRef<any>;
+  @ViewChild('detailsTemplate') detailsTemplate: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<LogicalGroupView> = {
     description: 'List of SLA Logical Groups',
@@ -111,7 +111,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
     );
   }
 
-  public deleteLogicalGroup(logicalGroup: ActifioLogicalGroupDto): void {
+  public deleteLogicalGroup(logicalGroup: LogicalGroupView): void {
     const { id, name } = logicalGroup;
     const dto = new YesNoModalDto(
       'Delete Logical Group',

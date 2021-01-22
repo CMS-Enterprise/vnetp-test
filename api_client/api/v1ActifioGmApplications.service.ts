@@ -25,10 +25,10 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmApplicationsGetRequestParams {
-    limit: number;
-    offset: number;
     clusterIds?: Array<string>;
     logicalGroupMember?: boolean;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmApplicationsIdDeleteRequestParams {
@@ -115,16 +115,10 @@ export class V1ActifioGmApplicationsService {
     public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioApplicationDto>>>;
     public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioApplicationDto>>>;
     public v1ActifioGmApplicationsGet(requestParameters: V1ActifioGmApplicationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmApplicationsGet.');
-        }
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmApplicationsGet.');
-        }
         const clusterIds = requestParameters.clusterIds;
         const logicalGroupMember = requestParameters.logicalGroupMember;
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (clusterIds) {
@@ -135,13 +129,13 @@ export class V1ActifioGmApplicationsService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>logicalGroupMember, 'logicalGroupMember');
         }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;

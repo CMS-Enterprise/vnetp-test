@@ -13,12 +13,14 @@ import { ActifioSequenceOrderDto } from './actifioSequenceOrderDto';
 
 
 export interface ActifioApplicationGroupDto { 
+    armServerId?: string;
+    cdsId: string;
     description?: string;
     id?: string;
     name: string;
+    recoveryPlanId?: string;
     serverId: string;
     sequenceOrders: Array<ActifioSequenceOrderDto>;
     startupSequence?: number;
-    cdsId: string;
 }
 

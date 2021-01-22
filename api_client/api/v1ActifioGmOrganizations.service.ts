@@ -29,8 +29,8 @@ export interface V1ActifioGmOrganizationsAddPostRequestParams {
 }
 
 export interface V1ActifioGmOrganizationsGetRequestParams {
-    limit: number;
-    offset: number;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmOrganizationsIdDeleteRequestParams {
@@ -173,23 +173,17 @@ export class V1ActifioGmOrganizationsService {
     public v1ActifioGmOrganizationsGet(requestParameters: V1ActifioGmOrganizationsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioOrganizationDto>>>;
     public v1ActifioGmOrganizationsGet(requestParameters: V1ActifioGmOrganizationsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioOrganizationDto>>>;
     public v1ActifioGmOrganizationsGet(requestParameters: V1ActifioGmOrganizationsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmOrganizationsGet.');
-        }
         const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmOrganizationsGet.');
-        }
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;

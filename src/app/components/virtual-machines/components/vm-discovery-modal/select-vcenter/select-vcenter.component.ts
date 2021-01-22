@@ -9,10 +9,10 @@ import { TableConfig } from 'src/app/common/table/table.component';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class SelectVCenterComponent implements OnInit {
-  @ViewChild('selectVCenterTemplate', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVCenterToggleTemplate', { static: false }) selectVCenterToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterTemplate') selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenterToggleTemplate') selectVCenterToggleTemplate: TemplateRef<any>;
 
-  @Output() vcenterSelected = new EventEmitter<number>();
+  @Output() vCenterSelected = new EventEmitter<ActifioHostDto>();
 
   public config: TableConfig<ActifioHostDto> = {
     description: 'List of vCenters',
@@ -24,7 +24,7 @@ export class SelectVCenterComponent implements OnInit {
   };
   public vCenters: ActifioHostDto[] = [];
   public isLoading = false;
-  public selectedVCenterId: number;
+  public selectedVCenterId: string;
 
   constructor(private agmHostService: V1ActifioGmHostsService, private ngx: NgxSmartModalService) {}
 
@@ -40,7 +40,11 @@ export class SelectVCenterComponent implements OnInit {
     if (!this.selectedVCenterId) {
       return;
     }
-    this.vcenterSelected.emit(this.selectedVCenterId);
+    const vCenter = this.vCenters.find(v => v.id === this.selectedVCenterId);
+    if (!vCenter) {
+      return;
+    }
+    this.vCenterSelected.emit(vCenter);
   }
 
   private loadVCenters(): void {

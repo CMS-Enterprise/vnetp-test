@@ -30,7 +30,7 @@ describe('StaticRoutesComponent', () => {
   });
 
   it('should load tiers', () => {
-    const tierService = TestBed.get(V1TiersService);
+    const tierService = TestBed.inject(V1TiersService);
     const loadTiersSpy = jest.spyOn(tierService, 'v1TiersGet');
     component.getTiers();
 

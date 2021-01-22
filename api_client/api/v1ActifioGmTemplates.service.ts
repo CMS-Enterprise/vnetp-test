@@ -27,6 +27,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1ActifioGmTemplatesGetRequestParams {
+    offset?: number;
+    limit?: number;
+}
+
 export interface V1ActifioGmTemplatesIdDeleteRequestParams {
     id: string;
 }
@@ -36,10 +41,10 @@ export interface V1ActifioGmTemplatesIdGetRequestParams {
 }
 
 export interface V1ActifioGmTemplatesIdPolicyGetRequestParams {
-    offset: number;
-    limit: number;
     isSnapshot: boolean;
     id: string;
+    offset?: number;
+    limit?: number;
 }
 
 export interface V1ActifioGmTemplatesIdPolicyPolicyIdDeleteRequestParams {
@@ -126,13 +131,26 @@ export class V1ActifioGmTemplatesService {
 
     /**
      * Get many ActifioTemplateDto
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioGmTemplatesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioTemplateDto>>;
-    public v1ActifioGmTemplatesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioTemplateDto>>>;
-    public v1ActifioGmTemplatesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioTemplateDto>>>;
-    public v1ActifioGmTemplatesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioTemplateDto>>;
+    public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioTemplateDto>>>;
+    public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioTemplateDto>>>;
+    public v1ActifioGmTemplatesGet(requestParameters: V1ActifioGmTemplatesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -156,6 +174,7 @@ export class V1ActifioGmTemplatesService {
 
         return this.httpClient.get<Array<ActifioTemplateDto>>(`${this.configuration.basePath}/v1/actifio/gm/templates`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -266,14 +285,6 @@ export class V1ActifioGmTemplatesService {
     public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioPolicyDto>>>;
     public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioPolicyDto>>>;
     public v1ActifioGmTemplatesIdPolicyGet(requestParameters: V1ActifioGmTemplatesIdPolicyGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const offset = requestParameters.offset;
-        if (offset === null || offset === undefined) {
-            throw new Error('Required parameter offset was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
-        }
-        const limit = requestParameters.limit;
-        if (limit === null || limit === undefined) {
-            throw new Error('Required parameter limit was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
-        }
         const isSnapshot = requestParameters.isSnapshot;
         if (isSnapshot === null || isSnapshot === undefined) {
             throw new Error('Required parameter isSnapshot was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
@@ -282,6 +293,8 @@ export class V1ActifioGmTemplatesService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling v1ActifioGmTemplatesIdPolicyGet.');
         }
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (offset !== undefined && offset !== null) {

@@ -47,7 +47,7 @@ describe('TierSelectComponent', () => {
   });
 
   it('should open the tier modal when clicked', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
     jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return {
@@ -62,7 +62,9 @@ describe('TierSelectComponent', () => {
   });
 
   it('should switch tiers', () => {
-    const toastrService = TestBed.get(ToastrService);
+    const tierContextService = TestBed.inject(TierContextService);
+    const toastrService = TestBed.inject(ToastrService);
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => true);
     const successSpy = jest.spyOn(toastrService, 'success');
 
     component.selectedTier = '1';
@@ -72,12 +74,10 @@ describe('TierSelectComponent', () => {
   });
 
   it('should not switch tiers when an error occurs', () => {
-    const tierContextService = TestBed.get(TierContextService);
-    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => {
-      throw Error();
-    });
+    const tierContextService = TestBed.inject(TierContextService);
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => false);
 
-    const toastrService = TestBed.get(ToastrService);
+    const toastrService = TestBed.inject(ToastrService);
     const successSpy = jest.spyOn(toastrService, 'success');
 
     component.selectedTier = '1';

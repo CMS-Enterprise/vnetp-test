@@ -23,7 +23,7 @@ describe('DatacenterContextService', () => {
         { provide: AuthService, useValue: authService },
       ],
     });
-    service = TestBed.get(DatacenterContextService);
+    service = TestBed.inject(DatacenterContextService);
   });
 
   it('should be created', () => {

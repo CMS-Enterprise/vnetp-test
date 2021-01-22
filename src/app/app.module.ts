@@ -31,7 +31,6 @@ import {
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxMaskModule } from 'ngx-mask';
-import { CookieService } from 'ngx-cookie-service';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -88,7 +87,6 @@ export function init_app(appLoadService: AppInitService) {
       useClass: HttpConfigInterceptor,
       multi: true,
     },
-    CookieService,
     Title,
   ],
   bootstrap: [AppComponent],

@@ -16,9 +16,10 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   currentDatacenter: Datacenter;
   selectedDatacenter: Datacenter;
   lockCurrentDatacenter: boolean;
-  datacentersSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-  datacenterLockSubscription: Subscription;
+
+  private currentDatacenterSubscription: Subscription;
+  private datacenterLockSubscription: Subscription;
+  private datacentersSubscription: Subscription;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
@@ -31,11 +32,11 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   }
 
   public switchDatacenter(): void {
-    try {
-      this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
-      this.toastrService.success('Datacenter Switched');
-    } catch (error) {
-      this.toastrService.error(error);
+    const isSwitched = this.datacenterContextService.switchDatacenter(this.selectedDatacenter.id);
+    if (isSwitched) {
+      this.toastrService.success('Datacenter switched');
+    } else {
+      this.toastrService.error('Unable to switch datacenter');
     }
   }
 

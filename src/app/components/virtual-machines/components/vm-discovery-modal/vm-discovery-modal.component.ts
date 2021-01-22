@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioApplicationDto } from 'api_client';
+import { ActifioApplicationDto, ActifioHostDto } from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
@@ -8,13 +8,13 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class VmDiscoveryModalComponent {
-  @ViewChild('selectVCenter', { static: false }) selectVCenterTemplate: TemplateRef<any>;
-  @ViewChild('selectVirtualMachines', { static: false }) selectVirtualMachinesTemplate: TemplateRef<any>;
-  @ViewChild('selectAction', { static: false }) selectActionTemplate: TemplateRef<any>;
+  @ViewChild('selectVCenter') selectVCenterTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachines') selectVirtualMachinesTemplate: TemplateRef<any>;
+  @ViewChild('selectAction') selectActionTemplate: TemplateRef<any>;
 
   public currentDiscoveryStepTemplate: TemplateRef<any>;
   public selectedVirtualMachines: ActifioApplicationDto[] = [];
-  public selectedVCenterId: string;
+  public selectedVCenter: ActifioHostDto;
 
   constructor(private changeRef: ChangeDetectorRef, private ngx: NgxSmartModalService) {}
 
@@ -27,7 +27,7 @@ export class VmDiscoveryModalComponent {
     this.ngx.close('vmDiscoveryModal');
     this.currentDiscoveryStepTemplate = this.selectVCenterTemplate;
 
-    this.selectedVCenterId = null;
+    this.selectedVCenter = null;
     this.selectedVirtualMachines = [];
   }
 
@@ -36,8 +36,8 @@ export class VmDiscoveryModalComponent {
     this.currentDiscoveryStepTemplate = this.selectActionTemplate;
   }
 
-  public onVCenterSelected(vCenterId: string): void {
-    this.selectedVCenterId = vCenterId;
+  public onVCenterSelected(vCenter: ActifioHostDto): void {
+    this.selectedVCenter = vCenter;
     this.currentDiscoveryStepTemplate = this.selectVirtualMachinesTemplate;
   }
 

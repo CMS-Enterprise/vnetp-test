@@ -70,8 +70,8 @@ describe('DeployComponent', () => {
   });
 
   it('should call to load tiers and tier groups on init', () => {
-    const tiersService = TestBed.get(V1TiersService);
-    const tierGroupService = TestBed.get(V1TierGroupsService);
+    const tiersService = TestBed.inject(V1TiersService);
+    const tierGroupService = TestBed.inject(V1TierGroupsService);
 
     datacenterSubject.next(testData.datacenter);
 
@@ -105,7 +105,7 @@ describe('DeployComponent', () => {
 
   describe('deployTiers', () => {
     it('should not open the confirmation modal when 0 tiers are selected', () => {
-      const ngx = TestBed.get(NgxSmartModalService);
+      const ngx = TestBed.inject(NgxSmartModalService);
       const spy = jest.spyOn(ngx, 'getModal');
 
       component.tiers = [];
@@ -124,7 +124,7 @@ describe('DeployComponent', () => {
 
       component.tiers = [testData.tier];
 
-      const jobService = TestBed.get(V1JobsService);
+      const jobService = TestBed.inject(V1JobsService);
       const deploySpy = jest.spyOn(jobService, 'v1JobsPost');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));

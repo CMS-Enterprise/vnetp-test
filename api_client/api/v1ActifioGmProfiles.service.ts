@@ -24,9 +24,9 @@ import { Configuration }                                     from '../configurat
 
 
 export interface V1ActifioGmProfilesGetRequestParams {
+    clusterIds?: Array<string>;
     offset?: number;
     limit?: number;
-    clusterIds?: Array<string>;
 }
 
 export interface V1ActifioGmProfilesIdGetRequestParams {
@@ -96,7 +96,7 @@ export class V1ActifioGmProfilesService {
     }
 
     /**
-     * Delete one ActifioOrganization
+     * Get many ActifioProfileDto
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -105,11 +105,15 @@ export class V1ActifioGmProfilesService {
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioProfileDto>>>;
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioProfileDto>>>;
     public v1ActifioGmProfilesGet(requestParameters: V1ActifioGmProfilesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const clusterIds = requestParameters.clusterIds;
         const offset = requestParameters.offset;
         const limit = requestParameters.limit;
-        const clusterIds = requestParameters.clusterIds;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
+        if (clusterIds) {
+            queryParameters = this.addToHttpParams(queryParameters,
+                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
+        }
         if (offset !== undefined && offset !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>offset, 'offset');
@@ -117,10 +121,6 @@ export class V1ActifioGmProfilesService {
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
-        }
-        if (clusterIds) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                clusterIds.join(COLLECTION_FORMATS['csv']), 'clusterIds');
         }
 
         let headers = this.defaultHeaders;

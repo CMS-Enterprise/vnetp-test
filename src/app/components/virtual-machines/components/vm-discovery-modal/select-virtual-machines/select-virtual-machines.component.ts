@@ -1,5 +1,11 @@
 import { Component, Input, OnInit, Output, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
-import { ActifioApplicationDto, ActifioDiscoveredVMDto, V1ActifioGmHostsService, V1ActifioGmApplicationsService } from 'api_client';
+import {
+  ActifioApplicationDto,
+  ActifioDiscoveredVMDto,
+  V1ActifioGmHostsService,
+  V1ActifioGmApplicationsService,
+  ActifioHostDto,
+} from 'api_client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
@@ -20,9 +26,9 @@ interface SelectableVirtualMachine {
   styles: ['.loading { display: flex; flex-direction: column; align-items: center'],
 })
 export class SelectVirtualMachinesComponent implements OnInit {
-  @ViewChild('selectVirtualMachineToggleTemplate', { static: false }) selectVirtualMachineToggleTemplate: TemplateRef<any>;
+  @ViewChild('selectVirtualMachineToggleTemplate') selectVirtualMachineToggleTemplate: TemplateRef<any>;
 
-  @Input() vcenterId: string;
+  @Input() vCenter: ActifioHostDto;
   @Output() virtualMachinesAdded = new EventEmitter<ActifioApplicationDto[]>();
 
   public config: TableConfig<SelectableVirtualMachine> = {
@@ -46,7 +52,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadVirtualMachinesOnHost(this.vcenterId);
+    this.loadVirtualMachinesOnHost(this.vCenter.id);
   }
 
   public onCancel(): void {
@@ -81,7 +87,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
       .v1ActifioGmApplicationsImportPost({
         actifioImportApplicationsDto: {
           clusters,
-          hostId: this.vcenterId,
+          hostId: this.vCenter.id,
         },
       })
       .subscribe(
@@ -119,7 +125,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
   }
 
   private mapDiscoveredVM(discoveredVM: ActifioDiscoveredVMDto): SelectableVirtualMachine {
-    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name, sourceClusterIds } = discoveredVM;
+    const { applicationId, clusterName, discoveredId, isManaged, folderPath, name, sourceClusters } = discoveredVM;
     return {
       folderPath,
       isManaged,
@@ -128,7 +134,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
       isNew: !applicationId,
       id: applicationId || discoveredId,
       isSelected: false,
-      sourceClusterIds,
+      sourceClusterIds: sourceClusters.map(c => c.id),
     };
   }
 }

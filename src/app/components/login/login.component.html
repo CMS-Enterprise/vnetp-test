@@ -1,0 +1,91 @@
+<div class="offset-3 col-md-6 mt-5">
+  <div class="text-center">
+    <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
+
+    <form *ngIf="!tenantSelect" name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="EUA Username"
+          aria-placeholder="EUA Username"
+          id="username"
+          class="form-control"
+          #username="ngModel"
+          [(ngModel)]="userpass.username"
+          aria-label="Username"
+          [ngClass]="{ 'is-invalid': form.submitted && username.invalid }"
+          required
+        />
+        <div *ngIf="form.submitted && username.invalid" class="invalid-feedback">
+          <div *ngIf="username.errors.required">Username is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="EUA Password"
+          aria-placeholder="EUA Password"
+          id="password"
+          class="form-control"
+          #password="ngModel"
+          [(ngModel)]="userpass.password"
+          aria-label="Password"
+          [ngClass]="{ 'is-invalid': form.submitted && password.invalid }"
+          required
+        />
+
+        <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
+          <div *ngIf="password.errors.required">Password is required</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" type="submit">
+        Login
+      </button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <form
+      *ngIf="tenantSelect"
+      name="tenantForm"
+      (ngSubmit)="form.form.valid && setTenantAndNavigate(selectedTenant)"
+      #form="ngForm"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="tenant">Tenant</label>
+        <select
+          id="tenant"
+          name="tenant"
+          class="form-control"
+          #tenant="ngModel"
+          [(ngModel)]="selectedTenant"
+          aria-label="Tenant"
+          [ngClass]="{ 'is-invalid': form.submitted && tenant.invalid }"
+          required
+        >
+          <option></option>
+          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.db_name">
+            {{ availableTenant.name }}
+          </option>
+        </select>
+
+        <div *ngIf="form.submitted && tenant.invalid" class="invalid-feedback">
+          <div *ngIf="tenant.errors.required">Select a Tenant</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" type="submit">
+        Select Tenant
+      </button>
+    </form>
+  </div>
+</div>

@@ -16,7 +16,7 @@ import { ActifioVMMemberDto } from './actifioVMMemberDto';
 export interface ActifioSequenceOrderDto { 
     delay: number;
     memberOrderIndex: number;
-    sequencePortGroup: Array<ActifioSequencePortGroupDto>;
-    vmMembers: Array<ActifioVMMemberDto>;
+    sequencePortGroups?: Array<ActifioSequencePortGroupDto>;
+    vmMembers?: Array<ActifioVMMemberDto>;
 }
 

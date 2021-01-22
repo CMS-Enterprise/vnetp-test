@@ -16,8 +16,8 @@ interface TemplateView extends ActifioTemplateDto {
   templateUrl: './template-list.component.html',
 })
 export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('snapshotPolicyTemplate', { static: false }) snapshotPolicyTemplate: TemplateRef<any>;
-  @ViewChild('actionsTemplate', { static: false }) actionsTemplate: TemplateRef<any>;
+  @ViewChild('snapshotPolicyTemplate') snapshotPolicyTemplate: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config = {
     description: 'List of SLA Templates',
@@ -69,7 +69,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public loadTemplates(): void {
     this.isLoading = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(data => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(data => {
       this.templates = data.map(d => {
         return {
           ...d,
@@ -98,7 +98,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getSnapshotPolicyTimeWindow(templateId: string): Observable<string> {
-    return this.agmTemplateService.v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true, limit: 1, offset: 0 }).pipe(
+    return this.agmTemplateService.v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true }).pipe(
       map(policies => (policies.length > 0 ? policies[0] : null)),
       map(snapshotPolicy => {
         if (!snapshotPolicy) {

@@ -11,18 +11,22 @@
 
 <!-- Step 1 - Select vCenter -->
 <ng-template #selectVCenter>
-  <app-select-vcenter (vcenterSelected)="onVCenterSelected($event)"></app-select-vcenter>
+  <app-select-vcenter (vCenterSelected)="onVCenterSelected($event)"></app-select-vcenter>
 </ng-template>
 
 <!-- Step 2 - Select Virtual Machines -->
 <ng-template #selectVirtualMachines>
   <app-select-virtual-machines
-    [vcenterId]="selectedVCenterId"
+    [vCenter]="selectedVCenter"
     (virtualMachinesAdded)="onVirtualMachinesAdded($event)"
   ></app-select-virtual-machines>
 </ng-template>
 
 <!-- Step 3 - Select Action -->
 <ng-template #selectAction>
-  <app-select-action [virtualMachines]="selectedVirtualMachines" (actionComplete)="onActionComplete()"></app-select-action>
+  <app-select-action
+    [virtualMachines]="selectedVirtualMachines"
+    [vCenter]="selectedVCenter"
+    (actionComplete)="onActionComplete()"
+  ></app-select-action>
 </ng-template>

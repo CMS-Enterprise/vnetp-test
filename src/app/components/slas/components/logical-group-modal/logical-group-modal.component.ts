@@ -172,7 +172,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet().subscribe(templates => {
+    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(templates => {
       this.templates = templates;
       this.isLoadingTemplates = false;
     });
@@ -180,7 +180,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadProfiles(): void {
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({ limit: 100, offset: 0 }).subscribe(profiles => {
+    this.agmProfileService.v1ActifioGmProfilesGet({}).subscribe(profiles => {
       this.profiles = profiles;
       this.isLoadingProfiles = false;
     });
@@ -188,7 +188,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadClusters(): void {
     this.isLoadingClusters = true;
-    this.agmClusterService.v1ActifioGmClustersGet({ limit: 100, offset: 0 }).subscribe(clusters => {
+    this.agmClusterService.v1ActifioGmClustersGet({}).subscribe(clusters => {
       this.clusters = clusters;
       this.isLoadingClusters = false;
     });
@@ -196,8 +196,6 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadVirtualMachinesOnCluster(clusterId: string): Observable<ActifioApplicationDto[]> {
     return this.agmApplicationService.v1ActifioGmApplicationsGet({
-      limit: 200,
-      offset: 0,
       logicalGroupMember: false,
       clusterIds: [clusterId],
     });

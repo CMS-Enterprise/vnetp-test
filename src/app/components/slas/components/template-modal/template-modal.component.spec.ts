@@ -1,5 +1,5 @@
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioPolicyDtoOperation, V1ActifioGmTemplatesService } from 'api_client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +32,7 @@ describe('TemplateModalComponent', () => {
   });
 
   it('should default the time window when creating a new template', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService);
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => of({}));
 
     component.onLoad();
@@ -43,14 +43,14 @@ describe('TemplateModalComponent', () => {
   });
 
   it('should not set the time window when the template does not have a snapshot policy', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService);
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       return {
         id: '1',
         name: 'Name',
       };
     });
-    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
     templateService.v1ActifioGmTemplatesIdPolicyGet = jest.fn(() => of([]));
 
     component.onLoad();
@@ -61,14 +61,14 @@ describe('TemplateModalComponent', () => {
   });
 
   it('should set the time window when editing a template', () => {
-    const ngx = TestBed.get(NgxSmartModalService);
+    const ngx = TestBed.inject(NgxSmartModalService);
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       return {
         id: '1',
         name: 'Name',
       };
     });
-    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
     templateService.v1ActifioGmTemplatesIdPolicyGet = jest.fn(() => {
       return of([{ startTime: 1 * 60 * 60, endTime: 2 * 60 * 60 }]);
     });
@@ -87,7 +87,7 @@ describe('TemplateModalComponent', () => {
     component.form.controls.startTime.setValue('00:00');
     component.form.controls.endTime.setValue('10:00');
 
-    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const templateService = TestBed.inject(V1ActifioGmTemplatesService);
     const saveSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesPost');
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -99,7 +99,8 @@ describe('TemplateModalComponent', () => {
         description: 'Description',
         policies: [
           {
-            isSnapshot: true,
+            name: 'S-Daily',
+            operation: ActifioPolicyDtoOperation.Snap,
             isWindowed: true,
             startTime: 0,
             endTime: 10 * 60 * 60,
@@ -110,7 +111,7 @@ describe('TemplateModalComponent', () => {
   });
 
   it('should not save the template when the name is empty', () => {
-    const templateService = TestBed.get(V1ActifioGmTemplatesService);
+    const templateService = TestBed.inject(V1ActifioGmTemplatesService);
     const saveSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesPost');
 
     component.form.controls.name.setValue('');

@@ -110,33 +110,32 @@ export class TierContextService {
     });
   }
 
-  public switchTier(tierId: string): void {
+  public switchTier(tierId: string): boolean {
     if (this.lockCurrentTierSubject.value) {
-      throw Error('Current Tier Locked.');
+      this.messageService.sendMessage(new Message(null, null, 'Current tier locked'));
+      return false;
     }
 
-    // Validate that the tier we are switching to is a member
-    // of the private tiers array.
     const tier = this._tiers.find(t => t.id === tierId);
+    if (!tier) {
+      return false;
+    }
 
-    if (this.currentTierValue && tier.id === this.currentTierValue.id) {
-      throw Error('Tier already Selected.');
+    const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;
+    if (isSameTier) {
+      this.messageService.sendMessage(new Message(null, null, 'Tier already selected'));
+      return false;
     }
 
     const oldTierId = this.currentTierValue ? this.currentTierValue.id : null;
 
-    if (tier) {
-      this.currentTierSubject.next(tier);
-
-      this.ignoreNextQueryParamEvent = true;
-
-      // Update Query Params
-      this.router.navigate([], {
-        queryParams: { tier: tier.id },
-        queryParamsHandling: 'merge',
-      });
-
-      this.messageService.sendMessage(new Message(oldTierId, tierId, 'Tier Switched'));
-    }
+    this.currentTierSubject.next(tier);
+    this.ignoreNextQueryParamEvent = true;
+    this.router.navigate([], {
+      queryParams: { tier: tier.id },
+      queryParamsHandling: 'merge',
+    });
+    this.messageService.sendMessage(new Message(oldTierId, tierId, 'Tier Switched'));
+    return true;
   }
 }

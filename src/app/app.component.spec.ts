@@ -45,10 +45,10 @@ describe('AppComponent', () => {
   });
 
   it('should call to set the title when the route changes', () => {
-    const title = TestBed.get(Title);
+    const title = TestBed.inject(Title);
     const spy = jest.spyOn(title, 'setTitle');
 
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute);
     activatedRoute.data = of({ title: 'New Title' });
 
     const navigationEnd = new NavigationEnd(1, '', '');
@@ -58,10 +58,10 @@ describe('AppComponent', () => {
   });
 
   it('should default the title to "Automation"', () => {
-    const title = TestBed.get(Title);
+    const title = TestBed.inject(Title);
     const spy = jest.spyOn(title, 'setTitle');
 
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute);
     activatedRoute.data = of({ title: null });
 
     const navigationEnd = new NavigationEnd(1, '', '');
@@ -71,10 +71,10 @@ describe('AppComponent', () => {
   });
 
   it('should get the most child route to set the title', () => {
-    const title = TestBed.get(Title);
+    const title = TestBed.inject(Title);
     const spy = jest.spyOn(title, 'setTitle');
 
-    const activatedRoute = TestBed.get(ActivatedRoute);
+    const activatedRoute = TestBed.inject(ActivatedRoute) as any;
     activatedRoute.firstChild = { outlet: 'primary', data: of({ title: 'Child Title' }) };
     activatedRoute.data = of({ title: 'Parent Title' });
 

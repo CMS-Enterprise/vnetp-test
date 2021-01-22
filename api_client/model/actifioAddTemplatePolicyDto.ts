@@ -13,8 +13,23 @@
 
 export interface ActifioAddTemplatePolicyDto { 
     endTime?: number;
-    isSnapshot: boolean;
     isWindowed: boolean;
+    name: string;
+    operation: ActifioAddTemplatePolicyDtoOperation;
+    remoteRetention?: number;
     startTime: number;
 }
+export enum ActifioAddTemplatePolicyDtoOperation {
+    Async = 'async',
+    Dedup = 'dedup',
+    DedupAsync = 'dedup_async',
+    Directdedup = 'directdedup',
+    Replicate = 'replicate',
+    Remotereplicate = 'remotereplicate',
+    StreamSnap = 'stream_snap',
+    Snap = 'snap',
+    Sync = 'sync'
+};
+
+
 

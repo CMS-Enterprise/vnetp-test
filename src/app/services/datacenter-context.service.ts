@@ -114,33 +114,33 @@ export class DatacenterContextService {
     });
   }
 
-  public switchDatacenter(datacenterId: string): void {
+  public switchDatacenter(datacenterId: string): boolean {
     if (this.lockCurrentDatacenterSubject.value) {
-      throw Error('Current Datacenter Locked.');
+      this.messageService.sendMessage(new Message(null, null, 'Current datacenter locked'));
+      return false;
     }
 
-    // Validate that the datacenter we are switching to is a member
-    // of the private datacenters array.
     const datacenter = this._datacenters.find(dc => dc.id === datacenterId);
+    if (!datacenter) {
+      return false;
+    }
 
-    if (this.currentDatacenterValue && datacenter.id === this.currentDatacenterValue.id) {
-      throw Error('Datacenter already Selected.');
+    const isSameDatacenter = this.currentDatacenterValue && datacenter.id === this.currentDatacenterValue.id;
+    if (isSameDatacenter) {
+      this.messageService.sendMessage(new Message(null, null, 'Datacenter already selected'));
+      return false;
     }
 
     const oldDatacenterId = this.currentDatacenterValue ? this.currentDatacenterValue.id : null;
 
-    if (datacenter) {
-      this.currentDatacenterSubject.next(datacenter);
+    this.currentDatacenterSubject.next(datacenter);
+    this.ignoreNextQueryParamEvent = true;
+    this.router.navigate([], {
+      queryParams: { datacenter: datacenter.id },
+      queryParamsHandling: 'merge',
+    });
 
-      this.ignoreNextQueryParamEvent = true;
-
-      // Update Query Params
-      this.router.navigate([], {
-        queryParams: { datacenter: datacenter.id },
-        queryParamsHandling: 'merge',
-      });
-
-      this.messageService.sendMessage(new Message(oldDatacenterId, datacenterId, 'Datacenter Switched'));
-    }
+    this.messageService.sendMessage(new Message(oldDatacenterId, datacenterId, 'Datacenter switched'));
+    return true;
   }
 }

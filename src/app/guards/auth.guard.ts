@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router, private authenticationService: AuthService) {}
 
-  canActivate(): Observable<boolean> | boolean {
-    if (this.authService.isLoggedIn()) {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const currentUser = this.authenticationService.currentUserValue;
+    if (currentUser) {
+      // logged in so return true
       return true;
     }
 
-    this.authService.startAuthentication();
+    // Not logged in so evaluate URL.
+
+    // if tenant is not in the URL, navigate to /login with no returnUrl QP.
+    if (!state.url.includes('?tenant=')) {
+      this.router.navigateByUrl('/login');
+    } else {
+      // Otherwise navigate to login and add the current URL to returnUrl QP.
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    }
     return false;
   }
 }

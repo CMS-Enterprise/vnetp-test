@@ -24,6 +24,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface V1ActifioGmSlasGetRequestParams {
+    offset?: number;
+    limit?: number;
+}
+
 export interface V1ActifioGmSlasIdDeleteRequestParams {
     id: string;
 }
@@ -105,13 +110,26 @@ export class V1ActifioGmSlasService {
 
     /**
      * Get many ActifioSlaDto
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1ActifioGmSlasGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioSlaDto>>;
-    public v1ActifioGmSlasGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioSlaDto>>>;
-    public v1ActifioGmSlasGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
-    public v1ActifioGmSlasGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ActifioSlaDto>>;
+    public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ActifioSlaDto>>>;
+    public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ActifioSlaDto>>>;
+    public v1ActifioGmSlasGet(requestParameters: V1ActifioGmSlasGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const offset = requestParameters.offset;
+        const limit = requestParameters.limit;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (offset !== undefined && offset !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>offset, 'offset');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -135,6 +153,7 @@ export class V1ActifioGmSlasService {
 
         return this.httpClient.get<Array<ActifioSlaDto>>(`${this.configuration.basePath}/v1/actifio/gm/slas`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

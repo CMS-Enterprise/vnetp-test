@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { V1VtsService } from 'api_client';
-import { Papa } from 'ngx-papaparse';
+import { Papa, ParseConfig } from 'ngx-papaparse';
 import { LineChartDataDto, ChartData, ReplicationTableDataDto } from '../../../../models/wizard/replication-charts-dto';
 
 @Component({
@@ -43,6 +43,11 @@ export class ReplicationStatePanelComponent implements OnInit {
     domain: ['#ffad00'],
   };
 
+  private parseConfig: ParseConfig = {
+    skipEmptyLines: true,
+    header: true,
+  };
+
   constructor(private vtsService: V1VtsService, private papa: Papa) {}
 
   getScale() {
@@ -69,15 +74,11 @@ export class ReplicationStatePanelComponent implements OnInit {
   getReplicationQueueDepth() {
     this.vtsService.v1VtsReplicationQueueDepthPost().subscribe(data => {
       this.lineChartData = data;
-      const options = {
-        skipEmptyLines: true,
-        header: true,
-      };
       let parsedData = null;
       let papaParsedData = null;
       if (this.lineChartData) {
         parsedData = JSON.parse(JSON.stringify(this.lineChartData));
-        papaParsedData = this.papa.parse(parsedData, options);
+        papaParsedData = this.papa.parse(parsedData, this.parseConfig);
         this.lineChartData = [{ name: 'Replication Queue Depth', series: [] }];
         papaParsedData.data.map(item => {
           this.lineChartData[0].series.push({
@@ -93,15 +94,11 @@ export class ReplicationStatePanelComponent implements OnInit {
   getReplicationNotCompleted() {
     this.vtsService.v1VtsReplicationNotCompletedPost().subscribe(data => {
       const results = data;
-      const options = {
-        skipEmptyLines: true,
-        header: true,
-      };
       let parsedData = null;
       let papaParsedData = null;
       if (results) {
         parsedData = JSON.parse(JSON.stringify(results));
-        papaParsedData = this.papa.parse(parsedData, options);
+        papaParsedData = this.papa.parse(parsedData, this.parseConfig);
         this.pieChartData = [
           {
             name: 'error',

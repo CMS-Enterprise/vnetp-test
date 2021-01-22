@@ -40,7 +40,7 @@ describe('VmViewComponent', () => {
   });
 
   it('should call to get a single application based on the param', () => {
-    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
     const spy = jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
     const newParamMap = convertToParamMap({ id: '3' });
@@ -50,10 +50,10 @@ describe('VmViewComponent', () => {
   });
 
   it('should default the last sync date to "--" when jobs are empty', done => {
-    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
     jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
-    const jobService = TestBed.get(V1ActifioGmJobsService);
+    const jobService = TestBed.inject(V1ActifioGmJobsService) as any;
     jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([]));
 
     const newParamMap = convertToParamMap({ id: '3' });
@@ -67,10 +67,10 @@ describe('VmViewComponent', () => {
   });
 
   it('should set the last sync date', done => {
-    const applicationService = TestBed.get(V1ActifioGmApplicationsService);
+    const applicationService = TestBed.inject(V1ActifioGmApplicationsService) as any;
     jest.spyOn(applicationService, 'v1ActifioGmApplicationsIdGet').mockImplementation(() => of({ id: '1', name: 'Name' }));
 
-    const jobService = TestBed.get(V1ActifioGmJobsService);
+    const jobService = TestBed.inject(V1ActifioGmJobsService) as any;
     jest.spyOn(jobService, 'v1ActifioGmJobsGet').mockImplementation(() => of([{ endDate: new Date('1/1/70, 12:00:00 AM').toUTCString() }]));
 
     const newParamMap = convertToParamMap({ id: '3' });

@@ -13,7 +13,7 @@ describe('EntityService', () => {
       providers: [EntityService, MockProvider(NgxSmartModalService)],
     });
 
-    service = TestBed.get(EntityService);
+    service = TestBed.inject(EntityService);
 
     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
       confirmFn();

@@ -2,12 +2,12 @@
   <li
     class="nav-item"
     *ngFor="let tab of tabs; let i = index"
-    (click)="activeTab = tab; tabChange.emit(tab)"
-    (keyup.enter)="activeTab = tab; tabChange.emit(tab)"
+    (click)="setActiveTab(tab)"
+    (keyup.enter)="setActiveTab(tab)"
     tabindex="0"
     role="tab"
   >
-    <a class="nav-link" [class.active]="activeTab.name === tab.name">
+    <a class="nav-link" [class.active]="activeTab?.name === tab.name">
       <span>{{ tab.name }}</span>
       <tooltip *ngIf="tab.tooltip" [message]="tab.tooltip"></tooltip>
     </a>

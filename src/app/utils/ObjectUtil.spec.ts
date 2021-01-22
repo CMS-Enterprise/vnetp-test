@@ -76,4 +76,42 @@ describe('ObjectUtil', () => {
       expect(test).toEqual(testCopy);
     });
   });
+
+  describe('sortByName', () => {
+    it('should return a number when sorting objects with a name property', () => {
+      const obj1 = { id: '1', name: 'B' };
+      const obj2 = { id: '2', name: 'A' };
+
+      expect(ObjectUtil.sortByName(obj1, obj2)).toBe(1);
+    });
+  });
+
+  describe('removeEmptyProps', () => {
+    it('should return an object with undefined props removed', () => {
+      expect(ObjectUtil.removeEmptyProps({ a: undefined })).toEqual({});
+    });
+
+    it('should return an object with null props removed', () => {
+      expect(ObjectUtil.removeEmptyProps({ a: null })).toEqual({});
+    });
+
+    it('should return all object props that exist', () => {
+      const object = {
+        a: 1,
+        b: '2',
+        c: true,
+        d: [],
+        e: {},
+        f: undefined,
+        g: null,
+      };
+      expect(ObjectUtil.removeEmptyProps(object)).toEqual({
+        a: 1,
+        b: '2',
+        c: true,
+        d: [],
+        e: {},
+      });
+    });
+  });
 });
