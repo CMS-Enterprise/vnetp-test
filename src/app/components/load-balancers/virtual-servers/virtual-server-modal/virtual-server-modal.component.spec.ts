@@ -57,6 +57,7 @@ describe('VirtualServerModalComponent', () => {
       tierId: '1',
       id: '2',
       destinationIpAddress: '192.168.1.2',
+      defaultPoolId: '10bc339d-1ede-7e84-d129-259ef7f0f',
       name: 'VirtualServer2',
       servicePort: 5,
       sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
@@ -73,13 +74,13 @@ describe('VirtualServerModalComponent', () => {
     expect(TestUtil.hasNameValidator(component.f.name)).toBe(true);
   });
 
-  it('name, destinationIpAddress, sourceAddressTranslation, sourceIpAddress and type should be required', () => {
+  it('name, defaultPoolId, destinationIpAddress, sourceAddressTranslation, sourceIpAddress and type should be required', () => {
     const fields = ['name', 'destinationIpAddress', 'sourceAddressTranslation', 'sourceIpAddress', 'type'];
     expect(TestUtil.areRequiredFields(component.form, fields)).toBe(true);
   });
 
-  it('description and defaultPoolId should be optional', () => {
-    const fields = ['description', 'defaultPoolId'];
+  it('description should be optional', () => {
+    const fields = ['description'];
     expect(TestUtil.areOptionalFields(component.form, fields)).toBe(true);
   });
 

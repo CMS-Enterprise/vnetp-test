@@ -219,7 +219,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      defaultPoolId: [null],
+      defaultPoolId: ['', Validators.required],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       name: ['', NameValidator()],
