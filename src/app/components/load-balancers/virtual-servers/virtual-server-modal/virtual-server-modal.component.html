@@ -110,14 +110,17 @@
 
         <!-- Pool -->
         <div class="form-group col-md-6">
-          <label for="pool">Pool</label>
+          <label for="defaultPoolId">Pool</label>
           <tooltip [message]="helpText.Pool"></tooltip>
-          <select id="pool" class="form-control" formControlName="defaultPoolId">
+          <select id="pool" class="form-control" formControlName="defaultPoolId" [class.is-invalid]="submitted && f.defaultPoolId.errors">
             <option></option>
             <option *ngFor="let pool of pools" [ngValue]="pool.id">
               {{ pool.name }}
             </option>
           </select>
+          <div *ngIf="submitted && f.defaultPoolId.errors" class="invalid-feedback">
+            <div *ngIf="f.defaultPoolId.errors.required">Default Pool is required.</div>
+          </div>
         </div>
       </div>
 
