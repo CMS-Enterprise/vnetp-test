@@ -39,6 +39,10 @@ export class AuthService {
     this.currentTenantSubject.next(tenant);
   }
 
+  getTenants() {
+    return this.http.get<any>(environment.apiBase + '/v1/auth/tenants', {});
+  }
+
   login(userpass: UserPass) {
     return this.http
       .post<any>(environment.apiBase + '/v1/auth/token', {

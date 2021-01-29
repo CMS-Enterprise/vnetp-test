@@ -62,7 +62,10 @@ export class LoginComponent implements OnInit {
         data => {
           const userTenants = data.dcsPermissions.map(p => p.tenant);
           // Read Tenants from Environment Config.
+          const patsCurrentTenants = this.authService.getTenants();
+          console.log('pats tenants', patsCurrentTenants);
           const currentTenants = environment.environment.current_tenants as TenantName[];
+          console.log('currentTenants', currentTenants);
 
           // If the user doesn't have global access and only has one Tenant
           if (!userTenants.some(t => t === '*') && userTenants.length === 1) {
