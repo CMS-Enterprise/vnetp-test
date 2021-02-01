@@ -73,8 +73,8 @@
           required
         >
           <option></option>
-          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.db_name">
-            {{ availableTenant.name }}
+          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.tenantQueryParameter">
+            {{ availableTenant.tenantFullName }}
           </option>
         </select>
 

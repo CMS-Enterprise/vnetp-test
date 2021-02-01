@@ -40,7 +40,11 @@ export class AuthService {
   }
 
   getTenants() {
-    return this.http.get<any>(environment.apiBase + '/v1/auth/tenants', {});
+    return this.http.get<any>(environment.apiBase + '/v1/auth/tenants').pipe(
+      map(tenants => {
+        return tenants;
+      }),
+    );
   }
 
   login(userpass: UserPass) {
