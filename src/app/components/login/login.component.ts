@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
           const userTenants = data.dcsPermissions.map(p => p.tenant);
           // Read Tenants from Environment Config.
           this.authService
-            .getTenants()
+            .getTenants(data.token)
             .pipe(first())
             .subscribe(
               tenantData => {
