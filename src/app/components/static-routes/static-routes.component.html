@@ -1,35 +1,43 @@
+<app-tier-select></app-tier-select>
+
 <h1>Static Routes</h1>
+<ng-container *ngIf="tiers?.length; else warningMessage">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Refresh -->
+    <button type="button" class="btn btn-info" (click)="getTiers()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
 
-<section class="btn-toolbar" role="toolbar">
-  <!-- Refresh -->
-  <button type="button" class="btn btn-info" (click)="getTiers()">
-    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-    <span>Refresh</span>
-  </button>
-</section>
-
-<table class="table table-striped">
-  <caption>
-    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-    <span>Static Routes grouped by Tier</span>
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col">Tier</th>
-      <th scope="col">Static Routes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let tier of tiers">
-      <td>
-        <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge">{{ tier.name }}</a>
-      </td>
-      <td>
-        {{ tier.staticRoutes.length }}
-      </td>
-    </tr>
-    <tr *ngIf="!tiers?.length" class="text-center">
-      <td colspan="2">No Tiers</td>
-    </tr>
-  </tbody>
-</table>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Static Routes grouped by Tier</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Tier</th>
+        <th scope="col">Static Routes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tier of tiers">
+        <td>
+          <a routerLink="/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge"
+            >{{ tier.name | slice: 0:20 }}{{ tier.name.length > 20 ? '...' : '' }}</a
+          >
+        </td>
+        <td>
+          {{ tier.staticRoutes.length }}
+        </td>
+      </tr>
+      <tr *ngIf="!tiers?.length" class="text-center">
+        <td colspan="2">No Tiers</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
+<ng-template #warningMessage>
+  <p>Select a Tier to display Static Route details</p>
+</ng-template>

@@ -1,85 +1,88 @@
 <h1>Physical Servers</h1>
 
-<section class="btn-toolbar" role="toolbar">
-  <!-- Create Physical Server -->
-  <button type="button" class="btn btn-success" (click)="openPhysicalServerModal(ModalMode.Create)">
-    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-    <span>Create Physical Server</span>
-  </button>
+<ng-container *ngIf="datacenterId; else warningMessage">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Physical Server -->
+    <button type="button" class="btn btn-success" (click)="openPhysicalServerModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Physical Server</span>
+    </button>
 
-  <!-- Refresh -->
-  <button type="button" class="btn btn-info" (click)="getPhysicalServers()">
-    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-    <span>Refresh</span>
-  </button>
-</section>
+    <!-- Refresh -->
+    <button type="button" class="btn btn-info" (click)="getPhysicalServers()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
 
-<table class="table table-striped">
-  <caption>
-    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-    <span>Physical Servers</span>
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Serial Number</th>
-      <th scope="col">Delivery Date</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let ps of physicalServers | paginate: { itemsPerPage: perPage, currentPage: currentPhysicalServersPage }">
-      <td>
-        <a routerLink="/physical-server/{{ ps.id }}" queryParamsHandling="merge">
-          {{ ps.name }}
-        </a>
-      </td>
-      <td>
-        {{ ps.serialNumber }}
-      </td>
-      <td>
-        {{ ps.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}
-      </td>
-      <td class="table__actions">
-        <app-icon-button
-          *ngIf="!ps?.deletedAt"
-          icon="edit"
-          label="Edit Physical Server"
-          (handleClick)="openPhysicalServerModal(ModalMode.Edit, ps)"
-        ></app-icon-button>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Physical Servers</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Serial Number</th>
+        <th scope="col">Delivery Date</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ps of physicalServers | paginate: { itemsPerPage: perPage, currentPage: currentPhysicalServersPage }">
+        <td>
+          <a routerLink="/physical-server/{{ ps.id }}" queryParamsHandling="merge">
+            {{ ps.name | slice: 0:20 }}{{ ps.name.length > 20 ? '...' : '' }}
+          </a>
+        </td>
+        <td>{{ ps.serialNumber | slice: 0:20 }}{{ ps.serialNumber.length > 20 ? '...' : '' }}</td>
+        <td>
+          {{ ps.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}
+        </td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!ps?.deletedAt"
+            icon="edit"
+            label="Edit Physical Server"
+            (handleClick)="openPhysicalServerModal(ModalMode.Edit, ps)"
+          ></app-icon-button>
 
-        <app-icon-button
-          *ngIf="ps?.deletedAt"
-          icon="undo"
-          label="Restore Physical Server"
-          type="success"
-          (handleClick)="restorePhysicalServer(ps)"
-        ></app-icon-button>
+          <app-icon-button
+            *ngIf="ps?.deletedAt"
+            icon="undo"
+            label="Restore Physical Server"
+            type="success"
+            (handleClick)="restorePhysicalServer(ps)"
+          ></app-icon-button>
 
-        <app-icon-button
-          icon="delete"
-          label="Soft-Delete/Delete Physical Server"
-          [type]="ps?.deletedAt ? 'danger' : 'default'"
-          (handleClick)="deletePhysicalServer(ps)"
-        ></app-icon-button>
-      </td>
-    </tr>
-    <tr *ngIf="!physicalServers?.length" class="text-center">
-      <td colspan="4">No Physical Servers</td>
-    </tr>
-  </tbody>
-</table>
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Physical Server"
+            [type]="ps?.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deletePhysicalServer(ps)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!physicalServers?.length" class="text-center">
+        <td colspan="4">No Physical Servers</td>
+      </tr>
+    </tbody>
+  </table>
 
-<pagination-controls (pageChange)="currentPhysicalServersPage = $event"></pagination-controls>
+  <pagination-controls (pageChange)="currentPhysicalServersPage = $event"></pagination-controls>
 
-<section class="btn-toolbar btn-toolbar--start" role="toolbar">
-  <span class="mr-3">Entities per page</span>
-  <div class="btn-group" role="group">
-    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-  </div>
-</section>
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </section>
+</ng-container>
 
 <app-physical-server-modal></app-physical-server-modal>
 <app-yes-no-modal></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Select a Datacenter to display Physical Server details</p>
+</ng-template>

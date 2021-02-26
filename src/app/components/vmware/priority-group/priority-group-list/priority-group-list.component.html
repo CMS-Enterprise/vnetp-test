@@ -27,9 +27,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let priorityGroup of priorityGroups | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
-      <td>
-        {{ priorityGroup.name }}
-      </td>
+      <td>{{ priorityGroup.name }}{{ priorityGroup.name.length > 20 ? '...' : '' }}</td>
       <td>
         {{ priorityGroup.priority }}
       </td>

@@ -18,7 +18,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
 
   private applianceModalSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
-  private datacenterId: string;
+  public datacenterId: string;
 
   constructor(
     private applianceService: V1AppliancesService,
