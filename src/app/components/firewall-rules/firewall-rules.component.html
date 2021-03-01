@@ -1,5 +1,3 @@
-<app-tier-select></app-tier-select>
-
 <h1>Firewall Rules</h1>
 <ng-container *ngIf="tiers.length !== 0; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
