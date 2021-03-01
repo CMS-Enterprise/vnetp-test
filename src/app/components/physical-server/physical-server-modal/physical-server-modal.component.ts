@@ -92,6 +92,8 @@ export class PhysicalServerModalComponent implements OnInit {
 
     if (this.ModalMode === ModalMode.Edit) {
       this.PhysicalServerId = dto.PhysicalServer.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     const physicalServer = dto.PhysicalServer;
@@ -102,6 +104,7 @@ export class PhysicalServerModalComponent implements OnInit {
       const deliveryDate = date.toISOString().substring(0, 10);
 
       this.form.controls.name.setValue(physicalServer.name);
+      this.form.controls.name.disable();
       this.form.controls.description.setValue(physicalServer.description);
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
       this.form.controls.deliveryDate.setValue(deliveryDate);

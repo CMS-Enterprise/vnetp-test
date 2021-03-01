@@ -27,9 +27,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let priorityGroup of priorityGroups | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
-      <td>
-        {{ priorityGroup.name }}
-      </td>
+      <td>{{ priorityGroup.name }}{{ priorityGroup.name.length > 20 ? '...' : '' }}</td>
       <td>
         {{ priorityGroup.priority }}
       </td>
@@ -62,7 +60,7 @@
       </td>
     </tr>
     <tr *ngIf="!priorityGroups?.length" class="text-center">
-      <td colspan="4">No Priority Groups</td>
+      <td colspan="4">No Priority Groups in this Datacenter</td>
     </tr>
   </tbody>
 </table>

@@ -44,7 +44,6 @@ export class PriorityGroupModalComponent implements OnInit {
   }
 
   public loadPriorityGroup(): void {
-    this.buildForm();
     const { modalMode, datacenterId, priorityGroup } = this.ngx.getModalData('priorityGroupModal');
     this.modalMode = modalMode;
     this.datacenterId = datacenterId;
@@ -53,7 +52,10 @@ export class PriorityGroupModalComponent implements OnInit {
 
     if (modalMode === ModalMode.Edit) {
       this.f.name.setValue(priorityGroup.name);
+      this.form.controls.name.disable();
       this.f.priority.setValue(priorityGroup.priority);
+    } else {
+      this.form.controls.name.enable();
     }
 
     this.loadVirtualMachines(this.priorityGroupId);
