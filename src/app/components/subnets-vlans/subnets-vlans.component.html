@@ -107,10 +107,10 @@
       <tbody>
         <tr *ngFor="let vlan of vlans | paginate: { itemsPerPage: perPage, currentPage: currentVlansPage }">
           <td>
-            <span>{{ vlan?.name }}</span>
+            <span>{{ vlan?.name | slice: 0:20 }}{{ vlan?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
-            <span>{{ vlan?.description }}</span>
+            <span>{{ vlan?.description | slice: 0:20 }}{{ vlan?.description.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ vlan?.vlanNumber }}</span>

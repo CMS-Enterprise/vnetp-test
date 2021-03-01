@@ -54,7 +54,6 @@ describe('PriorityGroupModalComponent', () => {
       id: '2',
       priorityGroup: {
         datacenterId: null,
-        name: 'PG2',
         priority: 2,
       },
     });
