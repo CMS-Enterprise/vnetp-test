@@ -3,7 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1>Virtual Machine: {{ VirtualMachine?.name | slice: 0:20 }}{{ VirtualMachine?.name.length > 20 ? '...' : '' }}</h1>
+<h1>Virtual Machine: {{ VirtualMachine?.name | slice: 0:20 }}{{ VirtualMachine?.name?.length > 20 ? '...' : '' }}</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Restore Virtual Machine -->
@@ -49,7 +49,7 @@
     <tbody>
       <tr *ngFor="let v of virtualDisks">
         <td>
-          <span>{{ v.name | slice: 0:20 }}{{ v?.name.length > 20 ? '...' : '' }}</span>
+          <span>{{ v.name | slice: 0:20 }}{{ v?.name?.length > 20 ? '...' : '' }}</span>
         </td>
         <td>
           <span>{{ ConversionUtil.convertBytesToGb(v.diskSize) }} GB</span>
