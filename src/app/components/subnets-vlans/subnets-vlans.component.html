@@ -35,7 +35,7 @@
             <span>{{ subnet?.name | slice: 0:20 }}{{ subnet?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
-            <span>{{ subnet?.description | slice: 0:20 }}{{ subnet?.description.length > 20 ? '...' : '' }}</span>
+            <span>{{ subnet?.description | slice: 0:20 }}{{ subnet?.description?.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ subnet?.vlanId | resolve: getVlanName }}</span>
@@ -110,7 +110,7 @@
             <span>{{ vlan?.name | slice: 0:20 }}{{ vlan?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
-            <span>{{ vlan?.description | slice: 0:20 }}{{ vlan?.description.length > 20 ? '...' : '' }}</span>
+            <span>{{ vlan?.description | slice: 0:20 }}{{ vlan?.description?.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ vlan?.vlanNumber }}</span>

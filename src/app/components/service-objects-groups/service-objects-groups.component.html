@@ -112,7 +112,7 @@
           "
         >
           <td>
-            <span>{{ svcObjGroup.name }}</span>
+            <span>{{ svcObjGroup.name | slice: 0:20 }}{{ svcObjGroup.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ svcObjGroup.type }}</span>

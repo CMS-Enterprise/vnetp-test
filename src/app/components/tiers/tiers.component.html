@@ -30,7 +30,7 @@
           <span>{{ tier?.name | slice: 0:20 }}{{ tier?.name.length > 20 ? '...' : '' }}</span>
         </td>
         <td>
-          <span>{{ tier?.description | slice: 0:20 }}{{ tier?.description.length > 20 ? '...' : '' }}</span>
+          <span>{{ tier?.description | slice: 0:20 }}{{ tier?.description?.length > 20 ? '...' : '' }}</span>
         </td>
         <td>
           <span>{{ tier?.tierClass }}</span>

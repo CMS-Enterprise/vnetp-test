@@ -122,7 +122,7 @@
           *ngFor="let netObjGroup of networkObjectGroups | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectGroupsPage }"
         >
           <td>
-            <span>{{ netObjGroup.name }}</span>
+            <span>{{ netObjGroup.name | slice: 0:20 }}{{ netObjGroup?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ netObjGroup.networkObjects?.length }}</span>
