@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { UserDto } from '../../../../api_client/model/models';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -34,6 +35,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
     });
+    const tenantQueryParam = JSON.parse(localStorage.getItem('tenantQueryParam'));
+    this.tenant = tenantQueryParam;
   }
 
   ngOnDestroy(): void {
