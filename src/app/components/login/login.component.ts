@@ -69,8 +69,8 @@ export class LoginComponent implements OnInit {
               tenantData => {
                 const currentTenants = tenantData;
                 // If the user doesn't have global access and only has one Tenant
-                if (!userTenants.some(t => t === '*') && userTenants.length === 1) {
-                  this.setTenantAndNavigate(userTenants[0]);
+                if (!userTenants.some(t => t === '*') && currentTenants.length === 1) {
+                  this.setTenantAndNavigate(currentTenants[0].tenantQueryParameter);
                 } else {
                   if (userTenants.some(t => t === '*')) {
                     // If the user is a global admin, they have access to all available tenants.
