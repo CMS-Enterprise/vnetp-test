@@ -1,73 +1,75 @@
 <h1>Appliances</h1>
+<ng-container *ngIf="datacenterId; else warningMessage">
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Appliance -->
+    <button type="button" class="btn btn-success" (click)="createAppliance()">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Appliance</span>
+    </button>
 
-<section class="btn-toolbar" role="toolbar">
-  <!-- Create Appliance -->
-  <button type="button" class="btn btn-success" (click)="createAppliance()">
-    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-    <span>Create Appliance</span>
-  </button>
+    <!-- Refresh -->
+    <button type="button" class="btn btn-info" (click)="getAppliances()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
 
-  <!-- Refresh -->
-  <button type="button" class="btn btn-info" (click)="getAppliances()">
-    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-    <span>Refresh</span>
-  </button>
-</section>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Appliances</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Rack Units</th>
+        <th scope="col">Serial Number</th>
+        <th scope="col">Delivery Date</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of appliances">
+        <td>
+          <a routerLink="/appliance/{{ a.id }}" queryParamsHandling="merge">{{ a.name | slice: 0:20 }}{{ a.name.length > 20 ? '...' : '' }}</a>
+        </td>
+        <td>
+          {{ a.rackUnits }}
+        </td>
+        <td>{{ a.serialNumber | slice: 0:20 }}{{ a.serialNumber.length > 20 ? '...' : '' }}</td>
+        <td>{{ a.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}</td>
+        <td class="table__actions">
+          <app-icon-button
+            *ngIf="!a?.deletedAt"
+            icon="edit"
+            label="Edit Appliance"
+            (handleClick)="openApplianceModal(ModalMode.Edit, a)"
+          ></app-icon-button>
 
-<table class="table table-striped">
-  <caption>
-    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-    <span>Appliances</span>
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Rack Units</th>
-      <th scope="col">Serial Number</th>
-      <th scope="col">Delivery Date</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let a of appliances">
-      <td>
-        <a routerLink="/appliance/{{ a.id }}" queryParamsHandling="merge">{{ a.name }}</a>
-      </td>
-      <td>
-        {{ a.rackUnits }}
-      </td>
-      <td>
-        {{ a.serialNumber }}
-      </td>
-      <td>{{ a.deliveryDate | date: 'MM/dd/yyyy':'UTC' }}</td>
-      <td class="table__actions">
-        <app-icon-button
-          *ngIf="!a?.deletedAt"
-          icon="edit"
-          label="Edit Appliance"
-          (handleClick)="openApplianceModal(ModalMode.Edit, a)"
-        ></app-icon-button>
+          <app-icon-button
+            *ngIf="a?.deletedAt"
+            icon="undo"
+            label="Restore Appliance"
+            type="success"
+            (handleClick)="restoreAppliance(a)"
+          ></app-icon-button>
 
-        <app-icon-button
-          *ngIf="a?.deletedAt"
-          icon="undo"
-          label="Restore Appliance"
-          type="success"
-          (handleClick)="restoreAppliance(a)"
-        ></app-icon-button>
-
-        <app-icon-button
-          icon="delete"
-          label="Soft-Delete/Delete Appliance"
-          [type]="a.deletedAt ? 'danger' : 'default'"
-          (handleClick)="deleteAppliance(a)"
-        ></app-icon-button>
-      </td>
-    </tr>
-    <tr *ngIf="!appliances?.length" class="text-center">
-      <td colspan="5">No Appliances</td>
-    </tr>
-  </tbody>
-</table>
+          <app-icon-button
+            icon="delete"
+            label="Soft-Delete/Delete Appliance"
+            [type]="a.deletedAt ? 'danger' : 'default'"
+            (handleClick)="deleteAppliance(a)"
+          ></app-icon-button>
+        </td>
+      </tr>
+      <tr *ngIf="!appliances?.length" class="text-center">
+        <td colspan="5">No Appliances in this Datacenter</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
 <app-appliance-modal></app-appliance-modal>
 <app-yes-no-modal></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Select a Datacenter to display Appliance details</p>
+</ng-template>

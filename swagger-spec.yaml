@@ -24,8 +24,19 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/UserDto'
-      tags:
+      tags: &ref_0
         - v1/auth
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/auth/tenants:
+    get:
+      summary: Available Tenants
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
       produces:
         - application/json
       consumes:
@@ -46,7 +57,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_0
+      tags: &ref_1
         - v1/configuration-upload
       produces:
         - application/json
@@ -192,7 +203,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -210,7 +221,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -254,7 +265,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -276,7 +287,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -292,7 +303,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -308,7 +319,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -324,7 +335,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -340,7 +351,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -485,7 +496,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Datacenter'
-      tags: &ref_1
+      tags: &ref_2
         - v1/datacenters
       produces:
         - application/json
@@ -504,7 +515,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -548,7 +559,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -570,7 +581,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -592,7 +603,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -608,7 +619,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -624,7 +635,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -773,7 +784,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: &ref_2
+      tags: &ref_3
         - v1/tiers
       produces:
         - application/json
@@ -822,7 +833,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_2
+      tags: *ref_3
       produces:
         - application/json
       consumes:
@@ -967,7 +978,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: &ref_3
+      tags: &ref_4
         - v1/tiers
       produces:
         - application/json
@@ -986,7 +997,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1030,7 +1041,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1052,7 +1063,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1074,7 +1085,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1091,7 +1102,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1112,7 +1123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1128,7 +1139,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1144,7 +1155,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1160,7 +1171,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1176,7 +1187,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1321,7 +1332,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: &ref_4
+      tags: &ref_5
         - v1/network-security/firewall-rule-groups
       produces:
         - application/json
@@ -1340,7 +1351,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1384,7 +1395,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1406,7 +1417,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1428,7 +1439,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1445,7 +1456,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1466,7 +1477,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1482,7 +1493,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1498,7 +1509,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1514,7 +1525,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1530,7 +1541,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1549,8 +1560,25 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRulePreview'
-      tags: &ref_5
+      tags: &ref_6
         - v1/network-security/firewall-rules
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/network-security/firewall-rules/group/{id}':
+    get:
+      summary: Get Firewall Rules w/ Object Relations for Firewall Rule Group.
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1695,7 +1723,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1713,7 +1741,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1757,7 +1785,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1779,7 +1807,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1801,7 +1829,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1818,7 +1846,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1834,7 +1862,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1850,7 +1878,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1995,7 +2023,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObjectGroup'
-      tags: &ref_6
+      tags: &ref_7
         - v1/network-security/service-object-groups
       produces:
         - application/json
@@ -2014,7 +2042,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2058,7 +2086,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2080,7 +2108,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2102,7 +2130,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2119,7 +2147,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2140,7 +2168,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2156,7 +2184,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2172,7 +2200,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2188,7 +2216,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2204,7 +2232,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2230,7 +2258,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: &ref_7
+      tags: &ref_8
         - v1/network-security/service-object-groups
       produces:
         - application/json
@@ -2256,7 +2284,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_7
+      tags: *ref_8
       produces:
         - application/json
       consumes:
@@ -2273,7 +2301,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
       produces:
         - application/json
       consumes:
@@ -2418,7 +2446,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObject'
-      tags: &ref_8
+      tags: &ref_9
         - v1/network-security/service-objects
       produces:
         - application/json
@@ -2437,7 +2465,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2481,7 +2509,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2503,7 +2531,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2525,7 +2553,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2542,7 +2570,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2563,7 +2591,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2579,7 +2607,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2595,7 +2623,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2611,7 +2639,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2627,7 +2655,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2772,7 +2800,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObjectGroup'
-      tags: &ref_9
+      tags: &ref_10
         - v1/network-security/network-object-groups
       produces:
         - application/json
@@ -2791,7 +2819,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2835,7 +2863,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2857,7 +2885,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2879,7 +2907,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2896,7 +2924,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2917,7 +2945,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2933,7 +2961,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2949,7 +2977,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2965,7 +2993,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2981,7 +3009,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -3007,7 +3035,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: &ref_10
+      tags: &ref_11
         - v1/network-security/network-object-groups
       produces:
         - application/json
@@ -3033,7 +3061,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_10
+      tags: *ref_11
       produces:
         - application/json
       consumes:
@@ -3050,7 +3078,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
       produces:
         - application/json
       consumes:
@@ -3195,7 +3223,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObject'
-      tags: &ref_11
+      tags: &ref_12
         - v1/network-security/network-objects
       produces:
         - application/json
@@ -3214,7 +3242,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3258,7 +3286,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3280,7 +3308,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3302,7 +3330,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3319,7 +3347,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3340,7 +3368,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3356,7 +3384,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3372,7 +3400,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3388,7 +3416,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3404,7 +3432,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3553,7 +3581,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: &ref_12
+      tags: &ref_13
         - v1/vlans
       produces:
         - application/json
@@ -3602,7 +3630,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_12
+      tags: *ref_13
       produces:
         - application/json
       consumes:
@@ -3747,7 +3775,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: &ref_13
+      tags: &ref_14
         - v1/network/vlans
       produces:
         - application/json
@@ -3766,7 +3794,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3810,7 +3838,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3832,7 +3860,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3854,7 +3882,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3871,7 +3899,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3892,7 +3920,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3908,7 +3936,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3924,7 +3952,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3940,7 +3968,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3956,7 +3984,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -4105,7 +4133,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: &ref_14
+      tags: &ref_15
         - v1/network/vlans
       produces:
         - application/json
@@ -4154,7 +4182,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_14
+      tags: *ref_15
       produces:
         - application/json
       consumes:
@@ -4303,7 +4331,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: &ref_15
+      tags: &ref_16
         - v1/tiers/
       produces:
         - application/json
@@ -4352,7 +4380,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_15
+      tags: *ref_16
       produces:
         - application/json
       consumes:
@@ -4369,7 +4397,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_16
+      tags: &ref_17
         - v1/network/subnets
       produces:
         - application/json
@@ -4515,7 +4543,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4533,7 +4561,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4577,7 +4605,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4599,7 +4627,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4621,7 +4649,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4638,7 +4666,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4654,7 +4682,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4670,7 +4698,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4686,7 +4714,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4702,7 +4730,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4847,7 +4875,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/StaticRoute'
-      tags: &ref_17
+      tags: &ref_18
         - v1/network/static-routes
       produces:
         - application/json
@@ -4866,7 +4894,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4910,7 +4938,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4932,7 +4960,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4954,7 +4982,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4971,7 +4999,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4992,7 +5020,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5008,7 +5036,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5024,7 +5052,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5040,7 +5068,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5056,7 +5084,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5201,7 +5229,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualMachine'
-      tags: &ref_18
+      tags: &ref_19
         - v1/vmware/virtual-machines
       produces:
         - application/json
@@ -5220,7 +5248,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5264,7 +5292,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5286,7 +5314,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5308,7 +5336,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5325,7 +5353,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5346,7 +5374,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualMachine'
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5362,7 +5390,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5378,7 +5406,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5394,7 +5422,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5410,7 +5438,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
       produces:
         - application/json
       consumes:
@@ -5555,7 +5583,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: &ref_19
+      tags: &ref_20
         - v1/vmware/network-adapter
       produces:
         - application/json
@@ -5574,7 +5602,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5618,7 +5646,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5640,7 +5668,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5662,7 +5690,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5679,7 +5707,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5700,7 +5728,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareNetworkAdapter'
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5716,7 +5744,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5732,7 +5760,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
       produces:
         - application/json
       consumes:
@@ -5877,7 +5905,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualDisk'
-      tags: &ref_20
+      tags: &ref_21
         - v1/vmware/virtual-disks
       produces:
         - application/json
@@ -5896,7 +5924,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5940,7 +5968,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5962,7 +5990,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -5984,7 +6012,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6001,7 +6029,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6022,7 +6050,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/VmwareVirtualDisk'
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6038,7 +6066,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6054,7 +6082,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
       produces:
         - application/json
       consumes:
@@ -6071,7 +6099,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_21
+      tags: &ref_22
         - v1/priority-groups
       produces:
         - application/json
@@ -6216,7 +6244,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6260,7 +6288,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6282,7 +6310,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6304,7 +6332,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6321,7 +6349,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6342,7 +6370,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PriorityGroup'
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6358,7 +6386,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6374,7 +6402,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6390,7 +6418,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6406,7 +6434,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
       produces:
         - application/json
       consumes:
@@ -6551,7 +6579,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: &ref_22
+      tags: &ref_23
         - v1/physical-servers
       produces:
         - application/json
@@ -6570,7 +6598,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6614,7 +6642,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6636,7 +6664,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6658,7 +6686,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6675,7 +6703,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6696,7 +6724,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6712,7 +6740,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6728,7 +6756,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6873,7 +6901,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: &ref_23
+      tags: &ref_24
         - v1/appliances
       produces:
         - application/json
@@ -6892,7 +6920,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6936,7 +6964,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6958,7 +6986,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6980,7 +7008,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6997,7 +7025,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7018,7 +7046,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7034,7 +7062,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7050,7 +7078,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -7067,7 +7095,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_24
+      tags: &ref_25
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7079,7 +7107,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7224,7 +7252,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7242,7 +7270,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7286,7 +7314,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7308,7 +7336,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7330,7 +7358,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7347,7 +7375,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7363,7 +7391,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7379,7 +7407,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7395,7 +7423,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7411,7 +7439,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7435,7 +7463,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_25
+      tags: &ref_26
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7459,7 +7487,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7483,7 +7511,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_26
+      tags: &ref_27
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7507,7 +7535,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7531,7 +7559,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_27
+      tags: &ref_28
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7555,7 +7583,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7700,7 +7728,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: &ref_28
+      tags: &ref_29
         - v1/load-balancer/irules
       produces:
         - application/json
@@ -7719,7 +7747,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7763,7 +7791,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7785,7 +7813,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7807,7 +7835,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7824,7 +7852,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7845,7 +7873,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7861,7 +7889,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7877,7 +7905,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7893,7 +7921,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7909,7 +7937,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -8054,7 +8082,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: &ref_29
+      tags: &ref_30
         - v1/load-balancer/profiles
       produces:
         - application/json
@@ -8073,7 +8101,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8117,7 +8145,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8139,7 +8167,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8161,7 +8189,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8178,7 +8206,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8199,7 +8227,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8215,7 +8243,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8231,7 +8259,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8247,7 +8275,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8263,7 +8291,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8408,7 +8436,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: &ref_30
+      tags: &ref_31
         - v1/load-balancer/policies
       produces:
         - application/json
@@ -8427,7 +8455,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8471,7 +8499,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8493,7 +8521,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8515,7 +8543,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8532,7 +8560,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8553,7 +8581,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8569,7 +8597,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8585,7 +8613,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8601,7 +8629,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8617,7 +8645,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8634,7 +8662,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_31
+      tags: &ref_32
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8652,7 +8680,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8669,7 +8697,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8686,7 +8714,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8697,7 +8725,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8715,7 +8743,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8738,7 +8766,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8760,7 +8788,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8777,7 +8805,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8793,7 +8821,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8809,7 +8837,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8825,7 +8853,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8841,7 +8869,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8865,7 +8893,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_32
+      tags: &ref_33
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8889,7 +8917,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8921,7 +8949,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_33
+      tags: &ref_34
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8950,7 +8978,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -9095,7 +9123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_34
+      tags: &ref_35
         - v1/load-balancer/health-monitors
       produces:
         - application/json
@@ -9114,7 +9142,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9158,7 +9186,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9180,7 +9208,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9202,7 +9230,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9219,7 +9247,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9240,7 +9268,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9256,7 +9284,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9272,7 +9300,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9288,7 +9316,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9304,7 +9332,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -9321,7 +9349,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_35
+      tags: &ref_36
         - v1/load-balancer/nodes
       produces:
         - application/json
@@ -9339,7 +9367,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9484,7 +9512,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9502,7 +9530,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9546,7 +9574,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9568,7 +9596,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9590,7 +9618,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9607,7 +9635,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9628,7 +9656,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9644,7 +9672,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9660,7 +9688,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9676,7 +9704,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9692,7 +9720,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9837,7 +9865,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVlan'
-      tags: &ref_36
+      tags: &ref_37
         - /v1/load-balancer/vlans
       produces:
         - application/json
@@ -9856,7 +9884,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9900,7 +9928,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9922,7 +9950,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9944,7 +9972,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9961,7 +9989,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9982,7 +10010,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9998,7 +10026,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -10014,7 +10042,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -10030,7 +10058,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -10046,7 +10074,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -10191,7 +10219,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: &ref_37
+      tags: &ref_38
         - /v1/load-balancer/self-ips
       produces:
         - application/json
@@ -10210,7 +10238,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10254,7 +10282,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10276,7 +10304,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10298,7 +10326,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10315,7 +10343,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10336,7 +10364,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10352,7 +10380,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10368,7 +10396,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10384,7 +10412,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10400,7 +10428,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10545,7 +10573,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerRoute'
-      tags: &ref_38
+      tags: &ref_39
         - /v1/load-balancer/routes
       produces:
         - application/json
@@ -10564,7 +10592,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10608,7 +10636,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10630,7 +10658,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10652,7 +10680,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10669,7 +10697,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10690,7 +10718,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10706,7 +10734,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10722,7 +10750,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10738,7 +10766,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10754,7 +10782,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10899,7 +10927,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Job'
-      tags: &ref_39
+      tags: &ref_40
         - v1/jobs
       produces:
         - application/json
@@ -10918,7 +10946,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -10962,7 +10990,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -10984,7 +11012,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -11129,7 +11157,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: &ref_40
+      tags: &ref_41
         - v1/tier-groups
       produces:
         - application/json
@@ -11148,7 +11176,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11192,7 +11220,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11214,7 +11242,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11236,7 +11264,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11253,7 +11281,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11274,7 +11302,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11290,7 +11318,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11306,7 +11334,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -11317,7 +11345,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_41
+      tags: &ref_42
         - v1/vts
       produces:
         - application/json
@@ -11329,7 +11357,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_41
+      tags: *ref_42
       produces:
         - application/json
       consumes:
@@ -11364,7 +11392,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationDto'
-      tags: &ref_42
+      tags: &ref_43
         - v1/actifio/gm/applications
       produces:
         - application/json
@@ -11383,7 +11411,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioApplicationDto'
-      tags: *ref_42
+      tags: *ref_43
       produces:
         - application/json
       consumes:
@@ -11398,7 +11426,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_42
+      tags: *ref_43
       produces:
         - application/json
       consumes:
@@ -11415,7 +11443,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_42
+      tags: *ref_43
       produces:
         - application/json
       consumes:
@@ -11471,7 +11499,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioHostDto'
-      tags: &ref_43
+      tags: &ref_44
         - v1/actifio/gm/hosts
       produces:
         - application/json
@@ -11490,7 +11518,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioHostDto'
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11510,7 +11538,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioDiscoveredVMDto'
-      tags: *ref_43
+      tags: *ref_44
       produces:
         - application/json
       consumes:
@@ -11570,7 +11598,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioLogicalGroupDto'
-      tags: &ref_44
+      tags: &ref_45
         - v1/actifio/gm/logical-groups
       produces:
         - application/json
@@ -11589,7 +11617,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11607,7 +11635,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11629,7 +11657,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11646,7 +11674,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11666,7 +11694,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationDto'
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11687,7 +11715,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11702,7 +11730,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_44
+      tags: *ref_45
       produces:
         - application/json
       consumes:
@@ -11726,7 +11754,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioOrganizationDto'
-      tags: &ref_45
+      tags: &ref_46
         - v1/actifio/gm/organizations
       produces:
         - application/json
@@ -11745,7 +11773,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioOrganizationDto'
-      tags: *ref_45
+      tags: *ref_46
       produces:
         - application/json
       consumes:
@@ -11760,7 +11788,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_45
+      tags: *ref_46
       produces:
         - application/json
       consumes:
@@ -11777,7 +11805,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_45
+      tags: *ref_46
       produces:
         - application/json
       consumes:
@@ -11800,7 +11828,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioOrganizationDto'
-      tags: *ref_45
+      tags: *ref_46
       produces:
         - application/json
       consumes:
@@ -11831,7 +11859,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioProfileDto'
-      tags: &ref_46
+      tags: &ref_47
         - v1/actifio/gm/profiles
       produces:
         - application/json
@@ -11850,7 +11878,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioProfileDto'
-      tags: *ref_46
+      tags: *ref_47
       produces:
         - application/json
       consumes:
@@ -11874,7 +11902,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioSlaDto'
-      tags: &ref_47
+      tags: &ref_48
         - v1/actifio/gm/slas
       produces:
         - application/json
@@ -11893,7 +11921,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioSlaDto'
-      tags: *ref_47
+      tags: *ref_48
       produces:
         - application/json
       consumes:
@@ -11911,7 +11939,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioSlaDto'
-      tags: *ref_47
+      tags: *ref_48
       produces:
         - application/json
       consumes:
@@ -11933,7 +11961,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioSlaDto'
-      tags: *ref_47
+      tags: *ref_48
       produces:
         - application/json
       consumes:
@@ -11950,7 +11978,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioSla'
-      tags: *ref_47
+      tags: *ref_48
       produces:
         - application/json
       consumes:
@@ -11974,7 +12002,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioTemplateDto'
-      tags: &ref_48
+      tags: &ref_49
         - v1/actifio/gm/templates
       produces:
         - application/json
@@ -11993,7 +12021,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12011,7 +12039,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12033,7 +12061,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12048,7 +12076,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12080,7 +12108,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioPolicyDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12107,7 +12135,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioTemplateDto'
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12126,7 +12154,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_48
+      tags: *ref_49
       produces:
         - application/json
       consumes:
@@ -12141,7 +12169,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioRdsArmServerDto'
-      tags: &ref_49
+      tags: &ref_50
         - v1/actifio/rds/arm-servers
       produces:
         - application/json
@@ -12160,7 +12188,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdsArmServerDto'
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12184,7 +12212,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: *ref_49
+      tags: *ref_50
       produces:
         - application/json
       consumes:
@@ -12199,7 +12227,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
-      tags: &ref_50
+      tags: &ref_51
         - v1/actifio/rds/recovery-plans
       produces:
         - application/json
@@ -12210,7 +12238,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12228,7 +12256,7 @@ paths:
           description: ''
           schema:
             type: boolean
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12246,7 +12274,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12261,7 +12289,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12283,7 +12311,7 @@ paths:
           description: ''
           schema:
             type: boolean
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12301,7 +12329,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdsRecoveryPlanStateDto'
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12321,7 +12349,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioRdsRecoveryPlanExecutionDto'
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12339,7 +12367,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12354,7 +12382,7 @@ paths:
             type: array
             items:
               type: string
-      tags: *ref_50
+      tags: *ref_51
       produces:
         - application/json
       consumes:
@@ -12385,7 +12413,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioRdsVirtualManagementServerDto'
-      tags: &ref_51
+      tags: &ref_52
         - v1/actifio/rds/virtual-management-servers
       produces:
         - application/json
@@ -12406,7 +12434,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioRdsResourcePoolDto'
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12430,7 +12458,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioPortGroupDto'
-      tags: *ref_51
+      tags: *ref_52
       produces:
         - application/json
       consumes:
@@ -12450,7 +12478,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: &ref_52
+      tags: &ref_53
         - v1/actifio/rdc/application-groups
       produces:
         - application/json
@@ -12469,7 +12497,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -12487,7 +12515,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioApplicationGroupDto'
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -12509,7 +12537,7 @@ paths:
           description: ''
           schema:
             type: string
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -12524,7 +12552,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -12542,7 +12570,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ActifioRdcEditApplicationGroupDto'
-      tags: *ref_52
+      tags: *ref_53
       produces:
         - application/json
       consumes:
@@ -12557,7 +12585,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioApplianceDto'
-      tags: &ref_53
+      tags: &ref_54
         - v1/actifio/rdc/appliances
       produces:
         - application/json
@@ -12578,7 +12606,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActifioVirtualManagementServerDto'
-      tags: *ref_53
+      tags: *ref_54
       produces:
         - application/json
       consumes:
@@ -13666,17 +13694,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_54
+        enum: &ref_55
           - In
           - Out
       action:
         type: string
-        enum: &ref_55
+        enum: &ref_56
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_56
+        enum: &ref_57
           - IP
           - ICMP
           - TCP
@@ -13690,19 +13718,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_57
+        enum: &ref_58
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_58
+        enum: &ref_59
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_59
+        enum: &ref_60
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -13864,7 +13892,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_64
+        enum: &ref_65
           - IpAddress
           - Fqdn
       ipAddress:
@@ -13991,7 +14019,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_62
+        enum: &ref_63
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -14020,7 +14048,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_63
+          enum: &ref_64
             - UDP
             - TCP
             - HTTP
@@ -14217,13 +14245,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_60
+        enum: &ref_61
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_61
+        enum: &ref_62
           - Standard
       servicePort:
         type: number
@@ -14746,13 +14774,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_54
+        enum: *ref_55
       action:
         type: string
-        enum: *ref_55
+        enum: *ref_56
       protocol:
         type: string
-        enum: *ref_56
+        enum: *ref_57
       logging:
         type: boolean
       enabled:
@@ -14762,13 +14790,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_57
+        enum: *ref_58
       destinationAddressType:
         type: string
-        enum: *ref_58
+        enum: *ref_59
       serviceType:
         type: string
-        enum: *ref_59
+        enum: *ref_60
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -15188,10 +15216,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_60
+        enum: *ref_61
       type:
         type: string
-        enum: *ref_61
+        enum: *ref_62
       servicePort:
         type: number
         minimum: 1
@@ -15307,7 +15335,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_62
+        enum: *ref_63
       nodes:
         type: array
         items:
@@ -15320,7 +15348,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_63
+          enum: *ref_64
       tierId:
         type: string
       vrfName:
@@ -15397,7 +15425,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_64
+        enum: *ref_65
       ipAddress:
         type: string
       fqdn:

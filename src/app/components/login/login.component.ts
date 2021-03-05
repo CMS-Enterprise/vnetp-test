@@ -62,22 +62,33 @@ export class LoginComponent implements OnInit {
         data => {
           const userTenants = data.dcsPermissions.map(p => p.tenant);
           // Read Tenants from Environment Config.
-          const currentTenants = environment.environment.current_tenants as TenantName[];
+          this.authService
+            .getTenants(data.token)
+            .pipe(first())
+            .subscribe(
+              tenantData => {
+                const currentTenants = tenantData;
+                // If the user doesn't have global access and only has one Tenant
+                if (!userTenants.some(t => t === '*') && currentTenants.length === 1) {
+                  this.setTenantAndNavigate(currentTenants[0].tenantQueryParameter);
+                } else {
+                  if (userTenants.some(t => t === '*')) {
+                    // If the user is a global admin, they have access to all available tenants.
+                    this.availableTenants = currentTenants;
+                  } else {
+                    // If the user is not a global admin, filter current tenats based on their tenants.
+                    this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.db_name === ut));
+                  }
 
-          // If the user doesn't have global access and only has one Tenant
-          if (!userTenants.some(t => t === '*') && userTenants.length === 1) {
-            this.setTenantAndNavigate(userTenants[0]);
-          } else {
-            if (userTenants.some(t => t === '*')) {
-              // If the user is a global admin, they have access to all available tenants.
-              this.availableTenants = currentTenants;
-            } else {
-              // If the user is not a global admin, filter current tenats based on their tenants.
-              this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.db_name === ut));
-            }
-
-            this.tenantSelect = true;
-          }
+                  this.tenantSelect = true;
+                }
+              },
+              error => {
+                this.toastr.error('Error getting tenants');
+                this.errorMessage = 'Error getting tenants';
+                this.loading = false;
+              },
+            );
         },
         error => {
           this.toastr.error('Invalid Username/Password');

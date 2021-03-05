@@ -13,7 +13,7 @@ export class HttpConfigInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
-    const isLogin = request.url.includes('auth/token');
+    const isLogin = request.url.includes('auth/');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.

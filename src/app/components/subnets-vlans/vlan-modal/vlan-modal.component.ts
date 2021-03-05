@@ -83,7 +83,7 @@ export class VlanModalComponent implements OnInit {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });
   }
