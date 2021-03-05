@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDto, UserPass } from '../../../api_client/model/models';
@@ -37,6 +37,18 @@ export class AuthService {
 
   public set currentTenantValue(tenant: string) {
     this.currentTenantSubject.next(tenant);
+  }
+
+  getTenants(token: string) {
+    return this.http
+      .get<any>(environment.apiBase + '/v1/auth/tenants', {
+        headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
+      })
+      .pipe(
+        map(tenants => {
+          return tenants;
+        }),
+      );
   }
 
   login(userpass: UserPass) {
