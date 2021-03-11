@@ -126,10 +126,10 @@ export class PhysicalServerModalComponent implements OnInit {
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 

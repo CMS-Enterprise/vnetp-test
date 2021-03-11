@@ -31,7 +31,9 @@
     <tbody>
       <tr *ngFor="let a of appliances">
         <td>
-          <a routerLink="/appliance/{{ a.id }}" queryParamsHandling="merge">{{ a.name | slice: 0:20 }}{{ a.name.length > 20 ? '...' : '' }}</a>
+          <a routerLink="/appliance/{{ a.id }}" queryParamsHandling="merge"
+            >{{ a.name | slice: 0:20 }}{{ a.name.length > 20 ? '...' : '' }}</a
+          >
         </td>
         <td>
           {{ a.rackUnits }}

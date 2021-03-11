@@ -58,7 +58,6 @@
           />
           <div *ngIf="submitted && f.serialNumber.errors" class="invalid-feedback">
             <div *ngIf="f.serialNumber.errors.required">Serial Number is required</div>
-            <div *ngIf="f.serialNumber.errors.min">Serial Number must be positive</div>
           </div>
         </div>
 
@@ -124,14 +123,11 @@
             class="form-control"
             formControlName="localStorageSize"
             [class.is-invalid]="submitted && f.localStorageSize.errors"
-            min="0"
-            step="1"
-            onfocus="this.previousValue = this.value"
-            onkeydown="this.previousValue = this.value"
-            oninput="validity.valid || (value = this.previousValue)"
+            min="1"
           />
           <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.localStorageSize.errors.required">Local Storage Size is required</div>
+            <div *ngIf="f.localStorageSize.errors.min">Local Storage Size must be at least 1</div>
           </div>
         </div>
       </div>
@@ -178,14 +174,11 @@
             class="form-control"
             formControlName="sanStorageSize"
             [class.is-invalid]="submitted && f.sanStorageSize.errors"
-            min="0"
-            step="1"
-            onfocus="this.previousValue = this.value"
-            onkeydown="this.previousValue = this.value"
-            oninput="validity.valid || (value = this.previousValue)"
+            min="1"
           />
           <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.sanStorageSize.errors.required">SAN Storage Size is required</div>
+            <div *ngIf="f.sanStorageSize.errors.min">SAN Storage Size must be at least 1</div>
           </div>
         </div>
       </div>
