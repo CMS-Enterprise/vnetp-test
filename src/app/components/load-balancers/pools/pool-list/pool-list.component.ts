@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
 export interface PoolView extends LoadBalancerPool {
+  nameView: string;
   methodName: string;
   totalHealthMonitors: number;
   totalNodes: number;
@@ -31,7 +32,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PoolView> = {
     description: 'Pools in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
@@ -89,6 +90,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.pools = pools.map(p => {
             return {
               ...p,
+              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
               methodName: methodsLookup[p.loadBalancingMethod],
               state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               totalNodes: getTotal(p.nodes),

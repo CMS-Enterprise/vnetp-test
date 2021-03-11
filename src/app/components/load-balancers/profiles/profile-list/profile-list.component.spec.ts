@@ -67,6 +67,7 @@ describe('ProfileListComponent', () => {
     expect(profile1).toEqual({
       id: '1',
       name: 'Profile1',
+      nameView: 'Profile1',
       provisionedAt: {},
       state: 'Provisioned',
       reverseProxy: 'Explicit',
@@ -76,8 +77,9 @@ describe('ProfileListComponent', () => {
     expect(profile2).toEqual({
       id: '2',
       name: 'Profile2',
+      nameView: 'Profile2',
       state: 'Not Provisioned',
-      reverseProxyView: '--',
+      reverseProxyView: undefined,
     });
   });
 

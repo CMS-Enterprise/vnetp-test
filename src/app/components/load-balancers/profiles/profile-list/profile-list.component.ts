@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 
 export interface ProfileView extends LoadBalancerProfile {
+  nameView: string;
   state: string;
   reverseProxyView: string;
 }
@@ -28,7 +29,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<ProfileView> = {
     description: 'Profiles in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'Reverse Proxy', property: 'reverseProxyView' },
       { name: 'State', property: 'state' },
@@ -81,8 +82,13 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.profiles = profiles.map(p => {
             return {
               ...p,
+              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
               state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              reverseProxyView: p.reverseProxy || '--',
+              reverseProxyView: p.reverseProxy
+                ? p.reverseProxy.length >= 20
+                  ? p.reverseProxy.slice(0, 19) + '...'
+                  : p.reverseProxy
+                : undefined,
             };
           });
         },
