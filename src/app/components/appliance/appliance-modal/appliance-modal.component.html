@@ -242,7 +242,7 @@
           />
           <div *ngIf="submitted && f.powerSupplyWattage.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyWattage.errors.required">Power Supply Wattage is required</div>
-            <div *ngIf="f.priority.powerSupplyWattage.min">Power Supply Wattage must be at least 1</div>
+            <div *ngIf="f.powerSupplyWattage.errors.min">Power Supply Wattage must be at least 1</div>
           </div>
         </div>
       </div>
