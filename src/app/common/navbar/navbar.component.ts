@@ -12,6 +12,8 @@ import { UserDto } from '../../../../api_client/model/models';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;
+  public userRoles: string[];
+  public role: string;
   public tenant: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
@@ -30,6 +32,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
       this.user = user;
+      if (user) {
+        this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
+        this.role = this.userRoles[0];
+        if (this.role.includes('ro')) {
+          this.role = 'admin';
+        }
+      }
     });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;

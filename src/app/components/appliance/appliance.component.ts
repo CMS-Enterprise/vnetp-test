@@ -29,14 +29,9 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   ) {}
 
   public getAppliances(): void {
-    this.datacenterService
-      .v1DatacentersIdGet({
-        id: this.datacenterId,
-        join: 'appliances',
-      })
-      .subscribe(data => {
-        this.appliances = data.appliances;
-      });
+    this.applianceService.v1AppliancesGet({ filter: `datacenterId||eq||${this.datacenterId}` }).subscribe(data => {
+      this.appliances = data;
+    });
   }
 
   public createAppliance(): void {

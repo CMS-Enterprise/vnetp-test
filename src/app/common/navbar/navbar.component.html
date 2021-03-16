@@ -29,15 +29,15 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
-          <a class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
-          <a class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
-          <a class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
-          <a class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
-          <a class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
-          <a class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
+          <a *ngIf="role === 'admin' || role === 'loadbalancer_admin'" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li *ngIf="role === 'admin' || role === 'x86_admin'" class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
           href="#"
