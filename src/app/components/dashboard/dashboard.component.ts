@@ -70,6 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
 
+  // only fetch the dashboard entities that the user has the correct permissions to view
   private loadDashboard(roles?: string[]): void {
     this.getDatacenters();
     this.getTiers();
@@ -77,10 +78,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.getVmwareVirtualMachines();
       this.getLoadBalancerVirtualServers();
     }
-    if (roles && roles.includes('x86_admin')) {
+    if (roles && (roles.includes('x86_admin') || roles.includes('x86_ro'))) {
       this.getVmwareVirtualMachines();
     }
-    if (roles && roles.includes('loadbalancer_admin')) {
+    if (roles && (roles.includes('loadbalancer_admin') || roles.includes('loadbalancer_ro'))) {
       this.getLoadBalancerVirtualServers();
     }
   }

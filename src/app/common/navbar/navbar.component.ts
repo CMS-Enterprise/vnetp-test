@@ -35,6 +35,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
       if (user) {
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
         this.role = this.userRoles[0];
+
+        // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
+        // show them all dropdown options, they will get denied at the component level
+        // this allows for more flexibility of the word "admin" in the HTML with no risk
         if (this.role.includes('ro')) {
           this.role = 'admin';
         }
