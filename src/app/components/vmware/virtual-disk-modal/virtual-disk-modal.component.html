@@ -57,7 +57,7 @@
         />
       </div>
       <div *ngIf="submitted && f.diskSize.errors" class="invalid-feedback">
-        <div *ngIf="f.diskSize.errors.min">Disk Size must be at least 1</div>
+        <div *ngIf="f.diskSize.errors.min">Disk Size must be greater than or equal to 1</div>
       </div>
 
       <div class="form-group">

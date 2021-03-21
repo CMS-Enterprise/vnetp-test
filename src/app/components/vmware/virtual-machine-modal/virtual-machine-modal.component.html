@@ -161,7 +161,7 @@
           />
           <div *ngIf="submitted && f.memorySize.errors" class="invalid-feedback">
             <div *ngIf="f.memorySize.errors.required">Memory (GB) is required</div>
-            <div *ngIf="f.memorySize.errors.min">Memory must be at least 1</div>
+            <div *ngIf="f.memorySize.errors.min">Memory must be greater than or equal to 1</div>
           </div>
         </div>
 

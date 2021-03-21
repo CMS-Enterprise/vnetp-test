@@ -151,7 +151,7 @@
           />
           <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.localStorageSize.errors.required">Local Storage Size is required</div>
-            <div *ngIf="f.localStorageSize.errors.min">Local Storage Size must be at least 1</div>
+            <div *ngIf="f.localStorageSize.errors.min">Local Storage Size must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -204,7 +204,7 @@
           />
           <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.sanStorageSize.errors.required">SAN Storage Size is required</div>
-            <div *ngIf="f.sanStorageSize.errors.min">SAN Storage Size must be at least 1</div>
+            <div *ngIf="f.sanStorageSize.errors.min">SAN Storage Size must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@
           />
           <div *ngIf="submitted && f.powerSupplyVoltage.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyVoltage.errors.required">Power Supply Voltage is required</div>
-            <div *ngIf="f.powerSupplyVoltage.errors.min">Power Supply Voltage must be at least 1</div>
+            <div *ngIf="f.powerSupplyVoltage.errors.min">Power Supply Voltage must be greater than or equal to 1</div>
           </div>
         </div>
 
@@ -242,7 +242,7 @@
           />
           <div *ngIf="submitted && f.powerSupplyWattage.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyWattage.errors.required">Power Supply Wattage is required</div>
-            <div *ngIf="f.powerSupplyWattage.errors.min">Power Supply Wattage must be at least 1</div>
+            <div *ngIf="f.powerSupplyWattage.errors.min">Power Supply Wattage must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -280,7 +280,7 @@
           />
           <div *ngIf="submitted && f.powerSupplyCount.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyCount.errors.required">Power Supply Count is required</div>
-            <div *ngIf="f.powerSupplyCount.errors.min">Power Supply Count must be at least 1</div>
+            <div *ngIf="f.powerSupplyCount.errors.min">Power Supply Count must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
