@@ -67,6 +67,7 @@ describe('SelfIpListComponent', () => {
     expect(selfIp1).toEqual({
       id: '1',
       name: 'SelfIp1',
+      nameView: 'SelfIp1',
       provisionedAt: {},
       state: 'Provisioned',
       loadBalancerVlan: { name: 'VLAN' },
@@ -76,8 +77,9 @@ describe('SelfIpListComponent', () => {
     expect(selfIp2).toEqual({
       id: '2',
       name: 'SelfIp2',
+      nameView: 'SelfIp2',
       state: 'Not Provisioned',
-      vlanName: '--',
+      vlanName: undefined,
     });
   });
 

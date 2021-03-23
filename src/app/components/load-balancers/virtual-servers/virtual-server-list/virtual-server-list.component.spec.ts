@@ -68,6 +68,7 @@ describe('VirtualServerListComponent', () => {
     expect(virtualServer1).toEqual({
       id: '1',
       name: 'VirtualServer1',
+      nameView: 'VirtualServer1',
       provisionedAt: {},
       state: 'Provisioned',
       defaultPool: { name: 'Pool1' },
@@ -78,7 +79,8 @@ describe('VirtualServerListComponent', () => {
       id: '2',
       name: 'VirtualServer2',
       state: 'Not Provisioned',
-      defaultPoolName: '--',
+      nameView: 'VirtualServer2',
+      defaultPoolName: undefined,
     });
   });
 

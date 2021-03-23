@@ -141,19 +141,19 @@ export class ApplianceModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      rackUnits: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      rackUnits: [1, Validators.compose([Validators.required, Validators.min(1)])],
       serialNumber: ['', Validators.required],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: ['', Validators.required],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: ['', Validators.required],
-      powerSupplyVoltage: ['', Validators.required],
-      powerSupplyWattage: ['', Validators.required],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyVoltage: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyWattage: [1, Validators.compose([Validators.required, Validators.min(1)])],
       powerSupplyConnectionType: ['', Validators.required],
-      powerSupplyCount: ['', Validators.required],
+      powerSupplyCount: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 
