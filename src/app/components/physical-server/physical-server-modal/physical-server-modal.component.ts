@@ -122,7 +122,7 @@ export class PhysicalServerModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      serialNumber: ['', Validators.required, Validators.compose([Validators.min(0)])],
+      serialNumber: ['', Validators.compose([Validators.required, Validators.min(0)])],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
