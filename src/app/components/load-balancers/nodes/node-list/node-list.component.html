@@ -11,12 +11,7 @@
 
 <ng-template #actionsTemplate let-node="datum">
   <section class="table__actions">
-    <app-icon-button
-      *ngIf="!node?.deletedAt"
-      icon="edit"
-      label="Edit Node"
-      (handleClick)="openModal(node)"
-    ></app-icon-button>
+    <app-icon-button *ngIf="!node?.deletedAt" icon="edit" label="Edit Node" (handleClick)="openModal(node)"></app-icon-button>
 
     <app-icon-button
       *ngIf="node?.deletedAt"

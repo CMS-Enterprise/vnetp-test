@@ -157,9 +157,11 @@
             class="form-control"
             [class.is-invalid]="submitted && f.memorySize.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.memorySize.errors" class="invalid-feedback">
             <div *ngIf="f.memorySize.errors.required">Memory (GB) is required</div>
+            <div *ngIf="f.memorySize.errors.min">Memory must be greater than or equal to 1</div>
           </div>
         </div>
 
@@ -212,7 +214,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let v of virtualDisks">
-                <td>{{ v.name }}</td>
+                <td>{{ v.name | slice: 0:20 }}{{ v.name.length > 20 ? '...' : '' }}</td>
                 <td>{{ ConversionUtil.convertBytesToGb(v.diskSize) }} GB</td>
                 <td>{{ v.rawLun }}</td>
                 <td>{{ v.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>

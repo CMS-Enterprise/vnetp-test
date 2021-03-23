@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 
 export interface NodeView extends LoadBalancerNode {
+  nameView: string;
   state: string;
   autoPopulateView: string;
 }
@@ -28,7 +29,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<NodeView> = {
     description: 'Nodes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'FQDN', property: 'fqdn' },
@@ -87,6 +88,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
             };
             return {
               ...n,
+              nameView: n.name.length >= 20 ? n.name.slice(0, 19) + '...' : n.name,
               state: n.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               ipAddress: defaultVal('ipAddress'),
               fqdn: defaultVal('fqdn'),

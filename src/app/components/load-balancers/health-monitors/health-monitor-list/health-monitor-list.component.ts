@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
+  nameView: string;
   state: string;
 }
 
@@ -27,7 +28,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   public config: TableConfig<HealthMonitorView> = {
     description: 'Health Monitors in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Interval', property: 'interval' },
@@ -82,6 +83,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
           this.healthMonitors = healthMonitors.map(h => {
             return {
               ...h,
+              nameView: h.name.length >= 20 ? h.name.slice(0, 19) + '...' : h.name,
               state: h.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });

@@ -67,6 +67,7 @@ describe('PolicyListComponent', () => {
     expect(policy1).toEqual({
       id: '1',
       name: 'Policy1',
+      nameView: 'Policy1',
       provisionedAt: {},
       state: 'Provisioned',
       type: 'APM',
@@ -75,6 +76,7 @@ describe('PolicyListComponent', () => {
     expect(policy2).toEqual({
       id: '2',
       name: 'Policy2',
+      nameView: 'Policy2',
       state: 'Not Provisioned',
     });
   });

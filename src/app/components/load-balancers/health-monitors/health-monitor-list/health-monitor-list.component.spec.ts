@@ -67,6 +67,7 @@ describe('HealthMonitorListComponent', () => {
     expect(healthMonitor1).toEqual({
       id: '1',
       name: 'HealthMonitor1',
+      nameView: 'HealthMonitor1',
       provisionedAt: {},
       state: 'Provisioned',
     });
@@ -74,6 +75,7 @@ describe('HealthMonitorListComponent', () => {
     expect(healthMonitor2).toEqual({
       id: '2',
       name: 'HealthMonitor2',
+      nameView: 'HealthMonitor2',
       state: 'Not Provisioned',
     });
   });

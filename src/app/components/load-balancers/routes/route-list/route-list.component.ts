@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 
 export interface RouteView extends LoadBalancerRoute {
+  nameView: string;
   state: string;
 }
 
@@ -27,7 +28,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<RouteView> = {
     description: 'Routes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', property: 'state' },
@@ -81,6 +82,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.routes = routes.map(r => {
             return {
               ...r,
+              nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
               state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
