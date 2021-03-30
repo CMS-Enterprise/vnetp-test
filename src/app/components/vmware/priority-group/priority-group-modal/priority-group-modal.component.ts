@@ -119,9 +119,12 @@ export class PriorityGroupModalComponent implements OnInit {
           vmwareVirtualMachineIds: this.virtualMachines.filter(vm => vm.isSelected).map(vm => vm.id),
         },
       })
-      .subscribe(() => {
-        this.closeModal();
-      });
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 
   private updatePriorityGroup(priorityGroup: PriorityGroup): void {
@@ -132,9 +135,12 @@ export class PriorityGroupModalComponent implements OnInit {
         id: this.priorityGroupId,
         priorityGroup,
       })
-      .subscribe(() => {
-        this.closeModal();
-      });
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 }
 
