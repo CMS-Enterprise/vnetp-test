@@ -50,17 +50,12 @@ export class VmwareComponent implements OnInit, OnDestroy {
     this.activeTabName = tab.name as TabName;
   }
 
-  getVirtualMachines() {
-    this.datacenterService
-      .v1DatacentersIdGet({
-        id: this.datacenterId,
-        join: 'vmwareVirtualMachines',
-      })
-      .subscribe(data => {
-        this.virtualMachines = data.vmwareVirtualMachines;
-        this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
-        this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
-      });
+  getVirtualMachines(): void {
+    this.virtualMachineService.v1VmwareVirtualMachinesGet({ filter: `datacenterId||eq||${this.datacenterId}` }).subscribe(data => {
+      this.virtualMachines = data;
+      this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
+      this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
+    });
   }
 
   createVirtualMachine() {

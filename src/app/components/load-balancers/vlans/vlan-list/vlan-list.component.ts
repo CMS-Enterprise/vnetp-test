@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
 
 export interface VlanView extends LoadBalancerVlan {
+  nameView: string;
   state: string;
 }
 
@@ -27,7 +28,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<VlanView> = {
     description: 'VLANs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Tag', property: 'tag' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -79,6 +80,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.vlans = vlans.map(v => {
             return {
               ...v,
+              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
               state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });

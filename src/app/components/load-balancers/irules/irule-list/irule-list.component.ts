@@ -11,8 +11,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
 export interface IRuleView extends LoadBalancerIrule {
+  nameView: string;
   state: string;
   descriptionView: string;
+  contentView: string;
 }
 
 @Component({
@@ -26,16 +28,17 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<IRuleView> = {
-    description: 'Health Monitors in the currently selected Tier',
+    description: 'iRules in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Description', property: 'descriptionView' },
-      { name: 'Content', property: 'content' },
+      { name: 'Content', property: 'contentView' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
   public iRules: IRuleView[] = [];
+  public iRulesTable: IRuleView[] = [];
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -81,8 +84,14 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.iRules = iRules.map(i => {
             return {
               ...i,
-              descriptionView: i.description || '--',
+              nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
+              descriptionView: i.description
+                ? i.description.length >= 20
+                  ? i.description.slice(0, 19) + '...'
+                  : i.description
+                : undefined,
               state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
             };
           });
         },

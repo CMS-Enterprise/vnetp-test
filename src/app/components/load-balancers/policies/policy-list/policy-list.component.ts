@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
 
 export interface PolicyView extends LoadBalancerPolicy {
+  nameView: string;
   state: string;
 }
 
@@ -27,7 +28,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PolicyView> = {
     description: 'Policies in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -79,6 +80,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.policies = policies.map(p => {
             return {
               ...p,
+              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
               state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });

@@ -68,7 +68,7 @@ export class VirtualDiskModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      diskSize: [''],
+      diskSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       rawLun: [''],
     });
   }

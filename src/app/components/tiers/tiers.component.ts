@@ -48,13 +48,9 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   public getTiers(): void {
-    this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
-        datacenterId: this.currentDatacenter.id,
-      })
-      .subscribe(data => {
-        this.tiers = data;
-      });
+    this.tierService.v1TiersGet({ filter: `datacenterId||eq||${this.currentDatacenter.id}` }).subscribe(data => {
+      this.tiers = data;
+    });
   }
 
   public openTierModal(modalMode: ModalMode, tier?: Tier): void {
