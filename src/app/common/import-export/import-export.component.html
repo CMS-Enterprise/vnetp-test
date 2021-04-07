@@ -1,4 +1,4 @@
-<button class="btn btn-warning btn-sm mr-1" (click)="uploader.click()" *ngIf="!disableImport">
+<button class="btn btn-warning" (click)="uploader.click()" *ngIf="!disableImport">
   <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
   <span>Import </span>
   <span *ngIf="!disableJson">JSON</span>
@@ -7,7 +7,7 @@
 </button>
 
 <a
-  class="btn btn-info btn-sm mr-1"
+  class="btn btn-info"
   title="Download JSON"
   [href]="downloadHref"
   download="{{ exportFileName }}-{{ currentDate }}.json"
@@ -19,7 +19,7 @@
 </a>
 
 <a
-  class="btn btn-info btn-sm mr-1"
+  class="btn btn-info"
   title="Download CSV"
   [href]="downloadHref"
   download="{{ exportFileName }}-{{ currentDate }}.csv"

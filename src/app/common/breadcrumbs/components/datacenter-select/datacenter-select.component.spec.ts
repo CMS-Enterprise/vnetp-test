@@ -1,66 +1,51 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterSelectComponent } from './datacenter-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrService } from 'ngx-toastr';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
   let fixture: ComponentFixture<DatacenterSelectComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
-  beforeEach(async(() => {
-    const toastrService = {
-      success: jest.fn(),
-      error: jest.fn(),
-    };
-
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent],
-      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }, { provide: ToastrService, useValue: toastrService }],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(DatacenterSelectComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+      providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
+    });
+
+    fixture = TestBed.createComponent(DatacenterSelectComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should call to open the datacenter switch modal on click', () => {
-    const modal = ngx.getModal('test');
-    const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
+    const ngx = TestBed.inject(NgxSmartModalService) as any;
+    const openSpy = jest.fn();
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
       return {
-        ...modal,
-        open: jest.fn(),
+        open: openSpy,
       };
     });
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
     openButton.nativeElement.click();
 
-    expect(spy).toHaveBeenCalledWith('datacenterSwitchModal');
-
-    const getModalCall = spy.mock.results[0].value;
-    expect(getModalCall.open).toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalled();
   });
 
   describe('switchDatacenter', () => {
     it('should call to switch the datacenter', () => {
-      const datacenterContextService = TestBed.get(DatacenterContextService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
       const spy = jest.spyOn(datacenterContextService, 'switchDatacenter');
 
       component.selectedDatacenter = {
@@ -73,7 +58,9 @@ describe('DatacenterSelectComponent', () => {
     });
 
     it('should display a toastr success message when changing datacenters succeeds', () => {
-      const toastrService = TestBed.get(ToastrService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
+      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => true);
+      const toastrService = TestBed.inject(ToastrService);
       const successSpy = jest.spyOn(toastrService, 'success');
 
       component.selectedDatacenter = {
@@ -82,17 +69,15 @@ describe('DatacenterSelectComponent', () => {
       };
       component.switchDatacenter();
 
-      expect(successSpy).toHaveBeenCalledWith('Datacenter Switched');
+      expect(successSpy).toHaveBeenCalledWith('Datacenter switched');
     });
 
     it('should display a toastr error message when changing datacenters fails', () => {
-      const toastrService = TestBed.get(ToastrService);
-      const datacenterContextService = TestBed.get(DatacenterContextService);
+      const toastrService = TestBed.inject(ToastrService);
+      const datacenterContextService = TestBed.inject(DatacenterContextService);
 
       const errorSpy = jest.spyOn(toastrService, 'error');
-      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => {
-        throw Error();
-      });
+      jest.spyOn(datacenterContextService, 'switchDatacenter').mockImplementation(() => false);
 
       component.selectedDatacenter = {
         id: '2',

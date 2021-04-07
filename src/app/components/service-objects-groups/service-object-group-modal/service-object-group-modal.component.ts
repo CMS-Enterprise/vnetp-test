@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -7,6 +7,7 @@ import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroups
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-service-object-group-modal',
@@ -52,10 +53,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           serviceObjectGroup: modalServiceObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       modalServiceObjectGroup.type = null;
@@ -65,10 +66,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           serviceObjectGroup: modalServiceObjectGroup,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -93,32 +94,26 @@ export class ServiceObjectGroupModalComponent implements OnInit {
         serviceObjectGroupId: this.ServiceObjectGroupId,
         serviceObjectId: this.selectedServiceObject.id,
       })
-      .subscribe(data => {
+      .subscribe(() => {
         this.selectedServiceObject = null;
         this.getGroupServiceObjects();
       });
   }
 
-  removeServiceObject(serviceObject: ServiceObject) {
+  public removeServiceObject(serviceObject: ServiceObject): void {
     const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
+    const onConfirm = () => {
+      this.serviceObjectGroupService
+        .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
+          serviceObjectGroupId: this.ServiceObjectGroupId,
+          serviceObjectId: serviceObject.id,
+        })
+        .subscribe(() => {
+          this.getGroupServiceObjects();
+        });
+    };
 
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        this.serviceObjectGroupService
-          .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
-            serviceObjectGroupId: this.ServiceObjectGroupId,
-            serviceObjectId: serviceObject.id,
-          })
-          .subscribe(() => {
-            this.getGroupServiceObjects();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   getData() {
@@ -128,17 +123,13 @@ export class ServiceObjectGroupModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.type.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.ServiceObjectGroupId = dto.ServiceObjectGroup.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.type.enable();
     }
 
     const serviceObjectGroup = dto.ServiceObjectGroup;
@@ -175,7 +166,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       type: ['', Validators.required],
     });

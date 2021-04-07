@@ -3,11 +3,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { ApplianceNetworkPort, V1AppliancesService, Appliance } from 'api_client';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
 
 @Component({
   selector: 'app-appliance-modal',
@@ -71,10 +70,10 @@ export class ApplianceModalComponent implements OnInit {
           appliance,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.applianceService
@@ -83,10 +82,10 @@ export class ApplianceModalComponent implements OnInit {
           appliance,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -106,16 +105,10 @@ export class ApplianceModalComponent implements OnInit {
       this.DatacenterId = dto.DatacenterId;
     }
 
-    // this.getNetworkPorts()
+    this.ModalMode = dto.ModalMode;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.ApplianceId = dto.Appliance.id;
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.ApplianceId = dto.Appliance.id;
     }
 
     const appliance = dto.Appliance;
@@ -146,21 +139,21 @@ export class ApplianceModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      rackUnits: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      rackUnits: [1, Validators.compose([Validators.required, Validators.min(1)])],
       serialNumber: ['', Validators.required],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: ['', Validators.required],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: ['', Validators.required],
-      powerSupplyVoltage: ['', Validators.required],
-      powerSupplyWattage: ['', Validators.required],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyVoltage: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyWattage: [1, Validators.compose([Validators.required, Validators.min(1)])],
       powerSupplyConnectionType: ['', Validators.required],
-      powerSupplyCount: ['', Validators.required],
+      powerSupplyCount: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 
@@ -173,19 +166,6 @@ export class ApplianceModalComponent implements OnInit {
     this.ngx.resetModalData('applianceModal');
     this.submitted = false;
     this.buildForm();
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
   }
 
   ngOnInit() {

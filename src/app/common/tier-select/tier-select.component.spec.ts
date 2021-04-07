@@ -1,33 +1,38 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TierSelectComponent } from './tier-select.component';
 import { FormsModule } from '@angular/forms';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { CookieService } from 'ngx-cookie-service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
+import { ToastrService } from 'ngx-toastr';
+import { of } from 'rxjs';
+import { MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { AuthService } from 'src/app/services/auth.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
+import { V1DatacentersService } from 'api_client';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { By } from '@angular/platform-browser';
 
 describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
   let fixture: ComponentFixture<TierSelectComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
+    const authService = {
+      currentUser: of({}),
+    };
+
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgxSmartModalModule,
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
-        ToastrModule.forRoot(),
-        NgSelectModule,
+      imports: [FormsModule, NgSelectModule],
+      declarations: [TierSelectComponent, MockNgxSmartModalComponent],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(ToastrService),
+        MockProvider(V1DatacentersService, { v1DatacentersIdGet: of({ tiers: [] }) }),
+        { provide: AuthService, useValue: authService },
       ],
-      declarations: [TierSelectComponent],
-      providers: [CookieService, { provide: NgxSmartModalService, useValue: ngx }],
     }).compileComponents();
   }));
 
@@ -39,5 +44,45 @@ describe('TierSelectComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should open the tier modal when clicked', () => {
+    const ngx = TestBed.inject(NgxSmartModalService) as any;
+    const openSpy = jest.fn();
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
+      return {
+        open: openSpy,
+      };
+    });
+
+    const openButton = fixture.debugElement.query(By.css('button'));
+    openButton.nativeElement.click();
+
+    expect(openSpy).toHaveBeenCalled();
+  });
+
+  it('should switch tiers', () => {
+    const tierContextService = TestBed.inject(TierContextService);
+    const toastrService = TestBed.inject(ToastrService);
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => true);
+    const successSpy = jest.spyOn(toastrService, 'success');
+
+    component.selectedTier = '1';
+    component.switchTier();
+
+    expect(successSpy).toHaveBeenCalled();
+  });
+
+  it('should not switch tiers when an error occurs', () => {
+    const tierContextService = TestBed.inject(TierContextService);
+    jest.spyOn(tierContextService, 'switchTier').mockImplementation(() => false);
+
+    const toastrService = TestBed.inject(ToastrService);
+    const successSpy = jest.spyOn(toastrService, 'success');
+
+    component.selectedTier = '1';
+    component.switchTier();
+
+    expect(successSpy).not.toHaveBeenCalled();
   });
 });

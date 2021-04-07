@@ -1,40 +1,43 @@
-<!-- add back button? -->
-<div class="clearfix">
-  <a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-sm btn-primary mb-2">
-    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-    <span>Back</span>
-  </a>
+<a routerLink="/vmware" queryParamsHandling="merge" class="btn btn-info">
+  <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <h1>Virtual Machine: {{ VirtualMachine?.name }}</h1>
+<h1>Virtual Machine: {{ VirtualMachine?.name | slice: 0:20 }}{{ VirtualMachine?.name?.length > 20 ? '...' : '' }}</h1>
 
-  <div class="btn-toolbar mb-2 pull-right" role="toolbar">
-    <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-sm btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
-      <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-      <span>Restore Virtual Machine</span>
-    </button>
-    <button class="btn btn-sm btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
-      <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
-      <span> Delete Virtual Machine</span>
-    </button>
-  </div>
-</div>
+<section class="btn-toolbar" role="toolbar">
+  <!-- Restore Virtual Machine -->
+  <button *ngIf="VirtualMachine?.deletedAt" class="btn btn-success" (click)="restoreVirtualMachine(VirtualMachine)">
+    <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+    <span>Restore Virtual Machine</span>
+  </button>
+
+  <!-- Delete Virtual Machine -->
+  <button class="btn btn-danger" (click)="deleteVirtualMachine(VirtualMachine)">
+    <fa-icon class="icon" [icon]="['fas', 'trash']"></fa-icon>
+    <span>Delete Virtual Machine</span>
+  </button>
+</section>
 
 <div *ngIf="VirtualMachine">
-  <p *ngIf="VirtualMachine.description"><strong>Description:</strong> {{ VirtualMachine.description }}</p>
-  <p><strong>CPUs:</strong> {{ VirtualMachine.cpuCores }}</p>
-  <p><strong>Cores per Socket:</strong> {{ VirtualMachine.cpuCoresPerSocket }}</p>
-  <p><strong>CPU Reserved?</strong> {{ VirtualMachine.cpuReserved }}</p>
-  <p>
-    <strong>Memory Size:</strong>
-    {{ ConversionUtil.convertBytesToGb(VirtualMachine.memorySize) }} GB
-  </p>
-  <p><strong>Memory Reserved?</strong> {{ VirtualMachine.memoryReserved }}</p>
-</div>
+  <app-view-field background="none" label="Description" [value]="VirtualMachine.description || 'No description provided'"></app-view-field>
 
-<!-- Virtual Disks table -->
-<div class="p-3">
-  <h3>Virtual Disks</h3>
-  <table class="table table-striped" aria-describedby="Virtual Disks table">
+  <div class="details">
+    <app-view-field label="CPU Cores" [value]="VirtualMachine.cpuCores"></app-view-field>
+    <app-view-field label="CPU Per Socket" [value]="VirtualMachine.cpuCoresPerSocket"></app-view-field>
+    <app-view-field label="CPU Reserved?" [value]="VirtualMachine.cpuReserved"></app-view-field>
+    <app-view-field label="Memory Size" [value]="ConversionUtil.convertBytesToGb(VirtualMachine.memorySize) + ' GB'"></app-view-field>
+    <app-view-field label="Memory Reserved?" [value]="VirtualMachine.memoryReserved"></app-view-field>
+    <app-view-field label="High Performance?" [value]="VirtualMachine.highPerformance"></app-view-field>
+  </div>
+
+  <!-- Virtual Disks table -->
+  <h2>Virtual Disks</h2>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Virtual Disks in the currently selected Virtual Machine</span>
+    </caption>
     <thead>
       <tr>
         <th scope="col">Name</th>
@@ -46,7 +49,7 @@
     <tbody>
       <tr *ngFor="let v of virtualDisks">
         <td>
-          <span>{{ v.name }}</span>
+          <span>{{ v.name | slice: 0:20 }}{{ v?.name?.length > 20 ? '...' : '' }}</span>
         </td>
         <td>
           <span>{{ ConversionUtil.convertBytesToGb(v.diskSize) }} GB</span>
@@ -63,12 +66,14 @@
       </tr>
     </tbody>
   </table>
-</div>
 
-<!-- Network Adapters table -->
-<div class="p-3">
-  <h3>Network Adapters</h3>
-  <table class="table table-striped" aria-describedby="Network Adapters table">
+  <!-- Network Adapters table -->
+  <h2>Network Adapters</h2>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>Network Adapters in the currently selected Virtual Machine</span>
+    </caption>
     <thead>
       <tr>
         <th scope="col">Adapter</th>
@@ -79,7 +84,7 @@
     <tbody>
       <tr *ngFor="let n of networkAdapters">
         <td>
-          <span>{{ n.name }}</span>
+          <span>{{ n.name | slice: 0:20 }}{{ n?.name.length > 20 ? '...' : '' }}</span>
         </td>
         <td>
           <span>{{ n.vlanId }}</span>
@@ -93,6 +98,6 @@
       </tr>
     </tbody>
   </table>
-</div>
 
-<app-yes-no-modal></app-yes-no-modal>
+  <app-yes-no-modal></app-yes-no-modal>
+</div>

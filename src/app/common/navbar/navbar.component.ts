@@ -1,15 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AutomationApiService } from 'src/app/services/automation-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { User } from 'src/app/models/user/user';
-import { MessageService } from 'src/app/services/message.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { AppMessage } from 'src/app/models/app-message';
-import { AppMessageType } from 'src/app/models/app-message-type';
-import { HelpersService } from 'src/app/services/helpers.service';
-import { Job } from 'src/app/models/other/job';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { UserDto } from '../../../../api_client/model/models';
 
 @Component({
   selector: 'app-navbar',
@@ -17,9 +11,12 @@ import SubscriptionUtil from 'src/app/utils/subscription.util';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  public currentUser: User;
-
+  public user: UserDto;
+  public userRoles: string[];
+  public role: string;
+  public tenant: string;
   private currentUserSubscription: Subscription;
+  private currentTenantSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 
@@ -32,11 +29,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.auth.logout();
   }
 
-  ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
+  ngOnInit(): void {
+    this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
+      this.user = user;
+      if (user) {
+        this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
+        this.role = this.userRoles[0];
+
+        // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
+        // show them all dropdown options, they will get denied at the component level
+        // this allows for more flexibility of the word "admin" in the HTML with no risk
+        if (this.role.includes('ro')) {
+          this.role = 'admin';
+        }
+      }
+    });
+    this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
+      this.tenant = tenant;
+    });
   }
 
-  ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentUserSubscription]);
+  ngOnDestroy(): void {
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
   }
 }

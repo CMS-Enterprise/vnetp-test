@@ -8,22 +8,28 @@
 // custom imports
 @import 'variables', 'buttons', 'tables', 'forms', 'modals';
 
-a {
-  &:hover {
-    color: $secondary-main;
-  }
+a:hover {
+  color: $c-blue-400;
 }
 
-h1.header {
+h1 {
   font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
 }
 
-// wasn't working inside tooltip component styles for some reason
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
 .tooltiptext a {
-  color: $secondary-medium;
-  &:hover {
-    color: $secondary-dark;
-  }
+  color: $c-blue-300;
+  transition: color 150ms;
 }
 
 .icon {
@@ -40,28 +46,12 @@ hr {
   cursor: not-allowed;
 }
 
-.pill-default {
-  background-color: #0d146d;
-  border-radius: 2px;
-  color: #ffffff;
-  display: inline;
-  font-size: smaller;
-  padding: 2px 5px 2px 5px;
-}
-
 .fg-danger {
-  color: $danger;
-  &--dark {
-    color: $danger--dark;
-  }
-}
-
-.fg-warning {
-  color: $warning;
+  color: $c-red-400;
 }
 
 .fg-success {
-  color: $success;
+  color: $c-green-400;
 }
 
 .xlarge-modal {
@@ -87,29 +77,6 @@ hr {
   font-weight: bold;
 }
 
-.nav-tabs .nav-item .nav-link {
-  color: #333;
-  text-decoration: none;
-
-  &:hover {
-    color: darken( #333, 10);
-  }
-}
-
-// PAGINATION STYLES
-.ngx-pagination {
-  padding: 0;
-  text-align: center;
-
-  li.disabled {
-    color: #75767a;
-  }
-
-  li.current {
-    background-color: $primary-main;
-  }
-}
-
 %remain-steps {
   &:before {
     content: counter(stepNum);
@@ -117,7 +84,7 @@ hr {
     font-weight: 700;
   }
   &:after {
-    background-color: $gray-light;
+    background-color: $c-gray-100;
   }
 }
 .multi-steps {
@@ -139,7 +106,7 @@ hr {
       content: '\2713';
       display: block;
       margin: 0 auto 4px;
-      background-color: $white;
+      background-color: white;
       width: 36px;
       height: 36px;
       line-height: 32px;
@@ -171,26 +138,26 @@ hr {
     &.is-active {
       @extend %remain-steps;
       &:before {
-        background-color: $white;
+        background-color: white;
         border-color: $multistep-success;
       }
 
       ~ li {
-        color: #808080;
+        color: $c-gray-400;
         @extend %remain-steps;
         &:before {
-          background-color: $gray-light;
-          border-color: $gray-light;
+          background-color: $c-gray-100;
+          border-color: $c-gray-100;
         }
       }
     }
   }
 }
 
-.badge-primary {
-  background-color: $primary-dark;
-}
-
 .pull-right {
   float: right;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
 }

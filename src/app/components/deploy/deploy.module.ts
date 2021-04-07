@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DeployComponent } from './deploy.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
   {
@@ -11,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, ReactiveFormsModule, SharedModule, RouterModule.forChild(routes)],
   declarations: [DeployComponent],
 })
 export class DeployModule {}

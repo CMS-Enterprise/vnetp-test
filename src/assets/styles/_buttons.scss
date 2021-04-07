@@ -1,45 +1,156 @@
 .btn {
-  margin-left: 5px;
-  margin-right: 5px;
+  border-radius: 4px;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  + .btn {
+    margin-left: 0.25rem;
+  }
+
+  .icon {
+    margin-right: 0.5rem;
+  }
 }
 
-.btn-link {
-  color: $primary--alt;
+%disabled-btn {
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    background-color: $c-gray-400;
+    color: white;
+    border-color: $c-gray-400;
+    opacity: 1;
+
+    &:hover,
+    &:focus {
+      background-color: $c-gray-400;
+      color: white;
+      border-color: $c-gray-400;
+      opacity: 1;
+    }
+  }
 }
 
-@mixin button($text, $background) {
-  color: $text;
-  background-color: $background;
-  border-color: $background;
+.btn-toolbar {
+  margin: 10px 0;
+  justify-content: flex-end;
+  align-items: center;
+
+  &--start {
+    justify-content: flex-start;
+  }
+}
+
+.btn-icon {
+  box-shadow: none;
+  padding: 0 10px;
+
+  .icon {
+    margin: 0;
+  }
+}
+
+.btn-danger {
+  background-color: $c-red-400;
+  border-color: $c-red-400;
+  color: white;
+
+  @extend %disabled-btn;
 
   &:hover,
   &:focus,
   &:not(:disabled):not(.disabled):active,
   &:not(:disabled):not(.disabled):active:focus {
-    background-color: darken($background, 10%);
-    border-color: darken($background, 10%);
-  }
-
-  &:disabled {
+    background-color: $c-red-700;
+    border-color: $c-red-700;
     color: white;
-    background-color: $gray-dark;
-    border-color: $gray-dark;
   }
 }
 
-.btn-primary,
-.btn-info {
-  @include button($white, $primary-main);
+.btn-link {
+  color: $c-gray-700;
+  background-color: white;
+  box-shadow: none;
+  border: none;
+
+  @extend %disabled-btn;
+
+  &:hover,
+  &:focus,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    color: $c-gray-700;
+    background-color: $c-gray-100;
+  }
+}
+
+.btn-primary {
+  background-color: $c-blue-400;
+  border-color: $c-blue-400;
+  color: white;
+
+  @extend %disabled-btn;
+
+  &:hover,
+  &:focus,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    background-color: $c-blue-700;
+    border-color: $c-blue-700;
+    color: white;
+  }
 }
 
 .btn-success {
-  @include button($white, $success--dark);
+  background-color: $c-green-100;
+  border-color: $c-green-400;
+  color: $c-green-400;
+
+  @extend %disabled-btn;
+
+  &:hover,
+  &:focus,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    background-color: $c-green-400;
+    border-color: $c-green-400;
+    color: white;
+  }
+}
+
+.btn-info {
+  background-color: $c-blue-100;
+  border-color: $c-blue-400;
+  color: $c-blue-400;
+
+  @extend %disabled-btn;
+
+  &:hover,
+  &:focus,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    background-color: $c-blue-400;
+    border-color: $c-blue-400;
+    color: white;
+  }
 }
 
 .btn-warning {
-  @include button($gray-darker, $warning);
-}
+  background-color: $c-gray-100;
+  border-color: $c-gray-700;
+  color: $c-gray-700;
 
-.btn-danger {
-  @include button($white, $danger);
+  @extend %disabled-btn;
+
+  &:hover,
+  &:focus,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled):active:focus {
+    background-color: $c-gray-700;
+    border-color: $c-gray-700;
+    color: white;
+  }
 }

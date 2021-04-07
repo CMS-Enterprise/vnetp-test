@@ -5,24 +5,36 @@ import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService) {}
+  constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
-    const isLogin = request.url.includes('auth/login');
+    const isLogin = request.url.includes('auth/');
 
     // Send the current token, if it is stale, we will get a 401
     // back and the user will be logged out.
-    if (!isLogin && !request.headers.has('Authorization') && currentUser.Token) {
+    if (!isLogin && !request.headers.has('Authorization') && currentUser.token) {
+      // Get tenant from the tenant query param.
+      let tenant = '';
+      this.route.queryParams.subscribe(qp => {
+        tenant = qp.tenant;
+      });
+
+      // If no tenant is selected, log the user out and allow them to reselect a tenant.
+      if (!tenant) {
+        this.auth.logout();
+      }
+
       const headers = new HttpHeaders({
-        Authorization: `Bearer ${currentUser.Token}`,
+        Authorization: `Bearer ${currentUser.token}`,
         'Cache-Control': 'no-cache',
         Pragma: 'no-cache',
       });
-      request = request.clone({ headers });
+      request = request.clone({ headers, params: request.params.set('tenant', tenant) });
     }
 
     if (!request.headers.has('Accept')) {
@@ -79,7 +91,7 @@ export class HttpConfigInterceptor {
               toastrMessage = 'Bad Request';
               break;
             case 401:
-              this.auth.logout();
+              this.auth.logout(true);
               return;
             case 403:
               toastrMessage = 'Unauthorized.';

@@ -1,0 +1,46 @@
+<section class="btn-toolbar" role="toolbar">
+  <button type="button" class="btn btn-success" (click)="openModal()">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Pool</span>
+  </button>
+</section>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="pools"></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-pool="datum">
+  <section class="table__actions">
+    <app-icon-button *ngIf="!pool?.deletedAt" icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>
+
+    <app-icon-button
+      *ngIf="pool?.deletedAt"
+      icon="undo"
+      label="Restore Pool"
+      type="success"
+      (handleClick)="restore(pool)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Pool"
+      [type]="pool?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="delete(pool)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<section class="btn-toolbar" role="toolbar">
+  <app-import-export
+    [exportObject]="pools"
+    exportFileName="LoadBalancer_Pools_{{ currentTier.name }}"
+    (import)="import($event)"
+  ></app-import-export>
+</section>
+
+<app-pool-modal></app-pool-modal>
+<app-yes-no-modal></app-yes-no-modal>

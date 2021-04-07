@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
-import { of } from 'rxjs';
+import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -14,23 +13,12 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   beforeEach(async(() => {
-    const serviceObjectsService = {
-      v1NetworkSecurityServiceObjectsIdPut: jest.fn(() => of({})),
-      v1NetworkSecurityServiceObjectsPost: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        Validators,
-        { provide: V1NetworkSecurityServiceObjectsService, useValue: serviceObjectsService },
-      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityServiceObjectsService)],
     })
       .compileComponents()
       .then(() => {
@@ -47,28 +35,24 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = component.form.controls.name;
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 
@@ -93,8 +77,8 @@ describe('ServiceObjectModalComponent', () => {
     expect(component.form.controls.name.value).toBe('');
   });
 
-  it('should not call to create a service object when the form is invalid', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+  it('should not create a service object when the form is invalid', () => {
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
     const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -112,7 +96,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should call to create a service object when in create mode', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
     const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
 
     component.ModalMode = ModalMode.Create;
@@ -138,7 +122,7 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   it('should call to edit an existing service object when in edit mode', () => {
-    const service = TestBed.get(V1NetworkSecurityServiceObjectsService);
+    const service = TestBed.inject(V1NetworkSecurityServiceObjectsService) as any;
     const updateServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsIdPut');
 
     component.ModalMode = ModalMode.Edit;
@@ -179,16 +163,8 @@ describe('ServiceObjectModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const dto = createServiceObjectModalDto();
-      dto.ModalMode = null;
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
       const dto = createServiceObjectModalDto();
       dto.ServiceObject = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -203,6 +179,7 @@ describe('ServiceObjectModalComponent', () => {
     });
 
     it('should disable the name and protocol when editing an existing service object', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createServiceObjectModalDto());
 
       component.getData();

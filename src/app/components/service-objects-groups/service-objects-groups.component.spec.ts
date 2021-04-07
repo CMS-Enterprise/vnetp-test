@@ -1,52 +1,52 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ServiceObjectsGroupsComponent } from './service-objects-groups.component';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockIconButtonComponent,
+  MockTabsComponent,
+  MockComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { ToastrModule } from 'ngx-toastr';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
-import { ServiceObjectModalComponent } from './service-object-modal/service-object-modal.component';
-import { ServiceObjectGroupModalComponent } from './service-object-group-modal/service-object-group-modal.component';
+import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'api_client';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
   let fixture: ComponentFixture<ServiceObjectsGroupsComponent>;
 
-  const ngx = new NgxSmartModalServiceStub();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NgxSmartModalModule,
-        NgxMaskModule.forRoot(),
-        NgxPaginationModule,
-        NgSelectModule,
-        ToastrModule.forRoot(),
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
-      ],
+      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
-        ServiceObjectsGroupsComponent,
-        ServiceObjectModalComponent,
-        ServiceObjectGroupModalComponent,
         ImportExportComponent,
-        YesNoModalComponent,
-        MockTooltipComponent,
-        TierSelectComponent,
+        MockComponent('app-service-object-group-modal'),
+        MockComponent('app-service-object-modal'),
+        MockComponent('app-tier-select'),
         MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockTabsComponent,
+        MockTooltipComponent,
+        ServiceObjectsGroupsComponent,
+        YesNoModalComponent,
       ],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService, FormBuilder],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(TierContextService),
+        MockProvider(V1TiersService),
+      ],
     }).compileComponents();
   }));
 

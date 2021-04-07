@@ -1,4 +1,4 @@
-<div class="breadcrumb-wrap mb-3" *ngIf="currentUser">
+<div *ngIf="render" class="breadcrumb-wrap mb-3">
   <ul class="breadcrumb">
     <li *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb-item">
       <a routerLink="{{ breadcrumb.url }}" queryParamsHandling="merge">

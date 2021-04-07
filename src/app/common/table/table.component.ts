@@ -1,0 +1,52 @@
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+
+export interface TableColumn<T> {
+  name: string;
+  property?: keyof T;
+  template?: () => TemplateRef<any>;
+}
+
+export interface TableConfig<T> {
+  description: string;
+  columns: TableColumn<T>[];
+  rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
+}
+
+/**
+ * Usage:
+ *
+ * - in component:
+ *  @ViewChild('nameTemplate') nameTemplate: TemplateRef<any>;
+ *
+ *  public config: TableConfig = {
+ *     description: 'Table',
+ *     columns: [{ name: 'Name', template: () => this.nameTemplate }, { name: 'Desc', property: 'description' }],
+ *     rowStyle: (data: object) => ({ background: 'red' }),
+ *  };
+ *  public data = [{ name: 'Test', description: 'my-desc' }];
+ *
+ * - in template
+ * <app-table [config]="config" [data]="data"></app-table>
+ * <ng-template #nameTemplate let-datum="datum">{{ datum.name }}</ng-template>
+ */
+@Component({
+  selector: 'app-table',
+  templateUrl: './table.component.html',
+})
+export class TableComponent<T> implements AfterViewInit {
+  @Input() config: TableConfig<T>;
+  @Input() data: object[] = [];
+
+  public itemsPerPage = 20;
+  public currentPage = 1;
+  public show = false;
+  public uniqueTableId: string;
+
+  constructor(private changeRef: ChangeDetectorRef) {}
+
+  ngAfterViewInit(): void {
+    this.show = true;
+    this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
+    this.changeRef.detectChanges();
+  }
+}

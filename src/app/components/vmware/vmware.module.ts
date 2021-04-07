@@ -7,6 +7,16 @@ import { VirtualMachineModalComponent } from './virtual-machine-modal/virtual-ma
 import { VmwareDetailComponent } from './vmware-detail/vmware-detail.component';
 import { SharedModule } from 'src/app/common/shared.module';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { PriorityGroupListComponent } from './priority-group/priority-group-list/priority-group-list.component';
+import { PriorityGroupModalComponent } from './priority-group/priority-group-modal/priority-group-modal.component';
+import { ViewFieldModule } from 'src/app/common/view-field/view-field.module';
 
 const routes: Routes = [
   {
@@ -22,12 +32,26 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    IconButtonModule,
+    NgxPaginationModule,
+    NgxSmartModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TabsModule,
+    ViewFieldModule,
+  ],
   declarations: [
-    VmwareComponent,
     NetworkAdapterModalComponent,
+    PriorityGroupListComponent,
+    PriorityGroupModalComponent,
     VirtualDiskModalComponent,
     VirtualMachineModalComponent,
+    VmwareComponent,
     VmwareDetailComponent,
   ],
 })

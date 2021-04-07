@@ -3,8 +3,9 @@ import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1Job
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-deploy',
@@ -14,7 +15,6 @@ export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
 
-  navIndex = 0;
   tierGroups: TierGroup[] = [];
   tiers: TableRowWrapper<Tier>[] = [];
 
@@ -28,32 +28,23 @@ export class DeployComponent implements OnInit {
 
   public deployTiers(): void {
     const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item);
-
     if (!tiersToDeploy.length) {
       return;
     }
 
     const tierCount = tiersToDeploy.length === 1 ? '1 tier' : `${tiersToDeploy.length} tiers`;
-    const modalDto = new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tierCount}?`);
+    const onConfirm = () => {
+      this.launchTierProvisioningJobs(tiersToDeploy);
+    };
 
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-
-    const confirmationModal = this.ngx.getModal('yesNoModal');
-    confirmationModal.open();
-    const yesNoModalSubscription = confirmationModal.onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        this.launchTierProvisioningJobs(tiersToDeploy);
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
+    SubscriptionUtil.subscribeToYesNoModal(
+      new YesNoModalDto('Deploy Tiers', `Are you sure you would like to deploy ${tierCount}?`),
+      this.ngx,
+      onConfirm,
+    );
   }
 
-  public getTierGroupName = (id: string): string => {
-    return this.getObjectName(id, this.tierGroups);
-    // tslint:disable-next-line: semicolon
-  };
+  public getTierGroupName = (id: string): string => this.getObjectName(id, this.tierGroups);
 
   private getObjectName(id: string, objects: { name: string; id?: string }[]): string {
     if (!objects) {
@@ -98,7 +89,7 @@ export class DeployComponent implements OnInit {
         tierId: tier.id,
       };
 
-      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(data => {});
+      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(() => {});
 
       const tierNetworkSecurityJob = {} as Job;
 
@@ -110,7 +101,7 @@ export class DeployComponent implements OnInit {
         externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.External).id,
       };
 
-      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(data => {});
+      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(() => {});
     });
   }
 

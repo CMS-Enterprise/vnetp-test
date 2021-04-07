@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } from 'api_client';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-physical-server-detail',
@@ -17,10 +16,10 @@ export class PhysicalServerDetailComponent implements OnInit {
   ConversionUtil = ConversionUtil;
 
   constructor(
+    private entityService: EntityService,
     private route: ActivatedRoute,
     private router: Router,
     private physicalServerService: V1PhysicalServersService,
-    private ngx: NgxSmartModalService,
   ) {}
 
   getPhysicalServer() {
@@ -33,35 +32,25 @@ export class PhysicalServerDetailComponent implements OnInit {
       });
   }
 
-  deletePhysicalServer(ps: PhysicalServer) {
-    const deleteDescription = ps.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!ps.deletedAt) {
-        this.physicalServerService
-          .v1PhysicalServersIdSoftDelete({
-            id: ps.id,
-          })
-          .subscribe(data => {
-            this.getPhysicalServer();
+  public deletePhysicalServer(physicalServer: PhysicalServer): void {
+    this.entityService.deleteEntity(physicalServer, {
+      entityName: 'Physical Server',
+      delete$: this.physicalServerService.v1PhysicalServersIdDelete({
+        id: physicalServer.id,
+      }),
+      softDelete$: this.physicalServerService.v1PhysicalServersIdSoftDelete({
+        id: physicalServer.id,
+      }),
+      onSuccess: () => {
+        if (physicalServer.deletedAt) {
+          this.router.navigate(['/physical-server'], {
+            queryParamsHandling: 'merge',
           });
-      } else {
-        this.physicalServerService
-          .v1PhysicalServersIdDelete({
-            id: ps.id,
-          })
-          .subscribe(data => {
-            this.router.navigate(['/physical-server'], {
-              queryParamsHandling: 'merge',
-            });
-          });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Physical Server?`, `Do you want to ${deleteDescription} physical server "${ps.name}"?`),
-      deleteFunction,
-    );
+        } else {
+          this.getPhysicalServer();
+        }
+      },
+    });
   }
 
   restorePhysicalServer(ps: PhysicalServer) {
@@ -70,28 +59,14 @@ export class PhysicalServerDetailComponent implements OnInit {
         .v1PhysicalServersIdRestorePatch({
           id: ps.id,
         })
-        .subscribe(data => {
+        .subscribe(() => {
           this.getPhysicalServer();
         });
     }
   }
 
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
   ngOnInit() {
     this.Id = this.route.snapshot.paramMap.get('id');
-
     this.getPhysicalServer();
   }
 }

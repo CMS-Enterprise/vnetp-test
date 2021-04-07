@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Tier, V1TiersService } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-static-routes',
@@ -9,16 +10,18 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./static-routes.component.scss'],
 })
 export class StaticRoutesComponent implements OnInit, OnDestroy {
-  tiers: Array<Tier>;
-  DatacenterId: string;
-  currentDatacenterSubscription: Subscription;
+  public DatacenterId: string;
+  public tiers: Tier[] = [];
+
+  private currentDatacenterSubscription: Subscription;
 
   constructor(private datacenterContextService: DatacenterContextService, private tierService: V1TiersService) {}
 
-  getTiers() {
+  public getTiers(): void {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
-        datacenterId: this.DatacenterId,
+      .v1TiersGet({
+        filter: `datacenterId||eq||${this.DatacenterId}`,
+        join: 'staticRoutes',
       })
       .subscribe(data => {
         this.tiers = data;
@@ -36,6 +39,6 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.currentDatacenterSubscription.unsubscribe();
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
   }
 }

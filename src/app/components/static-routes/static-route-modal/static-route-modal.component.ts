@@ -19,8 +19,8 @@ export class StaticRouteModalComponent implements OnInit {
   StaticRouteId: string;
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
+    private ngx: NgxSmartModalService,
     private staticRouteService: V1NetworkStaticRoutesService,
   ) {}
 
@@ -43,10 +43,10 @@ export class StaticRouteModalComponent implements OnInit {
           staticRoute: modalStaticRoute,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.staticRouteService
@@ -55,10 +55,10 @@ export class StaticRouteModalComponent implements OnInit {
           staticRoute: modalStaticRoute,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -84,21 +84,17 @@ export class StaticRouteModalComponent implements OnInit {
       this.TierId = dto.TierId;
     }
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
+    this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.StaticRouteId = dto.StaticRoute.id;
-        this.form.controls.name.disable();
-        this.form.controls.destinationNetwork.disable();
-        this.form.controls.nextHop.disable();
-      } else {
-        this.form.controls.name.enable();
-        this.form.controls.destinationNetwork.enable();
-        this.form.controls.nextHop.enable();
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.StaticRouteId = dto.StaticRoute.id;
+      this.form.controls.name.disable();
+      this.form.controls.destinationNetwork.disable();
+      this.form.controls.nextHop.disable();
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.destinationNetwork.enable();
+      this.form.controls.nextHop.enable();
     }
 
     const staticRoute = dto.StaticRoute;
@@ -114,7 +110,7 @@ export class StaticRouteModalComponent implements OnInit {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       destinationNetwork: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       nextHop: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],

@@ -4,6 +4,14 @@ import { NetworkObjectsGroupsComponent } from './network-objects-groups.componen
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal/network-object-group-modal.component';
 import { NetworkObjectModalComponent } from './network-object-modal/network-object-modal.component';
 import { SharedModule } from 'src/app/common/shared.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 
 const routes: Routes = [
   {
@@ -13,7 +21,19 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormsModule,
+    IconButtonModule,
+    NgxPaginationModule,
+    NgxSmartModalModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TabsModule,
+    TooltipModule,
+  ],
   declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
 })
 export class NetworkObjectsGroupsModule {}

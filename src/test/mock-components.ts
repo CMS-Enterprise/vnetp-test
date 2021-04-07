@@ -1,7 +1,11 @@
 import { Component, EventEmitter } from '@angular/core';
 
-export const MockComponent = (options: Component): Component => {
-  const metadata = { ...options };
+/**
+ * Creates a Component to use during tests
+ * @param options Either a component or just the selector name
+ */
+export const MockComponent = (options: Component | string): Component => {
+  const metadata = typeof options === 'string' ? { selector: options } : { ...options };
   metadata.template = metadata.template || '';
   metadata.outputs = metadata.outputs || [];
   metadata.exportAs = metadata.exportAs || '';
@@ -27,4 +31,23 @@ export const MockNgxSmartModalComponent = MockComponent({
   template: '<ng-content></ng-content>',
   inputs: ['identifier', 'customClass', 'dismissable'],
   outputs: ['onClose', 'onOpen'],
+});
+export const MockIconButtonComponent = MockComponent({
+  selector: 'app-icon-button',
+  inputs: ['icon', 'label', 'type'],
+  outputs: ['handleClick'],
+});
+export const MockTabsComponent = MockComponent({
+  selector: 'app-tabs',
+  inputs: ['tabs'],
+  outputs: ['tabChange'],
+});
+
+export const MockViewFieldComponent = MockComponent({
+  selector: 'app-view-field',
+  inputs: ['background', 'label', 'value'],
+});
+
+export const MockYesNoModalComponent = MockComponent({
+  selector: 'app-yes-no-modal',
 });

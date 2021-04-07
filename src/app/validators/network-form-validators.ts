@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import * as validator from 'validator';
+import { isFQDN, isIP, isMACAddress } from 'validator';
 
 export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boolean } {
   if (!control || !control.value) {
@@ -18,9 +18,8 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
 
   if (isValid) {
     return null;
-  } else if (!isValid) {
-    return { invalidIpAny: true };
   }
+  return { invalidIpAny: true };
 }
 
 export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
@@ -64,7 +63,7 @@ export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
     return null;
   }
 
-  const isValid = validator.isFQDN(control.value);
+  const isValid = isFQDN(control.value);
 
   if (isValid) {
     return null;
@@ -77,7 +76,7 @@ export function MacAddressValidator(control: FormControl): { invalidMacAddress: 
     return null;
   }
 
-  const isValid = validator.isMACAddress(control.value);
+  const isValid = isMACAddress(control.value);
 
   if (isValid) {
     return null;
@@ -131,7 +130,7 @@ function isValidPortNumber(portNumber: number): boolean {
 }
 
 function ValidateIpAddress(ipAddress: string): boolean {
-  return validator.isIP(ipAddress, 4) || validator.isIP(ipAddress, 6);
+  return isIP(ipAddress, 4) || isIP(ipAddress, 6);
 }
 
 function ValidateCidrAddress(ipArray: string[]): boolean {
@@ -141,10 +140,10 @@ function ValidateCidrAddress(ipArray: string[]): boolean {
     return false;
   }
 
-  if (validator.isIP(ipAddress, 4)) {
+  if (isIP(ipAddress, 4)) {
     return ValidateNetMask(Number(netMask), 4);
   }
-  if (validator.isIP(ipAddress, 6)) {
+  if (isIP(ipAddress, 6)) {
     return ValidateNetMask(Number(netMask), 6);
   }
   return false;

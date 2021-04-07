@@ -1,4 +1,14 @@
 module.exports = {
+  globals: {
+    'ts-jest': {
+      astTransformers: {
+        before: [
+          'jest-preset-angular/build/InlineFilesTransformer',
+          'jest-preset-angular/build/StripStylesTransformer',
+        ],
+      },
+    },
+  },
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/test/setupJest.ts'],
@@ -6,7 +16,7 @@ module.exports = {
     '^lodash-es$': 'lodash',
   },
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
-  coverageReporters: ['text', 'cobertura'],
+  coverageReporters: ['text', 'cobertura', 'lcov'],
   coverageThreshold: {
     global: {
       branches: 21,
@@ -25,7 +35,7 @@ module.exports = {
     '!**/environments/**',
     '!**/src/setupJest.ts',
   ],
-  moduleDirectories: ["", "node_modules", "src"],
+  moduleDirectories: ['', 'node_modules', 'src'],
   transformIgnorePatterns: ['node_modules/(?!lodash-es/*)'],
   verbose: true,
 };

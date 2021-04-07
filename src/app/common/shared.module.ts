@@ -6,7 +6,6 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImportExportComponent } from './import-export/import-export.component';
 import { TierSelectComponent } from './tier-select/tier-select.component';
-import { TooltipComponent } from './tooltip/tooltip.component';
 import { ZosZvmRequestModalComponent } from './zos-zvm-request-modal/zos-zvm-request-modal.component';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -24,27 +23,7 @@ import { ResolvePipe } from '../pipes/resolve.pipe';
     NgSelectModule,
     NgxPaginationModule,
   ],
-  declarations: [
-    ImportExportComponent,
-    ResolvePipe,
-    TierSelectComponent,
-    TooltipComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
-  exports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxSmartModalModule,
-    NgxPaginationModule,
-    ImportExportComponent,
-    ResolvePipe,
-    TierSelectComponent,
-    TooltipComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
+  declarations: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  exports: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
 })
 export class SharedModule {}

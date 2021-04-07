@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
+  <header class="modal-header">
     <h4 class="modal-title">Firewall Rule</h4>
-  </div>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -19,7 +19,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
         />
@@ -39,7 +39,7 @@
             id="action"
             formControlName="action"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
+            [class.is-invalid]="submitted && f.action.errors"
             aria-label="Action"
           >
             <option></option>
@@ -58,7 +58,7 @@
             id="direction"
             formControlName="direction"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.action.errors }"
+            [class.is-invalid]="submitted && f.action.errors"
             aria-label="Direction"
           >
             <option></option>
@@ -77,7 +77,7 @@
             id="protocol"
             formControlName="protocol"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.protocol.errors }"
+            [class.is-invalid]="submitted && f.protocol.errors"
             aria-label="Protocol"
           >
             <option></option>
@@ -98,7 +98,7 @@
             id="logging"
             formControlName="logging"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
+            [class.is-invalid]="submitted && f.logging.errors"
             aria-label="Logging"
           >
             <option></option>
@@ -117,7 +117,7 @@
             id="enabled"
             formControlName="enabled"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.logging.errors }"
+            [class.is-invalid]="submitted && f.logging.errors"
             aria-label="Logging"
           >
             <option></option>
@@ -134,7 +134,7 @@
             id="ruleIndex"
             formControlName="ruleIndex"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.ruleIndex.errors }"
+            [class.is-invalid]="submitted && f.ruleIndex.errors"
             aria-label="Rule Index"
           />
           <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
@@ -165,7 +165,7 @@
             formControlName="sourceIpAddress"
             id="sourceIpAddress"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourceIpAddress.errors }"
+            [class.is-invalid]="submitted && f.sourceIpAddress.errors"
             aria-label="Source IP"
             *ngIf="f.sourceNetworkType.value === 'IpAddress'"
           />
@@ -251,7 +251,7 @@
             id="destinationIpAddress"
             formControlName="destinationIpAddress"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destinationIpAddress.errors }"
+            [class.is-invalid]="submitted && f.destinationIpAddress.errors"
             aria-label="Destination IP"
             *ngIf="f.destinationNetworkType.value === 'IpAddress'"
           />
@@ -338,7 +338,7 @@
             id="sourcePorts"
             formControlName="sourcePorts"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sourcePorts.errors }"
+            [class.is-invalid]="submitted && f.sourcePorts.errors"
             aria-label="Source Ports"
             *ngIf="f.serviceType.value === 'Port'"
           />
@@ -357,7 +357,7 @@
             id="destinationPorts"
             formControlName="destinationPorts"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.destinationPorts.errors }"
+            [class.is-invalid]="submitted && f.destinationPorts.errors"
             aria-label="Destination Ports"
             *ngIf="f.serviceType.value === 'Port'"
           />
@@ -414,15 +414,15 @@
       </div>
     </div>
 
-    <div class="modal-footer">
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

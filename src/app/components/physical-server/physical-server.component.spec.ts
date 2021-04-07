@@ -1,17 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PhysicalServerComponent } from './physical-server.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
-import { NgxSmartModalService, NgxSmartModalModule } from 'ngx-smart-modal';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { PhysicalServerModalComponent } from './physical-server-modal/physical-server-modal.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-
-const ngx = new NgxSmartModalServiceStub();
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { V1DatacentersService, V1PhysicalServersService } from 'api_client';
 
 describe('PhysicalServerComponent', () => {
   let component: PhysicalServerComponent;
@@ -19,16 +17,21 @@ describe('PhysicalServerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NgxSmartModalModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NgxPaginationModule,
-        RouterTestingModule.withRoutes([]),
-        HttpClientTestingModule,
+      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        PhysicalServerComponent,
+        PhysicalServerModalComponent,
+        YesNoModalComponent,
+        MockNgxSmartModalComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
       ],
-      declarations: [PhysicalServerComponent, PhysicalServerModalComponent, YesNoModalComponent, MockFontAwesomeComponent],
-      providers: [{ provide: NgxSmartModalService, useValue: ngx }, CookieService],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(DatacenterContextService),
+        MockProvider(V1DatacentersService),
+        MockProvider(V1PhysicalServersService),
+      ],
     }).compileComponents();
   }));
 

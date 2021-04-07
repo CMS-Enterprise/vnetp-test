@@ -1,39 +1,39 @@
+import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
-import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { EntityService } from 'src/app/services/entity.service';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'api_client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
 
 @Component({
   selector: 'app-tiers',
   templateUrl: './tiers.component.html',
 })
 export class TiersComponent implements OnInit, OnDestroy {
-  tiers: Tier[];
-  tierGroups: TierGroup[];
+  public ModalMode = ModalMode;
+  public currentDatacenter: Datacenter;
+  public currentTiersPage = 1;
+  public perPage = 20;
+  public tierGroups: TierGroup[];
+  public tiers: Tier[];
 
-  perPage = 20;
-  currentTiersPage = 1;
-  navIndex = 0;
-  ModalMode = ModalMode;
-
-  tierModalSubscription: Subscription;
-  currentDatacenterSubscription: Subscription;
-
-  currentDatacenter: Datacenter;
+  private currentDatacenterSubscription: Subscription;
+  private tierModalSubscription: Subscription;
 
   constructor(
+    private datacenterContextService: DatacenterContextService,
+    private entityService: EntityService,
     private ngx: NgxSmartModalService,
-    public datacenterService: DatacenterContextService,
-    private datacenterTierService: V1TiersService,
     private tierGroupService: V1TierGroupsService,
+    private tierService: V1TiersService,
   ) {}
 
-  getTierGroups(getTiers = false) {
+  public getTierGroups(loadTiers = false): void {
     this.tierGroupService
       .v1TierGroupsGet({
         filter: `datacenterId||eq||${this.currentDatacenter.id}`,
@@ -41,27 +41,19 @@ export class TiersComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.tierGroups = data;
 
-        if (getTiers) {
+        if (loadTiers) {
           this.getTiers();
         }
       });
   }
 
-  getTiers() {
-    this.datacenterTierService
-      .v1DatacentersDatacenterIdTiersGet({
-        datacenterId: this.currentDatacenter.id,
-      })
-      .subscribe(data => {
-        this.tiers = data;
-      });
+  public getTiers(): void {
+    this.tierService.v1TiersGet({ filter: `datacenterId||eq||${this.currentDatacenter.id}` }).subscribe(data => {
+      this.tiers = data;
+    });
   }
 
-  openTierModal(modalMode: ModalMode, tier?: Tier) {
-    if (modalMode === ModalMode.Edit && !tier) {
-      throw new Error('Service Object required.');
-    }
-
+  public openTierModal(modalMode: ModalMode, tier?: Tier): void {
     const dto = new TierModalDto();
 
     dto.ModalMode = modalMode;
@@ -72,131 +64,82 @@ export class TiersComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToTierModal();
-    this.datacenterService.lockDatacenter();
+    this.datacenterContextService.lockDatacenter();
     this.ngx.setModalData(dto, 'tierModal');
     this.ngx.getModal('tierModal').open();
   }
 
-  subscribeToTierModal() {
-    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+  public deleteTier(tier: Tier): void {
+    this.entityService.deleteEntity(tier, {
+      entityName: 'Tier',
+      delete$: this.tierService.v1TiersIdDelete({ id: tier.id }),
+      softDelete$: this.tierService.v1TiersIdSoftDelete({ id: tier.id }),
+      onSuccess: () => this.getTiers(),
+    });
+  }
+
+  public restoreTier(tier: Tier): void {
+    if (!tier.deletedAt) {
+      return;
+    }
+    this.tierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(() => {
+      this.getTiers();
+    });
+  }
+
+  public importTiersConfig(tiers: Tier[]): void {
+    const tierEnding = tiers.length > 1 ? 's' : '';
+    const modalDto = new YesNoModalDto(
+      `Import Tier${tierEnding}`,
+      `Would you like to import ${tiers.length} tier${tierEnding}?`,
+      `Import Tier${tierEnding}`,
+      'Cancel',
+    );
+    const onConfirm = () => {
+      this.tierService
+        .v1TiersBulkPost({
+          generatedTierBulkDto: { bulk: this.sanitizeTiers(tiers) },
+        })
+        .subscribe(() => {
+          this.getTiers();
+        });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  private sanitizeTiers(tiers: Tier[]): Tier[] {
+    const sanitizeTier = (tier: Tier) => {
+      Object.entries(tier).forEach(([key, val]) => {
+        if (val === 'false' || val === 'f') {
+          tier[key] = false;
+        }
+        if (val === 'true' || val === 't') {
+          tier[key] = true;
+        }
+        if (val === null || val === '') {
+          delete tier[key];
+        }
+      });
+      return tier;
+    };
+
+    return tiers.map(sanitizeTier);
+  }
+
+  public getTierGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.tierGroups);
+
+  private subscribeToTierModal(): void {
+    this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
       this.getTiers();
       this.ngx.resetModalData('tierModal');
-      this.datacenterService.unlockDatacenter();
+      this.datacenterContextService.unlockDatacenter();
       this.tierModalSubscription.unsubscribe();
     });
   }
 
-  deleteTier(tier: Tier) {
-    if (tier.provisionedAt) {
-      throw new Error('Cannot delete provisioned object.');
-    }
-
-    const deleteDescription = tier.deletedAt ? 'Delete' : 'Soft-Delete';
-
-    const deleteFunction = () => {
-      if (!tier.deletedAt) {
-        this.datacenterTierService.v1TiersIdSoftDelete({ id: tier.id }).subscribe(data => {
-          this.getTiers();
-        });
-      } else {
-        this.datacenterTierService.v1TiersIdDelete({ id: tier.id }).subscribe(data => {
-          this.getTiers();
-        });
-      }
-    };
-
-    this.confirmDeleteObject(
-      new YesNoModalDto(`${deleteDescription} Tier?`, `Do you want to ${deleteDescription} tier "${tier.name}"?`),
-      deleteFunction,
-    );
-  }
-
-  restoreTier(tier: Tier) {
-    if (tier.deletedAt) {
-      this.datacenterTierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(data => {
-        this.getTiers();
-      });
-    }
-  }
-
-  private confirmDeleteObject(modalDto: YesNoModalDto, deleteFunction: () => void) {
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const data = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (data && data.modalYes) {
-        deleteFunction();
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
-  importTiersConfig(event) {
-    const modalDto = new YesNoModalDto(
-      'Import Tiers',
-      `Are you sure you would like to import ${event.length} tier${event.length > 1 ? 's' : ''}?`,
-    );
-    this.ngx.setModalData(modalDto, 'yesNoModal');
-    this.ngx.getModal('yesNoModal').open();
-
-    const yesNoModalSubscription = this.ngx.getModal('yesNoModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData = modal.getData() as YesNoModalDto;
-      modal.removeData();
-      if (modalData && modalData.modalYes) {
-        const dto = this.sanitizeData(event);
-        this.datacenterTierService
-          .v1TiersBulkPost({
-            generatedTierBulkDto: { bulk: dto },
-          })
-          .subscribe(data => {
-            this.getTiers();
-          });
-      }
-      yesNoModalSubscription.unsubscribe();
-    });
-  }
-
-  sanitizeData(entities: any) {
-    return entities.map(entity => {
-      this.mapCsv(entity);
-      return entity;
-    });
-  }
-
-  mapCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false' || val === 'f') {
-        obj[key] = false;
-      }
-      if (val === 'true' || val === 't') {
-        obj[key] = true;
-      }
-      if (val === null || val === '') {
-        delete obj[key];
-      }
-    });
-    return obj;
-    // tslint:disable-next-line: semicolon
-  };
-
-  getTierGroupName = (id: string) => {
-    return this.getObjectName(id, this.tierGroups);
-    // tslint:disable-next-line: semicolon
-  };
-
-  private getObjectName(id: string, objects: { name: string; id?: string }[]) {
-    if (objects && objects.length) {
-      return objects.find(o => o.id === id).name || 'N/A';
-    }
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
-  }
-
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.currentDatacenter = cd;
         this.getTierGroups(true);
@@ -205,6 +148,6 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
   }
 }

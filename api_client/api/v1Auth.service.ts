@@ -17,19 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { User } from '../model/models';
+import { UserDto } from '../model/models';
 import { UserPass } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1AuthLoginPostRequestParams {
+export interface V1AuthTokenPostRequestParams {
     userPass: UserPass;
-}
-
-export interface V1AuthRegisterPostRequestParams {
-    user: User;
 }
 
 
@@ -95,19 +91,14 @@ export class V1AuthService {
     }
 
     /**
-     * Login
-     * @param requestParameters
+     * Available Tenants
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AuthLoginPost(requestParameters: V1AuthLoginPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const userPass = requestParameters.userPass;
-        if (userPass === null || userPass === undefined) {
-            throw new Error('Required parameter userPass was null or undefined when calling v1AuthLoginPost.');
-        }
+    public v1AuthTenantsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1AuthTenantsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1AuthTenantsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1AuthTenantsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -123,22 +114,12 @@ export class V1AuthService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/auth/login`,
-            userPass,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/auth/tenants`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -150,18 +131,18 @@ export class V1AuthService {
     }
 
     /**
-     * Register
+     * Token
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1AuthRegisterPost(requestParameters: V1AuthRegisterPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const user = requestParameters.user;
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling v1AuthRegisterPost.');
+    public v1AuthTokenPost(requestParameters: V1AuthTokenPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<UserDto>;
+    public v1AuthTokenPost(requestParameters: V1AuthTokenPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<UserDto>>;
+    public v1AuthTokenPost(requestParameters: V1AuthTokenPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<UserDto>>;
+    public v1AuthTokenPost(requestParameters: V1AuthTokenPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const userPass = requestParameters.userPass;
+        if (userPass === null || userPass === undefined) {
+            throw new Error('Required parameter userPass was null or undefined when calling v1AuthTokenPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -170,6 +151,7 @@ export class V1AuthService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -192,8 +174,8 @@ export class V1AuthService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/auth/register`,
-            user,
+        return this.httpClient.post<UserDto>(`${this.configuration.basePath}/v1/auth/token`,
+            userPass,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

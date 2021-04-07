@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { CookieService } from 'ngx-cookie-service';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
 import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'api_client';
 import { of } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -26,6 +26,10 @@ describe('DashboardComponent', () => {
       v1LoadBalancerVirtualServersGet: jest.fn(() => of({ total: 1 })),
     };
 
+    const authService = {
+      completeAuthentication: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       declarations: [
         DashboardComponent,
@@ -34,11 +38,11 @@ describe('DashboardComponent', () => {
         MockFontAwesomeComponent,
       ],
       providers: [
-        CookieService,
         { provide: V1DatacentersService, useValue: datacenterService },
         { provide: V1TiersService, useValue: tierService },
         { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
         { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
+        { provide: AuthService, useValue: authService },
       ],
     })
       .compileComponents()
@@ -54,16 +58,14 @@ describe('DashboardComponent', () => {
   });
 
   it('should load data on init', () => {
-    const datacenterService = TestBed.get(V1DatacentersService);
-    const tierService = TestBed.get(V1TiersService);
-    const vmwareService = TestBed.get(V1VmwareVirtualMachinesService);
-    const loadBalancerService = TestBed.get(V1LoadBalancerVirtualServersService);
+    const datacenterService = TestBed.inject(V1DatacentersService);
+    const tierService = TestBed.inject(V1TiersService);
+    const vmwareService = TestBed.inject(V1VmwareVirtualMachinesService);
+    const loadBalancerService = TestBed.inject(V1LoadBalancerVirtualServersService);
 
     component.ngOnInit();
 
     expect(datacenterService.v1DatacentersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
     expect(tierService.v1TiersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
-    expect(vmwareService.v1VmwareVirtualMachinesGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
-    expect(loadBalancerService.v1LoadBalancerVirtualServersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
   });
 });

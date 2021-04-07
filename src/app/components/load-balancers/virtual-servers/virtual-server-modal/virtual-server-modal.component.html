@@ -1,0 +1,287 @@
+<ngx-smart-modal
+  #virtualServerModal
+  identifier="virtualServerModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="closeModal()"
+  customClass="medium-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Virtual Server</h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+        </div>
+      </div>
+
+      <!-- Type -->
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
+          <option></option>
+          <option value="standard">Standard</option>
+        </select>
+        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+          <div *ngIf="f.type.errors.required">Type is required</div>
+        </div>
+      </div>
+
+      <!-- Source Address Translation -->
+      <div class="form-group">
+        <label for="sourceAddressTranslation">Source Address Translation</label>
+        <tooltip [message]="helpText.SourceAddressTranslation"></tooltip>
+        <select
+          id="sourceAddressTranslation"
+          formControlName="sourceAddressTranslation"
+          class="form-control"
+          [class.is-invalid]="submitted && f.sourceAddressTranslation.errors"
+        >
+          <option></option>
+          <option value="None">None</option>
+          <option value="AutoMap">Auto Map</option>
+          <option value="SNAT">SNAT</option>
+        </select>
+        <div *ngIf="submitted && f.sourceAddressTranslation.errors" class="invalid-feedback">
+          <div *ngIf="f.sourceAddressTranslation.errors.required">Source Address Translation is required</div>
+        </div>
+      </div>
+
+      <!-- Source Address -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="sourceAddress">Source Address</label>
+          <tooltip [message]="helpText.SourceAddress"></tooltip>
+          <input
+            id="sourceAddress"
+            formControlName="sourceIpAddress"
+            class="form-control"
+            [class.is-invalid]="submitted && f.sourceIpAddress.errors"
+          />
+          <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceIpAddress.errors.required">Source Address is required.</div>
+            <div *ngIf="f.sourceIpAddress.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
+          </div>
+        </div>
+
+        <!-- Destination Address -->
+        <div class="form-group col-md-6">
+          <label for="destinationAddress">Destination Address</label>
+          <tooltip [message]="helpText.DestinationAddress"></tooltip>
+          <input
+            id="destinationAddress"
+            formControlName="destinationIpAddress"
+            class="form-control"
+            [class.is-invalid]="submitted && f.destinationIpAddress.errors"
+          />
+          <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationIpAddress.errors.required">Destination Address is required.</div>
+            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Service Port -->
+        <div class="form-group col-md-6">
+          <label for="servicePort">Service Port</label>
+          <tooltip [message]="helpText.ServicePort"></tooltip>
+          <input
+            id="servicePort"
+            type="number"
+            class="form-control"
+            formControlName="servicePort"
+            [class.is-invalid]="submitted && f.servicePort.errors"
+          />
+          <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
+            <div *ngIf="f.servicePort.errors.required">Service Port is required.</div>
+            <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
+          </div>
+        </div>
+
+        <!-- Pool -->
+        <div class="form-group col-md-6">
+          <label for="defaultPoolId">Pool</label>
+          <tooltip [message]="helpText.Pool"></tooltip>
+          <select id="pool" class="form-control" formControlName="defaultPoolId" [class.is-invalid]="submitted && f.defaultPoolId.errors">
+            <option></option>
+            <option *ngFor="let pool of pools" [ngValue]="pool.id">
+              {{ pool.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.defaultPoolId.errors" class="invalid-feedback">
+            <div *ngIf="f.defaultPoolId.errors.required">Default Pool is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div class="form-row" *ngIf="modalMode === ModalMode.Edit">
+        <div class="form-group col-md-12">
+          <label for="availableProfiles">Profiles</label>
+          <tooltip [message]="helpText.AvailableProfiles"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availableProfiles" formControlName="selectedProfileId">
+              <option></option>
+              <option *ngFor="let profile of availableProfiles" [ngValue]="profile.id">{{ profile.name }}</option>
+            </select>
+            <button type="button" class="btn btn-info" (click)="addProfile()">
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add Profile</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedProfiles">Selected Profiles</label>
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected Client SSL Porifles</span>
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Profile</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let profile of selectedProfiles">
+                <td>
+                  {{ profile?.name }}
+                </td>
+                <td>
+                  {{ profile?.profileType }}
+                </td>
+                <td class="table__actions">
+                  <app-icon-button icon="delete" label="Remove Profile" (handleClick)="removeProfile(profile)"></app-icon-button>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedProfiles?.length" class="text-center">
+                <td colspan="3">No Profiles Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="modalMode === ModalMode.Edit">
+        <div class="form-group col-md-12">
+          <label for="availablePolicies">Policies</label>
+          <tooltip [message]="helpText.AvailablePolicies"></tooltip>
+
+          <div class="input-group align-items-center">
+            <select class="form-control" id="availablePolicies" formControlName="selectedPolicyId">
+              <option></option>
+              <option *ngFor="let policy of availablePolicies" [ngValue]="policy.id">{{ policy.name }}</option>
+            </select>
+            <button type="button" class="btn btn-info" (click)="addPolicy()">
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add Policy</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedPolicies">Selected Policies</label>
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected Policies</span>
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Policy</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let policy of selectedPolicies">
+                <td>
+                  {{ policy?.name }}
+                </td>
+                <td>
+                  {{ policy?.policyType }}
+                </td>
+                <td class="table__actions">
+                  <app-icon-button icon="delete" label="Remove Policy" (handleClick)="removePolicy(policy)"></app-icon-button>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedPolicies?.length" class="text-center">
+                <td colspan="3">No Policies Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="modalMode === ModalMode.Edit">
+        <div class="form-group col-md-12">
+          <label for="selectedIRule">iRules</label>
+          <tooltip [message]="helpText.IRules"></tooltip>
+          <div class="input-group align-items-center">
+            <select class="form-control" id="selectedIRule" formControlName="selectedIRuleId">
+              <option></option>
+              <option *ngFor="let irule of availableIRules" [ngValue]="irule.id">{{ irule.name }}</option>
+            </select>
+            <button type="button" class="btn btn-info" (click)="addIRule()">
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add iRule</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="selectedIRules">Selected iRules</label>
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Selected iRules</span>
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let irule of selectedIRules">
+                <td>
+                  {{ irule.name }}
+                </td>
+                <td class="table__actions">
+                  <app-icon-button icon="delete" label="Remove iRule" (handleClick)="removeIRule(irule)"></app-icon-button>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedIRules?.length" class="text-center">
+                <td colspan="2">No iRules Selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save Virtual Server</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

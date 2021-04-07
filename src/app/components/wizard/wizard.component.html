@@ -46,7 +46,12 @@
         <div class="mb-2 card" *ngFor="let category of wizardSection.Categories">
           <div class="card-header">
             <label class="m-0">
-              <fa-icon class="icon" [icon]="['fas', category?.Expanded ? 'chevron-down' : 'chevron-right']" (click)="category.Expanded = !category.Expanded" aria-label="Toggle Category"></fa-icon>
+              <fa-icon
+                class="icon"
+                [icon]="['fas', category?.Expanded ? 'chevron-down' : 'chevron-right']"
+                (click)="category.Expanded = !category.Expanded"
+                aria-label="Toggle Category"
+              ></fa-icon>
               <span>{{ category.Name }}</span>
             </label>
           </div>
@@ -54,10 +59,12 @@
           <div *ngIf="category?.Expanded">
             <div class="p-2 pl-5" *ngFor="let subcategory of category.Subcategories">
               <label>
-                <fa-icon class="icon"
-                         [icon]="['fas', subcategory?.Expanded ? 'chevron-down' : 'chevron-right']" 
-                         (click)="subcategory.Expanded = !subcategory.Expanded; getSidePanel(subcategory.Name)"
-                         aria-label="Toggle Subcategory"></fa-icon>
+                <fa-icon
+                  class="icon"
+                  [icon]="['fas', subcategory?.Expanded ? 'chevron-down' : 'chevron-right']"
+                  (click)="subcategory.Expanded = !subcategory.Expanded; getSidePanel(subcategory.Name)"
+                  aria-label="Toggle Subcategory"
+                ></fa-icon>
                 <span>{{ subcategory.Name }}</span>
               </label>
 

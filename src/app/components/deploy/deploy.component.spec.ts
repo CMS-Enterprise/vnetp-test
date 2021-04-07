@@ -1,22 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject } from 'rxjs';
 import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('DeployComponent', () => {
   let component: DeployComponent;
   let fixture: ComponentFixture<DeployComponent>;
-  const ngx = new NgxSmartModalServiceStub();
 
   const testData = {
     datacenter: {
@@ -43,33 +41,15 @@ describe('DeployComponent', () => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
-    const jobService = {
-      v1JobsPost: jest.fn(() => of({})),
-    };
-    const tiersService = {
-      v1DatacentersDatacenterIdTiersGet: jest.fn(() => of([testData.tier.item])),
-    };
-    const tierGroupService = {
-      v1TierGroupsGet: jest.fn(() => of([])),
-    };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [
-        DeployComponent,
-        ResolvePipe,
-        MockFontAwesomeComponent,
-        MockNgxSmartModalComponent,
-        MockComponent({ selector: 'app-yes-no-modal' }),
-      ],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        FormBuilder,
-        CookieService,
-        Validators,
-        { provide: V1TiersService, useValue: tiersService },
-        { provide: V1TierGroupsService, useValue: tierGroupService },
-        { provide: V1JobsService, useValue: jobService },
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1JobsService),
+        MockProvider(V1TierGroupsService),
+        MockProvider(V1TiersService, { v1DatacentersDatacenterIdTiersGet: of([testData.tier.item]) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -90,8 +70,8 @@ describe('DeployComponent', () => {
   });
 
   it('should call to load tiers and tier groups on init', () => {
-    const tiersService = TestBed.get(V1TiersService);
-    const tierGroupService = TestBed.get(V1TierGroupsService);
+    const tiersService = TestBed.inject(V1TiersService);
+    const tierGroupService = TestBed.inject(V1TierGroupsService);
 
     datacenterSubject.next(testData.datacenter);
 
@@ -125,6 +105,7 @@ describe('DeployComponent', () => {
 
   describe('deployTiers', () => {
     it('should not open the confirmation modal when 0 tiers are selected', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
       const spy = jest.spyOn(ngx, 'getModal');
 
       component.tiers = [];
@@ -135,48 +116,19 @@ describe('DeployComponent', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should open the confirmation modal to deploys tiers', () => {
-      const spy = jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onCloseFinished: new Subject().asObservable(),
-        } as any;
-      });
-
-      component.tiers = [testData.tier];
-
-      const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
-      deployButton.nativeElement.click();
-
-      expect(spy).toHaveBeenCalledWith('yesNoModal');
-
-      const getModalCall = spy.mock.results[0].value;
-      expect(getModalCall.open).toHaveBeenCalled();
-    });
-
     it('should call to deploys tiers after confirming', () => {
-      const onCloseFinishedSubject = new Subject();
-      jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-        return {
-          open: jest.fn(),
-          onCloseFinished: onCloseFinishedSubject.asObservable(),
-        } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+        confirmFn();
+        return of().subscribe();
       });
 
       component.tiers = [testData.tier];
 
-      const jobService = TestBed.get(V1JobsService);
+      const jobService = TestBed.inject(V1JobsService);
       const deploySpy = jest.spyOn(jobService, 'v1JobsPost');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();
-      onCloseFinishedSubject.next({
-        getData: () => {
-          return { modalYes: true };
-        },
-        removeData: jest.fn(),
-      });
-
       expect(deploySpy).toHaveBeenCalled();
     });
   });

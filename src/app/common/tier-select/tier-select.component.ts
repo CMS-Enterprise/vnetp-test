@@ -3,27 +3,24 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { V1DatacentersService, Tier } from 'api_client';
-import { User } from 'src/app/models/user/user';
-import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-tier-select',
   templateUrl: './tier-select.component.html',
 })
 export class TierSelectComponent implements OnInit, OnDestroy {
-  tiers: Array<Tier>;
-  selectedTier: string;
-  currentTier: Tier;
-  datacenterId: string;
-  currentDatacenterSubscription: Subscription;
-  currentUserSubscription: Subscription;
-  currentTierSubscription: Subscription;
+  public currentTier: Tier;
+  public datacenterId: string;
+  public selectedTier: string;
+  public tiers: Tier[] = [];
+
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
 
   constructor(
-    private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
     private datacenterService: V1DatacentersService,
     private tierContextService: TierContextService,
@@ -31,13 +28,11 @@ export class TierSelectComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
   ) {}
 
-  currentUser: User;
-
-  openTierModal() {
+  public openTierModal(): void {
     this.ngx.getModal('tierSwitchModal').open();
   }
 
-  getTiers() {
+  public getTiers(): void {
     this.datacenterService
       .v1DatacentersIdGet({
         id: this.datacenterId,
@@ -48,22 +43,16 @@ export class TierSelectComponent implements OnInit, OnDestroy {
       });
   }
 
-  switchTier() {
-    try {
-      this.tierContextService.switchTier(this.selectedTier);
-      this.toastrService.success('Tier Switched');
-    } catch (error) {
-      this.toastrService.error(error);
+  public switchTier(): void {
+    const isSwitched = this.tierContextService.switchTier(this.selectedTier);
+    if (isSwitched) {
+      this.toastrService.success('Tier switched');
+    } else {
+      this.toastrService.error('Unable to switch tier');
     }
   }
 
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentUserSubscription, this.currentTierSubscription]);
-  }
-
   ngOnInit() {
-    this.currentUserSubscription = this.auth.currentUser.subscribe(u => (this.currentUser = u));
-
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;
@@ -75,6 +64,6 @@ export class TierSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubAll();
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 }

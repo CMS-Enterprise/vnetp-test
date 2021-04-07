@@ -1,8 +1,14 @@
-<ngx-smart-modal #applianceModal identifier="applianceModal" [dismissable]="false" (onOpen)="getData()" (onClose)="cancel()" customClass="medium-modal">
-  <div class="modal-header">
-    <h1 class="modal-title header">Appliance</h1>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
-  </div>
+<ngx-smart-modal
+  #applianceModal
+  identifier="applianceModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="cancel()"
+  customClass="medium-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Appliance</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -12,7 +18,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
           required
@@ -31,7 +37,7 @@
           type="text"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
           id="description"
         />
@@ -48,9 +54,10 @@
             type="number"
             formControlName="rackUnits"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.rackUnits.errors }"
+            [class.is-invalid]="submitted && f.rackUnits.errors"
             id="rackUnits"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.rackUnits.errors" class="invalid-feedback">
             <div *ngIf="f.rackUnits.errors.required">Rack Units are required</div>
@@ -63,7 +70,7 @@
             type="text"
             formControlName="serialNumber"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.serialNumber.errors }"
+            [class.is-invalid]="submitted && f.serialNumber.errors"
             id="serialNumber"
             required
           />
@@ -80,7 +87,7 @@
           formControlName="deliveryDate"
           id="deliveryDate"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.deliveryDate.errors }"
+          [class.is-invalid]="submitted && f.deliveryDate.errors"
           required
         />
         <div *ngIf="submitted && f.deliveryDate.errors" class="invalid-feedback">
@@ -97,7 +104,7 @@
             formControlName="localStorageType"
             id="localStorageType"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageType.errors }"
+            [class.is-invalid]="submitted && f.localStorageType.errors"
             required
           >
             <option></option>
@@ -117,7 +124,7 @@
             formControlName="localStorageRequired"
             id="localStorageRequired"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageRequired.errors }"
+            [class.is-invalid]="submitted && f.localStorageRequired.errors"
             required
           >
             <option></option>
@@ -138,11 +145,13 @@
             formControlName="localStorageSize"
             id="localStorageSize"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.localStorageSize.errors }"
+            [class.is-invalid]="submitted && f.localStorageSize.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.localStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.localStorageSize.errors.required">Local Storage Size is required</div>
+            <div *ngIf="f.localStorageSize.errors.min">Local Storage Size must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -152,13 +161,7 @@
       <div class="row">
         <div class="form-group col-md-4">
           <label for="sanType">SAN Type</label>
-          <select
-            formControlName="sanType"
-            id="sanType"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanType.errors }"
-            required
-          >
+          <select formControlName="sanType" id="sanType" class="form-control" [class.is-invalid]="submitted && f.sanType.errors" required>
             <option></option>
             <option *ngFor="let opt of ['iSCSI', 'NFS']">
               {{ opt }}
@@ -175,7 +178,7 @@
             formControlName="sanRequired"
             id="sanRequired"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanRequired.errors }"
+            [class.is-invalid]="submitted && f.sanRequired.errors"
             required
           >
             <option></option>
@@ -195,11 +198,13 @@
             formControlName="sanStorageSize"
             id="sanStorageSize"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.sanStorageSize.errors }"
+            [class.is-invalid]="submitted && f.sanStorageSize.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.sanStorageSize.errors" class="invalid-feedback">
             <div *ngIf="f.sanStorageSize.errors.required">SAN Storage Size is required</div>
+            <div *ngIf="f.sanStorageSize.errors.min">SAN Storage Size must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -214,11 +219,13 @@
             formControlName="powerSupplyVoltage"
             id="powerSupplyVoltage"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyVoltage.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyVoltage.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.powerSupplyVoltage.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyVoltage.errors.required">Power Supply Voltage is required</div>
+            <div *ngIf="f.powerSupplyVoltage.errors.min">Power Supply Voltage must be greater than or equal to 1</div>
           </div>
         </div>
 
@@ -229,11 +236,13 @@
             formControlName="powerSupplyWattage"
             id="powerSupplyWattage"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyWattage.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyWattage.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.powerSupplyWattage.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyWattage.errors.required">Power Supply Wattage is required</div>
+            <div *ngIf="f.powerSupplyWattage.errors.min">Power Supply Wattage must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -245,7 +254,7 @@
             formControlName="powerSupplyConnectionType"
             id="powerSupplyConnectionType"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyConnectionType.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyConnectionType.errors"
             required
           >
             <option></option>
@@ -265,11 +274,13 @@
             formControlName="powerSupplyCount"
             id="powerSupplyCount"
             class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.powerSupplyCount.errors }"
+            [class.is-invalid]="submitted && f.powerSupplyCount.errors"
             required
+            min="1"
           />
           <div *ngIf="submitted && f.powerSupplyCount.errors" class="invalid-feedback">
             <div *ngIf="f.powerSupplyCount.errors.required">Power Supply Count is required</div>
+            <div *ngIf="f.powerSupplyCount.errors.min">Power Supply Count must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -279,11 +290,20 @@
 
         <div class="form-group">
           <label>Network Ports</label>
-          <button type="button" name="modalVirtualDisk" class="btn btn-sm btn-info pull-right mb-2" (click)="openAddNetworkPortModal()">
-            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-            <span>Add Network Port</span>
-          </button>
-          <table name="vSwitchTable" class="table table-striped" aria-describedby="Network Ports table">
+
+          <!-- Add Network Port -->
+          <section class="btn-toolbar" role="toolbar">
+            <button type="button" name="modalVirtualDisk" class="btn btn-info" (click)="openAddNetworkPortModal()">
+              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+              <span>Add Network Port</span>
+            </button>
+          </section>
+
+          <table class="table table-striped">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>Network Ports on this Appliance</span>
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Name</th>
@@ -293,22 +313,21 @@
             <tbody>
               <tr *ngFor="let n of networkPorts">
                 <td>{{ n.name }}</td>
-                <td class="item-actions">
-                  <fa-icon 
-                    [icon]="['fas', 'undo']"
+                <td class="table__actions">
+                  <app-icon-button
                     *ngIf="n?.deletedAt"
-                    class="fg-success icon"
-                    (click)="restoreNetworkPort(n)"
-                    aria-label="Restore Network Port"
-                  ></fa-icon>
-                  <fa-icon
-                    class="icon"
-                    [icon]="['fas', 'trash']"
-                    [ngClass]="{ 'fg-danger': n.deletedAt }"
-                    (click)="deleteNetworkPort(n)"
-                    aria-label="Soft-Delete/Delete Network Port"
-                  >
-                  </fa-icon>
+                    icon="undo"
+                    label="Restore Network Port"
+                    type="success"
+                    (handleClick)="restoreNetworkPort(n)"
+                  ></app-icon-button>
+
+                  <app-icon-button
+                    icon="delete"
+                    label="Soft-Delete/Delete Network Port"
+                    [type]="n?.deletedAt ? 'danger' : 'default'"
+                    (handleClick)="deleteNetworkPort(n)"
+                  ></app-icon-button>
                 </td>
               </tr>
               <tr *ngIf="!networkPorts?.length" class="text-center">
@@ -320,15 +339,15 @@
       </div>
     </div>
 
-    <div class="modal-footer">
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

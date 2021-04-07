@@ -10,6 +10,37 @@ tags:
 schemes:
   - http
 paths:
+  /v1/auth/token:
+    post:
+      summary: Token
+      parameters:
+        - name: UserPass
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/UserPass'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDto'
+      tags: &ref_0
+        - v1/auth
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/auth/tenants:
+    get:
+      summary: Available Tenants
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+      produces:
+        - application/json
+      consumes:
+        - application/json
   '/v1/configuration-upload/{id}/configure':
     patch:
       summary: Provisions an Entity.
@@ -26,7 +57,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_0
+      tags: &ref_1
         - v1/configuration-upload
       produces:
         - application/json
@@ -172,7 +203,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -190,7 +221,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -234,7 +265,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -256,7 +287,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ConfigurationUpload'
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -272,7 +303,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -288,7 +319,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -304,7 +335,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -320,7 +351,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_0
+      tags: *ref_1
       produces:
         - application/json
       consumes:
@@ -465,7 +496,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Datacenter'
-      tags: &ref_1
+      tags: &ref_2
         - v1/datacenters
       produces:
         - application/json
@@ -484,7 +515,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -528,7 +559,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -550,7 +581,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -572,7 +603,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Datacenter'
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -588,7 +619,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -604,7 +635,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_2
       produces:
         - application/json
       consumes:
@@ -753,7 +784,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: &ref_2
+      tags: &ref_3
         - v1/tiers
       produces:
         - application/json
@@ -802,7 +833,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_2
+      tags: *ref_3
       produces:
         - application/json
       consumes:
@@ -947,7 +978,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: &ref_3
+      tags: &ref_4
         - v1/tiers
       produces:
         - application/json
@@ -966,7 +997,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1010,7 +1041,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1032,7 +1063,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1054,7 +1085,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1071,7 +1102,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1092,7 +1123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Tier'
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1108,7 +1139,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1124,7 +1155,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1140,7 +1171,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1156,25 +1187,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_3
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  '/v1/network-security/firewall-rule-groups/{id}/rules':
-    get:
-      summary: Get Firewall Rules w/ Object Relations for Firewall Rule Group.
-      parameters:
-        - type: string
-          name: id
-          required: true
-          in: path
-          description: UUID.
-      responses:
-        '201':
-          description: ''
-      tags: &ref_4
-        - v1/network-security/firewall-rule-groups
+      tags: *ref_4
       produces:
         - application/json
       consumes:
@@ -1319,7 +1332,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: &ref_5
+        - v1/network-security/firewall-rule-groups
       produces:
         - application/json
       consumes:
@@ -1337,7 +1351,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1381,7 +1395,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1403,7 +1417,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1425,7 +1439,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1442,7 +1456,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1463,7 +1477,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRuleGroup'
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1479,7 +1493,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1495,7 +1509,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1511,7 +1525,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1527,7 +1541,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_4
+      tags: *ref_5
       produces:
         - application/json
       consumes:
@@ -1544,8 +1558,27 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_5
+          schema:
+            $ref: '#/definitions/FirewallRulePreview'
+      tags: &ref_6
         - v1/network-security/firewall-rules
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/network-security/firewall-rules/group/{id}':
+    get:
+      summary: Get Firewall Rules w/ Object Relations for Firewall Rule Group.
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+          description: UUID.
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1690,7 +1723,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1708,7 +1741,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1752,7 +1785,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1774,7 +1807,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1796,7 +1829,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1813,7 +1846,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/FirewallRule'
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1829,7 +1862,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1845,7 +1878,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
       produces:
         - application/json
       consumes:
@@ -1990,7 +2023,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObjectGroup'
-      tags: &ref_6
+      tags: &ref_7
         - v1/network-security/service-object-groups
       produces:
         - application/json
@@ -2009,7 +2042,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2053,7 +2086,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2075,7 +2108,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2097,7 +2130,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2114,7 +2147,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2135,7 +2168,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2151,7 +2184,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2167,7 +2200,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2183,7 +2216,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2199,7 +2232,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
       produces:
         - application/json
       consumes:
@@ -2225,7 +2258,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: &ref_7
+      tags: &ref_8
         - v1/network-security/service-object-groups
       produces:
         - application/json
@@ -2251,7 +2284,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObjectGroup'
-      tags: *ref_7
+      tags: *ref_8
       produces:
         - application/json
       consumes:
@@ -2268,7 +2301,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
       produces:
         - application/json
       consumes:
@@ -2413,7 +2446,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObject'
-      tags: &ref_8
+      tags: &ref_9
         - v1/network-security/service-objects
       produces:
         - application/json
@@ -2432,7 +2465,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2476,7 +2509,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2498,7 +2531,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2520,7 +2553,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2537,7 +2570,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2558,7 +2591,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ServiceObject'
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2574,7 +2607,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2590,7 +2623,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2606,7 +2639,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2622,7 +2655,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
       produces:
         - application/json
       consumes:
@@ -2767,7 +2800,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObjectGroup'
-      tags: &ref_9
+      tags: &ref_10
         - v1/network-security/network-object-groups
       produces:
         - application/json
@@ -2786,7 +2819,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2830,7 +2863,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2852,7 +2885,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2874,7 +2907,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2891,7 +2924,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2912,7 +2945,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2928,7 +2961,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2944,7 +2977,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2960,7 +2993,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -2976,7 +3009,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
       produces:
         - application/json
       consumes:
@@ -3002,7 +3035,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: &ref_10
+      tags: &ref_11
         - v1/network-security/network-object-groups
       produces:
         - application/json
@@ -3028,7 +3061,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObjectGroup'
-      tags: *ref_10
+      tags: *ref_11
       produces:
         - application/json
       consumes:
@@ -3045,7 +3078,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
       produces:
         - application/json
       consumes:
@@ -3190,7 +3223,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObject'
-      tags: &ref_11
+      tags: &ref_12
         - v1/network-security/network-objects
       produces:
         - application/json
@@ -3209,7 +3242,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3253,7 +3286,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3275,7 +3308,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3297,7 +3330,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3314,7 +3347,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3335,7 +3368,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NetworkObject'
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3351,7 +3384,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3367,7 +3400,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3383,7 +3416,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3399,7 +3432,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
       produces:
         - application/json
       consumes:
@@ -3548,7 +3581,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: &ref_12
+      tags: &ref_13
         - v1/vlans
       produces:
         - application/json
@@ -3597,7 +3630,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_12
+      tags: *ref_13
       produces:
         - application/json
       consumes:
@@ -3742,7 +3775,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: &ref_13
+      tags: &ref_14
         - v1/network/vlans
       produces:
         - application/json
@@ -3761,7 +3794,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3805,7 +3838,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3827,7 +3860,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3849,7 +3882,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3866,7 +3899,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3887,7 +3920,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Vlan'
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3903,7 +3936,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3919,7 +3952,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3935,7 +3968,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -3951,7 +3984,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
       produces:
         - application/json
       consumes:
@@ -4100,7 +4133,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: &ref_14
+      tags: &ref_15
         - v1/network/vlans
       produces:
         - application/json
@@ -4149,7 +4182,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_14
+      tags: *ref_15
       produces:
         - application/json
       consumes:
@@ -4298,7 +4331,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: &ref_15
+      tags: &ref_16
         - v1/tiers/
       produces:
         - application/json
@@ -4347,7 +4380,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_15
+      tags: *ref_16
       produces:
         - application/json
       consumes:
@@ -4364,7 +4397,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_16
+      tags: &ref_17
         - v1/network/subnets
       produces:
         - application/json
@@ -4510,7 +4543,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4528,7 +4561,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4572,7 +4605,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4594,7 +4627,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4616,7 +4649,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4633,7 +4666,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Subnet'
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4649,7 +4682,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4665,7 +4698,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4681,7 +4714,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4697,7 +4730,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
       produces:
         - application/json
       consumes:
@@ -4842,7 +4875,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/StaticRoute'
-      tags: &ref_17
+      tags: &ref_18
         - v1/network/static-routes
       produces:
         - application/json
@@ -4861,7 +4894,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4905,7 +4938,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4927,7 +4960,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4949,7 +4982,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4966,7 +4999,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -4987,7 +5020,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/StaticRoute'
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5003,7 +5036,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5019,7 +5052,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5035,7 +5068,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
       produces:
         - application/json
       consumes:
@@ -5050,41 +5083,6 @@ paths:
           type: string
       responses:
         '200':
-          description: ''
-      tags: *ref_17
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/auth/login:
-    post:
-      summary: Login
-      parameters:
-        - name: UserPass
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/UserPass'
-      responses:
-        '200':
-          description: ''
-      tags: &ref_18
-        - v1/auth
-      produces:
-        - application/json
-      consumes:
-        - application/json
-  /v1/auth/register:
-    post:
-      summary: Register
-      parameters:
-        - name: User
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/User'
-      responses:
-        '201':
           description: ''
       tags: *ref_18
       produces:
@@ -6089,6 +6087,358 @@ paths:
         - application/json
       consumes:
         - application/json
+  /v1/priority-groups:
+    post:
+      summary: Create one PriorityGroup
+      parameters:
+        - name: CreatePriorityGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CreatePriorityGroupDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_22
+        - v1/priority-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    get:
+      summary: Retrieve many PriorityGroup
+      parameters:
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: filter
+          description: >-
+            <h4>Adds fields request condition (multiple conditions) to the
+            request.</h4><i>Syntax:</i>
+            <strong>?filter=field||condition||value</strong><br/><i>Examples:</i>
+            <ul><li><strong>?filter=name||eq||batman</strong></li><li><strong>?filter=isVillain||eq||false&filter=city||eq||Arkham</strong>
+            (multiple filters are treated as a combination of AND type of
+            conditions)</li><li><strong>?filter=shots||in||12,26</strong> (some
+            conditions accept multiple values separated by
+            commas)</li><li><strong>?filter=power||isnull</strong> (some
+            conditions don't accept value)</li></ul><br/>Filter
+            Conditions:<ul><li><strong><code>eq</code></strong> (<code>=</code>,
+            equal)</li><li><strong><code>ne</code></strong> (<code>!=</code>,
+            not equal)</li><li><strong><code>gt</code></strong>
+            (<code>&gt;</code>, greater
+            than)</li><li><strong><code>lt</code></strong> (<code>&lt;</code>,
+            lower that)</li><li><strong><code>gte</code></strong>
+            (<code>&gt;=</code>, greater than or
+            equal)</li><li><strong><code>lte</code></strong>
+            (<code>&lt;=</code>, lower than or
+            equal)</li><li><strong><code>starts</code></strong> (<code>LIKE
+            val%</code>, starts with)</li><li><strong><code>ends</code></strong>
+            (<code>LIKE %val</code>, ends
+            with)</li><li><strong><code>cont</code></strong> (<code>LIKE
+            %val%</code>, contains)</li><li><strong><code>excl</code></strong>
+            (<code>NOT LIKE %val%</code>, not
+            contains)</li><li><strong><code>in</code></strong> (<code>IN</code>,
+            in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>notin</code></strong>
+            (<code>NOT IN</code>, not in range, <strong><em>accepts multiple
+            values</em></strong>)</li><li><strong><code>isnull</code></strong>
+            (<code>IS NULL</code>, is NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>notnull</code></strong>
+            (<code>IS NOT NULL</code>, not NULL, <strong><em>doesn't accept
+            value</em></strong>)</li><li><strong><code>between</code></strong>
+            (<code>BETWEEN</code>, between, <strong><em>accepts two
+            values</em></strong>)</li></ul>
+          required: false
+          in: query
+          type: string
+        - name: or
+          description: >-
+            <h4>Adds <code>OR</code> conditions to the
+            request.</h4><i>Syntax:</i>
+            <strong>?or=field||condition||value</strong><br/>It uses the same
+            conditions as the filter parameter<br/><i>Rules and
+            <i>Examples:</i></i><ul><li>If there is only <strong>one</strong>
+            <code>or</code> present (without <code>filter</code>) then it will
+            be interpreted as simple
+            filter:</li><ul><li><strong>?or=name||eq||batman</strong></li></ul></ul><ul><li>If
+            there are <strong>multiple</strong> <code>or</code> present (without
+            <code>filter</code>) then it will be interpreted as a compination of
+            <code>OR</code> conditions, as follows:<br><code>WHERE {or} OR {or}
+            OR
+            ...</code></li><ul><li><strong>?or=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            there are <strong>one</strong> <code>or</code> and
+            <strong>one</strong> <code>filter</code> then it will be interpreted
+            as <code>OR</code> condition, as follows:<br><code>WHERE {filter} OR
+            {or}</code></li><ul><li><strong>?filter=name||eq||batman&or=name||eq||joker</strong></li></ul></ul><ul><li>If
+            present <strong>both</strong> <code>or</code> and
+            <code>filter</code> in any amount (<strong>one</strong> or
+            <strong>miltiple</strong> each) then both interpreted as a
+            combitation of <code>AND</code> conditions and compared with each
+            other by <code>OR</code> condition, as follows:<br><code>WHERE
+            ({filter} AND {filter} AND ...) OR ({or} AND {or} AND
+            ...)</code></li><ul><li><strong>?filter=type||eq||hero&filter=status||eq||alive&or=type||eq||villain&or=status||eq||dead</strong></li></ul></ul>
+          required: false
+          in: query
+          type: string
+        - name: sort
+          description: >-
+            <h4>Adds sort by field (by multiple fields) and order to query
+            result.</h4><i>Syntax:</i>
+            <strong>?sort=field,ASC|DESC</strong><br/><i>Examples:</i></i><ul><li><strong>?sort=name,ASC</strong></li><li><strong>?sort=name,ASC&sort=id,DESC</strong></li></ul>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: per_page
+          description: >-
+            <h4>Receive <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?per_page=number</strong><br/><i>Example:</i>
+            <strong>?per_page=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: offset
+          description: >-
+            <h4>Offset <code>N</code> amount of entities.</h4><i>Syntax:</i>
+            <strong>?offset=number</strong><br/><i>Example:</i>
+            <strong>?offset=10</strong>
+          required: false
+          in: query
+          type: number
+        - name: page
+          description: >-
+            <h4>Receive a portion of <code>limit</code> entities (alternative to
+            <code>offset</code>). Will be applied if <code>limit</code> is set
+            up.</h4><i>Syntax:</i>
+            <strong>?page=number</strong><br/><i>Example:</i>
+            <strong>?page=2</strong>
+          required: false
+          in: query
+          type: number
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/priority-groups/{id}':
+    get:
+      summary: Retrieve one PriorityGroup
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: fields
+          description: >-
+            <h4>Selects fields that should be returned in the reponse
+            body.</h4><i>Syntax:</i> <strong>?fields=field1,field2,...</strong>
+            <br/><i>Example:</i> <strong>?fields=email,name</strong>
+          required: false
+          in: query
+          type: string
+        - name: join
+          description: >-
+            <h4>Receive joined relational objects in GET result (with all or
+            selected
+            fields).</h4><i>Syntax:</i><ul><li><strong>?join=relation</strong></li><li><strong>?join=relation||field1,field2,...</strong></li><li><strong>?join=relation1||field11,field12,...&join=relation1.nested||field21,field22,...&join=...</strong></li></ul><br/><i>Examples:</i></i><ul><li><strong>?join=profile</strong></li><li><strong>?join=profile||firstName,email</strong></li><li><strong>?join=profile||firstName,email&join=notifications||content&join=tasks</strong></li><li><strong>?join=relation1&join=relation1.nested&join=relation1.nested.deepnested</strong></li></ul><strong><i>Notice:</i></strong>
+            <code>id</code> field always persists in relational objects. To use
+            nested relations, the parent level MUST be set before the child
+            level like example above.
+          required: false
+          in: query
+          type: string
+        - name: cache
+          description: >-
+            <h4>Reset cache (if was enabled) and receive entities from the
+            DB.</h4><i>Usage:</i> <strong>?cache=0</strong>
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    patch:
+      summary: Update one PriorityGroup
+      parameters:
+        - name: PriorityGroup
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Replace one PriorityGroup
+      parameters:
+        - name: PriorityGroup
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one PriorityGroup
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/priority-groups/bulk:
+    post:
+      summary: Create many PriorityGroup
+      parameters:
+        - name: GeneratedPriorityGroupBulkDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/GeneratedPriorityGroupBulkDto'
+      responses:
+        '201':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PriorityGroup'
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/priority-groups/{id}/provision':
+    put:
+      summary: Provisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/priority-groups/{id}/deprovision':
+    patch:
+      summary: Deprovisions an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/priority-groups/{id}/soft':
+    delete:
+      summary: Soft deletes an Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/priority-groups/{id}/restore':
+    patch:
+      summary: Restores a Soft-Deleted Entity.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+      produces:
+        - application/json
+      consumes:
+        - application/json
   /v1/physical-servers:
     get:
       summary: Retrieve many PhysicalServer
@@ -6229,7 +6579,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: &ref_22
+      tags: &ref_23
         - v1/physical-servers
       produces:
         - application/json
@@ -6248,7 +6598,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6292,7 +6642,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6314,7 +6664,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6336,7 +6686,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6353,7 +6703,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6374,7 +6724,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PhysicalServer'
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6390,7 +6740,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6406,7 +6756,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
       produces:
         - application/json
       consumes:
@@ -6551,7 +6901,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: &ref_23
+      tags: &ref_24
         - v1/appliances
       produces:
         - application/json
@@ -6570,7 +6920,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6614,7 +6964,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6636,7 +6986,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6658,7 +7008,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6675,7 +7025,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6696,7 +7046,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Appliance'
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6712,7 +7062,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6728,7 +7078,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
       produces:
         - application/json
       consumes:
@@ -6745,7 +7095,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_24
+      tags: &ref_25
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -6757,7 +7107,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -6902,7 +7252,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -6920,7 +7270,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -6964,7 +7314,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -6986,7 +7336,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7008,7 +7358,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7025,7 +7375,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7041,7 +7391,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7057,7 +7407,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7073,7 +7423,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7089,7 +7439,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
       produces:
         - application/json
       consumes:
@@ -7113,7 +7463,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_25
+      tags: &ref_26
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7137,7 +7487,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_25
+      tags: *ref_26
       produces:
         - application/json
       consumes:
@@ -7161,7 +7511,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_26
+      tags: &ref_27
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7185,7 +7535,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_26
+      tags: *ref_27
       produces:
         - application/json
       consumes:
@@ -7209,7 +7559,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: &ref_27
+      tags: &ref_28
         - v1/load-balancer/virtual-servers
       produces:
         - application/json
@@ -7233,7 +7583,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVirtualServer'
-      tags: *ref_27
+      tags: *ref_28
       produces:
         - application/json
       consumes:
@@ -7378,7 +7728,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: &ref_28
+      tags: &ref_29
         - v1/load-balancer/irules
       produces:
         - application/json
@@ -7397,7 +7747,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7441,7 +7791,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7463,7 +7813,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7485,7 +7835,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7502,7 +7852,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7523,7 +7873,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerIrule'
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7539,7 +7889,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7555,7 +7905,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7571,7 +7921,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7587,7 +7937,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
       produces:
         - application/json
       consumes:
@@ -7732,7 +8082,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: &ref_29
+      tags: &ref_30
         - v1/load-balancer/profiles
       produces:
         - application/json
@@ -7751,7 +8101,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7795,7 +8145,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7817,7 +8167,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7839,7 +8189,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7856,7 +8206,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7877,7 +8227,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerProfile'
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7893,7 +8243,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7909,7 +8259,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7925,7 +8275,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -7941,7 +8291,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_29
+      tags: *ref_30
       produces:
         - application/json
       consumes:
@@ -8086,7 +8436,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: &ref_30
+      tags: &ref_31
         - v1/load-balancer/policies
       produces:
         - application/json
@@ -8105,7 +8455,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8149,7 +8499,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8171,7 +8521,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8193,7 +8543,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8210,7 +8560,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8231,7 +8581,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerPolicy'
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8247,7 +8597,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8263,7 +8613,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8279,7 +8629,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8295,7 +8645,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_30
+      tags: *ref_31
       produces:
         - application/json
       consumes:
@@ -8312,7 +8662,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_31
+      tags: &ref_32
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8330,7 +8680,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8347,7 +8697,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8364,7 +8714,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8375,7 +8725,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8393,7 +8743,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8416,7 +8766,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8438,7 +8788,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8455,7 +8805,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerPool'
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8471,7 +8821,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8487,7 +8837,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8503,7 +8853,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8519,7 +8869,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_31
+      tags: *ref_32
       produces:
         - application/json
       consumes:
@@ -8543,7 +8893,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_32
+      tags: &ref_33
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8567,7 +8917,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_32
+      tags: *ref_33
       produces:
         - application/json
       consumes:
@@ -8599,7 +8949,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: &ref_33
+      tags: &ref_34
         - v1/load-balancer/pools
       produces:
         - application/json
@@ -8628,7 +8978,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_33
+      tags: *ref_34
       produces:
         - application/json
       consumes:
@@ -8773,7 +9123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: &ref_34
+      tags: &ref_35
         - v1/load-balancer/health-monitors
       produces:
         - application/json
@@ -8792,7 +9142,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8836,7 +9186,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8858,7 +9208,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8880,7 +9230,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8897,7 +9247,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8918,7 +9268,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerHealthMonitor'
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8934,7 +9284,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8950,7 +9300,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8966,7 +9316,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8982,7 +9332,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_34
+      tags: *ref_35
       produces:
         - application/json
       consumes:
@@ -8999,7 +9349,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_35
+      tags: &ref_36
         - v1/load-balancer/nodes
       produces:
         - application/json
@@ -9017,7 +9367,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9162,7 +9512,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9180,7 +9530,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9224,7 +9574,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9246,7 +9596,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9268,7 +9618,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9285,7 +9635,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9306,7 +9656,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerNode'
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9322,7 +9672,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9338,7 +9688,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9354,7 +9704,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9370,7 +9720,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_35
+      tags: *ref_36
       produces:
         - application/json
       consumes:
@@ -9515,7 +9865,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVlan'
-      tags: &ref_36
+      tags: &ref_37
         - /v1/load-balancer/vlans
       produces:
         - application/json
@@ -9534,7 +9884,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9578,7 +9928,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9600,7 +9950,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9622,7 +9972,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9639,7 +9989,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9660,7 +10010,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerVlan'
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9676,7 +10026,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9692,7 +10042,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9708,7 +10058,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9724,7 +10074,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_36
+      tags: *ref_37
       produces:
         - application/json
       consumes:
@@ -9869,7 +10219,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: &ref_37
+      tags: &ref_38
         - /v1/load-balancer/self-ips
       produces:
         - application/json
@@ -9888,7 +10238,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -9932,7 +10282,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -9954,7 +10304,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -9976,7 +10326,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -9993,7 +10343,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10014,7 +10364,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerSelfIp'
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10030,7 +10380,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10046,7 +10396,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10062,7 +10412,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10078,7 +10428,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_37
+      tags: *ref_38
       produces:
         - application/json
       consumes:
@@ -10223,7 +10573,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerRoute'
-      tags: &ref_38
+      tags: &ref_39
         - /v1/load-balancer/routes
       produces:
         - application/json
@@ -10242,7 +10592,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10286,7 +10636,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10308,7 +10658,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10330,7 +10680,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10347,7 +10697,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10368,7 +10718,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LoadBalancerRoute'
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10384,7 +10734,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10400,7 +10750,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10416,7 +10766,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10432,7 +10782,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_38
+      tags: *ref_39
       produces:
         - application/json
       consumes:
@@ -10577,7 +10927,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Job'
-      tags: &ref_39
+      tags: &ref_40
         - v1/jobs
       produces:
         - application/json
@@ -10596,7 +10946,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -10640,7 +10990,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -10662,7 +11012,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/Job'
-      tags: *ref_39
+      tags: *ref_40
       produces:
         - application/json
       consumes:
@@ -10807,7 +11157,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: &ref_40
+      tags: &ref_41
         - v1/tier-groups
       produces:
         - application/json
@@ -10826,7 +11176,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10870,7 +11220,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10892,7 +11242,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10914,7 +11264,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10931,7 +11281,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10952,7 +11302,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TierGroup'
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10968,7 +11318,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10984,7 +11334,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_40
+      tags: *ref_41
       produces:
         - application/json
       consumes:
@@ -10995,7 +11345,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_41
+      tags: &ref_42
         - v1/vts
       produces:
         - application/json
@@ -11007,12 +11357,1356 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_41
+      tags: *ref_42
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/applications:
+    get:
+      summary: Get many ActifioApplicationDto
+      parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+        - type: boolean
+          name: logicalGroupMember
+          required: false
+          in: query
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationDto'
+      tags: &ref_43
+        - v1/actifio/gm/applications
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/applications/{id}':
+    get:
+      summary: Get one ActifioApplicationDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioApplicationDto'
+      tags: *ref_43
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove one ActifioApplication
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_43
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/applications/import:
+    post:
+      summary: Add one ActifioApplication
+      parameters:
+        - name: ActifioImportApplicationsDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioImportApplicationsDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_43
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/clusters:
+    get:
+      summary: Get many ActifioClusterDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioClusterDto'
+      tags:
+        - v1/actifio/gm/clusters
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/disk-pools:
+    get:
+      summary: Get many ActifioDiskPoolDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioDiskPoolDto'
+      tags:
+        - v1/actifio/gm/disk-pools
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/hosts:
+    get:
+      summary: Get many ActifioHostDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioHostDto'
+      tags: &ref_44
+        - v1/actifio/gm/hosts
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/hosts/{id}':
+    get:
+      summary: Get one ActifioHostDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioHostDto'
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/hosts/{hostId}/discovered-applications':
+    get:
+      summary: Get many discoveredVMDto
+      parameters:
+        - type: string
+          name: hostId
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioDiscoveredVMDto'
+      tags: *ref_44
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/jobs:
+    get:
+      summary: Get many ActifioJobDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+        - type: string
+          name: status
+          required: true
+          in: query
+        - type: number
+          name: jobClassCode
+          required: true
+          in: query
+        - type: string
+          name: applicationName
+          required: true
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioJobDto'
+      tags:
+        - v1/actifio/gm/jobs
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/logical-groups:
+    get:
+      summary: Get many ActifioLogicalGroupDto
+      parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioLogicalGroupDto'
+      tags: &ref_45
+        - v1/actifio/gm/logical-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create Logical Group
+      parameters:
+        - name: ActifioAddOrUpdateLogicalGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrUpdateLogicalGroupDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/logical-groups/{id}':
+    get:
+      summary: Get one ActifioDetailedLogicalGroupDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Update Logical Group
+      parameters:
+        - name: ActifioAddOrUpdateLogicalGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrUpdateLogicalGroupDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioDetailedLogicalGroupDto'
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete Logical Group
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/logical-groups/{id}/members':
+    get:
+      summary: Get Members of Logical Group
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationDto'
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/logical-groups/{id}/sla':
+    post:
+      summary: Apply Sla to Logical Group
+      parameters:
+        - name: ActifioCreateOrApplySlaDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '201':
+          description: ''
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove Sla from Logical Group
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_45
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/organizations:
+    get:
+      summary: Get many ActifioOrganizationDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioOrganizationDto'
+      tags: &ref_46
+        - v1/actifio/gm/organizations
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/organizations/{id}':
+    get:
+      summary: Get one ActifioOrganizationDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioOrganizationDto'
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one ActifioOrganization
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/organizations/add:
+    post:
+      summary: Create one ActifioOrganization
+      parameters:
+        - name: ActifioAddOrganizationDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrganizationDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/organizations/{id}/':
+    put:
+      summary: Update ActifioOrganization
+      parameters:
+        - name: ActifioAddOrganizationDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddOrganizationDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioOrganizationDto'
+      tags: *ref_46
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/profiles:
+    get:
+      summary: Get many ActifioProfileDto
+      parameters:
+        - type: array
+          name: clusterIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioProfileDto'
+      tags: &ref_47
+        - v1/actifio/gm/profiles
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/profiles/{id}':
+    get:
+      summary: Get one ActifioProfileDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioProfileDto'
+      tags: *ref_47
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/slas:
+    get:
+      summary: Get many ActifioSlaDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioSlaDto'
+      tags: &ref_48
+        - v1/actifio/gm/slas
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one Sla
+      parameters:
+        - name: ActifioCreateOrApplySlaDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/slas/{id}':
+    get:
+      summary: Get one ActifioSlaDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Apply one Sla to VM
+      parameters:
+        - name: ActifioCreateOrApplySlaDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioCreateOrApplySlaDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSlaDto'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Remove one Sla
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioSla'
+      tags: *ref_48
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/gm/templates:
+    get:
+      summary: Get many ActifioTemplateDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioTemplateDto'
+      tags: &ref_49
+        - v1/actifio/gm/templates
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one ActifioTemplate
+      parameters:
+        - name: ActifioAddTemplateDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioAddTemplateDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/templates/{id}':
+    get:
+      summary: Get one ActifioTemplateDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Update ActifioTemplate
+      parameters:
+        - name: ActifioUpdateTemplateDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioUpdateTemplateDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one ActifioTemplate
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/templates/{id}/policy':
+    get:
+      summary: Get many ActifioPolicyDto
+      parameters:
+        - type: number
+          name: offset
+          required: false
+          in: query
+        - type: number
+          name: limit
+          required: false
+          in: query
+        - type: boolean
+          name: isSnapshot
+          required: true
+          in: query
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioPolicyDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/gm/templates/{id}/policy/{policyId}':
+    put:
+      summary: Update one ActifioPolicy
+      parameters:
+        - name: ActifioUpdateTemplatePolicyDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioUpdateTemplatePolicyDto'
+        - type: string
+          name: policyId
+          required: true
+          in: path
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioTemplateDto'
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one ActifioPolicy
+      parameters:
+        - type: string
+          name: policyId
+          required: true
+          in: path
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_49
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/arm-servers:
+    get:
+      summary: Get many ActifioRdsArmServerDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsArmServerDto'
+      tags: &ref_50
+        - v1/actifio/rds/arm-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/arm-servers/{id}':
+    get:
+      summary: Get one ActifioRdsArmServerDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsArmServerDto'
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/arm-servers/{id}/application-groups':
+    get:
+      summary: Get many ActifioApplicationGroupDto
+      parameters:
+        - type: string
+          name: recoveryPlanId
+          required: false
+          in: query
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: *ref_50
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/recovery-plans:
+    get:
+      summary: Get many ActifioRdsRecoveryPlanDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
+      tags: &ref_51
+        - v1/actifio/rds/recovery-plans
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete all Recovery Plans
+      responses:
+        '200':
+          description: ''
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one ActifioRdsAddRecoveryPlanDto
+      parameters:
+        - name: ActifioRdsAddRecoveryPlanDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioRdsAddRecoveryPlanDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: boolean
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}':
+    get:
+      summary: Get one ActifioRdsRecoveryPlanDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsRecoveryPlanDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one Recovery Plan
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Create one ActifioRdsAddRecoveryPlanDto
+      parameters:
+        - name: ActifioRdsAddRecoveryPlanDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioRdsAddRecoveryPlanDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: boolean
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}/state':
+    get:
+      summary: Get one ActifioRdsRecoveryPlanStateDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdsRecoveryPlanStateDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}/execution':
+    get:
+      summary: Get many ActifioRdsRecoveryPlanExecutionDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsRecoveryPlanExecutionDto'
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/recovery-plans/{id}/execute':
+    post:
+      summary: Execute one Recovery Plan
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/recovery-plans/execute:
+    post:
+      summary: Execute all Recovery Plans
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              type: string
+      tags: *ref_51
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rds/virtual-management-servers:
+    get:
+      summary: Get many ActifioRdsVirtualManagementServerDto
+      parameters:
+        - type: string
+          name: recoveryPlanId
+          required: false
+          in: query
+        - type: array
+          name: applicationGroupIds
+          required: false
+          in: query
+          items:
+            type: string
+          collectionFormat: csv
+        - type: string
+          name: armServerId
+          required: true
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsVirtualManagementServerDto'
+      tags: &ref_52
+        - v1/actifio/rds/virtual-management-servers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/virtual-management-servers/{id}/resource-pools':
+    get:
+      summary: Get many ActifioRdsResourcePoolDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioRdsResourcePoolDto'
+      tags: *ref_52
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rds/virtual-management-servers/{id}/resource-pools/{resourcePoolId}/port-groups':
+    get:
+      summary: Get many ActifioPortGroupDto
+      parameters:
+        - type: string
+          name: resourcePoolId
+          required: true
+          in: path
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioPortGroupDto'
+      tags: *ref_52
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rdc/application-groups:
+    get:
+      summary: Get many ActifioApplicationGroupDto
+      parameters:
+        - type: string
+          name: ids
+          required: false
+          in: query
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: &ref_53
+        - v1/actifio/rdc/application-groups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    post:
+      summary: Create one ApplicationGroup
+      parameters:
+        - name: ActifioApplicationGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_53
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rdc/application-groups/{id}':
+    get:
+      summary: Get one ActifioApplicationGroupDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
+      tags: *ref_53
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    put:
+      summary: Update one ApplicationGroup
+      parameters:
+        - name: ActifioApplicationGroupDto
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ActifioApplicationGroupDto'
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: string
+      tags: *ref_53
+      produces:
+        - application/json
+      consumes:
+        - application/json
+    delete:
+      summary: Delete one Application Group
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+      tags: *ref_53
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rdc/application-groups/{id}/edit':
+    get:
+      summary: Get one ActifioCollectorEditAppalicationGroupDto
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ActifioRdcEditApplicationGroupDto'
+      tags: *ref_53
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rdc/appliances:
+    get:
+      summary: Get many ActifioCollectorApplianceDto
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioApplianceDto'
+      tags: &ref_54
+        - v1/actifio/rdc/appliances
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rdc/appliances/{id}/virtual-management-servers':
+    get:
+      summary: Get many ActifioCollectorVirtualManagementServers
+      parameters:
+        - type: string
+          name: id
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioVirtualManagementServerDto'
+      tags: *ref_54
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  '/v1/actifio/rdc/applications/{cdsId}/{serverId}':
+    get:
+      summary: Get many ActifioCollectorVMMemberDto
+      parameters:
+        - type: string
+          name: serverId
+          required: true
+          in: path
+        - type: string
+          name: cdsId
+          required: true
+          in: path
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActifioVMMemberDto'
+      tags:
+        - v1/actifio/rdc/applications
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /v1/actifio/rdc/recovery-types:
+    get:
+      summary: Get many ActifioRecoveryTypeDto
+      responses:
+        '200':
+          description: ''
+      tags:
+        - v1/actifio/rdc/recovery-types
       produces:
         - application/json
       consumes:
         - application/json
 definitions:
+  UserPass:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - username
+      - password
+  DcsPermissions:
+    type: object
+    properties:
+      tenant:
+        type: string
+      roles:
+        type: array
+        items:
+          type: string
+    required:
+      - tenant
+      - roles
+  UserDto:
+    type: object
+    properties:
+      dn:
+        type: string
+      uid:
+        type: string
+      cn:
+        type: string
+      givenname:
+        type: string
+      mail:
+        type: string
+      dcsrole:
+        type: string
+      ismemberof:
+        type: object
+      token:
+        type: string
+      expiresIn:
+        type: number
+      dcsPermissions:
+        type: array
+        items:
+          $ref: '#/definitions/DcsPermissions'
+    required:
+      - dn
+      - uid
+      - cn
+      - givenname
+      - mail
+      - dcsrole
+      - ismemberof
+      - token
+      - expiresIn
+      - dcsPermissions
   Buffer:
     type: object
     properties: {}
@@ -11493,11 +13187,15 @@ definitions:
         type: number
       cpuReserved:
         type: boolean
+      highPerformance:
+        type: boolean
       memorySize:
         type: number
       memoryReserved:
         type: boolean
       datacenterId:
+        type: string
+      priorityGroupId:
         type: string
       networkAdapters:
         type: array
@@ -11514,8 +13212,60 @@ definitions:
       - cpuCores
       - cpuCoresPerSocket
       - cpuReserved
+      - highPerformance
       - memorySize
       - memoryReserved
+      - datacenterId
+      - priorityGroupId
+  PriorityGroup:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      createdAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      updatedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      version:
+        type: number
+        readOnly: true
+      deletedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedAt:
+        title: Date
+        allOf:
+          - $ref: '#/definitions/Date'
+          - readOnly: true
+      provisionedVersion:
+        type: number
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+        maxLength: 100
+      priority:
+        type: number
+        minimum: 1
+      datacenterId:
+        type: string
+      vmwareVirtualMachines:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/VmwareVirtualMachine'
+    required:
+      - name
+      - priority
       - datacenterId
   TierGroup:
     type: object
@@ -11944,17 +13694,17 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: &ref_42
+        enum: &ref_55
           - In
           - Out
       action:
         type: string
-        enum: &ref_43
+        enum: &ref_56
           - Permit
           - Deny
       protocol:
         type: string
-        enum: &ref_44
+        enum: &ref_57
           - IP
           - ICMP
           - TCP
@@ -11968,19 +13718,19 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: &ref_45
+        enum: &ref_58
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       destinationAddressType:
         type: string
-        enum: &ref_46
+        enum: &ref_59
           - IpAddress
           - NetworkObject
           - NetworkObjectGroup
       serviceType:
         type: string
-        enum: &ref_47
+        enum: &ref_60
           - Port
           - ServiceObject
           - ServiceObjectGroup
@@ -12142,7 +13892,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_52
+        enum: &ref_65
           - IpAddress
           - Fqdn
       ipAddress:
@@ -12269,7 +14019,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_50
+        enum: &ref_63
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -12298,7 +14048,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_51
+          enum: &ref_64
             - UDP
             - TCP
             - HTTP
@@ -12495,13 +14245,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_48
+        enum: &ref_61
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_49
+        enum: &ref_62
           - Standard
       servicePort:
         type: number
@@ -12775,7 +14525,9 @@ definitions:
           - IMP
           - VAL
           - TST
-          - BMS
+          - BCK
+          - MGT
+          - SEC
       vlans:
         type: array
         readOnly: true
@@ -12949,6 +14701,11 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/VmwareVirtualMachine'
+      priorityGroups:
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/PriorityGroup'
       tiers:
         type: array
         readOnly: true
@@ -13017,13 +14774,13 @@ definitions:
         maxLength: 500
       direction:
         type: string
-        enum: *ref_42
+        enum: *ref_55
       action:
         type: string
-        enum: *ref_43
+        enum: *ref_56
       protocol:
         type: string
-        enum: *ref_44
+        enum: *ref_57
       logging:
         type: boolean
       enabled:
@@ -13033,13 +14790,13 @@ definitions:
         minimum: 1
       sourceAddressType:
         type: string
-        enum: *ref_45
+        enum: *ref_58
       destinationAddressType:
         type: string
-        enum: *ref_46
+        enum: *ref_59
       serviceType:
         type: string
-        enum: *ref_47
+        enum: *ref_60
       sourceIpAddress:
         type: string
       sourceNetworkObjectId:
@@ -13119,9 +14876,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FirewallRuleImport'
+      dryRun:
+        type: boolean
     required:
       - datacenterId
       - firewallRules
+      - dryRun
+  FirewallRulePreview:
+    type: object
+    properties:
+      firewallRulesToBeDeleted:
+        type: array
+        items:
+          $ref: '#/definitions/FirewallRule'
+      firewallRulesToBeUploaded:
+        type: array
+        items:
+          $ref: '#/definitions/FirewallRule'
+    required:
+      - firewallRulesToBeDeleted
+      - firewallRulesToBeUploaded
+      - firewallRulesToBeUploaded
   GeneratedServiceObjectGroupBulkDto:
     type: object
     properties:
@@ -13302,56 +15077,6 @@ definitions:
           $ref: '#/definitions/StaticRoute'
     required:
       - bulk
-  UserPass:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-    required:
-      - username
-      - password
-  User:
-    type: object
-    properties:
-      id:
-        type: number
-        readOnly: true
-      username:
-        type: string
-      password:
-        type: string
-      email:
-        type: string
-      roles:
-        type: array
-        readOnly: true
-        items:
-          type: string
-          enum:
-            - User
-            - Administrator
-            - NetworkSecurityAdministrator
-            - LoadBalancerAdministrator
-            - NetworkAdministrator
-            - VMwareAdministrator
-            - ZOSAdministrator
-            - ZVMAdministrator
-      createdAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-      updatedAt:
-        title: Date
-        allOf:
-          - $ref: '#/definitions/Date'
-          - readOnly: true
-    required:
-      - username
-      - password
-      - email
   GeneratedVmwareVirtualMachineBulkDto:
     type: object
     properties:
@@ -13377,6 +15102,33 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/VmwareVirtualDisk'
+    required:
+      - bulk
+  CreatePriorityGroupDto:
+    type: object
+    properties:
+      datacenterId:
+        type: string
+      name:
+        type: string
+      priority:
+        type: number
+      vmwareVirtualMachineIds:
+        type: array
+        items:
+          type: string
+    required:
+      - datacenterId
+      - name
+      - priority
+      - vmwareVirtualMachineIds
+  GeneratedPriorityGroupBulkDto:
+    type: object
+    properties:
+      bulk:
+        type: array
+        items:
+          $ref: '#/definitions/PriorityGroup'
     required:
       - bulk
   GeneratedPhysicalServerBulkDto:
@@ -13464,10 +15216,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_48
+        enum: *ref_61
       type:
         type: string
-        enum: *ref_49
+        enum: *ref_62
       servicePort:
         type: number
         minimum: 1
@@ -13583,7 +15335,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_50
+        enum: *ref_63
       nodes:
         type: array
         items:
@@ -13596,7 +15348,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_51
+          enum: *ref_64
       tierId:
         type: string
       vrfName:
@@ -13673,7 +15425,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_52
+        enum: *ref_65
       ipAddress:
         type: string
       fqdn:
@@ -13768,3 +15520,736 @@ definitions:
           $ref: '#/definitions/TierGroup'
     required:
       - bulk
+  ActifioClusterDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      clusterId:
+        type: string
+    required:
+      - id
+      - name
+      - clusterId
+  ActifioProfileDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      createdDate:
+        type: string
+      description:
+        type: string
+      lastModifiedDate:
+        type: string
+      localClusterName:
+        type: string
+      remoteClusterName:
+        type: string
+      sourceClusterId:
+        type: string
+    required:
+      - id
+      - name
+      - createdDate
+      - lastModifiedDate
+      - localClusterName
+      - remoteClusterName
+      - sourceClusterId
+  ActifioPolicyDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      endTime:
+        type: number
+      operation:
+        type: string
+        enum:
+          - async
+          - dedup
+          - dedup_async
+          - directdedup
+          - replicate
+          - remotereplicate
+          - stream_snap
+          - snap
+          - sync
+      remoteRetention:
+        type: number
+      startTime:
+        type: number
+    required:
+      - id
+      - name
+      - operation
+      - remoteRetention
+      - startTime
+  ActifioTemplateDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      policies:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioPolicyDto'
+    required:
+      - id
+      - name
+  ActifioSlaDto:
+    type: object
+    properties:
+      id:
+        type: string
+      profile:
+        $ref: '#/definitions/ActifioProfileDto'
+      template:
+        $ref: '#/definitions/ActifioTemplateDto'
+    required:
+      - profile
+      - template
+  ActifioLogicalGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      applianceId:
+        type: string
+      description:
+        type: string
+      sla:
+        $ref: '#/definitions/ActifioSlaDto'
+      sourceClusterId:
+        type: string
+    required:
+      - id
+      - name
+      - sourceClusterId
+  ActifioApplicationDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      applianceId:
+        type: string
+      cluster:
+        $ref: '#/definitions/ActifioClusterDto'
+      folderPath:
+        type: string
+      isManaged:
+        type: boolean
+      logicalGroup:
+        $ref: '#/definitions/ActifioLogicalGroupDto'
+      slaProfile:
+        $ref: '#/definitions/ActifioProfileDto'
+      slaTemplate:
+        $ref: '#/definitions/ActifioTemplateDto'
+    required:
+      - id
+      - name
+      - applianceId
+      - cluster
+      - isManaged
+  ActifioImportApplicationsToClusterDto:
+    type: object
+    properties:
+      applicationUUIDs:
+        type: array
+        items:
+          type: string
+      applicationNames:
+        type: array
+        items:
+          type: string
+      clusterName:
+        type: string
+    required:
+      - applicationUUIDs
+      - applicationNames
+      - clusterName
+  ActifioImportApplicationsDto:
+    type: object
+    properties:
+      hostId:
+        type: string
+      clusters:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioImportApplicationsToClusterDto'
+    required:
+      - hostId
+      - clusters
+  ActifioDiskPoolDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      href:
+        type: number
+      srcid:
+        type: string
+      usduid:
+        type: string
+    required:
+      - id
+      - name
+  ActifioBaseDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioHostDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      ipAddress:
+        type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusters:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioBaseDto'
+    required:
+      - id
+      - name
+      - ipAddress
+      - clusterIds
+      - sourceClusters
+  ActifioDiscoveredVMDto:
+    type: object
+    properties:
+      applicationId:
+        type: string
+      clusterName:
+        type: string
+      discoveredId:
+        type: string
+      folderPath:
+        type: string
+      isManaged:
+        type: boolean
+      isNewVirtualMachine:
+        type: boolean
+      name:
+        type: string
+      clusterIds:
+        type: array
+        items:
+          type: string
+      sourceClusters:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioBaseDto'
+    required:
+      - clusterName
+      - isManaged
+      - isNewVirtualMachine
+      - name
+      - clusterIds
+      - sourceClusters
+  ActifioJobDto:
+    type: object
+    properties:
+      applicationName:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: string
+      startDate:
+        type: string
+      status:
+        type: string
+    required:
+      - applicationName
+      - id
+      - startDate
+      - status
+  ActifioDetailedLogicalGroupDto:
+    type: object
+    properties:
+      logicalGroup:
+        $ref: '#/definitions/ActifioLogicalGroupDto'
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioApplicationDto'
+    required:
+      - logicalGroup
+      - members
+  ActifioModifyLgMemberDto:
+    type: object
+    properties:
+      id:
+        type: string
+      applianceId:
+        type: string
+    required:
+      - id
+      - applianceId
+  ActifioAddOrUpdateLogicalGroupDto:
+    type: object
+    properties:
+      applianceId:
+        type: string
+      description:
+        type: string
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioModifyLgMemberDto'
+      name:
+        type: string
+      profileId:
+        type: string
+      templateId:
+        type: string
+    required:
+      - name
+  ActifioCreateOrApplySlaDto:
+    type: object
+    properties:
+      applicationId:
+        type: string
+      applicationName:
+        type: string
+      apply:
+        type: boolean
+      slpId:
+        type: string
+      sltId:
+        type: string
+    required:
+      - slpId
+      - sltId
+  ActifioOrganizationDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      createdate:
+        type: number
+      description:
+        type: string
+    required:
+      - id
+      - name
+      - createdate
+  ActifioAddOrganizationDto:
+    type: object
+    properties:
+      applicationIds:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      hostIds:
+        type: array
+        items:
+          type: string
+      logicalGroupIds:
+        type: array
+        items:
+          type: string
+      name:
+        type: string
+      slpIds:
+        type: array
+        items:
+          type: string
+      sltIds:
+        type: array
+        items:
+          type: string
+      storageArrayIds:
+        type: array
+        items:
+          type: string
+      storagePoolIds:
+        type: array
+        items:
+          type: string
+      userIds:
+        type: array
+        items:
+          type: string
+    required:
+      - name
+  ActifioSla:
+    type: object
+    properties: {}
+  ActifioAddTemplatePolicyDto:
+    type: object
+    properties:
+      endTime:
+        type: number
+      isWindowed:
+        type: boolean
+      name:
+        type: string
+      operation:
+        type: string
+        enum:
+          - async
+          - dedup
+          - dedup_async
+          - directdedup
+          - replicate
+          - remotereplicate
+          - stream_snap
+          - snap
+          - sync
+      remoteRetention:
+        type: number
+      startTime:
+        type: number
+    required:
+      - isWindowed
+      - name
+      - operation
+      - startTime
+  ActifioAddTemplateDto:
+    type: object
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      policies:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioAddTemplatePolicyDto'
+    required:
+      - name
+      - policies
+  ActifioUpdateTemplateDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+      - name
+  ActifioUpdateTemplatePolicyDto:
+    type: object
+    properties:
+      endTime:
+        type: number
+      id:
+        type: string
+      startTime:
+        type: number
+    required:
+      - id
+      - startTime
+  ActifioRdsArmServerDto:
+    type: object
+    properties:
+      id:
+        type: string
+      hostOrIp:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+      - hostOrIp
+      - description
+  ActifioSequencePortGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioVMMemberDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioSequenceOrderDto:
+    type: object
+    properties:
+      delay:
+        type: number
+      memberOrderIndex:
+        type: number
+      sequencePortGroups:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequencePortGroupDto'
+      vmMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - delay
+      - memberOrderIndex
+  ActifioApplicationGroupDto:
+    type: object
+    properties:
+      armServerId:
+        type: string
+      cdsId:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      recoveryPlanId:
+        type: string
+      serverId:
+        type: string
+      sequenceOrders:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      startupSequence:
+        type: number
+    required:
+      - cdsId
+      - name
+      - serverId
+      - sequenceOrders
+  ActifioRdsRecoveryPlanDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      appliances:
+        type: array
+        items:
+          type: string
+      applicationGroups:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioApplicationGroupDto'
+      armServerId:
+        type: string
+      armServerName:
+        type: string
+      defaultPortGroupUniqueName:
+        type: string
+      defaultResourcePoolId:
+        type: string
+      isScheduled:
+        type: boolean
+      lastModifiedDate:
+        type: string
+      lastRunDate:
+        type: string
+      scheduleId:
+        type: string
+      serverId:
+        type: string
+      state:
+        type: string
+    required:
+      - id
+      - name
+      - appliances
+      - applicationGroups
+      - armServerId
+      - armServerName
+      - defaultPortGroupUniqueName
+      - defaultResourcePoolId
+      - isScheduled
+      - lastModifiedDate
+      - lastRunDate
+      - serverId
+      - state
+  ActifioRdsRecoveryPlanStateDto:
+    type: object
+    properties:
+      description:
+        type: string
+      duration:
+        type: string
+      recoveryPlanId:
+        type: string
+      recoveryPlanName:
+        type: string
+      status:
+        type: string
+    required:
+      - description
+      - duration
+      - recoveryPlanId
+      - recoveryPlanName
+      - status
+  ActifioRdsRecoveryPlanExecutionDto:
+    type: object
+    properties:
+      detailedStatus:
+        type: string
+      endDateTime:
+        type: number
+      id:
+        type: number
+      isTest:
+        type: boolean
+      startDateTime:
+        type: number
+      status:
+        type: string
+    required:
+      - detailedStatus
+      - endDateTime
+      - id
+      - isTest
+      - startDateTime
+      - status
+  ActifioRdsAddRecoveryPlanDto:
+    type: object
+    properties:
+      applicationGroupIds:
+        type: array
+        items:
+          type: string
+      armServerId:
+        type: string
+      defaultResourcePoolId:
+        type: string
+      defaultPortGroupUniqueName:
+        type: string
+      name:
+        type: string
+      serverId:
+        type: string
+    required:
+      - applicationGroupIds
+      - armServerId
+      - defaultResourcePoolId
+      - defaultPortGroupUniqueName
+      - name
+      - serverId
+  ActifioRdsVirtualManagementServerDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioRdsResourcePoolDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ActifioPortGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uniqueName:
+        type: string
+    required:
+      - id
+      - name
+      - uniqueName
+  ActifioRdcEditApplicationGroupDto:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      serverId:
+        type: string
+      cdsId:
+        type: string
+      sequenceOrders:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioSequenceOrderDto'
+      newVMMembers:
+        type: array
+        items:
+          $ref: '#/definitions/ActifioVMMemberDto'
+    required:
+      - id
+      - name
+      - description
+      - serverId
+      - cdsId
+      - sequenceOrders
+  ActifioApplianceDto:
+    type: object
+    properties:
+      name:
+        type: string
+      hostOrIp:
+        type: string
+      id:
+        type: string
+    required:
+      - hostOrIp
+      - id
+  ActifioVirtualManagementServerDto:
+    type: object
+    properties:
+      ipAddress:
+        type: string
+      id:
+        type: string
+    required:
+      - ipAddress
+      - id

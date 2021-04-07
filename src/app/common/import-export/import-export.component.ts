@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Papa } from 'ngx-papaparse';
+import { Papa, ParseConfig } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-import-export',
   templateUrl: './import-export.component.html',
 })
-export class ImportExportComponent implements OnInit {
+export class ImportExportComponent {
   downloadHref: SafeUrl;
   currentDate: string;
   fileInput: any;
@@ -24,10 +24,8 @@ export class ImportExportComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer, private papa: Papa) {}
 
-  ngOnInit() {}
-
-  importFile(evt) {
-    this.Import(evt, importObjects => this.importCallback(importObjects));
+  public importFile(event: Event): void {
+    this.Import(event, importObjects => this.importCallback(importObjects));
   }
 
   importCallback(importObjects) {
@@ -35,7 +33,7 @@ export class ImportExportComponent implements OnInit {
     this.fileInput = '';
   }
 
-  exportFile(exportType: string) {
+  public exportFile(exportType: string): void {
     this.downloadHref = this.Export(this.exportObject, exportType);
   }
 
@@ -43,8 +41,8 @@ export class ImportExportComponent implements OnInit {
     this.currentDate = new Date().toISOString().slice(0, 19);
   }
 
-  private Import(evt: any, importCallback: any): any {
-    const files = evt.target.files;
+  private Import(evt: Event, importCallback: any): void {
+    const files = (evt.target as HTMLInputElement).files;
     const file = files[0];
     const importType = file.name.split('.')[1];
     const reader = new FileReader();
@@ -56,14 +54,14 @@ export class ImportExportComponent implements OnInit {
           if (this.disableCsv) {
             throw new Error('Invalid File Type');
           }
-          const options = {
+          const config: ParseConfig = {
             skipEmptyLines: true,
             header: true,
             complete: results => {
               importCallback(results.data);
             },
           };
-          this.papa.parse(importObject, options);
+          this.papa.parse(importObject, config);
           break;
         case 'json':
           if (this.disableJson) {
@@ -85,7 +83,6 @@ export class ImportExportComponent implements OnInit {
         }
         const exportCsv = this.papa.unparse(exportObject);
         return this.sanitizer.bypassSecurityTrustUrl('data:text/csv;charset=UTF-8,' + encodeURIComponent(exportCsv));
-
       case 'json':
         if (this.disableJson) {
           throw new Error('Invalid File Type');

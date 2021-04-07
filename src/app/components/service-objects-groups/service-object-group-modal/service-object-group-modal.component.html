@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
-    <h1 class="modal-title header">Service Object Group</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Service Object Group</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -20,7 +20,7 @@
           id="name"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -31,17 +31,27 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          id="description"
+          formControlName="description"
+          class="form-control"
+          [class.is-invalid]="submitted && f.description.errors"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group col-md-12">
           <label for="type">Type</label>
           <tooltip [message]="helpText.Type"></tooltip>
-          <select
-            id="type"
-            formControlName="type"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-            aria-label="Type"
-          >
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
             <option></option>
             <option value="TCPUDP">TCP/UDP</option>
             <option value="TCP">TCP</option>
@@ -53,43 +63,27 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="description">Description</label>
-        <tooltip [message]="helpText.Description"></tooltip>
-        <input
-          type="text"
-          id="description"
-          formControlName="description"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-          aria-label="Description"
-        />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">Name is required</div>
-        </div>
-      </div>
-
       Service Objects
-      <tooltip [message]="helpText.ServiceObjects"></tooltip>
 
-      <div *ngIf="ModalMode === 'Edit'" class="btn-group-sm pull-right mb-2" role="group">
-        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }">
+      <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
+        <!-- Select Service Object -->
+        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
           <option></option>
           <option *ngFor="let tierServiceObject of tierServiceObjects" [ngValue]="tierServiceObject">{{ tierServiceObject?.name }}</option>
         </select>
 
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="addServiceObject()"
-          [disabled]="!selectedServiceObject"
-        >
+        <!-- Add Service Object -->
+        <button type="button" class="btn btn-info" (click)="addServiceObject()" [disabled]="!selectedServiceObject">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Service Object</span>
         </button>
-      </div>
+      </section>
 
-      <table class="table table-striped" aria-describedby="Service Objects table">
+      <table class="table table-striped">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>Service Objects within the current Service Object Group</span>
+        </caption>
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -113,8 +107,12 @@
             <td>
               <span>{{ serviceObject?.destinationPorts }}</span>
             </td>
-            <td class="item-actions">
-              <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeServiceObject(serviceObject)" aria-label="Remove Service Object"></fa-icon>
+            <td class="table__actions">
+              <app-icon-button
+                icon="delete"
+                label="Remove Service Object"
+                (handleClick)="removeServiceObject(serviceObject)"
+              ></app-icon-button>
             </td>
           </tr>
           <tr *ngIf="!serviceObjects?.length" class="text-center">
@@ -123,15 +121,16 @@
         </tbody>
       </table>
     </div>
-    <div class="modal-footer">
+
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

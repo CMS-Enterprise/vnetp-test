@@ -3,6 +3,23 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { V1ActifioGmApplicationsService } from './api/v1ActifioGmApplications.service';
+import { V1ActifioGmClustersService } from './api/v1ActifioGmClusters.service';
+import { V1ActifioGmDiskPoolsService } from './api/v1ActifioGmDiskPools.service';
+import { V1ActifioGmHostsService } from './api/v1ActifioGmHosts.service';
+import { V1ActifioGmJobsService } from './api/v1ActifioGmJobs.service';
+import { V1ActifioGmLogicalGroupsService } from './api/v1ActifioGmLogicalGroups.service';
+import { V1ActifioGmOrganizationsService } from './api/v1ActifioGmOrganizations.service';
+import { V1ActifioGmProfilesService } from './api/v1ActifioGmProfiles.service';
+import { V1ActifioGmSlasService } from './api/v1ActifioGmSlas.service';
+import { V1ActifioGmTemplatesService } from './api/v1ActifioGmTemplates.service';
+import { V1ActifioRdcAppliancesService } from './api/v1ActifioRdcAppliances.service';
+import { V1ActifioRdcApplicationGroupsService } from './api/v1ActifioRdcApplicationGroups.service';
+import { V1ActifioRdcApplicationsService } from './api/v1ActifioRdcApplications.service';
+import { V1ActifioRdcRecoveryTypesService } from './api/v1ActifioRdcRecoveryTypes.service';
+import { V1ActifioRdsArmServersService } from './api/v1ActifioRdsArmServers.service';
+import { V1ActifioRdsRecoveryPlansService } from './api/v1ActifioRdsRecoveryPlans.service';
+import { V1ActifioRdsVirtualManagementServersService } from './api/v1ActifioRdsVirtualManagementServers.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuthService } from './api/v1Auth.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
@@ -28,6 +45,7 @@ import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.servic
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1PhysicalServersService } from './api/v1PhysicalServers.service';
+import { V1PriorityGroupsService } from './api/v1PriorityGroups.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
 import { V1VlansService } from './api/v1Vlans.service';

@@ -1,32 +1,35 @@
-<div>
-  <h1>Jobs</h1>
+<h1>Jobs</h1>
 
-  <table class="table table-striped" aria-describedby="Jobs table">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-        <th scope="col">Started</th>
-        <th scope="col">Finished</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let job of jobs | paginate: { itemsPerPage: perPage, currentPage: currentJobsPage }">
-        <td>{{ job?.jobType }}</td>
-        <td>{{ job?.createdAt | date: 'medium' }}</td>
-        <td>{{ job?.completedAt | date: 'medium' }}</td>
-      </tr>
-      <tr *ngIf="!jobs?.length" class="text-center">
-        <td colspan="5">No Jobs</td>
-      </tr>
-    </tbody>
-  </table>
-  <pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>
-</div>
-<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-  <div class="btn-group mr-2" role="group" aria-label="First group">
-    Entities per page
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Jobs</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Started</th>
+      <th scope="col">Finished</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let job of jobs | paginate: { itemsPerPage: perPage, currentPage: currentJobsPage }">
+      <td>{{ job?.jobType }}</td>
+      <td>{{ job?.createdAt | date: 'medium' }}</td>
+      <td>{{ job?.completedAt | date: 'medium' }}</td>
+    </tr>
+    <tr *ngIf="!jobs?.length" class="text-center">
+      <td colspan="3">No Jobs</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
     <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
     <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
     <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
   </div>
-</div>
+</section>

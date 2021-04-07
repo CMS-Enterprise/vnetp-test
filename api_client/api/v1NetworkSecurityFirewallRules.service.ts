@@ -19,6 +19,7 @@ import { Observable }                                        from 'rxjs';
 
 import { FirewallRule } from '../model/models';
 import { FirewallRuleImportCollectionDto } from '../model/models';
+import { FirewallRulePreview } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -153,10 +154,10 @@ export class V1NetworkSecurityFirewallRulesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRulePreview>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRulePreview>>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRulePreview>>;
+    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const firewallRuleImportCollectionDto = requestParameters.firewallRuleImportCollectionDto;
         if (firewallRuleImportCollectionDto === null || firewallRuleImportCollectionDto === undefined) {
             throw new Error('Required parameter firewallRuleImportCollectionDto was null or undefined when calling v1NetworkSecurityFirewallRulesBulkImportPost.');
@@ -168,6 +169,7 @@ export class V1NetworkSecurityFirewallRulesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -190,7 +192,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/firewall-rules/bulk-import`,
+        return this.httpClient.post<FirewallRulePreview>(`${this.configuration.basePath}/v1/network-security/firewall-rules/bulk-import`,
             firewallRuleImportCollectionDto,
             {
                 responseType: <any>responseType,

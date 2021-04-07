@@ -1,30 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { AppMessage } from '../models/app-message';
 import { environment } from 'src/environments/environment';
+import ObjectUtil from '../utils/ObjectUtil';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  private subject = new Subject<any>();
-  public messageHistory = new Array<AppMessage>();
+  public messageHistory: Message[] = [];
+  private subject = new Subject<Message>();
 
-  listen(): Observable<AppMessage> {
+  public listen(): Observable<Message> {
     return this.subject.asObservable();
   }
 
-  sendMessage(m: AppMessage) {
+  public sendMessage(m: Message): void {
     if (!environment.production) {
-      console.log('debug-messageService-->>', m);
+      console.debug('DEBUG :: MessageService :: ', ObjectUtil.removeEmptyProps(m));
     }
 
     this.subject.next(m);
     this.messageHistory.push(m);
   }
 
-  clearMessages() {
+  public clearMessages(): void {
     this.subject.next();
-    this.messageHistory = new Array<AppMessage>();
+    this.messageHistory = [];
   }
+}
+
+export class Message {
+  constructor(public readonly oldValue: string, public readonly newValue: string, public readonly message: string) {}
 }

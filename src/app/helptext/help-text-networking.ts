@@ -26,51 +26,11 @@ export class SubnetsVlansHelpText {
   providedIn: 'root',
 })
 export class SubnetModalHelpText {
-  Name = `Name of the Subnet.`;
-  Description = 'Description of the Subnet.';
   Vrf = `Tier (VRF) that the subnet will be created within.`;
   Protocol = `IP Protocol of the Subnet.`;
   Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
   Gateway = `Gateway Address of the Subnet.`;
   Vlan = `VLAN associated with the Subnet.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class VlanModalHelpText {
-  Name = 'Name of the VLAN.';
-  Description = 'Description of the VLAN.';
-  Vlan = `VLAN Number.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class TierModalHelpText {
-  Name = 'Name of the Tier.';
-  Description = 'Description of the Tier.';
-  TierGroup = 'Tier Group that the Tier belongs to.';
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class LoadBalancersHelpText {
-  wikiBase: string = environment.wikiBase;
-
-  Tier = `Tier that Load Balancer configurations are created within.`;
-  VirtualServers = `Manage Virtual Servers.`;
-  Pools = `Manage Pools and Nodes.`;
-  PoolRelations = `Manage Pool to Node and Pool to Health Monitor Relations.`;
-  Nodes = `Manage Nodes.`;
-  IRules = `Manage iRules in F5 format. More info: <a href=${this.wikiBase}/load-balancer#iRules">wiki</a>`;
-  HealthMonitors = `Manage Health Monitors.`;
-  Profiles = `Manage Profiles.`;
-  Policies = `Manage Policies.`;
-  SelfIps = `Manage Load Balancer Self IPs.`;
-  Vlans = `Manage Load Balancer VLANs.`;
-  Routes = `Manage Load Balancer Routes.`;
 }
 
 @Injectable({
@@ -83,18 +43,6 @@ export class FirewallRulesHelpText {
   External = `Firewall Rules between a Tier and CMSnet/Internet.`;
   InterVrf = `Firewall Rules between 2 Tiers.`;
   IntraVrf = `Contracts between Subnets in the same Tier.`;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class ProfilesHelpText {
-  wikiBase: string = environment.wikiBase;
-
-  Name = `Name of Profile.`;
-  Type = `Type of Profile (Http or ClientSSL).`;
-  Certificate = `ClientSSL certificate of the profile.`;
-  ReverseProxy = `Reverse Proxy Type of the profile.`;
 }
 
 @Injectable({
@@ -207,8 +155,6 @@ export class ServiceObjectGroupModalHelpText {
   providedIn: 'root',
 })
 export class VirtualServerModalHelpText {
-  Name = `Name of Virtual Server.`;
-  Type = `Type of Virtual Server.`;
   SourceAddress = `Address or Network that the Virtual Server accepts traffic from.`;
   SourceAddressTranslation = `Source Address type.`;
   DestinationAddress = `Address that the Virtual Server accepts traffic at.`;
@@ -216,22 +162,14 @@ export class VirtualServerModalHelpText {
   Pool = `Pool that the Virtual Server forwards the request to.`;
   IRules = `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`;
   AvailableProfiles = `Client SSL profiles available (can select multiple).`;
-  SelectedProfiles = `Selected Client SSL profiles.`;
   AvailablePolicies = `Policies available (can select multiple).`;
-  SelectedPolicies = `Selected policies.`;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class PoolModalHelpText {
-  Name = `Name of Pool.`;
   LoadBalancingMethod = `Load Balancing Strategy used to distribute requests amongst members.`;
-  Nodes = `Nodes of the Pool.`;
-  AvailableHealthMonitors = `Health Monitors that can be added to the Pool.`;
-  SelectedHealthMonitors = `Health Monitors that have been added to the Pool.`;
-  AvailableNodes = `Nodes that can be added to the Pool.`;
-  SelectedNodes = `Nodes that have been added to the Pool.`;
   Ratio = 'Ratio of traffic that will be sent to the node.';
   ServicePort = `Port that the node provides service on.`;
 }
@@ -240,12 +178,6 @@ export class PoolModalHelpText {
   providedIn: 'root',
 })
 export class NodeModalHelpText {
-  Name = `Name of Node.`;
-  Type = `Node Type (FQDN, IP Address).`;
-  IpAddress = `IP Address of Node.`;
-  Fqdn = `FQDN of Node.`;
-  ServicePort = `Port that the Node is listening for requests on.`;
-  Priority = `Priority of node.`;
   AutoPopulate = `Determines whether the pool member will be auto-populated from the FQDN.`;
 }
 
@@ -255,7 +187,6 @@ export class NodeModalHelpText {
 export class IRuleModalHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Name = `Name of iRule.`;
   Content = `iRule content in valid F5 format.`;
 }
 
@@ -265,11 +196,9 @@ export class IRuleModalHelpText {
 export class HealthMonitorModalHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Name = `Name of Health Monitor.`;
-  Type = 'Health Monitor Type (TCP, HTTP, HTTPS).';
   ServicePort = 'Port that Health Monitor attempts to connect to.';
-  Interval = 'Interval (seconds) that Health Monitor performs checks.';
-  Timeout = 'Timeout (seconds) for checks before considering them failed.';
+  Interval = 'Interval that Health Monitor performs checks.';
+  Timeout = 'Timeout for checks before considering them failed.';
 }
 
 @Injectable({
@@ -295,13 +224,4 @@ export class DashboardHelpText {
   VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class LoadBalancerRouteModalHelpText {
-  Name = 'Name of Load Balancer Route';
-  Destination = 'Destination of Load Balancer Route';
-  Gateway = 'Gateway of Load Balancer Route';
 }

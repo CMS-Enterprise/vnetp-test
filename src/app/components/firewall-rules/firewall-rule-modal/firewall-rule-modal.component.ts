@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
-import { Vrf } from 'src/app/models/d42/vrf';
 import { FirewallRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   ServiceObject,
@@ -19,7 +18,7 @@ import {
 } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
-import SubscriptionUtil from 'src/app/utils/subscription.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -29,7 +28,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
   TierId: string;
-  vrf: Vrf;
 
   sourceNetworkTypeSubscription: Subscription;
   destinationNetworkTypeSubscription: Subscription;
@@ -119,10 +117,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           firewallRule: modalFirewallRule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.firewallRuleService
@@ -131,10 +129,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           firewallRule: modalFirewallRule,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -155,15 +153,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   getData() {
     const dto = this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
+    this.ModalMode = dto.ModalMode;
 
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
-
-      if (this.ModalMode === ModalMode.Edit) {
-        this.FirewallRuleId = dto.FirewallRule.id;
-      }
+    if (this.ModalMode === ModalMode.Edit) {
+      this.FirewallRuleId = dto.FirewallRule.id;
     }
 
     this.TierId = dto.TierId;
@@ -342,7 +335,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(28), NameValidator])],
+      name: ['', NameValidator(3, 28)],
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required],

@@ -5,3 +5,4 @@ dist
 build
 README.md
 api_client
+swagger-spec.yaml

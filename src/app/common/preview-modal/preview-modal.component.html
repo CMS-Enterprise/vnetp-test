@@ -1,0 +1,19 @@
+<ngx-smart-modal #previewModal identifier="previewModal" [dismissable]="false" (onOpenFinished)="getData()" customClass="xlarge-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">{{ config.description }}</h4>
+  </header>
+
+  <!-- Preview Table -->
+  <app-table [config]="config" [data]="data"></app-table>
+
+  <!-- Footer -->
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
+      Cancel
+    </button>
+
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="confirm()">
+      Import
+    </button>
+  </footer>
+</ngx-smart-modal>

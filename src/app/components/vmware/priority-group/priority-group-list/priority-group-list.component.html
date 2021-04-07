@@ -1,0 +1,79 @@
+<section class="btn-toolbar" role="toolbar">
+  <!-- Create Priority Group -->
+  <button type="button" class="btn btn-success" (click)="openPriorityGroupModal(ModalMode.Create)">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Priority Group</span>
+  </button>
+
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="loadPriorityGroups()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+
+<table class="table table-striped">
+  <caption>
+    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+    <span>Priority Groups are a collection of Virtual Machines</span>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Priority</th>
+      <th scope="col">VM Count</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let priorityGroup of priorityGroups | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
+      <td>{{ priorityGroup.name }}{{ priorityGroup.name.length > 20 ? '...' : '' }}</td>
+      <td>
+        {{ priorityGroup.priority }}
+      </td>
+      <td>
+        {{ priorityGroup.vmwareVirtualMachines.length }}
+      </td>
+      <td class="table__actions">
+        <app-icon-button
+          *ngIf="!priorityGroup?.deletedAt"
+          icon="edit"
+          label="Edit Priority Group"
+          (handleClick)="openPriorityGroupModal(ModalMode.Edit, priorityGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="priorityGroup?.deletedAt"
+          icon="undo"
+          label="Restore Priority Group"
+          type="success"
+          (handleClick)="restorePriorityGroup(priorityGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="priorityGroup?.vmwareVirtualMachines?.length === 0"
+          icon="delete"
+          label="Soft-Delete/Delete Priority Group"
+          [type]="priorityGroup?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deletePriorityGroup(priorityGroup)"
+        ></app-icon-button>
+      </td>
+    </tr>
+    <tr *ngIf="!priorityGroups?.length" class="text-center">
+      <td colspan="4">No Priority Groups in this Datacenter</td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+
+<section class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <span class="mr-3">Entities per page</span>
+  <div class="btn-group" role="group">
+    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+  </div>
+</section>
+
+<app-yes-no-modal></app-yes-no-modal>
+<app-priority-group-modal></app-priority-group-modal>

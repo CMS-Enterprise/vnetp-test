@@ -1,37 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalServiceStub } from 'src/test/modal-mock';
+import { MockProvider } from 'src/test/mock-providers';
 import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import TestUtil from 'src/test/test.util';
+import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { V1NetworkVlansService } from 'api_client';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
-import { of } from 'rxjs';
 
 describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
 
   beforeEach(async(() => {
-    const ngx = new NgxSmartModalServiceStub();
-
-    const vlanService = {
-      v1NetworkVlansPost: jest.fn(() => of({})),
-      v1NetworkVlansIdPut: jest.fn(() => of({})),
-    };
-
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [
-        { provide: NgxSmartModalService, useValue: ngx },
-        { provide: V1NetworkVlansService, useValue: vlanService },
-        FormBuilder,
-        Validators,
-      ],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkVlansService)],
     })
       .compileComponents()
       .then(() => {
@@ -48,28 +35,24 @@ describe('VlanModalComponent', () => {
   });
 
   describe('Name', () => {
-    it('should be valid', () => {
-      const name = component.form.controls.name;
+    it('should have a minimum length of 3 and maximum length of 100', () => {
+      const { name } = component.form.controls;
+
+      name.setValue('a');
+      expect(name.valid).toBe(false);
+
       name.setValue('a'.repeat(3));
-      expect(name.valid).toBeTruthy();
-    });
+      expect(name.valid).toBe(true);
 
-    it('should be invalid, min length', () => {
-      const name = component.form.controls.name;
-      name.setValue('a'.repeat(2));
-      expect(name.valid).toBeFalsy();
-    });
-
-    it('should be invalid, max length', () => {
-      const name = component.form.controls.name;
       name.setValue('a'.repeat(101));
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
 
-    it('should be invalid, invalid characters', () => {
-      const name = component.form.controls.name;
+    it('should not allow invalid characters', () => {
+      const { name } = component.form.controls;
+
       name.setValue('invalid/name!');
-      expect(name.valid).toBeFalsy();
+      expect(name.valid).toBe(false);
     });
   });
 
@@ -106,7 +89,7 @@ describe('VlanModalComponent', () => {
     const clickSaveButton = () => fixture.debugElement.query(By.css('.btn.btn-success')).nativeElement.click();
 
     it('should not create a vlan when the form is invalid', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService);
       const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
 
       component.ModalMode = ModalMode.Create;
@@ -122,7 +105,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should create a vlan when in create mode', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService);
       const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
 
       component.ModalMode = ModalMode.Create;
@@ -145,7 +128,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should edit an existing vlan when in edit mode', () => {
-      const service = TestBed.get(V1NetworkVlansService);
+      const service = TestBed.inject(V1NetworkVlansService) as any;
       const updateVlanSpy = jest.spyOn(service, 'v1NetworkVlansIdPut');
 
       component.ModalMode = ModalMode.Edit;
@@ -183,18 +166,8 @@ describe('VlanModalComponent', () => {
       };
     };
 
-    it('should throw an error if the modal mode is not set', () => {
-      const service = TestBed.get(NgxSmartModalService);
-      const dto = createDto();
-      dto.ModalMode = null;
-      jest.spyOn(service, 'getModalData').mockImplementation(() => dto);
-      const throwsError = () => component.getData();
-
-      expect(throwsError).toThrowError('Modal Mode not Set.');
-    });
-
     it('should enable the name and vlan number when creating a new vlan', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       const dto = createDto();
       dto.Vlan = undefined;
       dto.ModalMode = ModalMode.Create;
@@ -207,7 +180,7 @@ describe('VlanModalComponent', () => {
     });
 
     it('should disable the name and vlan number when editing an existing vlan', () => {
-      const service = TestBed.get(NgxSmartModalService);
+      const service = TestBed.inject(NgxSmartModalService);
       jest.spyOn(service, 'getModalData').mockImplementation(() => createDto());
 
       component.getData();

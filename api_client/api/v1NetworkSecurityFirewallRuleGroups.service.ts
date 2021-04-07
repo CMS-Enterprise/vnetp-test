@@ -85,11 +85,6 @@ export interface V1NetworkSecurityFirewallRuleGroupsIdRestorePatchRequestParams 
     id: string;
 }
 
-export interface V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams {
-    /** UUID. */
-    id: string;
-}
-
 export interface V1NetworkSecurityFirewallRuleGroupsIdSoftDeleteRequestParams {
     id: string;
 }
@@ -664,51 +659,6 @@ export class V1NetworkSecurityFirewallRuleGroupsService {
 
         return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-security/firewall-rule-groups/${encodeURIComponent(String(id))}/restore`,
             null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Get Firewall Rules w/ Object Relations for Firewall Rule Group.
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public v1NetworkSecurityFirewallRuleGroupsIdRulesGet(requestParameters: V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityFirewallRuleGroupsIdRulesGet(requestParameters: V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityFirewallRuleGroupsIdRulesGet(requestParameters: V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityFirewallRuleGroupsIdRulesGet(requestParameters: V1NetworkSecurityFirewallRuleGroupsIdRulesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRuleGroupsIdRulesGet.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/network-security/firewall-rule-groups/${encodeURIComponent(String(id))}/rules`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

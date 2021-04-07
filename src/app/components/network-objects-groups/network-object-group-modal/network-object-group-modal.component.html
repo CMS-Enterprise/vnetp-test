@@ -6,9 +6,9 @@
   (onClose)="reset()"
   customClass="medium-modal"
 >
-  <div class="modal-header">
-    <h1 class="modal-title header">Network Object Group</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Network Object Group</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -19,7 +19,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
         />
@@ -38,7 +38,7 @@
           type="text"
           formControlName="description"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
           id="description"
         />
@@ -50,24 +50,26 @@
 
       Network Objects
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
-      <div *ngIf="ModalMode === 'Edit'" class="btn-group-sm pull-right mb-2" role="group">
-        <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{ standalone: true }">
+
+      <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
+        <!-- Select Network Object-->
+        <select [(ngModel)]="selectedNetworkObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
           <option></option>
           <option *ngFor="let tierNetworkObject of tierNetworkObjects" [ngValue]="tierNetworkObject">{{ tierNetworkObject?.name }}</option>
         </select>
 
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="addNetworkObject()"
-          [disabled]="!selectedNetworkObject"
-        >
+        <!-- Add Network Object -->
+        <button type="button" class="btn btn-info" (click)="addNetworkObject()" [disabled]="!selectedNetworkObject">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Network Object</span>
         </button>
-      </div>
+      </section>
 
-      <table class="table table-striped" aria-describedby="Network Objects table">
+      <table class="table table-striped">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>Network Objects within the current Network Object Group</span>
+        </caption>
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -88,8 +90,8 @@
               <span *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
               <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
             </td>
-            <td class="item-actions">
-              <fa-icon class="icon" [icon]="['fas', 'trash']" (click)="removeNetworkObject(netObj)" aria-label="Remove Network Object"></fa-icon>
+            <td class="table__actions">
+              <app-icon-button icon="delete" label="Remove Network Object" (handleClick)="removeNetworkObject(netObj)"></app-icon-button>
             </td>
           </tr>
           <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -98,15 +100,16 @@
         </tbody>
       </table>
     </div>
-    <div class="modal-footer">
+
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { AuthService } from './auth.service';
-import { MessageService } from './message.service';
-import { AppMessageType } from '../models/app-message-type';
-import { AppMessage } from '../models/app-message';
+import { Message, MessageService } from './message.service';
 import { Datacenter, V1DatacentersService } from 'api_client';
 
 /** Service to store and expose the Current Datacenter Context. */
@@ -30,11 +27,11 @@ export class DatacenterContextService {
   public lockCurrentDatacenter: Observable<boolean> = this.lockCurrentDatacenterSubject.asObservable();
 
   private _datacenters: Datacenter[] = new Array<Datacenter>();
-  ignoreNextQueryParamEvent: boolean;
+  private routesNotToRender: string[] = ['/', '/tenant', '/logout', '/unauthorized'];
+  private ignoreNextQueryParamEvent: boolean;
 
   constructor(
-    private authService: AuthService,
-    private DatacenterService: V1DatacentersService,
+    private datacenterService: V1DatacentersService,
     private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -53,16 +50,15 @@ export class DatacenterContextService {
     // Subscribe to the activatedRoute, validate that the
     // datacenter param has a valid id present.
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      if (!this.authService.currentUserValue) {
-        return;
-      }
-
       if (this.ignoreNextQueryParamEvent) {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
+      const fetch = !this.routesNotToRender.some(route => route === this.router.url);
 
-      this.getDatacenters(queryParams.get('datacenter'));
+      if (fetch) {
+        this.getDatacenters(queryParams.get('datacenter'));
+      }
     });
   }
 
@@ -105,7 +101,7 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.DatacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
+    this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
       // Update internal datacenters array and external subject.
       this._datacenters = data;
       this.datacentersSubject.next(data);
@@ -118,36 +114,33 @@ export class DatacenterContextService {
     });
   }
 
-  /** Switch from the currentDatacenter to the provided datacenter.
-   * @param datacenter Datacenter to switch to.
-   */
-  public switchDatacenter(datacenterId: string) {
+  public switchDatacenter(datacenterId: string): boolean {
     if (this.lockCurrentDatacenterSubject.value) {
-      throw Error('Current Datacenter Locked.');
+      this.messageService.sendMessage(new Message(null, null, 'Current datacenter locked'));
+      return false;
     }
 
-    // Validate that the datacenter we are switching to is a member
-    // of the private datacenters array.
     const datacenter = this._datacenters.find(dc => dc.id === datacenterId);
-
-    if (this.currentDatacenterValue && datacenter.id === this.currentDatacenterValue.id) {
-      throw Error('Datacenter already Selected.');
+    if (!datacenter) {
+      return false;
     }
 
-    if (datacenter) {
-      // Update Subject
-      this.currentDatacenterSubject.next(datacenter);
-
-      this.ignoreNextQueryParamEvent = true;
-
-      // Update Query Params
-      this.router.navigate([], {
-        queryParams: { datacenter: datacenter.id },
-        queryParamsHandling: 'merge',
-      });
-
-      // Send Context Switch Message
-      this.messageService.sendMessage(new AppMessage(`Datacenter Context Switch ${datacenterId}`, AppMessageType.DatacenterContextSwitch));
+    const isSameDatacenter = this.currentDatacenterValue && datacenter.id === this.currentDatacenterValue.id;
+    if (isSameDatacenter) {
+      this.messageService.sendMessage(new Message(null, null, 'Datacenter already selected'));
+      return false;
     }
+
+    const oldDatacenterId = this.currentDatacenterValue ? this.currentDatacenterValue.id : null;
+
+    this.currentDatacenterSubject.next(datacenter);
+    this.ignoreNextQueryParamEvent = true;
+    this.router.navigate([], {
+      queryParams: { datacenter: datacenter.id },
+      queryParamsHandling: 'merge',
+    });
+
+    this.messageService.sendMessage(new Message(oldDatacenterId, datacenterId, 'Datacenter switched'));
+    return true;
   }
 }

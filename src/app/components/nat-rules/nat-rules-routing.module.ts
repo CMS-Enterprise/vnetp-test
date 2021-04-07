@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NatRulesLandingComponent } from './components/nat-rules-landing/nat-rules-landing.component';
-import { NatRuleListComponent } from './components/nat-rule-list/nat-rule-list.component';
-import { NatRuleGroupListComponent } from './components/nat-rule-group-list/nat-rule-group-list.component';
+import { NatRuleGroupListComponent } from './nat-rule-group-list/nat-rule-group-list.component';
+import { NatRuleListComponent } from './nat-rule-list/nat-rule-list.component';
+import { NatRulesLandingComponent } from './nat-rules-landing/nat-rules-landing.component';
 
 const routes: Routes = [
   {

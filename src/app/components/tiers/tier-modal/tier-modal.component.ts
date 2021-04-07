@@ -3,7 +3,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { TierModalHelpText } from 'src/app/helptext/help-text-networking';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 
@@ -12,19 +11,18 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './tier-modal.component.html',
 })
 export class TierModalComponent implements OnInit {
-  form: FormGroup;
-  submitted: boolean;
-  ModalMode: ModalMode;
-  DatacenterId: string;
-  TierId: string;
-  tierGroups: Array<TierGroup>;
+  public DatacenterId: string;
+  public ModalMode: ModalMode;
+  public TierId: string;
+  public form: FormGroup;
+  public submitted: boolean;
+  public tierGroups: TierGroup[] = [];
 
   constructor(
-    private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    public helpText: TierModalHelpText,
-    private tierService: V1TiersService,
+    private ngx: NgxSmartModalService,
     private tierGroupService: V1TierGroupsService,
+    private tierService: V1TiersService,
   ) {}
 
   get f() {
@@ -44,10 +42,6 @@ export class TierModalComponent implements OnInit {
     }
 
     this.getTierGroups();
-
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not Set.');
-    }
 
     this.ModalMode = dto.ModalMode;
     if (this.ModalMode === ModalMode.Edit) {
@@ -107,7 +101,7 @@ export class TierModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
       tierClass: [null],
@@ -117,10 +111,10 @@ export class TierModalComponent implements OnInit {
 
   private createTier(tier: Tier): void {
     this.tierService.v1TiersPost({ tier }).subscribe(
-      data => {
+      () => {
         this.closeModal();
       },
-      error => {},
+      () => {},
     );
   }
 
@@ -133,10 +127,10 @@ export class TierModalComponent implements OnInit {
         tier,
       })
       .subscribe(
-        data => {
+        () => {
           this.closeModal();
         },
-        error => {},
+        () => {},
       );
   }
 

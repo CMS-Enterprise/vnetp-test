@@ -1,67 +1,70 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item" (click)="showExternal()">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 'External' }"> External <tooltip [message]="helpText.External"></tooltip> </a>
-  </li>
-  <li class="nav-item" (click)="showIntervrf()">
-    <a class="nav-link" [ngClass]="{ active: navIndex == 'Intervrf' }"> Intervrf <tooltip [message]="helpText.InterVrf"></tooltip></a>
-  </li>
-</ul>
+<h1>Firewall Rules</h1>
+<ng-container *ngIf="tiers.length !== 0; else warningMessage">
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-<h1 class="mt-3 header">{{ navIndex }} Firewall Rules</h1>
-<div class="btn-toolbar mb-2 pull-right" role="toolbar">
-  <button type="button" class="btn btn-info btn-sm" (click)="getTiers()" aria-label="Refresh Networks">
-    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-    <span>Refresh</span>
-  </button>
-</div>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-info" (click)="getTiers()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
 
-<table class="table table-striped" aria-describedby="Firewall Rules table">
-  <thead>
-    <tr>
-      <th scope="col">Tier</th>
-      <th scope="col">Firewall Rules</th>
-      <th scope="col">State</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      *ngFor="
-        let firewallRuleGroup of firewallRuleGroups
-          | filter: filterFirewallRuleGroup
-          | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
-      "
-    >
-      <td>
-        {{ getTierName(firewallRuleGroup.tierId) }}
-      </td>
-      <td>
-        <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge">{{ firewallRuleGroup.name }}</a>
-      </td>
-      <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
-    </tr>
-    <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
-      <td colspan="3">No Tiers</td>
-    </tr>
-  </tbody>
-</table>
-<pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>{{ currentTab }} Firewall Rules with the current Tier</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Tier</th>
+        <th scope="col">Firewall Rules</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let firewallRuleGroup of firewallRuleGroups
+            | filter: filterFirewallRuleGroup
+            | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
+        "
+      >
+        <td>
+          {{ getTierName(firewallRuleGroup.tierId) }}
+        </td>
+        <td>
+          <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
+            >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
+          >
+        </td>
+        <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+      </tr>
+      <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
+        <td colspan="3">No Firewall Rules</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentFirewallRulePage = $event"></pagination-controls>
 
-<div class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-  <div class="btn-group mr-2 align-items-center" role="group" aria-label="First group">
-    Entities per page
-    <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-    <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-  </div>
-</div>
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </section>
 
-<div class="pull-right">
-  <app-import-export
-    [exportObject]="firewallRuleGroups"
-    exportFileName="firewallRuleGroups"
-    [disableJson]="false"
-    (import)="importFirewallRuleGroupsConfig($event)"
-  >
-  </app-import-export>
-</div>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="firewallRuleGroups"
+      exportFileName="firewallRuleGroups"
+      [disableJson]="false"
+      (import)="importFirewallRuleGroupsConfig($event)"
+    ></app-import-export>
+  </section>
+</ng-container>
 <app-yes-no-modal></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Select a Tier to display Firewall Rules details</p>
+</ng-template>

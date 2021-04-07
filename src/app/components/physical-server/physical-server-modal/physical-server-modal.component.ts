@@ -5,7 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V1PhysicalServersService, PhysicalServer } from 'api_client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
-import ConversionUtil from 'src/app/utils/conversion.util';
+import ConversionUtil from 'src/app/utils/ConversionUtil';
 
 @Component({
   selector: 'app-physical-server-modal',
@@ -53,10 +53,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     } else {
       this.physicalServerService
@@ -65,10 +65,10 @@ export class PhysicalServerModalComponent implements OnInit {
           physicalServer,
         })
         .subscribe(
-          data => {
+          () => {
             this.closeModal();
           },
-          error => {},
+          () => {},
         );
     }
   }
@@ -87,14 +87,13 @@ export class PhysicalServerModalComponent implements OnInit {
     if (dto.DatacenterId) {
       this.DatacenterId = dto.DatacenterId;
     }
-    if (!dto.ModalMode) {
-      throw Error('Modal Mode not set.');
-    } else {
-      this.ModalMode = dto.ModalMode;
 
-      if (this.ModalMode === ModalMode.Edit) {
-        this.PhysicalServerId = dto.PhysicalServer.id;
-      }
+    this.ModalMode = dto.ModalMode;
+
+    if (this.ModalMode === ModalMode.Edit) {
+      this.PhysicalServerId = dto.PhysicalServer.id;
+    } else {
+      this.form.controls.name.enable();
     }
 
     const physicalServer = dto.PhysicalServer;
@@ -105,6 +104,7 @@ export class PhysicalServerModalComponent implements OnInit {
       const deliveryDate = date.toISOString().substring(0, 10);
 
       this.form.controls.name.setValue(physicalServer.name);
+      this.form.controls.name.disable();
       this.form.controls.description.setValue(physicalServer.description);
       this.form.controls.serialNumber.setValue(physicalServer.serialNumber);
       this.form.controls.deliveryDate.setValue(deliveryDate);
@@ -118,29 +118,18 @@ export class PhysicalServerModalComponent implements OnInit {
     this.ngx.resetModalData('physicalServerModal');
   }
 
-  private stringToBoolean(str: string): boolean {
-    switch (str) {
-      case 'true':
-        return true;
-      case 'false':
-        return false;
-      default:
-        return Boolean(str);
-    }
-  }
-
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100), NameValidator])],
+      name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      serialNumber: ['', Validators.required],
+      serialNumber: ['', Validators.compose([Validators.required, Validators.min(0)])],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: ['', Validators.required],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: ['', Validators.required],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 

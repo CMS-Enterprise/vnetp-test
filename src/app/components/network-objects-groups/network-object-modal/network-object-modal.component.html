@@ -1,7 +1,7 @@
 <ngx-smart-modal #networkObjectModal identifier="networkObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
-  <div class="modal-header">
-    <h1 class="modal-title header">Network Object</h1>
-  </div>
+  <header class="modal-header">
+    <h4 class="modal-title">Network Object</h4>
+  </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -12,7 +12,7 @@
           type="text"
           formControlName="name"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
           id="name"
         />
@@ -27,13 +27,7 @@
       <div class="form-group" *ngIf="!f.nat.value">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
-        <select
-          id="type"
-          formControlName="type"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.type.errors }"
-          aria-label="Type"
-        >
+        <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
           <option></option>
           <option value="IpAddress">Ip Address</option>
           <option value="Range">Range</option>
@@ -51,7 +45,7 @@
           id="ipAddress"
           formControlName="ipAddress"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.ipAddress.errors }"
+          [class.is-invalid]="submitted && f.ipAddress.errors"
           aria-label="IP Address"
           *ngIf="f.type.value == 'IpAddress'"
         />
@@ -98,7 +92,7 @@
           id="endIpAddress"
           class="form-control"
           formControlName="endIpAddress"
-          [ngClass]="{ 'is-invalid': submitted && f.endIpAddress.errors }"
+          [class.is-invalid]="submitted && f.endIpAddress.errors"
           aria-label="End Address"
           *ngIf="f.type.value == 'Range'"
         />
@@ -130,7 +124,7 @@
           name="natType"
           formControlName="natType"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.natType.errors }"
+          [class.is-invalid]="submitted && f.natType.errors"
           aria-label="NAT Direction"
         >
           <option></option>
@@ -146,7 +140,7 @@
           name="natDirection"
           formControlName="natDirection"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.natDirection.errors }"
+          [class.is-invalid]="submitted && f.natDirection.errors"
           aria-label="NAT Direction"
         >
           <option></option>
@@ -166,7 +160,7 @@
           class="form-control"
           formControlName="translatedIpAddress"
           aria-label="Translated IP"
-          [ngClass]="{ 'is-invalid': submitted && f.translatedIpAddress.errors }"
+          [class.is-invalid]="submitted && f.translatedIpAddress.errors"
         />
       </div>
 
@@ -188,7 +182,7 @@
           name="natProtocol"
           formControlName="natProtocol"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.natProtocol.errors }"
+          [class.is-invalid]="submitted && f.natProtocol.errors"
           aria-label="NAT Protocol Type"
         >
           <option></option>
@@ -213,7 +207,7 @@
             name="natSourcePort"
             class="form-control"
             formControlName="natSourcePort"
-            [ngClass]="{ 'is-invalid': submitted && f.natSourcePort.errors }"
+            [class.is-invalid]="submitted && f.natSourcePort.errors"
             mask="09999"
           />
         </div>
@@ -228,22 +222,22 @@
             name="natTranslatedPort"
             class="form-control"
             formControlName="natTranslatedPort"
-            [ngClass]="{ 'is-invalid': submitted && f.natTranslatedPort.errors }"
+            [class.is-invalid]="submitted && f.natTranslatedPort.errors"
             mask="09999"
           />
         </div>
       </div>
     </div>
 
-    <div class="modal-footer">
+    <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
         Cancel
       </button>
 
       <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['far', 'save']"></fa-icon>
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-    </div>
+    </footer>
   </form>
 </ngx-smart-modal>

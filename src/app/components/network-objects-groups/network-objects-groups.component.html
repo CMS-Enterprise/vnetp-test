@@ -1,32 +1,24 @@
 <app-tier-select></app-tier-select>
 
-<div>
-  <h1 class="header mb-3">Network Objects & Groups</h1>
+<h1>Network Objects & Groups</h1>
+<ng-container *ngIf="currentTier; else warningMessage">
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item" (click)="navIndex = 0; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 0 }">Network Objects <tooltip [message]="helpText.NetworkObjects"></tooltip></a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 1; getObjectsForNavIndex()">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 1 }"
-        >Network Object Groups <tooltip [message]="helpText.NetworkObjects"></tooltip
-      ></a>
-    </li>
-    <li class="nav-item" (click)="navIndex = 2">
-      <a class="nav-link" [ngClass]="{ active: navIndex == 2 }">Network Object Group Relations </a>
-    </li>
-  </ul>
-
-  <div *ngIf="navIndex == 0">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)" aria-label="Create Network Object">
+  <div *ngIf="navIndex === 0">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Network Object -->
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
       </button>
-    </div>
+    </section>
 
-    <table class="table table-striped" aria-describedby="Network Objects table">
-      <!-- TO DO: are all of these fields necessary to show on the summary page? -->
+    <table class="table table-striped">
+      <caption>
+        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+        <span>Network Objects can consist of a single host (with NAT/PAT), range or subnet</span>
+      </caption>
+      <!-- TODO: are all of these fields necessary to show on the summary page? -->
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -44,7 +36,7 @@
       <tbody>
         <tr *ngFor="let netObj of networkObjects | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectsPage }">
           <td>
-            <span>{{ netObj?.name }}</span>
+            <span>{{ netObj?.name | slice: 0:20 }}{{ netObj?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ netObj?.type }}</span>
@@ -71,24 +63,28 @@
           <td>
             <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon class="icon" [icon]="['fas', 'pencil-alt']" *ngIf="!netObj?.deletedAt" (click)="openNetworkObjectModal(ModalMode.Edit, netObj)" aria-label="Edit Network Object">
-            </fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+          <td class="table__actions">
+            <app-icon-button
+              *ngIf="!netObj?.deletedAt"
+              icon="edit"
+              label="Edit Network Object"
+              (handleClick)="openNetworkObjectModal(ModalMode.Edit, netObj)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="netObj?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreNetworkObject(netObj)"
-              aria-label="Restore Network Object"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': netObj.deletedAt }"
-              (click)="deleteNetworkObject(netObj)"
-              aria-label="Soft-Delete/Delete Network Object"
-            >
-            </fa-icon>
+              icon="undo"
+              label="Restore Network Object"
+              type="success"
+              (handleClick)="restoreNetworkObject(netObj)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Network Object"
+              [type]="netObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteNetworkObject(netObj)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!networkObjects?.length" class="text-center">
@@ -99,15 +95,20 @@
     <pagination-controls (pageChange)="currentNetworkObjectsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 1">
-    <div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)" aria-label="Create Network Object Group">
+  <div *ngIf="navIndex === 1">
+    <section class="btn-toolbar" role="toolbar">
+      <!-- Create Network Object Group -->
+      <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object Group</span>
       </button>
-    </div>
+    </section>
 
-    <table class="table table-striped" aria-describedby="Network Object Groups table">
+    <table class="table table-striped">
+      <caption>
+        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+        <span>Network Object Groups are a collection of Network Objects</span>
+      </caption>
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -121,7 +122,7 @@
           *ngFor="let netObjGroup of networkObjectGroups | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectGroupsPage }"
         >
           <td>
-            <span>{{ netObjGroup.name }}</span>
+            <span>{{ netObjGroup.name | slice: 0:20 }}{{ netObjGroup?.name.length > 20 ? '...' : '' }}</span>
           </td>
           <td>
             <span>{{ netObjGroup.networkObjects?.length }}</span>
@@ -129,28 +130,28 @@
           <td>
             <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
           </td>
-          <td class="item-actions">
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'pencil-alt']" 
+          <td class="table__actions">
+            <app-icon-button
               *ngIf="!netObjGroup?.deletedAt"
-              (click)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
-              aria-label="Edit Network Object Group"
-            ></fa-icon>
-            <fa-icon 
-              [icon]="['fas', 'undo']"
+              icon="edit"
+              label="Edit Network Object Group"
+              (handleClick)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
               *ngIf="netObjGroup?.deletedAt"
-              class="fg-success icon"
-              (click)="restoreNetworkObjectGroup(netObjGroup)"
-              aria-label="Restore Network Object Group"
-            ></fa-icon>
-            <fa-icon 
-              class="icon"
-              [icon]="['fas', 'trash']"
-              [ngClass]="{ 'fg-danger': netObjGroup.deletedAt }"
-              (click)="deleteNetworkObjectGroup(netObjGroup)"
-              aria-label="Soft-Delete/Delete Network Object Group"
-            ></fa-icon>
+              icon="undo"
+              label="Restore Network Object Group"
+              type="success"
+              (handleClick)="restoreNetworkObjectGroup(netObjGroup)"
+            ></app-icon-button>
+
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Network Object Group"
+              [type]="netObjGroup?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteNetworkObjectGroup(netObjGroup)"
+            ></app-icon-button>
           </td>
         </tr>
         <tr *ngIf="!networkObjectGroups?.length" class="text-center">
@@ -161,58 +162,48 @@
     <pagination-controls (pageChange)="currentNetworkObjectGroupsPage = $event"></pagination-controls>
   </div>
 
-  <div *ngIf="navIndex == 2">
-    <table class="table table-striped mt-3" aria-describedby="Network Object Group Relations">
-      <thead>
-        <tr>
-          <th scope="col">Click the import CSV button to add network object group relations</th>
-        </tr>
-      </thead>
-    </table>
+  <div *ngIf="navIndex === 2">
+    <label class="mt-3 ml-3">Click the import CSV button to add network object group relations</label>
   </div>
 
-  <div *ngIf="navIndex !== 2" class="btn-toolbar" role="toolbar" aria-label="Entities per page">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-      Entities per page
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">
-        10
-      </button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">
-        20
-      </button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">
-        50
-      </button>
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
     </div>
-  </div>
-</div>
+  </section>
 
-<div *ngIf="navIndex === 0" class="pull-right">
-  <app-import-export
-    [exportObject]="networkObjects"
-    exportFileName="networkObjects-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importNetworkObjectsConfig($event)"
-  ></app-import-export>
-</div>
+  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
+    <app-import-export
+      [exportObject]="networkObjects"
+      exportFileName="networkObjects-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importNetworkObjectsConfig($event)"
+    ></app-import-export>
+  </section>
 
-<div *ngIf="navIndex === 1" class="pull-right">
-  <app-import-export
-    [exportObject]="networkObjectGroups"
-    exportFileName="networkObjectGroups-{{ currentTier?.name }}"
-    [disableJson]="false"
-    (import)="importNetworkObjectGroupsConfig($event)"
-  ></app-import-export>
-</div>
+  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
+    <app-import-export
+      [exportObject]="networkObjectGroups"
+      exportFileName="networkObjectGroups-{{ currentTier?.name }}"
+      [disableJson]="false"
+      (import)="importNetworkObjectGroupsConfig($event)"
+    ></app-import-export>
+  </section>
 
-<div *ngIf="navIndex === 2" class="pull-right">
-  <app-import-export
-    [disableExport]="true"
-    [disableJson]="false"
-    (import)="importNetworkObjectGroupRelationsConfig($event)"
-  ></app-import-export>
-</div>
-
+  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
+    <app-import-export
+      [disableExport]="true"
+      [disableJson]="false"
+      (import)="importNetworkObjectGroupRelationsConfig($event)"
+    ></app-import-export>
+  </section>
+</ng-container>
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Select a Tier to display Network Objects & Groups details</p>
+</ng-template>

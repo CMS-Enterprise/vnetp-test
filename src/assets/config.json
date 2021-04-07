@@ -1,0 +1,14 @@
+{
+  "environment": {
+    "current_tenants": [
+      {
+        "name": "CDS",
+        "db_name": "draas"
+      },
+      {
+        "name": "Third Packet",
+        "db_name": "dcs_thirdpacket"
+      }
+    ]
+  }
+}

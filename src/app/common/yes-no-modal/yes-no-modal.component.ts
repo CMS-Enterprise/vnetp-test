@@ -10,11 +10,14 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 export class YesNoModalComponent {
   @Input() allowEmptyTier = false;
 
-  form: FormGroup;
-  submitted: boolean;
-  modalBody = 'Title';
-  modalTitle = 'Body';
-  allowEmptyTierRadio = false;
+  public allowEmptyTierRadio = false;
+  public cancelText = 'No';
+  public confirmButtonType: 'primary' | 'danger' | 'success' = 'primary';
+  public confirmText = 'Yes';
+  public form: FormGroup;
+  public modalBody = 'Title';
+  public modalTitle = 'Body';
+  public submitted: boolean;
 
   constructor(private ngx: NgxSmartModalService) {}
 
@@ -40,8 +43,12 @@ export class YesNoModalComponent {
   public getData(): void {
     const modalConfig = this.ngx.getModalData('yesNoModal') as YesNoModalDto;
 
-    this.modalTitle = modalConfig.modalTitle;
+    this.cancelText = modalConfig.cancelText;
+    this.confirmButtonType = modalConfig.confirmButtonType;
+    this.confirmText = modalConfig.confirmText;
     this.modalBody = modalConfig.modalBody;
+    this.modalTitle = modalConfig.modalTitle;
+
     this.ngx.resetModalData('yesNoModal');
   }
 }
