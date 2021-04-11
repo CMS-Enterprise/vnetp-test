@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { PriorityGroupListComponent } from './priority-group-list.component';
-import { V1PriorityGroupsService, PriorityGroup } from 'api_client';
+import { V1PriorityGroupsService, PriorityGroup, V1DatacentersService } from 'api_client';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -10,6 +10,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { EntityService } from 'src/app/services/entity.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PriorityGroupListComponent', () => {
   let component: PriorityGroupListComponent;
@@ -17,7 +18,7 @@ describe('PriorityGroupListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule, RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent('app-priority-group-modal'),
         MockFontAwesomeComponent,
@@ -26,7 +27,12 @@ describe('PriorityGroupListComponent', () => {
         PriorityGroupListComponent,
         YesNoModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1PriorityGroupsService), MockProvider(EntityService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1PriorityGroupsService),
+        MockProvider(V1DatacentersService),
+        MockProvider(EntityService),
+      ],
     })
       .compileComponents()
       .then(() => {

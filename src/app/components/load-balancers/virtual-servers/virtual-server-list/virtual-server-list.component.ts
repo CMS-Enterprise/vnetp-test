@@ -10,6 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
+  nameView: string;
   defaultPoolName: string;
   state: string;
 }
@@ -29,7 +30,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public config: TableConfig<VirtualServerView> = {
     description: 'Virtual Servers in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'Destination Address', property: 'destinationIpAddress' },
       { name: 'Service Port', property: 'servicePort' },
@@ -85,7 +86,12 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
           this.virtualServers = virtualServers.map(v => {
             return {
               ...v,
-              defaultPoolName: v.defaultPool ? v.defaultPool.name : '--',
+              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+              defaultPoolName: v.defaultPool
+                ? v.defaultPool.name.length >= 20
+                  ? v.defaultPool.name.slice(0, 19) + '...'
+                  : v.defaultPool.name
+                : undefined,
               state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });

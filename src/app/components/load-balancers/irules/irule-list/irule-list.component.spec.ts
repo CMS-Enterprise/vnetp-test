@@ -65,19 +65,23 @@ describe('IRuleListComponent', () => {
 
     const [iRule1, iRule2] = component.iRules;
     expect(iRule1).toEqual({
+      contentView: undefined,
       description: undefined,
-      descriptionView: '--',
+      descriptionView: undefined,
       id: '1',
       name: 'iRule1',
+      nameView: 'iRule1',
       provisionedAt: {},
       state: 'Provisioned',
     });
 
     expect(iRule2).toEqual({
+      contentView: undefined,
       description: 'Description',
       descriptionView: 'Description',
       id: '2',
       name: 'iRule2',
+      nameView: 'iRule2',
       state: 'Not Provisioned',
     });
   });

@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
+  nameView: string;
   state: string;
   vlanName: string;
 }
@@ -28,7 +29,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<SelfIpView> = {
     description: 'Self IPs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'VLAN', property: 'vlanName' },
       { name: 'State', property: 'state' },
@@ -84,8 +85,13 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
             const loadBalancerVlan = (s as any).loadBalancerVlan as { name: string };
             return {
               ...s,
+              nameView: s.name.length >= 20 ? s.name.slice(0, 19) + '...' : s.name,
               state: s.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              vlanName: loadBalancerVlan ? loadBalancerVlan.name : '--',
+              vlanName: loadBalancerVlan
+                ? loadBalancerVlan.name.length >= 20
+                  ? loadBalancerVlan.name.slice(0, 19) + '...'
+                  : loadBalancerVlan.name
+                : undefined,
             };
           });
         },

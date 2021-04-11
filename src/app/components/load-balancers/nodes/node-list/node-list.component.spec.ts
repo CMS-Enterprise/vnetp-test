@@ -71,6 +71,7 @@ describe('NodeListComponent', () => {
       id: '1',
       ipAddress: '--',
       name: 'Node1',
+      nameView: 'Node1',
       provisionedAt: {},
       state: 'Provisioned',
     });
@@ -81,6 +82,7 @@ describe('NodeListComponent', () => {
       id: '2',
       ipAddress: '192.168.1.1',
       name: 'Node2',
+      nameView: 'Node2',
       state: 'Not Provisioned',
     });
   });

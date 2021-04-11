@@ -197,7 +197,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
       cpuCount: [null, Validators.required],
       coreCount: [null, Validators.required],
       cpuReserved: [false, Validators.required],
-      memorySize: [null, Validators.required],
+      memorySize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       memoryReserved: [false, Validators.required],
       highPerformance: [false, Validators.required],
       priorityGroupId: [null, Validators.required],

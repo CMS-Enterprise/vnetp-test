@@ -68,6 +68,7 @@ describe('RouteListComponent', () => {
     expect(route1).toEqual({
       id: '1',
       name: 'Route1',
+      nameView: 'Route1',
       provisionedAt: {},
       state: 'Provisioned',
     });
@@ -75,6 +76,7 @@ describe('RouteListComponent', () => {
     expect(route2).toEqual({
       id: '2',
       name: 'Route2',
+      nameView: 'Route2',
       state: 'Not Provisioned',
     });
   });

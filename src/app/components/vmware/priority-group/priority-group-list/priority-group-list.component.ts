@@ -5,6 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { EntityService } from 'src/app/services/entity.service';
+import { DatacenterContextService } from '../../../../services/datacenter-context.service';
 
 @Component({
   selector: 'app-priority-group-list',
@@ -19,15 +20,22 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
   public priorityGroups: PriorityGroup[] = [];
 
   private priorityGroupSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
 
   constructor(
     private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private priorityGroupService: V1PriorityGroupsService,
+    private datacenterContextService: DatacenterContextService,
   ) {}
 
   ngOnInit(): void {
-    this.loadPriorityGroups();
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+        this.loadPriorityGroups();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -35,7 +43,7 @@ export class PriorityGroupListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.priorityGroupSubscription]);
+    SubscriptionUtil.unsubscribe([this.priorityGroupSubscription, this.currentDatacenterSubscription]);
   }
 
   public deletePriorityGroup(priorityGroup: PriorityGroup): void {
