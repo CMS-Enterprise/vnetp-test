@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
 import { ServiceObject } from './serviceObject';
 import { NetworkObjectGroup } from './networkObjectGroup';
@@ -44,9 +43,7 @@ export interface NatRuleImport {
     translatedDestinationNetworkObjectId?: string;
     translatedDestinationNetworkObjectGroupId?: string;
     originalServiceObjectId?: string;
-    originalServiceObjectGroupId?: string;
     translatedServiceObjectId?: string;
-    translatedServiceObjectGroupId?: string;
     originalSourceNetworkObject?: NetworkObject & object;
     originalSourceNetworkObjectGroup?: NetworkObjectGroup & object;
     translatedSourceNetworkObject?: NetworkObject & object;
@@ -56,9 +53,7 @@ export interface NatRuleImport {
     translatedDestinationNetworkObject?: NetworkObject & object;
     translatedDestinationNetworkObjectGroup?: NetworkObjectGroup & object;
     originalServiceObject?: ServiceObject & object;
-    originalServiceObjectGroup?: ServiceObjectGroup & object;
     translatedServiceObject?: ServiceObject & object;
-    translatedServiceObjectGroup?: ServiceObjectGroup & object;
     vrfName: string;
     natRuleGroupType: string;
 }
@@ -94,13 +89,11 @@ export enum NatRuleImportTranslatedDestinationAddressType {
 };
 export enum NatRuleImportOriginalServiceType {
     None = 'None',
-    ServiceObject = 'ServiceObject',
-    ServiceObjectGroup = 'ServiceObjectGroup'
+    ServiceObject = 'ServiceObject'
 };
 export enum NatRuleImportTranslatedServiceType {
     None = 'None',
-    ServiceObject = 'ServiceObject',
-    ServiceObjectGroup = 'ServiceObjectGroup'
+    ServiceObject = 'ServiceObject'
 };
 
 

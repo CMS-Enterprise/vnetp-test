@@ -14569,13 +14569,11 @@ definitions:
         enum: &ref_68
           - None
           - ServiceObject
-          - ServiceObjectGroup
       translatedServiceType:
         type: string
         enum: &ref_69
           - None
           - ServiceObject
-          - ServiceObjectGroup
       natRuleGroupId:
         type: string
       originalSourceNetworkObjectId:
@@ -14596,11 +14594,7 @@ definitions:
         type: string
       originalServiceObjectId:
         type: string
-      originalServiceObjectGroupId:
-        type: string
       translatedServiceObjectId:
-        type: string
-      translatedServiceObjectGroupId:
         type: string
       originalSourceNetworkObject:
         title: NetworkObject
@@ -14647,20 +14641,10 @@ definitions:
         allOf:
           - $ref: '#/definitions/ServiceObject'
           - readOnly: true
-      originalServiceObjectGroup:
-        title: ServiceObjectGroup
-        allOf:
-          - $ref: '#/definitions/ServiceObjectGroup'
-          - readOnly: true
       translatedServiceObject:
         title: ServiceObject
         allOf:
           - $ref: '#/definitions/ServiceObject'
-          - readOnly: true
-      translatedServiceObjectGroup:
-        title: ServiceObjectGroup
-        allOf:
-          - $ref: '#/definitions/ServiceObjectGroup'
           - readOnly: true
     required:
       - name
@@ -15964,11 +15948,7 @@ definitions:
         type: string
       originalServiceObjectId:
         type: string
-      originalServiceObjectGroupId:
-        type: string
       translatedServiceObjectId:
-        type: string
-      translatedServiceObjectGroupId:
         type: string
       originalSourceNetworkObject:
         title: NetworkObject
@@ -16015,20 +15995,10 @@ definitions:
         allOf:
           - $ref: '#/definitions/ServiceObject'
           - readOnly: true
-      originalServiceObjectGroup:
-        title: ServiceObjectGroup
-        allOf:
-          - $ref: '#/definitions/ServiceObjectGroup'
-          - readOnly: true
       translatedServiceObject:
         title: ServiceObject
         allOf:
           - $ref: '#/definitions/ServiceObject'
-          - readOnly: true
-      translatedServiceObjectGroup:
-        title: ServiceObjectGroup
-        allOf:
-          - $ref: '#/definitions/ServiceObjectGroup'
           - readOnly: true
       vrfName:
         type: string

@@ -12,7 +12,6 @@ import { NatRuleListComponent } from './nat-rule-list/nat-rule-list.component';
 import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component';
 import { TabsModule } from '../../common/tabs/tabs.module';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
-import { FirewallRulesModule } from '../firewall-rules/firewall-rules.module';
 import { AuthGuard } from '../../guards/auth.guard';
 
 const routes: Routes = [

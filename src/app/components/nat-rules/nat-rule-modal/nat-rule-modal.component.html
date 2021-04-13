@@ -94,7 +94,6 @@
           >
             <option [value]="NatRuleOriginalServiceType.None">None</option>
             <option [value]="NatRuleOriginalServiceType.ServiceObject">Service Object</option>
-            <option [value]="NatRuleOriginalServiceType.ServiceObjectGroup">Service Object Group</option>
           </select>
           <div *ngIf="submitted && f.originalServiceType.errors" class="invalid-feedback">
             <div *ngIf="f.originalServiceType.errors.required">Original Service Type is required</div>
@@ -122,26 +121,6 @@
         </div>
 
         <!-- Original Service Object Group -->
-        <div class="form-group col-md-6" *ngIf="f.originalServiceType.value === NatRuleOriginalServiceType.ServiceObjectGroup">
-          <label for="originalServiceObjectGroup">Original Service Object Group</label>
-          <select
-            id="originalServiceObjectGroup"
-            formControlName="originalServiceObjectGroup"
-            class="form-control"
-            [class.is-invalid]="submitted && f.originalServiceObjectGroup.errors"
-            required
-          >
-            <option></option>
-            <option *ngFor="let serviceObjectGroup of serviceObjectGroups" [value]="serviceObjectGroup.id">{{
-              serviceObjectGroup.name
-            }}</option>
-          </select>
-          <div *ngIf="submitted && f.NatRuleOriginalServiceType.errors" class="invalid-feedback">
-            <div *ngIf="f.NatRuleOriginalServiceType.errors.required">
-              Original Service Object Group is required
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Original Source Address Type -->
@@ -420,7 +399,6 @@
             >
               <option [value]="NatRuleTranslatedServiceType.None">None</option>
               <option [value]="NatRuleTranslatedServiceType.ServiceObject">Service Object</option>
-              <option [value]="NatRuleTranslatedServiceType.ServiceObjectGroup">Service Object Group</option>
             </select>
             <div *ngIf="submitted && f.translatedServiceType.errors" class="invalid-feedback">
               <div *ngIf="f.translatedServiceType.errors.required">Translated Service Type is required</div>
@@ -447,27 +425,6 @@
             </div>
           </div>
 
-          <!-- Translated Service Object Group -->
-          <div class="form-group col-md-6" *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObjectGroup">
-            <label for="translatedServiceObjectGroup">Translated Service Object Group</label>
-            <select
-              id="translatedServiceObjectGroup"
-              formControlName="translatedServiceObjectGroup"
-              class="form-control"
-              [class.is-invalid]="submitted && f.translatedServiceObjectGroup.errors"
-              required
-            >
-              <option></option>
-              <option *ngFor="let serviceObjectGroup of serviceObjectGroups" [value]="serviceObjectGroup.id">{{
-                serviceObjectGroup.name
-              }}</option>
-            </select>
-            <div *ngIf="submitted && f.translatedServiceObjectGroup.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedServiceObjectGroup.errors.required">
-                Translated Service Object Group is required
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

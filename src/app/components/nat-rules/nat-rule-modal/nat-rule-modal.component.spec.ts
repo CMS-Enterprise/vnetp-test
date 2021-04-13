@@ -66,12 +66,12 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(originalServiceType)).toBe(true);
     });
 
-    it('should not require "Original Service Object" and "Original Service Object Group" when set to "None"', () => {
+    it('should not require "Original Service Object" when set to "None"', () => {
       testRequiredFields({
         field: 'originalServiceType',
         newValue: NatRuleOriginalServiceType.None,
         expectedRequiredFields: [],
-        expectedOptionalFields: ['originalServiceObject', 'originalServiceObjectGroup'],
+        expectedOptionalFields: ['originalServiceObject'],
       });
     });
 
@@ -80,16 +80,7 @@ describe('NatRuleModalComponent', () => {
         field: 'originalServiceType',
         newValue: NatRuleOriginalServiceType.ServiceObject,
         expectedRequiredFields: ['originalServiceObject'],
-        expectedOptionalFields: ['originalServiceObjectGroup'],
-      });
-    });
-
-    it('should require "Original Service Object Group" when set to "ServiceObjectGroup"', () => {
-      testRequiredFields({
-        field: 'originalServiceType',
-        newValue: NatRuleOriginalServiceType.ServiceObjectGroup,
-        expectedRequiredFields: ['originalServiceObjectGroup'],
-        expectedOptionalFields: ['originalServiceObject'],
+        expectedOptionalFields: [],
       });
     });
   });
@@ -216,12 +207,12 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(translatedServiceType)).toBe(true);
     });
 
-    it('should not require "Translated Service Object" and "Translated Service Object Group" when set to "None"', () => {
+    it('should not require "Translated Service Object" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedServiceType',
         newValue: NatRuleTranslatedServiceType.None,
         expectedRequiredFields: [],
-        expectedOptionalFields: ['translatedServiceObject', 'translatedServiceObjectGroup'],
+        expectedOptionalFields: ['translatedServiceObject'],
       });
     });
 
@@ -230,16 +221,7 @@ describe('NatRuleModalComponent', () => {
         field: 'translatedServiceType',
         newValue: NatRuleTranslatedServiceType.ServiceObject,
         expectedRequiredFields: ['translatedServiceObject'],
-        expectedOptionalFields: ['translatedServiceObjectGroup'],
-      });
-    });
-
-    it('should require "Translated Service Object Group" when set to "ServiceObjectGroup"', () => {
-      testRequiredFields({
-        field: 'translatedServiceType',
-        newValue: NatRuleTranslatedServiceType.ServiceObjectGroup,
-        expectedRequiredFields: ['translatedServiceObjectGroup'],
-        expectedOptionalFields: ['translatedServiceObject'],
+        expectedOptionalFields: [],
       });
     });
   });

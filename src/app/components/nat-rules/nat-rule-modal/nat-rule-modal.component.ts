@@ -29,7 +29,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   // Lookups
   @Input() networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
   @Input() networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
-  @Input() serviceObjectGroups: ServiceObjectGroup[] = [{ id: '1', name: 'Service Object Group 1' } as ServiceObjectGroup];
   @Input() serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
 
   public form: FormGroup;
@@ -99,7 +98,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       originalDestinationNetworkObject: null,
       originalDestinationNetworkObjectGroup: null,
       originalServiceObject: null,
-      originalServiceObjectGroup: null,
       originalServiceType: [NatRuleOriginalServiceType.None, Validators.required],
       originalSourceAddressType: [NatRuleOriginalSourceAddressType.None, Validators.required],
       originalSourceNetworkObject: null,
@@ -109,7 +107,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
       translatedServiceObject: null,
-      translatedServiceObjectGroup: null,
       translatedServiceType: null,
       translatedSourceAddressType: null,
       translatedSourceNetworkObject: null,
@@ -129,52 +126,32 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToOriginalServiceTypeChanges(): Subscription {
-    const { originalServiceType, originalServiceObject, originalServiceObjectGroup } = this.form.controls;
+    const { originalServiceType, originalServiceObject } = this.form.controls;
 
     const handler: Record<NatRuleOriginalServiceType, () => void> = {
       [NatRuleOriginalServiceType.None]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.clearValidators();
-        originalServiceObjectGroup.setValue(null);
-        originalServiceObjectGroup.clearValidators();
       },
       [NatRuleOriginalServiceType.ServiceObject]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.setValidators(Validators.required);
-        originalServiceObjectGroup.setValue(null);
-        originalServiceObjectGroup.clearValidators();
-      },
-      [NatRuleOriginalServiceType.ServiceObjectGroup]: () => {
-        originalServiceObject.setValue(null);
-        originalServiceObject.clearValidators();
-        originalServiceObjectGroup.setValue(null);
-        originalServiceObjectGroup.setValidators(Validators.required);
       },
     };
     return originalServiceType.valueChanges.subscribe((type: NatRuleOriginalServiceType) => this.updateForm(type, handler));
   }
 
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
-    const { translatedServiceType, translatedServiceObject, translatedServiceObjectGroup } = this.form.controls;
+    const { translatedServiceType, translatedServiceObject } = this.form.controls;
 
     const handler: Record<NatRuleTranslatedServiceType, () => void> = {
       [NatRuleTranslatedServiceType.None]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
-        translatedServiceObjectGroup.setValue(null);
-        translatedServiceObjectGroup.clearValidators();
       },
       [NatRuleTranslatedServiceType.ServiceObject]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.setValidators(Validators.required);
-        translatedServiceObjectGroup.setValue(null);
-        translatedServiceObjectGroup.clearValidators();
-      },
-      [NatRuleTranslatedServiceType.ServiceObjectGroup]: () => {
-        translatedServiceObject.setValue(null);
-        translatedServiceObject.clearValidators();
-        translatedServiceObjectGroup.setValue(null);
-        translatedServiceObjectGroup.setValidators(Validators.required);
       },
     };
     return translatedServiceType.valueChanges.subscribe((type: NatRuleTranslatedServiceType) => this.updateForm(type, handler));

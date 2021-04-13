@@ -4,8 +4,6 @@ import { MockFontAwesomeComponent, MockComponent, MockNgxSmartModalComponent } f
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NatRuleGroupListComponent } from './nat-rule-group-list.component';
-import { Subject } from 'rxjs';
-import { Tier, V1TiersService } from 'api_client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { MockProvider } from '../../../../test/mock-providers';
 
