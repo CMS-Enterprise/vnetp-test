@@ -1,42 +1,79 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Tier } from 'api_client';
+import { NatRule, NatRuleGroup, NatRuleGroupType, Tier, V1TiersService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { TierContextService } from 'src/app/services/tier-context.service';
-import { mergeMap, tap } from 'rxjs/operators';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
-import { NatRule } from '../nat-rules.type';
+import { Tab } from '../../../common/tabs/tabs.component';
+import ObjectUtil from '../../../utils/ObjectUtil';
+import { DatacenterContextService } from '../../../services/datacenter-context.service';
+import { FirewallRulesHelpText } from '../../../helptext/help-text-networking';
 
 @Component({
   selector: 'app-nat-rule-list',
   templateUrl: './nat-rule-list.component.html',
 })
 export class NatRuleListComponent implements OnInit, OnDestroy {
-  public currentPage = 1;
+  public DatacenterId: string;
+  public currentNatRulePage = 1;
   public currentTier: Tier;
   public perPage = 20;
   public ModalMode = ModalMode;
   public natRules: NatRule[] = [];
+  public natRuleGroups: NatRuleGroup[] = [];
+  public currentTab = NatRuleGroupType.External;
+  public tiers: Tier[] = [];
+  public tabs: Tab[] = [
+    {
+      name: 'External',
+      tooltip: this.helpText.External,
+    },
+    {
+      name: 'Intervrf',
+      tooltip: this.helpText.InterVrf,
+    },
+  ];
 
-  private currentTierSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private tierContextService: TierContextService) {}
+  constructor(
+    public helpText: FirewallRulesHelpText,
+    private ngx: NgxSmartModalService,
+    private datacenterContextService: DatacenterContextService,
+    private tierService: V1TiersService,
+  ) {}
 
   public ngOnInit(): void {
-    this.currentTierSubscription = this.tierContextService.currentTier
-      .pipe(
-        tap((tier: Tier) => (this.currentTier = tier)),
-        mergeMap((tier: Tier) => this.loadNatRules(tier)),
-      )
-      .subscribe((natRules: NatRule[]) => {
-        this.natRules = natRules;
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.DatacenterId = cd.id;
+        this.getTiers();
+      }
+    });
+  }
+
+  public getTiers(): void {
+    this.tierService
+      .v1DatacentersDatacenterIdTiersGet({
+        datacenterId: this.DatacenterId,
+        join: 'natRuleGroups',
+      })
+      .subscribe(data => {
+        this.tiers = data;
+        this.natRuleGroups = [];
+        this.tiers.forEach(tier => {
+          this.natRuleGroups = this.natRuleGroups.concat(tier.natRuleGroups);
+        });
       });
   }
 
+  public handleTabChange(tab: Tab): void {
+    this.currentTab = tab.name === 'External' ? NatRuleGroupType.External : NatRuleGroupType.Intervrf;
+  }
+
   public ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
   }
 
   public deleteNatRule(natRule: NatRule): void {
@@ -65,4 +102,15 @@ export class NatRuleListComponent implements OnInit, OnDestroy {
     }
     return of([]);
   }
+
+  public getTierName(tierId: string): string {
+    return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
+  }
+
+  public filterNatRuleGroup = (natRuleGroup: NatRuleGroup): boolean => {
+    if (!natRuleGroup) {
+      return false;
+    }
+    return natRuleGroup.type === this.currentTab;
+  };
 }

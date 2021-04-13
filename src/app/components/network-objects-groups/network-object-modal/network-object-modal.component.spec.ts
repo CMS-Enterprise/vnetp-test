@@ -59,7 +59,7 @@ describe('NetworkObjectModalComponent', () => {
 
   it('should have correct required and optional fields by default', () => {
     const requiredFields = ['name', 'type'];
-    const optionalFields = ['natType', 'natDirection', 'ipAddress', 'startIpAddress', 'endIpAddress', 'natSourcePort', 'natTranslatedPort'];
+    const optionalFields = ['ipAddress', 'startIpAddress', 'endIpAddress'];
 
     requiredFields.forEach(r => {
       expect(isRequired(r)).toBe(true);
@@ -82,23 +82,5 @@ describe('NetworkObjectModalComponent', () => {
 
     expect(isRequired('startIpAddress')).toBe(true);
     expect(isRequired('endIpAddress')).toBe(true);
-  });
-
-  it('should require translated ip address, nat type and nat direction when nat is set to "true"', () => {
-    const nat = getFormControl('nat');
-    nat.setValue(true);
-
-    expect(isRequired('translatedIpAddress')).toBe(true);
-    expect(isRequired('natType')).toBe(true);
-    expect(isRequired('natDirection')).toBe(true);
-  });
-
-  it('should require nat protocol, nat source port and nat translated port when nat service is set to "true"', () => {
-    const natService = getFormControl('natService');
-    natService.setValue(true);
-
-    expect(isRequired('natProtocol')).toBe(true);
-    expect(isRequired('natSourcePort')).toBe(true);
-    expect(isRequired('natTranslatedPort')).toBe(true);
   });
 });

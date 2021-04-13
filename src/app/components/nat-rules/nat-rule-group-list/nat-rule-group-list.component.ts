@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Tier } from 'api_client';
+import { NatRuleGroup, NatRuleGroupType, Tier } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
@@ -8,7 +8,6 @@ import { mergeMap, tap } from 'rxjs/operators';
 import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleGroupModalDto } from '../models/nat-rule-group-modal-dto';
-import { NatRuleGroup, NatRuleGroupType } from '../nat-rules.type';
 
 @Component({
   selector: 'app-nat-rule-group-list',

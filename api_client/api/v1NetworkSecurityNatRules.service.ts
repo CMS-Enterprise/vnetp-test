@@ -17,19 +17,18 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { FirewallRule } from '../model/models';
-import { FirewallRuleImportCollectionDto } from '../model/models';
-import { FirewallRulePreview } from '../model/models';
+import { NatRule } from '../model/models';
+import { NatRuleImportCollectionDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface V1NetworkSecurityFirewallRulesBulkImportPostRequestParams {
-    firewallRuleImportCollectionDto: FirewallRuleImportCollectionDto;
+export interface V1NetworkSecurityNatRulesBulkImportPostRequestParams {
+    natRuleImportCollectionDto: NatRuleImportCollectionDto;
 }
 
-export interface V1NetworkSecurityFirewallRulesGetRequestParams {
+export interface V1NetworkSecurityNatRulesGetRequestParams {
     /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
     /** &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;isVillain||eq||false&amp;filter&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt; */
@@ -50,16 +49,16 @@ export interface V1NetworkSecurityFirewallRulesGetRequestParams {
     cache?: number;
 }
 
-export interface V1NetworkSecurityFirewallRulesGroupIdGetRequestParams {
+export interface V1NetworkSecurityNatRulesGroupIdGetRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface V1NetworkSecurityFirewallRulesIdDeleteRequestParams {
+export interface V1NetworkSecurityNatRulesIdDeleteRequestParams {
     id: string;
 }
 
-export interface V1NetworkSecurityFirewallRulesIdGetRequestParams {
+export interface V1NetworkSecurityNatRulesIdGetRequestParams {
     id: string;
     /** &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt; */
     fields?: string;
@@ -69,33 +68,33 @@ export interface V1NetworkSecurityFirewallRulesIdGetRequestParams {
     cache?: number;
 }
 
-export interface V1NetworkSecurityFirewallRulesIdPatchRequestParams {
+export interface V1NetworkSecurityNatRulesIdPatchRequestParams {
     id: string;
-    firewallRule: FirewallRule;
+    natRule: NatRule;
 }
 
-export interface V1NetworkSecurityFirewallRulesIdPutRequestParams {
+export interface V1NetworkSecurityNatRulesIdPutRequestParams {
     id: string;
-    firewallRule: FirewallRule;
+    natRule: NatRule;
 }
 
-export interface V1NetworkSecurityFirewallRulesIdRestorePatchRequestParams {
-    id: string;
-}
-
-export interface V1NetworkSecurityFirewallRulesIdSoftDeleteRequestParams {
+export interface V1NetworkSecurityNatRulesIdRestorePatchRequestParams {
     id: string;
 }
 
-export interface V1NetworkSecurityFirewallRulesPostRequestParams {
-    firewallRule: FirewallRule;
+export interface V1NetworkSecurityNatRulesIdSoftDeleteRequestParams {
+    id: string;
+}
+
+export interface V1NetworkSecurityNatRulesPostRequestParams {
+    natRule: NatRule;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1NetworkSecurityFirewallRulesService {
+export class V1NetworkSecurityNatRulesService {
 
     protected basePath = 'http://localhost/api';
     public defaultHeaders = new HttpHeaders();
@@ -154,18 +153,18 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Bulk Import Firewall Rules
+     * Bulk Import NAT Rules
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRulePreview>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRulePreview>>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRulePreview>>;
-    public v1NetworkSecurityFirewallRulesBulkImportPost(requestParameters: V1NetworkSecurityFirewallRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const firewallRuleImportCollectionDto = requestParameters.firewallRuleImportCollectionDto;
-        if (firewallRuleImportCollectionDto === null || firewallRuleImportCollectionDto === undefined) {
-            throw new Error('Required parameter firewallRuleImportCollectionDto was null or undefined when calling v1NetworkSecurityFirewallRulesBulkImportPost.');
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const natRuleImportCollectionDto = requestParameters.natRuleImportCollectionDto;
+        if (natRuleImportCollectionDto === null || natRuleImportCollectionDto === undefined) {
+            throw new Error('Required parameter natRuleImportCollectionDto was null or undefined when calling v1NetworkSecurityNatRulesBulkImportPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -174,7 +173,6 @@ export class V1NetworkSecurityFirewallRulesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -197,8 +195,8 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<FirewallRulePreview>(`${this.configuration.basePath}/v1/network-security/firewall-rules/bulk-import`,
-            firewallRuleImportCollectionDto,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/nat-rules/bulk-import`,
+            natRuleImportCollectionDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -210,15 +208,15 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Retrieve many FirewallRule
+     * Retrieve many NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesGet(requestParameters: V1NetworkSecurityFirewallRulesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesGet(requestParameters: V1NetworkSecurityFirewallRulesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<FirewallRule>>>;
-    public v1NetworkSecurityFirewallRulesGet(requestParameters: V1NetworkSecurityFirewallRulesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<FirewallRule>>>;
-    public v1NetworkSecurityFirewallRulesGet(requestParameters: V1NetworkSecurityFirewallRulesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityNatRulesGet(requestParameters: V1NetworkSecurityNatRulesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<NatRule>>;
+    public v1NetworkSecurityNatRulesGet(requestParameters: V1NetworkSecurityNatRulesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<NatRule>>>;
+    public v1NetworkSecurityNatRulesGet(requestParameters: V1NetworkSecurityNatRulesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<NatRule>>>;
+    public v1NetworkSecurityNatRulesGet(requestParameters: V1NetworkSecurityNatRulesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const fields = requestParameters.fields;
         const filter = requestParameters.filter;
         const or = requestParameters.or;
@@ -287,7 +285,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<FirewallRule>>(`${this.configuration.basePath}/v1/network-security/firewall-rules`,
+        return this.httpClient.get<Array<NatRule>>(`${this.configuration.basePath}/v1/network-security/nat-rules`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -300,18 +298,18 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Get Firewall Rules w/ Object Relations for Firewall Rule Group.
+     * Get NAT Rules w/ Object Relations for NAT Rule Group.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesGroupIdGet(requestParameters: V1NetworkSecurityFirewallRulesGroupIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityFirewallRulesGroupIdGet(requestParameters: V1NetworkSecurityFirewallRulesGroupIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityFirewallRulesGroupIdGet(requestParameters: V1NetworkSecurityFirewallRulesGroupIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityFirewallRulesGroupIdGet(requestParameters: V1NetworkSecurityFirewallRulesGroupIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityNatRulesGroupIdGet(requestParameters: V1NetworkSecurityNatRulesGroupIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1NetworkSecurityNatRulesGroupIdGet(requestParameters: V1NetworkSecurityNatRulesGroupIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityNatRulesGroupIdGet(requestParameters: V1NetworkSecurityNatRulesGroupIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityNatRulesGroupIdGet(requestParameters: V1NetworkSecurityNatRulesGroupIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesGroupIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesGroupIdGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -333,7 +331,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/network-security/firewall-rules/group/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/network-security/nat-rules/group/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -345,18 +343,18 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Delete one FirewallRule
+     * Delete one NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdDelete(requestParameters: V1NetworkSecurityFirewallRulesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public v1NetworkSecurityFirewallRulesIdDelete(requestParameters: V1NetworkSecurityFirewallRulesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdDelete(requestParameters: V1NetworkSecurityFirewallRulesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdDelete(requestParameters: V1NetworkSecurityFirewallRulesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdDelete(requestParameters: V1NetworkSecurityNatRulesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public v1NetworkSecurityNatRulesIdDelete(requestParameters: V1NetworkSecurityNatRulesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public v1NetworkSecurityNatRulesIdDelete(requestParameters: V1NetworkSecurityNatRulesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public v1NetworkSecurityNatRulesIdDelete(requestParameters: V1NetworkSecurityNatRulesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -379,7 +377,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -391,18 +389,18 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Retrieve one FirewallRule
+     * Retrieve one NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdGet(requestParameters: V1NetworkSecurityFirewallRulesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public v1NetworkSecurityFirewallRulesIdGet(requestParameters: V1NetworkSecurityFirewallRulesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdGet(requestParameters: V1NetworkSecurityFirewallRulesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdGet(requestParameters: V1NetworkSecurityFirewallRulesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdGet(requestParameters: V1NetworkSecurityNatRulesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public v1NetworkSecurityNatRulesIdGet(requestParameters: V1NetworkSecurityNatRulesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public v1NetworkSecurityNatRulesIdGet(requestParameters: V1NetworkSecurityNatRulesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public v1NetworkSecurityNatRulesIdGet(requestParameters: V1NetworkSecurityNatRulesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdGet.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdGet.');
         }
         const fields = requestParameters.fields;
         const join = requestParameters.join;
@@ -442,7 +440,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -455,22 +453,22 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Update one FirewallRule
+     * Update one NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdPatch(requestParameters: V1NetworkSecurityFirewallRulesIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public v1NetworkSecurityFirewallRulesIdPatch(requestParameters: V1NetworkSecurityFirewallRulesIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdPatch(requestParameters: V1NetworkSecurityFirewallRulesIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdPatch(requestParameters: V1NetworkSecurityFirewallRulesIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdPatch(requestParameters: V1NetworkSecurityNatRulesIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public v1NetworkSecurityNatRulesIdPatch(requestParameters: V1NetworkSecurityNatRulesIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public v1NetworkSecurityNatRulesIdPatch(requestParameters: V1NetworkSecurityNatRulesIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public v1NetworkSecurityNatRulesIdPatch(requestParameters: V1NetworkSecurityNatRulesIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdPatch.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdPatch.');
         }
-        const firewallRule = requestParameters.firewallRule;
-        if (firewallRule === null || firewallRule === undefined) {
-            throw new Error('Required parameter firewallRule was null or undefined when calling v1NetworkSecurityFirewallRulesIdPatch.');
+        const natRule = requestParameters.natRule;
+        if (natRule === null || natRule === undefined) {
+            throw new Error('Required parameter natRule was null or undefined when calling v1NetworkSecurityNatRulesIdPatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -502,8 +500,8 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
-            firewallRule,
+        return this.httpClient.patch<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}`,
+            natRule,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -515,22 +513,22 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Replace one FirewallRule
+     * Replace one NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdPut(requestParameters: V1NetworkSecurityFirewallRulesIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public v1NetworkSecurityFirewallRulesIdPut(requestParameters: V1NetworkSecurityFirewallRulesIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdPut(requestParameters: V1NetworkSecurityFirewallRulesIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesIdPut(requestParameters: V1NetworkSecurityFirewallRulesIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdPut(requestParameters: V1NetworkSecurityNatRulesIdPutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public v1NetworkSecurityNatRulesIdPut(requestParameters: V1NetworkSecurityNatRulesIdPutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public v1NetworkSecurityNatRulesIdPut(requestParameters: V1NetworkSecurityNatRulesIdPutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public v1NetworkSecurityNatRulesIdPut(requestParameters: V1NetworkSecurityNatRulesIdPutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdPut.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdPut.');
         }
-        const firewallRule = requestParameters.firewallRule;
-        if (firewallRule === null || firewallRule === undefined) {
-            throw new Error('Required parameter firewallRule was null or undefined when calling v1NetworkSecurityFirewallRulesIdPut.');
+        const natRule = requestParameters.natRule;
+        if (natRule === null || natRule === undefined) {
+            throw new Error('Required parameter natRule was null or undefined when calling v1NetworkSecurityNatRulesIdPut.');
         }
 
         let headers = this.defaultHeaders;
@@ -562,8 +560,8 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
-            firewallRule,
+        return this.httpClient.put<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}`,
+            natRule,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -580,13 +578,13 @@ export class V1NetworkSecurityFirewallRulesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdRestorePatch(requestParameters: V1NetworkSecurityFirewallRulesIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityFirewallRulesIdRestorePatch(requestParameters: V1NetworkSecurityFirewallRulesIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityFirewallRulesIdRestorePatch(requestParameters: V1NetworkSecurityFirewallRulesIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityFirewallRulesIdRestorePatch(requestParameters: V1NetworkSecurityFirewallRulesIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdRestorePatch(requestParameters: V1NetworkSecurityNatRulesIdRestorePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1NetworkSecurityNatRulesIdRestorePatch(requestParameters: V1NetworkSecurityNatRulesIdRestorePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityNatRulesIdRestorePatch(requestParameters: V1NetworkSecurityNatRulesIdRestorePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityNatRulesIdRestorePatch(requestParameters: V1NetworkSecurityNatRulesIdRestorePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdRestorePatch.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdRestorePatch.');
         }
 
         let headers = this.defaultHeaders;
@@ -608,7 +606,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -626,13 +624,13 @@ export class V1NetworkSecurityFirewallRulesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesIdSoftDelete(requestParameters: V1NetworkSecurityFirewallRulesIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityFirewallRulesIdSoftDelete(requestParameters: V1NetworkSecurityFirewallRulesIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityFirewallRulesIdSoftDelete(requestParameters: V1NetworkSecurityFirewallRulesIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityFirewallRulesIdSoftDelete(requestParameters: V1NetworkSecurityFirewallRulesIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityNatRulesIdSoftDelete(requestParameters: V1NetworkSecurityNatRulesIdSoftDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public v1NetworkSecurityNatRulesIdSoftDelete(requestParameters: V1NetworkSecurityNatRulesIdSoftDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public v1NetworkSecurityNatRulesIdSoftDelete(requestParameters: V1NetworkSecurityNatRulesIdSoftDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public v1NetworkSecurityNatRulesIdSoftDelete(requestParameters: V1NetworkSecurityNatRulesIdSoftDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityFirewallRulesIdSoftDelete.');
+            throw new Error('Required parameter id was null or undefined when calling v1NetworkSecurityNatRulesIdSoftDelete.');
         }
 
         let headers = this.defaultHeaders;
@@ -654,7 +652,7 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -666,18 +664,18 @@ export class V1NetworkSecurityFirewallRulesService {
     }
 
     /**
-     * Create one FirewallRule
+     * Create one NatRule
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityFirewallRulesPost(requestParameters: V1NetworkSecurityFirewallRulesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public v1NetworkSecurityFirewallRulesPost(requestParameters: V1NetworkSecurityFirewallRulesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesPost(requestParameters: V1NetworkSecurityFirewallRulesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public v1NetworkSecurityFirewallRulesPost(requestParameters: V1NetworkSecurityFirewallRulesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const firewallRule = requestParameters.firewallRule;
-        if (firewallRule === null || firewallRule === undefined) {
-            throw new Error('Required parameter firewallRule was null or undefined when calling v1NetworkSecurityFirewallRulesPost.');
+    public v1NetworkSecurityNatRulesPost(requestParameters: V1NetworkSecurityNatRulesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public v1NetworkSecurityNatRulesPost(requestParameters: V1NetworkSecurityNatRulesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public v1NetworkSecurityNatRulesPost(requestParameters: V1NetworkSecurityNatRulesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public v1NetworkSecurityNatRulesPost(requestParameters: V1NetworkSecurityNatRulesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const natRule = requestParameters.natRule;
+        if (natRule === null || natRule === undefined) {
+            throw new Error('Required parameter natRule was null or undefined when calling v1NetworkSecurityNatRulesPost.');
         }
 
         let headers = this.defaultHeaders;
@@ -709,8 +707,8 @@ export class V1NetworkSecurityFirewallRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules`,
-            firewallRule,
+        return this.httpClient.post<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules`,
+            natRule,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

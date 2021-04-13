@@ -24,11 +24,11 @@
           <th scope="col">Name</th>
           <th scope="col">Type</th>
           <th scope="col">Address</th>
-          <th scope="col">NAT Translated IP Address</th>
+          <!-- <th scope="col">NAT Translated IP Address</th>
           <th scope="col">NAT Type</th>
           <th scope="col">NAT Direction</th>
           <th scope="col">NAT Protocol</th>
-          <th scope="col">NAT Source:Translated Port</th>
+          <th scope="col">NAT Source:Translated Port</th> -->
           <th scope="col">State</th>
           <th scope="col"></th>
         </tr>
@@ -44,21 +44,6 @@
           <td>
             <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
             <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
-          </td>
-          <td>
-            <span>{{ netObj?.translatedIpAddress }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natType }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natDirection }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natProtocol }}</span>
-          </td>
-          <td>
-            <span *ngIf="netObj?.natService"> {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }} </span>
           </td>
           <td>
             <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>

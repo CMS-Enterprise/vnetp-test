@@ -44,6 +44,6 @@ const routes: Routes = [
     TabsModule,
     TooltipModule,
   ],
-  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FilterPipe],
+  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent],
 })
 export class FirewallRulesModule {}

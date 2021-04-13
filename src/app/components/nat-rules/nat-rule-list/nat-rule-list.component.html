@@ -1,59 +1,69 @@
-<div class="btn-group-sm mb-2 pull-right mt-3" role="group">
-  <button type="button" class="btn btn-success" (click)="openNatRuleModal(ModalMode.Create)" [disabled]="!currentTier">
-    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-    <span>Create NAT Rule</span>
-  </button>
-</div>
+<h1>Nat Rules</h1>
+<ng-container *ngIf="tiers.length !== 0; else warningMessage">
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-<table class="table table-striped" aria-describedby="NAT Rules table">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let natRule of natRules | paginate: { itemsPerPage: perPage, currentPage: currentPage }">
-      <td>
-        <span>{{ natRule?.name }}</span>
-      </td>
-      <td class="item-actions">
-        <!-- Edit NAT Rule -->
-        <fa-icon
-          *ngIf="!natRule?.deletedAt"
-          class="icon"
-          [icon]="['fas', 'pencil-alt']"
-          (click)="openNatRuleModal(ModalMode.Edit, natRule)"
-          aria-label="Edit NAT Rule"
-        >
-        </fa-icon>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-info" (click)="getTiers()">
+      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </section>
 
-        <!-- Restore NAT Rule -->
-        <fa-icon
-          [icon]="['fas', 'undo']"
-          *ngIf="natRule?.deletedAt"
-          class="fg-success icon"
-          (click)="restoreNatRule(natRule)"
-          aria-label="Restore NAT Rule"
-        >
-        </fa-icon>
+  <table class="table table-striped">
+    <caption>
+      <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+      <span>{{ currentTab }} Nat Rules with the current Tier</span>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Tier</th>
+        <th scope="col">Nat Rules</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let natRuleGroup of natRuleGroups
+            | filter : filterNatRuleGroup
+            | paginate: { itemsPerPage: perPage, currentPage: currentNatRulePage }
+        "
+      >
+        <td>
+          {{ getTierName(natRuleGroup.tierId) }}
+        </td>
+        <td>
+          <a routerLink="/nat-rules/edit/{{ natRuleGroup.id }}" queryParamsHandling="merge"
+            >{{ natRuleGroup.name | slice: 0:20 }}{{ natRuleGroup.name.length > 20 ? '...' : '' }}</a
+          >
+        </td>
+        <td>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+      </tr>
+      <tr *ngIf="natRuleGroups.length === 0" class="text-center">
+        <td colspan="3">No Nat Rules</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentNatRulePage = $event"></pagination-controls>
 
-        <!-- Soft-Delete/Delete NAT Rule -->
-        <fa-icon
-          class="icon"
-          [icon]="['fas', 'trash']"
-          [class.fg-danger]="natRule?.deletedAt"
-          (click)="deleteNatRule(natRule)"
-          aria-label="Soft-Delete/Delete NAT Rule"
-        >
-        </fa-icon>
-      </td>
-    </tr>
-    <tr *ngIf="!natRules?.length" class="text-center">
-      <td colspan="2">No NAT Rules in this Tier</td>
-    </tr>
-  </tbody>
-</table>
-<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
+      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
+      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
+    </div>
+  </section>
 
-<app-nat-rule-modal></app-nat-rule-modal>
+  <!-- <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="NatRuleGroups"
+      exportFileName="NatRuleGroups"
+      [disableJson]="false"
+    ></app-import-export>
+  </section> -->
+</ng-container>
+<app-yes-no-modal></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Create a Tier to display Nat Rules details</p>
+</ng-template>

@@ -9,9 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NatRule } from './natRule';
 
 
-export interface NetworkObject { 
+export interface NatRuleGroup { 
     readonly id?: string;
     createdAt?: object;
     updatedAt?: object;
@@ -20,16 +21,13 @@ export interface NetworkObject {
     provisionedAt?: object;
     readonly provisionedVersion?: number;
     name: string;
-    description?: string;
-    type: NetworkObjectType;
-    ipAddress?: string;
-    startIpAddress?: string;
-    endIpAddress?: string;
+    type: NatRuleGroupType;
     tierId: string;
+    readonly natRules?: Array<NatRule>;
 }
-export enum NetworkObjectType {
-    IpAddress = 'IpAddress',
-    Range = 'Range'
+export enum NatRuleGroupType {
+    Intervrf = 'Intervrf',
+    External = 'External'
 };
 
 
