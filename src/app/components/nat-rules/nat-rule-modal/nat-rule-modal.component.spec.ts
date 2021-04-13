@@ -6,9 +6,17 @@ import { NatRuleModalComponent } from './nat-rule-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from '../../../../test/mock-providers';
 import TestUtil from '../../../../test/TestUtil';
-import { NatRuleServiceType, NatRuleAddressType, NatRuleTranslationType } from '../nat-rules.type';
 import { TierContextService } from '../../../services/tier-context.service';
-import { V1TiersService } from '../../../../../api_client';
+import {
+  NatRuleOriginalDestinationAddressType,
+  NatRuleOriginalServiceType,
+  NatRuleOriginalSourceAddressType,
+  NatRuleTranslatedDestinationAddressType,
+  NatRuleTranslatedServiceType,
+  NatRuleTranslatedSourceAddressType,
+  NatRuleTranslationType,
+  V1TiersService,
+} from '../../../../../api_client';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
 
 describe('NatRuleModalComponent', () => {
@@ -61,7 +69,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Original Service Object" and "Original Service Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalServiceType',
-        newValue: NatRuleServiceType.None,
+        newValue: NatRuleOriginalServiceType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['originalServiceObject', 'originalServiceObjectGroup'],
       });
@@ -70,7 +78,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Service Object" when set to "ServiceObject"', () => {
       testRequiredFields({
         field: 'originalServiceType',
-        newValue: NatRuleServiceType.ServiceObject,
+        newValue: NatRuleOriginalServiceType.ServiceObject,
         expectedRequiredFields: ['originalServiceObject'],
         expectedOptionalFields: ['originalServiceObjectGroup'],
       });
@@ -79,7 +87,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Service Object Group" when set to "ServiceObjectGroup"', () => {
       testRequiredFields({
         field: 'originalServiceType',
-        newValue: NatRuleServiceType.ServiceObjectGroup,
+        newValue: NatRuleOriginalServiceType.ServiceObjectGroup,
         expectedRequiredFields: ['originalServiceObjectGroup'],
         expectedOptionalFields: ['originalServiceObject'],
       });
@@ -95,7 +103,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Original Source Network Object" and "Original Source Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalSourceAddressType',
-        newValue: NatRuleAddressType.None,
+        newValue: NatRuleOriginalSourceAddressType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['originalSourceNetworkObject', 'originalSourceNetworkObjectGroup'],
       });
@@ -104,7 +112,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Source Network Object" when set to "NetworkObject"', () => {
       testRequiredFields({
         field: 'originalSourceAddressType',
-        newValue: NatRuleAddressType.NetworkObject,
+        newValue: NatRuleOriginalSourceAddressType.NetworkObject,
         expectedRequiredFields: ['originalSourceNetworkObject'],
         expectedOptionalFields: ['originalSourceNetworkObjectGroup'],
       });
@@ -113,7 +121,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Source Network Object Group" when set to "NetworkObjectGroup"', () => {
       testRequiredFields({
         field: 'originalSourceAddressType',
-        newValue: NatRuleAddressType.NetworkObjectGroup,
+        newValue: NatRuleOriginalSourceAddressType.NetworkObjectGroup,
         expectedRequiredFields: ['originalSourceNetworkObjectGroup'],
         expectedOptionalFields: ['originalSourceNetworkObject'],
       });
@@ -130,7 +138,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Original Destination Network Object" and "Original Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',
-        newValue: NatRuleAddressType.None,
+        newValue: NatRuleOriginalDestinationAddressType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['originalDestinationNetworkObject', 'originalDestinationNetworkObjectGroup'],
       });
@@ -139,7 +147,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Destination Network Object" when set to "NetworkObject"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',
-        newValue: NatRuleAddressType.NetworkObject,
+        newValue: NatRuleOriginalDestinationAddressType.NetworkObject,
         expectedRequiredFields: ['originalDestinationNetworkObject'],
         expectedOptionalFields: ['originalDestinationNetworkObjectGroup'],
       });
@@ -148,7 +156,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Original Destination Network Object Group" when set to "NetworkObjectGroup"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',
-        newValue: NatRuleAddressType.NetworkObjectGroup,
+        newValue: NatRuleOriginalDestinationAddressType.NetworkObjectGroup,
         expectedRequiredFields: ['originalDestinationNetworkObjectGroup'],
         expectedOptionalFields: ['originalDestinationNetworkObject'],
       });
@@ -211,7 +219,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Translated Service Object" and "Translated Service Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedServiceType',
-        newValue: NatRuleServiceType.None,
+        newValue: NatRuleTranslatedServiceType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['translatedServiceObject', 'translatedServiceObjectGroup'],
       });
@@ -220,7 +228,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Service Object" when set to "ServiceObject"', () => {
       testRequiredFields({
         field: 'translatedServiceType',
-        newValue: NatRuleServiceType.ServiceObject,
+        newValue: NatRuleTranslatedServiceType.ServiceObject,
         expectedRequiredFields: ['translatedServiceObject'],
         expectedOptionalFields: ['translatedServiceObjectGroup'],
       });
@@ -229,7 +237,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Service Object Group" when set to "ServiceObjectGroup"', () => {
       testRequiredFields({
         field: 'translatedServiceType',
-        newValue: NatRuleServiceType.ServiceObjectGroup,
+        newValue: NatRuleTranslatedServiceType.ServiceObjectGroup,
         expectedRequiredFields: ['translatedServiceObjectGroup'],
         expectedOptionalFields: ['translatedServiceObject'],
       });
@@ -249,7 +257,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Translated Source Network Object" and "Translated Source Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedSourceAddressType',
-        newValue: NatRuleAddressType.None,
+        newValue: NatRuleTranslatedSourceAddressType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['translatedSourceNetworkObject', 'translatedSourceNetworkObjectGroup'],
       });
@@ -258,7 +266,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Source Network Object" when set to "NetworkObject"', () => {
       testRequiredFields({
         field: 'translatedSourceAddressType',
-        newValue: NatRuleAddressType.NetworkObject,
+        newValue: NatRuleTranslatedSourceAddressType.NetworkObject,
         expectedRequiredFields: ['translatedSourceNetworkObject'],
         expectedOptionalFields: ['translatedSourceNetworkObjectGroup'],
       });
@@ -267,7 +275,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Source Network Object Group" when set to "NetworkObjectGroup"', () => {
       testRequiredFields({
         field: 'translatedSourceAddressType',
-        newValue: NatRuleAddressType.NetworkObjectGroup,
+        newValue: NatRuleTranslatedSourceAddressType.NetworkObjectGroup,
         expectedRequiredFields: ['translatedSourceNetworkObjectGroup'],
         expectedOptionalFields: ['translatedSourceNetworkObject'],
       });
@@ -283,7 +291,7 @@ describe('NatRuleModalComponent', () => {
     it('should not require "Translated Destination Network Object" and "Translated Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedDestinationAddressType',
-        newValue: NatRuleAddressType.None,
+        newValue: NatRuleTranslatedDestinationAddressType.None,
         expectedRequiredFields: [],
         expectedOptionalFields: ['translatedDestinationNetworkObject', 'translatedDestinationNetworkObjectGroup'],
       });
@@ -292,7 +300,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Destination Network Object" when set to "NetworkObject"', () => {
       testRequiredFields({
         field: 'translatedDestinationAddressType',
-        newValue: NatRuleAddressType.NetworkObject,
+        newValue: NatRuleTranslatedDestinationAddressType.NetworkObject,
         expectedRequiredFields: ['translatedDestinationNetworkObject'],
         expectedOptionalFields: ['translatedDestinationNetworkObjectGroup'],
       });
@@ -301,7 +309,7 @@ describe('NatRuleModalComponent', () => {
     it('should require "Translated Destination Network Object Group" when set to "NetworkObjectGroup"', () => {
       testRequiredFields({
         field: 'translatedDestinationAddressType',
-        newValue: NatRuleAddressType.NetworkObjectGroup,
+        newValue: NatRuleTranslatedDestinationAddressType.NetworkObjectGroup,
         expectedRequiredFields: ['translatedDestinationNetworkObjectGroup'],
         expectedOptionalFields: ['translatedDestinationNetworkObject'],
       });

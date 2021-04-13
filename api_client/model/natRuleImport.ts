@@ -26,7 +26,7 @@ export interface NatRuleImport {
     enabled: boolean;
     ruleIndex: number;
     translationType: NatRuleImportTranslationType;
-    direction: string;
+    direction: NatRuleImportDirection;
     biDirectional: boolean;
     originalSourceAddressType: NatRuleImportOriginalSourceAddressType;
     translatedSourceAddressType: NatRuleImportTranslatedSourceAddressType;
@@ -67,6 +67,10 @@ export enum NatRuleImportTranslationType {
     Static = 'Static',
     DynamicIp = 'DynamicIp',
     DynamicIpAndPort = 'DynamicIpAndPort'
+};
+export enum NatRuleImportDirection {
+    In = 'In',
+    Out = 'Out'
 };
 export enum NatRuleImportOriginalSourceAddressType {
     None = 'None',

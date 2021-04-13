@@ -14535,41 +14535,44 @@ definitions:
           - DynamicIpAndPort
       direction:
         type: string
+        enum: &ref_63
+          - In
+          - Out
       biDirectional:
         type: boolean
       originalSourceAddressType:
-        type: string
-        enum: &ref_63
-          - None
-          - NetworkObject
-          - NetworkObjectGroup
-      translatedSourceAddressType:
         type: string
         enum: &ref_64
           - None
           - NetworkObject
           - NetworkObjectGroup
-      originalDestinationAddressType:
+      translatedSourceAddressType:
         type: string
         enum: &ref_65
           - None
           - NetworkObject
           - NetworkObjectGroup
-      translatedDestinationAddressType:
+      originalDestinationAddressType:
         type: string
         enum: &ref_66
           - None
           - NetworkObject
           - NetworkObjectGroup
-      originalServiceType:
+      translatedDestinationAddressType:
         type: string
         enum: &ref_67
+          - None
+          - NetworkObject
+          - NetworkObjectGroup
+      originalServiceType:
+        type: string
+        enum: &ref_68
           - None
           - ServiceObject
           - ServiceObjectGroup
       translatedServiceType:
         type: string
-        enum: &ref_68
+        enum: &ref_69
           - None
           - ServiceObject
           - ServiceObjectGroup
@@ -14766,7 +14769,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: &ref_73
+        enum: &ref_74
           - IpAddress
           - Fqdn
       ipAddress:
@@ -14893,7 +14896,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: &ref_71
+        enum: &ref_72
           - RoundRobin
           - LeastSessions
           - FastestNode
@@ -14922,7 +14925,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: &ref_72
+          enum: &ref_73
             - UDP
             - TCP
             - HTTP
@@ -15119,13 +15122,13 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: &ref_69
+        enum: &ref_70
           - None
           - AutoMap
           - SNAT
       type:
         type: string
-        enum: &ref_70
+        enum: &ref_71
           - Standard
       servicePort:
         type: number
@@ -15920,26 +15923,27 @@ definitions:
         enum: *ref_62
       direction:
         type: string
+        enum: *ref_63
       biDirectional:
         type: boolean
       originalSourceAddressType:
         type: string
-        enum: *ref_63
+        enum: *ref_64
       translatedSourceAddressType:
         type: string
-        enum: *ref_64
+        enum: *ref_65
       originalDestinationAddressType:
         type: string
-        enum: *ref_65
+        enum: *ref_66
       translatedDestinationAddressType:
         type: string
-        enum: *ref_66
+        enum: *ref_67
       originalServiceType:
         type: string
-        enum: *ref_67
+        enum: *ref_68
       translatedServiceType:
         type: string
-        enum: *ref_68
+        enum: *ref_69
       natRuleGroupId:
         type: string
       originalSourceNetworkObjectId:
@@ -16292,10 +16296,10 @@ definitions:
           $ref: '#/definitions/LoadBalancerIrule'
       sourceAddressTranslation:
         type: string
-        enum: *ref_69
+        enum: *ref_70
       type:
         type: string
-        enum: *ref_70
+        enum: *ref_71
       servicePort:
         type: number
         minimum: 1
@@ -16411,7 +16415,7 @@ definitions:
         maxLength: 500
       loadBalancingMethod:
         type: string
-        enum: *ref_71
+        enum: *ref_72
       nodes:
         type: array
         items:
@@ -16424,7 +16428,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: *ref_72
+          enum: *ref_73
       tierId:
         type: string
       vrfName:
@@ -16501,7 +16505,7 @@ definitions:
         maxLength: 500
       type:
         type: string
-        enum: *ref_73
+        enum: *ref_74
       ipAddress:
         type: string
       fqdn:
