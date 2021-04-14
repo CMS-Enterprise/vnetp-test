@@ -113,14 +113,12 @@
             <option></option>
             <option *ngFor="let serviceObject of serviceObjects" [value]="serviceObject.id">{{ serviceObject.name }}</option>
           </select>
-          <div *ngIf="submitted && f.NatRuleOriginalServiceType.errors" class="invalid-feedback">
-            <div *ngIf="f.NatRuleOriginalServiceType.errors.required">
+          <div *ngIf="submitted && f.originalServiceObject.errors" class="invalid-feedback">
+            <div *ngIf="f.originalServiceObject.errors.required">
               Original Service Object is required
             </div>
           </div>
         </div>
-
-        <!-- Original Service Object Group -->
       </div>
 
       <!-- Original Source Address Type -->

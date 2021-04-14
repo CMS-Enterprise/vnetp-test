@@ -48,6 +48,16 @@ export class FirewallRulesHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class NatRulesHelpText {
+  wikiBase: string = environment.wikiBase;
+
+  External = `Nat Rules between a Tier and CMSnet/Internet.`;
+  InterVrf = `Nat Rules between 2 Tiers.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class NetworkInterfacesHelpText {
   wikiBase: string = environment.wikiBase;
 

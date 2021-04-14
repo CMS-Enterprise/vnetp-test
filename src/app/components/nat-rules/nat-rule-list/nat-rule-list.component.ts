@@ -8,7 +8,7 @@ import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
 import { Tab } from '../../../common/tabs/tabs.component';
 import ObjectUtil from '../../../utils/ObjectUtil';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
-import { FirewallRulesHelpText } from '../../../helptext/help-text-networking';
+import { NatRulesHelpText } from '../../../helptext/help-text-networking';
 
 @Component({
   selector: 'app-nat-rule-list',
@@ -38,7 +38,7 @@ export class NatRuleListComponent implements OnInit, OnDestroy {
   private currentDatacenterSubscription: Subscription;
 
   constructor(
-    public helpText: FirewallRulesHelpText,
+    public helpText: NatRulesHelpText,
     private ngx: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private tierService: V1TiersService,
@@ -84,16 +84,16 @@ export class NatRuleListComponent implements OnInit, OnDestroy {
     // TODO: Implement
   }
 
-  public openNatRuleModal(modalMode: ModalMode, natRule?: NatRule): void {
-    const modalName = 'natRuleModal';
-    const dto: NatRuleModalDto = {
-      tierId: this.currentTier.id,
-      modalMode,
-      natRule,
-    };
-    this.ngx.setModalData(dto, modalName);
-    this.ngx.open(modalName);
-  }
+  // public openNatRuleModal(modalMode: ModalMode, natRule?: NatRule): void {
+  //   const modalName = 'natRuleModal';
+  //   const dto: NatRuleModalDto = {
+  //     tierId: this.currentTier.id,
+  //     modalMode,
+  //     natRule,
+  //   };
+  //   this.ngx.setModalData(dto, modalName);
+  //   this.ngx.open(modalName);
+  // }
 
   private loadNatRules(tier: Tier): Observable<NatRule[]> {
     const hasCurrentTier = tier && !!tier.id;

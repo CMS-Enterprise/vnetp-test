@@ -9,34 +9,38 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/common/shared.module';
 import { NatRuleGroupModalComponent } from './nat-rule-group-modal/nat-rule-group-modal.component';
 import { NatRuleListComponent } from './nat-rule-list/nat-rule-list.component';
-import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component';
 import { TabsModule } from '../../common/tabs/tabs.module';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
 import { AuthGuard } from '../../guards/auth.guard';
+import { NatRuleDetailComponent } from './nat-rules-detail/nat-rule-detail.component';
+import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component';
+import { IconButtonModule } from '../../common/icon-button/icon-button.module';
 
 const routes: Routes = [
   {
     path: '',
     component: NatRuleListComponent,
-    children: [
-      { path: 'groups', component: NatRuleGroupListComponent },
-      { path: '**', redirectTo: '' },
-    ],
   },
   {
     path: 'edit/:id',
-    component: NatRuleModalComponent,
+    component: NatRuleDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Nat Rule Group' },
   },
-  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
-  declarations: [NatRuleGroupListComponent, NatRuleGroupModalComponent, NatRuleListComponent, NatRuleModalComponent],
+  declarations: [
+    NatRuleGroupListComponent,
+    NatRuleGroupModalComponent,
+    NatRuleListComponent,
+    NatRuleModalComponent,
+    NatRuleDetailComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
+    IconButtonModule,
     ReactiveFormsModule,
     RouterModule,
     FontAwesomeModule,

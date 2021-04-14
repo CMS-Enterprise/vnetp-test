@@ -26,10 +26,10 @@ import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
   templateUrl: './nat-rule-modal.component.html',
 })
 export class NatRuleModalComponent implements OnInit, OnDestroy {
-  // Lookups
-  @Input() networkObjectGroups: NetworkObjectGroup[] = [{ id: '1', name: 'Network Object Group 1' } as NetworkObjectGroup];
-  @Input() networkObjects: NetworkObject[] = [{ id: '1', name: 'Network Object 1' } as NetworkObject];
-  @Input() serviceObjects: ServiceObject[] = [{ id: '1', name: 'Service Object 1' } as ServiceObject];
+  networkObjects: Array<NetworkObject>;
+  networkObjectGroups: Array<NetworkObjectGroup>;
+
+  serviceObjects: Array<ServiceObject>;
 
   public form: FormGroup;
   public submitted = false;
@@ -69,6 +69,10 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       this.f.name.setValue(name);
       this.f.name.disable();
     }
+    this.networkObjects = dto.NetworkObjects;
+    this.networkObjectGroups = dto.NetworkObjectGroups;
+    this.serviceObjects = dto.ServiceObjects;
+    // this.form.updateValueAndValidity();
   }
 
   public closeModal(): void {
@@ -79,14 +83,16 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public reset(): void {
     this.ngx.resetModalData('natRuleModal');
     this.submitted = false;
+    this.initForm();
   }
 
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
+      console.log('form invalid', this.form);
       return;
     }
-    console.log(this.form.value);
+    console.log('form valid', this.form);
   }
 
   private initForm(): void {
@@ -132,10 +138,12 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       [NatRuleOriginalServiceType.None]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.clearValidators();
+        // originalServiceObject.updateValueAndValidity();
       },
       [NatRuleOriginalServiceType.ServiceObject]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.setValidators(Validators.required);
+        // originalServiceObject.updateValueAndValidity();
       },
     };
     return originalServiceType.valueChanges.subscribe((type: NatRuleOriginalServiceType) => this.updateForm(type, handler));
@@ -186,7 +194,15 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToTranslationTypeChanges(): Subscription {
-    const { translatedDestinationAddressType, translatedServiceType, translatedSourceAddressType, translationType } = this.form.controls;
+    const {
+      translatedDestinationAddressType,
+      translatedServiceType,
+      translatedSourceAddressType,
+      translationType,
+      translatedDestinationNetworkObject,
+      translatedServiceObject,
+      translatedSourceNetworkObject,
+    } = this.form.controls;
 
     const requireTranslatedFields = () => {
       translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressType.None);
@@ -205,6 +221,12 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationAddressType.clearValidators();
         translatedServiceType.setValue(null);
         translatedServiceType.clearValidators();
+        translatedDestinationNetworkObject.setValue(null);
+        translatedDestinationNetworkObject.clearValidators();
+        translatedSourceNetworkObject.setValue(null);
+        translatedSourceNetworkObject.clearValidators();
+        translatedServiceObject.setValue(null);
+        translatedServiceObject.clearValidators();
       },
       [NatRuleTranslationType.Static]: requireTranslatedFields,
       [NatRuleTranslationType.DynamicIp]: requireTranslatedFields,
@@ -301,6 +323,17 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private updateForm<T extends string>(newValue: T, valueHandler: Record<T, () => void>): void {
     const fn = valueHandler[newValue] || (() => {});
     fn();
+    // TO DO : current workaround to modal validation issue is to run this function twice, will continue looking into
+    fn();
     this.form.updateValueAndValidity();
+  }
+
+  private modalPropertyChecker(modalNatRule, property, value) {
+    if (value != null) {
+      const propertyId = property + 'Id';
+      modalNatRule[propertyId] = value;
+      modalNatRule[property] = null;
+    }
+    return modalNatRule;
   }
 }
