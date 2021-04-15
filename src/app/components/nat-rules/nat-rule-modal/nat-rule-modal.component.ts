@@ -16,7 +16,7 @@ import {
   NetworkObject,
   NetworkObjectGroup,
   ServiceObject,
-  ServiceObjectGroup,
+  V1NetworkSecurityNatRulesService,
 } from 'api_client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
@@ -33,6 +33,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   public form: FormGroup;
   public submitted = false;
+  public modalMode: ModalMode;
+  public natRuleGroupId: string;
+  public natRuleId: string;
 
   // Enums
   public NatRuleDirection = NatRuleDirection;
@@ -46,7 +49,11 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private ngx: NgxSmartModalService,
+    private natRuleService: V1NetworkSecurityNatRulesService,
+  ) {}
 
   get f() {
     return this.form.controls;
@@ -62,25 +69,31 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   public initNatRule(): void {
     const dto = Object.assign({}, this.ngx.getModalData('natRuleModal') as NatRuleModalDto);
-
+    this.modalMode = dto.modalMode;
+    const { natRule } = dto;
     if (dto.modalMode === ModalMode.Edit) {
-      const { name } = dto.natRule;
-
-      this.f.name.setValue(name);
+      this.natRuleId = natRule.id;
+    } else {
+      this.f.name.enable();
+    }
+    if (natRule !== undefined) {
+      this.modalPropertyChecker(natRule);
+      this.form.patchValue(natRule);
       this.f.name.disable();
     }
     this.networkObjects = dto.NetworkObjects;
     this.networkObjectGroups = dto.NetworkObjectGroups;
     this.serviceObjects = dto.ServiceObjects;
-    // this.form.updateValueAndValidity();
+    this.natRuleGroupId = dto.natRuleGroupId;
   }
 
   public closeModal(): void {
+    this.ngx.close('natRuleModal');
     this.reset();
-    this.ngx.closeLatestModal();
   }
 
   public reset(): void {
+    SubscriptionUtil.unsubscribe(this.subscriptions);
     this.ngx.resetModalData('natRuleModal');
     this.submitted = false;
     this.initForm();
@@ -89,10 +102,85 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
-      console.log('form invalid', this.form);
       return;
     }
-    console.log('form valid', this.form);
+    const modalNatRule = this.form.value;
+    modalNatRule.originalServiceObjectId = null;
+    modalNatRule.originalSourceNetworkObjectId = null;
+    modalNatRule.originalSourceNetworkObjectGroupId = null;
+    modalNatRule.originalDestinationNetworkObjectId = null;
+    modalNatRule.originalDestinationNetworkObjectGroupId = null;
+    modalNatRule.translatedServiceObjectId = null;
+    modalNatRule.translatedSourceNetworkObjectId = null;
+    modalNatRule.translatedSourceNetworkObjectGroupId = null;
+    modalNatRule.translatedDestinationNetworkObjectId = null;
+    modalNatRule.translatedDestinationNetworkObjectGroupId = null;
+    if (modalNatRule.originalServiceType === NatRuleOriginalServiceType.ServiceObject) {
+      modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
+      modalNatRule.originalServiceObject = null;
+    }
+    if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressType.NetworkObject) {
+      modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
+      modalNatRule.originalSourceNetworkObject = null;
+    } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressType.NetworkObjectGroup) {
+      modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
+      modalNatRule.originalSourceNetworkObjectGroup = null;
+    }
+    if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.NetworkObject) {
+      modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
+      modalNatRule.originalDestinationNetworkObject = null;
+    } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.NetworkObjectGroup) {
+      modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
+      modalNatRule.originalDestinationNetworkObjectGroup = null;
+    }
+    if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceType.ServiceObject) {
+      modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
+      modalNatRule.translatedServiceObject = null;
+    }
+    if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressType.NetworkObject) {
+      modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
+      modalNatRule.translatedSourceNetworkObject = null;
+    } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
+      modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
+      modalNatRule.translatedSourceNetworkObjectGroup = null;
+    }
+    if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressType.NetworkObject) {
+      modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
+      modalNatRule.translatedDestinationNetworkObject = null;
+      if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.None) {
+        console.log('original destination address must not be none!!!!');
+        return;
+      }
+    } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
+      modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
+      modalNatRule.translatedDestinationNetworkObjectGroup = null;
+    }
+
+    if (this.modalMode === ModalMode.Create) {
+      modalNatRule.natRuleGroupId = this.natRuleGroupId;
+      this.natRuleService
+        .v1NetworkSecurityNatRulesPost({
+          natRule: modalNatRule,
+        })
+        .subscribe(
+          () => {
+            this.closeModal();
+          },
+          () => {},
+        );
+    } else {
+      this.natRuleService
+        .v1NetworkSecurityNatRulesIdPut({
+          id: this.natRuleId,
+          natRule: modalNatRule,
+        })
+        .subscribe(
+          () => {
+            this.closeModal();
+          },
+          () => {},
+        );
+    }
   }
 
   private initForm(): void {
@@ -109,15 +197,15 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       originalSourceNetworkObject: null,
       originalSourceNetworkObjectGroup: null,
       ruleIndex: [null, Validators.compose([Validators.required, Validators.min(1)])],
-      translatedDestinationAddressType: null,
+      translatedDestinationAddressType: [NatRuleTranslatedDestinationAddressType.None, Validators.required],
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
       translatedServiceObject: null,
-      translatedServiceType: null,
-      translatedSourceAddressType: null,
+      translatedServiceType: [NatRuleTranslatedServiceType.None, Validators.required],
+      translatedSourceAddressType: [NatRuleTranslatedSourceAddressType.None, Validators.required],
       translatedSourceNetworkObject: null,
       translatedSourceNetworkObjectGroup: null,
-      translationType: [NatRuleTranslationType.None, Validators.required],
+      translationType: [NatRuleTranslationType.Static, Validators.required],
     });
 
     this.subscriptions = [
@@ -138,15 +226,20 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       [NatRuleOriginalServiceType.None]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.clearValidators();
-        // originalServiceObject.updateValueAndValidity();
+        originalServiceObject.updateValueAndValidity();
       },
       [NatRuleOriginalServiceType.ServiceObject]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.setValidators(Validators.required);
-        // originalServiceObject.updateValueAndValidity();
+        originalServiceObject.updateValueAndValidity();
       },
     };
-    return originalServiceType.valueChanges.subscribe((type: NatRuleOriginalServiceType) => this.updateForm(type, handler));
+    return originalServiceType.valueChanges.subscribe(
+      (type: NatRuleOriginalServiceType) => {
+        this.updateForm(type, handler);
+      },
+      () => {},
+    );
   }
 
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
@@ -156,10 +249,12 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       [NatRuleTranslatedServiceType.None]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
+        translatedServiceObject.updateValueAndValidity();
       },
       [NatRuleTranslatedServiceType.ServiceObject]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.setValidators(Validators.required);
+        translatedServiceObject.updateValueAndValidity();
       },
     };
     return translatedServiceType.valueChanges.subscribe((type: NatRuleTranslatedServiceType) => this.updateForm(type, handler));
@@ -174,18 +269,24 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationNetworkObject.clearValidators();
         originalDestinationNetworkObjectGroup.setValue(null);
         originalDestinationNetworkObjectGroup.clearValidators();
+        originalDestinationNetworkObject.updateValueAndValidity();
+        originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleOriginalDestinationAddressType.NetworkObject]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.setValidators(Validators.required);
         originalDestinationNetworkObjectGroup.setValue(null);
         originalDestinationNetworkObjectGroup.clearValidators();
+        originalDestinationNetworkObject.updateValueAndValidity();
+        originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleOriginalDestinationAddressType.NetworkObjectGroup]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.clearValidators();
         originalDestinationNetworkObjectGroup.setValue(null);
         originalDestinationNetworkObjectGroup.setValidators(Validators.required);
+        originalDestinationNetworkObject.updateValueAndValidity();
+        originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
     };
     return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleOriginalDestinationAddressType) =>
@@ -211,6 +312,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationAddressType.setValidators(Validators.required);
       translatedServiceType.setValue(NatRuleTranslatedServiceType.None);
       translatedServiceType.setValidators(Validators.required);
+      translatedSourceAddressType.updateValueAndValidity();
+      translatedDestinationAddressType.updateValueAndValidity();
+      translatedServiceType.updateValueAndValidity();
     };
 
     const handler: Record<NatRuleTranslationType, () => void> = {
@@ -227,6 +331,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObject.clearValidators();
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
+        translatedSourceAddressType.updateValueAndValidity();
+        translatedDestinationAddressType.updateValueAndValidity();
+        translatedServiceType.updateValueAndValidity();
       },
       [NatRuleTranslationType.Static]: requireTranslatedFields,
       [NatRuleTranslationType.DynamicIp]: requireTranslatedFields,
@@ -244,18 +351,24 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalSourceNetworkObject.clearValidators();
         originalSourceNetworkObjectGroup.setValue(null);
         originalSourceNetworkObjectGroup.clearValidators();
+        originalSourceNetworkObject.updateValueAndValidity();
+        originalSourceNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleOriginalSourceAddressType.NetworkObject]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.setValidators(Validators.required);
         originalSourceNetworkObjectGroup.setValue(null);
         originalSourceNetworkObjectGroup.clearValidators();
+        originalSourceNetworkObject.updateValueAndValidity();
+        originalSourceNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleOriginalSourceAddressType.NetworkObjectGroup]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.clearValidators();
         originalSourceNetworkObjectGroup.setValue(null);
         originalSourceNetworkObjectGroup.setValidators(Validators.required);
+        originalSourceNetworkObject.updateValueAndValidity();
+        originalSourceNetworkObjectGroup.updateValueAndValidity();
       },
     };
 
@@ -271,18 +384,24 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObject.clearValidators();
         translatedSourceNetworkObjectGroup.setValue(null);
         translatedSourceNetworkObjectGroup.clearValidators();
+        translatedSourceNetworkObject.updateValueAndValidity();
+        translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleTranslatedSourceAddressType.NetworkObject]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.setValidators(Validators.required);
         translatedSourceNetworkObjectGroup.setValue(null);
         translatedSourceNetworkObjectGroup.clearValidators();
+        translatedSourceNetworkObject.updateValueAndValidity();
+        translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleTranslatedSourceAddressType.NetworkObjectGroup]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.clearValidators();
         translatedSourceNetworkObjectGroup.setValue(null);
         translatedSourceNetworkObjectGroup.setValidators(Validators.required);
+        translatedSourceNetworkObject.updateValueAndValidity();
+        translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
     };
     return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleTranslatedSourceAddressType) => this.updateForm(type, handler));
@@ -293,6 +412,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationAddressType,
       translatedDestinationNetworkObject,
       translatedDestinationNetworkObjectGroup,
+      originalDestinationAddressType,
     } = this.form.controls;
 
     const handler: Record<NatRuleTranslatedDestinationAddressType, () => void> = {
@@ -301,18 +421,28 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationNetworkObject.clearValidators();
         translatedDestinationNetworkObjectGroup.setValue(null);
         translatedDestinationNetworkObjectGroup.clearValidators();
+        translatedDestinationNetworkObject.updateValueAndValidity();
+        translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleTranslatedDestinationAddressType.NetworkObject]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.setValidators(Validators.required);
         translatedDestinationNetworkObjectGroup.setValue(null);
         translatedDestinationNetworkObjectGroup.clearValidators();
+        originalDestinationAddressType.setValue(NatRuleOriginalDestinationAddressType.NetworkObject);
+        originalDestinationAddressType.updateValueAndValidity();
+        translatedDestinationNetworkObject.updateValueAndValidity();
+        translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
       [NatRuleTranslatedDestinationAddressType.NetworkObjectGroup]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.clearValidators();
         translatedDestinationNetworkObjectGroup.setValue(null);
         translatedDestinationNetworkObjectGroup.setValidators(Validators.required);
+        originalDestinationAddressType.setValue(NatRuleOriginalDestinationAddressType.NetworkObjectGroup);
+        originalDestinationAddressType.updateValueAndValidity();
+        translatedDestinationNetworkObject.updateValueAndValidity();
+        translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
     };
     return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleTranslatedDestinationAddressType) =>
@@ -323,17 +453,19 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private updateForm<T extends string>(newValue: T, valueHandler: Record<T, () => void>): void {
     const fn = valueHandler[newValue] || (() => {});
     fn();
-    // TO DO : current workaround to modal validation issue is to run this function twice, will continue looking into
-    fn();
     this.form.updateValueAndValidity();
   }
 
-  private modalPropertyChecker(modalNatRule, property, value) {
-    if (value != null) {
-      const propertyId = property + 'Id';
-      modalNatRule[propertyId] = value;
-      modalNatRule[property] = null;
+  private modalPropertyChecker(modalNatRule) {
+    for (const [key, value] of Object.entries(modalNatRule)) {
+      if (value != null) {
+        const property = key.slice(0, key.length - 2);
+        const propertyId = property + 'Id';
+        modalNatRule[property] = value;
+        modalNatRule[propertyId] = null;
+      }
     }
+
     return modalNatRule;
   }
 }

@@ -4,6 +4,9 @@ import { NatRule, NetworkObject, NetworkObjectGroup, ServiceObject } from '../..
 export class NatRuleModalDto {
   tierId: string;
   modalMode: ModalMode;
+  natRuleGroupId: string;
+  ruleIndex: number;
+  description: string;
 
   // todo: Use generated types from api_client
   natRule: NatRule;

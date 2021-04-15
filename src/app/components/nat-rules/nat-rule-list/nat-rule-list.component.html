@@ -25,7 +25,7 @@
       <tr
         *ngFor="
           let natRuleGroup of natRuleGroups
-            | filter : filterNatRuleGroup
+            | filter: filterNatRuleGroup
             | paginate: { itemsPerPage: perPage, currentPage: currentNatRulePage }
         "
       >

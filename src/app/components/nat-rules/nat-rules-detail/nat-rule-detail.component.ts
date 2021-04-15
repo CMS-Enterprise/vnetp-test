@@ -38,6 +38,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
 
   natRuleGroup: NatRuleGroup;
   natRules: NatRule[];
+  description: string;
 
   // Pagination
   totalNatRules = 0;
@@ -178,6 +179,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
 
     const dto = new NatRuleModalDto();
     dto.tierId = this.TierId;
+    dto.natRuleGroupId = this.Id;
     dto.modalMode = modalMode;
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.NetworkObjects = this.networkObjects;
@@ -186,7 +188,6 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
     if (modalMode === ModalMode.Edit) {
       dto.natRule = natRule;
     }
-
     this.subscribeToNatRuleModal();
     this.ngx.setModalData(dto, 'natRuleModal');
     this.ngx.getModal('natRuleModal').open();

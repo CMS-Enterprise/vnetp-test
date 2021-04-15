@@ -108,10 +108,9 @@
             formControlName="originalServiceObject"
             class="form-control"
             [class.is-invalid]="submitted && f.originalServiceObject.errors"
-            required
           >
             <option></option>
-            <option *ngFor="let serviceObject of serviceObjects" [value]="serviceObject.id">{{ serviceObject.name }}</option>
+            <option *ngFor="let serviceObject of serviceObjects" [value]="serviceObject.id">{{ serviceObject?.name }}</option>
           </select>
           <div *ngIf="submitted && f.originalServiceObject.errors" class="invalid-feedback">
             <div *ngIf="f.originalServiceObject.errors.required">
@@ -191,7 +190,11 @@
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
             required
           >
-            <option [value]="NatRuleOriginalDestinationAddressType.None">None</option>
+            <option
+              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None"
+              [value]="NatRuleOriginalDestinationAddressType.None"
+              >None</option
+            >
             <option [value]="NatRuleOriginalDestinationAddressType.NetworkObject">Network Object</option>
             <option [value]="NatRuleOriginalDestinationAddressType.NetworkObjectGroup">Network Object Group</option>
           </select>
@@ -201,7 +204,10 @@
         </div>
 
         <!-- Original Destination Network Object -->
-        <div class="form-group col-md-6" *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject">
+        <div
+          class="form-group col-md-6"
+          *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject"
+        >
           <label for="originalDestinationNetworkObject">Original Destination Network Object</label>
           <select
             id="originalDestinationNetworkObject"
@@ -219,7 +225,10 @@
         </div>
 
         <!-- Original Destination Network Object Group -->
-        <div class="form-group col-md-6" *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup">
+        <div
+          class="form-group col-md-6"
+          *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup"
+        >
           <label for="originalDestinationNetworkObjectGroup">Original Destination Network Object Group</label>
           <select
             id="originalDestinationNetworkObjectGroup"
@@ -253,7 +262,6 @@
           [class.is-invalid]="submitted && f.translationType.errors"
           required
         >
-          <option [value]="NatRuleTranslationType.None">None</option>
           <option [value]="NatRuleTranslationType.Static">Static</option>
           <option [value]="NatRuleTranslationType.DynamicIp">Dynamic IP</option>
           <option [value]="NatRuleTranslationType.DynamicIpAndPort">Dynamic IP and Port</option>
@@ -275,7 +283,9 @@
               [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
               required
             >
-              <option [value]="NatRuleTranslatedSourceAddressType.None">None</option>
+              <option *ngIf="f.translationType.value === NatRuleTranslationType.Static" [value]="NatRuleTranslatedSourceAddressType.None"
+                >None</option
+              >
               <option [value]="NatRuleTranslatedSourceAddressType.NetworkObject">Network Object</option>
               <option [value]="NatRuleTranslatedSourceAddressType.NetworkObjectGroup">Network Object Group</option>
             </select>
@@ -303,7 +313,10 @@
           </div>
 
           <!-- Translated Source Network Object Group -->
-          <div class="form-group col-md-6" *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup">
+          <div
+            class="form-group col-md-6"
+            *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup"
+          >
             <label for="translatedSourceNetworkObjectGroup">Translated Source Network Object Group</label>
             <select
               id="translatedSourceNetworkObjectGroup"
@@ -344,7 +357,10 @@
           </div>
 
           <!-- Translated Destination Network Object -->
-          <div class="form-group col-md-6" *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject">
+          <div
+            class="form-group col-md-6"
+            *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject"
+          >
             <label for="translatedDestinationNetworkObject">Translated Destination Network Object</label>
             <select
               id="translatedDestinationNetworkObject"
@@ -362,7 +378,10 @@
           </div>
 
           <!-- Translated Destination Network Object Group -->
-          <div class="form-group col-md-6" *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup">
+          <div
+            class="form-group col-md-6"
+            *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup"
+          >
             <label for="translatedDestinationNetworkObjectGroup">Translated Destination Network Object Group</label>
             <select
               id="translatedDestinationNetworkObjectGroup"
@@ -422,7 +441,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

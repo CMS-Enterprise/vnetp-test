@@ -15,6 +15,7 @@ import {
   NatRuleTranslatedServiceType,
   NatRuleTranslatedSourceAddressType,
   NatRuleTranslationType,
+  V1NetworkSecurityNatRulesService,
   V1TiersService,
 } from '../../../../../api_client';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
@@ -27,7 +28,7 @@ describe('NatRuleModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [MockComponent('app-nat-rule-modal'), NatRuleModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(TierContextService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNatRulesService), MockProvider(TierContextService)],
     })
       .compileComponents()
       .then(() => {
