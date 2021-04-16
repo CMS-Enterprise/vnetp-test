@@ -161,15 +161,6 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(translationType)).toBe(true);
     });
 
-    it('should not require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" when set to "None"', () => {
-      testRequiredFields({
-        field: 'translationType',
-        newValue: NatRuleTranslationType.None,
-        expectedRequiredFields: [],
-        expectedOptionalFields: ['translatedSourceAddressType', 'translatedDestinationAddressType', 'translatedServiceType'],
-      });
-    });
-
     it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" when set to "Static"', () => {
       testRequiredFields({
         field: 'translationType',

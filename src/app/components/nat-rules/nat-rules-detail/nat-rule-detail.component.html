@@ -38,22 +38,25 @@
         <p>{{ natRule?.direction }}</p>
       </td>
       <td>
-        <p>{{ natRule?.originalSourceAddressType }}</p>
+        <ng-container *ngTemplateOutlet="originalServiceType; context: { datum: natRule }"></ng-container>
       </td>
       <td>
-        <p>{{ natRule?.originalDestinationAddressType }}</p>
+        <ng-container *ngTemplateOutlet="originalSourceAddress; context: { datum: natRule }"></ng-container>
       </td>
       <td>
-        <ng-container *ngTemplateOutlet="sourceAddress; context: { datum: natRule }"></ng-container>
+        <ng-container *ngTemplateOutlet="originalDestinationAddress; context: { datum: natRule }"></ng-container>
       </td>
       <td>
-        <ng-container *ngTemplateOutlet="destinationAddress; context: { datum: natRule }"></ng-container>
+        <p>{{ natRule?.translationType }}</p>
       </td>
       <td>
-        <ng-container *ngTemplateOutlet="serviceType; context: { datum: natRule }"></ng-container>
+        <ng-container *ngTemplateOutlet="translatedSourceAddress; context: { datum: natRule }"></ng-container>
       </td>
       <td>
-        <p>{{ natRule?.translatedSourceAddressType }}</p>
+        <ng-container *ngTemplateOutlet="translatedDestinationAddress; context: { datum: natRule }"></ng-container>
+      </td>
+      <td>
+        <ng-container *ngTemplateOutlet="translatedServiceType; context: { datum: natRule }"></ng-container>
       </td>
       <td>
         <p>{{ natRule?.enabled }}</p>
@@ -115,8 +118,8 @@
 <app-nat-rule-modal></app-nat-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
 
-<!-- source address template -->
-<ng-template #sourceAddress let-natRule="datum">
+<!-- original service type template -->
+<ng-template #originalServiceType let-natRule="datum">
   <p *ngIf="natRule.originalServiceType === 'None'" aria-label="Source Address type">
     {{ natRule.originalServiceType }}
   </p>
@@ -126,8 +129,8 @@
   </p>
 </ng-template>
 
-<!-- source address template -->
-<ng-template #sourceAddress let-natRule="datum">
+<!-- original source address template -->
+<ng-template #originalSourceAddress let-natRule="datum">
   <p *ngIf="natRule.originalSourceAddressType === 'None'" aria-label="Source Address type">
     {{ natRule.originalSourceAddressType }}
   </p>
@@ -141,37 +144,62 @@
   </p>
 </ng-template>
 
-<!-- source address template -->
-<ng-template #sourceAddress let-natRule="datum">
+<!-- original destination address template -->
+<ng-template #originalDestinationAddress let-natRule="datum">
   <p *ngIf="natRule.originalDestinationAddressType === 'None'" aria-label="Source Address type">
     {{ natRule.originalDestinationAddressType }}
   </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Source Network Object">
-    {{ natRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
-    (Object)
-  </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-    {{ natRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
-    (Object Group)
-  </p>
-</ng-template>
-
-<!-- destination address template -->
-<ng-template #destinationAddress let-natRule="datum">
-  <p *ngIf="natRule.translationType === 'Static'" aria-label="Destination IP">
-    {{ natRule?.destinationIpAddress }}
-  </p>
-  <p *ngIf="natRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
+  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
     {{ natRule?.originalDestinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
+  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
     {{ natRule?.originalDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
 
-<!-- service type template -->
+<!-- translated source address template -->
+<ng-template #translatedSourceAddress let-natRule="datum">
+  <p *ngIf="natRule.translatedSourceAddressType === 'None'" aria-label="IP">
+    {{ natRule?.translatedSourceAddressType }}
+  </p>
+  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.translatedSourceNetworkObjectId | resolve: getNetworkObjectName }}
+    (Object)
+  </p>
+  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.translatedSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    (Object Group)
+  </p>
+</ng-template>
+
+<!-- translated destination address template -->
+<ng-template #translatedDestinationAddress let-natRule="datum">
+  <p *ngIf="natRule.translatedDestinationAddressType === 'None'" aria-label="IP">
+    {{ natRule?.translatedDestinationAddressType }}
+  </p>
+  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.translatedDestinationNetworkObjectId | resolve: getNetworkObjectName }}
+    (Object)
+  </p>
+  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    (Object Group)
+  </p>
+</ng-template>
+
+<ng-template #translatedServiceType let-natRule="datum">
+  <p *ngIf="natRule.translatedServiceType === 'None'" aria-label="Source Address type">
+    {{ natRule.translatedServiceType }}
+  </p>
+  <p *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Source Address Type">
+    {{ natRule?.translatedServiceObjectId | resolve: getServiceObjectName }}
+    (Object)
+  </p>
+</ng-template>
+
+<!-- service type template
 <ng-template #serviceType let-natRule="datum">
   <p *ngIf="natRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
     Source Ports: {{ natRule?.sourcePorts }} - Destination Ports: {{ natRule?.destinationPorts }}
@@ -179,4 +207,4 @@
   <p *ngIf="natRule.serviceType === 'ServiceObject'" aria-label="Service Object">
     {{ natRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
   </p>
-</ng-template>
+</ng-template> -->

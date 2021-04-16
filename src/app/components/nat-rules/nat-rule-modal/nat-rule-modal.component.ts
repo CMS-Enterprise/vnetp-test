@@ -317,27 +317,22 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedServiceType.updateValueAndValidity();
     };
 
+    const translationTypeNotStatic = () => {
+      translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressType.NetworkObject);
+      translatedSourceAddressType.setValidators(Validators.required);
+      translatedDestinationAddressType.setValue(NatRuleTranslatedDestinationAddressType.None);
+      translatedDestinationAddressType.setValidators(Validators.required);
+      translatedServiceType.setValue(NatRuleTranslatedServiceType.None);
+      translatedServiceType.setValidators(Validators.required);
+      translatedSourceAddressType.updateValueAndValidity();
+      translatedDestinationAddressType.updateValueAndValidity();
+      translatedServiceType.updateValueAndValidity();
+    };
+
     const handler: Record<NatRuleTranslationType, () => void> = {
-      [NatRuleTranslationType.None]: () => {
-        translatedSourceAddressType.setValue(null);
-        translatedSourceAddressType.clearValidators();
-        translatedDestinationAddressType.setValue(null);
-        translatedDestinationAddressType.clearValidators();
-        translatedServiceType.setValue(null);
-        translatedServiceType.clearValidators();
-        translatedDestinationNetworkObject.setValue(null);
-        translatedDestinationNetworkObject.clearValidators();
-        translatedSourceNetworkObject.setValue(null);
-        translatedSourceNetworkObject.clearValidators();
-        translatedServiceObject.setValue(null);
-        translatedServiceObject.clearValidators();
-        translatedSourceAddressType.updateValueAndValidity();
-        translatedDestinationAddressType.updateValueAndValidity();
-        translatedServiceType.updateValueAndValidity();
-      },
       [NatRuleTranslationType.Static]: requireTranslatedFields,
-      [NatRuleTranslationType.DynamicIp]: requireTranslatedFields,
-      [NatRuleTranslationType.DynamicIpAndPort]: requireTranslatedFields,
+      [NatRuleTranslationType.DynamicIp]: translationTypeNotStatic,
+      [NatRuleTranslationType.DynamicIpAndPort]: translationTypeNotStatic,
     };
     return translationType.valueChanges.subscribe((type: NatRuleTranslationType) => this.updateForm(type, handler));
   }

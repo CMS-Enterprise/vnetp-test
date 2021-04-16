@@ -15,5 +15,6 @@ import { NatRuleImport } from './natRuleImport';
 export interface NatRuleImportCollectionDto { 
     datacenterId: string;
     natRules: Array<NatRuleImport>;
+    dryRun: boolean;
 }
 

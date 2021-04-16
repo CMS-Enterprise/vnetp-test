@@ -56,7 +56,6 @@ export interface NatRule {
     translatedServiceObject?: ServiceObject & object;
 }
 export enum NatRuleTranslationType {
-    None = 'None',
     Static = 'Static',
     DynamicIp = 'DynamicIp',
     DynamicIpAndPort = 'DynamicIpAndPort'

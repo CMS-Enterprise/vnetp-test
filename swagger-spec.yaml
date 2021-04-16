@@ -14529,7 +14529,6 @@ definitions:
       translationType:
         type: string
         enum: &ref_62
-          - None
           - Static
           - DynamicIp
           - DynamicIpAndPort
@@ -16029,9 +16028,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/NatRuleImport'
+      dryRun:
+        type: boolean
     required:
       - datacenterId
       - natRules
+      - dryRun
   GeneratedNatRuleGroupBulkDto:
     type: object
     properties:

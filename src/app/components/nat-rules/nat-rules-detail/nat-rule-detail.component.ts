@@ -60,21 +60,26 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
   tableHeaders: string[] = [
     'Name',
     'Direction',
+    'Original Service Type',
     'Original Source Address',
     'Original Destination Address',
+    'Translation Type',
     'Translated Source Address',
     'Translated Destination Address',
-    'Original Service',
-    'Translated Service',
+    'Translated Service Type',
     'Enabled',
     'Rule Index',
     '',
   ];
 
   // Templates
-  @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
-  @ViewChild('destinationAddress') destinationAddressTemplate: TemplateRef<any>;
-  @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
+  @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
+  @ViewChild('originalSourceAddress') originalSourceAddressTemplate: TemplateRef<any>;
+  @ViewChild('originalDestinationAddress') originalDestinationAddressTemplate: TemplateRef<any>;
+
+  @ViewChild('translatedSourceAddress') translatedSourceAddressTemplate: TemplateRef<any>;
+  @ViewChild('translatedDestinationAddress') translatedDestinationAddress: TemplateRef<any>;
+  @ViewChild('translatedServiceType') translatedServiceTemplate: TemplateRef<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -222,6 +227,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
 
   importNatRulesConfig(event: NatRuleImport[]): void {
     const fwDto: NatRuleImportCollectionDto = {
+      dryRun: false,
       datacenterId: this.datacenterService.currentDatacenterValue.id,
       natRules: this.sanitizeData(event),
     };

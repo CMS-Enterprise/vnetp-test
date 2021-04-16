@@ -58,7 +58,6 @@ export interface NatRuleImport {
     natRuleGroupType: string;
 }
 export enum NatRuleImportTranslationType {
-    None = 'None',
     Static = 'Static',
     DynamicIp = 'DynamicIp',
     DynamicIpAndPort = 'DynamicIpAndPort'
