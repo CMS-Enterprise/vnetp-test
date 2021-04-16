@@ -37,6 +37,10 @@
       <td>
         <p>{{ natRule?.direction }}</p>
       </td>
+
+      <td>
+        <p>{{ natRule?.biDirectional }}</p>
+      </td>
       <td>
         <ng-container *ngTemplateOutlet="originalServiceType; context: { datum: natRule }"></ng-container>
       </td>

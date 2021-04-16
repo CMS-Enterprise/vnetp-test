@@ -63,6 +63,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
   tableHeaders: string[] = [
     'Name',
     'Direction',
+    'BiDirectional',
     'Original Service Type',
     'Original Source Address',
     'Original Destination Address',
@@ -274,6 +275,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
       columns: [
         { name: 'Name', property: 'name' },
         { name: 'Direction', property: 'direction' },
+        { name: 'BiDirectional', property: 'biDirectional' },
         { name: 'Original Service Type', template: () => this.originalServiceTemplate },
         { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
         { name: 'Original Source Address', template: () => this.originalDestinationAddressTemplate },

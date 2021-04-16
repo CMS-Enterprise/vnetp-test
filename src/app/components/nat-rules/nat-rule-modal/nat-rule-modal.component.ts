@@ -115,6 +115,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedSourceNetworkObjectGroupId = null;
     modalNatRule.translatedDestinationNetworkObjectId = null;
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
+    if (modalNatRule.biDirectional === 'false') {
+      modalNatRule.biDirectional = false;
+    }
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceType.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
       modalNatRule.originalServiceObject = null;
@@ -185,6 +188,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.formBuilder.group({
+      biDirectional: [true],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatRuleDirection.In, Validators.required],
       name: ['', NameValidator()],
@@ -209,6 +213,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions = [
+      this.subscribeToBiDirectionalChanges(),
       this.subscribeToOriginalDestinationAddressTypeChanges(),
       this.subscribeToOriginalServiceTypeChanges(),
       this.subscribeToOriginalSourceAddressTypeChanges(),
@@ -217,6 +222,23 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       this.subscribeToTranslatedSourceAddressTypeChanges(),
       this.subscribeToTranslationTypeChanges(),
     ];
+  }
+
+  private subscribeToBiDirectionalChanges(): Subscription {
+    const { biDirectional, translationType } = this.form.controls;
+
+    const handler: Record<string, () => void> = {
+      ['true']: () => {
+        translationType.setValue(NatRuleTranslationType.Static);
+        translationType.updateValueAndValidity();
+      },
+    };
+    return biDirectional.valueChanges.subscribe(
+      (type: string) => {
+        this.updateForm(type, handler);
+      },
+      () => {},
+    );
   }
 
   private subscribeToOriginalServiceTypeChanges(): Subscription {
@@ -296,13 +318,11 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   private subscribeToTranslationTypeChanges(): Subscription {
     const {
+      biDirectional,
       translatedDestinationAddressType,
       translatedServiceType,
       translatedSourceAddressType,
       translationType,
-      translatedDestinationNetworkObject,
-      translatedServiceObject,
-      translatedSourceNetworkObject,
     } = this.form.controls;
 
     const requireTranslatedFields = () => {
@@ -324,6 +344,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationAddressType.setValidators(Validators.required);
       translatedServiceType.setValue(NatRuleTranslatedServiceType.None);
       translatedServiceType.setValidators(Validators.required);
+      biDirectional.setValue(false);
+      biDirectional.updateValueAndValidity();
       translatedSourceAddressType.updateValueAndValidity();
       translatedDestinationAddressType.updateValueAndValidity();
       translatedServiceType.updateValueAndValidity();
