@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';

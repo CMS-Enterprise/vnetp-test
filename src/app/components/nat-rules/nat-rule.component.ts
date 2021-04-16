@@ -3,18 +3,17 @@ import { NatRule, NatRuleGroup, NatRuleGroupType, Tier, V1TiersService } from 'a
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import SubscriptionUtil from '../../../utils/SubscriptionUtil';
-import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
-import { Tab } from '../../../common/tabs/tabs.component';
-import ObjectUtil from '../../../utils/ObjectUtil';
-import { DatacenterContextService } from '../../../services/datacenter-context.service';
-import { NatRulesHelpText } from '../../../helptext/help-text-networking';
+import { Tab } from '../../common/tabs/tabs.component';
+import { NatRulesHelpText } from '../../helptext/help-text-networking';
+import { DatacenterContextService } from '../../services/datacenter-context.service';
+import ObjectUtil from '../../utils/ObjectUtil';
+import SubscriptionUtil from '../../utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-nat-rule-list',
-  templateUrl: './nat-rule-list.component.html',
+  selector: 'app-nat-rule',
+  templateUrl: './nat-rule.component.html',
 })
-export class NatRuleListComponent implements OnInit, OnDestroy {
+export class NatRuleComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentNatRulePage = 1;
   public currentTier: Tier;
@@ -75,25 +74,6 @@ export class NatRuleListComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
   }
-
-  public deleteNatRule(natRule: NatRule): void {
-    // TODO: Implement
-  }
-
-  public restoreNatRule(natRule: NatRule): void {
-    // TODO: Implement
-  }
-
-  // public openNatRuleModal(modalMode: ModalMode, natRule?: NatRule): void {
-  //   const modalName = 'natRuleModal';
-  //   const dto: NatRuleModalDto = {
-  //     tierId: this.currentTier.id,
-  //     modalMode,
-  //     natRule,
-  //   };
-  //   this.ngx.setModalData(dto, modalName);
-  //   this.ngx.open(modalName);
-  // }
 
   private loadNatRules(tier: Tier): Observable<NatRule[]> {
     const hasCurrentTier = tier && !!tier.id;
