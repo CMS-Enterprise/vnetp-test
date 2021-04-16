@@ -117,6 +117,7 @@
 
 <app-nat-rule-modal></app-nat-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
+<app-preview-modal></app-preview-modal>
 
 <!-- original service type template -->
 <ng-template #originalServiceType let-natRule="datum">
@@ -198,13 +199,3 @@
     (Object)
   </p>
 </ng-template>
-
-<!-- service type template
-<ng-template #serviceType let-natRule="datum">
-  <p *ngIf="natRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
-    Source Ports: {{ natRule?.sourcePorts }} - Destination Ports: {{ natRule?.destinationPorts }}
-  </p>
-  <p *ngIf="natRule.serviceType === 'ServiceObject'" aria-label="Service Object">
-    {{ natRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
-  </p>
-</ng-template> -->

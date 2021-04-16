@@ -24,6 +24,9 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
+import { TableConfig } from '../../../common/table/table.component';
+import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
+import { NatRulePreview } from '../models/nat-rule-preview';
 
 @Component({
   selector: 'app-nat-rule-detail',
@@ -78,7 +81,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
   @ViewChild('originalDestinationAddress') originalDestinationAddressTemplate: TemplateRef<any>;
 
   @ViewChild('translatedSourceAddress') translatedSourceAddressTemplate: TemplateRef<any>;
-  @ViewChild('translatedDestinationAddress') translatedDestinationAddress: TemplateRef<any>;
+  @ViewChild('translatedDestinationAddress') translatedDestinationAddressTemplate: TemplateRef<any>;
   @ViewChild('translatedServiceType') translatedServiceTemplate: TemplateRef<any>;
 
   constructor(
@@ -226,17 +229,19 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
   }
 
   importNatRulesConfig(event: NatRuleImport[]): void {
-    const fwDto: NatRuleImportCollectionDto = {
-      dryRun: false,
+    const nrDto: NatRuleImportCollectionDto = {
+      dryRun: true,
       datacenterId: this.datacenterService.currentDatacenterValue.id,
       natRules: this.sanitizeData(event),
     };
 
     this.natRuleService
       .v1NetworkSecurityNatRulesBulkImportPost({
-        natRuleImportCollectionDto: fwDto,
+        natRuleImportCollectionDto: nrDto,
       })
-      .subscribe();
+      .subscribe(data => {
+        this.createPreview(data, event);
+      });
   }
 
   private sanitizeData(entities: NatRuleImport[]): NatRuleImport[] {
@@ -260,5 +265,50 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
       }
     });
     return entity;
+  }
+
+  private createPreview(data: NatRulePreview, natRules: NatRuleImport[]): void {
+    const { natRulesToBeDeleted, natRulesToBeUploaded } = data;
+    const tableConfig: TableConfig<NatRule> = {
+      description: 'Nat Rules Import Preview',
+      columns: [
+        { name: 'Name', property: 'name' },
+        { name: 'Direction', property: 'direction' },
+        { name: 'Original Service Type', template: () => this.originalServiceTemplate },
+        { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
+        { name: 'Original Source Address', template: () => this.originalDestinationAddressTemplate },
+        { name: 'Translation Type', property: 'translationType' },
+        { name: 'Original Source Address', template: () => this.translatedSourceAddressTemplate },
+        { name: 'Original Destination Address', template: () => this.translatedDestinationAddressTemplate },
+        { name: 'Destination Address', template: () => this.translatedServiceTemplate },
+        { name: 'Enabled', property: 'enabled' },
+        { name: 'Rule Index', property: 'ruleIndex' },
+      ],
+      rowStyle: (natRule: NatRule) => (natRule.hasOwnProperty('id') ? { background: '#ffeef0' } : { background: '#e6ffed' }),
+    };
+    const previewModalDto = new PreviewModalDto(tableConfig, [...natRulesToBeDeleted, ...natRulesToBeUploaded]);
+    this.ngx.setModalData(previewModalDto, 'previewModal');
+    this.ngx.getModal('previewModal').open();
+
+    const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
+      const modalData: PreviewModalDto<NatRule> = modal.getData();
+      modal.removeData();
+      if (modalData && modalData.confirm) {
+        const natConfirmDto: NatRuleImportCollectionDto = {
+          datacenterId: this.datacenterService.currentDatacenterValue.id,
+          natRules: this.sanitizeData(natRules),
+          dryRun: true,
+        };
+
+        this.natRuleService
+          .v1NetworkSecurityNatRulesBulkImportPost({
+            natRuleImportCollectionDto: natConfirmDto,
+          })
+          .subscribe(() => {
+            this.getNatRuleGroup();
+          });
+      }
+      previewImportSubscription.unsubscribe();
+    });
   }
 }
