@@ -200,7 +200,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       originalSourceAddressType: [NatRuleOriginalSourceAddressType.None, Validators.required],
       originalSourceNetworkObject: null,
       originalSourceNetworkObjectGroup: null,
-      ruleIndex: [null, Validators.compose([Validators.required, Validators.min(1)])],
+      ruleIndex: [0, Validators.compose([Validators.required, Validators.min(1)])],
       translatedDestinationAddressType: [NatRuleTranslatedDestinationAddressType.None, Validators.required],
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
