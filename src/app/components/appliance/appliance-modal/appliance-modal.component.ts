@@ -109,6 +109,9 @@ export class ApplianceModalComponent implements OnInit {
 
     if (this.ModalMode === ModalMode.Edit) {
       this.ApplianceId = dto.Appliance.id;
+      this.form.controls.name.disable();
+    } else {
+      this.form.controls.name.enable();
     }
 
     const appliance = dto.Appliance;
@@ -134,6 +137,7 @@ export class ApplianceModalComponent implements OnInit {
       this.form.controls.powerSupplyConnectionType.setValue(appliance.powerSupplyConnectionType);
       this.form.controls.powerSupplyCount.setValue(appliance.powerSupplyCount);
     }
+
     this.ngx.resetModalData('applianceModal');
   }
 
