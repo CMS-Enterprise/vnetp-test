@@ -7,6 +7,7 @@ import {
   MockTooltipComponent,
   MockIconButtonComponent,
   MockNgxSmartModalComponent,
+  MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityNetworkObjectGroupsService, V1TiersService } from 'api_client';
@@ -24,6 +25,7 @@ describe('NetworkObjectGroupModalComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockNgSelectComponent,
       ],
       providers: [
         MockProvider(NgxSmartModalService),

@@ -6,6 +6,7 @@ import {
   MockTooltipComponent,
   MockNgxSmartModalComponent,
   MockIconButtonComponent,
+  MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
@@ -24,6 +25,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
+        MockNgSelectComponent,
       ],
       providers: [
         MockProvider(NgxSmartModalService),

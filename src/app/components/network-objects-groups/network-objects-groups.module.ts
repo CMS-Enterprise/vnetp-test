@@ -12,6 +12,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
     IconButtonModule,
     NgxPaginationModule,
     NgxSmartModalModule,
+    NgSelectModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,

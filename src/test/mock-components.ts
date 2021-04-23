@@ -51,3 +51,8 @@ export const MockViewFieldComponent = MockComponent({
 export const MockYesNoModalComponent = MockComponent({
   selector: 'app-yes-no-modal',
 });
+
+export const MockNgSelectComponent = MockComponent({
+  selector: 'ng-select',
+  inputs: ['items', 'bindLabel', 'bindValue'],
+});

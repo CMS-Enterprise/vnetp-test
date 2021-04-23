@@ -63,21 +63,17 @@
         </div>
       </div>
 
-      Service Objects
+      Service Objects {{ selectedServiceObject?.name }}
 
-      <section class="btn-toolbar" role="toolbar" *ngIf="ModalMode === 'Edit'">
+      <div *ngIf="ModalMode === 'Edit'">
         <!-- Select Service Object -->
-        <select [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }" class="mr-1">
-          <option></option>
-          <option *ngFor="let tierServiceObject of tierServiceObjects" [ngValue]="tierServiceObject">{{ tierServiceObject?.name }}</option>
-        </select>
-
+        <ng-select [items]="tierServiceObjects" bindLabel="name" [(ngModel)]="selectedServiceObject" [ngModelOptions]="{ standalone: true }"></ng-select>
         <!-- Add Service Object -->
         <button type="button" class="btn btn-info" (click)="addServiceObject()" [disabled]="!selectedServiceObject">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add Service Object</span>
         </button>
-      </section>
+      </div>
 
       <table class="table table-striped">
         <caption>
