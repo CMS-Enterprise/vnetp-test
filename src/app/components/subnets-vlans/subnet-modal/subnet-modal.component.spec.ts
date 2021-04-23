@@ -1,7 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockNgxSmartModalComponent,
+  MockNgSelectComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/TestUtil';
@@ -9,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { V1NetworkSubnetsService } from 'api_client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
@@ -16,7 +22,7 @@ describe('SubnetModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService)],
     })

@@ -180,19 +180,18 @@
 
           <label for="sourceNetworkObject" *ngIf="f.sourceNetworkType.value === 'NetworkObject'">Source Network Object</label>
           <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
-          <select
+          <ng-select
             formControlName="sourceNetworkObject"
             id="sourceNetworkObject"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.sourceNetworkObject.errors
             }"
             aria-label="Source Network Object"
             *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
-          >
-            <option></option>
-            <option *ngFor="let networkObject of networkObjects" [ngValue]="networkObject.id">{{ networkObject?.name }}</option>
-          </select>
+            [items]="networkObjects"
+            bindLabel="name"
+            bindValue="id"
+          ></ng-select>
           <div *ngIf="submitted && f.sourceNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.sourceNetworkObject.errors.required">
               Source Network Object is required
@@ -203,21 +202,19 @@
             >Source Network Object Group</label
           >
           <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
-          <select
+          <ng-select
             formControlName="sourceNetworkObjectGroup"
             id="sourceNetworkObjectGroup"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.sourceNetworkObjectGroup.errors
             }"
             aria-label="Source Network Object Group"
             *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
+            [items]="networkObjectGroups"
+            bindLabel="name"
+            bindValue="id"
           >
-            <option></option>
-            <option *ngFor="let networkObjectGroup of networkObjectGroups" [ngValue]="networkObjectGroup.id">{{
-              networkObjectGroup.name
-            }}</option>
-          </select>
+          </ng-select>
           <div *ngIf="submitted && f.sourceNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.sourceNetworkObjectGroup.errors.required">
               Source Network Object Group is required
@@ -268,19 +265,19 @@
             >Destination Network Object</label
           >
           <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
-          <select
+          <ng-select
             formControlName="destinationNetworkObject"
             id="destinationNetworkObject"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.destinationNetworkObject.errors
             }"
             aria-label="Destination Network Object"
             *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
+            [items]="networkObjects"
+            bindLabel="name"
+            bindValue="id"
           >
-            <option></option>
-            <option *ngFor="let networkObject of networkObjects" [ngValue]="networkObject.id">{{ networkObject.name }}</option>
-          </select>
+          </ng-select>
           <div *ngIf="submitted && f.destinationNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.destinationNetworkObject.errors.required">
               Destination Network Object is required
@@ -291,21 +288,19 @@
             >Destination Network Object Group</label
           >
           <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
-          <select
+          <ng-select
             formControlName="destinationNetworkObjectGroup"
             id="destinationNetworkObjectGroup"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.destinationNetworkObjectGroup.errors
             }"
             aria-label="Destination Network Object Group"
             *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
+            [items]="networkObjectGroups"
+            bindLabel="name"
+            bindValue="id"
           >
-            <option></option>
-            <option *ngFor="let networkObjectGroup of networkObjectGroups" [ngValue]="networkObjectGroup.id">{{
-              networkObjectGroup.name
-            }}</option>
-          </select>
+          </ng-select>
           <div *ngIf="submitted && f.destinationNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.destinationNetworkObjectGroup.errors.required">
               Destination Network Object Group is required
@@ -369,19 +364,19 @@
 
           <label for="serviceObject" *ngIf="f.serviceType.value === 'ServiceObject'">Service Object </label>
           <tooltip *ngIf="f.serviceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
-          <select
+          <ng-select
             formControlName="serviceObject"
             id="serviceObject"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.serviceObject.errors
             }"
-            aria-label="Service Object"
+            aria-label="Service Object Group"
             *ngIf="f.serviceType.value === 'ServiceObject'"
+            [items]="serviceObjects"
+            bindLabel="name"
+            bindValue="id"
           >
-            <option></option>
-            <option *ngFor="let serviceObject of serviceObjects" [ngValue]="serviceObject.id">{{ serviceObject.name }}</option>
-          </select>
+          </ng-select>
           <div *ngIf="submitted && f.serviceObject.errors" class="invalid-feedback">
             <div *ngIf="f.serviceObject.errors.required">
               Service Object is required
@@ -390,21 +385,19 @@
 
           <label for="serviceObjectGroup" *ngIf="f.serviceType.value === 'ServiceObjectGroup'">Service Object Group</label>
           <tooltip *ngIf="f.serviceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
-          <select
+          <ng-select
             formControlName="serviceObjectGroup"
             id="serviceObjectGroup"
-            class="form-control"
             [ngClass]="{
               'is-invalid': submitted && f.serviceObjectGroup.errors
             }"
             aria-label="Service Object Group"
             *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
+            [items]="serviceObjectGroups"
+            bindLabel="name"
+            bindValue="id"
           >
-            <option></option>
-            <option *ngFor="let serviceObjectGroup of serviceObjectGroups" [ngValue]="serviceObjectGroup.id">{{
-              serviceObjectGroup.name
-            }}</option>
-          </select>
+          </ng-select>
           <div *ngIf="submitted && f.serviceObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.serviceObjectGroup.errors.required">
               Service Object Group is required
