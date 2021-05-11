@@ -15,18 +15,18 @@ import { MockProvider } from '../../../test/mock-providers';
 import { FilterPipe } from '../../pipes/filter.pipe';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
-import { NatRuleComponent } from './nat-rule.component';
+import { NatRulesComponent } from './nat-rules.component';
 
 describe('NatRuleComponent', () => {
-  let component: NatRuleComponent;
-  let fixture: ComponentFixture<NatRuleComponent>;
+  let component: NatRulesComponent;
+  let fixture: ComponentFixture<NatRulesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
       declarations: [
         FilterPipe,
-        NatRuleComponent,
+        NatRulesComponent,
         MockComponent({ selector: 'app-nat-rule-modal' }),
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
@@ -42,7 +42,7 @@ describe('NatRuleComponent', () => {
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(NatRuleComponent);
+        fixture = TestBed.createComponent(NatRulesComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
       });

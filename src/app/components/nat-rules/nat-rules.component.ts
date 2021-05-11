@@ -10,10 +10,10 @@ import ObjectUtil from '../../utils/ObjectUtil';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-nat-rule',
-  templateUrl: './nat-rule.component.html',
+  selector: 'app-nat-rules',
+  templateUrl: './nat-rules.component.html',
 })
-export class NatRuleComponent implements OnInit, OnDestroy {
+export class NatRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentNatRulePage = 1;
   public currentTier: Tier;

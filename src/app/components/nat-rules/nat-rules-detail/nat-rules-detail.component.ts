@@ -17,7 +17,6 @@ import {
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
-  V1NetworkSecurityServiceObjectGroupsService,
   NatRuleImport,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -26,13 +25,12 @@ import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
-import { NatRulePreview } from '../models/nat-rule-preview';
 
 @Component({
-  selector: 'app-nat-rule-detail',
-  templateUrl: './nat-rule-detail.component.html',
+  selector: 'app-nat-rules-detail',
+  templateUrl: './nat-rules-detail.component.html',
 })
-export class NatRuleDetailComponent implements OnInit, OnDestroy {
+export class NatRulesDetailComponent implements OnInit, OnDestroy {
   Id = '';
   TierName = '';
   currentTierIds: string[];
@@ -201,6 +199,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
     this.ngx.setModalData(dto, 'natRuleModal');
     this.ngx.getModal('natRuleModal').open();
   }
+
   subscribeToNatRuleModal(): void {
     this.natRuleModalSubscription = this.ngx.getModal('natRuleModal').onCloseFinished.subscribe(() => {
       this.getNatRuleGroup();
@@ -268,7 +267,7 @@ export class NatRuleDetailComponent implements OnInit, OnDestroy {
     return entity;
   }
 
-  private createPreview(data: NatRulePreview, natRules: NatRuleImport[]): void {
+  private createPreview(data: any, natRules: NatRuleImport[]): void {
     const { natRulesToBeDeleted, natRulesToBeUploaded } = data;
     const tableConfig: TableConfig<NatRule> = {
       description: 'Nat Rules Import Preview',

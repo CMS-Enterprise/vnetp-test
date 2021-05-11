@@ -9,39 +9,41 @@ import { SharedModule } from 'src/app/common/shared.module';
 import { TabsModule } from '../../common/tabs/tabs.module';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
 import { AuthGuard } from '../../guards/auth.guard';
-import { NatRuleDetailComponent } from './nat-rules-detail/nat-rule-detail.component';
+import { NatRulesDetailComponent } from './nat-rules-detail/nat-rules-detail.component';
 import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component';
 import { IconButtonModule } from '../../common/icon-button/icon-button.module';
-import { NatRuleComponent } from './nat-rule.component';
+import { NatRulesComponent } from './nat-rules.component';
+import { PreviewModalModule } from '../../common/preview-modal/preview-modal.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: NatRuleComponent,
+    component: NatRulesComponent,
   },
   {
     path: 'edit/:id',
-    component: NatRuleDetailComponent,
+    component: NatRulesDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Nat Rule Group' },
   },
 ];
 
 @NgModule({
-  declarations: [NatRuleComponent, NatRuleModalComponent, NatRuleDetailComponent],
   imports: [
     CommonModule,
+    FontAwesomeModule,
     FormsModule,
     IconButtonModule,
-    ReactiveFormsModule,
-    RouterModule,
     FontAwesomeModule,
     NgxPaginationModule,
     NgxSmartModalModule,
+    PreviewModalModule,
+    ReactiveFormsModule,
     SharedModule,
     TabsModule,
     TooltipModule,
     RouterModule.forChild(routes),
   ],
+  declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent],
 })
 export class NatRulesModule {}
