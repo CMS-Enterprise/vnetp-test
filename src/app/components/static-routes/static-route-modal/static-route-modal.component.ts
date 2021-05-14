@@ -113,7 +113,7 @@ export class StaticRouteModalComponent implements OnInit {
       name: ['', NameValidator()],
       destinationNetwork: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       nextHop: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
-      metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],
+      metric: [1, Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],
     });
   }
 

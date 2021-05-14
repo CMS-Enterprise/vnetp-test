@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -68,6 +68,8 @@
             name="interval"
             formControlName="interval"
             [class.is-invalid]="submitted && f.interval.errors"
+            min="5"
+            max="300"
           />
           <div *ngIf="submitted && f.interval.errors" class="invalid-feedback">
             <div *ngIf="f.interval.errors.required">Interval is required</div>
@@ -86,6 +88,8 @@
             name="timeout"
             formControlName="timeout"
             [class.is-invalid]="submitted && f.timeout.errors"
+            min="5"
+            max="300"
           />
           <div *ngIf="submitted && f.timeout.errors" class="invalid-feedback">
             <div *ngIf="f.timeout.errors.required">Timeout is required</div>

@@ -27,17 +27,18 @@
             <div *ngIf="f.name.errors.required">Name is required</div>
             <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
             <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
           </div>
         </div>
 
         <!-- Tag -->
         <div class="form-group col-md-6">
-          <label for="type">Tag</label>
-          <input type="number" name="tag" formControlName="tag" class="form-control" required />
+          <label for="tag">Tag</label>
+          <input type="number" name="tag" formControlName="tag" class="form-control" [class.is-invalid]="submitted && f.tag.errors" min="1" required />
           <div *ngIf="submitted && f.tag.errors" class="invalid-feedback">
             <div *ngIf="f.tag.errors.required">Tag is required</div>
-            <div *ngIf="f.tag.errors.min || f.tag.errors.max">Tag must be between 1-4094</div>
+            <div *ngIf="f.tag.errors.min">Tag must be greater than or equal to 1</div>
+            <div *ngIf="f.tag.errors.max">Tag must be less than or equal to 4094</div>
           </div>
         </div>
       </div>

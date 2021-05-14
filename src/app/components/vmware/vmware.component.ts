@@ -64,7 +64,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
   openVirtualMachineModal(modalMode: ModalMode, vm?: VmwareVirtualMachine) {
     if (modalMode === ModalMode.Edit && !vm) {
-      throw new Error('VM required.');
+      throw new Error('VM required');
     }
 
     const dto = new VirtualMachineModalDto();

@@ -165,12 +165,12 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
 
     if (type === LoadBalancerProfileType.ClientSSL) {
       if (!this.privateKeyCipher) {
-        this.toastr.error('Private Key is required.');
+        this.toastr.error('Private Key is required');
         return null;
       }
 
       if (this.isUnencryptedPrivateKey(this.privateKeyCipher) || this.isUnencryptedPrivateKey(certificate)) {
-        this.toastr.error('Unencrypted Private Key not allowed.');
+        this.toastr.error('Unencrypted Private Key not allowed');
         return null;
       }
 

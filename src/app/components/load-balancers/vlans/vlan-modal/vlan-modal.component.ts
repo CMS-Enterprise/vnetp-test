@@ -37,6 +37,7 @@ export class VlanModalComponent implements OnInit {
 
   public save(): void {
     this.submitted = true;
+
     if (this.form.invalid) {
       return;
     }

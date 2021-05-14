@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
             [class.is-invalid]="submitted && f.sourceIpAddress.errors"
           />
           <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceIpAddress.errors.required">Source Address is required.</div>
+            <div *ngIf="f.sourceIpAddress.errors.required">Source Address is required</div>
             <div *ngIf="f.sourceIpAddress.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
           </div>
         </div>
@@ -84,7 +84,7 @@
             [class.is-invalid]="submitted && f.destinationIpAddress.errors"
           />
           <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationIpAddress.errors.required">Destination Address is required.</div>
+            <div *ngIf="f.destinationIpAddress.errors.required">Destination Address is required</div>
             <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.</div>
           </div>
         </div>
@@ -103,7 +103,7 @@
             [class.is-invalid]="submitted && f.servicePort.errors"
           />
           <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
-            <div *ngIf="f.servicePort.errors.required">Service Port is required.</div>
+            <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
             <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
           </div>
         </div>
@@ -119,7 +119,7 @@
             </option>
           </select>
           <div *ngIf="submitted && f.defaultPoolId.errors" class="invalid-feedback">
-            <div *ngIf="f.defaultPoolId.errors.required">Default Pool is required.</div>
+            <div *ngIf="f.defaultPoolId.errors.required">Default Pool is required</div>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -49,13 +49,12 @@
               rows="8"
               formControlName="asmContent"
               class="form-control"
+              [class.is-invalid]="submitted && f.asmContent.errors"
               placeholder="Paste ASM Policy XML or Upload"
             >
             </textarea>
-          </div>
-          <div *ngIf="submitted && f.asmContent.errors" class="invalid-feedback">
-            <div *ngIf="f.asmContent.errors.required">
-              ASM Policy XML is Required.
+            <div *ngIf="submitted && f.asmContent.errors" class="invalid-feedback">
+              <div *ngIf="f.asmContent.errors.required">ASM Policy XML is Required.</div>
             </div>
           </div>
         </div>
