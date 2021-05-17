@@ -62,13 +62,13 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     'Name',
     'Direction',
     'BiDirectional',
-    'Original Service Type',
-    'Original Source Address',
-    'Original Destination Address',
+    'Original Service (Type)',
+    'Original Source Address (Type)',
+    'Original Destination Address (Type)',
     'Translation Type',
-    'Translated Source Address',
-    'Translated Destination Address',
-    'Translated Service Type',
+    'Translated Service (Type)',
+    'Translated Source Address (Type)',
+    'Translated Destination Address (Type)',
     'Enabled',
     'Rule Index',
     '',
@@ -78,10 +78,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
   @ViewChild('originalSourceAddress') originalSourceAddressTemplate: TemplateRef<any>;
   @ViewChild('originalDestinationAddress') originalDestinationAddressTemplate: TemplateRef<any>;
-
+  @ViewChild('translatedServiceType') translatedServiceTemplate: TemplateRef<any>;
   @ViewChild('translatedSourceAddress') translatedSourceAddressTemplate: TemplateRef<any>;
   @ViewChild('translatedDestinationAddress') translatedDestinationAddressTemplate: TemplateRef<any>;
-  @ViewChild('translatedServiceType') translatedServiceTemplate: TemplateRef<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -275,14 +274,14 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         { name: 'Name', property: 'name' },
         { name: 'Direction', property: 'direction' },
         { name: 'BiDirectional', property: 'biDirectional' },
-        { name: 'Original Service Type', template: () => this.originalServiceTemplate },
+        { name: 'Original Service (Type)', template: () => this.originalServiceTemplate },
         { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
-        { name: 'Original Source Address', template: () => this.originalDestinationAddressTemplate },
+        { name: 'Original Destination Address', template: () => this.originalDestinationAddressTemplate },
         { name: 'Translation Type', property: 'translationType' },
-        { name: 'Original Source Address', template: () => this.translatedSourceAddressTemplate },
-        { name: 'Original Destination Address', template: () => this.translatedDestinationAddressTemplate },
-        { name: 'Destination Address', template: () => this.translatedServiceTemplate },
-        { name: 'Enabled', property: 'enabled' },
+        { name: 'Translated Service (Type)', template: () => this.translatedServiceTemplate },
+        { name: 'Translated Source Address', template: () => this.translatedSourceAddressTemplate },
+        { name: 'Translated Destination Address', template: () => this.translatedDestinationAddressTemplate },
+        // { name: 'Enabled', property: 'enabled' },
         { name: 'Rule Index', property: 'ruleIndex' },
       ],
       rowStyle: (natRule: NatRule) => (natRule.hasOwnProperty('id') ? { background: '#ffeef0' } : { background: '#e6ffed' }),
