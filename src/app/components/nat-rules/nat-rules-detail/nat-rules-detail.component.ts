@@ -297,7 +297,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         const natConfirmDto: NatRuleImportCollectionDto = {
           datacenterId: this.datacenterService.currentDatacenterValue.id,
           natRules: this.sanitizeData(natRules),
-          dryRun: true,
+          dryRun: false,
         };
 
         this.natRuleService

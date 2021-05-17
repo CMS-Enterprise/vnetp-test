@@ -12,6 +12,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { ToastrModule } from 'ngx-toastr';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     TabsModule,
+    ToastrModule,
     TooltipModule,
   ],
   declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
