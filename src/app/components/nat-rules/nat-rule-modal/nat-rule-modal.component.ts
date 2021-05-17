@@ -19,7 +19,7 @@ import {
   V1NetworkSecurityNatRulesService,
 } from 'api_client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
-import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
+import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 
 @Component({
   selector: 'app-nat-rule-modal',

@@ -90,6 +90,7 @@ export * from './natRule';
 export * from './natRuleGroup';
 export * from './natRuleImport';
 export * from './natRuleImportCollectionDto';
+export * from './natRulePreview';
 export * from './networkObject';
 export * from './networkObjectGroup';
 export * from './networkObjectGroupRelationBulkImportCollectionDto';

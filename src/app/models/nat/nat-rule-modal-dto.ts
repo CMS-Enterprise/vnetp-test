@@ -1,5 +1,5 @@
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NatRule, NetworkObject, NetworkObjectGroup, ServiceObject } from '../../../../../api_client';
+import { NatRule, NetworkObject, NetworkObjectGroup, ServiceObject } from '../../../../api_client';
 
 export class NatRuleModalDto {
   tierId: string;

@@ -75,14 +75,6 @@ export class NatRulesComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
   }
 
-  private loadNatRules(tier: Tier): Observable<NatRule[]> {
-    const hasCurrentTier = tier && !!tier.id;
-    if (!hasCurrentTier) {
-      return of([]);
-    }
-    return of([]);
-  }
-
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
   }

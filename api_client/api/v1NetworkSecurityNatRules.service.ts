@@ -19,6 +19,7 @@ import { Observable }                                        from 'rxjs';
 
 import { NatRule } from '../model/models';
 import { NatRuleImportCollectionDto } from '../model/models';
+import { NatRulePreview } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -158,10 +159,10 @@ export class V1NetworkSecurityNatRulesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRulePreview>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRulePreview>>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRulePreview>>;
+    public v1NetworkSecurityNatRulesBulkImportPost(requestParameters: V1NetworkSecurityNatRulesBulkImportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const natRuleImportCollectionDto = requestParameters.natRuleImportCollectionDto;
         if (natRuleImportCollectionDto === null || natRuleImportCollectionDto === undefined) {
             throw new Error('Required parameter natRuleImportCollectionDto was null or undefined when calling v1NetworkSecurityNatRulesBulkImportPost.');
@@ -173,6 +174,7 @@ export class V1NetworkSecurityNatRulesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -195,7 +197,7 @@ export class V1NetworkSecurityNatRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/nat-rules/bulk-import`,
+        return this.httpClient.post<NatRulePreview>(`${this.configuration.basePath}/v1/network-security/nat-rules/bulk-import`,
             natRuleImportCollectionDto,
             {
                 responseType: <any>responseType,

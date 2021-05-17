@@ -18,11 +18,12 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   NatRuleImport,
+  NatRulePreview,
 } from 'api_client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
-import { NatRuleModalDto } from '../models/nat-rule-modal-dto';
+import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
 
@@ -266,7 +267,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     return entity;
   }
 
-  private createPreview(data: any, natRules: NatRuleImport[]): void {
+  private createPreview(data: NatRulePreview, natRules: NatRuleImport[]): void {
     const { natRulesToBeDeleted, natRulesToBeUploaded } = data;
     const tableConfig: TableConfig<NatRule> = {
       description: 'Nat Rules Import Preview',

@@ -3771,6 +3771,8 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/NatRulePreview'
       tags: &ref_14
         - v1/network-security/nat-rules
       produces:
@@ -16034,6 +16036,21 @@ definitions:
       - datacenterId
       - natRules
       - dryRun
+  NatRulePreview:
+    type: object
+    properties:
+      natRulesToBeDeleted:
+        type: array
+        items:
+          $ref: '#/definitions/NatRule'
+      natRulesToBeUploaded:
+        type: array
+        items:
+          $ref: '#/definitions/NatRule'
+    required:
+      - natRulesToBeDeleted
+      - natRulesToBeUploaded
+      - natRulesToBeUploaded
   GeneratedNatRuleGroupBulkDto:
     type: object
     properties:
