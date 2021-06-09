@@ -67,12 +67,6 @@ const routes: Routes = [
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
   {
-    path: 'wizard',
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'Wizard', title: 'Automation - Wizard' },
-    loadChildren: () => import('./components/wizard/wizard.module').then(m => m.WizardModule),
-  },
-  {
     path: 'physical-server',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Physical Servers', title: 'Automation - Physical Servers' },
