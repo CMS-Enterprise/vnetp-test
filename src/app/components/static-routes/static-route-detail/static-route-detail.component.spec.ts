@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { V1TiersService, V1NetworkStaticRoutesService } from 'api_client';
+import { V1TiersService, V1NetworkStaticRoutesService } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
 describe('StaticRouteDetailComponent', () => {

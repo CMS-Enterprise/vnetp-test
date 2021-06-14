@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
         <div class="form-group col-md-12">
           <label for="publicKey">Client SSL Certificate</label>
           <textarea
@@ -90,7 +90,7 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
         <div class="form-group col-md-6">
           <button class="btn btn-warning" (click)="privateKeyCipherUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>

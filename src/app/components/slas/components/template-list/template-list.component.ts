@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
-interface TemplateView extends ActifioTemplateDto {
+export interface TemplateView extends ActifioTemplateDto {
   snapshotPolicyTimeWindow: Observable<string>;
 }
 
@@ -69,21 +69,22 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public loadTemplates(): void {
     this.isLoading = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(data => {
-      this.templates = data.map(d => {
+    this.agmTemplateService.getTemplatesActifioTemplate({}).subscribe(data => {
+      this.templates = (data as TemplateView[]).map(template => {
         return {
-          ...d,
-          description: d.description || '--',
-          snapshotPolicyTimeWindow: this.getSnapshotPolicyTimeWindow(d.id),
+          ...template,
+          description: template.description || '--',
+          snapshotPolicyTimeWindow: this.getSnapshotPolicyTimeWindow(template.id),
         };
       });
+
       this.isLoading = false;
     });
   }
 
   public deleteTemplate(template: ActifioTemplateDto): void {
     const deleteFunction = () => {
-      this.agmTemplateService.v1ActifioGmTemplatesIdDelete({ id: template.id }).subscribe(() => {
+      this.agmTemplateService.deleteTemplateActifioTemplate({ id: template.id }).subscribe(() => {
         this.loadTemplates();
       });
     };
@@ -98,7 +99,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getSnapshotPolicyTimeWindow(templateId: string): Observable<string> {
-    return this.agmTemplateService.v1ActifioGmTemplatesIdPolicyGet({ id: templateId, isSnapshot: true }).pipe(
+    return this.agmTemplateService.getTemplatePoliciesActifioTemplate({ id: templateId, isSnapshot: true }).pipe(
       map(policies => (policies.length > 0 ? policies[0] : null)),
       map(snapshotPolicy => {
         if (!snapshotPolicy) {

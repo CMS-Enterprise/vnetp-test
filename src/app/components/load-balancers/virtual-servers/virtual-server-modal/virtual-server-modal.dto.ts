@@ -1,4 +1,4 @@
-import { LoadBalancerVirtualServer } from 'api_client';
+import { LoadBalancerVirtualServer } from 'client';
 
 export interface VirtualServerModalDto {
   tierId: string;

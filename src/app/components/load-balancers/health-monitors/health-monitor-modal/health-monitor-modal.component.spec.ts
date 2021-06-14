@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HealthMonitorModalComponent } from './health-monitor-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorType, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorTypeEnum, V1LoadBalancerHealthMonitorsService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { HealthMonitorModalDto } from './health-monitor-modal.dto';
 
@@ -34,7 +34,7 @@ describe('HealthMonitorModalComponent', () => {
       tierId: '1',
       id: '2',
       name: 'HealthMonitor2',
-      type: LoadBalancerHealthMonitorType.HTTP,
+      type: LoadBalancerHealthMonitorTypeEnum.Http,
       servicePort: 5,
       interval: 5,
       timeout: 5,
@@ -85,7 +85,7 @@ describe('HealthMonitorModalComponent', () => {
   });
 
   it('should create a new health monitor', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerHealthMonitor');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: HealthMonitorModalDto = {
         tierId: '1',
@@ -96,7 +96,7 @@ describe('HealthMonitorModalComponent', () => {
     component.getData();
     component.form.setValue({
       name: 'HealthMonitor1',
-      type: LoadBalancerHealthMonitorType.HTTP,
+      type: LoadBalancerHealthMonitorTypeEnum.Http,
       servicePort: 5,
       interval: 5,
       timeout: 5,
@@ -107,7 +107,7 @@ describe('HealthMonitorModalComponent', () => {
       loadBalancerHealthMonitor: {
         tierId: '1',
         name: 'HealthMonitor1',
-        type: LoadBalancerHealthMonitorType.HTTP,
+        type: LoadBalancerHealthMonitorTypeEnum.Http,
         servicePort: 5,
         interval: 5,
         timeout: 5,
@@ -116,7 +116,7 @@ describe('HealthMonitorModalComponent', () => {
   });
 
   it('should update an existing health monitor', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerHealthMonitor');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: HealthMonitorModalDto = {
         tierId: '1',
@@ -128,7 +128,7 @@ describe('HealthMonitorModalComponent', () => {
     component.getData();
     component.form.setValue({
       name: 'HealthMonitor100',
-      type: LoadBalancerHealthMonitorType.TCP,
+      type: LoadBalancerHealthMonitorTypeEnum.Tcp,
       servicePort: 10,
       interval: 10,
       timeout: 10,
@@ -140,7 +140,7 @@ describe('HealthMonitorModalComponent', () => {
       loadBalancerHealthMonitor: {
         tierId: null,
         name: 'HealthMonitor100',
-        type: LoadBalancerHealthMonitorType.TCP,
+        type: LoadBalancerHealthMonitorTypeEnum.Tcp,
         servicePort: 10,
         interval: 10,
         timeout: 10,

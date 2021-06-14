@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { V1DatacentersService, Tier } from 'api_client';
+import { V1DatacentersService, Tier } from 'client';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -34,12 +34,12 @@ export class TierSelectComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.datacenterService
-      .v1DatacentersIdGet({
+      .getOneDatacenters({
         id: this.datacenterId,
-        join: 'tiers',
+        join: ['tiers'],
       })
       .subscribe(data => {
-        this.tiers = data.tiers.filter(t => !t.deletedAt);
+        this.tiers = data?.tiers?.filter(t => !t.deletedAt) ?? [];
       });
   }
 

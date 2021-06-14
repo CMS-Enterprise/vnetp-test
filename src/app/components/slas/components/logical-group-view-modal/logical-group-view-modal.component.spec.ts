@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActifioDetailedLogicalGroupDto } from 'api_client';
+import { ActifioDetailedLogicalGroupDto } from 'client';
 import { MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { LogicalGroupViewModalComponent } from './logical-group-view-modal.component';
 

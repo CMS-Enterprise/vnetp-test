@@ -4,5 +4,5 @@ coverage
 dist
 build
 README.md
-api_client
+client
 swagger-spec.yaml

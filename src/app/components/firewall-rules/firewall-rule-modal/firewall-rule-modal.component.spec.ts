@@ -9,7 +9,7 @@ import {
   MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityFirewallRulesService } from 'api_client';
+import { V1NetworkSecurityFirewallRulesService } from 'client';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;

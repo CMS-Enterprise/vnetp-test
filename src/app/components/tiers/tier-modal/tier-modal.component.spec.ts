@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { MockProvider } from 'src/test/mock-providers';
 import { TierModalComponent } from './tier-modal.component';
 import TestUtil from 'src/test/TestUtil';
-import { V1TiersService, V1TierGroupsService, TierGroup } from 'api_client';
+import { V1TiersService, V1TierGroupsService, TierGroup } from 'client';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -96,7 +96,7 @@ describe('TierModalComponent', () => {
 
   it('should not call to create a tier when the form is invalid', () => {
     const service = TestBed.inject(V1TiersService);
-    const createTierSpy = jest.spyOn(service, 'v1TiersPost');
+    const createTierSpy = jest.spyOn(service, 'createOneTier');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -115,7 +115,7 @@ describe('TierModalComponent', () => {
 
   it('should call to create a tier when in create mode', () => {
     const service = TestBed.inject(V1TiersService) as any;
-    const createTierSpy = jest.spyOn(service, 'v1TiersPost');
+    const createTierSpy = jest.spyOn(service, 'createOneTier');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -143,7 +143,7 @@ describe('TierModalComponent', () => {
 
   it('should call to edit an existing tier when in edit mode', () => {
     const service = TestBed.inject(V1TiersService) as any;
-    const updateTierSpy = jest.spyOn(service, 'v1TiersIdPut');
+    const updateTierSpy = jest.spyOn(service, 'updateOneTier');
 
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({
@@ -208,12 +208,12 @@ describe('TierModalComponent', () => {
       const ngx = TestBed.inject(NgxSmartModalService) as any;
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTierModalDto());
       const tierGroupsService = TestBed.inject(V1TierGroupsService) as any;
-      const loadTierGroupsSpy = jest.spyOn(tierGroupsService, 'v1TierGroupsGet').mockImplementation(() => of([] as TierGroup[]));
+      const loadTierGroupsSpy = jest.spyOn(tierGroupsService, 'getManyTierGroup').mockImplementation(() => of([] as TierGroup[]));
 
       component.getData();
 
       expect(loadTierGroupsSpy).toHaveBeenCalledWith({
-        filter: 'datacenterId||eq||1',
+        filter: ['datacenterId||eq||1'],
       });
     });
   });

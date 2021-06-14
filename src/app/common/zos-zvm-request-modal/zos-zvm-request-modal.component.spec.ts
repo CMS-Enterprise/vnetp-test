@@ -4,7 +4,7 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
-import { V1ConfigurationUploadService, ConfigurationUploadType } from 'api_client';
+import { V1ConfigurationUploadService, ConfigurationUploadTypeEnum } from 'client';
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 
@@ -35,15 +35,15 @@ describe('ZosZvmRequestModalComponent', () => {
       const service = TestBed.inject(V1ConfigurationUploadService);
 
       component.uploadType = 'request';
-      component.configurationType = ConfigurationUploadType.OS;
+      component.configurationType = ConfigurationUploadTypeEnum.Os;
       component.form.controls.file.setValue('test');
 
       const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
       saveButton.nativeElement.click();
 
-      expect(service.v1ConfigurationUploadPost).toHaveBeenCalledWith({
+      expect(service.createOneConfigurationUpload).toHaveBeenCalledWith({
         configurationUpload: {
-          type: ConfigurationUploadType.OS,
+          type: ConfigurationUploadTypeEnum.Os,
           file: 'test',
         },
       });
@@ -54,13 +54,13 @@ describe('ZosZvmRequestModalComponent', () => {
 
       component.uploadId = '1';
       component.uploadType = 'configuration';
-      component.configurationType = ConfigurationUploadType.OS;
+      component.configurationType = ConfigurationUploadTypeEnum.Os;
       component.form.controls.file.setValue('test');
 
       const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
       saveButton.nativeElement.click();
 
-      expect(service.v1ConfigurationUploadIdConfigurePatch).toHaveBeenCalledWith({
+      expect(service.configureConfigurationUpload).toHaveBeenCalledWith({
         configurationDto: { configuration: 'test' },
         id: '1',
       });
@@ -71,11 +71,11 @@ describe('ZosZvmRequestModalComponent', () => {
 
       component.uploadId = '1';
       component.uploadType = 'something-else';
-      component.configurationType = ConfigurationUploadType.OS;
+      component.configurationType = ConfigurationUploadTypeEnum.Os;
       component.form.controls.file.setValue('test');
 
-      expect(service.v1ConfigurationUploadIdConfigurePatch).not.toHaveBeenCalled();
-      expect(service.v1ConfigurationUploadPost).not.toHaveBeenCalled();
+      expect(service.updateOneConfigurationUpload).not.toHaveBeenCalled();
+      expect(service.createOneConfigurationUpload).not.toHaveBeenCalled();
     });
   });
 
@@ -94,7 +94,7 @@ describe('ZosZvmRequestModalComponent', () => {
     jest.spyOn(service, 'getModalData').mockImplementation(() => {
       return {
         id: '1',
-        type: ConfigurationUploadType.OS,
+        type: ConfigurationUploadTypeEnum.Os,
         uploadType: 'request',
       };
     });
@@ -102,7 +102,7 @@ describe('ZosZvmRequestModalComponent', () => {
     component.getData();
 
     expect(component.uploadId).toBe('1');
-    expect(component.configurationType).toBe(ConfigurationUploadType.OS);
+    expect(component.configurationType).toBe(ConfigurationUploadTypeEnum.Os);
     expect(component.uploadType).toBe('request');
   });
 

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioDetailedLogicalGroupDto, ActifioLogicalGroupDto, V1ActifioGmLogicalGroupsService } from 'api_client';
+import { ActifioDetailedLogicalGroupDto, V1ActifioGmLogicalGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of, Subscription } from 'rxjs';
@@ -80,7 +80,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
       this.cachedLogicalGroups = new Map();
     }
     this.isLoading = true;
-    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(logicalGroups => {
+    this.agmLogicalGroupService.getLogicalGroupsActifioLogicalGroup({}).subscribe(logicalGroups => {
       this.logicalGroups = logicalGroups.map(logicalGroup => {
         const { id, name, description = '--', sla } = logicalGroup;
         const template = sla ? sla.template : { name: '--', description: '--' };
@@ -104,7 +104,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
     if (isCached) {
       return of(this.cachedLogicalGroups.get(logicalGroupId));
     }
-    return this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
+    return this.agmLogicalGroupService.getLogicalGroupActifioLogicalGroup({ id: logicalGroupId }).pipe(
       tap((logicalGroup: ActifioDetailedLogicalGroupDto) => {
         this.cachedLogicalGroups.set(logicalGroupId, logicalGroup);
       }),
@@ -121,7 +121,7 @@ export class LogicalGroupListComponent implements OnInit, OnDestroy {
       'danger',
     );
     const deleteFunction = () => {
-      this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdDelete({ id }).subscribe(() => {
+      this.agmLogicalGroupService.deleteLogicalGroupActifioLogicalGroup({ id }).subscribe(() => {
         this.loadLogicalGroups();
         this.toastr.success(name, 'Successfully deleted');
       });

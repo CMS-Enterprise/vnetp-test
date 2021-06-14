@@ -1,4 +1,4 @@
-import { LoadBalancerProfile } from 'api_client';
+import { LoadBalancerProfile } from 'client';
 
 export interface ProfileModalDto {
   tierId: string;

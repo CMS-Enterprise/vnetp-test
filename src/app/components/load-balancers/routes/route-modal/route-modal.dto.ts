@@ -1,4 +1,4 @@
-import { LoadBalancerRoute } from 'api_client';
+import { LoadBalancerRoute } from 'client';
 
 export interface RouteModalDto {
   tierId: string;

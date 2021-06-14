@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
-import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'api_client';
+import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'client';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -11,19 +11,19 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     const datacenterService = {
-      v1DatacentersGet: jest.fn(() => of({ total: 1 })),
+      getManyDatacenters: jest.fn(() => of({ total: 1 })),
     };
 
     const tierService = {
-      v1TiersGet: jest.fn(() => of({ total: 1 })),
+      getManyTier: jest.fn(() => of({ total: 1 })),
     };
 
     const vmwareService = {
-      v1VmwareVirtualMachinesGet: jest.fn(() => of({ total: 1 })),
+      getManyVmwareVirtualMachine: jest.fn(() => of({ total: 1 })),
     };
 
     const loadBalancerService = {
-      v1LoadBalancerVirtualServersGet: jest.fn(() => of({ total: 1 })),
+      getManyLoadBalancerVirtualServer: jest.fn(() => of({ total: 1 })),
     };
 
     const authService = {
@@ -65,7 +65,7 @@ describe('DashboardComponent', () => {
 
     component.ngOnInit();
 
-    expect(datacenterService.v1DatacentersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
-    expect(tierService.v1TiersGet).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(datacenterService.getManyDatacenters).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, limit: 1 });
   });
 });

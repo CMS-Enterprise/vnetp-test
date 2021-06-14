@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Datacenter } from 'api_client';
+import { Datacenter } from 'client';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';

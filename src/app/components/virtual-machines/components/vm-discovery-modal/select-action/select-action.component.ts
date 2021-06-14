@@ -5,14 +5,14 @@ import {
   ActifioDetailedLogicalGroupDto,
   ActifioHostDto,
   ActifioLogicalGroupDto,
-  ActifioPolicyDtoOperation,
+  ActifioPolicyDtoOperationEnum,
   ActifioProfileDto,
   ActifioTemplateDto,
   V1ActifioGmLogicalGroupsService,
   V1ActifioGmProfilesService,
   V1ActifioGmSlasService,
   V1ActifioGmTemplatesService,
-} from 'api_client';
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -115,7 +115,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     const sourceClusterIds = new Set(this.vCenter.sourceClusters.map(c => c.id));
 
     this.isLoadingLogicalGroups = true;
-    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsGet({}).subscribe(logicalGroups => {
+    this.agmLogicalGroupService.getLogicalGroupsActifioLogicalGroup({}).subscribe(logicalGroups => {
       this.logicalGroups = logicalGroups.filter(l => sourceClusterIds.has(l.sourceClusterId)).sort(ObjectUtil.sortByName);
       this.isLoadingLogicalGroups = false;
     });
@@ -125,7 +125,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
     const sourceClusterIds = new Set(this.vCenter.sourceClusters.map(c => c.id));
 
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({}).subscribe(profiles => {
+    this.agmProfileService.getProfilesActifioProfile({}).subscribe(profiles => {
       this.allProfiles = profiles
         .filter(p => sourceClusterIds.has(p.sourceClusterId))
         .sort(ObjectUtil.sortByName)
@@ -142,7 +142,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(data => {
+    this.agmTemplateService.getTemplatesActifioTemplate({}).subscribe(data => {
       this.templates = data;
       this.isLoadingTemplates = false;
     });
@@ -175,7 +175,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
   }
 
   private updateLogicalGroup(logicalGroupId: string): Observable<ActifioDetailedLogicalGroupDto> {
-    return this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdGet({ id: logicalGroupId }).pipe(
+    return this.agmLogicalGroupService.getLogicalGroupActifioLogicalGroup({ id: logicalGroupId }).pipe(
       switchMap((logicalGroup: ActifioDetailedLogicalGroupDto) => {
         const {
           logicalGroup: { applianceId, description, sla, name },
@@ -192,7 +192,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
         const currentMembers = members.map(mapVM);
         const newMembers = this.virtualMachines.map(mapVM);
 
-        return this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdPut({
+        return this.agmLogicalGroupService.updateLogicalGroupActifioLogicalGroup({
           id: logicalGroupId,
           actifioAddOrUpdateLogicalGroupDto: {
             applianceId,
@@ -209,7 +209,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
 
   private applySlas(templateId: string, profile: ActifioProfileDto): Observable<any> {
     const createSla = (vm: ActifioApplicationDto) => {
-      return this.agmSlaService.v1ActifioGmSlasPost({
+      return this.agmSlaService.createSlaActifioSla({
         actifioCreateOrApplySlaDto: {
           applicationId: vm.id,
           applicationName: vm.name,
@@ -234,7 +234,7 @@ export class SelectActionComponent implements OnInit, OnDestroy {
         const template = this.templates.find(t => t.id === templateId);
 
         const requiresRemoteProfile = template.policies.some(p => {
-          return p.remoteRetention > 0 || p.operation === ActifioPolicyDtoOperation.Replicate;
+          return p.remoteRetention > 0 || p.operation === ActifioPolicyDtoOperationEnum.Replicate;
         });
 
         this.shownProfiles = requiresRemoteProfile ? this.allProfiles.filter(p => !!p.remoteClusterName) : this.allProfiles;

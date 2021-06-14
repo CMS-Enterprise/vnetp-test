@@ -19,7 +19,7 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
-import { V1TiersService, V1NetworkVlansService, V1NetworkSubnetsService } from 'api_client';
+import { V1TiersService, V1NetworkVlansService, V1NetworkSubnetsService } from 'client';
 
 describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;

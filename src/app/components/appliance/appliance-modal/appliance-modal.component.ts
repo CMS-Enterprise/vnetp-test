@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { ApplianceNetworkPort, V1AppliancesService, Appliance } from 'api_client';
+import { ApplianceNetworkPort, V1AppliancesService, Appliance } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -66,7 +66,7 @@ export class ApplianceModalComponent implements OnInit {
       appliance.datacenterId = this.DatacenterId;
 
       this.applianceService
-        .v1AppliancesPost({
+        .createOneAppliance({
           appliance,
         })
         .subscribe(
@@ -77,7 +77,7 @@ export class ApplianceModalComponent implements OnInit {
         );
     } else {
       this.applianceService
-        .v1AppliancesIdPut({
+        .updateOneAppliance({
           id: this.ApplianceId,
           appliance,
         })

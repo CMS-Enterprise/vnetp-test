@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Message, MessageService } from './message.service';
-import { Datacenter, V1DatacentersService } from 'api_client';
+import { Datacenter, V1DatacentersService } from 'client';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({
@@ -101,10 +101,10 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.datacenterService.v1DatacentersGet({ join: 'tiers' }).subscribe(data => {
+    this.datacenterService.getManyDatacenters({ join: ['tiers'] }).subscribe((data: unknown) => {
       // Update internal datacenters array and external subject.
-      this._datacenters = data;
-      this.datacentersSubject.next(data);
+      this._datacenters = data as Datacenter[];
+      this.datacentersSubject.next(data as Datacenter[]);
 
       // If a datacenter matching currentDatacenterId is present
       // set currentDatacenter to that datacenter.

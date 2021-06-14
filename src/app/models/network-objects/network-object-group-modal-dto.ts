@@ -1,4 +1,4 @@
-import { NetworkObjectGroup } from 'api_client';
+import { NetworkObjectGroup } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class NetworkObjectGroupModalDto {

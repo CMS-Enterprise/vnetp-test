@@ -7,7 +7,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { V1VmwareVirtualMachinesService } from 'api_client';
+import { V1VmwareVirtualMachinesService } from 'client';
 
 describe('VmwareDetailComponent', () => {
   let component: VmwareDetailComponent;

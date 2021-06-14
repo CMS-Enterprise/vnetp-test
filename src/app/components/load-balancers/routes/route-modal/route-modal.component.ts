@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'api_client';
+import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { RouteModalDto } from './route-modal.dto';
@@ -91,7 +91,7 @@ export class RouteModalComponent implements OnInit {
   }
 
   private createRoute(loadBalancerRoute: LoadBalancerRoute): void {
-    this.routeService.v1LoadBalancerRoutesPost({ loadBalancerRoute }).subscribe(
+    this.routeService.createOneLoadBalancerRoute({ loadBalancerRoute }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -100,7 +100,7 @@ export class RouteModalComponent implements OnInit {
   private updateRoute(loadBalancerRoute: LoadBalancerRoute): void {
     loadBalancerRoute.tierId = null;
     this.routeService
-      .v1LoadBalancerRoutesIdPut({
+      .updateOneLoadBalancerRoute({
         id: this.routeId,
         loadBalancerRoute,
       })

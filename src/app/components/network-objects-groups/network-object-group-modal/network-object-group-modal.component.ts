@@ -4,7 +4,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
-import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'api_client';
+import { V1NetworkSecurityNetworkObjectGroupsService, NetworkObject, NetworkObjectGroup, V1TiersService } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -47,7 +47,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     if (this.ModalMode === ModalMode.Create) {
       modalNetworkObjectGroup.tierId = this.TierId;
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsPost({
+        .createOneNetworkObjectGroup({
           networkObjectGroup: modalNetworkObjectGroup,
         })
         .subscribe(
@@ -58,7 +58,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         );
     } else {
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsIdPut({
+        .updateOneNetworkObjectGroup({
           id: this.NetworkObjectGroupId,
           networkObjectGroup: modalNetworkObjectGroup,
         })
@@ -87,7 +87,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   addNetworkObject() {
     this.networkObjectGroupService
-      .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdPost({
+      .addNetworkObjectToGroupNetworkObjectGroupNetworkObject({
         networkObjectGroupId: this.NetworkObjectGroupId,
         networkObjectId: this.selectedNetworkObject.id,
       })
@@ -101,7 +101,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Network Object from Network Object Group', '');
     const onConfirm = () => {
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsNetworkObjectGroupIdNetworkObjectsNetworkObjectIdDelete({
+        .removeNetworkObjectFromGroupNetworkObjectGroupNetworkObject({
           networkObjectGroupId: this.NetworkObjectGroupId,
           networkObjectId: networkObject.id,
         })
@@ -141,16 +141,16 @@ export class NetworkObjectGroupModalComponent implements OnInit {
   }
 
   private getTierNetworkObjects() {
-    this.tierService.v1TiersIdGet({ id: this.TierId, join: 'networkObjects' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.TierId, join: ['networkObjects'] }).subscribe(data => {
       this.tierNetworkObjects = data.networkObjects;
     });
   }
 
   private getGroupNetworkObjects() {
     this.networkObjectGroupService
-      .v1NetworkSecurityNetworkObjectGroupsIdGet({
+      .getOneNetworkObjectGroup({
         id: this.NetworkObjectGroupId,
-        join: 'networkObjects',
+        join: ['networkObjects'],
       })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;

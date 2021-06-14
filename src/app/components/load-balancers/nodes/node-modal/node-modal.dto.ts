@@ -1,4 +1,4 @@
-import { LoadBalancerNode } from 'api_client';
+import { LoadBalancerNode } from 'client';
 
 export interface NodeModalDto {
   tierId: string;

@@ -9,7 +9,7 @@ import {
   V1ActifioRdcAppliancesService,
   V1ActifioRdcApplicationGroupsService,
   V1ActifioRdcApplicationsService,
-} from 'api_client';
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -209,19 +209,19 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
 
   private loadAppliances(): void {
     this.isLoadingAppliances = true;
-    this.rdcApplianceService.v1ActifioRdcAppliancesGet().subscribe(appliances => {
+    this.rdcApplianceService.getAppliancesAppliance().subscribe(appliances => {
       this.appliances = appliances;
       this.isLoadingAppliances = false;
     });
   }
 
   private loadVirtualMachines(applianceId: string, virtualMachineServerId: string): Observable<ActifioVMMemberDto[]> {
-    return this.rdcApplicationService.v1ActifioRdcApplicationsCdsIdServerIdGet({ cdsId: applianceId, serverId: virtualMachineServerId });
+    return this.rdcApplicationService.getApplicationsApplication({ cdsId: applianceId, serverId: virtualMachineServerId });
   }
 
   private createApplicationGroup(dto: ApplicationGroupDto): void {
     this.rdcApplicationGroupService
-      .v1ActifioRdcApplicationGroupsPost({
+      .createApplicationGroupApplicationGroup({
         actifioApplicationGroupDto: dto,
       })
       .subscribe(() => this.onClose());
@@ -231,7 +231,7 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
     this.form.disable();
 
     this.rdcApplicationGroupService
-      .v1ActifioRdcApplicationGroupsIdEditGet({ id: applicationGroupId })
+      .getApplicationGroupForEditApplicationGroup({ id: applicationGroupId })
       .pipe(
         mergeMap(applicationGroup => {
           const { cdsId } = applicationGroup;
@@ -268,7 +268,7 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
   }
 
   private loadVirtualManagementServers(applianceId: string): Observable<ActifioVirtualManagementServerDto[]> {
-    return this.rdcApplianceService.v1ActifioRdcAppliancesIdVirtualManagementServersGet({ id: applianceId });
+    return this.rdcApplianceService.getVirtualManagementServersAppliance({ id: applianceId });
   }
 
   private mapSequenceOrder(sequenceOrder: SequenceOrder): ActifioSequenceOrderDto {
@@ -282,7 +282,7 @@ export class ApplicationGroupModalComponent implements OnInit, OnDestroy {
 
   private updateApplicationGroup(applicationGroupId: string, dto: ApplicationGroupDto): void {
     this.rdcApplicationGroupService
-      .v1ActifioRdcApplicationGroupsIdPut({
+      .updateApplicationGroupApplicationGroup({
         id: applicationGroupId,
         actifioApplicationGroupDto: dto,
       })

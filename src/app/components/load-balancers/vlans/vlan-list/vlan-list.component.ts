@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -63,8 +63,8 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(vlan: VlanView): void {
     this.entityService.deleteEntity(vlan, {
       entityName: 'VLAN',
-      delete$: this.vlansService.v1LoadBalancerVlansIdDelete({ id: vlan.id }),
-      softDelete$: this.vlansService.v1LoadBalancerVlansIdSoftDelete({ id: vlan.id }),
+      delete$: this.vlansService.deleteOneLoadBalancerVlan({ id: vlan.id }),
+      softDelete$: this.vlansService.softDeleteOneLoadBalancerVlan({ id: vlan.id }),
       onSuccess: () => this.loadVlans(),
     });
   }
@@ -72,12 +72,12 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadVlans(): void {
     this.isLoading = true;
     this.vlansService
-      .v1LoadBalancerVlansGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerVlan({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        vlans => {
-          this.vlans = vlans.map(v => {
+        (vlans: unknown) => {
+          this.vlans = (vlans as VlanView[]).map(v => {
             return {
               ...v,
               nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
@@ -109,8 +109,8 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.vlansService
-      .v1LoadBalancerVlansBulkPost({
-        generatedLoadBalancerVlanBulkDto: { bulk },
+      .createManyLoadBalancerVlan({
+        createManyLoadBalancerVlanDto: { bulk },
       })
       .subscribe(() => this.loadVlans());
   }
@@ -128,7 +128,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!vlan.deletedAt) {
       return;
     }
-    this.vlansService.v1LoadBalancerVlansIdRestorePatch({ id: vlan.id }).subscribe(() => this.loadVlans());
+    this.vlansService.restoreOneLoadBalancerVlan({ id: vlan.id }).subscribe(() => this.loadVlans());
   }
 
   private subscribeToDataChanges(): Subscription {

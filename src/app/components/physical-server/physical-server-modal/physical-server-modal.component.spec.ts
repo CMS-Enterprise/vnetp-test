@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PhysicalServerModalComponent } from './physical-server-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1PhysicalServersService } from 'api_client';
+import { V1PhysicalServersService } from 'client';
 
 describe('PhysicalServerModalComponent', () => {
   let component: PhysicalServerModalComponent;

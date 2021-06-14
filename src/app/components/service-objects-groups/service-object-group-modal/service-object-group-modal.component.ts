@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
-import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
+import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -49,7 +49,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
       modalServiceObjectGroup.tierId = this.TierId;
       modalServiceObjectGroup.type = this.form.value.type;
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsPost({
+        .createOneServiceObjectGroup({
           serviceObjectGroup: modalServiceObjectGroup,
         })
         .subscribe(
@@ -61,7 +61,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     } else {
       modalServiceObjectGroup.type = null;
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsIdPut({
+        .updateOneServiceObjectGroup({
           id: this.ServiceObjectGroupId,
           serviceObjectGroup: modalServiceObjectGroup,
         })
@@ -90,7 +90,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   addServiceObject() {
     this.serviceObjectGroupService
-      .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdPost({
+      .addServiceObjectToGroupServiceObjectGroupServiceObject({
         serviceObjectGroupId: this.ServiceObjectGroupId,
         serviceObjectId: this.selectedServiceObject.id,
       })
@@ -104,7 +104,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
     const onConfirm = () => {
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsServiceObjectGroupIdServiceObjectsServiceObjectIdDelete({
+        .removeServiceObjectFromGroupServiceObjectGroupServiceObject({
           serviceObjectGroupId: this.ServiceObjectGroupId,
           serviceObjectId: serviceObject.id,
         })
@@ -148,16 +148,16 @@ export class ServiceObjectGroupModalComponent implements OnInit {
   }
 
   private getTierServiceObjects() {
-    this.tierService.v1TiersIdGet({ id: this.TierId, join: 'serviceObjects' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.TierId, join: ['serviceObjects'] }).subscribe(data => {
       this.tierServiceObjects = data.serviceObjects;
     });
   }
 
   private getGroupServiceObjects() {
     this.serviceObjectGroupService
-      .v1NetworkSecurityServiceObjectGroupsIdGet({
+      .getOneServiceObjectGroup({
         id: this.ServiceObjectGroupId,
-        join: 'serviceObjects',
+        join: ['serviceObjects'],
       })
       .subscribe(data => {
         this.serviceObjects = data.serviceObjects;

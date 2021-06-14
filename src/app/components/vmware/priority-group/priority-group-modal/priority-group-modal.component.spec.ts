@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { V1PriorityGroupsService, PriorityGroup, V1VmwareVirtualMachinesService } from 'api_client';
+import { V1PriorityGroupsService, PriorityGroup, V1VmwareVirtualMachinesService } from 'client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { PriorityGroupModalComponent, SelectableVM } from './priority-group-modal.component';
@@ -46,7 +46,7 @@ describe('PriorityGroupModalComponent', () => {
     });
     fixture.detectChanges();
 
-    const updateSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdPut');
+    const updateSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'updateOnePriorityGroup');
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
@@ -75,7 +75,7 @@ describe('PriorityGroupModalComponent', () => {
     });
     fixture.detectChanges();
 
-    const createSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsPost');
+    const createSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'createOnePriorityGroup');
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
