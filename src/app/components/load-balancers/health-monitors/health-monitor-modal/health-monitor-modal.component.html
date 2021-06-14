@@ -68,7 +68,7 @@
             name="interval"
             formControlName="interval"
             [class.is-invalid]="submitted && f.interval.errors"
-            min="5"
+            min="1"
             max="300"
           />
           <div *ngIf="submitted && f.interval.errors" class="invalid-feedback">
@@ -88,7 +88,7 @@
             name="timeout"
             formControlName="timeout"
             [class.is-invalid]="submitted && f.timeout.errors"
-            min="5"
+            min="1"
             max="300"
           />
           <div *ngIf="submitted && f.timeout.errors" class="invalid-feedback">

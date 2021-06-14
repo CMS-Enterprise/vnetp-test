@@ -50,6 +50,7 @@
           [class.is-invalid]="submitted && f.vlanNumber.errors"
           aria-label="vlanNumber"
           min="1"
+          max="4094"
         />
         <div *ngIf="submitted && f.vlanNumber.errors" class="invalid-feedback">
           <div *ngIf="f.vlanNumber.errors.required">VLAN Number is required</div>
