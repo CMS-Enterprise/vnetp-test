@@ -42,7 +42,7 @@
 
       <div class="form-row">
         <!-- NAT Direction -->
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
           <label for="direction">NAT Direction</label>
           <select
             id="direction"
@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
           <label for="biDirectional">biDirectional</label>
           <select
             id="biDirectional"
@@ -77,7 +77,7 @@
         </div>
 
         <!-- Rule Index -->
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
           <label for="ruleIndex">Rule Index</label>
           <input
             id="ruleIndex"
@@ -91,6 +91,22 @@
             <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
             <div *ngIf="f.ruleIndex.errors.min">Rule Index must be greater than or equal to 1.</div>
           </div>
+        </div>
+        
+        <!-- Enabled -->
+        <div class="form-group col-md-3">
+          <label for="enabled">Enabled</label>
+          <select
+            id="enabled"
+            formControlName="enabled"
+            class="form-control"
+            [class.is-invalid]="submitted && f.enabled.errors"
+            aria-label="Enabled"
+          >
+            <option></option>
+            <option [ngValue]="false">False</option>
+            <option [ngValue]="true">True</option>
+          </select>
         </div>
       </div>
 

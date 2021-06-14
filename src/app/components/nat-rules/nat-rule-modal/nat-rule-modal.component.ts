@@ -118,6 +118,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
     if (modalNatRule.biDirectional === 'false') {
       modalNatRule.biDirectional = false;
+    } else {
+      modalNatRule.biDirectional = true;
     }
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceType.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
@@ -200,6 +202,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       biDirectional: [true],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatRuleDirection.In, Validators.required],
+      enabled: [true, Validators.required],
       name: ['', NameValidator()],
       originalDestinationAddressType: [NatRuleOriginalDestinationAddressType.None, Validators.required],
       originalDestinationNetworkObject: null,
