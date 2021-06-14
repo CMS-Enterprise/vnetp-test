@@ -5,7 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1ConfigurationUploadService } from 'api_client';
+import { V1ConfigurationUploadService } from 'client';
 
 describe('ZvmComponent', () => {
   let component: ZvmComponent;

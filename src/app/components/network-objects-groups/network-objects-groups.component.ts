@@ -6,7 +6,7 @@ import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-ob
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'api_client/model/tier';
+import { Tier } from 'client/model/tier';
 import {
   V1TiersService,
   NetworkObject,
@@ -14,7 +14,7 @@ import {
   NetworkObjectGroup,
   V1NetworkSecurityNetworkObjectGroupsService,
   NetworkObjectGroupRelationBulkImportCollectionDto,
-} from 'api_client';
+} from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -64,19 +64,19 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects() {
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'networkObjects' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.currentTier.id, join: ['networkObjects'] }).subscribe(data => {
       this.networkObjects = data.networkObjects;
     });
   }
 
   getNetworkObjectGroups() {
     this.networkObjectGroupService
-      .v1NetworkSecurityNetworkObjectGroupsGet({
-        join: 'networkObjects',
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyNetworkObjectGroup({
+        join: ['networkObjects'],
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
-      .subscribe(data => {
-        this.networkObjectGroups = data;
+      .subscribe((data: unknown) => {
+        this.networkObjectGroups = data as NetworkObjectGroup[];
       });
   }
 
@@ -139,15 +139,15 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   public deleteNetworkObject(networkObject: NetworkObject): void {
     this.entityService.deleteEntity(networkObject, {
       entityName: 'Network Object',
-      delete$: this.networkObjectService.v1NetworkSecurityNetworkObjectsIdDelete({ id: networkObject.id }),
-      softDelete$: this.networkObjectService.v1NetworkSecurityNetworkObjectsIdSoftDelete({ id: networkObject.id }),
+      delete$: this.networkObjectService.deleteOneNetworkObject({ id: networkObject.id }),
+      softDelete$: this.networkObjectService.softDeleteOneNetworkObject({ id: networkObject.id }),
       onSuccess: () => this.getNetworkObjects(),
     });
   }
 
   restoreNetworkObject(networkObject: NetworkObject) {
     if (networkObject.deletedAt) {
-      this.networkObjectService.v1NetworkSecurityNetworkObjectsIdRestorePatch({ id: networkObject.id }).subscribe(() => {
+      this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
         this.getNetworkObjects();
       });
     }
@@ -156,10 +156,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   public deleteNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup): void {
     this.entityService.deleteEntity(networkObjectGroup, {
       entityName: 'Network Object Group',
-      delete$: this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsIdDelete({
+      delete$: this.networkObjectGroupService.deleteOneNetworkObjectGroup({
         id: networkObjectGroup.id,
       }),
-      softDelete$: this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsIdSoftDelete({
+      softDelete$: this.networkObjectGroupService.softDeleteOneNetworkObjectGroup({
         id: networkObjectGroup.id,
       }),
       onSuccess: () => this.getNetworkObjectGroups(),
@@ -169,7 +169,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   restoreNetworkObjectGroup(networkObjectGroup: NetworkObjectGroup) {
     if (networkObjectGroup.deletedAt) {
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsIdRestorePatch({
+        .restoreOneNetworkObjectGroup({
           id: networkObjectGroup.id,
         })
         .subscribe(() => {
@@ -198,8 +198,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.networkObjectService
-        .v1NetworkSecurityNetworkObjectsBulkPost({
-          generatedNetworkObjectBulkDto: { bulk: dto },
+        .createManyNetworkObject({
+          createManyNetworkObjectDto: { bulk: dto },
         })
         .subscribe(() => {
           this.getNetworkObjects();
@@ -224,7 +224,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       networkObjectRelationsDto.networkObjectRelations = event;
 
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsBulkImportRelationsPost({
+        .bulkImportRelationsNetworkObjectGroupNetworkObject({
           networkObjectGroupRelationBulkImportCollectionDto: networkObjectRelationsDto,
         })
         .subscribe(() => {
@@ -248,8 +248,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.networkObjectGroupService
-        .v1NetworkSecurityNetworkObjectGroupsBulkPost({
-          generatedNetworkObjectGroupBulkDto: { bulk: dto },
+        .createManyNetworkObjectGroup({
+          createManyNetworkObjectGroupDto: { bulk: dto },
         })
         .subscribe(() => {
           this.getNetworkObjectGroups();

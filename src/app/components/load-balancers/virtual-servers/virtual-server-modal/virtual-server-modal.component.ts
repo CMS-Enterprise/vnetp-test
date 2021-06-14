@@ -12,7 +12,7 @@ import {
   V1LoadBalancerPoolsService,
   V1LoadBalancerVirtualServersService,
   V1TiersService,
-} from 'api_client';
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { VirtualServerModalDto } from './virtual-server-modal.dto';
@@ -70,7 +70,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addIRule(): void {
     this.virtualServerService
-      .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdPost({
+      .addIRuleToVirtualServerLoadBalancerVirtualServerIRule({
         virtualServerId: this.virtualServerId,
         iruleId: this.f.selectedIRuleId.value,
       })
@@ -84,7 +84,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove iRule from Virtual Server', '', 'Remove iRule', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .v1LoadBalancerVirtualServersVirtualServerIdIrulesIruleIdDelete({
+        .removeIRuleFromVirtualServerLoadBalancerVirtualServerIRule({
           virtualServerId: this.virtualServerId,
           iruleId: irule.id,
         })
@@ -97,7 +97,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addProfile(): void {
     this.virtualServerService
-      .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdPost({
+      .addProfileToVirtualServerLoadBalancerVirtualServerProfile({
         virtualServerId: this.virtualServerId,
         profileId: this.f.selectedProfileId.value,
       })
@@ -111,7 +111,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Profile from Virtual Server', '', 'Remove Profile', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .v1LoadBalancerVirtualServersVirtualServerIdProfilesProfileIdDelete({
+        .removeProfileFromVirtualServerLoadBalancerVirtualServerProfile({
           virtualServerId: this.virtualServerId,
           profileId: profile.id,
         })
@@ -124,7 +124,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addPolicy(): void {
     this.virtualServerService
-      .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdPost({
+      .addPolicyToVirtualServerLoadBalancerVirtualServerPolicy({
         virtualServerId: this.virtualServerId,
         policyId: this.f.selectedPolicyId.value,
       })
@@ -138,7 +138,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Policy from Virtual Server', '', 'Remove Policy', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .v1LoadBalancerVirtualServersVirtualServerIdPoliciesPolicyIdDelete({
+        .removePolicyFromVirtualServerLoadBalancerVirtualServerPolicy({
           virtualServerId: this.virtualServerId,
           policyId: policy.id,
         })
@@ -243,7 +243,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadPools(): void {
     this.poolsService
-      .v1LoadBalancerPoolsIdTierIdGet({
+      .getPoolsLoadBalancerPool({
         id: this.tierId,
       })
       .subscribe(pools => {
@@ -253,9 +253,9 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadAvailableResources(): void {
     this.tiersService
-      .v1TiersIdGet({
+      .getOneTier({
         id: this.tierId,
-        join: 'loadBalancerIrules,loadBalancerProfiles,loadBalancerPolicies',
+        join: ['loadBalancerIrules,loadBalancerProfiles,loadBalancerPolicies'],
       })
       .subscribe((tier: Tier) => {
         this.availableIRules = tier.loadBalancerIrules;
@@ -266,9 +266,9 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadSelectedResources(): void {
     this.virtualServerService
-      .v1LoadBalancerVirtualServersIdGet({
+      .getOneLoadBalancerVirtualServer({
         id: this.virtualServerId,
-        join: 'irules,profiles,policies',
+        join: ['irules,profiles,policies'],
       })
       .subscribe((virtualServer: LoadBalancerVirtualServer) => {
         this.selectedIRules = virtualServer.irules;
@@ -278,7 +278,7 @@ export class VirtualServerModalComponent implements OnInit {
   }
 
   private createVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
-    this.virtualServerService.v1LoadBalancerVirtualServersPost({ loadBalancerVirtualServer }).subscribe(
+    this.virtualServerService.createOneLoadBalancerVirtualServer({ loadBalancerVirtualServer }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -287,7 +287,7 @@ export class VirtualServerModalComponent implements OnInit {
   private updateVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
     loadBalancerVirtualServer.tierId = null;
     this.virtualServerService
-      .v1LoadBalancerVirtualServersIdPut({
+      .updateOneLoadBalancerVirtualServer({
         id: this.virtualServerId,
         loadBalancerVirtualServer,
       })

@@ -1,4 +1,4 @@
-def nodeImage = 'node:lts'
+def nodeImage = 'node:16.3.0'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {

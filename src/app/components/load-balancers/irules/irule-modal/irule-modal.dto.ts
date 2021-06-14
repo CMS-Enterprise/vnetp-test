@@ -1,4 +1,4 @@
-import { LoadBalancerIrule } from 'api_client';
+import { LoadBalancerIrule } from 'client';
 
 export interface IRuleModalDto {
   tierId: string;

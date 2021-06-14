@@ -10,7 +10,7 @@ import {
   V1VmwareNetworkAdapterService,
   V1PriorityGroupsService,
   PriorityGroup,
-} from 'api_client';
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { Subscription } from 'rxjs';
@@ -82,8 +82,8 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   public deleteVirtualDisk(virtualDisk: VmwareVirtualDisk): void {
     this.entityService.deleteEntity(virtualDisk, {
       entityName: 'Virtual Disk',
-      delete$: this.virtualDiskService.v1VmwareVirtualDisksIdDelete({ id: virtualDisk.id }),
-      softDelete$: this.virtualDiskService.v1VmwareVirtualDisksIdSoftDelete({ id: virtualDisk.id }),
+      delete$: this.virtualDiskService.deleteOneVmwareVirtualDisk({ id: virtualDisk.id }),
+      softDelete$: this.virtualDiskService.softDeleteOneVmwareVirtualDisk({ id: virtualDisk.id }),
       onSuccess: () => this.getVirtualDisks(),
     });
   }
@@ -92,7 +92,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     if (!virtualDisk.deletedAt) {
       return;
     }
-    this.virtualDiskService.v1VmwareVirtualDisksIdRestorePatch({ id: virtualDisk.id }).subscribe(() => {
+    this.virtualDiskService.restoreOneVmwareVirtualDisk({ id: virtualDisk.id }).subscribe(() => {
       this.getVirtualDisks();
     });
   }
@@ -100,8 +100,8 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
   public deleteNetworkAdapter(networkAdapter: VmwareNetworkAdapter): void {
     this.entityService.deleteEntity(networkAdapter, {
       entityName: 'Network Adapter',
-      delete$: this.networkAdapterService.v1VmwareNetworkAdapterIdDelete({ id: networkAdapter.id }),
-      softDelete$: this.networkAdapterService.v1VmwareNetworkAdapterIdSoftDelete({ id: networkAdapter.id }),
+      delete$: this.networkAdapterService.deleteOneVmwareNetworkAdapter({ id: networkAdapter.id }),
+      softDelete$: this.networkAdapterService.softDeleteOneVmwareNetworkAdapter({ id: networkAdapter.id }),
       onSuccess: () => this.getVirtualDisks(),
     });
   }
@@ -110,7 +110,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     if (!networkAdapter.deletedAt) {
       return;
     }
-    this.networkAdapterService.v1VmwareNetworkAdapterIdRestorePatch({ id: networkAdapter.id }).subscribe(() => {
+    this.networkAdapterService.restoreOneVmwareNetworkAdapter({ id: networkAdapter.id }).subscribe(() => {
       this.getNetworkAdapters();
     });
   }
@@ -206,9 +206,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
   private getVirtualDisks(): void {
     this.virtualMachineService
-      .v1VmwareVirtualMachinesIdGet({
+      .getOneVmwareVirtualMachine({
         id: this.VirtualMachineId,
-        join: 'virtualDisks,networkAdapters',
+        join: ['virtualDisks,networkAdapters'],
       })
       .subscribe(data => {
         this.virtualDisks = data.virtualDisks;
@@ -217,9 +217,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
   private getNetworkAdapters(): void {
     this.virtualMachineService
-      .v1VmwareVirtualMachinesIdGet({
+      .getOneVmwareVirtualMachine({
         id: this.VirtualMachineId,
-        join: 'networkAdapters',
+        join: ['networkAdapters'],
       })
       .subscribe(data => {
         this.networkAdapters = data.networkAdapters;
@@ -244,7 +244,7 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
     vmwareVirtualMachine.name = this.form.value.name;
     vmwareVirtualMachine.datacenterId = this.DatacenterId;
 
-    this.virtualMachineService.v1VmwareVirtualMachinesPost({ vmwareVirtualMachine }).subscribe(
+    this.virtualMachineService.createOneVmwareVirtualMachine({ vmwareVirtualMachine }).subscribe(
       () => {
         this.closeModal();
       },
@@ -254,15 +254,15 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
   private loadPriorityGroups(): void {
     this.priorityGroupService
-      .v1PriorityGroupsGet({ filter: `datacenterId||eq||${this.DatacenterId}`, join: 'vmwareVirtualMachines' })
-      .subscribe(data => {
-        this.priorityGroups = data;
+      .getManyPriorityGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`], join: ['vmwareVirtualMachines'] })
+      .subscribe((data: unknown) => {
+        this.priorityGroups = data as PriorityGroup[];
       });
   }
 
   private updateVmwareVirtualMachine(vmwareVirtualMachine: VmwareVirtualMachine): void {
     this.virtualMachineService
-      .v1VmwareVirtualMachinesIdPut({
+      .updateOneVmwareVirtualMachine({
         id: this.VirtualMachineId,
         vmwareVirtualMachine,
       })

@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
 import { HealthMonitorListComponent, HealthMonitorView, ImportHealthMonitor } from './health-monitor-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should map health monitors', () => {
-    jest.spyOn(service, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => {
       return of(([
         { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
         { id: '2', name: 'HealthMonitor2' },
@@ -82,7 +82,7 @@ describe('HealthMonitorListComponent', () => {
 
   it('should default health monitors to be empty on error', () => {
     component.healthMonitors = [{ id: '1', name: 'HealthMonitor1' }] as HealthMonitorView[];
-    jest.spyOn(service, 'v1LoadBalancerHealthMonitorsGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -91,12 +91,12 @@ describe('HealthMonitorListComponent', () => {
 
   it('should import health monitors', () => {
     const healthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerHealthMonitor');
 
     component.import(healthMonitors);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerHealthMonitorBulkDto: {
+      createManyLoadBalancerHealthMonitorDto: {
         bulk: [{ name: 'HealthMonitor1', tierId: '1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }],
       },
     });
@@ -112,7 +112,7 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should restore a health monitor', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerHealthMonitorsIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerHealthMonitor');
 
     component.restore({} as LoadBalancerHealthMonitor);
     expect(spy).not.toHaveBeenCalled();

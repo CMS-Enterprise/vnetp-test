@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { SelfIpModalDto } from './self-ip-modal.dto';
@@ -90,11 +90,11 @@ export class SelfIpModalComponent implements OnInit {
 
   public loadVlans(): void {
     this.vlansService
-      .v1LoadBalancerVlansGet({
-        filter: `tierId||eq||${this.tierId}`,
+      .getManyLoadBalancerVlan({
+        filter: [`tierId||eq||${this.tierId}`],
       })
-      .subscribe(vlans => {
-        this.availableVlans = vlans;
+      .subscribe((vlans: unknown) => {
+        this.availableVlans = vlans as LoadBalancerVlan[];
       });
   }
 
@@ -107,7 +107,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   private createSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
-    this.selfIpService.v1LoadBalancerSelfIpsPost({ loadBalancerSelfIp }).subscribe(
+    this.selfIpService.createOneLoadBalancerSelfIp({ loadBalancerSelfIp }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -116,7 +116,7 @@ export class SelfIpModalComponent implements OnInit {
   private updateSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
     loadBalancerSelfIp.tierId = null;
     this.selfIpService
-      .v1LoadBalancerSelfIpsIdPut({
+      .updateOneLoadBalancerSelfIp({
         id: this.selfIpId,
         loadBalancerSelfIp,
       })

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerNode, LoadBalancerNodeType, V1LoadBalancerNodesService } from 'api_client';
+import { LoadBalancerNode, LoadBalancerNodeTypeEnum, V1LoadBalancerNodesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NodeModalDto } from './node-modal.dto';
@@ -20,10 +20,10 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public submitted: boolean;
 
-  public NodeType = LoadBalancerNodeType;
+  public NodeType = LoadBalancerNodeTypeEnum;
   public nodeTypeLookup = nodeTypeLookup;
-  public nodeTypes: LoadBalancerNodeType[] = Object.keys(LoadBalancerNodeType).map(k => {
-    return LoadBalancerNodeType[k];
+  public nodeTypes: LoadBalancerNodeTypeEnum[] = Object.keys(LoadBalancerNodeTypeEnum).map(k => {
+    return LoadBalancerNodeTypeEnum[k];
   });
 
   private nodeId: string;
@@ -106,14 +106,14 @@ export class NodeModalComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([
           IpAddressIpValidator,
-          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerNodeType.IpAddress),
+          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerNodeTypeEnum.IpAddress),
         ]),
       ],
       fqdn: [
         '',
         Validators.compose([
           FqdnValidator,
-          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerNodeType.Fqdn),
+          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerNodeTypeEnum.Fqdn),
         ]),
       ],
       autoPopulate: [false],
@@ -121,7 +121,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   private createNode(loadBalancerNode: LoadBalancerNode): void {
-    this.nodeService.v1LoadBalancerNodesPost({ loadBalancerNode }).subscribe(
+    this.nodeService.createOneLoadBalancerNode({ loadBalancerNode }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -130,7 +130,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   private updateNode(loadBalancerNode: LoadBalancerNode): void {
     loadBalancerNode.tierId = null;
     this.nodeService
-      .v1LoadBalancerNodesIdPut({
+      .updateOneLoadBalancerNode({
         id: this.nodeId,
         loadBalancerNode,
       })
@@ -143,7 +143,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   private getNodeForSave(): LoadBalancerNode {
     const { name, type, ipAddress, autoPopulate, fqdn } = this.form.getRawValue();
 
-    if (type === LoadBalancerNodeType.IpAddress) {
+    if (type === LoadBalancerNodeTypeEnum.IpAddress) {
       return {
         ipAddress,
         name,
@@ -169,9 +169,9 @@ export class NodeModalComponent implements OnInit, OnDestroy {
     const autoPopulate = this.form.get('autoPopulate');
     const ipAddress = this.form.get('ipAddress');
 
-    const types = new Set([LoadBalancerNodeType.IpAddress, LoadBalancerNodeType.Fqdn]);
+    const types = new Set([LoadBalancerNodeTypeEnum.IpAddress, LoadBalancerNodeTypeEnum.Fqdn]);
 
-    return this.form.get('type').valueChanges.subscribe((type: LoadBalancerNodeType) => {
+    return this.form.get('type').valueChanges.subscribe((type: LoadBalancerNodeTypeEnum) => {
       if (!types.has(type)) {
         return;
       }

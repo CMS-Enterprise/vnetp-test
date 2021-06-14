@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'api_client';
+import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
 import { IRuleListComponent, ImportIRule, IRuleView } from './irule-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('IRuleListComponent', () => {
   });
 
   it('should map iRules', () => {
-    jest.spyOn(service, 'v1LoadBalancerIrulesGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => {
       return of(([
         { id: '1', name: 'iRule1', provisionedAt: {} },
         { id: '2', name: 'iRule2', description: 'Description' },
@@ -88,7 +88,7 @@ describe('IRuleListComponent', () => {
 
   it('should default iRules to be empty on error', () => {
     component.iRules = [{ id: '1', name: 'iRule1' }] as IRuleView[];
-    jest.spyOn(service, 'v1LoadBalancerIrulesGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -97,12 +97,12 @@ describe('IRuleListComponent', () => {
 
   it('should import iRules', () => {
     const iRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerIrulesBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerIrule');
 
     component.import(iRules);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerIruleBulkDto: {
+      createManyLoadBalancerIruleDto: {
         bulk: [{ name: 'iRule1', tierId: '1', vrfName: 'Tier1' }, { name: 'iRule2' }],
       },
     });
@@ -118,7 +118,7 @@ describe('IRuleListComponent', () => {
   });
 
   it('should restore an iRule', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerIrulesIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerIrule');
 
     component.restore({} as IRuleView);
     expect(spy).not.toHaveBeenCalled();

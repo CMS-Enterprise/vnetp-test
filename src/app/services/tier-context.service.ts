@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Message, MessageService } from './message.service';
-import { Tier, V1DatacentersService } from 'api_client';
+import { Tier, V1DatacentersService } from 'client';
 import { DatacenterContextService } from './datacenter-context.service';
 
 /** Service to store and expose the Current Tier Context. */
@@ -94,9 +94,9 @@ export class TierContextService {
       }
 
       this.currentDatacenterId = cd.id;
-      this.DatacenterService.v1DatacentersIdGet({
+      this.DatacenterService.getOneDatacenters({
         id: this.currentDatacenterId,
-        join: 'tiers',
+        join: ['tiers'],
       }).subscribe(data => {
         this._tiers = data.tiers;
         this.tiersSubject.next(data.tiers);

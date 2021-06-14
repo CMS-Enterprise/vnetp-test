@@ -8,7 +8,7 @@
 >
   <header class="modal-header">
     <h4 class="modal-title">
-      {{ configurationType === ConfigurationUploadType.VM ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
+      {{ configurationType === ConfigurationUploadType.Vm ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
     </h4>
   </header>
 
@@ -28,7 +28,7 @@
       <button type="submit" class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
         <span>
-          {{ configurationType === ConfigurationUploadType.VM ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
+          {{ configurationType === ConfigurationUploadType.Vm ? 'Upload z/VM Request' : 'Upload z/OS Request' }}
         </span>
       </button>
     </footer>

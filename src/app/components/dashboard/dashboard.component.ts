@@ -1,11 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  V1DatacentersService,
-  V1TiersService,
-  V1VmwareVirtualMachinesService,
-  V1LoadBalancerVirtualServersService,
-  UserDto,
-} from 'api_client';
+import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService, UserDto } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from '../../services/auth.service';
@@ -87,7 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.v1DatacentersGet({ page: 1, perPage: 1 }).subscribe(data => {
+    this.datacenterService.getManyDatacenters({ page: 1, limit: 1 }).subscribe(data => {
       const paged: any = data;
       this.datacenters = paged.total;
       try {
@@ -97,21 +91,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getTiers(): void {
-    this.tierService.v1TiersGet({ page: 1, perPage: 1 }).subscribe(data => {
+    this.tierService.getManyTier({ page: 1, limit: 1 }).subscribe(data => {
       const paged: any = data;
       this.tiers = paged.total;
     });
   }
 
   private getVmwareVirtualMachines(): void {
-    this.vmwareService.v1VmwareVirtualMachinesGet({ page: 1, perPage: 1 }).subscribe(data => {
+    this.vmwareService.getManyVmwareVirtualMachine({ page: 1, limit: 1 }).subscribe(data => {
       const paged = data as any;
       this.vmwareVirtualMachines = paged.total;
     });
   }
 
   private getLoadBalancerVirtualServers(): void {
-    this.loadBalancerService.v1LoadBalancerVirtualServersGet({ page: 1, perPage: 1 }).subscribe(data => {
+    this.loadBalancerService.getManyLoadBalancerVirtualServer({ page: 1, limit: 1 }).subscribe(data => {
       const paged = data as any;
       this.loadBalancerVirtualServers = paged.total;
     });

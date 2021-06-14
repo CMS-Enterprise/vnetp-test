@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'api_client/model/tier';
+import { Tier } from 'client/model/tier';
 import {
   V1TiersService,
   ServiceObject,
@@ -11,7 +11,7 @@ import {
   ServiceObjectGroup,
   V1NetworkSecurityServiceObjectGroupsService,
   ServiceObjectGroupRelationBulkImportCollectionDto,
-} from 'api_client';
+} from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
@@ -63,19 +63,19 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getServiceObjects() {
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'serviceObjects' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.currentTier.id, join: ['serviceObjects'] }).subscribe(data => {
       this.serviceObjects = data.serviceObjects;
     });
   }
 
   getServiceObjectGroups() {
     this.serviceObjectGroupService
-      .v1NetworkSecurityServiceObjectGroupsGet({
-        join: 'serviceObjects',
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyServiceObjectGroup({
+        join: ['serviceObjects'],
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
-      .subscribe(data => {
-        this.serviceObjectGroups = data;
+      .subscribe((data: unknown) => {
+        this.serviceObjectGroups = data as ServiceObjectGroup[];
       });
   }
 
@@ -138,15 +138,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public deleteServiceObject(serviceObject: ServiceObject): void {
     this.entityService.deleteEntity(serviceObject, {
       entityName: 'Service Object',
-      delete$: this.serviceObjectService.v1NetworkSecurityServiceObjectsIdDelete({ id: serviceObject.id }),
-      softDelete$: this.serviceObjectService.v1NetworkSecurityServiceObjectsIdSoftDelete({ id: serviceObject.id }),
+      delete$: this.serviceObjectService.deleteOneServiceObject({ id: serviceObject.id }),
+      softDelete$: this.serviceObjectService.softDeleteOneServiceObject({ id: serviceObject.id }),
       onSuccess: () => this.getServiceObjects(),
     });
   }
 
   restoreServiceObject(serviceObject: ServiceObject) {
     if (serviceObject.deletedAt) {
-      this.serviceObjectService.v1NetworkSecurityServiceObjectsIdRestorePatch({ id: serviceObject.id }).subscribe(() => {
+      this.serviceObjectService.restoreOneServiceObject({ id: serviceObject.id }).subscribe(() => {
         this.getServiceObjects();
       });
     }
@@ -155,10 +155,10 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public deleteServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup): void {
     this.entityService.deleteEntity(serviceObjectGroup, {
       entityName: 'Service Object Group',
-      delete$: this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsIdDelete({
+      delete$: this.serviceObjectGroupService.deleteOneServiceObjectGroup({
         id: serviceObjectGroup.id,
       }),
-      softDelete$: this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsIdSoftDelete({
+      softDelete$: this.serviceObjectGroupService.softDeleteOneServiceObjectGroup({
         id: serviceObjectGroup.id,
       }),
       onSuccess: () => this.getServiceObjectGroups(),
@@ -168,7 +168,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   restoreServiceObjectGroup(serviceObjectGroup: ServiceObjectGroup) {
     if (serviceObjectGroup.deletedAt) {
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsIdRestorePatch({
+        .restoreOneServiceObjectGroup({
           id: serviceObjectGroup.id,
         })
         .subscribe(() => {
@@ -198,8 +198,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.serviceObjectService
-        .v1NetworkSecurityServiceObjectsBulkPost({
-          generatedServiceObjectBulkDto: { bulk: dto },
+        .createManyServiceObject({
+          createManyServiceObjectDto: { bulk: dto },
         })
         .subscribe(() => {
           this.getServiceObjects();
@@ -224,7 +224,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       serviceObjectRelationsDto.serviceObjectRelations = event;
 
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsBulkImportRelationsPost({
+        .bulkImportRelationsServiceObjectGroupServiceObject({
           serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
         })
         .subscribe(() => {
@@ -247,8 +247,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.serviceObjectGroupService
-        .v1NetworkSecurityServiceObjectGroupsBulkPost({
-          generatedServiceObjectGroupBulkDto: { bulk: dto },
+        .createManyServiceObjectGroup({
+          createManyServiceObjectGroupDto: { bulk: dto },
         })
         .subscribe(() => {
           this.getServiceObjectGroups();

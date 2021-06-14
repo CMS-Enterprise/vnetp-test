@@ -1,4 +1,4 @@
-import { LoadBalancerPolicy } from 'api_client';
+import { LoadBalancerPolicy } from 'client';
 
 export interface PolicyModalDto {
   tierId: string;

@@ -15,7 +15,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
+import { V1DatacentersService, V1VmwareVirtualMachinesService } from 'client';
 
 describe('VmwareComponent', () => {
   let component: VmwareComponent;

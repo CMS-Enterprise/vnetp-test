@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Vlan, V1NetworkVlansService } from 'api_client';
+import { Vlan, V1NetworkVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -91,7 +91,7 @@ export class VlanModalComponent implements OnInit {
   private createVlan(vlan: Vlan): void {
     vlan.vlanNumber = this.form.value.vlanNumber;
     vlan.tierId = this.TierId;
-    this.vlanService.v1NetworkVlansPost({ vlan }).subscribe(
+    this.vlanService.createOneVlan({ vlan }).subscribe(
       () => {
         this.closeModal();
       },
@@ -102,7 +102,7 @@ export class VlanModalComponent implements OnInit {
   private updateVlan(vlan: Vlan): void {
     vlan.name = null;
     vlan.vlanNumber = null;
-    this.vlanService.v1NetworkVlansIdPut({ id: this.VlanId, vlan }).subscribe(
+    this.vlanService.updateOneVlan({ id: this.VlanId, vlan }).subscribe(
       () => {
         this.closeModal();
       },

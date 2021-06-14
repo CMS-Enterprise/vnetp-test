@@ -7,7 +7,7 @@ import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-ob
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectType } from 'api_client';
+import { V1NetworkSecurityNetworkObjectsService, NetworkObject, NetworkObjectTypeEnum } from 'client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -42,9 +42,9 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     modalNetworkObject.name = this.form.value.name;
     modalNetworkObject.type = this.form.getRawValue().type;
 
-    if (modalNetworkObject.type === NetworkObjectType.IpAddress) {
+    if (modalNetworkObject.type === NetworkObjectTypeEnum.IpAddress) {
       modalNetworkObject.ipAddress = this.form.value.ipAddress;
-    } else if (modalNetworkObject.type === NetworkObjectType.Range) {
+    } else if (modalNetworkObject.type === NetworkObjectTypeEnum.Range) {
       modalNetworkObject.startIpAddress = this.form.value.startIpAddress;
       modalNetworkObject.endIpAddress = this.form.value.endIpAddress;
     }
@@ -68,7 +68,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     if (this.ModalMode === ModalMode.Create) {
       modalNetworkObject.tierId = this.TierId;
       this.networkObjectService
-        .v1NetworkSecurityNetworkObjectsPost({
+        .createOneNetworkObject({
           networkObject: modalNetworkObject,
         })
         .subscribe(
@@ -80,7 +80,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     } else {
       modalNetworkObject.type = null;
       this.networkObjectService
-        .v1NetworkSecurityNetworkObjectsIdPut({
+        .updateOneNetworkObject({
           id: this.NetworkObjectId,
           networkObject: modalNetworkObject,
         })

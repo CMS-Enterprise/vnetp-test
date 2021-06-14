@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Appliance, V1DatacentersService, V1AppliancesService } from 'api_client';
+import { Appliance, V1DatacentersService, V1AppliancesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -29,8 +29,8 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   ) {}
 
   public getAppliances(): void {
-    this.applianceService.v1AppliancesGet({ filter: `datacenterId||eq||${this.datacenterId}` }).subscribe(data => {
-      this.appliances = data;
+    this.applianceService.getManyAppliance({ filter: [`datacenterId||eq||${this.datacenterId}`] }).subscribe((data: unknown) => {
+      this.appliances = data as Appliance[];
     });
   }
 
@@ -60,8 +60,8 @@ export class ApplianceComponent implements OnInit, OnDestroy {
   public deleteAppliance(appliance: Appliance): void {
     this.entityService.deleteEntity(appliance, {
       entityName: 'Appliance',
-      delete$: this.applianceService.v1AppliancesIdDelete({ id: appliance.id }),
-      softDelete$: this.applianceService.v1AppliancesIdSoftDelete({ id: appliance.id }),
+      delete$: this.applianceService.deleteOneAppliance({ id: appliance.id }),
+      softDelete$: this.applianceService.softDeleteOneAppliance({ id: appliance.id }),
       onSuccess: () => this.getAppliances(),
     });
   }
@@ -71,7 +71,7 @@ export class ApplianceComponent implements OnInit, OnDestroy {
       return;
     }
     this.applianceService
-      .v1AppliancesIdRestorePatch({
+      .restoreOneAppliance({
         id: appliance.id,
       })
       .subscribe(() => {

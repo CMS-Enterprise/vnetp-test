@@ -9,7 +9,7 @@ import { of } from 'rxjs';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { AuthService } from 'src/app/services/auth.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { V1DatacentersService } from 'api_client';
+import { V1DatacentersService } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
 
@@ -30,19 +30,24 @@ describe('TierSelectComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(TierContextService),
         MockProvider(ToastrService),
-        MockProvider(V1DatacentersService, { v1DatacentersIdGet: of({ tiers: [] }) }),
+        MockProvider(V1DatacentersService),
         { provide: AuthService, useValue: authService },
       ],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(TierSelectComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TierSelectComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
+    // const datacenterService = TestBed.inject(V1DatacentersService);
+    // const datacenterSpy = jest.spyOn(datacenterService, 'getOneDatacenters').mockImplementation(() => {
+    //   return of({});
+    // });
+
     expect(component).toBeTruthy();
   });
 

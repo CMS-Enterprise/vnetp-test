@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { VlanModalComponent } from './vlan-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { VlanModalDto } from './vlan-modal.dto';
 
@@ -67,7 +67,7 @@ describe('VlanModalComponent', () => {
   });
 
   it('should create a new vlan', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerVlansPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerVlan');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: VlanModalDto = {
         tierId: '1',
@@ -92,7 +92,7 @@ describe('VlanModalComponent', () => {
   });
 
   it('should update an existing vlan', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerVlansIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerVlan');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: VlanModalDto = {
         tierId: '1',

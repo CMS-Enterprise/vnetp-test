@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'api_client';
+import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -67,8 +67,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(node: NodeView): void {
     this.entityService.deleteEntity(node, {
       entityName: 'Node',
-      delete$: this.nodesService.v1LoadBalancerNodesIdDelete({ id: node.id }),
-      softDelete$: this.nodesService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }),
+      delete$: this.nodesService.deleteOneLoadBalancerNode({ id: node.id }),
+      softDelete$: this.nodesService.softDeleteOneLoadBalancerNode({ id: node.id }),
       onSuccess: () => this.loadNodes(),
     });
   }
@@ -76,12 +76,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadNodes(): void {
     this.isLoading = true;
     this.nodesService
-      .v1LoadBalancerNodesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerNode({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        nodes => {
-          this.nodes = nodes.map(n => {
+        (nodes: unknown) => {
+          this.nodes = (nodes as NodeView[]).map(n => {
             const defaultVal = (key: keyof LoadBalancerNode) => {
               const val = n[key];
               return val === null || val === undefined ? '--' : n[key].toString();
@@ -120,8 +120,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.nodesService
-      .v1LoadBalancerNodesBulkPost({
-        generatedLoadBalancerNodeBulkDto: { bulk },
+      .createManyLoadBalancerNode({
+        createManyLoadBalancerNodeDto: { bulk },
       })
       .subscribe(() => this.loadNodes());
   }
@@ -139,7 +139,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!node.deletedAt) {
       return;
     }
-    this.nodesService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(() => this.loadNodes());
+    this.nodesService.restoreOneLoadBalancerNode({ id: node.id }).subscribe(() => this.loadNodes());
   }
 
   private subscribeToDataChanges(): Subscription {

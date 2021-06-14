@@ -4,7 +4,7 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1VmwareVirtualDisksService } from 'api_client';
+import { V1VmwareVirtualDisksService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
@@ -103,7 +103,7 @@ describe('VirtualDiskModalComponent', () => {
 
     it('should not create a vmware virtual disk when the form is invalid', () => {
       const service = TestBed.inject(V1VmwareVirtualDisksService);
-      const createVirtualDiskSpy = jest.spyOn(service, 'v1VmwareVirtualDisksPost');
+      const createVirtualDiskSpy = jest.spyOn(service, 'createOneVmwareVirtualDisk');
 
       component.form.setValue({
         name: null,
@@ -119,7 +119,7 @@ describe('VirtualDiskModalComponent', () => {
 
     it('should create a vmware virtual disk', () => {
       const service = TestBed.inject(V1VmwareVirtualDisksService);
-      const createVirtualDiskSpy = jest.spyOn(service, 'v1VmwareVirtualDisksPost');
+      const createVirtualDiskSpy = jest.spyOn(service, 'createOneVmwareVirtualDisk');
 
       component.form.setValue({
         name: 'Test',

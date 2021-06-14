@@ -41,7 +41,7 @@
 
       <ng-container *ngIf="f.type.value">
         <!-- ASM -->
-        <div class="form-row" *ngIf="f.type.value === PolicyType.ASM">
+        <div class="form-row" *ngIf="f.type.value === PolicyType.Asm">
           <div class="form-group col-md-12">
             <label for="asmContent">ASM Policy XML</label>
             <textarea
@@ -65,7 +65,7 @@
           <div class="form-group col-md-6">
             <button class="btn btn-warning" (click)="policyContentUploader.click()" type="button">
               <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
-              <span>{{ f.type.value === PolicyType.ASM ? 'Upload ASM XML Export' : 'Upload APM Base64 Export' }}</span>
+              <span>{{ f.type.value === PolicyType.Asm ? 'Upload ASM XML Export' : 'Upload APM Base64 Export' }}</span>
             </button>
 
             <input hidden type="file" #policyContentUploader (change)="importPolicyContent($event)" />

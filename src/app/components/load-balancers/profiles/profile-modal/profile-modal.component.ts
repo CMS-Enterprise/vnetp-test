@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerProfile, LoadBalancerProfileType, V1LoadBalancerProfilesService } from 'api_client';
+import { LoadBalancerProfile, LoadBalancerProfileTypeEnum, V1LoadBalancerProfilesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { ProfileModalDto } from './profile-modal.dto';
@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ProfileModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public submitted: boolean;
-  public ProfileType = LoadBalancerProfileType;
+  public ProfileType = LoadBalancerProfileTypeEnum;
 
   public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => {
     return ProfileReverseProxyType[k];
@@ -92,12 +92,12 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(name);
       this.form.controls.type.setValue(type);
 
-      if (type === LoadBalancerProfileType.ClientSSL) {
+      if (type === LoadBalancerProfileTypeEnum.ClientSsl) {
         this.privateKeyCipher = key || null;
         this.form.controls.certificate.setValue(certificate);
       }
 
-      if (type === LoadBalancerProfileType.Http) {
+      if (type === LoadBalancerProfileTypeEnum.Http) {
         this.form.controls.reverseProxy.setValue(reverseProxy);
       }
     } else {
@@ -130,18 +130,18 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
         null,
         Validators.compose([
           Validators.minLength(50),
-          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileType.ClientSSL),
+          ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileTypeEnum.ClientSsl),
         ]),
       ],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       name: ['', NameValidator()],
-      reverseProxy: [null, ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileType.Http)],
+      reverseProxy: [null, ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerProfileTypeEnum.Http)],
       type: ['', Validators.required],
     });
   }
 
   private createProfile(loadBalancerProfile: LoadBalancerProfile): void {
-    this.profileService.v1LoadBalancerProfilesPost({ loadBalancerProfile }).subscribe(
+    this.profileService.createOneLoadBalancerProfile({ loadBalancerProfile }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -150,7 +150,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
     loadBalancerProfile.tierId = null;
     this.profileService
-      .v1LoadBalancerProfilesIdPut({
+      .updateOneLoadBalancerProfile({
         id: this.profileId,
         loadBalancerProfile,
       })
@@ -163,7 +163,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   private getProfileForSave(): LoadBalancerProfile {
     const { name, type, reverseProxy, certificate, description } = this.form.getRawValue();
 
-    if (type === LoadBalancerProfileType.ClientSSL) {
+    if (type === LoadBalancerProfileTypeEnum.ClientSsl) {
       if (!this.privateKeyCipher) {
         this.toastr.error('Private Key is required.');
         return null;
@@ -186,7 +186,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
       };
     }
 
-    if (type === LoadBalancerProfileType.Http) {
+    if (type === LoadBalancerProfileTypeEnum.Http) {
       return {
         description,
         name,

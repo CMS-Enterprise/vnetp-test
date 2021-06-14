@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { V1JobsService } from 'api_client';
+import { V1JobsService } from 'client';
 
 @Component({
   selector: 'app-jobs',
@@ -24,7 +24,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   getJobs() {
-    this.jobsService.v1JobsGet({ perPage: 100, sort: 'createdAt,DESC' }).subscribe(data => {
+    this.jobsService.getManyJob({ limit: 100, sort: ['createdAt,DESC'] }).subscribe(data => {
       this.jobs = data;
     });
   }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'api_client';
+import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -69,8 +69,8 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(pool: PoolView): void {
     this.entityService.deleteEntity(pool, {
       entityName: 'Pool',
-      delete$: this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }),
-      softDelete$: this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }),
+      delete$: this.poolsService.deleteOneLoadBalancerPool({ id: pool.id }),
+      softDelete$: this.poolsService.softDeleteOneLoadBalancerPool({ id: pool.id }),
       onSuccess: () => this.loadPools(),
     });
   }
@@ -78,7 +78,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadPools(): void {
     this.isLoading = true;
     this.poolsService
-      .v1LoadBalancerPoolsIdTierIdGet({
+      .getPoolsLoadBalancerPool({
         id: this.currentTier.id,
       })
       .subscribe(
@@ -109,7 +109,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(pools: LoadBalancerPoolBulkImportDto[] = []): void {
     this.poolsService
-      .v1LoadBalancerPoolsBulkImportPost({
+      .bulkImportPoolsLoadBalancerPool({
         poolImportCollectionDto: {
           datacenterId: this.datacenterId,
           pools,
@@ -131,7 +131,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!pool.deletedAt) {
       return;
     }
-    this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.loadPools());
+    this.poolsService.restoreOneLoadBalancerPool({ id: pool.id }).subscribe(() => this.loadPools());
   }
 
   private subscribeToDataChanges(): Subscription {

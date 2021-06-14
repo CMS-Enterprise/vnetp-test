@@ -1,4 +1,4 @@
-import { VmwareVirtualMachine } from 'api_client';
+import { VmwareVirtualMachine } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class VirtualMachineModalDto {

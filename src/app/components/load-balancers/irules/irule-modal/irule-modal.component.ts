@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'api_client';
+import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { IRuleModalDto } from './irule-modal.dto';
@@ -91,7 +91,7 @@ export class IRuleModalComponent implements OnInit {
   }
 
   private createIRule(loadBalancerIrule: LoadBalancerIrule): void {
-    this.iRuleService.v1LoadBalancerIrulesPost({ loadBalancerIrule }).subscribe(
+    this.iRuleService.createOneLoadBalancerIrule({ loadBalancerIrule }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -100,7 +100,7 @@ export class IRuleModalComponent implements OnInit {
   private updateIRule(loadBalancerIrule: LoadBalancerIrule): void {
     loadBalancerIrule.tierId = null;
     this.iRuleService
-      .v1LoadBalancerIrulesIdPut({
+      .updateOneLoadBalancerIrule({
         id: this.iRuleId,
         loadBalancerIrule,
       })

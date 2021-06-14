@@ -11,11 +11,11 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 import {
   LoadBalancerPool,
-  LoadBalancerPoolLoadBalancingMethod,
+  LoadBalancerPoolLoadBalancingMethodEnum,
   V1LoadBalancerHealthMonitorsService,
   V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
-} from 'api_client';
+} from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { PoolModalDto } from './pool-modal.dto';
@@ -57,7 +57,7 @@ describe('PoolModalComponent', () => {
       defaultHealthMonitors: [],
       healthMonitors: [],
       id: '2',
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember,
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember,
       name: 'Pool2',
       nodes: [],
       tierId: '1',
@@ -101,7 +101,7 @@ describe('PoolModalComponent', () => {
   });
 
   it('should create a new pool', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerPool');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: PoolModalDto = {
         tierId: '1',
@@ -111,7 +111,7 @@ describe('PoolModalComponent', () => {
 
     component.getData();
     component.form.setValue({
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
       name: 'NewName',
       ratio: null,
       selectedHealthMonitor: null,
@@ -125,14 +125,14 @@ describe('PoolModalComponent', () => {
         defaultHealthMonitors: [],
         healthMonitors: [],
         name: 'NewName',
-        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
         tierId: '1',
       },
     });
   });
 
   it('should update an existing pool', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerPool');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: PoolModalDto = {
         tierId: '1',
@@ -143,7 +143,7 @@ describe('PoolModalComponent', () => {
 
     component.getData();
     component.form.setValue({
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
       name: 'New Name',
       ratio: null,
       selectedHealthMonitor: null,
@@ -157,7 +157,7 @@ describe('PoolModalComponent', () => {
       loadBalancerPool: {
         defaultHealthMonitors: [],
         healthMonitors: [],
-        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+        loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
         name: 'New Name',
         tierId: null,
       },

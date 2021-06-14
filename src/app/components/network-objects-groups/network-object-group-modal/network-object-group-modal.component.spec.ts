@@ -10,7 +10,7 @@ import {
   MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityNetworkObjectGroupsService, V1TiersService } from 'api_client';
+import { V1NetworkSecurityNetworkObjectGroupsService, V1TiersService } from 'client';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
