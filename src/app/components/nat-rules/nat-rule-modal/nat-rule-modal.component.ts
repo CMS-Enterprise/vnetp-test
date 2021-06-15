@@ -116,11 +116,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedSourceNetworkObjectGroupId = null;
     modalNatRule.translatedDestinationNetworkObjectId = null;
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
-    if (modalNatRule.biDirectional === 'false') {
-      modalNatRule.biDirectional = false;
-    } else {
-      modalNatRule.biDirectional = true;
-    }
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceType.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
       modalNatRule.originalServiceObject = null;
