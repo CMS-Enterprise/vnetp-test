@@ -38,7 +38,7 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
 
   public openPhysicalServerModal(modalMode: ModalMode, physicalServer?: PhysicalServer) {
     if (modalMode === ModalMode.Edit && !physicalServer) {
-      throw new Error('Physical Server required.');
+      throw new Error('Physical Server required');
     }
 
     const dto = new PhysicalServerModalDto();

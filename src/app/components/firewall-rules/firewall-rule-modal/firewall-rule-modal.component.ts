@@ -340,7 +340,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       action: ['', Validators.required],
       protocol: ['', Validators.required],
       direction: ['', Validators.required],
-      ruleIndex: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
 
       // Source Network Info
       sourceNetworkType: ['IpAddress'],

@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -50,12 +50,8 @@
           *ngIf="f.type.value == 'IpAddress'"
         />
         <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.ipAddress.errors.required">
-            IP Address is required
-          </div>
-          <div *ngIf="f.ipAddress.errors.invalidIpAny">
-            IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR.
-          </div>
+          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
+          <div *ngIf="f.ipAddress.errors.invalidIpAny">IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR</div>
         </div>
       </div>
 
@@ -75,12 +71,8 @@
         />
 
         <div *ngIf="submitted && f.startIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.required">
-            Start Address is required
-          </div>
-          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress">
-            IP Address is invalid
-          </div>
+          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.required">Start Address is required</div>
+          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress">IP Address is invalid</div>
         </div>
       </div>
 
@@ -97,22 +89,15 @@
           *ngIf="f.type.value == 'Range'"
         />
         <div *ngIf="submitted && f.endIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.endIpAddress.errors.invalidIpAddress">
-            IP Address is invalid
-          </div>
-          <div *ngIf="f.endIpAddress.errors.required">
-            End Address is required
-          </div>
+          <div *ngIf="f.endIpAddress.errors.invalidIpAddress">IP Address is invalid</div>
+          <div *ngIf="f.endIpAddress.errors.required">End Address is required</div>
         </div>
       </div>
 
       <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
         <div class="form-check form-check-inline">
           <input type="checkbox" name="nat" class="form-check-input" formControlName="nat" aria-label="NAT" />
-
-          <label class="form-check-label" for="nat">
-            NAT
-          </label>
+          <label class="form-check-label" for="nat">NAT</label>
           <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.Nat"></tooltip>
         </div>
       </div>
@@ -131,6 +116,9 @@
           <option value="Intervrf">InterVRF</option>
           <option value="External">External</option>
         </select>
+        <div *ngIf="submitted && f.natType.errors" class="invalid-feedback">
+          <div *ngIf="f.natType.errors.required">NAT Type is required</div>
+        </div>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">
@@ -147,12 +135,13 @@
           <option value="In">In</option>
           <option value="Out">Out</option>
         </select>
+        <div *ngIf="submitted && f.natDirection.errors" class="invalid-feedback">
+          <div *ngIf="f.natDirection.errors.required">NAT Direction is required</div>
+        </div>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">
-        <label for="translatedIpAddress">
-          Translated IP Address
-        </label>
+        <label for="translatedIpAddress">Translated IP Address</label>
         <tooltip *ngIf="f.nat.value" [message]="helpText.TranslatedIpAddress"></tooltip>
         <input
           type="text"
@@ -162,15 +151,15 @@
           aria-label="Translated IP"
           [class.is-invalid]="submitted && f.translatedIpAddress.errors"
         />
+        <div *ngIf="submitted && f.translatedIpAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.translatedIpAddress.errors.required">Translated IP Address is required</div>
+        </div>
       </div>
 
       <div class="form-group" *ngIf="f.nat.value">
         <div class="form-check form-check-inline">
           <input type="checkbox" name="natService" class="form-check-input" formControlName="natService" aria-label="NAT Service" />
-
-          <label class="form-check-label" for="nat">
-            NAT Service
-          </label>
+          <label class="form-check-label" for="nat">NAT Service</label>
           <tooltip *ngIf="f.nat.value" [message]="helpText.NatService"></tooltip>
         </div>
       </div>
@@ -190,17 +179,13 @@
           <option value="UDP">UDP</option>
         </select>
         <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
-          <div *ngIf="f.natProtocol.errors.required">
-            NAT Protocol is required
-          </div>
+          <div *ngIf="f.natProtocol.errors.required">NAT Protocol is required</div>
         </div>
       </div>
 
       <div class="form-row" *ngIf="f.natService.value">
         <div class="form-group col-md-6">
-          <label for="natSourcePort">
-            Source Port
-          </label>
+          <label for="natSourcePort">Source Port</label>
           <tooltip *ngIf="f.natService.value" [message]="helpText.NatSourcePort"></tooltip>
           <input
             type="text"
@@ -210,12 +195,13 @@
             [class.is-invalid]="submitted && f.natSourcePort.errors"
             mask="09999"
           />
+          <div *ngIf="submitted && f.natSourcePort.errors" class="invalid-feedback">
+            <div *ngIf="f.natSourcePort.errors.required">Source Port is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-6">
-          <label for="natTranslatedPort">
-            Destination Port
-          </label>
+          <label for="natTranslatedPort">Destination Port</label>
           <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
           <input
             type="text"
@@ -225,6 +211,9 @@
             [class.is-invalid]="submitted && f.natTranslatedPort.errors"
             mask="09999"
           />
+          <div *ngIf="submitted && f.natTranslatedPort.errors" class="invalid-feedback">
+            <div *ngIf="f.natTranslatedPort.errors.required">Destination Port is required</div>
+          </div>
         </div>
       </div>
     </div>

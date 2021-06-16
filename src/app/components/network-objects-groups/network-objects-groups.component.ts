@@ -82,7 +82,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openNetworkObjectModal(modalMode: ModalMode, networkObject?: NetworkObject) {
     if (modalMode === ModalMode.Edit && !networkObject) {
-      throw new Error('Network Object required.');
+      throw new Error('Network Object required');
     }
 
     const dto = new NetworkObjectModalDto();
@@ -102,7 +102,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openNetworkObjectGroupModal(modalMode: ModalMode, networkObjectGroup?: NetworkObjectGroup) {
     if (modalMode === ModalMode.Edit && !networkObjectGroup) {
-      throw new Error('Network Object required.');
+      throw new Error('Network Object required');
     }
 
     const dto = new NetworkObjectGroupModalDto();

@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -69,7 +69,7 @@
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        <span>Save VLAN</span>
+        <span>Save Self IP</span>
       </button>
     </footer>
   </form>

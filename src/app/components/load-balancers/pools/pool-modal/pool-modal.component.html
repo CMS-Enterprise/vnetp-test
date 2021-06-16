@@ -20,7 +20,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -72,8 +72,7 @@
             />
             <div *ngIf="f.servicePort.errors" class="invalid-feedback">
               <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
-              <div *ngIf="f.servicePort.errors.min">Service Port must be greater than or equal to 1.</div>
-              <div *ngIf="f.servicePort.errors.max">Service Port must be equal to or less than 65535.</div>
+              <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
             </div>
           </div>
 

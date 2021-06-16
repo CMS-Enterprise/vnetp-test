@@ -81,7 +81,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openServiceObjectModal(modalMode: ModalMode, serviceObject?: ServiceObject) {
     if (modalMode === ModalMode.Edit && !serviceObject) {
-      throw new Error('Service Object required.');
+      throw new Error('Service Object required');
     }
 
     const dto = new ServiceObjectModalDto();
@@ -101,7 +101,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
-      throw new Error('Service Object required.');
+      throw new Error('Service Object required');
     }
 
     const dto = new ServiceObjectGroupModalDto();
