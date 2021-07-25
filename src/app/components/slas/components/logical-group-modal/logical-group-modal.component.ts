@@ -11,7 +11,7 @@ import {
   V1ActifioGmLogicalGroupsService,
   V1ActifioGmProfilesService,
   V1ActifioGmTemplatesService,
-} from 'api_client';
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -163,7 +163,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
     this.isLoadingVirtualMachines = true;
     this.agmLogicalGroupService
-      .v1ActifioGmLogicalGroupsIdMembersGet({ id: logicalGroupId })
+      .getMembersOfLogicalGroupActifioLogicalGroup({ id: logicalGroupId })
       .subscribe((members: ActifioApplicationDto[]) => {
         this.virtualMachines = members;
         this.isLoadingVirtualMachines = false;
@@ -172,7 +172,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadTemplates(): void {
     this.isLoadingTemplates = true;
-    this.agmTemplateService.v1ActifioGmTemplatesGet({}).subscribe(templates => {
+    this.agmTemplateService.getTemplatesActifioTemplate({}).subscribe(templates => {
       this.templates = templates;
       this.isLoadingTemplates = false;
     });
@@ -180,7 +180,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadProfiles(): void {
     this.isLoadingProfiles = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({}).subscribe(profiles => {
+    this.agmProfileService.getProfilesActifioProfile({}).subscribe(profiles => {
       this.profiles = profiles;
       this.isLoadingProfiles = false;
     });
@@ -188,14 +188,14 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private loadClusters(): void {
     this.isLoadingClusters = true;
-    this.agmClusterService.v1ActifioGmClustersGet({}).subscribe(clusters => {
+    this.agmClusterService.getClustersActifioCluster({}).subscribe(clusters => {
       this.clusters = clusters;
       this.isLoadingClusters = false;
     });
   }
 
   private loadVirtualMachinesOnCluster(clusterId: string): Observable<ActifioApplicationDto[]> {
-    return this.agmApplicationService.v1ActifioGmApplicationsGet({
+    return this.agmApplicationService.getApplicationsActifioApplication({
       logicalGroupMember: false,
       clusterIds: [clusterId],
     });
@@ -203,7 +203,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private createLogicalGroup(dto: ActifioAddOrUpdateLogicalGroupDto): void {
     this.agmLogicalGroupService
-      .v1ActifioGmLogicalGroupsPost({
+      .createLogicalGroupActifioLogicalGroup({
         actifioAddOrUpdateLogicalGroupDto: dto,
       })
       .subscribe(() => this.onClose());
@@ -213,7 +213,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
     if (!logicalGroupId) {
       return;
     }
-    this.agmLogicalGroupService.v1ActifioGmLogicalGroupsIdGet({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
+    this.agmLogicalGroupService.getLogicalGroupActifioLogicalGroup({ id: logicalGroupId }).subscribe(detailedLogicalGroup => {
       const { logicalGroup, members } = detailedLogicalGroup;
       const { name, description, applianceId, sla } = logicalGroup;
 
@@ -231,7 +231,7 @@ export class LogicalGroupModalComponent implements OnInit, OnDestroy {
 
   private updateLogicalGroup(logicalGroupId: string, dto: ActifioAddOrUpdateLogicalGroupDto): void {
     this.agmLogicalGroupService
-      .v1ActifioGmLogicalGroupsIdPut({
+      .updateLogicalGroupActifioLogicalGroup({
         id: logicalGroupId,
         actifioAddOrUpdateLogicalGroupDto: dto,
       })

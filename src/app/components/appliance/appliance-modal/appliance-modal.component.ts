@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
-import { ApplianceNetworkPort, V1AppliancesService, Appliance } from 'api_client';
+import { ApplianceNetworkPort, V1AppliancesService, Appliance } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ApplianceModalDto } from 'src/app/models/appliance/appliance-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -66,7 +66,7 @@ export class ApplianceModalComponent implements OnInit {
       appliance.datacenterId = this.DatacenterId;
 
       this.applianceService
-        .v1AppliancesPost({
+        .createOneAppliance({
           appliance,
         })
         .subscribe(
@@ -77,7 +77,7 @@ export class ApplianceModalComponent implements OnInit {
         );
     } else {
       this.applianceService
-        .v1AppliancesIdPut({
+        .updateOneAppliance({
           id: this.ApplianceId,
           appliance,
         })
@@ -109,6 +109,9 @@ export class ApplianceModalComponent implements OnInit {
 
     if (this.ModalMode === ModalMode.Edit) {
       this.ApplianceId = dto.Appliance.id;
+      this.form.controls.name.disable();
+    } else {
+      this.form.controls.name.enable();
     }
 
     const appliance = dto.Appliance;
@@ -134,6 +137,7 @@ export class ApplianceModalComponent implements OnInit {
       this.form.controls.powerSupplyConnectionType.setValue(appliance.powerSupplyConnectionType);
       this.form.controls.powerSupplyCount.setValue(appliance.powerSupplyCount);
     }
+
     this.ngx.resetModalData('applianceModal');
   }
 
@@ -141,19 +145,19 @@ export class ApplianceModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      rackUnits: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      rackUnits: [1, Validators.compose([Validators.required, Validators.min(1)])],
       serialNumber: ['', Validators.required],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: ['', Validators.required],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: ['', Validators.required],
-      powerSupplyVoltage: ['', Validators.required],
-      powerSupplyWattage: ['', Validators.required],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyVoltage: [1, Validators.compose([Validators.required, Validators.min(1)])],
+      powerSupplyWattage: [1, Validators.compose([Validators.required, Validators.min(1)])],
       powerSupplyConnectionType: ['', Validators.required],
-      powerSupplyCount: ['', Validators.required],
+      powerSupplyCount: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 

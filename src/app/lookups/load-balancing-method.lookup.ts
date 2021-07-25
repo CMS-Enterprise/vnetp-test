@@ -1,20 +1,20 @@
-import { LoadBalancerPoolLoadBalancingMethod } from 'api_client';
+import { LoadBalancerPoolLoadBalancingMethodEnum } from 'client';
 
-export const methodsLookup: Record<LoadBalancerPoolLoadBalancingMethod, string> = {
-  [LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember]: 'Dynamic Ratio Member',
-  [LoadBalancerPoolLoadBalancingMethod.DynamicRatioNode]: 'Dynamic Ratio Node',
-  [LoadBalancerPoolLoadBalancingMethod.FastestAppResponse]: 'Fastest App Response',
-  [LoadBalancerPoolLoadBalancingMethod.FastestNode]: 'Fastest Node',
-  [LoadBalancerPoolLoadBalancingMethod.LeastConnectionsNode]: 'Least Connections Node',
-  [LoadBalancerPoolLoadBalancingMethod.LeastSessions]: 'Least Sessions',
-  [LoadBalancerPoolLoadBalancingMethod.ObservedMember]: 'Observed Member',
-  [LoadBalancerPoolLoadBalancingMethod.ObservedNode]: 'Observed Node',
-  [LoadBalancerPoolLoadBalancingMethod.PredictiveMember]: 'Predictive Member',
-  [LoadBalancerPoolLoadBalancingMethod.PredictiveNode]: 'Predictive Node',
-  [LoadBalancerPoolLoadBalancingMethod.RatioLeastConnectionsMember]: 'Ratio Least Connections Member',
-  [LoadBalancerPoolLoadBalancingMethod.RatioLeastConnectionsNode]: 'Ratio Least Connections Node',
-  [LoadBalancerPoolLoadBalancingMethod.RatioMember]: 'Ratio Member',
-  [LoadBalancerPoolLoadBalancingMethod.RatioNode]: 'Ratio Node',
-  [LoadBalancerPoolLoadBalancingMethod.RatioSession]: 'Ratio Session',
-  [LoadBalancerPoolLoadBalancingMethod.RoundRobin]: 'Round Robin',
+export const methodsLookup: Record<LoadBalancerPoolLoadBalancingMethodEnum, string> = {
+  [LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember]: 'Dynamic Ratio Member',
+  [LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioNode]: 'Dynamic Ratio Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.FastestAppResponse]: 'Fastest App Response',
+  [LoadBalancerPoolLoadBalancingMethodEnum.FastestNode]: 'Fastest Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.LeastConnectionsNode]: 'Least Connections Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.LeastSessions]: 'Least Sessions',
+  [LoadBalancerPoolLoadBalancingMethodEnum.ObservedMember]: 'Observed Member',
+  [LoadBalancerPoolLoadBalancingMethodEnum.ObservedNode]: 'Observed Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember]: 'Predictive Member',
+  [LoadBalancerPoolLoadBalancingMethodEnum.PredictiveNode]: 'Predictive Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RatioLeastConnectionsMember]: 'Ratio Least Connections Member',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RatioLeastConnectionsNode]: 'Ratio Least Connections Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RatioMember]: 'Ratio Member',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RatioNode]: 'Ratio Node',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RatioSession]: 'Ratio Session',
+  [LoadBalancerPoolLoadBalancingMethodEnum.RoundRobin]: 'Round Robin',
 };

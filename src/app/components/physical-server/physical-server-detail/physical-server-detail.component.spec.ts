@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { V1PhysicalServersService } from 'api_client';
+import { V1PhysicalServersService } from 'client';
 
 describe('PhysicalServerDetailComponent', () => {
   let component: PhysicalServerDetailComponent;

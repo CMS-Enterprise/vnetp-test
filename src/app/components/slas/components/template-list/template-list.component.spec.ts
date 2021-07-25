@@ -1,12 +1,12 @@
 import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioTemplateDto, V1ActifioGmTemplatesService } from 'client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import { TemplateListComponent } from './template-list.component';
+import { TemplateListComponent, TemplateView } from './template-list.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('TemplateListComponent', () => {
@@ -53,7 +53,7 @@ describe('TemplateListComponent', () => {
 
   it('should call to get templates on init', () => {
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    const spy = jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
+    const spy = jest.spyOn(templateService, 'getTemplatesActifioTemplate').mockImplementation(() => of(createTemplates()));
 
     component.ngOnInit();
 
@@ -62,9 +62,9 @@ describe('TemplateListComponent', () => {
 
   it('should default an empty description to be "--"', () => {
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => {
+    jest.spyOn(templateService, 'getTemplatesActifioTemplate').mockImplementation(() => {
       const templates = createTemplates();
-      templates[0].description = undefined;
+      (templates as TemplateView[])[0].description = undefined;
       return of(templates);
     });
     component.ngOnInit();
@@ -75,12 +75,12 @@ describe('TemplateListComponent', () => {
 
   it('should set the time window to "--" when a snapshot policy does not exist', done => {
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
-    jest.spyOn(templateService, 'v1ActifioGmTemplatesIdPolicyGet').mockImplementation(() => of([]));
+    jest.spyOn(templateService, 'getTemplatesActifioTemplate').mockImplementation(() => of(createTemplates()));
+    jest.spyOn(templateService, 'getTemplatePoliciesActifioTemplate').mockImplementation(() => of([]));
 
     component.ngOnInit();
 
-    const [template1] = component.templates;
+    const [template1] = component.templates as TemplateView[];
     template1.snapshotPolicyTimeWindow.subscribe((date: string) => {
       expect(date).toBe('--');
       done();
@@ -89,8 +89,8 @@ describe('TemplateListComponent', () => {
 
   it('should set the time window of a template snapshot policy', done => {
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    jest.spyOn(templateService, 'v1ActifioGmTemplatesGet').mockImplementation(() => of(createTemplates()));
-    jest.spyOn(templateService, 'v1ActifioGmTemplatesIdPolicyGet').mockImplementation(() => {
+    jest.spyOn(templateService, 'getTemplatesActifioTemplate').mockImplementation(() => of(createTemplates()));
+    jest.spyOn(templateService, 'getTemplatePoliciesActifioTemplate').mockImplementation(() => {
       const snapshotPolicy = {
         startTime: 10 * 60 * 60,
         endTime: 20 * 60 * 60,
@@ -100,7 +100,7 @@ describe('TemplateListComponent', () => {
 
     component.ngOnInit();
 
-    const [template1] = component.templates;
+    const [template1] = component.templates as TemplateView[];
     template1.snapshotPolicyTimeWindow.subscribe((date: string) => {
       expect(date).toBe('10:00 to 20:00');
       done();
@@ -115,7 +115,7 @@ describe('TemplateListComponent', () => {
       return of().subscribe();
     });
 
-    const deleteSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesIdDelete');
+    const deleteSpy = jest.spyOn(templateService, 'deleteTemplateActifioTemplate');
 
     component.deleteTemplate({ id: '1', name: 'Test' });
 

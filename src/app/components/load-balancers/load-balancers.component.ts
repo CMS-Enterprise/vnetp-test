@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ContentChild, Query, AfterContentChecked, AfterContentInit } from '@angular/core';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Datacenter, Tier } from 'api_client';
+import { Datacenter, Tier } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';

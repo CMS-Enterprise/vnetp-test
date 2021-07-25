@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'api_client';
+import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NodeListComponent, ImportNode, NodeView } from './node-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('NodeListComponent', () => {
   });
 
   it('should map nodes', () => {
-    jest.spyOn(service, 'v1LoadBalancerNodesGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => {
       return of(([
         { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
         { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
@@ -71,6 +71,7 @@ describe('NodeListComponent', () => {
       id: '1',
       ipAddress: '--',
       name: 'Node1',
+      nameView: 'Node1',
       provisionedAt: {},
       state: 'Provisioned',
     });
@@ -81,13 +82,14 @@ describe('NodeListComponent', () => {
       id: '2',
       ipAddress: '192.168.1.1',
       name: 'Node2',
+      nameView: 'Node2',
       state: 'Not Provisioned',
     });
   });
 
   it('should default nodes to be empty on error', () => {
     component.nodes = [{ id: '1', name: 'Node1' }] as NodeView[];
-    jest.spyOn(service, 'v1LoadBalancerNodesGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -96,12 +98,12 @@ describe('NodeListComponent', () => {
 
   it('should import nodes', () => {
     const nodes = [{ name: 'Node1', vrfName: 'Tier1' }, { name: 'Node2' }] as ImportNode[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerNodesBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerNode');
 
     component.import(nodes);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerNodeBulkDto: {
+      createManyLoadBalancerNodeDto: {
         bulk: [{ name: 'Node1', tierId: '1', vrfName: 'Tier1' }, { name: 'Node2' }],
       },
     });
@@ -117,7 +119,7 @@ describe('NodeListComponent', () => {
   });
 
   it('should restore a node', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerNodesIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerNode');
 
     component.restore({} as NodeView);
     expect(spy).not.toHaveBeenCalled();

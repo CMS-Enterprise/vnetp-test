@@ -1,4 +1,4 @@
-import { PhysicalServer } from 'api_client';
+import { PhysicalServer } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class PhysicalServerModalDto {

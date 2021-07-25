@@ -4,15 +4,15 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerHealthMonitor,
-  LoadBalancerHealthMonitorType,
+  LoadBalancerHealthMonitorTypeEnum,
   LoadBalancerNode,
   LoadBalancerPool,
-  LoadBalancerPoolDefaultHealthMonitors,
-  LoadBalancerPoolLoadBalancingMethod,
+  LoadBalancerPoolDefaultHealthMonitorsEnum,
+  LoadBalancerPoolLoadBalancingMethodEnum,
   V1LoadBalancerHealthMonitorsService,
   V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
-} from 'api_client';
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { PoolModalDto } from './pool-modal.dto';
@@ -36,19 +36,19 @@ export class PoolModalComponent implements OnInit {
   public availableHealthMonitors: LoadBalancerHealthMonitor[] = [];
   public availableNodes: LoadBalancerNode[] = [];
 
-  public selectedDefaultHealthMonitors: LoadBalancerPoolDefaultHealthMonitors[] = [];
+  public selectedDefaultHealthMonitors: LoadBalancerPoolDefaultHealthMonitorsEnum[] = [];
   public selectedHealthMonitors: LoadBalancerHealthMonitor[] = [];
   public selectedNodes: LoadBalancerNode[] = [];
 
   public defaultHealthMonitors = [
-    LoadBalancerPoolDefaultHealthMonitors.HTTP,
-    LoadBalancerPoolDefaultHealthMonitors.HTTPS,
-    LoadBalancerPoolDefaultHealthMonitors.TCP,
-    LoadBalancerPoolDefaultHealthMonitors.UDP,
+    LoadBalancerPoolDefaultHealthMonitorsEnum.Http,
+    LoadBalancerPoolDefaultHealthMonitorsEnum.Https,
+    LoadBalancerPoolDefaultHealthMonitorsEnum.Tcp,
+    LoadBalancerPoolDefaultHealthMonitorsEnum.Udp,
   ];
-  public methods: LoadBalancerPoolLoadBalancingMethod[] = Object.keys(LoadBalancerPoolLoadBalancingMethod)
+  public methods: LoadBalancerPoolLoadBalancingMethodEnum[] = Object.keys(LoadBalancerPoolLoadBalancingMethodEnum)
     .map(k => {
-      return LoadBalancerPoolLoadBalancingMethod[k];
+      return LoadBalancerPoolLoadBalancingMethodEnum[k];
     })
     .sort();
   public methodsLookup = methodsLookup;
@@ -114,7 +114,7 @@ export class PoolModalComponent implements OnInit {
     if (this.isDefaultHealthMonitor(healthMonitorId)) {
       this.selectedDefaultHealthMonitors.push(healthMonitorId);
       this.poolService
-        .v1LoadBalancerPoolsIdPatch({
+        .updateOneLoadBalancerPool({
           id: this.poolId,
           loadBalancerPool: {
             defaultHealthMonitors: this.selectedDefaultHealthMonitors,
@@ -126,7 +126,7 @@ export class PoolModalComponent implements OnInit {
         });
     } else {
       this.poolService
-        .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdPost({
+        .addNodeToPoolLoadBalancerPoolHealthMonitor({
           poolId: this.poolId,
           healthMonitorId: this.f.selectedHealthMonitor.value,
         })
@@ -144,7 +144,7 @@ export class PoolModalComponent implements OnInit {
     }
 
     this.poolService
-      .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortRatioRatioPost({
+      .addNodeToPoolLoadBalancerPoolNode({
         poolId: this.poolId,
         nodeId: selectedNode.id,
         servicePort,
@@ -158,7 +158,7 @@ export class PoolModalComponent implements OnInit {
       });
   }
 
-  public removeHealthMonitor(healthMonitorId: string | LoadBalancerHealthMonitorType, isDefaultHealthMonitor = false): void {
+  public removeHealthMonitor(healthMonitorId: string | LoadBalancerHealthMonitorTypeEnum, isDefaultHealthMonitor = false): void {
     const healthMonitorName = isDefaultHealthMonitor
       ? healthMonitorId
       : ObjectUtil.getObjectName(healthMonitorId, this.availableHealthMonitors);
@@ -174,7 +174,7 @@ export class PoolModalComponent implements OnInit {
       if (isDefaultHealthMonitor) {
         this.selectedDefaultHealthMonitors = this.selectedDefaultHealthMonitors.filter(h => h !== healthMonitorId);
         this.poolService
-          .v1LoadBalancerPoolsIdPatch({
+          .updateOneLoadBalancerPool({
             id: this.poolId,
             loadBalancerPool: {
               defaultHealthMonitors: this.selectedDefaultHealthMonitors,
@@ -185,7 +185,7 @@ export class PoolModalComponent implements OnInit {
           });
       } else {
         this.poolService
-          .v1LoadBalancerPoolsPoolIdHealthMonitorHealthMonitorIdDelete({
+          .removeNodeFromPoolLoadBalancerPoolHealthMonitor({
             poolId: this.poolId,
             healthMonitorId,
           })
@@ -207,7 +207,7 @@ export class PoolModalComponent implements OnInit {
     );
     const onConfirm = () => {
       this.poolService
-        .v1LoadBalancerPoolsPoolIdNodeNodeIdServicePortServicePortDelete({
+        .removeNodeFromPoolLoadBalancerPoolNode({
           poolId: this.poolId,
           nodeId: nodeToPool.loadBalancerNode.id,
           servicePort: nodeToPool.servicePort,
@@ -245,7 +245,7 @@ export class PoolModalComponent implements OnInit {
     this.ngx.resetModalData('poolModal');
   }
 
-  private isDefaultHealthMonitor(type: LoadBalancerPoolDefaultHealthMonitors): type is LoadBalancerPoolDefaultHealthMonitors {
+  private isDefaultHealthMonitor(type: LoadBalancerPoolDefaultHealthMonitorsEnum): type is LoadBalancerPoolDefaultHealthMonitorsEnum {
     return this.defaultHealthMonitors.includes(type);
   }
 
@@ -263,7 +263,7 @@ export class PoolModalComponent implements OnInit {
   }
 
   private createPool(loadBalancerPool: LoadBalancerPool): void {
-    this.poolService.v1LoadBalancerPoolsPost({ loadBalancerPool }).subscribe(
+    this.poolService.createOneLoadBalancerPool({ loadBalancerPool }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -272,7 +272,7 @@ export class PoolModalComponent implements OnInit {
   private updatePool(loadBalancerPool: LoadBalancerPool): void {
     loadBalancerPool.tierId = null;
     this.poolService
-      .v1LoadBalancerPoolsIdPut({
+      .updateOneLoadBalancerPool({
         id: this.poolId,
         loadBalancerPool,
       })
@@ -286,7 +286,7 @@ export class PoolModalComponent implements OnInit {
     if (!this.poolId) {
       return;
     }
-    this.poolService.v1LoadBalancerPoolsIdPoolIdGet({ id: this.poolId }).subscribe((pools: LoadBalancerPool[]) => {
+    this.poolService.getPoolLoadBalancerPool({ id: this.poolId }).subscribe((pools: LoadBalancerPool[]) => {
       const [pool] = pools;
       this.selectedHealthMonitors = pool.healthMonitors;
       this.selectedNodes = pool.nodes;
@@ -295,19 +295,19 @@ export class PoolModalComponent implements OnInit {
 
   private loadAvailableResources(): void {
     this.nodesService
-      .v1LoadBalancerNodesGet({
-        filter: `tierId||eq||${this.tierId}`,
+      .getManyLoadBalancerNode({
+        filter: [`tierId||eq||${this.tierId}`],
       })
-      .subscribe(nodes => {
-        this.availableNodes = nodes;
+      .subscribe((nodes: unknown) => {
+        this.availableNodes = nodes as LoadBalancerNode[];
       });
 
     this.healthMonitorsService
-      .v1LoadBalancerHealthMonitorsGet({
-        filter: `tierId||eq||${this.tierId}`,
+      .getManyLoadBalancerHealthMonitor({
+        filter: [`tierId||eq||${this.tierId}`],
       })
-      .subscribe(healthMonitors => {
-        this.availableHealthMonitors = healthMonitors;
+      .subscribe((healthMonitors: unknown) => {
+        this.availableHealthMonitors = healthMonitors as LoadBalancerHealthMonitor[];
       });
   }
 }

@@ -23,7 +23,7 @@ import {
   V1NetworkSecurityServiceObjectGroupsService,
   FirewallRuleImport,
   FirewallRulePreview,
-} from 'api_client';
+} from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -122,7 +122,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   getFirewallRuleGroup(): void {
     this.firewallRuleGroupService
-      .v1NetworkSecurityFirewallRuleGroupsIdGet({
+      .getOneFirewallRuleGroup({
         id: this.Id,
       })
       .subscribe(data => {
@@ -140,46 +140,45 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   getFirewallRules(): void {
     this.firewallRuleService
-      .v1NetworkSecurityFirewallRulesGet({
-        filter: `firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`,
-        perPage: this.perPage,
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        limit: this.perPage,
         page: this.currentFirewallRulePage,
       })
-      .subscribe(data => {
+      .subscribe(result => {
         // TODO: Review this approach, see if we can resolve
         // this in the generated client.
-        const result = data as any;
         this.firewallRules = result.data;
         this.totalFirewallRules = result.total;
       });
   }
 
   getObjects(): void {
-    const tierRequest = this.tierService.v1TiersIdGet({ id: this.TierId });
-    const networkObjectRequest = this.networkObjectService.v1NetworkSecurityNetworkObjectsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const tierRequest = this.tierService.getOneTier({ id: this.TierId });
+    const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
-    const networkObjectGroupRequest = this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
-    const serviceObjectRequest = this.serviceObjectService.v1NetworkSecurityServiceObjectsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
-    const serviceObjectGroupRequest = this.serviceObjectGroupService.v1NetworkSecurityServiceObjectGroupsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
 
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
-      result => {
+      (result: unknown) => {
         this.TierName = result[0].name;
-        this.networkObjects = result[1];
-        this.networkObjectGroups = result[2];
-        this.serviceObjects = result[3];
-        this.serviceObjectGroups = result[4];
+        this.networkObjects = (result as NetworkObject)[1];
+        this.networkObjectGroups = (result as NetworkObjectGroup)[2];
+        this.serviceObjects = (result as ServiceObject)[3];
+        this.serviceObjectGroups = (result as ServiceObjectGroup)[4];
 
         this.getFirewallRules();
       },
@@ -228,15 +227,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public deleteFirewallRule(firewallRule: FirewallRule): void {
     this.entityService.deleteEntity(firewallRule, {
       entityName: 'Firewall Rule',
-      delete$: this.firewallRuleService.v1NetworkSecurityFirewallRulesIdDelete({ id: firewallRule.id }),
-      softDelete$: this.firewallRuleService.v1NetworkSecurityFirewallRulesIdSoftDelete({ id: firewallRule.id }),
+      delete$: this.firewallRuleService.deleteOneFirewallRule({ id: firewallRule.id }),
+      softDelete$: this.firewallRuleService.softDeleteOneFirewallRule({ id: firewallRule.id }),
       onSuccess: () => this.getFirewallRules(),
     });
   }
 
   restoreFirewallRule(firewallRule: FirewallRule): void {
     if (firewallRule.deletedAt) {
-      this.firewallRuleService.v1NetworkSecurityFirewallRulesIdRestorePatch({ id: firewallRule.id }).subscribe(() => {
+      this.firewallRuleService.restoreOneFirewallRule({ id: firewallRule.id }).subscribe(() => {
         this.getFirewallRules();
       });
     }
@@ -250,7 +249,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     };
 
     this.firewallRuleService
-      .v1NetworkSecurityFirewallRulesBulkImportPost({
+      .bulkImportFirewallRulesFirewallRule({
         firewallRuleImportCollectionDto: fwDto,
       })
       .subscribe(data => {
@@ -312,7 +311,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         };
 
         this.firewallRuleService
-          .v1NetworkSecurityFirewallRulesBulkImportPost({
+          .bulkImportFirewallRulesFirewallRule({
             firewallRuleImportCollectionDto: firewallConfirmDto,
           })
           .subscribe(() => {

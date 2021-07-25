@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PriorityGroup, VmwareVirtualMachine, V1VmwareVirtualMachinesService, V1PriorityGroupsService } from 'api_client';
+import { PriorityGroup, VmwareVirtualMachine, V1VmwareVirtualMachinesService, V1PriorityGroupsService } from 'client';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -94,8 +94,8 @@ export class PriorityGroupModalComponent implements OnInit {
     const datacenterFilter = `datacenterId||eq||${this.datacenterId}`;
     const priorityGroupFilter = priorityGroupId ? `priorityGroupId||eq||${priorityGroupId}` : 'priorityGroupId||isnull';
     const filter = `${datacenterFilter},${priorityGroupFilter}`;
-    this.virtualMachineService.v1VmwareVirtualMachinesGet({ filter }).subscribe(data => {
-      this.virtualMachines = data.map(vm => {
+    this.virtualMachineService.getManyVmwareVirtualMachine({ filter: [filter] }).subscribe((data: unknown) => {
+      this.virtualMachines = (data as VmwareVirtualMachine[]).map(vm => {
         return {
           ...vm,
           isSelected: !!vm.priorityGroupId,
@@ -113,28 +113,34 @@ export class PriorityGroupModalComponent implements OnInit {
 
   private createPriorityGroup(priorityGroup: PriorityGroup): void {
     this.priorityGroupService
-      .v1PriorityGroupsPost({
+      .createOnePriorityGroup({
         createPriorityGroupDto: {
           ...priorityGroup,
           vmwareVirtualMachineIds: this.virtualMachines.filter(vm => vm.isSelected).map(vm => vm.id),
         },
       })
-      .subscribe(() => {
-        this.closeModal();
-      });
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 
   private updatePriorityGroup(priorityGroup: PriorityGroup): void {
     priorityGroup.datacenterId = null;
 
     this.priorityGroupService
-      .v1PriorityGroupsIdPut({
+      .updateOnePriorityGroup({
         id: this.priorityGroupId,
         priorityGroup,
       })
-      .subscribe(() => {
-        this.closeModal();
-      });
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
   }
 }
 

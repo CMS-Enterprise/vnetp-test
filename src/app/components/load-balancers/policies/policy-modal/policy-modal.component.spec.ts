@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { PolicyModalComponent } from './policy-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerPolicy, LoadBalancerPolicyType, V1LoadBalancerPoliciesService } from 'api_client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, V1LoadBalancerPoliciesService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { PolicyModalDto } from './policy-modal.dto';
 
@@ -33,7 +33,7 @@ describe('PolicyModalComponent', () => {
       tierId: '1',
       id: '2',
       name: 'Node2',
-      type: LoadBalancerPolicyType.APM,
+      type: LoadBalancerPolicyTypeEnum.Apm,
       apmContent: 'APM',
       asmContent: null,
     };
@@ -54,7 +54,7 @@ describe('PolicyModalComponent', () => {
 
   it('asmContent should be required when type is "ASM"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerPolicyType.ASM);
+    type.setValue(LoadBalancerPolicyTypeEnum.Asm);
     fixture.detectChanges();
 
     expect(TestUtil.isFormControlRequired(component.f.asmContent)).toBe(true);
@@ -63,7 +63,7 @@ describe('PolicyModalComponent', () => {
 
   it('apmContent should be required when type is "APM"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerPolicyType.APM);
+    type.setValue(LoadBalancerPolicyTypeEnum.Apm);
     fixture.detectChanges();
 
     expect(TestUtil.isFormControlRequired(component.f.apmContent)).toBe(true);
@@ -88,7 +88,7 @@ describe('PolicyModalComponent', () => {
   });
 
   it('should create a new policy', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoliciesPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerPolicy');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: PolicyModalDto = {
         tierId: '1',
@@ -101,7 +101,7 @@ describe('PolicyModalComponent', () => {
       apmContent: null,
       asmContent: null,
       name: 'Node1',
-      type: LoadBalancerPolicyType.APM,
+      type: LoadBalancerPolicyTypeEnum.Apm,
     });
     component.f.apmContent.setValue('APM Content');
     component.save();
@@ -112,13 +112,13 @@ describe('PolicyModalComponent', () => {
         asmContent: null,
         name: 'Node1',
         tierId: '1',
-        type: LoadBalancerPolicyType.APM,
+        type: LoadBalancerPolicyTypeEnum.Apm,
       },
     });
   });
 
   it('should update an existing policy', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoliciesIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerPolicy');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: PolicyModalDto = {
         tierId: '1',
@@ -132,7 +132,7 @@ describe('PolicyModalComponent', () => {
       apmContent: null,
       asmContent: null,
       name: 'NewName',
-      type: LoadBalancerPolicyType.APM,
+      type: LoadBalancerPolicyTypeEnum.Apm,
     });
     component.f.apmContent.setValue('APM Content');
     component.save();
@@ -144,7 +144,7 @@ describe('PolicyModalComponent', () => {
         asmContent: null,
         name: 'NewName',
         tierId: null,
-        type: LoadBalancerPolicyType.APM,
+        type: LoadBalancerPolicyTypeEnum.Apm,
       },
     });
   });

@@ -11,10 +11,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import {
   LoadBalancerPool,
   LoadBalancerPoolBulkImportDto,
-  LoadBalancerPoolLoadBalancingMethod,
+  LoadBalancerPoolLoadBalancingMethodEnum,
   Tier,
   V1LoadBalancerPoolsService,
-} from 'api_client';
+} from 'client';
 import { PoolListComponent, PoolView } from './pool-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -60,18 +60,18 @@ describe('PoolListComponent', () => {
   });
 
   it('should map pools', () => {
-    jest.spyOn(service, 'v1LoadBalancerPoolsIdTierIdGet').mockImplementation(() => {
+    jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => {
       return of(([
         {
           id: '1',
           name: 'Pool1',
-          loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+          loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
           provisionedAt: {},
           nodes: [{}],
           healthMonitors: [{}],
           defaultHealthMonitors: [{}],
         },
-        { id: '2', name: 'Pool2', loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember },
+        { id: '2', name: 'Pool2', loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember },
       ] as LoadBalancerPool[]) as any);
     });
 
@@ -82,9 +82,10 @@ describe('PoolListComponent', () => {
       defaultHealthMonitors: [{}],
       healthMonitors: [{}],
       id: '1',
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.PredictiveMember,
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
       methodName: 'Predictive Member',
       name: 'Pool1',
+      nameView: 'Pool1',
       nodes: [{}],
       provisionedAt: {},
       state: 'Provisioned',
@@ -94,9 +95,10 @@ describe('PoolListComponent', () => {
 
     expect(pool2).toEqual({
       id: '2',
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethod.DynamicRatioMember,
+      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember,
       methodName: 'Dynamic Ratio Member',
       name: 'Pool2',
+      nameView: 'Pool2',
       state: 'Not Provisioned',
       totalHealthMonitors: 0,
       totalNodes: 0,
@@ -105,7 +107,7 @@ describe('PoolListComponent', () => {
 
   it('should default pools to be empty on error', () => {
     component.pools = [{ id: '1', name: 'Pool1' }] as PoolView[];
-    jest.spyOn(service, 'v1LoadBalancerPoolsIdTierIdGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -114,7 +116,7 @@ describe('PoolListComponent', () => {
 
   it('should import pools', () => {
     const pools = [{ name: 'Pool1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsBulkImportPost');
+    const spy = jest.spyOn(service, 'bulkImportPoolsLoadBalancerPool');
 
     component.import(pools);
 
@@ -136,7 +138,7 @@ describe('PoolListComponent', () => {
   });
 
   it('should restore a pool', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoolsIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerPool');
 
     component.restore({} as PoolView);
     expect(spy).not.toHaveBeenCalled();

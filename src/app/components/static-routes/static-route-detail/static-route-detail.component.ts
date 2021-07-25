@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
+import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -64,8 +64,8 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   public deleteStaticRoute(staticRoute: StaticRoute): void {
     this.entityService.deleteEntity(staticRoute, {
       entityName: 'Static Route',
-      delete$: this.staticRouteService.v1NetworkStaticRoutesIdDelete({ id: staticRoute.id }),
-      softDelete$: this.staticRouteService.v1NetworkStaticRoutesIdSoftDelete({ id: staticRoute.id }),
+      delete$: this.staticRouteService.deleteOneStaticRoute({ id: staticRoute.id }),
+      softDelete$: this.staticRouteService.softDeleteOneStaticRoute({ id: staticRoute.id }),
       onSuccess: () => this.getStaticRoutes(),
     });
   }
@@ -74,13 +74,13 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     if (!staticRoute.deletedAt) {
       return;
     }
-    this.staticRouteService.v1NetworkStaticRoutesIdRestorePatch({ id: staticRoute.id }).subscribe(() => {
+    this.staticRouteService.restoreOneStaticRoute({ id: staticRoute.id }).subscribe(() => {
       this.getStaticRoutes();
     });
   }
 
   getStaticRoutes() {
-    this.tierService.v1TiersIdGet({ id: this.Id, join: 'staticRoutes' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.Id, join: ['staticRoutes'] }).subscribe(data => {
       this.tier = data;
       this.staticRoutes = data.staticRoutes;
     });

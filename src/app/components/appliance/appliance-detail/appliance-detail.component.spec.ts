@@ -11,7 +11,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1AppliancesService } from 'api_client';
+import { V1AppliancesService } from 'client';
 
 describe('ApplianceDetailComponent', () => {
   let component: ApplianceDetailComponent;

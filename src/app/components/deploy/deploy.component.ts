@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupType } from 'api_client';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupTypeEnum } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
@@ -56,11 +56,11 @@ export class DeployComponent implements OnInit {
 
   private getTierGroups(loadTiers = false): void {
     this.tierGroupService
-      .v1TierGroupsGet({
-        filter: `datacenterId||eq||${this.currentDatacenter.id}`,
+      .getManyTierGroup({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
       })
-      .subscribe(data => {
-        this.tierGroups = data;
+      .subscribe((data: unknown) => {
+        this.tierGroups = data as TierGroup[];
 
         if (loadTiers) {
           this.getTiers();
@@ -70,12 +70,12 @@ export class DeployComponent implements OnInit {
 
   private getTiers(): void {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
+      .getManyDatacenterTier({
         datacenterId: this.currentDatacenter.id,
-        join: 'firewallRuleGroups',
+        join: ['firewallRuleGroups'],
       })
-      .subscribe(data => {
-        this.tiers = data.map(tier => new TableRowWrapper(tier));
+      .subscribe((data: unknown) => {
+        this.tiers = (data as Tier[]).map(tier => new TableRowWrapper(tier));
       });
   }
 
@@ -89,7 +89,7 @@ export class DeployComponent implements OnInit {
         tierId: tier.id,
       };
 
-      this.jobService.v1JobsPost({ job: tierProvisionJob }).subscribe(() => {});
+      this.jobService.createOneJob({ job: tierProvisionJob }).subscribe(() => {});
 
       const tierNetworkSecurityJob = {} as Job;
 
@@ -97,11 +97,11 @@ export class DeployComponent implements OnInit {
       tierNetworkSecurityJob.jobType = 'provision-tier-network-security';
       tierNetworkSecurityJob.definition = {
         tierId: tier.id,
-        intervrfFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.Intervrf).id,
-        externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupType.External).id,
+        intervrfFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupTypeEnum.Intervrf).id,
+        externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupTypeEnum.External).id,
       };
 
-      this.jobService.v1JobsPost({ job: tierNetworkSecurityJob }).subscribe(() => {});
+      this.jobService.createOneJob({ job: tierNetworkSecurityJob }).subscribe(() => {});
     });
   }
 

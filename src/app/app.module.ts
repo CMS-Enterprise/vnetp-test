@@ -36,7 +36,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
-import { ApiModule, Configuration, ConfigurationParameters } from 'api_client';
+import { ApiModule, Configuration, ConfigurationParameters } from 'client';
 import { environment } from 'src/environments/environment';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';

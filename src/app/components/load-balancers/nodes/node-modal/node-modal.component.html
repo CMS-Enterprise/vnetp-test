@@ -13,7 +13,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -40,7 +40,7 @@
           [class.is-invalid]="submitted && f.ipAddress.errors"
         />
         <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.ipAddress.errors.required">IP Address is required.</div>
+          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
           <div *ngIf="f.ipAddress.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
         </div>
       </div>
@@ -51,7 +51,7 @@
           <label for="fqdn">FQDN</label>
           <input id="fqdn" name="fqdn" formControlName="fqdn" class="form-control" [class.is-invalid]="submitted && f.fqdn.errors" />
           <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
-            <div *ngIf="f.fqdn.errors.required">FQDN is required.</div>
+            <div *ngIf="f.fqdn.errors.required">FQDN is required</div>
             <div *ngIf="f.fqdn.errors.invalidFqdn">Invalid FQDN.</div>
           </div>
         </div>

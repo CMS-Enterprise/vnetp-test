@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'api_client';
+import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 
 export interface NodeView extends LoadBalancerNode {
+  nameView: string;
   state: string;
   autoPopulateView: string;
 }
@@ -28,7 +29,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<NodeView> = {
     description: 'Nodes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'FQDN', property: 'fqdn' },
@@ -66,8 +67,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(node: NodeView): void {
     this.entityService.deleteEntity(node, {
       entityName: 'Node',
-      delete$: this.nodesService.v1LoadBalancerNodesIdDelete({ id: node.id }),
-      softDelete$: this.nodesService.v1LoadBalancerNodesIdSoftDelete({ id: node.id }),
+      delete$: this.nodesService.deleteOneLoadBalancerNode({ id: node.id }),
+      softDelete$: this.nodesService.softDeleteOneLoadBalancerNode({ id: node.id }),
       onSuccess: () => this.loadNodes(),
     });
   }
@@ -75,18 +76,19 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadNodes(): void {
     this.isLoading = true;
     this.nodesService
-      .v1LoadBalancerNodesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerNode({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        nodes => {
-          this.nodes = nodes.map(n => {
+        (nodes: unknown) => {
+          this.nodes = (nodes as NodeView[]).map(n => {
             const defaultVal = (key: keyof LoadBalancerNode) => {
               const val = n[key];
               return val === null || val === undefined ? '--' : n[key].toString();
             };
             return {
               ...n,
+              nameView: n.name.length >= 20 ? n.name.slice(0, 19) + '...' : n.name,
               state: n.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               ipAddress: defaultVal('ipAddress'),
               fqdn: defaultVal('fqdn'),
@@ -118,8 +120,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.nodesService
-      .v1LoadBalancerNodesBulkPost({
-        generatedLoadBalancerNodeBulkDto: { bulk },
+      .createManyLoadBalancerNode({
+        createManyLoadBalancerNodeDto: { bulk },
       })
       .subscribe(() => this.loadNodes());
   }
@@ -137,7 +139,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!node.deletedAt) {
       return;
     }
-    this.nodesService.v1LoadBalancerNodesIdRestorePatch({ id: node.id }).subscribe(() => this.loadNodes());
+    this.nodesService.restoreOneLoadBalancerNode({ id: node.id }).subscribe(() => this.loadNodes());
   }
 
   private subscribeToDataChanges(): Subscription {

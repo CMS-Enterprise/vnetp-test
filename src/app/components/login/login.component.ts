@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { first } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { UserPass } from 'api_client/model/userPass';
+import { UserPass } from 'client/model/userPass';
 import { environment } from 'src/environments/environment';
 import { TenantName } from '../../models/other/tenant-name';
 

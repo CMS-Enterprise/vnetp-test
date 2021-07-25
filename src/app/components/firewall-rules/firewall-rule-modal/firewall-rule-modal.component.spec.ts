@@ -2,9 +2,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockNgxSmartModalComponent,
+  MockNgSelectComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityFirewallRulesService } from 'api_client';
+import { V1NetworkSecurityFirewallRulesService } from 'client';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -13,7 +18,13 @@ describe('FirewallRuleModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [FirewallRuleModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [
+        FirewallRuleModalComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        MockNgSelectComponent,
+      ],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityFirewallRulesService)],
     })
       .compileComponents()

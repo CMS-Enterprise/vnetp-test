@@ -12,7 +12,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1DatacentersService, V1AppliancesService, Appliance } from 'api_client';
+import { V1DatacentersService, V1AppliancesService, Appliance } from 'client';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { EntityService } from 'src/app/services/entity.service';
@@ -71,7 +71,7 @@ describe('ApplianceComponent', () => {
       } as Appliance;
 
       const applianceService = TestBed.inject(V1AppliancesService);
-      const restoreSpy = jest.spyOn(applianceService, 'v1AppliancesIdRestorePatch');
+      const restoreSpy = jest.spyOn(applianceService, 'restoreOneAppliance');
 
       component.restoreAppliance(appliance);
       expect(restoreSpy).not.toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('ApplianceComponent', () => {
       } as Appliance;
 
       const applianceService = TestBed.inject(V1AppliancesService);
-      const restoreSpy = jest.spyOn(applianceService, 'v1AppliancesIdRestorePatch');
+      const restoreSpy = jest.spyOn(applianceService, 'restoreOneAppliance');
 
       component.restoreAppliance(appliance);
       expect(restoreSpy).toHaveBeenCalledWith({ id: '1' });

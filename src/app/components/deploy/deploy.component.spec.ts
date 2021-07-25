@@ -6,7 +6,7 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject } from 'rxjs';
-import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupType } from 'api_client';
+import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupTypeEnum } from 'client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { MockProvider } from 'src/test/mock-providers';
@@ -27,8 +27,8 @@ describe('DeployComponent', () => {
         datacenterId: '1',
         name: 'Tier1',
         firewallRuleGroups: [
-          { tierId: '1', name: 'I', type: FirewallRuleGroupType.Intervrf, id: '11' },
-          { tierId: '1', name: 'E', type: FirewallRuleGroupType.External, id: '22' },
+          { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11' },
+          { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22' },
         ],
       },
       isSelected: true,
@@ -49,7 +49,7 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { v1DatacentersDatacenterIdTiersGet: of([testData.tier.item]) }),
+        MockProvider(V1TiersService, { getManyDatacenterTier: of([testData.tier.item]) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -75,8 +75,8 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.v1DatacentersDatacenterIdTiersGet).toHaveBeenCalledWith({ datacenterId: '1', join: 'firewallRuleGroups' });
-    expect(tierGroupService.v1TierGroupsGet).toHaveBeenCalledWith({ filter: 'datacenterId||eq||1' });
+    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1', join: ['firewallRuleGroups'] });
+    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'] });
     expect(component.tiers.length).toBe(1);
   });
 
@@ -125,7 +125,7 @@ describe('DeployComponent', () => {
       component.tiers = [testData.tier];
 
       const jobService = TestBed.inject(V1JobsService);
-      const deploySpy = jest.spyOn(jobService, 'v1JobsPost');
+      const deploySpy = jest.spyOn(jobService, 'createOneJob');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();

@@ -25,7 +25,7 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
-} from 'api_client';
+} from 'client';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;

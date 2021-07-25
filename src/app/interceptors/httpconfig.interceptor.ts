@@ -88,13 +88,17 @@ export class HttpConfigInterceptor {
         if (!isLogin) {
           switch (error.status) {
             case 400:
-              toastrMessage = 'Bad Request';
+              if (error?.error?.message?.message) {
+                toastrMessage = `Bad Request - ${error.error.message.message}`;
+              } else {
+                toastrMessage = 'Bad Request';
+              }
               break;
             case 401:
               this.auth.logout(true);
               return;
             case 403:
-              toastrMessage = 'Unauthorized.';
+              toastrMessage = 'Unauthorized';
               break;
           }
         }

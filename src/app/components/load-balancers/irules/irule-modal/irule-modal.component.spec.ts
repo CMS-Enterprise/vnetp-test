@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IRuleModalComponent } from './irule-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'api_client';
+import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { IRuleModalDto } from './irule-modal.dto';
 
@@ -74,7 +74,7 @@ describe('IRuleModalComponent', () => {
   });
 
   it('should create a new iRule', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerIrulesPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerIrule');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: IRuleModalDto = {
         tierId: '1',
@@ -101,7 +101,7 @@ describe('IRuleModalComponent', () => {
   });
 
   it('should update an existing iRule', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerIrulesIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerIrule');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: IRuleModalDto = {
         tierId: '1',

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'api_client';
+import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 
 export interface RouteView extends LoadBalancerRoute {
+  nameView: string;
   state: string;
 }
 
@@ -27,7 +28,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<RouteView> = {
     description: 'Routes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', property: 'state' },
@@ -63,8 +64,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(route: RouteView): void {
     this.entityService.deleteEntity(route, {
       entityName: 'Route',
-      delete$: this.routesService.v1LoadBalancerRoutesIdDelete({ id: route.id }),
-      softDelete$: this.routesService.v1LoadBalancerRoutesIdSoftDelete({ id: route.id }),
+      delete$: this.routesService.deleteOneLoadBalancerRoute({ id: route.id }),
+      softDelete$: this.routesService.softDeleteOneLoadBalancerRoute({ id: route.id }),
       onSuccess: () => this.loadRoutes(),
     });
   }
@@ -73,14 +74,15 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true;
 
     this.routesService
-      .v1LoadBalancerRoutesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerRoute({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        routes => {
-          this.routes = routes.map(r => {
+        (routes: unknown) => {
+          this.routes = (routes as RouteView[]).map(r => {
             return {
               ...r,
+              nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
               state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
             };
           });
@@ -109,8 +111,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.routesService
-      .v1LoadBalancerRoutesBulkPost({
-        generatedLoadBalancerRouteBulkDto: { bulk },
+      .createManyLoadBalancerRoute({
+        createManyLoadBalancerRouteDto: { bulk },
       })
       .subscribe(() => this.loadRoutes());
   }
@@ -128,7 +130,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!route.deletedAt) {
       return;
     }
-    this.routesService.v1LoadBalancerRoutesIdRestorePatch({ id: route.id }).subscribe(() => this.loadRoutes());
+    this.routesService.restoreOneLoadBalancerRoute({ id: route.id }).subscribe(() => this.loadRoutes());
   }
 
   private subscribeToDataChanges(): Subscription {

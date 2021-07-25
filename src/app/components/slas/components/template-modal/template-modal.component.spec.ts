@@ -1,5 +1,5 @@
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { ActifioPolicyDtoOperation, V1ActifioGmTemplatesService } from 'api_client';
+import { ActifioPolicyDtoOperationEnum, V1ActifioGmTemplatesService } from 'client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -51,7 +51,7 @@ describe('TemplateModalComponent', () => {
       };
     });
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    templateService.v1ActifioGmTemplatesIdPolicyGet = jest.fn(() => of([]));
+    templateService.getTemplatePoliciesActifioTemplate = jest.fn(() => of([]));
 
     component.onLoad();
 
@@ -69,7 +69,7 @@ describe('TemplateModalComponent', () => {
       };
     });
     const templateService = TestBed.inject(V1ActifioGmTemplatesService) as any;
-    templateService.v1ActifioGmTemplatesIdPolicyGet = jest.fn(() => {
+    templateService.getTemplatePoliciesActifioTemplate = jest.fn(() => {
       return of([{ startTime: 1 * 60 * 60, endTime: 2 * 60 * 60 }]);
     });
 
@@ -88,7 +88,7 @@ describe('TemplateModalComponent', () => {
     component.form.controls.endTime.setValue('10:00');
 
     const templateService = TestBed.inject(V1ActifioGmTemplatesService);
-    const saveSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesPost');
+    const saveSpy = jest.spyOn(templateService, 'createTemplateActifioTemplate');
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
@@ -100,7 +100,7 @@ describe('TemplateModalComponent', () => {
         policies: [
           {
             name: 'S-Daily',
-            operation: ActifioPolicyDtoOperation.Snap,
+            operation: ActifioPolicyDtoOperationEnum.Snap,
             isWindowed: true,
             startTime: 0,
             endTime: 10 * 60 * 60,
@@ -112,7 +112,7 @@ describe('TemplateModalComponent', () => {
 
   it('should not save the template when the name is empty', () => {
     const templateService = TestBed.inject(V1ActifioGmTemplatesService);
-    const saveSpy = jest.spyOn(templateService, 'v1ActifioGmTemplatesPost');
+    const saveSpy = jest.spyOn(templateService, 'createTemplateActifioTemplate');
 
     component.form.controls.name.setValue('');
 

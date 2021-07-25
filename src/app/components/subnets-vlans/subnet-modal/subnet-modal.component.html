@@ -19,7 +19,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -43,10 +43,20 @@
       <div class="form-group">
         <label for="vlan">VLAN</label>
         <tooltip [message]="helpText?.Vlan"></tooltip>
-        <select id="vlan" formControlName="vlan" class="form-control" [class.is-invalid]="submitted && f.vlan.errors" aria-label="VLAN">
-          <option></option>
-          <option *ngFor="let vlan of vlans" [ngValue]="vlan?.id">{{ vlan?.name }} ({{ vlan?.vlanNumber }})</option>
-        </select>
+
+        <ng-select
+          formControlName="vlan"
+          id="vlan"
+          [ngClass]="{
+            'is-invalid': submitted && f.vlan.errors
+          }"
+          aria-label="VLAN"
+          [items]="vlans"
+          bindLabel="name"
+          bindValue="id"
+        >
+        </ng-select>
+
         <div *ngIf="submitted && f.vlan.errors" class="invalid-feedback">
           <div *ngIf="f.vlan.errors.required">VLAN is required</div>
         </div>

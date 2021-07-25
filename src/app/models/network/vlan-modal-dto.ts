@@ -1,5 +1,5 @@
 import { ModalMode } from '../other/modal-mode';
-import { Vlan } from 'api_client';
+import { Vlan } from 'client';
 
 export class VlanModalDto {
   TierId: string;

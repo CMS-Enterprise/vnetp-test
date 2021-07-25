@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { ActifioApplicationDto, ActifioJobDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService } from 'api_client';
+import { ActifioApplicationDto, ActifioJobDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService } from 'client';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -55,12 +55,12 @@ export class VmViewComponent implements OnInit, OnDestroy {
   }
 
   private loadVirtualMachine(virtualMachineId: string): Observable<ActifioApplicationDto> {
-    return this.agmApplicationService.v1ActifioGmApplicationsIdGet({ id: virtualMachineId });
+    return this.agmApplicationService.getApplicationActifioApplication({ id: virtualMachineId });
   }
 
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
-      .v1ActifioGmJobsGet({
+      .getJobsActifioJob({
         applicationName: virtualMachineName,
         jobClassCode,
         status: 'succeeded',

@@ -11,12 +11,7 @@
 
 <ng-template #actionsTemplate let-pool="datum">
   <section class="table__actions">
-    <app-icon-button
-      *ngIf="!pool?.deletedAt"
-      icon="edit"
-      label="Edit Pool"
-      (handleClick)="openModal(pool)"
-    ></app-icon-button>
+    <app-icon-button *ngIf="!pool?.deletedAt" icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>
 
     <app-icon-button
       *ngIf="pool?.deletedAt"

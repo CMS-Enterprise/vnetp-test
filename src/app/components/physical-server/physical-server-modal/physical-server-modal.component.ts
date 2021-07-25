@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { V1PhysicalServersService, PhysicalServer } from 'api_client';
+import { V1PhysicalServersService, PhysicalServer } from 'client';
 import { PhysicalServerModalDto } from 'src/app/models/physical-server/physical-server-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
@@ -49,7 +49,7 @@ export class PhysicalServerModalComponent implements OnInit {
       physicalServer.datacenterId = this.DatacenterId;
 
       this.physicalServerService
-        .v1PhysicalServersPost({
+        .createOnePhysicalServer({
           physicalServer,
         })
         .subscribe(
@@ -60,7 +60,7 @@ export class PhysicalServerModalComponent implements OnInit {
         );
     } else {
       this.physicalServerService
-        .v1PhysicalServersIdPut({
+        .updateOnePhysicalServer({
           id: this.PhysicalServerId,
           physicalServer,
         })
@@ -122,14 +122,14 @@ export class PhysicalServerModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      serialNumber: ['', Validators.required],
+      serialNumber: ['', Validators.compose([Validators.required, Validators.min(0)])],
       deliveryDate: ['', Validators.required],
       localStorageType: ['', Validators.required],
       localStorageRequired: ['', Validators.required],
-      localStorageSize: ['', Validators.required],
+      localStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
       sanType: ['', Validators.required],
       sanRequired: ['', Validators.required],
-      sanStorageSize: ['', Validators.required],
+      sanStorageSize: [1, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 

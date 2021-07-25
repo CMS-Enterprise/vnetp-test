@@ -5,7 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { map, take } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ActifioApplicationDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService, ActifioJobDto } from 'api_client';
+import { ActifioApplicationDto, V1ActifioGmApplicationsService, V1ActifioGmJobsService, ActifioJobDto } from 'client';
 
 enum JobClassCode {
   Snapshot = 1,
@@ -90,7 +90,7 @@ export class VmListComponent implements OnInit, OnDestroy {
     const virtualMachineChunks = Array(virtualMachineCount / chunkSize)
       .fill(null)
       .map((value: null, index: number) => {
-        return this.agmApplicationService.v1ActifioGmApplicationsGet({ limit: chunkSize, offset: index * chunkSize });
+        return this.agmApplicationService.getApplicationsActifioApplication({ limit: chunkSize, offset: index * chunkSize });
       });
 
     return concat(...virtualMachineChunks).subscribe((data: ActifioApplicationDto[] = []) => {
@@ -109,7 +109,7 @@ export class VmListComponent implements OnInit, OnDestroy {
 
   private getMostRecentSuccessfulJob(virtualMachineName: string, jobClassCode: JobClassCode): Observable<string> {
     return this.agmJobService
-      .v1ActifioGmJobsGet({
+      .getJobsActifioJob({
         applicationName: virtualMachineName,
         jobClassCode,
         status: 'succeeded',

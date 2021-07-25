@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
+import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
+  nameView: string;
   state: string;
   vlanName: string;
 }
@@ -28,7 +29,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<SelfIpView> = {
     description: 'Self IPs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'VLAN', property: 'vlanName' },
       { name: 'State', property: 'state' },
@@ -64,8 +65,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(selfIp: SelfIpView): void {
     this.entityService.deleteEntity(selfIp, {
       entityName: 'Self IP',
-      delete$: this.selfIpsService.v1LoadBalancerSelfIpsIdDelete({ id: selfIp.id }),
-      softDelete$: this.selfIpsService.v1LoadBalancerSelfIpsIdSoftDelete({ id: selfIp.id }),
+      delete$: this.selfIpsService.deleteOneLoadBalancerSelfIp({ id: selfIp.id }),
+      softDelete$: this.selfIpsService.softDeleteOneLoadBalancerSelfIp({ id: selfIp.id }),
       onSuccess: () => this.loadSelfIps(),
     });
   }
@@ -73,19 +74,24 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadSelfIps(): void {
     this.isLoading = true;
     this.selfIpsService
-      .v1LoadBalancerSelfIpsGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
-        join: 'loadBalancerVlan',
+      .getManyLoadBalancerSelfIp({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+        join: ['loadBalancerVlan'],
       })
       .subscribe(
-        selfIps => {
-          this.selfIps = selfIps.map((s: LoadBalancerSelfIp) => {
+        (selfIps: unknown) => {
+          this.selfIps = (selfIps as SelfIpView[]).map((s: LoadBalancerSelfIp) => {
             // TODO: Fix back-end generated type
             const loadBalancerVlan = (s as any).loadBalancerVlan as { name: string };
             return {
               ...s,
+              nameView: s.name.length >= 20 ? s.name.slice(0, 19) + '...' : s.name,
               state: s.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              vlanName: loadBalancerVlan ? loadBalancerVlan.name : '--',
+              vlanName: loadBalancerVlan
+                ? loadBalancerVlan.name.length >= 20
+                  ? loadBalancerVlan.name.slice(0, 19) + '...'
+                  : loadBalancerVlan.name
+                : undefined,
             };
           });
         },
@@ -113,8 +119,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.selfIpsService
-      .v1LoadBalancerSelfIpsBulkPost({
-        generatedLoadBalancerSelfIpBulkDto: { bulk },
+      .createManyLoadBalancerSelfIp({
+        createManyLoadBalancerSelfIpDto: { bulk },
       })
       .subscribe(() => this.loadSelfIps());
   }
@@ -132,7 +138,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!selfIp.deletedAt) {
       return;
     }
-    this.selfIpsService.v1LoadBalancerSelfIpsIdRestorePatch({ id: selfIp.id }).subscribe(() => this.loadSelfIps());
+    this.selfIpsService.restoreOneLoadBalancerSelfIp({ id: selfIp.id }).subscribe(() => this.loadSelfIps());
   }
 
   private subscribeToDataChanges(): Subscription {

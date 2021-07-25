@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'api_client';
+import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
 export interface PoolView extends LoadBalancerPool {
+  nameView: string;
   methodName: string;
   totalHealthMonitors: number;
   totalNodes: number;
@@ -31,7 +32,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PoolView> = {
     description: 'Pools in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
@@ -68,8 +69,8 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(pool: PoolView): void {
     this.entityService.deleteEntity(pool, {
       entityName: 'Pool',
-      delete$: this.poolsService.v1LoadBalancerPoolsIdDelete({ id: pool.id }),
-      softDelete$: this.poolsService.v1LoadBalancerPoolsIdSoftDelete({ id: pool.id }),
+      delete$: this.poolsService.deleteOneLoadBalancerPool({ id: pool.id }),
+      softDelete$: this.poolsService.softDeleteOneLoadBalancerPool({ id: pool.id }),
       onSuccess: () => this.loadPools(),
     });
   }
@@ -77,7 +78,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadPools(): void {
     this.isLoading = true;
     this.poolsService
-      .v1LoadBalancerPoolsIdTierIdGet({
+      .getPoolsLoadBalancerPool({
         id: this.currentTier.id,
       })
       .subscribe(
@@ -89,6 +90,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.pools = pools.map(p => {
             return {
               ...p,
+              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
               methodName: methodsLookup[p.loadBalancingMethod],
               state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
               totalNodes: getTotal(p.nodes),
@@ -107,7 +109,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(pools: LoadBalancerPoolBulkImportDto[] = []): void {
     this.poolsService
-      .v1LoadBalancerPoolsBulkImportPost({
+      .bulkImportPoolsLoadBalancerPool({
         poolImportCollectionDto: {
           datacenterId: this.datacenterId,
           pools,
@@ -129,7 +131,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!pool.deletedAt) {
       return;
     }
-    this.poolsService.v1LoadBalancerPoolsIdRestorePatch({ id: pool.id }).subscribe(() => this.loadPools());
+    this.poolsService.restoreOneLoadBalancerPool({ id: pool.id }).subscribe(() => this.loadPools());
   }
 
   private subscribeToDataChanges(): Subscription {

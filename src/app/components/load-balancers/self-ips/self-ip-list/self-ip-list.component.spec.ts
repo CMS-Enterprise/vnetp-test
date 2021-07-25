@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'api_client';
+import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
 import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('SelfIpListComponent', () => {
   });
 
   it('should map self ips', () => {
-    jest.spyOn(service, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() => {
       return of(([
         { id: '1', name: 'SelfIp1', provisionedAt: {}, loadBalancerVlan: { name: 'VLAN' } },
         { id: '2', name: 'SelfIp2' },
@@ -67,6 +67,7 @@ describe('SelfIpListComponent', () => {
     expect(selfIp1).toEqual({
       id: '1',
       name: 'SelfIp1',
+      nameView: 'SelfIp1',
       provisionedAt: {},
       state: 'Provisioned',
       loadBalancerVlan: { name: 'VLAN' },
@@ -76,14 +77,15 @@ describe('SelfIpListComponent', () => {
     expect(selfIp2).toEqual({
       id: '2',
       name: 'SelfIp2',
+      nameView: 'SelfIp2',
       state: 'Not Provisioned',
-      vlanName: '--',
+      vlanName: undefined,
     });
   });
 
   it('should default self ips to be empty on error', () => {
     component.selfIps = [{ id: '1', name: 'SelfIp1' }] as SelfIpView[];
-    jest.spyOn(service, 'v1LoadBalancerSelfIpsGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -92,12 +94,12 @@ describe('SelfIpListComponent', () => {
 
   it('should import self ips', () => {
     const selfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerSelfIp');
 
     component.import(selfIps);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerSelfIpBulkDto: {
+      createManyLoadBalancerSelfIpDto: {
         bulk: [{ name: 'SelfIp1', tierId: '1', vrfName: 'Tier1' }, { name: 'SelfIp2' }],
       },
     });
@@ -113,7 +115,7 @@ describe('SelfIpListComponent', () => {
   });
 
   it('should restore a self ip', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerSelfIp');
 
     component.restore({} as SelfIpView);
     expect(spy).not.toHaveBeenCalled();

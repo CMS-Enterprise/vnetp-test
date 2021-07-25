@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'api_client';
+import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,8 +11,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
 export interface IRuleView extends LoadBalancerIrule {
+  nameView: string;
   state: string;
   descriptionView: string;
+  contentView: string;
 }
 
 @Component({
@@ -26,16 +28,17 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<IRuleView> = {
-    description: 'Health Monitors in the currently selected Tier',
+    description: 'iRules in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Description', property: 'descriptionView' },
-      { name: 'Content', property: 'content' },
+      { name: 'Content', property: 'contentView' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
   public iRules: IRuleView[] = [];
+  public iRulesTable: IRuleView[] = [];
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -64,8 +67,8 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(iRule: IRuleView): void {
     this.entityService.deleteEntity(iRule, {
       entityName: 'iRule',
-      delete$: this.iRuleService.v1LoadBalancerIrulesIdDelete({ id: iRule.id }),
-      softDelete$: this.iRuleService.v1LoadBalancerIrulesIdSoftDelete({ id: iRule.id }),
+      delete$: this.iRuleService.deleteOneLoadBalancerIrule({ id: iRule.id }),
+      softDelete$: this.iRuleService.softDeleteOneLoadBalancerIrule({ id: iRule.id }),
       onSuccess: () => this.loadIRules(),
     });
   }
@@ -73,16 +76,22 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadIRules(): void {
     this.isLoading = true;
     this.iRuleService
-      .v1LoadBalancerIrulesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerIrule({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        iRules => {
-          this.iRules = iRules.map(i => {
+        (iRules: unknown) => {
+          this.iRules = (iRules as IRuleView[]).map(i => {
             return {
               ...i,
-              descriptionView: i.description || '--',
+              nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
+              descriptionView: i.description
+                ? i.description.length >= 20
+                  ? i.description.slice(0, 19) + '...'
+                  : i.description
+                : undefined,
               state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+              contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
             };
           });
         },
@@ -110,8 +119,8 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.iRuleService
-      .v1LoadBalancerIrulesBulkPost({
-        generatedLoadBalancerIruleBulkDto: { bulk },
+      .createManyLoadBalancerIrule({
+        createManyLoadBalancerIruleDto: { bulk },
       })
       .subscribe(() => this.loadIRules());
   }
@@ -129,7 +138,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!iRule.deletedAt) {
       return;
     }
-    this.iRuleService.v1LoadBalancerIrulesIdRestorePatch({ id: iRule.id }).subscribe(() => this.loadIRules());
+    this.iRuleService.restoreOneLoadBalancerIrule({ id: iRule.id }).subscribe(() => this.loadIRules());
   }
 
   private subscribeToDataChanges(): Subscription {

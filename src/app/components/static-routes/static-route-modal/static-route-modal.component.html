@@ -12,7 +12,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
           aria-label="Destination Network"
         />
         <div *ngIf="submitted && f.destinationNetwork.errors" class="invalid-feedback">
-          <div *ngIf="f.destinationNetwork.errors.required">Destination Network is required.</div>
+          <div *ngIf="f.destinationNetwork.errors.required">Destination Network is required</div>
           <div *ngIf="f.destinationNetwork.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
         </div>
       </div>
@@ -43,9 +43,7 @@
           aria-label="Next Hop"
         />
         <div *ngIf="submitted && f.nextHop.errors" class="invalid-feedback">
-          <div *ngIf="f.nextHop.errors.required">
-            Next Hop required.
-          </div>
+          <div *ngIf="f.nextHop.errors.required">Next Hop required</div>
           <div *ngIf="f.nextHop.errors.invalidIpAddress">Invalid IP address, must be a valid IPv4/IPv6 address.</div>
         </div>
       </div>
@@ -59,11 +57,13 @@
           class="form-control"
           [class.is-invalid]="submitted && f.metric.errors"
           aria-label="Metric"
+          min="1"
+          max="255"
         />
         <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
-          <div *ngIf="f.metric.errors.required">
-            Metric required.
-          </div>
+          <div *ngIf="f.metric.errors.required">Metric required</div>
+          <div *ngIf="f.metric.errors.min">Metric must be greater than or equal to 1</div>
+          <div *ngIf="f.metric.errors.max">Metric must be less than or equal to 255</div>
         </div>
       </div>
     </div>

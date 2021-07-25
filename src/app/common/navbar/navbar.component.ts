@@ -3,8 +3,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { UserDto } from '../../../../api_client/model/models';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserDto } from '../../../../client';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;
+  public userRoles: string[];
+  public role: string;
   public tenant: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
@@ -31,6 +33,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
       this.user = user;
+      if (user) {
+        this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
+        this.role = this.userRoles[0];
+
+        // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
+        // show them all dropdown options, they will get denied at the component level
+        // this allows for more flexibility of the word "admin" in the HTML with no risk
+        if (this.role.includes('ro')) {
+          this.role = 'admin';
+        }
+      }
     });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;

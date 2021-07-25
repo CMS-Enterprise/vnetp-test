@@ -19,7 +19,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -49,17 +49,13 @@
           class="form-control"
           [class.is-invalid]="submitted && f.vlanNumber.errors"
           aria-label="vlanNumber"
+          min="1"
+          max="4094"
         />
         <div *ngIf="submitted && f.vlanNumber.errors" class="invalid-feedback">
-          <div *ngIf="f.vlanNumber.errors.required">
-            VLAN Number is required
-          </div>
-          <div *ngIf="f.vlanNumber.errors.min">
-            VLAN Number must be greater than 0
-          </div>
-          <div *ngIf="f.vlanNumber.errors.max">
-            VLAN Number must be less than 4094
-          </div>
+          <div *ngIf="f.vlanNumber.errors.required">VLAN Number is required</div>
+          <div *ngIf="f.vlanNumber.errors.min">VLAN Number must be greater than or equal to 1</div>
+          <div *ngIf="f.vlanNumber.errors.max">VLAN Number must be less than or equal to 4094</div>
         </div>
       </div>
     </div>

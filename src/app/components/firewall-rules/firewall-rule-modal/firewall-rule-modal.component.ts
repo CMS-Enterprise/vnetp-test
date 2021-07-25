@@ -10,12 +10,12 @@ import {
   ServiceObjectGroup,
   NetworkObjectGroup,
   NetworkObject,
-  FirewallRuleSourceAddressType,
-  FirewallRuleDestinationAddressType,
-  FirewallRuleServiceType,
+  FirewallRuleSourceAddressTypeEnum,
+  FirewallRuleDestinationAddressTypeEnum,
+  FirewallRuleServiceTypeEnum,
   FirewallRule,
   V1NetworkSecurityFirewallRulesService,
-} from 'api_client';
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -81,39 +81,39 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
 
-    if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.IpAddress) {
+    if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.IpAddress) {
       modalFirewallRule.sourceIpAddress = this.form.controls.sourceIpAddress.value;
-    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObject) {
+    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.NetworkObject) {
       modalFirewallRule.sourceNetworkObjectId = this.form.controls.sourceNetworkObject.value;
-    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObjectGroup) {
+    } else if (modalFirewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.NetworkObjectGroup) {
       modalFirewallRule.sourceNetworkObjectGroupId = this.form.controls.sourceNetworkObjectGroup.value;
     }
 
     modalFirewallRule.destinationAddressType = this.form.controls.destinationNetworkType.value;
 
-    if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.IpAddress) {
+    if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.IpAddress) {
       modalFirewallRule.destinationIpAddress = this.form.controls.destinationIpAddress.value;
-    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObject) {
+    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.NetworkObject) {
       modalFirewallRule.destinationNetworkObjectId = this.form.controls.destinationNetworkObject.value;
-    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObjectGroup) {
+    } else if (modalFirewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalFirewallRule.destinationNetworkObjectGroupId = this.form.controls.destinationNetworkObjectGroup.value;
     }
 
     modalFirewallRule.serviceType = this.form.controls.serviceType.value;
 
-    if (modalFirewallRule.serviceType === FirewallRuleServiceType.Port) {
+    if (modalFirewallRule.serviceType === FirewallRuleServiceTypeEnum.Port) {
       modalFirewallRule.sourcePorts = this.form.controls.sourcePorts.value;
       modalFirewallRule.destinationPorts = this.form.controls.destinationPorts.value;
-    } else if (modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObject) {
+    } else if (modalFirewallRule.serviceType === FirewallRuleServiceTypeEnum.ServiceObject) {
       modalFirewallRule.serviceObjectId = this.form.controls.serviceObject.value;
-    } else if (modalFirewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup) {
+    } else if (modalFirewallRule.serviceType === FirewallRuleServiceTypeEnum.ServiceObjectGroup) {
       modalFirewallRule.serviceObjectGroupId = this.form.controls.serviceObjectGroup.value;
     }
 
     if (this.ModalMode === ModalMode.Create) {
       modalFirewallRule.firewallRuleGroupId = this.FirewallRuleGroupId;
       this.firewallRuleService
-        .v1NetworkSecurityFirewallRulesPost({
+        .createOneFirewallRule({
           firewallRule: modalFirewallRule,
         })
         .subscribe(
@@ -124,7 +124,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         );
     } else {
       this.firewallRuleService
-        .v1NetworkSecurityFirewallRulesIdPut({
+        .updateOneFirewallRule({
           id: this.FirewallRuleId,
           firewallRule: modalFirewallRule,
         })
@@ -177,37 +177,37 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.logging.setValue(firewallRule.logging);
       this.form.controls.enabled.setValue(firewallRule.enabled);
 
-      if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.IpAddress) {
-        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.IpAddress);
+      if (firewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.IpAddress) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.IpAddress);
         this.form.controls.sourceIpAddress.setValue(firewallRule.sourceIpAddress);
-      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObject) {
-        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.NetworkObject);
+      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.NetworkObject) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.NetworkObject);
         this.form.controls.sourceNetworkObject.setValue(firewallRule.sourceNetworkObjectId);
-      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressType.NetworkObjectGroup) {
-        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressType.NetworkObjectGroup);
+      } else if (firewallRule.sourceAddressType === FirewallRuleSourceAddressTypeEnum.NetworkObjectGroup) {
+        this.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.NetworkObjectGroup);
         this.form.controls.sourceNetworkObjectGroup.setValue(firewallRule.sourceNetworkObjectGroupId);
       }
 
-      if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.IpAddress) {
-        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.IpAddress);
+      if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.IpAddress) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressTypeEnum.IpAddress);
         this.form.controls.destinationIpAddress.setValue(firewallRule.destinationIpAddress);
-      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObject) {
-        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.NetworkObject);
+      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.NetworkObject) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressTypeEnum.NetworkObject);
         this.form.controls.destinationNetworkObject.setValue(firewallRule.destinationNetworkObjectId);
-      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressType.NetworkObjectGroup) {
-        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressType.NetworkObjectGroup);
+      } else if (firewallRule.destinationAddressType === FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup) {
+        this.form.controls.destinationNetworkType.setValue(FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup);
         this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.destinationNetworkObjectGroupId);
       }
 
-      if (firewallRule.serviceType === FirewallRuleServiceType.Port) {
-        this.form.controls.serviceType.setValue(FirewallRuleServiceType.Port);
+      if (firewallRule.serviceType === FirewallRuleServiceTypeEnum.Port) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceTypeEnum.Port);
         this.form.controls.sourcePorts.setValue(firewallRule.sourcePorts);
         this.form.controls.destinationPorts.setValue(firewallRule.destinationPorts);
-      } else if (firewallRule.serviceType === FirewallRuleServiceType.ServiceObject) {
-        this.form.controls.serviceType.setValue(FirewallRuleServiceType.ServiceObject);
+      } else if (firewallRule.serviceType === FirewallRuleServiceTypeEnum.ServiceObject) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceTypeEnum.ServiceObject);
         this.form.controls.serviceObject.setValue(firewallRule.serviceObjectId);
-      } else if (firewallRule.serviceType === FirewallRuleServiceType.ServiceObjectGroup) {
-        this.form.controls.serviceType.setValue(FirewallRuleServiceType.ServiceObjectGroup);
+      } else if (firewallRule.serviceType === FirewallRuleServiceTypeEnum.ServiceObjectGroup) {
+        this.form.controls.serviceType.setValue(FirewallRuleServiceTypeEnum.ServiceObjectGroup);
         this.form.controls.serviceObjectGroup.setValue(firewallRule.serviceObjectGroupId);
       }
 
@@ -340,7 +340,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       action: ['', Validators.required],
       protocol: ['', Validators.required],
       direction: ['', Validators.required],
-      ruleIndex: [0, Validators.compose([Validators.required, Validators.min(1)])],
+      ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
 
       // Source Network Info
       sourceNetworkType: ['IpAddress'],

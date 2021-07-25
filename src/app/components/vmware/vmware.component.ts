@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesService } from 'api_client';
+import { VmwareVirtualMachine, V1DatacentersService, V1VmwareVirtualMachinesService } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
@@ -50,14 +50,11 @@ export class VmwareComponent implements OnInit, OnDestroy {
     this.activeTabName = tab.name as TabName;
   }
 
-  getVirtualMachines() {
-    this.datacenterService
-      .v1DatacentersIdGet({
-        id: this.datacenterId,
-        join: 'vmwareVirtualMachines',
-      })
-      .subscribe(data => {
-        this.virtualMachines = data.vmwareVirtualMachines;
+  getVirtualMachines(): void {
+    this.virtualMachineService
+      .getManyVmwareVirtualMachine({ filter: [`datacenterId||eq||${this.datacenterId}`] })
+      .subscribe((data: unknown) => {
+        this.virtualMachines = data as VmwareVirtualMachine[];
         this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
         this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
       });
@@ -69,7 +66,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
   openVirtualMachineModal(modalMode: ModalMode, vm?: VmwareVirtualMachine) {
     if (modalMode === ModalMode.Edit && !vm) {
-      throw new Error('VM required.');
+      throw new Error('VM required');
     }
 
     const dto = new VirtualMachineModalDto();
@@ -97,8 +94,8 @@ export class VmwareComponent implements OnInit, OnDestroy {
   public deleteVirtualMachine(vm: VmwareVirtualMachine): void {
     this.entityService.deleteEntity(vm, {
       entityName: 'Virtual Machine',
-      delete$: this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({ id: vm.id }),
-      softDelete$: this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({ id: vm.id }),
+      delete$: this.virtualMachineService.deleteOneVmwareVirtualMachine({ id: vm.id }),
+      softDelete$: this.virtualMachineService.softDeleteOneVmwareVirtualMachine({ id: vm.id }),
       onSuccess: () => this.getVirtualMachines(),
     });
   }
@@ -106,7 +103,7 @@ export class VmwareComponent implements OnInit, OnDestroy {
   restoreVirtualMachine(vm: VmwareVirtualMachine) {
     if (vm.deletedAt) {
       this.virtualMachineService
-        .v1VmwareVirtualMachinesIdRestorePatch({
+        .restoreOneVmwareVirtualMachine({
           id: vm.id,
         })
         .subscribe(() => {

@@ -1,5 +1,5 @@
 import { ModalMode } from '../other/modal-mode';
-import { Subnet, Vlan } from 'api_client';
+import { Subnet, Vlan } from 'client';
 
 export class SubnetModalDto {
   TierId: string;

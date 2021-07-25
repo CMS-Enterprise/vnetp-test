@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FirewallRulesHelpText } from 'src/app/helptext/help-text-networking';
-import { Tier, V1TiersService, FirewallRuleGroup, FirewallRuleGroupType, V1NetworkSecurityFirewallRuleGroupsService } from 'api_client';
+import { Tier, V1TiersService, FirewallRuleGroup, FirewallRuleGroupTypeEnum, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -17,7 +17,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentFirewallRulePage = 1;
   public firewallRuleGroups: FirewallRuleGroup[] = [];
-  public currentTab = FirewallRuleGroupType.External;
+  public currentTab = FirewallRuleGroupTypeEnum.External;
   public perPage = 20;
   public tiers: Tier[] = [];
 
@@ -43,17 +43,17 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   ) {}
 
   public handleTabChange(tab: Tab): void {
-    this.currentTab = tab.name === 'External' ? FirewallRuleGroupType.External : FirewallRuleGroupType.Intervrf;
+    this.currentTab = tab.name === 'External' ? FirewallRuleGroupTypeEnum.External : FirewallRuleGroupTypeEnum.Intervrf;
   }
 
   public getTiers(): void {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
+      .getManyDatacenterTier({
         datacenterId: this.DatacenterId,
-        join: 'firewallRuleGroups',
+        join: ['firewallRuleGroups'],
       })
-      .subscribe(data => {
-        this.tiers = data;
+      .subscribe((data: unknown) => {
+        this.tiers = data as Tier[];
         this.firewallRuleGroups = [];
         this.tiers.forEach(tier => {
           this.firewallRuleGroups = this.firewallRuleGroups.concat(tier.firewallRuleGroups);
@@ -79,8 +79,8 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.firewallRuleGroupService
-        .v1NetworkSecurityFirewallRuleGroupsBulkPost({
-          generatedFirewallRuleGroupBulkDto: { bulk: dto },
+        .createManyFirewallRuleGroup({
+          createManyFirewallRuleGroupDto: { bulk: dto },
         })
         .subscribe(() => {
           this.getTiers();

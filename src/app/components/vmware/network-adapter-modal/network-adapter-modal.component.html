@@ -26,7 +26,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
         <select name="vlanId" formControlName="vlanId" class="form-control">
           <option></option>
           <option *ngFor="let vlan of Vlans" [ngValue]="vlan.id">
-            {{ vlan.name }}
+            {{ vlan.name | slice: 0:20 }}{{ vlan.name.length > 20 ? '...' : '' }}
           </option>
         </select>
       </div>

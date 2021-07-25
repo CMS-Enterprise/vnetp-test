@@ -6,10 +6,11 @@ import {
   MockTooltipComponent,
   MockNgxSmartModalComponent,
   MockIconButtonComponent,
+  MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'api_client';
+import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -24,6 +25,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockIconButtonComponent,
+        MockNgSelectComponent,
       ],
       providers: [
         MockProvider(NgxSmartModalService),

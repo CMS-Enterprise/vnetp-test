@@ -1,4 +1,4 @@
-import { LoadBalancerSelfIp } from 'api_client';
+import { LoadBalancerSelfIp } from 'client';
 
 export interface SelfIpModalDto {
   tierId: string;

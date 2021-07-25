@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { V1VmwareNetworkAdapterService, VmwareNetworkAdapter, Vlan, V1TiersService } from 'api_client';
+import { V1VmwareNetworkAdapterService, VmwareNetworkAdapter, Vlan, V1TiersService, Tier } from 'client';
 import { VirtualMachineModalDto } from 'src/app/models/vmware/virtual-machine-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 
@@ -25,13 +25,13 @@ export class NetworkAdapterModalComponent implements OnInit {
 
   getVlanList() {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
+      .getManyDatacenterTier({
         datacenterId: this.DatacenterId,
-        join: 'vlans',
+        join: ['vlans'],
       })
-      .subscribe(data => {
+      .subscribe((data: unknown) => {
         this.Vlans = [];
-        data.forEach(tier => {
+        (data as Tier[]).forEach(tier => {
           this.Vlans.push(...tier.vlans);
         });
         this.Vlans = this.Vlans.filter(v => !v.deletedAt);
@@ -53,7 +53,7 @@ export class NetworkAdapterModalComponent implements OnInit {
     this.ngx.setModalData(Object.assign({}, networkAdapter), 'networkAdapterModal');
 
     this.networkAdapterService
-      .v1VmwareNetworkAdapterPost({
+      .createOneVmwareNetworkAdapter({
         vmwareNetworkAdapter: networkAdapter,
       })
       .subscribe(

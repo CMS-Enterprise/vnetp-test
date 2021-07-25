@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'api_client';
+import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -11,6 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 
 export interface ProfileView extends LoadBalancerProfile {
+  nameView: string;
   state: string;
   reverseProxyView: string;
 }
@@ -28,7 +29,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<ProfileView> = {
     description: 'Profiles in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'name' },
+      { name: 'Name', property: 'nameView' },
       { name: 'Type', property: 'type' },
       { name: 'Reverse Proxy', property: 'reverseProxyView' },
       { name: 'State', property: 'state' },
@@ -64,8 +65,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(profile: ProfileView): void {
     this.entityService.deleteEntity(profile, {
       entityName: 'Profile',
-      delete$: this.profilesService.v1LoadBalancerProfilesIdDelete({ id: profile.id }),
-      softDelete$: this.profilesService.v1LoadBalancerProfilesIdSoftDelete({ id: profile.id }),
+      delete$: this.profilesService.deleteOneLoadBalancerProfile({ id: profile.id }),
+      softDelete$: this.profilesService.softDeleteOneLoadBalancerProfile({ id: profile.id }),
       onSuccess: () => this.loadProfiles(),
     });
   }
@@ -73,16 +74,21 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadProfiles(): void {
     this.isLoading = true;
     this.profilesService
-      .v1LoadBalancerProfilesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerProfile({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        profiles => {
-          this.profiles = profiles.map(p => {
+        (profiles: unknown) => {
+          this.profiles = (profiles as ProfileView[]).map(p => {
             return {
               ...p,
+              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
               state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              reverseProxyView: p.reverseProxy || '--',
+              reverseProxyView: p.reverseProxy
+                ? p.reverseProxy.length >= 20
+                  ? p.reverseProxy.slice(0, 19) + '...'
+                  : p.reverseProxy
+                : undefined,
             };
           });
         },
@@ -110,8 +116,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.profilesService
-      .v1LoadBalancerProfilesBulkPost({
-        generatedLoadBalancerProfileBulkDto: { bulk },
+      .createManyLoadBalancerProfile({
+        createManyLoadBalancerProfileDto: { bulk },
       })
       .subscribe(() => this.loadProfiles());
   }
@@ -129,7 +135,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!profile.deletedAt) {
       return;
     }
-    this.profilesService.v1LoadBalancerProfilesIdRestorePatch({ id: profile.id }).subscribe(() => this.loadProfiles());
+    this.profilesService.restoreOneLoadBalancerProfile({ id: profile.id }).subscribe(() => this.loadProfiles());
   }
 
   private subscribeToDataChanges(): Subscription {

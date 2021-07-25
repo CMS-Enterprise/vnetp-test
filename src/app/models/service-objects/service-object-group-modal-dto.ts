@@ -1,4 +1,4 @@
-import { ServiceObjectGroup } from 'api_client';
+import { ServiceObjectGroup } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class ServiceObjectGroupModalDto {

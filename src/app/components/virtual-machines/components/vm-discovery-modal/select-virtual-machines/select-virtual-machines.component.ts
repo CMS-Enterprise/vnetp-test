@@ -5,7 +5,7 @@ import {
   V1ActifioGmHostsService,
   V1ActifioGmApplicationsService,
   ActifioHostDto,
-} from 'api_client';
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
 
@@ -84,7 +84,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
 
     this.isLoading = true;
     this.agmApplicationService
-      .v1ActifioGmApplicationsImportPost({
+      .importApplicationsActifioApplication({
         actifioImportApplicationsDto: {
           clusters,
           hostId: this.vCenter.id,
@@ -112,7 +112,7 @@ export class SelectVirtualMachinesComponent implements OnInit {
 
   public loadVirtualMachinesOnHost(hostId: string): void {
     this.isLoading = true;
-    this.agmHostService.v1ActifioGmHostsHostIdDiscoveredApplicationsGet({ hostId }).subscribe(
+    this.agmHostService.discoverApplicationsActifioHost({ hostId }).subscribe(
       (data: ActifioDiscoveredVMDto[]) => {
         this.selectableVirtualMachines = data.map(discoveredVM => this.mapDiscoveredVM(discoveredVM)).filter(vm => vm.isNew);
         this.isLoading = false;

@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
+import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'client';
 import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -55,7 +55,7 @@ describe('VirtualServerListComponent', () => {
 
   it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'v1LoadBalancerVirtualServersGet').mockImplementation(() => {
+    const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() => {
       return of(([
         { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
         { id: '2', name: 'VirtualServer2' },
@@ -68,6 +68,7 @@ describe('VirtualServerListComponent', () => {
     expect(virtualServer1).toEqual({
       id: '1',
       name: 'VirtualServer1',
+      nameView: 'VirtualServer1',
       provisionedAt: {},
       state: 'Provisioned',
       defaultPool: { name: 'Pool1' },
@@ -78,13 +79,14 @@ describe('VirtualServerListComponent', () => {
       id: '2',
       name: 'VirtualServer2',
       state: 'Not Provisioned',
-      defaultPoolName: '--',
+      nameView: 'VirtualServer2',
+      defaultPoolName: undefined,
     });
   });
 
   it('should default virtual servers to be empty on error', () => {
     component.virtualServers = [{ id: '1', name: 'VirtualServer1' }] as VirtualServerView[];
-    jest.spyOn(service, 'v1LoadBalancerVirtualServersGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerVirtualServer').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -93,7 +95,7 @@ describe('VirtualServerListComponent', () => {
 
   it('should import virtual servers', () => {
     const virtualServers = [{ name: 'VirtualServer1' }, { name: 'VirtualServer2' }] as VirtualServerImportDto[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersBulkImportPost');
+    const spy = jest.spyOn(service, 'bulkImportVirtualServersLoadBalancerVirtualServer');
 
     component.import(virtualServers);
 
@@ -115,7 +117,7 @@ describe('VirtualServerListComponent', () => {
   });
 
   it('should restore a virtual server', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerVirtualServer');
 
     component.restore({} as VirtualServerView);
     expect(spy).not.toHaveBeenCalled();
