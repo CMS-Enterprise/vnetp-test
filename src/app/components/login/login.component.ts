@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
                     this.availableTenants = currentTenants;
                   } else {
                     // If the user is not a global admin, filter current tenats based on their tenants.
-                    this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.db_name === ut));
+                    this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
                   }
 
                   this.tenantSelect = true;
