@@ -17,12 +17,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const user = JSON.parse(localStorage.getItem('user'));
+    const tenantQueryParam = JSON.parse(localStorage.getItem('tenantQueryParam'));
 
-    if (user) {
+    if (user && tenantQueryParam) {
       // Since we aren't storing the tenant in local storage,
       // it will be null on bootstrap. If the user is not
       // null, set the tenant to a generic value.
-      this.currentTenantSubject.next('tenant');
+      this.currentTenantSubject.next(tenantQueryParam);
     }
     this.currentUserSubject.next(user);
   }
@@ -76,6 +77,7 @@ export class AuthService {
   logout(keepReturnUrl?: boolean) {
     localStorage.clear();
     this.currentUserSubject.next(null);
+    this.currentTenantSubject.next(null);
     if (keepReturnUrl) {
       location.reload();
     } else {
