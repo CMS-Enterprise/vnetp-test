@@ -151,11 +151,11 @@ describe('ProfileModalComponent', () => {
         certificate: null,
         description: 'Description',
         key: null,
-        name: 'NewName',
+        name: undefined,
         properties: null,
         reverseProxy: ProfileReverseProxyType.Explicit,
         tierId: null,
-        type: LoadBalancerProfileTypeEnum.Http,
+        type: undefined,
       },
     });
   });

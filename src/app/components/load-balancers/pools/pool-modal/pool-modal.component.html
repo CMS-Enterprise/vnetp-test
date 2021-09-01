@@ -89,7 +89,12 @@
           </div>
 
           <div class="col-md-3 text-right" style="margin-top: 25px;">
-            <button type="button" class="btn btn-info" (click)="addNode()" [disabled]="f?.servicePort?.errors || f?.ratio?.errors">
+            <button
+              type="button"
+              class="btn btn-info"
+              (click)="addNode()"
+              [disabled]="!f.selectedNode.value || f?.servicePort?.errors || f?.ratio?.errors"
+            >
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add Node</span>
             </button>

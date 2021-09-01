@@ -139,8 +139,8 @@ describe('HealthMonitorModalComponent', () => {
       id: '2',
       loadBalancerHealthMonitor: {
         tierId: null,
-        name: 'HealthMonitor100',
-        type: LoadBalancerHealthMonitorTypeEnum.Tcp,
+        name: undefined,
+        type: undefined,
         servicePort: 10,
         interval: 10,
         timeout: 10,

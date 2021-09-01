@@ -41,7 +41,7 @@ export class RouteModalComponent implements OnInit {
       return;
     }
 
-    const { destination, gateway, name } = this.form.getRawValue();
+    const { destination, gateway, name } = this.form.value;
 
     const route: LoadBalancerRoute = {
       tierId: this.tierId,
@@ -66,11 +66,9 @@ export class RouteModalComponent implements OnInit {
     if (this.modalMode === ModalMode.Edit) {
       const { destination, gateway, name, id } = route;
       this.routeId = id;
-
+      this.form.controls.name.disable();
       this.form.controls.destination.disable();
       this.form.controls.gateway.disable();
-      this.form.controls.name.disable();
-
       this.form.controls.destination.setValue(destination);
       this.form.controls.gateway.setValue(gateway);
       this.form.controls.name.setValue(name);

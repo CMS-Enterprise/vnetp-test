@@ -142,9 +142,9 @@ describe('PolicyModalComponent', () => {
       loadBalancerPolicy: {
         apmContent: 'APM Content',
         asmContent: null,
-        name: 'NewName',
+        name: undefined,
         tierId: null,
-        type: LoadBalancerPolicyTypeEnum.Apm,
+        type: undefined,
       },
     });
   });

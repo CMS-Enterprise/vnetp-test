@@ -67,7 +67,7 @@ describe('SelfIpModalComponent', () => {
 
     expect(component.form.controls.name.disabled).toBe(true);
     expect(component.form.controls.ipAddress.disabled).toBe(true);
-    expect(component.form.controls.loadBalancerVlanId.disabled).toBe(false);
+    expect(component.form.controls.loadBalancerVlanId.disabled).toBe(true);
   });
 
   it('should create a new self ip', () => {
@@ -118,8 +118,8 @@ describe('SelfIpModalComponent', () => {
     expect(spy).toHaveBeenCalledWith({
       id: '2',
       loadBalancerSelfIp: {
-        ipAddress: '192.168.1.2',
         loadBalancerVlanId: '3',
+        ipAddress: '192.168.1.2',
         name: 'NewName',
         tierId: null,
       },

@@ -83,12 +83,19 @@ export class NodeModalComponent implements OnInit, OnDestroy {
       this.nodeId = id;
 
       this.form.controls.name.disable();
-
-      this.form.controls.autoPopulate.setValue(autoPopulate);
-      this.form.controls.fqdn.setValue(fqdn);
-      this.form.controls.ipAddress.setValue(ipAddress);
-      this.form.controls.name.setValue(name);
-      this.form.controls.type.setValue(type);
+      if (type === LoadBalancerNodeTypeEnum.IpAddress) {
+        this.form.controls.autoPopulate.setValue(autoPopulate);
+        this.form.controls.fqdn.setValue(null);
+        this.form.controls.ipAddress.setValue(ipAddress);
+        this.form.controls.name.setValue(name);
+        this.form.controls.type.setValue(type);
+      } else {
+        this.form.controls.autoPopulate.setValue(autoPopulate);
+        this.form.controls.fqdn.setValue(fqdn);
+        this.form.controls.ipAddress.setValue(null);
+        this.form.controls.name.setValue(name);
+        this.form.controls.type.setValue(type);
+      }
     } else {
       this.form.controls.name.enable();
     }
@@ -141,7 +148,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   private getNodeForSave(): LoadBalancerNode {
-    const { name, type, ipAddress, autoPopulate, fqdn } = this.form.getRawValue();
+    const { name, type, ipAddress, autoPopulate, fqdn } = this.form.value;
 
     if (type === LoadBalancerNodeTypeEnum.IpAddress) {
       return {

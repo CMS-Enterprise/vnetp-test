@@ -47,7 +47,7 @@ export class SelfIpModalComponent implements OnInit {
       return;
     }
 
-    const { ipAddress, name, loadBalancerVlanId } = this.form.getRawValue();
+    const { ipAddress, name, loadBalancerVlanId } = this.form.value;
 
     const selfIp: LoadBalancerSelfIp = {
       tierId: this.tierId,
@@ -75,6 +75,7 @@ export class SelfIpModalComponent implements OnInit {
 
       this.form.controls.name.disable();
       this.form.controls.ipAddress.disable();
+      this.form.controls.loadBalancerVlanId.disable();
 
       this.form.controls.ipAddress.setValue(ipAddress);
       this.form.controls.name.setValue(name);
@@ -82,6 +83,7 @@ export class SelfIpModalComponent implements OnInit {
     } else {
       this.form.controls.name.enable();
       this.form.controls.ipAddress.enable();
+      this.form.controls.loadBalancerVlanId.enable();
     }
 
     this.loadVlans();

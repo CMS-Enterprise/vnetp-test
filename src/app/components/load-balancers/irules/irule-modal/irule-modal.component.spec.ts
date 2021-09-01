@@ -122,7 +122,7 @@ describe('IRuleModalComponent', () => {
       id: '2',
       loadBalancerIrule: {
         tierId: null,
-        name: 'iRule100',
+        name: undefined,
         content: 'New Content',
         description: 'New Description',
       },

@@ -53,7 +53,7 @@ export class HealthMonitorModalComponent implements OnInit {
       return;
     }
 
-    const { name, type, servicePort, interval, timeout } = this.form.getRawValue();
+    const { name, type, servicePort, interval, timeout } = this.form.value;
 
     const healthMonitor: LoadBalancerHealthMonitor = {
       tierId: this.tierId,

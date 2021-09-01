@@ -91,7 +91,7 @@ export class PoolModalComponent implements OnInit {
       return;
     }
 
-    const { loadBalancingMethod, name } = this.form.getRawValue();
+    const { loadBalancingMethod, name } = this.form.value;
 
     const pool: LoadBalancerPool = {
       loadBalancingMethod,

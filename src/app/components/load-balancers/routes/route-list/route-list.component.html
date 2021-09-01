@@ -11,8 +11,6 @@
 
 <ng-template #actionsTemplate let-route="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!route?.deletedAt" icon="edit" label="Edit Route" (handleClick)="openModal(route)"></app-icon-button>
-
     <app-icon-button
       *ngIf="route?.deletedAt"
       icon="undo"

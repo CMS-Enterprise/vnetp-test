@@ -119,6 +119,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
 
   private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
     loadBalancerPolicy.tierId = null;
+    loadBalancerPolicy.type = undefined;
     this.policyService
       .updateOneLoadBalancerPolicy({
         id: this.policyId,
@@ -131,7 +132,8 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   private getPolicyForSave(): LoadBalancerPolicy {
-    const { name, type, apmContent, asmContent } = this.form.getRawValue();
+    const { name, apmContent, asmContent } = this.form.value;
+    const { type } = this.form.getRawValue();
     if (type === LoadBalancerPolicyTypeEnum.Apm) {
       return {
         apmContent,

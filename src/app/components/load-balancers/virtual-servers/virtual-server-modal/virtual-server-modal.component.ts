@@ -164,7 +164,7 @@ export class VirtualServerModalComponent implements OnInit {
       sourceAddressTranslation,
       sourceIpAddress,
       type,
-    } = this.form.getRawValue();
+    } = this.form.value;
 
     const virtualServer: LoadBalancerVirtualServer = {
       tierId: this.tierId,

@@ -83,10 +83,9 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
 
     if (this.modalMode === ModalMode.Edit) {
       const { name, type, id, certificate, reverseProxy, key, description } = profile;
-      this.profileId = id;
-
       this.form.controls.name.disable();
       this.form.controls.type.disable();
+      this.profileId = id;
 
       this.form.controls.description.setValue(description);
       this.form.controls.name.setValue(name);
@@ -149,6 +148,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
 
   private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
     loadBalancerProfile.tierId = null;
+    loadBalancerProfile.type = undefined;
     this.profileService
       .updateOneLoadBalancerProfile({
         id: this.profileId,
@@ -161,7 +161,8 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   private getProfileForSave(): LoadBalancerProfile {
-    const { name, type, reverseProxy, certificate, description } = this.form.getRawValue();
+    const { name, reverseProxy, certificate, description } = this.form.value;
+    const { type } = this.form.getRawValue();
 
     if (type === LoadBalancerProfileTypeEnum.ClientSsl) {
       if (!this.privateKeyCipher) {

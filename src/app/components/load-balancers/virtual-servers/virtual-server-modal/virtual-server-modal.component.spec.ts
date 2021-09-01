@@ -171,11 +171,11 @@ describe('VirtualServerModalComponent', () => {
         description: 'Description',
         defaultPoolId: '1',
         destinationIpAddress: '192.168.1.2',
-        name: 'NewName',
+        name: undefined,
         servicePort: 5,
         sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
         sourceIpAddress: '192.168.1.1/11',
-        type: LoadBalancerVirtualServerTypeEnum.Standard,
+        type: undefined,
         tierId: null,
       },
     });

@@ -158,7 +158,7 @@ describe('PoolModalComponent', () => {
         defaultHealthMonitors: [],
         healthMonitors: [],
         loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
-        name: 'New Name',
+        name: undefined,
         tierId: null,
       },
     });
