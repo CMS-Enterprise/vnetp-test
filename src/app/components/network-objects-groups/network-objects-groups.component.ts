@@ -281,7 +281,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       if (val === null || val === '') {
         delete obj[key];
       }
-      if (key === 'ipAddress') {
+      if (key === 'ipAddress' && val !== '') {
         obj[key] = String(val).trim();
       }
       if (key === 'vrf_name') {
