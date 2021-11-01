@@ -197,6 +197,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       'Import VLANs',
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
+    event.map(e => {
+      e.vlanNumber = Number(e.vlanNumber);
+
+      // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema
+      e.tierId = this.getTierId(e['vrfName']);
+    });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
         this.getVlans();
@@ -207,6 +213,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
+
+  public getTierName = (id: string) => ObjectUtil.getObjectName(id, this.tiers);
+  public getTierId = (name: string) => ObjectUtil.getObjectId(name, this.tiers);
 
   getObjectsForNavIndex() {
     if (!this.currentTier) {
